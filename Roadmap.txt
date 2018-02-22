@@ -1,0 +1,38 @@
+
+App
+[ ] Turn screen on for notifications
+[ ] Single emoji pops from top of screen and bounces back up
+[ ] Animate phone markers on move
+[ ] Animate phone markers into view
+[ ] Set name
+[ ] Icon
+[ ] Load on move map
+[ ] Register for push notifications
+[ ] Tap notification opens message reply in-app
+
+API
+Authorization: <phone>
+[ ] /near/<lat,lng>
+[ ] /phone?name=<name>
+[ ] /phone?status=<text>
+[ ] /phone?active=<bool>
+[ ] /phone?pushDeviceToken=<token>
+[ ] /send/<phone>?message=<text>
+
+Server
+[ ] ArangoDB
+[ ] Endpoints
+[ ] Query: Active near me
+[ ] Query: update phone { name?, status?, active? }
+[ ] Send message to phone
+
+Push Notifications
+[ ] Message { name, message }
+[ ] Wake up { }
+
+Services
+[ ] Push notifications
+[ ] Linode
+[ ]
+[ ]
+[ ]
