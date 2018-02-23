@@ -6,4 +6,6 @@
     <string name="turn_on">Turn on</string>
     <string name="update">Update</string>
     <string name="closer_notifications">Closer notifications</string>
+    <string name="what_s_up">What\'s up?</string>
+    <string name="off">Off</string>
 </resources>

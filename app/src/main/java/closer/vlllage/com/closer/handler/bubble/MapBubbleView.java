@@ -1,9 +1,11 @@
-package closer.vlllage.com.closer;
+package closer.vlllage.com.closer.handler.bubble;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import closer.vlllage.com.closer.R;
 
 /**
  * Created by jacob on 2/18/18.

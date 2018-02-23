@@ -8,8 +8,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.widget.Toast;
 
-import static closer.vlllage.com.closer.MapsActivity.KEY_TEXT_REPLY;
-import static closer.vlllage.com.closer.MapsActivity.NOTIFICATION_ID;
+import static closer.vlllage.com.closer.handler.NotificationHandler.KEY_TEXT_REPLY;
+import static closer.vlllage.com.closer.handler.NotificationHandler.NOTIFICATION_ID;
 
 public class Background extends BroadcastReceiver {
     @Override

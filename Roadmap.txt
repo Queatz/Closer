@@ -1,21 +1,24 @@
 
 SOC
-[ ] Location
-[ ] Map
+[X] Location
+[X] Map
 [ ] Reply
 [ ] My Status
-[ ] Notifications
+[X] Notifications
+[X] Permissions
 
 App
 [ ] Turn screen on for notifications
 [ ] Single emoji pops from top of screen and bounces back up
 [ ] Animate phone markers on move
 [ ] Animate phone markers into view
-[ ] Set name
+[ ] Set my name
 [ ] Icon
-[ ] Load on move map
+[ ] Load new bubbles on move map
 [ ] Register for push notifications
-[ ] Tap notification opens message reply in-app
+[X] Tap notification opens message reply in-app
+[ ] Persist my status + on/off
+[ ] Bookmark phone (shows icon)
 
 API
 Authorization: <phone>
