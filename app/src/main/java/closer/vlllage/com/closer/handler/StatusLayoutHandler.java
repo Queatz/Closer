@@ -49,6 +49,7 @@ public class StatusLayoutHandler extends PoolMember {
         myStatusVisibleButton.setOnClickListener(v -> {
             if (tentativeStatus == null || tentativeStatus.trim().isEmpty()) {
                 amIVisible = false;
+                myStatusEditText.setText("");
             } else {
                 setCurrentStatus(tentativeStatus);
                 tentativeStatus = null;

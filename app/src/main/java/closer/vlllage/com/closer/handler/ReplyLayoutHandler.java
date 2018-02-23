@@ -81,7 +81,7 @@ public class ReplyLayoutHandler extends PoolMember {
 
     public void showReplyLayout(boolean show) {
         if (show) {
-            if (replyLayout.getVisibility() == View.VISIBLE && (replyLayout.getAnimation() == null || (replyLayout.getAnimation() != null && replyLayout.getAnimation().getDuration() == 195))) {
+            if (replyLayout.getVisibility() == View.VISIBLE && (replyLayout.getAnimation() == null || (replyLayout.getAnimation() != null && replyLayout.getAnimation().getDuration() == AnimationDuration.ENTER_DURATION))) {
                 return;
             }
         } else {

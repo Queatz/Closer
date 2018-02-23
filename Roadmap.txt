@@ -2,8 +2,8 @@
 SOC
 [X] Location
 [X] Map
-[ ] Reply
-[ ] My Status
+[X] Reply
+[X] My Status
 [X] Notifications
 [X] Permissions
 

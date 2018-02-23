@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 
 import closer.vlllage.com.closer.handler.BubbleHandler;
+import closer.vlllage.com.closer.handler.IntentHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
-import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
 public class MapsActivity extends PoolActivity {
@@ -33,25 +32,13 @@ public class MapsActivity extends PoolActivity {
         pool(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
 
         if (getIntent() != null) {
-            onNewIntent(getIntent());
+            pool(IntentHandler.class).onNewIntent(getIntent());
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-
-            if (!intent.hasExtra(EXTRA_LAT_LNG) || !intent.hasExtra(EXTRA_NAME) || !intent.hasExtra(EXTRA_STATUS)) {
-                return;
-            }
-
-            float[] latLng = intent.getFloatArrayExtra(EXTRA_LAT_LNG);
-            pool(ReplyLayoutHandler.class).replyTo(new MapBubble(
-                    new LatLng(latLng[0], latLng[1]),
-                    intent.getStringExtra(EXTRA_NAME),
-                    intent.getStringExtra(EXTRA_STATUS)
-            ));
-        }
+        pool(IntentHandler.class).onNewIntent(intent);
     }
 
     @Override
