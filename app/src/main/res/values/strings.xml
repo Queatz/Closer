@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Closer</string>
-    <string name="title_activity_maps">Map</string>
     <string name="reply">Reply</string>
     <string name="turn_off">Turn off</string>
     <string name="turn_on">Turn on</string>

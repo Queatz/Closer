@@ -1,13 +1,19 @@
 package closer.vlllage.com.closer.handler.bubble;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.graphics.Point;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,6 +23,7 @@ import java.util.Set;
 public class BubbleMapLayer {
 
     private final Set<MapBubble> mapBubbles = new HashSet<>();
+    private final Map<MapBubble, Animator> mapBubbleAnimations = new HashMap<>();
     private GoogleMap map;
     private ViewGroup view;
     private MapBubbleView.OnMapBubbleClickListener onClickListener;
@@ -31,7 +38,6 @@ public class BubbleMapLayer {
         mapBubbles.add(mapBubble);
         mapBubble.setView(MapBubbleView.from(view, mapBubble, onClickListener));
         view.addView(mapBubble.getView());
-        update();
 
         mapBubble.getView().setScaleX(0);
         mapBubble.getView().setScaleY(0);
@@ -40,21 +46,55 @@ public class BubbleMapLayer {
             mapBubble.getView().setPivotX(mapBubble.getView().getWidth() / 2);
             mapBubble.getView().setPivotY(mapBubble.getView().getHeight());
             mapBubble.getView().animate().scaleX(1).scaleY(1).setInterpolator(new OvershootInterpolator()).setDuration(195).start();
+            update(mapBubble);
         });
     }
 
     public void update() {
         for (MapBubble mapBubble : mapBubbles) {
-            View view = mapBubble.getView();
-
-            if (view == null) {
-                continue;
-            }
-
-            Point point = map.getProjection().toScreenLocation(mapBubble.getLatLng());
-            view.setX(point.x - view.getWidth() / 2);
-            view.setY(point.y - view.getHeight());
-            view.setElevation(1 + (float) point.y / (float) this.view.getHeight());
+            update(mapBubble);
         }
+    }
+
+    public void update(MapBubble mapBubble) {
+        View view = mapBubble.getView();
+
+        if (view == null) {
+            return;
+        }
+
+        Point point = map.getProjection().toScreenLocation(mapBubble.getLatLng());
+        view.setX(point.x - view.getWidth() / 2);
+        view.setY(point.y - view.getHeight());
+        view.setElevation(1 + (float) point.y / (float) this.view.getHeight());
+    }
+
+    public void move(final MapBubble mapBubble, final LatLng targetLatLng) {
+        if (mapBubbleAnimations.containsKey(mapBubble)) {
+            Animator activeAnimator = mapBubbleAnimations.get(mapBubble);
+            if (activeAnimator.isRunning()) {
+                activeAnimator.cancel();
+            }
+        }
+
+        final LatLng sourceLatLng = new LatLng(mapBubble.getLatLng().latitude, mapBubble.getLatLng().longitude);
+
+        ValueAnimator animator = new ValueAnimator();
+        animator.setDuration(1000).setFloatValues(0f, 1f);
+
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addUpdateListener(animation -> {
+            float value = animation.getAnimatedFraction();
+
+            mapBubble.setLatLng(new LatLng(
+                    sourceLatLng.latitude * (1 - value) + targetLatLng.latitude * value,
+                    sourceLatLng.longitude * (1 - value) + targetLatLng.longitude * value
+            ));
+            update(mapBubble);
+        });
+
+        animator.start();
+
+        mapBubbleAnimations.put(mapBubble, animator);
     }
 }

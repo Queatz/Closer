@@ -25,8 +25,13 @@ public class BubbleHandler extends PoolMember {
 
     private void onLocationFound(Location location) {
         bubbleMapLayerLayout.postDelayed(() -> {
-            bubbleMapLayer.add(new MapBubble(new LatLng(location.getLatitude() - .01, location.getLongitude()), "Alfred", "Walking the doggo"));
+            MapBubble alfred = new MapBubble(new LatLng(location.getLatitude() - .01, location.getLongitude()), "Alfred", "Walking the doggo");
+            bubbleMapLayer.add(alfred);
             bubbleMapLayer.add(new MapBubble(new LatLng(location.getLatitude() + .01, location.getLongitude() + .02), "Meghan", "Homework"));
+
+            bubbleMapLayerLayout.postDelayed(() -> {
+                bubbleMapLayer.move(alfred, new LatLng(alfred.getLatLng().latitude + 0.003, alfred.getLatLng().longitude - 0.012));
+            }, 987);
         }, 1000);
     }
 

@@ -1,24 +1,16 @@
 
-SOC
-[X] Location
-[X] Map
-[X] Reply
-[X] My Status
-[X] Notifications
-[X] Permissions
-
 App
 [ ] Turn screen on for notifications
 [ ] Single emoji pops from top of screen and bounces back up
-[ ] Animate phone markers on move
-[ ] Animate phone markers into view
-[ ] Set my name
+[ ] Animate phone markers on location updated
+[X] Animate phone markers into view
+[X] Animate phone markers out of view on removed
+[ ] Set my name (tap my bubble | YOU[blue] -> JACOB (YOU[blue]))
 [ ] Icon
 [ ] Load new bubbles on move map
 [ ] Register for push notifications
 [X] Tap notification opens message reply in-app
 [ ] Persist my status + on/off
-[ ] Bookmark phone (shows icon)
 
 API
 Authorization: <phone>
@@ -35,6 +27,7 @@ Server
 [ ] Query: Active near me
 [ ] Query: update phone { name?, status?, active? }
 [ ] Send push notification message to phone
+[ ] Only allow app to talk to endpoints
 
 Push Notifications
 [ ] Message { name, message }
@@ -46,3 +39,8 @@ Services
 [ ]
 [ ]
 [ ]
+
+
+Next
+
+[ ] Bookmark someone's phone (shows icon)

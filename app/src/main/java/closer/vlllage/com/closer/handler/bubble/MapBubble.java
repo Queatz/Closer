@@ -9,9 +9,9 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class MapBubble {
-    private final LatLng latLng;
-    private final String name;
-    private final String status;
+    private LatLng latLng;
+    private String name;
+    private String status;
     private View view;
 
     public MapBubble(LatLng latLng, String name, String status) {
@@ -39,5 +39,9 @@ public class MapBubble {
     public MapBubble setView(View view) {
         this.view = view;
         return this;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
     }
 }
