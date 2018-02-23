@@ -127,8 +127,8 @@
                 android:layout_gravity="center"
                 android:textStyle="bold"
                 android:minWidth="0dp"
-                android:textColor="@color/button_text_color"
-                android:text="On" />
+                android:textColor="@color/colorPrimary"
+                android:text="@string/turn_on" />
 
         </LinearLayout>
 

@@ -21,6 +21,7 @@ import android.support.v4.app.RemoteInput;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -28,6 +29,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -54,16 +56,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String KEY_TEXT_REPLY = "key_text_reply";
     public static final int NOTIFICATION_ID = 0;
 
+    private static final String EXTRA_LAT_LNG = "latLng";
+    private static final String EXTRA_NAME = "name";
+    private static final String EXTRA_STATUS = "status";
+
     private GoogleMap map;
     private FusedLocationProviderClient fusedLocationProvider;
     private View replyLayout;
+    private TextView replyLayoutName;
+    private TextView replyLayoutStatus;
     private View myStatusLayout;
+    private Button myStatusVisibleButton;
+    private EditText myStatusEditText;
+    private ViewGroup bubbleMapLayerView;
+    private View sendButton;
+    private EditText replyMessage;
+    private View mapView;
 
     private BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
     private MapBubble replyingToMapBubble;
-    private View sendButton;
-    private EditText replyMessage;
+    private boolean amIVisible;
     private LatLng centerOnMapLoad;
+    private String tentativeStatus;
+    private String currentStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +90,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         replyLayout = findViewById(R.id.replyLayout);
         sendButton = replyLayout.findViewById(R.id.sendButton);
+        replyMessage = replyLayout.findViewById(R.id.message);
+        replyLayoutName = replyLayout.findViewById(R.id.replyLayoutName);
+        replyLayoutStatus = replyLayout.findViewById(R.id.replyLayoutStatus);
+        myStatusLayout = findViewById(R.id.myStatusLayout);
+        myStatusVisibleButton = findViewById(R.id.visibleButton);
+        myStatusEditText = findViewById(R.id.currentStatus);
+        mapView = findViewById(R.id.map);
+        bubbleMapLayerView = findViewById(R.id.bubbleMapLayer);
 
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this);
-
-        replyMessage = replyLayout.findViewById(R.id.message);
 
         sendButton.setOnClickListener(view -> {
             showNotification(replyingToMapBubble);
@@ -103,6 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 sendButton.setEnabled(!charSequence.toString().trim().isEmpty());
+                updateStatusButton();
             }
 
             @Override
@@ -111,10 +133,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        myStatusLayout = findViewById(R.id.myStatusLayout);
+        myStatusEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+                tentativeStatus = text.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+
+            }
+        });
+
+        myStatusVisibleButton.setOnClickListener(v -> {
+            if (tentativeStatus == null || tentativeStatus.trim().isEmpty()) {
+                amIVisible = !amIVisible;
+            } else {
+                setCurrentStatus(tentativeStatus);
+                tentativeStatus = null;
+                amIVisible = true;
+            }
+
+            updateStatusButton();
+        });
 
         if (getIntent() != null) {
             onNewIntent(getIntent());
+        }
+    }
+
+    private void updateStatusButton() {
+        if (!amIVisible) {
+            myStatusVisibleButton.setText(R.string.turn_on);
+            myStatusVisibleButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+        } else {
+            if (tentativeStatus == null || tentativeStatus.trim().isEmpty()) {
+                myStatusVisibleButton.setText(R.string.turn_off);
+                myStatusVisibleButton.setTextColor(getResources().getColor(R.color.disabled));
+            } else {
+                myStatusVisibleButton.setText(R.string.update);
+                myStatusVisibleButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+            }
         }
     }
 
@@ -122,13 +186,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onNewIntent(Intent intent) {
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 
-            float[] latLng = intent.getFloatArrayExtra("latLng");
-            replyingToMapBubble = new MapBubble(new LatLng(latLng[0], latLng[1]), intent.getStringExtra("name"), intent.getStringExtra("status"));
-            ((TextView) replyLayout.findViewById(R.id.replyLayoutName)).setText(replyingToMapBubble.getName());
-            ((TextView) replyLayout.findViewById(R.id.replyLayoutStatus)).setText(replyingToMapBubble.getStatus());
-            centerMap(replyingToMapBubble.getLatLng());
-            showReplyLayout(true);
+            if (!intent.hasExtra(EXTRA_LAT_LNG) || !intent.hasExtra(EXTRA_NAME) || !intent.hasExtra(EXTRA_STATUS)) {
+                return;
+            }
+
+            float[] latLng = intent.getFloatArrayExtra(EXTRA_LAT_LNG);
+            replyTo(new MapBubble(
+                    new LatLng(latLng[0], latLng[1]),
+                    intent.getStringExtra(EXTRA_NAME),
+                    intent.getStringExtra(EXTRA_STATUS)
+            ));
         }
+    }
+
+    private void replyTo(MapBubble mapBubble) {
+        replyingToMapBubble = mapBubble;
+        replyLayoutName.setText(replyingToMapBubble.getName());
+        replyLayoutStatus.setText(replyingToMapBubble.getStatus());
+        centerMap(replyingToMapBubble.getLatLng());
+        showReplyLayout(true);
     }
 
     private void centerMap(LatLng latLng) {
@@ -143,20 +219,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-
-        bubbleMapLayer.attach(map, findViewById(R.id.bubbleMapLayer), mapBubble -> {
-            ((TextView) replyLayout.findViewById(R.id.replyLayoutName)).setText(mapBubble.getName());
-            ((TextView) replyLayout.findViewById(R.id.replyLayoutStatus)).setText(mapBubble.getStatus());
-            replyingToMapBubble = mapBubble;
-            showReplyLayout(true);
-        });
+        bubbleMapLayer.attach(map, bubbleMapLayerView, this::replyTo);
 
         enableMyLocation();
 
         map.setOnCameraMoveListener(bubbleMapLayer::update);
         map.setOnCameraIdleListener(bubbleMapLayer::update);
         map.setOnMapClickListener(latlng -> showReplyLayout(false));
-        findViewById(R.id.map).addOnLayoutChangeListener((v, i1, i2, i3, i4, i5, i6, i7, i8) -> bubbleMapLayer.update());
+        mapView.addOnLayoutChangeListener((v, i1, i2, i3, i4, i5, i6, i7, i8) -> bubbleMapLayer.update());
         bubbleMapLayer.update();
 
         if (centerOnMapLoad != null) {
@@ -321,7 +391,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void onLocationFound(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, 13)));
-        findViewById(R.id.bubbleMapLayer).postDelayed(() -> {
+        bubbleMapLayerView.postDelayed(() -> {
             bubbleMapLayer.add(new MapBubble(new LatLng(latLng.latitude - .01, latLng.longitude), "Alfred", "Walking the doggo"));
             bubbleMapLayer.add(new MapBubble(new LatLng(latLng.latitude + .01, latLng.longitude + .02), "Meghan", "Homework"));
         }, 1000);
@@ -330,7 +400,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void showNotification(MapBubble mapBubble) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL,
-                    "Channel human readable title",
+                    getString(R.string.closer_notifications),
                     NotificationManager.IMPORTANCE_DEFAULT);
             ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(channel);
         }
@@ -341,9 +411,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Intent intent = new Intent(this, MapsActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
-        intent.putExtra("latLng", new float[] { (float) mapBubble.getLatLng().latitude, (float) mapBubble.getLatLng().longitude });
-        intent.putExtra("name", mapBubble.getName());
-        intent.putExtra("status", mapBubble.getStatus());
+        intent.putExtra(EXTRA_LAT_LNG, new float[] { (float) mapBubble.getLatLng().latitude, (float) mapBubble.getLatLng().longitude });
+        intent.putExtra(EXTRA_NAME, mapBubble.getName());
+        intent.putExtra(EXTRA_STATUS, mapBubble.getStatus());
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, REQUEST_CODE_NOTIFICATION, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -371,5 +441,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(NOTIFICATION_ID, newMessageNotification);
+    }
+
+    public void setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
+    }
+
+    public String getCurrentStatus() {
+        return currentStatus;
     }
 }

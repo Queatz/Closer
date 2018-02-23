@@ -1,4 +1,11 @@
 
+SOC
+[ ] Location
+[ ] Map
+[ ] Reply
+[ ] My Status
+[ ] Notifications
+
 App
 [ ] Turn screen on for notifications
 [ ] Single emoji pops from top of screen and bounces back up
@@ -24,7 +31,7 @@ Server
 [ ] Endpoints
 [ ] Query: Active near me
 [ ] Query: update phone { name?, status?, active? }
-[ ] Send message to phone
+[ ] Send push notification message to phone
 
 Push Notifications
 [ ] Message { name, message }
