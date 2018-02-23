@@ -22,6 +22,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     private OnMapChangedListener onMapChangedListener;
     private OnMapClickedListener onMapClickedListener;
     private OnMapReadyListener onMapReadyListener;
+    private OnMapIdleListener onMapIdleListener;
 
     public void attach(SupportMapFragment mapFragment) {
         mapFragment.getMapAsync(this);
@@ -38,6 +39,10 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
     public void setOnMapReadyListener(OnMapReadyListener onMapReadyListener) {
         this.onMapReadyListener = onMapReadyListener;
+    }
+
+    public void setOnMapIdleListener(OnMapIdleListener onMapIdleListener) {
+        this.onMapIdleListener = onMapIdleListener;
     }
 
     public void centerMap(LatLng latLng) {
@@ -63,6 +68,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         map.setOnCameraMoveListener(onMapChangedListener::onMapChanged);
         map.setOnCameraIdleListener(onMapChangedListener::onMapChanged);
         map.setOnMapClickListener(onMapClickedListener::onMapClicked);
+        map.setOnCameraIdleListener(() -> onMapIdleListener.onMapIdle(map.getCameraPosition().target));
         mapView.addOnLayoutChangeListener((v, i1, i2, i3, i4, i5, i6, i7, i8) -> onMapChangedListener.onMapChanged());
         onMapChangedListener.onMapChanged();
 
@@ -87,5 +93,9 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
     public interface OnMapClickedListener {
         void onMapClicked(LatLng latLng);
+    }
+
+    public interface OnMapIdleListener {
+        void onMapIdle(LatLng latLng);
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -96,5 +97,45 @@ public class BubbleMapLayer {
         animator.start();
 
         mapBubbleAnimations.put(mapBubble, animator);
+    }
+
+    public void clear() {
+        for (MapBubble mapBubble : mapBubbles) {
+            remove(mapBubble);
+        }
+    }
+
+    private void remove(MapBubble mapBubble) {
+        view.post(() -> {
+            mapBubble.getView()
+                    .animate()
+                    .scaleX(0)
+                    .scaleY(0)
+                    .setInterpolator(new AnticipateInterpolator())
+                    .setDuration(225)
+                    .setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mapBubbles.remove(mapBubble);
+                    view.removeView(mapBubble.getView());
+                    mapBubble.setView(null);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            }).start();
+        });
     }
 }

@@ -1,16 +1,16 @@
 
 App
-[ ] Turn screen on for notifications
-[ ] Single emoji pops from top of screen and bounces back up
-[ ] Animate phone markers on location updated
+[X] Animate phone markers on location updated
 [X] Animate phone markers into view
-[X] Animate phone markers out of view on removed
+[ ] Animate phone markers out of view on removed
+[ ] Persist my status + on/off
 [ ] Set my name (tap my bubble | YOU[blue] -> JACOB (YOU[blue]))
 [ ] Icon
-[ ] Load new bubbles on move map
+[ ] Load new bubbles on map idle
 [ ] Register for push notifications
 [X] Tap notification opens message reply in-app
-[ ] Persist my status + on/off
+[ ] Turn screen on for notifications
+[ ] Single emoji pops from top of screen and bounces back up
 
 API
 Authorization: <phone>
@@ -36,7 +36,7 @@ Push Notifications
 Services
 [ ] Push notifications
 [ ] Linode
-[ ]
+[ ] App Store
 [ ]
 [ ]
 

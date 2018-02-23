@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
+import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
+import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.IntentHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
@@ -27,6 +29,7 @@ public class MapsActivity extends PoolActivity {
         pool(MapHandler.class).setOnMapReadyListener(map -> pool(BubbleHandler.class).attach(map, findViewById(R.id.bubbleMapLayer), pool(ReplyLayoutHandler.class)::replyTo));
         pool(MapHandler.class).setOnMapChangedListener(pool(BubbleHandler.class)::update);
         pool(MapHandler.class).setOnMapClickedListener(latLng -> pool(ReplyLayoutHandler.class).showReplyLayout(false));
+        pool(MapHandler.class).setOnMapIdleListener(latLng -> pool(DisposableHandler.class).add(pool(ApiHandler.class).load(latLng).subscribe(mapBubbles -> pool(BubbleHandler.class).replace(mapBubbles))));
         pool(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         pool(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));
         pool(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
