@@ -22,13 +22,18 @@ public class MapBubbleView {
     }
 
     public static void update(View view, MapBubble mapBubble) {
-        ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName());
+        if (mapBubble.getName().isEmpty()) {
+            view.findViewById(R.id.name).setVisibility(View.GONE);
+        } else {
+            view.findViewById(R.id.name).setVisibility(View.VISIBLE);
+            ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName());
+        }
+
         ((TextView) view.findViewById(R.id.status)).setText(mapBubble.getStatus());
 
         if (mapBubble.getAction() != null) {
             ((TextView) view.findViewById(R.id.action)).setText(mapBubble.getAction());
         }
-
     }
 
     public interface OnMapBubbleClickListener {
