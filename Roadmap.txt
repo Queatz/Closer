@@ -2,19 +2,21 @@
 App
 [X] Animate phone markers on location updated
 [X] Animate phone markers into view
-[ ] Animate phone markers out of view on removed
-[ ] Persist my status + on/off
-[ ] Set my name (tap my bubble | YOU[blue] -> JACOB (YOU[blue]))
-[ ] Icon
-[ ] Load new bubbles on map idle
-[ ] Register for push notifications
+[X] Animate phone markers out of view on removed
+[X] Load new bubbles on map idle
 [X] Tap notification opens message reply in-app
+[ ] Set my name (tap my bubble | YOU[blue] -> JACOB (YOU[blue]))
+[ ] Persist my status + on/off
+[ ] Icon
+[ ] Register for push notifications
 [ ] Turn screen on for notifications
 [ ] Single emoji pops from top of screen and bounces back up
 
 API
-Authorization: <phone>
+ - Authorization: <phone>
+
 [ ] /near/<lat,lng>
+[ ] /phone?geo=<lat,lng>
 [ ] /phone?name=<name>
 [ ] /phone?status=<text>
 [ ] /phone?active=<bool>
