@@ -30,7 +30,7 @@ public class NotificationHandler extends PoolMember {
     private static final String NOTIFICATION_CHANNEL = "notifications";
 
     public void showNotification(MapBubble mapBubble) {
-        Context context = pool(ActivityHandler.class).getActivity().getBaseContext();
+        Context context = $(ActivityHandler.class).getActivity().getBaseContext();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL,

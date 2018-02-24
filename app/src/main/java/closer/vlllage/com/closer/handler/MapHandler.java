@@ -59,8 +59,8 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        pool(LocationHandler.class).getCurrentLocation(this::onLocationFound);
-        pool(PermissionHandler.class)
+        $(LocationHandler.class).getCurrentLocation(this::onLocationFound);
+        $(PermissionHandler.class)
                 .check(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
                 .when(granted -> map.setMyLocationEnabled(granted));
 

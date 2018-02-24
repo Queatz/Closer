@@ -13,7 +13,7 @@ public class PoolMember {
     protected void onPoolInit() { }
     protected void onPoolEnd() { }
 
-    protected <T extends PoolMember> T pool(Class<T> memeber) {
-        return pool.with(memeber);
+    protected <T extends PoolMember> T $(Class<T> memeber) {
+        return pool.$(memeber);
     }
 }

@@ -19,7 +19,7 @@ public class IntentHandler extends PoolMember {
             }
 
             float[] latLng = intent.getFloatArrayExtra(EXTRA_LAT_LNG);
-            pool(ReplyLayoutHandler.class).replyTo(new MapBubble(
+            $(ReplyLayoutHandler.class).replyTo(new MapBubble(
                     new LatLng(latLng[0], latLng[1]),
                     intent.getStringExtra(EXTRA_NAME),
                     intent.getStringExtra(EXTRA_STATUS)

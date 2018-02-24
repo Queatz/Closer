@@ -26,28 +26,28 @@ public class MapsActivity extends PoolActivity {
 
         setContentView(R.layout.activity_maps);
 
-        pool(MapHandler.class).setOnMapReadyListener(map -> pool(BubbleHandler.class).attach(map, findViewById(R.id.bubbleMapLayer), pool(ReplyLayoutHandler.class)::replyTo));
-        pool(MapHandler.class).setOnMapChangedListener(pool(BubbleHandler.class)::update);
-        pool(MapHandler.class).setOnMapClickedListener(latLng -> pool(ReplyLayoutHandler.class).showReplyLayout(false));
-        pool(MapHandler.class).setOnMapIdleListener(latLng -> pool(DisposableHandler.class).add(pool(ApiHandler.class).load(latLng).subscribe(mapBubbles -> pool(BubbleHandler.class).replace(mapBubbles))));
-        pool(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
-        pool(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));
-        pool(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
+        $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map, findViewById(R.id.bubbleMapLayer), $(ReplyLayoutHandler.class)::replyTo));
+        $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
+        $(MapHandler.class).setOnMapClickedListener(latLng -> $(ReplyLayoutHandler.class).showReplyLayout(false));
+        $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class).add($(ApiHandler.class).load(latLng).subscribe(mapBubbles -> $(BubbleHandler.class).replace(mapBubbles))));
+        $(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        $(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));
+        $(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
 
         if (getIntent() != null) {
-            pool(IntentHandler.class).onNewIntent(getIntent());
+            $(IntentHandler.class).onNewIntent(getIntent());
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        pool(IntentHandler.class).onNewIntent(intent);
+        $(IntentHandler.class).onNewIntent(intent);
     }
 
     @Override
     public void onBackPressed() {
-        if (pool(ReplyLayoutHandler.class).isVisible()) {
-            pool(ReplyLayoutHandler.class).showReplyLayout(false);
+        if ($(ReplyLayoutHandler.class).isVisible()) {
+            $(ReplyLayoutHandler.class).showReplyLayout(false);
             return;
         }
 

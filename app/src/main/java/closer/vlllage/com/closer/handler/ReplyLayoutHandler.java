@@ -36,13 +36,13 @@ public class ReplyLayoutHandler extends PoolMember {
         this.replyLayoutStatus = replyLayout.findViewById(R.id.replyLayoutStatus);
 
         sendButton.setOnClickListener(view -> {
-            pool(NotificationHandler.class).showNotification(replyingToMapBubble);
+            $(NotificationHandler.class).showNotification(replyingToMapBubble);
             showReplyLayout(false);
         });
 
         replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {
             if (action == EditorInfo.IME_ACTION_GO) {
-                pool(NotificationHandler.class).showNotification(replyingToMapBubble);
+                $(NotificationHandler.class).showNotification(replyingToMapBubble);
                 showReplyLayout(false);
             }
 
@@ -71,7 +71,7 @@ public class ReplyLayoutHandler extends PoolMember {
         replyingToMapBubble = mapBubble;
         replyLayoutName.setText(replyingToMapBubble.getName());
         replyLayoutStatus.setText(replyingToMapBubble.getStatus());
-        pool(MapHandler.class).centerMap(replyingToMapBubble.getLatLng());
+        $(MapHandler.class).centerMap(replyingToMapBubble.getLatLng());
         showReplyLayout(true);
     }
 
@@ -132,6 +132,6 @@ public class ReplyLayoutHandler extends PoolMember {
 
         replyLayout.startAnimation(animation);
 
-        pool(StatusLayoutHandler.class).visible(!show);
+        $(StatusLayoutHandler.class).visible(!show);
     }
 }

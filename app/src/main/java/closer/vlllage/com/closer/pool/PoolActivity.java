@@ -14,7 +14,7 @@ public class PoolActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pool.with(ActivityHandler.class).setActivity(this);
+        pool.$(ActivityHandler.class).setActivity(this);
     }
 
     @Override
@@ -23,13 +23,13 @@ public class PoolActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    protected <T extends PoolMember> T pool(Class<T> member) {
-        return pool.with(member);
+    protected <T extends PoolMember> T $(Class<T> member) {
+        return pool.$(member);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        pool(PermissionHandler.class).onRequestPermissionsResult(requestCode, permissions, grantResults);
+        $(PermissionHandler.class).onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

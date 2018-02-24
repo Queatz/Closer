@@ -18,13 +18,13 @@ public class LocationHandler extends PoolMember {
     @Override
     protected void onPoolInit() {
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(
-                pool(ActivityHandler.class).getActivity()
+                $(ActivityHandler.class).getActivity()
         );
     }
 
     @SuppressLint("MissingPermission")
     public void getCurrentLocation(LocationCallback callback) {
-        pool(PermissionHandler.class)
+        $(PermissionHandler.class)
                 .check(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 .when(granted -> {
                     if (granted) {
@@ -55,7 +55,7 @@ public class LocationHandler extends PoolMember {
 
                 callback.onLocationFound(locationResult.getLastLocation());
             }
-        }, pool(ActivityHandler.class).getActivity().getMainLooper());
+        }, $(ActivityHandler.class).getActivity().getMainLooper());
     }
 
     public interface LocationCallback {

@@ -61,7 +61,7 @@ public class StatusLayoutHandler extends PoolMember {
     }
 
     private void updateStatusButton() {
-        Resources resources = pool(ActivityHandler.class).getActivity().getResources();
+        Resources resources = $(ActivityHandler.class).getActivity().getResources();
 
         if (!amIVisible) {
             if (tentativeStatus == null || tentativeStatus.trim().isEmpty()) {

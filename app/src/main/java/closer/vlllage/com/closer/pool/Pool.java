@@ -9,7 +9,7 @@ public class Pool {
     private final Map<Class, PoolMember> members = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    public <T extends PoolMember> T with(Class<T> member) {
+    public <T extends PoolMember> T $(Class<T> member) {
         if (!members.containsKey(member)) {
             try {
                 members.put(member, member.getConstructor().newInstance().setPool(this));

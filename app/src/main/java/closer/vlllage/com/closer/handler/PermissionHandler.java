@@ -34,7 +34,7 @@ public class PermissionHandler extends PoolMember {
             check = new LocationCheck(true);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             check = new LocationCheck(permissions);
-            pool(ActivityHandler.class).getActivity().requestPermissions(permissions, REQUEST_CODE_PERMISSION);
+            $(ActivityHandler.class).getActivity().requestPermissions(permissions, REQUEST_CODE_PERMISSION);
         } else {
             check = new LocationCheck(false);
         }
@@ -43,7 +43,7 @@ public class PermissionHandler extends PoolMember {
     }
 
     public boolean has(String... permissions) {
-        Activity activity = pool(ActivityHandler.class).getActivity();
+        Activity activity = $(ActivityHandler.class).getActivity();
 
         for (String permission : permissions) {
             if (ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -101,16 +101,16 @@ public class PermissionHandler extends PoolMember {
                             permissionsGranted.add(permission);
                             if (permissionsGranted.size() == permissions.length) {
                                 callback.onPermissionResult(true);
-                                pool(DisposableHandler.class).dispose(disposable);
+                                $(DisposableHandler.class).dispose(disposable);
                             }
                         } else {
                             callback.onPermissionResult(false);
-                            pool(DisposableHandler.class).dispose(disposable);
+                            $(DisposableHandler.class).dispose(disposable);
                         }
                     }
             );
 
-            pool(DisposableHandler.class).add(disposable);
+            $(DisposableHandler.class).add(disposable);
         }
     }
 
