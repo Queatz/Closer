@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.handler.LocationHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
 import closer.vlllage.com.closer.handler.MyBubbleHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
+import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
@@ -30,7 +31,13 @@ public class MapsActivity extends PoolActivity {
 
         setContentView(R.layout.activity_maps);
 
-        $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map, findViewById(R.id.bubbleMapLayer), $(ReplyLayoutHandler.class)::replyTo));
+        $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map, findViewById(R.id.bubbleMapLayer), mapBubble -> {
+            if ($(MyBubbleHandler.class).isMyBubble(mapBubble)) {
+                $(SetNameHandler.class).modifyName();
+            } else {
+                $(ReplyLayoutHandler.class).replyTo(mapBubble);
+            }
+        }));
         $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
         $(MapHandler.class).setOnMapClickedListener(latLng -> $(ReplyLayoutHandler.class).showReplyLayout(false));
         $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class).add($(ApiHandler.class).load(latLng).subscribe(mapBubbles -> $(BubbleHandler.class).replace(mapBubbles))));

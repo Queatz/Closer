@@ -57,4 +57,8 @@ public class MyBubbleHandler extends PoolMember {
     public void start() {
         $(DisposableHandler.class).add($(AccountHandler.class).changes().subscribe(this::updateFrom));
     }
+
+    public boolean isMyBubble(MapBubble mapBubble) {
+        return myBubble == mapBubble;
+    }
 }

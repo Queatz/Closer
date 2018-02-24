@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="64sp"
+        android:textColor="@android:color/black"
+        android:text="😍"
+        android:padding="8dp"/>
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/set_name"
+        android:focusedByDefault="true"
+        android:selectAllOnFocus="true"
+        android:imeOptions="actionGo"
+        android:textAlignment="center"
+        android:padding="16dp"
+        android:background="@null"
+        android:inputType="textPersonName"
+        android:maxLines="1" />
+
+</LinearLayout>

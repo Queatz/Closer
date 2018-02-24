@@ -6,7 +6,7 @@ App
 [X] Load new bubbles on map idle
 [X] Tap notification opens message reply in-app
 [X] Persist my status + on/off
-[ ] Set my name (tap my bubble | YOU[blue] -> JACOB (YOU[blue]))
+[X] Set my name (tap my bubble)
 [ ] Icon
 [ ] Register for push notifications
 [ ] Turn screen on for notifications

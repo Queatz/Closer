@@ -7,4 +7,6 @@
     <string name="closer_notifications">Closer notifications</string>
     <string name="what_s_up">What\'s up?</string>
     <string name="off">Off</string>
+    <string name="update_name">Update name</string>
+    <string name="set_name">Your name here</string>
 </resources>
