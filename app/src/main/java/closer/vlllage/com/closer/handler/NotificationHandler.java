@@ -50,7 +50,12 @@ public class NotificationHandler extends PoolMember {
                 (float) mapBubble.getLatLng().latitude,
                 (float) mapBubble.getLatLng().longitude
         });
-        intent.putExtra(EXTRA_NAME, mapBubble.getName());
+
+        String name = mapBubble.getName().isEmpty() ?
+                $(ResourcesHandler.class).getResources().getString(R.string.app_name) :
+                mapBubble.getName();
+
+        intent.putExtra(EXTRA_NAME, name);
         intent.putExtra(EXTRA_STATUS, mapBubble.getStatus());
 
         PendingIntent contentIntent = PendingIntent.getActivity(
@@ -75,7 +80,7 @@ public class NotificationHandler extends PoolMember {
         Notification newMessageNotification =
                 new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setContentTitle(mapBubble.getName())
+                        .setContentTitle(name)
                         .setContentText(mapBubble.getStatus())
                         .setAutoCancel(true)
                         .setContentIntent(contentIntent)

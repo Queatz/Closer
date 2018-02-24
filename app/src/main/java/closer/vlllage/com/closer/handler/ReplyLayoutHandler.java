@@ -69,7 +69,14 @@ public class ReplyLayoutHandler extends PoolMember {
 
     public void replyTo(MapBubble mapBubble) {
         replyingToMapBubble = mapBubble;
-        replyLayoutName.setText(replyingToMapBubble.getName());
+
+        if (replyingToMapBubble.getName().isEmpty()) {
+            replyLayoutName.setVisibility(View.GONE);
+        } else {
+            replyLayoutName.setVisibility(View.VISIBLE);
+            replyLayoutName.setText(replyingToMapBubble.getName());
+        }
+
         replyLayoutStatus.setText(replyingToMapBubble.getStatus());
         $(MapHandler.class).centerMap(replyingToMapBubble.getLatLng());
         showReplyLayout(true);
