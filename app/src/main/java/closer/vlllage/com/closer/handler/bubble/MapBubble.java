@@ -13,6 +13,8 @@ public class MapBubble {
     private String name;
     private String status;
     private View view;
+    private boolean pinned;
+    private String action;
 
     public MapBubble(LatLng latLng, String name, String status) {
         this.latLng = latLng;
@@ -43,5 +45,29 @@ public class MapBubble {
 
     public void setLatLng(LatLng latLng) {
         this.latLng = latLng;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getAction() {
+        return action;
     }
 }

@@ -16,10 +16,19 @@ public class MapBubbleView {
         View view = LayoutInflater.from(layer.getContext()).inflate(R.layout.map_bubble, layer, false);
 
         view.findViewById(R.id.click).setOnClickListener(v -> onClickListener.onMapBubbleClick(mapBubble));
+        update(view, mapBubble);
+
+        return view;
+    }
+
+    public static void update(View view, MapBubble mapBubble) {
         ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName());
         ((TextView) view.findViewById(R.id.status)).setText(mapBubble.getStatus());
 
-        return view;
+        if (mapBubble.getAction() != null) {
+            ((TextView) view.findViewById(R.id.action)).setText(mapBubble.getAction());
+        }
+
     }
 
     public interface OnMapBubbleClickListener {

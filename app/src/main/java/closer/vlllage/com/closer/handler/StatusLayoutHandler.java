@@ -49,11 +49,13 @@ public class StatusLayoutHandler extends PoolMember {
         myStatusVisibleButton.setOnClickListener(v -> {
             if (tentativeStatus == null || tentativeStatus.trim().isEmpty()) {
                 amIVisible = false;
+                $(AccountHandler.class).updateActive(amIVisible);
                 myStatusEditText.setText("");
             } else {
                 setCurrentStatus(tentativeStatus);
                 tentativeStatus = null;
                 amIVisible = true;
+                $(AccountHandler.class).updateActive(amIVisible);
             }
 
             updateStatusButton();
@@ -117,5 +119,6 @@ public class StatusLayoutHandler extends PoolMember {
 
     public void setCurrentStatus(String currentStatus) {
         this.currentStatus = currentStatus;
+        $(AccountHandler.class).updateStatus(currentStatus);
     }
 }

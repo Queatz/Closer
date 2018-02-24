@@ -45,4 +45,15 @@ public class BubbleHandler extends PoolMember {
         bubbleMapLayer.update();
     }
 
+    public void update(MapBubble mapBubble) {
+        bubbleMapLayer.update(mapBubble);
+    }
+
+    public void updateDetails(MapBubble mapBubble) {
+        bubbleMapLayer.updateDetails(mapBubble);
+    }
+
+    public void remove(MapBubble mapBubble) {
+        bubbleMapLayer.remove(mapBubble);
+    }
 }

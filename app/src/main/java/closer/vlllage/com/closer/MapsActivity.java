@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
+import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.IntentHandler;
+import closer.vlllage.com.closer.handler.LocationHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
+import closer.vlllage.com.closer.handler.MyBubbleHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
 import closer.vlllage.com.closer.pool.PoolActivity;
@@ -31,8 +35,10 @@ public class MapsActivity extends PoolActivity {
         $(MapHandler.class).setOnMapClickedListener(latLng -> $(ReplyLayoutHandler.class).showReplyLayout(false));
         $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class).add($(ApiHandler.class).load(latLng).subscribe(mapBubbles -> $(BubbleHandler.class).replace(mapBubbles))));
         $(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        $(MyBubbleHandler.class).start();
         $(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));
         $(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
+        $(LocationHandler.class).getCurrentLocation(location -> $(AccountHandler.class).updateGeo(new LatLng(location.getLatitude(), location.getLongitude())));
 
         if (getIntent() != null) {
             $(IntentHandler.class).onNewIntent(getIntent());

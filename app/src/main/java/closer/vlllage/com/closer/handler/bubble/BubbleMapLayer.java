@@ -36,6 +36,10 @@ public class BubbleMapLayer {
     }
 
     public void add(MapBubble mapBubble) {
+        if (mapBubbles.contains(mapBubble)) {
+            return;
+        }
+
         mapBubbles.add(mapBubble);
         mapBubble.setView(MapBubbleView.from(view, mapBubble, onClickListener));
         view.addView(mapBubble.getView());
@@ -70,6 +74,17 @@ public class BubbleMapLayer {
         view.setElevation(1 + (float) point.y / (float) this.view.getHeight());
     }
 
+    public void updateDetails(MapBubble mapBubble) {
+        if (mapBubble.getView() == null) {
+            return;
+        }
+
+        MapBubbleView.update(mapBubble.getView(), mapBubble);
+        mapBubble.getView().setPivotX(mapBubble.getView().getWidth() / 2);
+        mapBubble.getView().setPivotY(mapBubble.getView().getHeight());
+        view.post(() -> update(mapBubble));
+    }
+
     public void move(final MapBubble mapBubble, final LatLng targetLatLng) {
         if (mapBubbleAnimations.containsKey(mapBubble)) {
             Animator activeAnimator = mapBubbleAnimations.get(mapBubble);
@@ -101,11 +116,19 @@ public class BubbleMapLayer {
 
     public void clear() {
         for (MapBubble mapBubble : mapBubbles) {
+            if (mapBubble.isPinned()) {
+                continue;
+            }
+
             remove(mapBubble);
         }
     }
 
-    private void remove(MapBubble mapBubble) {
+    public void remove(MapBubble mapBubble) {
+        if (!mapBubbles.contains(mapBubble)) {
+            return;
+        }
+
         view.post(() -> {
             mapBubble.getView()
                     .animate()
