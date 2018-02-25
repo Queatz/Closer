@@ -1,9 +1,10 @@
 package closer.vlllage.com.closer.api.models;
 
-import com.google.android.gms.maps.model.LatLng;
+import java.util.List;
 
 public class PhoneResult {
-    public LatLng latLng;
+    public String key;
+    public List<Float> geo;
     public String name;
     public String status;
     public Boolean active;

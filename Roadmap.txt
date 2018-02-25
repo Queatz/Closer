@@ -15,20 +15,20 @@ App
 API
  - Authorization: <phone>
 
-[ ] GET  /map/<lat,lng>
-[ ] GET  /phone
-[ ] POST /phone?geo=<lat,lng>
-[ ] POST /phone?name=<name>
-[ ] POST /phone?status=<text>
-[ ] POST /phone?active=<bool>
-[ ] POST /phone?deviceToken=<token>
+[X] GET  /phone
+[X] POST /phone?geo=<lat,lng>
+[X] POST /phone?name=<name>
+[X] POST /phone?status=<text>
+[X] POST /phone?active=<bool>
+[X] POST /phone?deviceToken=<token>
 [ ] POST /phone/<phone>?message=<text>
+[ ] GET  /map/<lat,lng>
 
 Server
-[ ] ArangoDB
-[ ] Endpoints
+[X] ArangoDB
+[X] Endpoints
+[X] Query: update phone { name?, status?, active? }
 [ ] Query: Active near me
-[ ] Query: update phone { name?, status?, active? }
 [ ] Send push notification message to phone
 [ ] Only allow app to talk to endpoints (cert)
 
@@ -37,8 +37,8 @@ Push Notifications
 [ ] Wake up { }
 
 Services
-[ ] Push notifications
-[ ] Linode
+[X] Push notifications
+[X] Linode
 [ ] App Store
 
 
@@ -48,3 +48,4 @@ Next
 [ ] Auto expire bubbles after a bit (reflect turned off when opening app, load my state)
 [ ] Phone icons on map (change color)
 [ ] Auto clubs "Sync server version omnidirectional Inception Notes it's the only way"
+[ ] Disable new phone accounts (enter invite code in app)

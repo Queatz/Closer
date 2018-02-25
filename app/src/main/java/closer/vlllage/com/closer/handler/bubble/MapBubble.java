@@ -4,6 +4,12 @@ import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.util.LatLngStr;
+
 /**
  * Created by jacob on 2/18/18.
  */
@@ -79,5 +85,23 @@ public class MapBubble {
     public MapBubble setPhone(String phone) {
         this.phone = phone;
         return this;
+    }
+
+    public static List<MapBubble> from(List<PhoneResult> phoneResults) {
+        List<MapBubble> mapBubbles = new ArrayList<>();
+
+        for (PhoneResult phoneResult : phoneResults) {
+            if (phoneResult.geo == null) {
+                continue;
+            }
+
+            mapBubbles.add(new MapBubble(
+                    LatLngStr.to(phoneResult.geo),
+                    phoneResult.name == null ? "" : phoneResult.name,
+                    phoneResult.status
+            ));
+        }
+
+        return mapBubbles;
     }
 }
