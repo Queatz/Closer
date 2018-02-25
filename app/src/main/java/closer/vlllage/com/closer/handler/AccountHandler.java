@@ -1,7 +1,10 @@
 package closer.vlllage.com.closer.handler;
 
+import android.widget.Toast;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.util.LatLngStr;
 import closer.vlllage.com.closer.util.PhoneUtil;
@@ -19,35 +22,39 @@ public class AccountHandler extends PoolMember {
 
     public void updateGeo(LatLng latLng) {
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_GEO, latLng));
-        $(ApiHandler.class).updatePhone(LatLngStr.from(latLng), null, null, null, null)
-            .subscribe();
+        $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(LatLngStr.from(latLng), null, null, null, null)
+            .subscribe(success -> {}, this::onError));
     }
 
     public void updateName(String name) {
         $(PersistenceHandler.class).setMyName(name);
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_NAME, name));
-        $(ApiHandler.class).updatePhone(null, name, null, null, null)
-            .subscribe();
+        $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, name, null, null, null)
+            .subscribe(success -> {}, this::onError));
     }
 
     public void updateStatus(String status) {
         $(PersistenceHandler.class).setMyStatus(status);
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_STATUS, status));
-        $(ApiHandler.class).updatePhone(null, null, status, null, null)
-            .subscribe();
+        $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, null, status, null, null)
+            .subscribe(success -> {}, this::onError));
+    }
+
+    private void onError(Throwable throwable) {
+        Toast.makeText($(ApplicationHandler.class).getApp(), R.string.network_down, Toast.LENGTH_SHORT).show();
     }
 
     public void updateActive(boolean active) {
         $(PersistenceHandler.class).setMyActive(active);
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_ACTIVE, active));
-        $(ApiHandler.class).updatePhone(null, null, null, active, null)
-            .subscribe();
+        $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, null, null, active, null)
+            .subscribe(success -> {}, this::onError));
     }
 
     public void updateDeviceToken(String deviceToken) {
         $(PersistenceHandler.class).setDeviceToken(deviceToken);
-        $(ApiHandler.class).updatePhone(null, null, null, null, deviceToken)
-            .subscribe();
+        $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, null, null, null, deviceToken)
+            .subscribe(success -> {}, this::onError));
     }
 
     public String getName() {

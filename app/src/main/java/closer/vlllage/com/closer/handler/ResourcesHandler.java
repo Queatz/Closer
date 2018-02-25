@@ -6,6 +6,6 @@ import closer.vlllage.com.closer.pool.PoolMember;
 
 public class ResourcesHandler extends PoolMember {
     public Resources getResources() {
-        return $(ActivityHandler.class).getActivity().getResources();
+        return $(ApplicationHandler.class).getApp().getResources();
     }
 }

@@ -7,10 +7,11 @@ App
 [X] Tap notification opens message reply in-app
 [X] Persist my status + on/off
 [X] Set my name (tap my bubble)
+[X] Register for push notifications
 [ ] Icon
-[ ] Register for push notifications
 [ ] Turn screen on for notifications
 [ ] Single emoji pops from top of screen and bounces back up
+[ ] Move, don't replace, bubbles that come back from API and are already present
 
 API
  - Authorization: <phone>
@@ -21,19 +22,19 @@ API
 [X] POST /phone?status=<text>
 [X] POST /phone?active=<bool>
 [X] POST /phone?deviceToken=<token>
-[ ] POST /phone/<phone>?message=<text>
-[ ] GET  /map/<lat,lng>
+[X] POST /phone/<phone>?message=<text>
+[X] GET  /map/<lat,lng>
 
 Server
 [X] ArangoDB
 [X] Endpoints
 [X] Query: update phone { name?, status?, active? }
-[ ] Query: Active near me
-[ ] Send push notification message to phone
+[X] Query: Active near me
+[X] Send push notification message to phone
 [ ] Only allow app to talk to endpoints (cert)
 
 Push Notifications
-[ ] Message { name, message }
+[X] Message { name, message }
 [ ] Wake up { }
 
 Services

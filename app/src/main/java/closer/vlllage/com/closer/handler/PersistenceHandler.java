@@ -19,7 +19,7 @@ public class PersistenceHandler extends PoolMember {
 
     @Override
     protected void onPoolInit() {
-        sharedPreferences = $(ActivityHandler.class).getActivity().getSharedPreferences(
+        sharedPreferences = $(ApplicationHandler.class).getApp().getSharedPreferences(
                 SHARED_PREFERENCES, Context.MODE_PRIVATE
         );
     }

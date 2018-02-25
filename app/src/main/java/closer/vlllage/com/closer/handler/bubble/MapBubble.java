@@ -99,7 +99,7 @@ public class MapBubble {
                     LatLngStr.to(phoneResult.geo),
                     phoneResult.name == null ? "" : phoneResult.name,
                     phoneResult.status
-            ));
+            ).setPhone(phoneResult.id));
         }
 
         return mapBubbles;

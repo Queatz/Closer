@@ -6,6 +6,11 @@ public abstract class PoolApplication extends Application {
     private final Pool pool = new Pool();
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
     public void onTerminate() {
         pool.end();
         super.onTerminate();

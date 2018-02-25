@@ -4,7 +4,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -25,12 +24,6 @@ public class BubbleHandler extends PoolMember {
 
     public void add(final MapBubble mapBubble) {
         bubbleMapLayer.add(mapBubble);
-
-        if (Math.random() < 0.1) {
-            bubbleMapLayerLayout.postDelayed(() -> {
-                bubbleMapLayer.move(mapBubble, new LatLng(mapBubble.getLatLng().latitude + 0.003, mapBubble.getLatLng().longitude - 0.012));
-            }, 987);
-        }
     }
 
     public void replace(List<MapBubble> mapBubbles) {

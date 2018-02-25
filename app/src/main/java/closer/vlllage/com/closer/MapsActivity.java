@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
@@ -26,6 +27,7 @@ public class MapsActivity extends PoolActivity {
     public static final String EXTRA_LAT_LNG = "latLng";
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_STATUS = "status";
+    public static final String EXTRA_PHONE = "phone";
     public static final String EXTRA_MESSAGE = "message";
 
     @Override
@@ -54,6 +56,12 @@ public class MapsActivity extends PoolActivity {
 
         if (getIntent() != null) {
             $(IntentHandler.class).onNewIntent(getIntent());
+        }
+
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
+        if (deviceToken != null) {
+            $(AccountHandler.class).updateDeviceToken(deviceToken);
         }
     }
 

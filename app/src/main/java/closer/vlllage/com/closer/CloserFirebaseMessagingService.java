@@ -6,8 +6,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
-import closer.vlllage.com.closer.handler.JsonHandler;
 import closer.vlllage.com.closer.handler.NotificationHandler;
+import closer.vlllage.com.closer.util.LatLngStr;
 
 public class CloserFirebaseMessagingService extends FirebaseMessagingService {
     @Override
@@ -16,8 +16,9 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
 
         Map<String, String> data = remoteMessage.getData();
         if (data.size() > 0) {
-            LatLng latLng = data.containsKey("latLng") ? app.getPool().$(JsonHandler.class).from(data.get("latLng"), LatLng.class) : null;
+            LatLng latLng = data.containsKey("latLng") ? LatLngStr.to(data.get("latLng")) : null;
             app.getPool().$(NotificationHandler.class).showNotification(
+                    data.get("phone"),
                     latLng,
                     data.containsKey("name") ? data.get("name") : "",
                     data.get("message"));

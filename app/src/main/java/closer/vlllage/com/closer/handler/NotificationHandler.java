@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.pool.PoolMember;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_LAT_LNG;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_NAME;
+import static closer.vlllage.com.closer.MapsActivity.EXTRA_PHONE;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_STATUS;
 
 public class NotificationHandler extends PoolMember {
@@ -29,9 +30,9 @@ public class NotificationHandler extends PoolMember {
     public static final int NOTIFICATION_ID = 0;
     private static final int REQUEST_CODE_NOTIFICATION = 101;
 
-    public void showNotification(LatLng latLng, String name, String message) {
+    public void showNotification(String phone, LatLng latLng, String name, String message) {
         String notificationChannel = $(ResourcesHandler.class).getResources().getString(R.string.notification_channel);
-        Context context = $(ActivityHandler.class).getActivity().getBaseContext();
+        Context context = $(ApplicationHandler.class).getApp();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(notificationChannel,
@@ -61,6 +62,7 @@ public class NotificationHandler extends PoolMember {
 
         intent.putExtra(EXTRA_NAME, name);
         intent.putExtra(EXTRA_STATUS, message);
+        intent.putExtra(EXTRA_PHONE, phone);
 
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,

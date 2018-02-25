@@ -11,4 +11,6 @@
     <string name="set_name">Your name here</string>
 
     <string name="notification_channel" translatable="false">notifications</string>
+    <string name="message_not_sent">Couldn\'t send message</string>
+    <string name="network_down">Network unavailable</string>
 </resources>

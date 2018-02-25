@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
@@ -35,23 +36,11 @@ public class ReplyLayoutHandler extends PoolMember {
         this.replyLayoutName = replyLayout.findViewById(R.id.replyLayoutName);
         this.replyLayoutStatus = replyLayout.findViewById(R.id.replyLayoutStatus);
 
-        sendButton.setOnClickListener(view -> {
-            $(NotificationHandler.class).showNotification(
-                    replyingToMapBubble.getLatLng(),
-                    replyingToMapBubble.getName(),
-                    replyingToMapBubble.getStatus()
-            );
-            showReplyLayout(false);
-        });
+        sendButton.setOnClickListener(view -> reply());
 
         replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {
             if (action == EditorInfo.IME_ACTION_GO) {
-                $(NotificationHandler.class).showNotification(
-                        replyingToMapBubble.getLatLng(),
-                        replyingToMapBubble.getName(),
-                        replyingToMapBubble.getStatus()
-                );
-                showReplyLayout(false);
+                reply();
             }
 
             return false;
@@ -73,6 +62,14 @@ public class ReplyLayoutHandler extends PoolMember {
 
             }
         });
+    }
+
+    private void reply() {
+        $(DisposableHandler.class).add($(ApiHandler.class).sendMessage(replyingToMapBubble.getPhone(), replyMessage.getText().toString()).subscribe(success -> {}, error -> {
+            Toast.makeText($(ActivityHandler.class).getActivity(), R.string.message_not_sent, Toast.LENGTH_SHORT).show();
+        }));
+        replyMessage.setText("");
+        showReplyLayout(false);
     }
 
     public void replyTo(MapBubble mapBubble) {

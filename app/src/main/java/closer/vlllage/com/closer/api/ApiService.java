@@ -26,7 +26,15 @@ public class ApiService {
         httpClient.addInterceptor(chain -> {
             Logger.getAnonymousLogger().warning("NETWORK: REQUEST: " + chain.request().toString());
             Response response = chain.proceed(chain.request());
-            Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: " + response.peekBody(response.body().contentLength()).string());
+
+            if (response.body() == null) {
+                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: null");
+            } else if (response.body().contentLength() < 0) {
+                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: no content");
+            } else {
+                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: " + response.peekBody(response.body().contentLength()).string());
+            }
+
             return response;
         });
 

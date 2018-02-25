@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
+import closer.vlllage.com.closer.App;
 import closer.vlllage.com.closer.handler.ActivityHandler;
+import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 
 public abstract class PoolActivity extends FragmentActivity {
@@ -14,6 +16,7 @@ public abstract class PoolActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        $(ApplicationHandler.class).setApp((App) getApplication());
         $(ActivityHandler.class).setActivity(this);
     }
 
