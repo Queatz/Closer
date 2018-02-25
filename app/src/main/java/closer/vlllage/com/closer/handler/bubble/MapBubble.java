@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class MapBubble {
+    private String phone;
     private LatLng latLng;
     private String name;
     private String status;
@@ -69,5 +70,14 @@ public class MapBubble {
 
     public String getAction() {
         return action;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public MapBubble setPhone(String phone) {
+        this.phone = phone;
+        return this;
     }
 }

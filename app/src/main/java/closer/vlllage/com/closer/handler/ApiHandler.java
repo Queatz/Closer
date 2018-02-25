@@ -19,4 +19,8 @@ public class ApiHandler extends PoolMember {
 
         return Observable.just(mapBubbles);
     }
+
+    public void updatePhone(String deviceToken) {
+
+    }
 }

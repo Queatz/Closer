@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import closer.vlllage.com.closer.handler.ActivityHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 
-public class PoolActivity extends FragmentActivity {
+public abstract class PoolActivity extends FragmentActivity {
     private final Pool pool = new Pool();
 
     @Override

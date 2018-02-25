@@ -50,6 +50,11 @@ public class AccountHandler extends PoolMember {
         return accountChanges;
     }
 
+    public void updateDeviceToken(String deviceToken) {
+        $(PersistenceHandler.class).setDeviceToken(deviceToken);
+        $(ApiHandler.class).updatePhone(deviceToken);
+    }
+
     public static class AccountChange {
 
         public final String prop;

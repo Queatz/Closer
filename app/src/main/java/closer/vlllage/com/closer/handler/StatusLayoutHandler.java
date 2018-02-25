@@ -39,7 +39,6 @@ public class StatusLayoutHandler extends PoolMember {
             public void onTextChanged(CharSequence text, int start, int before, int count) {
                 tentativeStatus = text.toString();
                 updateStatusButton();
-                KeyboardUtil.showKeyboard(myStatusEditText, false);
             }
 
             @Override
@@ -63,6 +62,15 @@ public class StatusLayoutHandler extends PoolMember {
             updateStatusButton();
             KeyboardUtil.showKeyboard(myStatusEditText, false);
         });
+
+        amIVisible = $(AccountHandler.class).getActive();
+        myStatusEditText.setText($(AccountHandler.class).getStatus());
+
+        if (amIVisible) {
+            tentativeStatus = null;
+        }
+
+        updateStatusButton();
     }
 
     private void updateStatusButton() {

@@ -11,8 +11,9 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import closer.vlllage.com.closer.Background;
-import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -27,13 +28,13 @@ public class NotificationHandler extends PoolMember {
     public static final String KEY_TEXT_REPLY = "key_text_reply";
     public static final int NOTIFICATION_ID = 0;
     private static final int REQUEST_CODE_NOTIFICATION = 101;
-    private static final String NOTIFICATION_CHANNEL = "notifications";
 
-    public void showNotification(MapBubble mapBubble) {
+    public void showNotification(LatLng latLng, String name, String message) {
+        String notificationChannel = $(ResourcesHandler.class).getResources().getString(R.string.notification_channel);
         Context context = $(ActivityHandler.class).getActivity().getBaseContext();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL,
+            NotificationChannel channel = new NotificationChannel(notificationChannel,
                     context.getString(R.string.closer_notifications),
                     NotificationManager.IMPORTANCE_DEFAULT);
             ((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE))
@@ -46,17 +47,20 @@ public class NotificationHandler extends PoolMember {
 
         Intent intent = new Intent(context, MapsActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
-        intent.putExtra(EXTRA_LAT_LNG, new float[] {
-                (float) mapBubble.getLatLng().latitude,
-                (float) mapBubble.getLatLng().longitude
-        });
 
-        String name = mapBubble.getName().isEmpty() ?
+        if (latLng != null) {
+            intent.putExtra(EXTRA_LAT_LNG, new float[]{
+                    (float) latLng.latitude,
+                    (float) latLng.longitude
+            });
+        }
+
+        name = name.isEmpty() ?
                 $(ResourcesHandler.class).getResources().getString(R.string.app_name) :
-                mapBubble.getName();
+                name;
 
         intent.putExtra(EXTRA_NAME, name);
-        intent.putExtra(EXTRA_STATUS, mapBubble.getStatus());
+        intent.putExtra(EXTRA_STATUS, message);
 
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -78,10 +82,10 @@ public class NotificationHandler extends PoolMember {
                         .build();
 
         Notification newMessageNotification =
-                new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
+                new NotificationCompat.Builder(context, notificationChannel)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setContentTitle(name)
-                        .setContentText(mapBubble.getStatus())
+                        .setContentText(message)
                         .setAutoCancel(true)
                         .setContentIntent(contentIntent)
                         .addAction(action)

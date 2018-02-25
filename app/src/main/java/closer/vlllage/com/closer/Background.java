@@ -18,6 +18,7 @@ public class Background extends BroadcastReceiver {
             Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
             if (remoteInput != null) {
                 Toast.makeText(context, remoteInput.getCharSequence(KEY_TEXT_REPLY), Toast.LENGTH_SHORT).show();
+                // TODO Send reply
 
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.cancel(NOTIFICATION_ID);

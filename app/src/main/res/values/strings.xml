@@ -9,4 +9,6 @@
     <string name="off">Off</string>
     <string name="update_name">Update name</string>
     <string name="set_name">Your name here</string>
+
+    <string name="notification_channel" translatable="false">notifications</string>
 </resources>

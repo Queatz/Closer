@@ -21,7 +21,7 @@ public class Pool {
         return (T) members.get(member);
     }
 
-    public void end() {
+    protected void end() {
         for (PoolMember member : members.values()) {
             member.onPoolEnd();
         }

@@ -12,6 +12,7 @@ public class PersistenceHandler extends PoolMember {
     private static final String PREFERENCE_MY_STATUS = "closer.me.status";
     private static final String PREFERENCE_MY_NAME = "closer.me.name";
     private static final String PREFERENCE_MY_ACTIVE = "closer.me.active";
+    private static final String PREFERENCE_DEVICE_TOKEN = "closer.device-token";
 
     private SharedPreferences sharedPreferences;
 
@@ -34,6 +35,10 @@ public class PersistenceHandler extends PoolMember {
         return sharedPreferences.getBoolean(PREFERENCE_MY_ACTIVE, false);
     }
 
+    public String getDeviceToken() {
+        return sharedPreferences.getString(PREFERENCE_DEVICE_TOKEN, null);
+    }
+
     @SuppressLint("ApplySharedPref")
     public void setMyStatus(String status) {
         sharedPreferences.edit().putString(PREFERENCE_MY_STATUS, status).commit();
@@ -47,5 +52,10 @@ public class PersistenceHandler extends PoolMember {
     @SuppressLint("ApplySharedPref")
     public void setMyActive(boolean active) {
         sharedPreferences.edit().putBoolean(PREFERENCE_MY_ACTIVE, active).commit();
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public void setDeviceToken(String deviceToken) {
+        sharedPreferences.edit().putString(PREFERENCE_DEVICE_TOKEN, deviceToken).commit();
     }
 }

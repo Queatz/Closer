@@ -15,13 +15,14 @@ App
 API
  - Authorization: <phone>
 
-[ ] /near/<lat,lng>
-[ ] /phone?geo=<lat,lng>
-[ ] /phone?name=<name>
-[ ] /phone?status=<text>
-[ ] /phone?active=<bool>
-[ ] /phone?pushDeviceToken=<token>
-[ ] /send/<phone>?message=<text>
+[ ] GET  /map/<lat,lng>
+[ ] GET  /phone
+[ ] POST /phone?geo=<lat,lng>
+[ ] POST /phone?name=<name>
+[ ] POST /phone?status=<text>
+[ ] POST /phone?active=<bool>
+[ ] POST /phone?deviceToken=<token>
+[ ] POST /phone/<phone>?message=<text>
 
 Server
 [ ] ArangoDB
@@ -39,11 +40,11 @@ Services
 [ ] Push notifications
 [ ] Linode
 [ ] App Store
-[ ]
-[ ]
 
 
 Next
 
 [ ] Bookmark someone's phone (shows icon)
+[ ] Auto expire bubbles after a bit (reflect turned off when opening app, load my state)
 [ ] Phone icons on map (change color)
+[ ] Auto clubs "Sync server version omnidirectional Inception Notes it's the only way"

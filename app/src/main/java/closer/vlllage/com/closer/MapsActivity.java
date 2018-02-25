@@ -24,6 +24,7 @@ public class MapsActivity extends PoolActivity {
     public static final String EXTRA_LAT_LNG = "latLng";
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_STATUS = "status";
+    public static final String EXTRA_MESSAGE = "message";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
