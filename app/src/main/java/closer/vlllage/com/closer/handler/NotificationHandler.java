@@ -78,14 +78,14 @@ public class NotificationHandler extends PoolMember {
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_launcher_foreground,
+                new NotificationCompat.Action.Builder(R.drawable.ic_notification,
                         context.getString(R.string.reply), replyPendingIntent)
                         .addRemoteInput(remoteInput)
                         .build();
 
         Notification newMessageNotification =
                 new NotificationCompat.Builder(context, notificationChannel)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(name)
                         .setContentText(message)
                         .setAutoCancel(true)

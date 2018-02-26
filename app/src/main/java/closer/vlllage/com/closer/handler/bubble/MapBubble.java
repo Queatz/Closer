@@ -104,4 +104,11 @@ public class MapBubble {
 
         return mapBubbles;
     }
+
+    public void updateFrom(MapBubble mapBubble) {
+        this.phone = mapBubble.phone;
+        this.latLng = mapBubble.latLng;
+        this.name = mapBubble.name;
+        this.status = mapBubble.status;
+    }
 }

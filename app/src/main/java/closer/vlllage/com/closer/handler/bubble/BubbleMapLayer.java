@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -160,5 +161,37 @@ public class BubbleMapLayer {
                 }
             }).start();
         });
+    }
+
+    public void replace(List<MapBubble> mapBubbles) {
+        Map<String, MapBubble> byPhone = new HashMap<>();
+
+        for (MapBubble mapBubble : mapBubbles) {
+            if (mapBubble.getPhone() != null) {
+                byPhone.put(mapBubble.getPhone(), mapBubble);
+            }
+        }
+
+        Set<String> updatedBubbles = new HashSet<>();
+
+        for (MapBubble mapBubble : this.mapBubbles) {
+            if (mapBubble.isPinned()) {
+                continue;
+            }
+
+            if (mapBubble.getPhone() == null || !byPhone.containsKey(mapBubble.getPhone())) {
+                remove(mapBubble);
+            } else {
+                mapBubble.updateFrom(byPhone.get(mapBubble.getPhone()));
+                updateDetails(mapBubble);
+                updatedBubbles.add(mapBubble.getPhone());
+            }
+        }
+
+        for (MapBubble mapBubble : mapBubbles) {
+            if (mapBubble.getPhone() != null && !updatedBubbles.contains(mapBubble.getPhone())) {
+                add(mapBubble);
+            }
+        }
     }
 }

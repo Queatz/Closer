@@ -27,11 +27,7 @@ public class BubbleHandler extends PoolMember {
     }
 
     public void replace(List<MapBubble> mapBubbles) {
-        bubbleMapLayer.clear();
-
-        for (MapBubble mapBubble : mapBubbles) {
-            add(mapBubble);
-        }
+        bubbleMapLayer.replace(mapBubbles);
     }
 
     public void update() {
