@@ -17,6 +17,8 @@ import closer.vlllage.com.closer.Background;
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.util.PhoneUtil;
+import closer.vlllage.com.closer.util.ScreenUtil;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_LAT_LNG;
@@ -29,6 +31,7 @@ public class NotificationHandler extends PoolMember {
     public static final String KEY_TEXT_REPLY = "key_text_reply";
     public static final int NOTIFICATION_ID = 0;
     private static final int REQUEST_CODE_NOTIFICATION = 101;
+    public static final String EXTRA_NOTIFICATION = "notification";
 
     public void showNotification(String phone, LatLng latLng, String name, String message) {
         String notificationChannel = $(ResourcesHandler.class).getResources().getString(R.string.notification_channel);
@@ -71,10 +74,16 @@ public class NotificationHandler extends PoolMember {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
 
+        String notificationTag = phone + "/" + PhoneUtil.rndId();
+
+        Intent backgroundIntent = new Intent(context, Background.class);
+        backgroundIntent.putExtra(EXTRA_PHONE, phone);
+        backgroundIntent.putExtra(EXTRA_NOTIFICATION, notificationTag);
+
         PendingIntent replyPendingIntent =
                 PendingIntent.getBroadcast(context,
                         REQUEST_CODE_NOTIFICATION,
-                        new Intent(context, Background.class),
+                        backgroundIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action action =
@@ -94,6 +103,8 @@ public class NotificationHandler extends PoolMember {
                         .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(NOTIFICATION_ID, newMessageNotification);
+        notificationManager.notify(notificationTag, NOTIFICATION_ID, newMessageNotification);
+
+        ScreenUtil.ensureScreenIsOn(context);
     }
 }

@@ -22,6 +22,11 @@ public class AccountHandler extends PoolMember {
 
     public void updateGeo(LatLng latLng) {
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_GEO, latLng));
+
+        if (!$(PersistenceHandler.class).getMyActive()) {
+            return;
+        }
+
         $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(LatLngStr.from(latLng), null, null, null, null)
             .subscribe(success -> {}, this::onError));
     }
@@ -41,6 +46,7 @@ public class AccountHandler extends PoolMember {
     }
 
     private void onError(Throwable throwable) {
+        throwable.printStackTrace();
         Toast.makeText($(ApplicationHandler.class).getApp(), R.string.network_down, Toast.LENGTH_SHORT).show();
     }
 
@@ -49,6 +55,12 @@ public class AccountHandler extends PoolMember {
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_ACTIVE, active));
         $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, null, null, active, null)
             .subscribe(success -> {}, this::onError));
+
+        if (!active) {
+            return;
+        }
+
+        $(LocationHandler.class).getCurrentLocation(location -> updateGeo(new LatLng(location.getLatitude(), location.getLongitude())));
     }
 
     public void updateDeviceToken(String deviceToken) {

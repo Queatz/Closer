@@ -52,7 +52,6 @@ public class MapsActivity extends PoolActivity {
         $(MyBubbleHandler.class).start();
         $(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));
         $(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
-        $(LocationHandler.class).getCurrentLocation(location -> $(AccountHandler.class).updateGeo(new LatLng(location.getLatitude(), location.getLongitude())));
 
         if (getIntent() != null) {
             $(IntentHandler.class).onNewIntent(getIntent());
@@ -65,9 +64,11 @@ public class MapsActivity extends PoolActivity {
         }
     }
 
-    private void networkError(Throwable throwable) {
-        throwable.printStackTrace();
-        Toast.makeText(this, throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        $(LocationHandler.class).getCurrentLocation(location -> $(AccountHandler.class).updateGeo(new LatLng(location.getLatitude(), location.getLongitude())));
     }
 
     @Override
@@ -83,5 +84,10 @@ public class MapsActivity extends PoolActivity {
         }
 
         super.onBackPressed();
+    }
+
+    private void networkError(Throwable throwable) {
+        throwable.printStackTrace();
+        Toast.makeText(this, throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 }

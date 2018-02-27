@@ -41,6 +41,8 @@ public class MyBubbleHandler extends PoolMember {
             myBubble.setPinned(true);
             myBubble.setAction($(ResourcesHandler.class).getResources().getString(R.string.update));
             updateActive($(AccountHandler.class).getActive());
+        } else {
+            $(BubbleHandler.class).move(myBubble, latLng);
         }
     }
 

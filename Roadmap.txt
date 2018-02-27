@@ -10,10 +10,10 @@ App
 [X] Register for push notifications
 [X] Move, don't replace, bubbles that come back from API and are already present
 [X] Icon
-[ ] "Network Unavailable" when tapping UPDATE
+[X] Timeout bubbles after 1H
+[X] "Network Unavailable" when tapping UPDATE
 [ ] Single emoji pops from top of screen and bounces back up
 [ ] Turn screen on for notifications
-[ ] Timeout bubbles after 1H
 [ ] Handle more than 1 message (+ messages from different users)
 
 API

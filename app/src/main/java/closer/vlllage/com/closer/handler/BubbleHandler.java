@@ -1,9 +1,9 @@
 package closer.vlllage.com.closer.handler;
 
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -15,10 +15,8 @@ import closer.vlllage.com.closer.pool.PoolMember;
 public class BubbleHandler extends PoolMember {
 
     private final BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
-    private View bubbleMapLayerLayout;
 
     public void attach(GoogleMap map, ViewGroup bubbleMapLayerLayout, MapBubbleView.OnMapBubbleClickListener onClickListener) {
-        this.bubbleMapLayerLayout = bubbleMapLayerLayout;
         bubbleMapLayer.attach(map, bubbleMapLayerLayout, onClickListener);
     }
 
@@ -36,6 +34,10 @@ public class BubbleHandler extends PoolMember {
 
     public void update(MapBubble mapBubble) {
         bubbleMapLayer.update(mapBubble);
+    }
+
+    public void move(MapBubble mapBubble, LatLng latLng) {
+        bubbleMapLayer.move(mapBubble, latLng);
     }
 
     public void updateDetails(MapBubble mapBubble) {

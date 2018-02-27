@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "1098230558363",
+    "firebase_url": "https://queatz-snappy.firebaseio.com",
+    "project_id": "queatz-snappy",
+    "storage_bucket": "queatz-snappy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098230558363:android:d8d0f9eac805f96b",
+        "android_client_info": {
+          "package_name": "closer.vlllage.com.closer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098230558363-fol6bo8p1pp4qfkrv2imrkin4uj5t6vm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1098230558363-dmdbpe4h8ch9shdvp3gucut3vu209epl.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1098230558363-rsipe4dnf6o9ke80faahujunvar5mjdf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBudGdSVDrZav9RUtXcZsbHO1ttSY-hrr8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
