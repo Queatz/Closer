@@ -182,7 +182,9 @@ public class BubbleMapLayer {
             if (mapBubble.getPhone() == null || !byPhone.containsKey(mapBubble.getPhone())) {
                 remove(mapBubble);
             } else {
+
                 mapBubble.updateFrom(byPhone.get(mapBubble.getPhone()));
+                move(mapBubble, byPhone.get(mapBubble.getPhone()).getLatLng());
                 updateDetails(mapBubble);
                 updatedBubbles.add(mapBubble.getPhone());
             }
