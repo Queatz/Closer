@@ -1,55 +1,31 @@
 
-App
-[X] Animate phone markers on location updated
-[X] Animate phone markers into view
-[X] Animate phone markers out of view on removed
-[X] Load new bubbles on map idle
-[X] Tap notification opens message reply in-app
-[X] Persist my status + on/off
-[X] Set my name (tap my bubble)
-[X] Register for push notifications
-[X] Move, don't replace, bubbles that come back from API and are already present
-[X] Icon
-[X] Timeout bubbles after 1H
-[X] "Network Unavailable" when tapping UPDATE
-[ ] Single emoji pops from top of screen and bounces back up
-[ ] Turn screen on for notifications
-[ ] Handle more than 1 message (+ messages from different users)
+Features
 
-API
- - Authorization: <phone>
+[ ] Invite from contacts as closer friends
+[ ] Random parties suggested (animated sparkle icons)
+[ ] Post photo bubbles
+[ ] Gray dots where inactive phones last were (tap for message)
+[-] Scale message bubbles when zoomed out
+[x] Support Android 5.0
+[ ] More than 10 pins = All activities across bottom in horizontal list
+[ ] Rounded bubble
+[ ] Show My Contacts info dialog explaining how Closer uses your contacts list
+[ ] Show call button if phone number is available
+[ ] Settings: Update my bubble location as I move around
 
-[X] GET  /phone
-[X] POST /phone?geo=<lat,lng>
-[X] POST /phone?name=<name>
-[X] POST /phone?status=<text>
-[X] POST /phone?active=<bool>
-[X] POST /phone?deviceToken=<token>
-[X] POST /phone/<phone>?message=<text>
-[X] GET  /map/<lat,lng>
+[ ] Get Suggestions (button)
 
-Server
-[X] ArangoDB
-[X] Endpoints
-[X] Query: update phone { name?, status?, active? }
-[X] Query: Active near me
-[X] Send push notification message to phone
-[ ] Only allow app to talk to endpoints (cert)
-
-Push Notifications
-[X] Message { name, message }
-[ ] Wake up { }
-
-Services
-[X] Push notifications
-[X] Linode
-[ ] App Store
-
+    Suggestion types
+    If you say you have a tent:
+        [ ] Camping
+    If you say you have a house:
+        [ ] Sleepover
 
 Next
 
-[ ] Bookmark someone's phone (shows icon)
-[ ] Auto expire bubbles after a bit (reflect turned off when opening app, load my state)
-[ ] Phone icons on map (change color)
-[ ] Auto clubs "Sync server version omnidirectional Inception Notes it's the only way"
-[ ] Disable new phone accounts (enter invite code in app)
+[X] Auto expire bubbles after a bit
+[X] Directions icon in Reply Layout (Opens Google Maps)
+[ ] Auto clubs (Friends of person, green hair, answer questions about yourself to join auto clubs, ...)
+[ ] App Notification Toggles (New bubble, your bubble expired, set your bubble follow you timeout)
+[ ] Server: Query: 100 closest phones
+

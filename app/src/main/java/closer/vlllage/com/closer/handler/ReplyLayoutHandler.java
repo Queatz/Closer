@@ -9,6 +9,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ public class ReplyLayoutHandler extends PoolMember {
     private TextView replyLayoutStatus;
     private View sendButton;
     private EditText replyMessage;
+    private ImageButton getDirectionsButton;
 
     private MapBubble replyingToMapBubble;
 
@@ -35,6 +37,7 @@ public class ReplyLayoutHandler extends PoolMember {
         this.replyMessage = replyLayout.findViewById(R.id.message);
         this.replyLayoutName = replyLayout.findViewById(R.id.replyLayoutName);
         this.replyLayoutStatus = replyLayout.findViewById(R.id.replyLayoutStatus);
+        this.getDirectionsButton = replyLayout.findViewById(R.id.getdDirectionsButton);
 
         sendButton.setOnClickListener(view -> reply());
 
@@ -61,6 +64,10 @@ public class ReplyLayoutHandler extends PoolMember {
             public void afterTextChanged(Editable editable) {
 
             }
+        });
+
+        getDirectionsButton.setOnClickListener(view -> {
+            $(OutboundHandler.class).openDirections(replyingToMapBubble.getLatLng());
         });
     }
 

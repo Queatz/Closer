@@ -65,7 +65,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
                 .when(granted -> map.setMyLocationEnabled(granted));
 
         onMapReadyListener.onMapReady(map);
-        map.setOnCameraMoveListener(onMapChangedListener::onMapChanged);
+        map.setOnCameraMoveListener(this::mapChanged);
         map.setOnCameraIdleListener(onMapChangedListener::onMapChanged);
         map.setOnMapClickListener(onMapClickedListener::onMapClicked);
         map.setOnCameraIdleListener(() -> onMapIdleListener.onMapIdle(map.getCameraPosition().target));
@@ -75,6 +75,28 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         if (centerOnMapLoad != null) {
             map.moveCamera(CameraUpdateFactory.newLatLng(centerOnMapLoad));
             centerOnMapLoad = null;
+        }
+    }
+
+    private void mapChanged() {
+        onMapChangedListener.onMapChanged();
+
+        if (map == null) {
+            return;
+        }
+
+        if (map.getCameraPosition().zoom >= 18) {
+            if (map.getMapType() != GoogleMap.MAP_TYPE_SATELLITE) {
+                map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            }
+        } else if (map.getCameraPosition().zoom <= 3) {
+            if (map.getMapType() != GoogleMap.MAP_TYPE_SATELLITE) {
+                map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            }
+        } else {
+            if (map.getMapType() != GoogleMap.MAP_TYPE_NORMAL) {
+                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            }
         }
     }
 
