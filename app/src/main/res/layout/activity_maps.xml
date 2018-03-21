@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -24,8 +24,18 @@
 
         <include layout="@layout/reply_layout" />
 
-        <include layout="@layout/my_status_layout" />
+        <include android:id="@+id/myStatusLayout" layout="@layout/my_status_layout" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/actionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_above="@id/myStatusLayout"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_shuffle_black_24dp"
+            android:tint="@android:color/white"
+            app:fabSize="normal" />
     </RelativeLayout>
 
 </RelativeLayout>

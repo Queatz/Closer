@@ -102,7 +102,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
     private void onLocationFound(Location location) {
         final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, 13)));
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, 15)));
     }
 
     public interface OnMapChangedListener {

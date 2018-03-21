@@ -1,31 +1,56 @@
 
+Things to solve:
+
+    1. Open the app: nothing there
+    2. Reason to post status
+    3. Friendly engagement (heads up there's a party at tonight with 8 people.  Tap for details.)
+
 Features
+========
+
+[ ] Scale message bubbles when zoomed out
+[ ] Rounded bubble
+[ ] Settings: Update my bubble location as I move around in the background
+
+Feature: History
+================
+
+[ ] Gray dots where inactive phones last were (tap for message if any)
+[ ] Blue dots where active phones are
+
+Feature: Contacts
+=================
 
 [ ] Invite from contacts as closer friends
-[ ] Random parties suggested (animated sparkle icons)
-[ ] Post photo bubbles
-[ ] Gray dots where inactive phones last were (tap for message)
-[-] Scale message bubbles when zoomed out
-[x] Support Android 5.0
-[ ] More than 10 pins = All activities across bottom in horizontal list
-[ ] Rounded bubble
 [ ] Show My Contacts info dialog explaining how Closer uses your contacts list
 [ ] Show call button if phone number is available
-[ ] Settings: Update my bubble location as I move around
 
-[ ] Get Suggestions (button)
+Feature: Suggestions
+====================
+
+[ ] Get Suggestions (dice button)
+[ ] Random parties suggested (animated sparkle icons)
+[ ] Free events on map (campouts, ...)
+[ ] Topics
 
     Suggestion types
-    If you say you have a tent:
+    If you have a favorite campsite:
         [ ] Camping
     If you say you have a house:
         [ ] Sleepover
 
 Next
+====
 
-[X] Auto expire bubbles after a bit
-[X] Directions icon in Reply Layout (Opens Google Maps)
-[ ] Auto clubs (Friends of person, green hair, answer questions about yourself to join auto clubs, ...)
 [ ] App Notification Toggles (New bubble, your bubble expired, set your bubble follow you timeout)
 [ ] Server: Query: 100 closest phones
+[ ] Server: Task Queue for push notifications
 
+Cool
+====
+
+[ ] Profile icons
+[ ] Auto clubs (Friends of person, green hair, answer questions about yourself to join auto clubs, ...)
+[ ] Dotted gray line betwixt gray dots when dot is tapped
+[ ] Post photo bubbles
+[ ] More than 10 pins = All activities across bottom in horizontal list

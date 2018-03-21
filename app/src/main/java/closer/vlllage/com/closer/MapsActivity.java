@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.handler.MyBubbleHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
+import closer.vlllage.com.closer.handler.SuggestionHandler;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
@@ -62,6 +63,8 @@ public class MapsActivity extends PoolActivity {
         if (deviceToken != null) {
             $(AccountHandler.class).updateDeviceToken(deviceToken);
         }
+
+        findViewById(R.id.actionButton).setOnClickListener(view -> $(SuggestionHandler.class).shuffle());
     }
 
     @Override
