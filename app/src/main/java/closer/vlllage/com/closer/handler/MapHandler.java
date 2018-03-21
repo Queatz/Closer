@@ -21,6 +21,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     private LatLng centerOnMapLoad;
     private OnMapChangedListener onMapChangedListener;
     private OnMapClickedListener onMapClickedListener;
+    private OnMapLongClickedListener onMapLongClickedListener;
     private OnMapReadyListener onMapReadyListener;
     private OnMapIdleListener onMapIdleListener;
 
@@ -35,6 +36,10 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
     public void setOnMapClickedListener(OnMapClickedListener onMapClickedListener) {
         this.onMapClickedListener = onMapClickedListener;
+    }
+
+    public void setOnMapLongClickedListener(OnMapLongClickedListener onMapLongClickedListener) {
+        this.onMapLongClickedListener = onMapLongClickedListener;
     }
 
     public void setOnMapReadyListener(OnMapReadyListener onMapReadyListener) {
@@ -68,6 +73,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         map.setOnCameraMoveListener(this::mapChanged);
         map.setOnCameraIdleListener(onMapChangedListener::onMapChanged);
         map.setOnMapClickListener(onMapClickedListener::onMapClicked);
+        map.setOnMapLongClickListener(onMapLongClickedListener::onMapLongClicked);
         map.setOnCameraIdleListener(() -> onMapIdleListener.onMapIdle(map.getCameraPosition().target));
         mapView.addOnLayoutChangeListener((v, i1, i2, i3, i4, i5, i6, i7, i8) -> onMapChangedListener.onMapChanged());
         onMapChangedListener.onMapChanged();
@@ -115,6 +121,10 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
     public interface OnMapClickedListener {
         void onMapClicked(LatLng latLng);
+    }
+
+    public interface OnMapLongClickedListener {
+        void onMapLongClicked(LatLng latLng);
     }
 
     public interface OnMapIdleListener {

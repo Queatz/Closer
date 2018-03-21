@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -10,7 +11,6 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -119,7 +119,7 @@ public class ReplyLayoutHandler extends PoolMember {
         Animation animation;
 
         replyLayout.clearAnimation();
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) replyLayout.getLayoutParams();
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) replyLayout.getLayoutParams();
         int totalHeight = replyLayout.getMeasuredHeight() + layoutParams.topMargin + layoutParams.bottomMargin;
 
         if (show) {

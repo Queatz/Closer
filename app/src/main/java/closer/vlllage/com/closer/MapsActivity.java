@@ -48,6 +48,7 @@ public class MapsActivity extends PoolActivity {
         }));
         $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
         $(MapHandler.class).setOnMapClickedListener(latLng -> $(ReplyLayoutHandler.class).showReplyLayout(false));
+        $(MapHandler.class).setOnMapLongClickedListener(latLng -> $(BubbleHandler.class).add(new MapBubble(latLng, "Suggestion", "Sensual party tyme guys!")));
         $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class).add($(ApiHandler.class).load(latLng).map(MapBubble::from).subscribe(mapBubbles -> $(BubbleHandler.class).replace(mapBubbles), this::networkError)));
         $(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();
