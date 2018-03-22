@@ -35,8 +35,11 @@ public class PermissionHandler extends PoolMember {
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             check = new LocationCheck(permissions);
             $(ActivityHandler.class).getActivity().requestPermissions(permissions, REQUEST_CODE_PERMISSION);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            check = new LocationCheck(permissions);
+            ActivityCompat.requestPermissions($(ActivityHandler.class).getActivity(), permissions, REQUEST_CODE_PERMISSION);
         } else {
-            check = new LocationCheck(false);
+            check = new LocationCheck(has(permissions));
         }
 
         return check;
