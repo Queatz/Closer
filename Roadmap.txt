@@ -1,8 +1,49 @@
 
+
+Features Overview
+=================
+
+1. Shuffle Button
+2. Longpress Map
+3. Suggest to Contacts
+4. Form a group from contacts
+5. Suggest to Group
+6. Name Group
+7. Show Suggestions on the map
+8. Tap suggestion to open Suggestion Conversation
+
+
+7a. Suggestions vanish after 1 hour of inactivity
+7b. Suggestions push notifications
+7c. Suggestion place info w/ photos
+
+UX
+==
+
+[ ] Bubble not showing up first time
+[ ] My location not showing up first time
+[ ] Map not centering once permission is granted
+[ ] Never switch to turn on if not really turned on (no lies!)
+
+[ ] Turn on MUST re-ask for permission
+    [ ] Must say what's up go to app settings if perma denied
+        [ ] PermissionsHandler.isDenied
+
+STEPPS
+======
+
+S Look good / insiders
+T Triggers = bored/want to meet/want to get closer
+E Emotion = Shuffle strange combos
+P Public = Bubbles on map
+P Value = Shuffle button
+S Trojan = Embedded in what
+
 Things to solve:
 
     1. Open the app: nothing there
     2. Reason to post status
+        33 people will be notified
     3. Friendly engagement (heads up there's a party at tonight with 8 people.  Tap for details.)
 
 Features
@@ -15,8 +56,19 @@ Features
 Feature: History
 ================
 
-[ ] Gray dots where inactive phones last were (tap for message if any)
+[ ] Gray dots where inactive phones last were
 [ ] Blue dots where active phones are
+
+Feature: Groups
+=================
+
+[ ] Add Suggestion to group
+[ ] Select group(s)
+[ ] Your groups show up on people statuses
+[ ] Longpress to add suggestion
+[ ] Notifications to person when adding person to group "Bun added you to 888 friends"
+[ ] Add person to group by phone number
+[ ] Share suggestion with contacts
 
 Feature: Contacts
 =================
@@ -25,19 +77,26 @@ Feature: Contacts
 [ ] Show My Contacts info dialog explaining how Closer uses your contacts list
 [ ] Show call button if phone number is available
 
+[ ] Add from your contacts
+
 Feature: Suggestions
 ====================
 
 [ ] Get Suggestions (dice button)
-[ ] Random parties suggested (animated sparkle icons)
+[ ] Random parties suggested (animated sparkle icons, 3 at a time 1-6 people, various locations, doing various things)
 [ ] Free events on map (campouts, ...)
 [ ] Topics
+[ ] "Until" 7 today
 
     Suggestion types
     If you have a favorite campsite:
         [ ] Camping
     If you say you have a house:
         [ ] Sleepover
+
+Feature: Contacts Favorite Places
+====================
+[ ] On map
 
 Next
 ====
@@ -49,8 +108,10 @@ Next
 Cool
 ====
 
-[ ] Profile icons
+[ ] Profile icons on bubbles
+[ ] Longpress bubble for profile
 [ ] Auto clubs (Friends of person, green hair, answer questions about yourself to join auto clubs, ...)
 [ ] Dotted gray line betwixt gray dots when dot is tapped
 [ ] Post photo bubbles
+
 [ ] More than 10 pins = All activities across bottom in horizontal list
