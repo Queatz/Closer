@@ -2,8 +2,10 @@
 <resources>
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimaryLight">#64B5F6</color>
     <color name="colorAccent">#FFC107</color>
     <color name="name">#66000000</color>
     <color name="selectable">#BDBDBD</color>
     <color name="disabled">@color/selectable</color>
+    <color name="highlight">#66ffffff</color>
 </resources>

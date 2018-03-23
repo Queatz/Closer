@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.IntentHandler;
 import closer.vlllage.com.closer.handler.LocationHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
 import closer.vlllage.com.closer.handler.MyBubbleHandler;
+import closer.vlllage.com.closer.handler.MyGroupsLayoutHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
@@ -56,6 +57,7 @@ public class MapsActivity extends PoolActivity {
         $(MyBubbleHandler.class).start();
         $(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));
         $(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
+        $(MyGroupsLayoutHandler.class).attach(findViewById(R.id.myGroupsLayout));
 
         if (getIntent() != null) {
             $(IntentHandler.class).onNewIntent(getIntent());

@@ -1,12 +1,17 @@
 
+User Flows
+=================
+
+
+
 
 Features Overview
 =================
 
 1. Shuffle Button
-2. Longpress Map
+2. Tap Map
 3. Suggest to Contacts
-4. Form a group from contacts
+4. Add to group from Contacts
 5. Suggest to Group
 6. Name Group
 7. Show Suggestions on the map
@@ -16,6 +21,31 @@ Features Overview
 7a. Suggestions vanish after 1 hour of inactivity
 7b. Suggestions push notifications
 7c. Suggestion place info w/ photos
+7d. Suggestions "name" area are the group name
+
+3. One group chat per group
+
+4a. Contacts on Closer
+
+Popups
+======
+
+1st app launch
+    "Get 'em all together"
+    "Tap anywhere on the map to suggest an outing."
+
+Verify your number to get invites from your friends.
+
+1st status
+    "Your status is shared publicly on the map.  TURN ON - GO BACK"
+
+"One last thing - tap the shuffle button to get outing suggestions."
+
+SMS
+===
+
+Bun invited you, Kerry, and Phoung to go out! Install the Closer app or check-in with Bun to get the details!
+Jacob invited you, Mai, and Phoung to go out! Install the Closer app or check-in with Jacob to get the details!
 
 UX
 ==
@@ -53,6 +83,13 @@ Features
 [ ] Rounded bubble
 [ ] Settings: Update my bubble location as I move around in the background
 
+Feature: Verified Number
+================
+[ ] Tap verify number at button of app screen
+[ ] Get SMS
+[ ] Enter 6-digit code
+[ ] Success!
+
 Feature: History
 ================
 
@@ -83,7 +120,7 @@ Feature: Suggestions
 ====================
 
 [ ] Get Suggestions (dice button)
-[ ] Random parties suggested (animated sparkle icons, 3 at a time 1-6 people, various locations, doing various things)
+[ ] Random parties suggested (animated sparkle icons, 3 at a time 1-6 people, animate 1,2,3 right after each other, various locations, doing various things)
 [ ] Free events on map (campouts, ...)
 [ ] Topics
 [ ] "Until" 7 today

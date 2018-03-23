@@ -2,7 +2,7 @@ package closer.vlllage.com.closer.pool;
 
 public class PoolMember {
 
-    private Pool pool;
+    Pool pool;
 
     PoolMember setPool(Pool pool) {
         this.pool = pool;
