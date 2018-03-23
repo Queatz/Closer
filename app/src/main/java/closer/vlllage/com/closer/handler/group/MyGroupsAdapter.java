@@ -53,7 +53,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 6;
     }
 
     class MyGroupViewHolder extends RecyclerView.ViewHolder {

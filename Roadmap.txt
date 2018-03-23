@@ -1,8 +1,12 @@
 
-User Flows
+Top
 =================
 
-
+[X] Closer animation fillafter
+[ ] Closer x button on group messages
+[X] 375ms
+[ ] Closer longpress
+[ ] Closer status not updating
 
 
 Features Overview
