@@ -22,6 +22,7 @@ public class MapBubble {
     private View view;
     private boolean pinned;
     private String action;
+    private boolean onTop;
 
     public MapBubble(LatLng latLng, String name, String status) {
         this.latLng = latLng;
@@ -109,5 +110,13 @@ public class MapBubble {
         this.phone = mapBubble.phone;
         this.name = mapBubble.name;
         this.status = mapBubble.status;
+    }
+
+    public void setOnTop(boolean onTop) {
+        this.onTop = onTop;
+    }
+
+    public boolean isOnTop() {
+        return onTop;
     }
 }

@@ -32,6 +32,8 @@ public class GroupActivity extends PoolActivity {
                 animator.start();
             });
         }
+
+        findViewById(R.id.closeButton).setOnClickListener(view -> finish());
     }
 
     @Override

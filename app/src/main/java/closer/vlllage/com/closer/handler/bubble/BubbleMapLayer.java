@@ -72,7 +72,7 @@ public class BubbleMapLayer {
         Point point = map.getProjection().toScreenLocation(mapBubble.getLatLng());
         view.setX(point.x - view.getWidth() / 2);
         view.setY(point.y - view.getHeight());
-        view.setElevation(1 + (float) point.y / (float) this.view.getHeight());
+        view.setElevation((mapBubble.isOnTop() ? 2 : 1) + (float) point.y / (float) this.view.getHeight());
     }
 
     public void updateDetails(MapBubble mapBubble) {
