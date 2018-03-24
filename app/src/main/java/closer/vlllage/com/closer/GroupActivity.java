@@ -9,6 +9,7 @@ import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
+import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
 public class GroupActivity extends PoolActivity {
@@ -39,6 +40,10 @@ public class GroupActivity extends PoolActivity {
             return true;
         });
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
+
+        $(GroupMessagesHandler.class).attach(findViewById(R.id.messagesRecyclerView));
+
+        findViewById(R.id.peopleInGroup).setSelected(true);
     }
 
     @Override

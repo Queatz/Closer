@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="64sp"
-        android:textColor="@android:color/black"
-        android:text="😍"
-        android:padding="8dp"/>
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="8dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/icon" />
 
     <EditText
         android:id="@+id/name"
@@ -19,6 +18,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/set_name"
         android:focusedByDefault="true"
+        android:contentDescription="@string/set_name"
         android:selectAllOnFocus="true"
         android:imeOptions="actionGo"
         android:textAlignment="center"

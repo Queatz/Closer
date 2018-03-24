@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,25 +9,108 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="84dp"
+        android:background="@color/colorPrimary"
+        android:clickable="true"
+        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_max="350dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="196dp"
-        android:elevation="8dp"
-        android:clickable="true"
-        android:background="@color/colorPrimary">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-        <ImageButton style="@style/Widget.AppCompat.Light.ActionButton"
-            android:id="@+id/closeButton"
+        <TextView
+            android:id="@+id/groupName"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/clickable_light"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:text="888 Friends"
+            android:textAllCaps="true"
+            android:textColor="@color/white_75"
+            android:textSize="12sp"
+            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/peopleInGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/clickable_light"
+            android:clickable="true"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Jacob, Bun, Mai, Phoung, Le My, Stella"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupName" />
+
+        <ImageButton
+            android:id="@+id/closeButton"
+            style="@style/Widget.AppCompat.Light.ActionButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:contentDescription="@string/close_messages"
             android:src="@drawable/ic_expand_more_black_24dp"
-            android:tint="@android:color/white" />
+            android:tint="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <EditText
+            android:id="@+id/replyMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/clickable_blue_light"
+            android:focusedByDefault="false"
+            android:hint="@string/say_something"
+            android:imeOptions="actionGo"
+            android:inputType="textShortMessage"
+            android:maxLines="1"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:selectAllOnFocus="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/highlight"
+            android:textColorHighlight="@color/white_75"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/closeButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="Hey guys let's go out" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/messagesRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/replyMessage"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup" />
 
     </android.support.constraint.ConstraintLayout>
 

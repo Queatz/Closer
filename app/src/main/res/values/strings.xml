@@ -5,7 +5,7 @@
     <string name="turn_on">Turn on</string>
     <string name="update">Update</string>
     <string name="closer_notifications">Closer notifications</string>
-    <string name="what_s_up">Say something publicly…</string>
+    <string name="what_s_up">Tell everyone…</string>
     <string name="off">Off</string>
     <string name="update_name">Update name</string>
     <string name="set_name">Your name here</string>
@@ -13,8 +13,9 @@
     <string name="notification_channel" translatable="false">notifications</string>
     <string name="message_not_sent">Couldn\'t send message</string>
     <string name="network_down">Network unavailable</string>
-    <string name="write_a_reply">Write a reply...</string>
+    <string name="write_a_reply">Write a reply…</string>
     <string name="get_directions">Get directions</string>
-    <string name="go_out_with">Go out with...</string>
+    <string name="go_out_with">Go out with…</string>
     <string name="close_messages">Close messages</string>
+    <string name="say_something">Say something…</string>
 </resources>
