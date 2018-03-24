@@ -15,4 +15,6 @@
     <string name="network_down">Network unavailable</string>
     <string name="write_a_reply">Write a reply...</string>
     <string name="get_directions">Get directions</string>
+    <string name="go_out_with">Go out with...</string>
+    <string name="close_messages">Close messages</string>
 </resources>

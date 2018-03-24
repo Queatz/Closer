@@ -8,4 +8,6 @@
     <color name="selectable">#BDBDBD</color>
     <color name="disabled">@color/selectable</color>
     <color name="highlight">#66ffffff</color>
+    <color name="white_75">#aaffffff</color>
+    <color name="black_15">#33000000</color>
 </resources>

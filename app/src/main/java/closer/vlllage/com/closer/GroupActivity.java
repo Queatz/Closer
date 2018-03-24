@@ -27,12 +27,17 @@ public class GroupActivity extends PoolActivity {
                         0,
                         (float) Math.hypot(getWindow().getDecorView().getWidth(), getWindow().getDecorView().getHeight())
                 );
-                animator.setDuration(375);
+                animator.setDuration(225);
                 animator.setInterpolator(new AccelerateInterpolator());
                 animator.start();
             });
         }
 
+        findViewById(R.id.background).setOnTouchListener((view, motionEvent) -> {
+            findViewById(R.id.background).setOnTouchListener(null);
+            finish();
+            return true;
+        });
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
     }
 

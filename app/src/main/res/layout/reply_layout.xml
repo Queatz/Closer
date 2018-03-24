@@ -8,7 +8,7 @@
     android:layout_margin="16dp"
     android:layout_centerHorizontal="true"
     android:layout_alignParentTop="true"
-    android:background="@drawable/rounded_white"
+    android:background="@drawable/rounded_white_8dp"
     android:elevation="16dp"
     android:maxWidth="360dp"
     android:visibility="gone"

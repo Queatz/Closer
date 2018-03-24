@@ -1,13 +1,16 @@
 
-Top
+Top Todos
 =================
 
-[X] Closer animation fillafter
-[X] Closer x button on group messages
-[X] 375ms
 [ ] Closer longpress
-[ ] Closer status not updating
+[ ] Closer status always not updating
 
+[ ] Scale out bubbles, white dots when super zoomed out
+[ ] Shuffle = recommended places
+[ ] Limit status to 24 character
+[ ] Tap zoomed out bubble = zoom in and center
+
+[ ] Messages ony 50% high
 
 Features Overview
 =================
@@ -28,6 +31,8 @@ Features Overview
 7d. Suggestions "name" area are the group name
 
 3. One group chat per group
+
+1a. Add some things you like to do
 
 4a. Contacts on Closer
 

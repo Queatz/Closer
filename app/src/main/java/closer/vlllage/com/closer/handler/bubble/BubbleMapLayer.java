@@ -29,6 +29,7 @@ public class BubbleMapLayer {
     private GoogleMap map;
     private ViewGroup view;
     private MapBubbleView.OnMapBubbleClickListener onClickListener;
+    private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener;
 
     public void attach(GoogleMap map, ViewGroup view, MapBubbleView.OnMapBubbleClickListener onClickListener) {
         this.map = map;
@@ -42,7 +43,13 @@ public class BubbleMapLayer {
         }
 
         mapBubbles.add(mapBubble);
-        mapBubble.setView(MapBubbleView.from(view, mapBubble, onClickListener));
+
+        if (mapBubble.isMenu()) {
+            mapBubble.setView(MapBubbleMenuView.from(view, mapBubble, onMenuItemClickListener));
+        } else {
+            mapBubble.setView(MapBubbleView.from(view, mapBubble, onClickListener));
+        }
+
         view.addView(mapBubble.getView());
 
         mapBubble.getView().setScaleX(0);

@@ -58,6 +58,7 @@ public class MapsActivity extends PoolActivity {
                 MapBubble suggestionBubble = new MapBubble(latLng, "Suggestion", "Sensual party tyme guys!");
                 suggestionBubble.setPinned(true);
                 suggestionBubble.setOnTop(true);
+                suggestionBubble.setMenu(true);
                 $(BubbleHandler.class).add(suggestionBubble);
             }
         });
