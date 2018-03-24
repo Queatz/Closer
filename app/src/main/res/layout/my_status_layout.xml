@@ -27,6 +27,7 @@
         android:selectAllOnFocus="true"
         android:inputType="textShortMessage"
         android:hint="@string/what_s_up"
+        android:textSize="12sp"
         android:maxLines="1" />
 
     <Button style="@style/Widget.AppCompat.Button.Borderless"

@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.graphics.Point;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -26,6 +27,7 @@ public class BubbleMapLayer {
 
     private final Set<MapBubble> mapBubbles = new HashSet<>();
     private final Map<MapBubble, Animator> mapBubbleAnimations = new HashMap<>();
+    private final Map<MapBubble, ViewPropertyAnimator> mapBubbleAppearDisappearAnimations = new HashMap<>();
     private GoogleMap map;
     private ViewGroup view;
     private MapBubbleView.OnMapBubbleClickListener onClickListener;
@@ -58,7 +60,39 @@ public class BubbleMapLayer {
         view.post(() -> {
             mapBubble.getView().setPivotX(mapBubble.getView().getWidth() / 2);
             mapBubble.getView().setPivotY(mapBubble.getView().getHeight());
-            mapBubble.getView().animate().scaleX(1).scaleY(1).setInterpolator(new OvershootInterpolator()).setDuration(195).start();
+
+            ViewPropertyAnimator animator = mapBubble.getView().animate()
+                    .scaleX(zoomScale())
+                    .scaleY(zoomScale())
+                    .setInterpolator(new OvershootInterpolator())
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mapBubbleAppearDisappearAnimations.remove(mapBubble);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    })
+                    .setDuration(195);
+
+            mapBubbleAppearDisappearAnimations.put(mapBubble, animator);
+
+
+            animator.start();
+
             update(mapBubble);
         });
     }
@@ -79,6 +113,12 @@ public class BubbleMapLayer {
         Point point = map.getProjection().toScreenLocation(mapBubble.getLatLng());
         view.setX(point.x - view.getWidth() / 2);
         view.setY(point.y - view.getHeight());
+
+        if (!mapBubbleAppearDisappearAnimations.containsKey(mapBubble)) {
+            mapBubble.getView().setScaleX(zoomScale());
+            mapBubble.getView().setScaleY(zoomScale());
+        }
+
         view.setElevation((mapBubble.isOnTop() ? 2 : 1) + (float) point.y / (float) this.view.getHeight());
     }
 
@@ -138,7 +178,7 @@ public class BubbleMapLayer {
         }
 
         view.post(() -> {
-            mapBubble.getView()
+            ViewPropertyAnimator animator = mapBubble.getView()
                     .animate()
                     .scaleX(0)
                     .scaleY(0)
@@ -155,6 +195,7 @@ public class BubbleMapLayer {
                     mapBubbles.remove(mapBubble);
                     view.removeView(mapBubble.getView());
                     mapBubble.setView(null);
+                    mapBubbleAppearDisappearAnimations.remove(mapBubble);
                 }
 
                 @Override
@@ -166,7 +207,11 @@ public class BubbleMapLayer {
                 public void onAnimationRepeat(Animator animation) {
 
                 }
-            }).start();
+            });
+
+            mapBubbleAppearDisappearAnimations.put(mapBubble, animator);
+
+            animator.start();
         });
     }
 
@@ -202,5 +247,9 @@ public class BubbleMapLayer {
                 add(mapBubble);
             }
         }
+    }
+
+    private float zoomScale() {
+        return Math.min(1, map.getCameraPosition().zoom / 15f);
     }
 }

@@ -2,15 +2,16 @@
 Top Todos
 =================
 
+[ ] Group forming
+[ ] Messaging
+[ ] Shuffle button
+
 [ ] Closer longpress
 [ ] Closer status always not updating
 
-[ ] Scale out bubbles, white dots when super zoomed out
 [ ] Shuffle = recommended places
-[ ] Limit status to 24 character
+[ ] Scale out bubbles, white dots when super zoomed out
 [ ] Tap zoomed out bubble = zoom in and center
-
-[ ] Messages ony 50% high
 
 Features Overview
 =================
