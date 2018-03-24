@@ -55,7 +55,7 @@
             android:paddingBottom="8dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="Jacob, Bun, Mai, Phoung, Le My, Stella"
+            android:text="Jacob, Bun, Mai, Phoung (invited), Le My, Stella"
             android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"

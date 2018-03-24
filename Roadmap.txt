@@ -1,162 +1,89 @@
 
-Top Todos
+Top
 =================
 
-[ ] Group forming
-[ ] Messaging
-[ ] Shuffle button
+[ ] Backend
+    [ ] Set up websocket
+    [ ] Set up SSH
+    [ ] API
+        [ ] /verify-number
+        [ ] /leave-group
+        [ ] /add-to-group
+            [ ] Phone number linked -> Push Notification
+                [ ] "Bun added you to 888 Friends"
+            [ ] Phone number not linked -> SMS "Jacob invited you to join him on Closer"
+    [ ] Set up Twillio
+        [ ] Send verification number to phone
+        [ ] Save phone number
+        [ ] Save temporary verification code on server
+        [ ] Expire code in 15 minutes
+    [ ] Limit query to 100 closest phones
 
-[ ] Closer longpress
-[ ] Closer status always not updating
+[ ] App
+    [ ] Group Contacts
+        [ ] Set group name
+        [ ] Show phone contacts button
+            [ ] Permission request (read contacts)
+        [ ] Add to group from contacts
 
-[ ] Shuffle = recommended places
+    [ ] Group Messages
+        [ ] Setup SSH Websocket
+            [ ] Handle messages
+        [ ] Load all messages
+        [ ] Show "Mai and Stella are typing..." text
+        [ ] Messages websocket
+        [ ] Forward group messages through WebSocket if active
+            [ ] fallback onto push notifications
+            [ ] load all
+        [ ] Show messages
+        [ ] Setup local realm database
+            [ ] Store messages in local realm
+        [ ] Tap on name menu
+            [ ] Rename group...
+            [ ] Leave group...
 
-Features Overview
-=================
+    [ ] Shuffle button
+        [ ] Position map
+        [ ] Show 3 suggestions
+        [ ] Tap again
+            [ ] Hide active suggestions
+        [ ] Tap suggestion
+            [ ] Share place...
+                [ ] Select group from menu
+            [ ] Add photos to place
 
-1. Shuffle Button
-2. Tap Map
-3. Suggest to Contacts
-4. Add to group from Contacts
-5. Suggest to Group
-6. Name Group
-7. Show Suggestions on the map
-8. Tap suggestion to open Suggestion Conversation
+    [ ] Influencer
+        [ ] Add place
+        [ ] Remove place
 
+    [ ] Verify Number
+        [ ] Tap "Verify your number to join groups" at button of app screen
+            [ ] Dialog with phone number
+                [ ] Auto-fill phone number
+                [ ] Allow them to enter their number
+                [ ] Send code button
+        [ ] Get SMS
+        [ ] Enter 6-digit code
+        [ ] Success!
 
-7a. Suggestions vanish after 1 hour of inactivity
-7b. Suggestions push notifications
-7c. Suggestion place info w/ photos
-7d. Suggestions "name" area are the group name
+    [ ] Evrytyme
+        [ ] My status always not updating / in sync with reality
+        [ ] Bubble not showing up first time
+        [ ] My location not showing up first time
+        [ ] Map not centering once permission is granted
+        [ ] Never switch to turn on if not really turned on (no lies!)
 
-3. One group chat per group
+        [ ] Turn on MUST re-ask for permission
+            [ ] Must say what's up go to app settings if perma denied
+                [ ] PermissionsHandler.isDenied
 
-1a. Add some things you like to do
+    [ ] Other
+        [ ] Show call button if phone number is available
 
-4a. Contacts on Closer
-
-Popups
-======
-
-1st app launch
-    "Get 'em all together"
-    "Tap anywhere on the map to suggest an outing."
-
-Verify your number to get invites from your friends.
-
-1st status
-    "Your status is shared publicly on the map.  TURN ON - GO BACK"
-
-"One last thing - tap the shuffle button to get outing suggestions."
-
-SMS
-===
-
-Bun invited you, Kerry, and Phoung to go out! Install the Closer app or check-in with Bun to get the details!
-Jacob invited you, Mai, and Phoung to go out! Install the Closer app or check-in with Jacob to get the details!
-
-UX
-==
-
-[ ] Bubble not showing up first time
-[ ] My location not showing up first time
-[ ] Map not centering once permission is granted
-[ ] Never switch to turn on if not really turned on (no lies!)
-
-[ ] Turn on MUST re-ask for permission
-    [ ] Must say what's up go to app settings if perma denied
-        [ ] PermissionsHandler.isDenied
-
-STEPPS
-======
-
-S Look good / insiders
-T Triggers = bored/want to meet/want to get closer
-E Emotion = Shuffle strange combos
-P Public = Bubbles on map
-P Value = Shuffle button
-S Trojan = Embedded in what
-
-Things to solve:
-
-    1. Open the app: nothing there
-    2. Reason to post status
-        33 people will be notified
-    3. Friendly engagement (heads up there's a party at tonight with 8 people.  Tap for details.)
-
-Features
-========
-
-[ ] Scale message bubbles when zoomed out
-[ ] Rounded bubble
-[ ] Settings: Update my bubble location as I move around in the background
-
-Feature: Verified Number
+Suggestion types
 ================
-[ ] Tap verify number at button of app screen
-[ ] Get SMS
-[ ] Enter 6-digit code
-[ ] Success!
-
-Feature: History
-================
-
-[ ] Gray dots where inactive phones last were
-[ ] Blue dots where active phones are
-
-Feature: Groups
-=================
-
-[ ] Add Suggestion to group
-[ ] Select group(s)
-[ ] Your groups show up on people statuses
-[ ] Longpress to add suggestion
-[ ] Notifications to person when adding person to group "Bun added you to 888 friends"
-[ ] Add person to group by phone number
-[ ] Share suggestion with contacts
-
-Feature: Contacts
-=================
-
-[ ] Invite from contacts as closer friends
-[ ] Show My Contacts info dialog explaining how Closer uses your contacts list
-[ ] Show call button if phone number is available
-
-[ ] Add from your contacts
-
-Feature: Suggestions
-====================
-
-[ ] Get Suggestions (dice button)
-[ ] Random parties suggested (animated sparkle icons, 3 at a time 1-6 people, animate 1,2,3 right after each other, various locations, doing various things)
-[ ] Free events on map (campouts, ...)
-[ ] Topics
-[ ] "Until" 7 today
-
-    Suggestion types
-    If you have a favorite campsite:
-        [ ] Camping
-    If you say you have a house:
-        [ ] Sleepover
-
-Feature: Contacts Favorite Places
-====================
-[ ] On map
-
-Next
-====
-
-[ ] App Notification Toggles (New bubble, your bubble expired, set your bubble follow you timeout)
-[ ] Server: Query: 100 closest phones
-[ ] Server: Task Queue for push notifications
-
-Cool
-====
-
-[ ] Profile icons on bubbles
-[ ] Longpress bubble for profile
-[ ] Auto clubs (Friends of person, green hair, answer questions about yourself to join auto clubs, ...)
-[ ] Dotted gray line betwixt gray dots when dot is tapped
-[ ] Post photo bubbles
-
-[ ] More than 10 pins = All activities across bottom in horizontal list
+    [ ] Campout
+    [ ] Sleepover
+    [ ] Dancing
+    [ ] Food
+    [ ] Stripclub
