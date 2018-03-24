@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:clipToPadding="false"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/click"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@drawable/clickable_blue_light"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/bubbleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:maxWidth="196dp"
+            tools:text="Skinny dipping at the beach" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="-8dp"
+        android:layout_marginBottom="4dp"
+        android:elevation="4dp"
+        android:rotation="45"
+        android:background="@drawable/map_bubble_knob_blue_light"/>
+
+</LinearLayout>

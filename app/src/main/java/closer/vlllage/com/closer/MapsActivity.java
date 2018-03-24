@@ -48,11 +48,13 @@ public class MapsActivity extends PoolActivity {
             } else {
                 $(ReplyLayoutHandler.class).replyTo(mapBubble);
             }
-        }));
+        }, (mapBubble, position) -> {}, mapBubble -> {}));
         $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
         $(MapHandler.class).setOnMapClickedListener(latLng -> {
             if ($(ReplyLayoutHandler.class).isVisible()) {
                 $(ReplyLayoutHandler.class).showReplyLayout(false);
+            } else {
+                $(SuggestionHandler.class).clearSuggestions();
             }
         });
         $(MapHandler.class).setOnMapLongClickedListener(latLng -> {});

@@ -10,7 +10,6 @@ public class MapBubbleMenuView {
     public static View from(ViewGroup layer, MapBubble mapBubble, MapBubbleMenuView.OnMapBubbleMenuItemClickListener onClickListener) {
         View view = LayoutInflater.from(layer.getContext()).inflate(R.layout.map_bubble_menu, layer, false);
 
-//        view.findViewById(R.id.click).setOnClickListener(v -> onClickListener.onMapBubbleClick(mapBubble));
         update(view, mapBubble);
 
         return view;

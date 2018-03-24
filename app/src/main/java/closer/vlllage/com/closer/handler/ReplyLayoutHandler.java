@@ -155,4 +155,8 @@ public class ReplyLayoutHandler extends PoolMember {
 
         $(StatusLayoutHandler.class).visible(!show);
     }
+
+    public int getHeight() {
+        return replyLayout.getMeasuredHeight();
+    }
 }

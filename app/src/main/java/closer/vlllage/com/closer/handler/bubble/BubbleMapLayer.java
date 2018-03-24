@@ -32,11 +32,17 @@ public class BubbleMapLayer {
     private ViewGroup view;
     private MapBubbleView.OnMapBubbleClickListener onClickListener;
     private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener;
+    private MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener;
 
-    public void attach(GoogleMap map, ViewGroup view, MapBubbleView.OnMapBubbleClickListener onClickListener) {
+    public void attach(GoogleMap map, ViewGroup view,
+                       MapBubbleView.OnMapBubbleClickListener onClickListener,
+                       MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener,
+                       MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener) {
         this.map = map;
         this.view = view;
         this.onClickListener = onClickListener;
+        this.onMenuItemClickListener = onMenuItemClickListener;
+        this.onMapBubbleSuggestionClickListener = onMapBubbleSuggestionClickListener;
     }
 
     public void add(MapBubble mapBubble) {
@@ -47,7 +53,7 @@ public class BubbleMapLayer {
         mapBubbles.add(mapBubble);
 
         if (mapBubble.isMenu()) {
-            mapBubble.setView(MapBubbleMenuView.from(view, mapBubble, onMenuItemClickListener));
+            mapBubble.setView(MapBubbleSuggestionView.from(view, mapBubble, onMapBubbleSuggestionClickListener));
         } else {
             mapBubble.setView(MapBubbleView.from(view, mapBubble, onClickListener));
         }
@@ -62,8 +68,8 @@ public class BubbleMapLayer {
             mapBubble.getView().setPivotY(mapBubble.getView().getHeight());
 
             ViewPropertyAnimator animator = mapBubble.getView().animate()
-                    .scaleX(zoomScale())
-                    .scaleY(zoomScale())
+                    .scaleX(zoomScale(mapBubble))
+                    .scaleY(zoomScale(mapBubble))
                     .setInterpolator(new OvershootInterpolator())
                     .setListener(new Animator.AnimatorListener() {
                         @Override
@@ -115,8 +121,8 @@ public class BubbleMapLayer {
         view.setY(point.y - view.getHeight());
 
         if (!mapBubbleAppearDisappearAnimations.containsKey(mapBubble)) {
-            mapBubble.getView().setScaleX(zoomScale());
-            mapBubble.getView().setScaleY(zoomScale());
+            mapBubble.getView().setScaleX(zoomScale(mapBubble));
+            mapBubble.getView().setScaleY(zoomScale(mapBubble));
         }
 
         view.setElevation((mapBubble.isOnTop() ? 2 : 1) + (float) point.y / (float) this.view.getHeight());
@@ -249,7 +255,11 @@ public class BubbleMapLayer {
         }
     }
 
-    private float zoomScale() {
+    private float zoomScale(MapBubble mapBubble) {
+        if (mapBubble.isMenu()) {
+            return 1;
+        }
+
         return (float) Math.min(1, Math.pow(map.getCameraPosition().zoom / 15f, 2f));
     }
 }

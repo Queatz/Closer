@@ -9,6 +9,8 @@ import java.util.List;
 
 import closer.vlllage.com.closer.handler.bubble.BubbleMapLayer;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
+import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
+import closer.vlllage.com.closer.handler.bubble.MapBubbleSuggestionView;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleView;
 import closer.vlllage.com.closer.pool.PoolMember;
 
@@ -16,8 +18,12 @@ public class BubbleHandler extends PoolMember {
 
     private final BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
 
-    public void attach(GoogleMap map, ViewGroup bubbleMapLayerLayout, MapBubbleView.OnMapBubbleClickListener onClickListener) {
-        bubbleMapLayer.attach(map, bubbleMapLayerLayout, onClickListener);
+    public void attach(GoogleMap map, ViewGroup bubbleMapLayerLayout,
+                       MapBubbleView.OnMapBubbleClickListener onClickListener,
+                       MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener,
+                       MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener) {
+        bubbleMapLayer.attach(map, bubbleMapLayerLayout, onClickListener,
+                onMenuItemClickListener, onMapBubbleSuggestionClickListener);
     }
 
     public void add(final MapBubble mapBubble) {

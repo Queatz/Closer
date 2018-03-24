@@ -139,8 +139,17 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
             builder.include(mapBubble.getLatLng());
         }
 
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(builder.build(), $(ActivityHandler.class).getActivity().getWindow().getDecorView().getWidth() / 5);
-        map.animateCamera(cu, 225, null);
+        try {
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(builder.build(), Math.min(
+                    $(ActivityHandler.class).getActivity().getWindow().getDecorView().getWidth(),
+                    $(ActivityHandler.class).getActivity().getWindow().getDecorView().getHeight()
+            ) / 4);
+            map.animateCamera(cu, 225, null);
+        } catch (Throwable ignored) {
+            // com.google.maps.api.android.lib6.common.apiexception.c:
+            // Error using newLatLngBounds(LatLngBounds, int):
+            // View size is too small after padding is applied.
+        }
     }
 
     public interface OnMapChangedListener {
