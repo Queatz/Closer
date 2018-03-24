@@ -13,7 +13,8 @@
     android:paddingRight="16dp"
     android:elevation="8dp"
     android:maxWidth="360dp"
-    android:background="@drawable/rounded_white_bkg">
+    android:background="@drawable/rounded_white_bkg"
+    android:focusableInTouchMode="true">
 
     <EditText
         android:id="@+id/currentStatus"

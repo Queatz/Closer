@@ -10,8 +10,6 @@ Top Todos
 [ ] Closer status always not updating
 
 [ ] Shuffle = recommended places
-[ ] Scale out bubbles, white dots when super zoomed out
-[ ] Tap zoomed out bubble = zoom in and center
 
 Features Overview
 =================

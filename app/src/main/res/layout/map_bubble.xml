@@ -17,8 +17,8 @@
         android:elevation="4dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
 
         <TextView
             android:id="@+id/name"

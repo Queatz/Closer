@@ -80,7 +80,7 @@ public class MapsActivity extends PoolActivity {
             $(AccountHandler.class).updateDeviceToken(deviceToken);
         }
 
-        findViewById(R.id.actionButton).setOnClickListener(view -> $(SuggestionHandler.class).shuffle());
+        $(SuggestionHandler.class).attach(findViewById(R.id.actionButton));
     }
 
     @Override
