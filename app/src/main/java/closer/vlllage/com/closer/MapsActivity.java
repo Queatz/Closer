@@ -53,13 +53,6 @@ public class MapsActivity extends PoolActivity {
         $(MapHandler.class).setOnMapClickedListener(latLng -> {
             if ($(ReplyLayoutHandler.class).isVisible()) {
                 $(ReplyLayoutHandler.class).showReplyLayout(false);
-            } else {
-
-                MapBubble suggestionBubble = new MapBubble(latLng, "Suggestion", "Sensual party tyme guys!");
-                suggestionBubble.setPinned(true);
-                suggestionBubble.setOnTop(true);
-                suggestionBubble.setMenu(true);
-                $(BubbleHandler.class).add(suggestionBubble);
             }
         });
         $(MapHandler.class).setOnMapLongClickedListener(latLng -> {});

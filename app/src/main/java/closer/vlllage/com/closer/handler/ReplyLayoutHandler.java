@@ -148,6 +148,7 @@ public class ReplyLayoutHandler extends PoolMember {
             });
             animation.setInterpolator(new DecelerateInterpolator());
             animation.setDuration(AnimationDuration.EXIT_DURATION);
+            KeyboardUtil.showKeyboard(replyMessage, false);
         }
 
         replyLayout.startAnimation(animation);

@@ -5,13 +5,18 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.Collection;
+
+import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class MapHandler extends PoolMember implements OnMapReadyCallback {
@@ -114,6 +119,28 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
                 .tilt(45)
                 .build();
         map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    public LatLng getCenter() {
+        if (map == null) {
+            return null;
+        }
+
+        return map.getCameraPosition().target;
+    }
+
+    public void centerOn(Collection<MapBubble> mapBubbles) {
+        if (mapBubbles.isEmpty()) {
+            return;
+        }
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (MapBubble mapBubble : mapBubbles) {
+            builder.include(mapBubble.getLatLng());
+        }
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(builder.build(), $(ActivityHandler.class).getActivity().getWindow().getDecorView().getWidth() / 5);
+        map.animateCamera(cu, 225, null);
     }
 
     public interface OnMapChangedListener {

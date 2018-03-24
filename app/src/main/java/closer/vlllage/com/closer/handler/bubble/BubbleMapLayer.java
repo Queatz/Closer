@@ -250,6 +250,6 @@ public class BubbleMapLayer {
     }
 
     private float zoomScale() {
-        return Math.min(1, (2f * map.getCameraPosition().zoom) / 15f);
+        return (float) Math.min(1, Math.pow(map.getCameraPosition().zoom / 15f, 2f));
     }
 }

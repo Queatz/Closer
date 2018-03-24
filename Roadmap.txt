@@ -6,13 +6,16 @@ Top
     [ ] Set up websocket
     [ ] Set up SSH
     [ ] API
-        [ ] /verify-number
+        [ ] /verify-number?number=1234567890&code=12345
         [ ] /leave-group
         [ ] /add-to-group
             [ ] Phone number linked -> Push Notification
-                [ ] "Bun added you to 888 Friends"
-            [ ] Phone number not linked -> SMS "Jacob invited you to join him on Closer"
-    [ ] Set up Twillio
+                [ ] Push: "Bun added you to 888 Friends"
+            [ ] Phone number not linked -> SMS
+                [ ] SMS: "Jacob invited you to join him on Closer"
+        [ ] /add-place?lat=&lng=&name=&comment=this place is awesome - lemy
+        [ ] /add-photo?place=12345
+    [ ] Set up Twilio
         [ ] Send verification number to phone
         [ ] Save phone number
         [ ] Save temporary verification code on server
@@ -40,7 +43,11 @@ Top
             [ ] Store messages in local realm
         [ ] Tap on name menu
             [ ] Rename group...
-            [ ] Leave group...
+            [ ] Leave group :(?...
+        [ ] Send message
+            [ ] Show sending
+            [ ] Show sent
+        [ ] Show dates in recycler
 
     [ ] Shuffle button
         [ ] Position map
@@ -71,8 +78,7 @@ Top
         [ ] Bubble not showing up first time
         [ ] My location not showing up first time
         [ ] Map not centering once permission is granted
-        [ ] Never switch to turn on if not really turned on (no lies!)
-
+        [ ] Never switch my status to turn on if not really turned on (no lies!)
         [ ] Turn on MUST re-ask for permission
             [ ] Must say what's up go to app settings if perma denied
                 [ ] PermissionsHandler.isDenied
