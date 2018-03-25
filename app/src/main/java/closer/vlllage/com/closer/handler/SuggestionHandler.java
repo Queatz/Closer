@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 
@@ -36,7 +37,7 @@ public class SuggestionHandler extends PoolMember {
             MapBubble suggestionBubble = new MapBubble(latLng, "Suggestion", suggestions[new Random().nextInt(suggestions.length)]);
             suggestionBubble.setPinned(true);
             suggestionBubble.setOnTop(true);
-            suggestionBubble.setMenu(true);
+            suggestionBubble.setType(BubbleType.SUGGESTION);
 
             $(TimerHandler.class).post(() -> {
                 $(BubbleHandler.class).add(suggestionBubble);

@@ -1,4 +1,12 @@
 
+
+How Close?
+
+Level 1 - Hanging out, Food, Chit Chat, HouseParties
+Level 2 - Dancing, Crazy, Clubbing
+Level 3 - House Parties, Sleepovers
+Level 4 - Cuddles, Kissing
+
 Top
 =================
 
@@ -15,12 +23,12 @@ Top
                 [ ] SMS: "Jacob invited you to join him on Closer"
         [ ] /add-place?lat=&lng=&name=&comment=this place is awesome - lemy
         [ ] /add-photo?place=12345
-    [ ] Set up Twilio
+    [-] Set up Twilio
         [ ] Send verification number to phone
         [ ] Save phone number
         [ ] Save temporary verification code on server
         [ ] Expire code in 15 minutes
-    [ ] Limit query to 100 closest phones
+    [ ]  Limit query to 100 closest phones
 
 [ ] App
     [ ] Group Contacts
@@ -47,21 +55,21 @@ Top
         [ ] Send message
             [ ] Show sending
             [ ] Show sent
-        [ ] Show dates in recycler
+        [ ] Show dates in recycler (on message tap)
 
-    [ ] Shuffle button
-        [ ] Position map
-        [ ] Show 3 suggestions
-        [ ] Tap again
-            [ ] Hide active suggestions
+    [-] Shuffle button
+        [X] Position map
+        [X] Show 3 suggestions
+        [X] Tap again
+            [X] Hide active suggestions
         [ ] Tap suggestion
             [ ] Share place...
                 [ ] Select group from menu
             [ ] Add photos to place
 
     [ ] Influencer
-        [ ] Add place
-        [ ] Remove place
+        [ ] Add suggestion
+        [ ] Remove suggestion
 
     [ ] Verify Number
         [ ] Tap "Verify your number to join groups" at button of app screen

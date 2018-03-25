@@ -52,10 +52,16 @@ public class BubbleMapLayer {
 
         mapBubbles.add(mapBubble);
 
-        if (mapBubble.isMenu()) {
-            mapBubble.setView(MapBubbleSuggestionView.from(view, mapBubble, onMapBubbleSuggestionClickListener));
-        } else {
-            mapBubble.setView(MapBubbleView.from(view, mapBubble, onClickListener));
+        switch (mapBubble.getType()) {
+            case MENU:
+                mapBubble.setView(MapBubbleMenuView.from(view, mapBubble, onMenuItemClickListener));
+                break;
+            case SUGGESTION:
+                mapBubble.setView(MapBubbleSuggestionView.from(view, mapBubble, onMapBubbleSuggestionClickListener));
+                break;
+            default:
+                mapBubble.setView(MapBubbleView.from(view, mapBubble, onClickListener));
+                break;
         }
 
         view.addView(mapBubble.getView());
@@ -256,10 +262,10 @@ public class BubbleMapLayer {
     }
 
     private float zoomScale(MapBubble mapBubble) {
-        if (mapBubble.isMenu()) {
-            return 1;
+        if (mapBubble.getType() == BubbleType.STATUS) {
+            return (float) Math.min(1, Math.pow(map.getCameraPosition().zoom / 15f, 2f));
         }
 
-        return (float) Math.min(1, Math.pow(map.getCameraPosition().zoom / 15f, 2f));
+        return 1;
     }
 }

@@ -23,6 +23,7 @@ import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
 import closer.vlllage.com.closer.handler.SuggestionHandler;
+import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
@@ -57,7 +58,13 @@ public class MapsActivity extends PoolActivity {
                 $(SuggestionHandler.class).clearSuggestions();
             }
         });
-        $(MapHandler.class).setOnMapLongClickedListener(latLng -> {});
+        $(MapHandler.class).setOnMapLongClickedListener(latLng -> {
+            MapBubble menuBubble = new MapBubble(latLng, "Menu", "");
+            menuBubble.setPinned(true);
+            menuBubble.setOnTop(true);
+            menuBubble.setType(BubbleType.MENU);
+            $(BubbleHandler.class).add(menuBubble);
+        });
         $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class).add($(ApiHandler.class).load(latLng).map(MapBubble::from).subscribe(mapBubbles -> $(BubbleHandler.class).replace(mapBubbles), this::networkError)));
         $(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();

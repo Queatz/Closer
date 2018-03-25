@@ -23,7 +23,7 @@ public class MapBubble {
     private boolean pinned;
     private String action;
     private boolean onTop;
-    private boolean menu;
+    private BubbleType type = BubbleType.STATUS;
 
     public MapBubble(LatLng latLng, String name, String status) {
         this.latLng = latLng;
@@ -121,11 +121,12 @@ public class MapBubble {
         return onTop;
     }
 
-    public boolean isMenu() {
-        return menu;
+    public BubbleType getType() {
+        return type;
     }
 
-    public void setMenu(boolean menu) {
-        this.menu = menu;
+    public MapBubble setType(BubbleType type) {
+        this.type = type;
+        return this;
     }
 }

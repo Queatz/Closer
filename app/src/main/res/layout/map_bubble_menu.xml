@@ -16,7 +16,7 @@
         android:elevation="4dp">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/menuName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -25,7 +25,9 @@
             android:textColor="@color/white_75"
             android:textAllCaps="true"
             android:textStyle="bold"
-            android:text="@string/go_out_with" />
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="@string/go_out_with" />
 
         <TextView
             android:id="@+id/status"
@@ -37,8 +39,9 @@
             android:textSize="12sp"
             android:textColor="@android:color/white"
             android:textStyle="bold"
+            android:textAllCaps="true"
             android:padding="12dp"
-            android:text="888 Friends" />
+            android:text="Add a suggestion..." />
 
         <TextView
             android:id="@+id/statusd"
@@ -50,21 +53,9 @@
             android:textSize="12sp"
             android:textColor="@android:color/white"
             android:textStyle="bold"
+            android:textAllCaps="true"
             android:padding="12dp"
-            android:text="Work friends" />
-
-        <TextView
-            android:id="@+id/statusd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:gravity="center_horizontal"
-            android:background="@drawable/clickable_light"
-            android:textSize="12sp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:padding="12dp"
-            android:text="Schoollll friends" />
+            android:text="Manage my suggestions..." />
 
     </LinearLayout>
 
