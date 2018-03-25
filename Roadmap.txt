@@ -2,6 +2,13 @@
 Top
 =================
 
+[ ] Add to group from contact
+[ ] Add suggestion
+[ ] Load suggestion
+
+Todo
+=================
+
 [ ] Backend
     [ ] Set up websocket
     [ ] Set up SSH

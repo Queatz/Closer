@@ -63,4 +63,8 @@ public class MyBubbleHandler extends PoolMember {
     public boolean isMyBubble(MapBubble mapBubble) {
         return myBubble == mapBubble;
     }
+
+    public MapBubble getMyBubble() {
+        return myBubble;
+    }
 }
