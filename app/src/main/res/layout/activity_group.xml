@@ -82,7 +82,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:background="@drawable/clickable_blue_light"
+            android:background="@drawable/clickable_blue_light_flat"
             android:focusedByDefault="false"
             android:hint="@string/say_something"
             android:imeOptions="actionGo"

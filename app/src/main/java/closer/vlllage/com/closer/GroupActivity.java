@@ -40,9 +40,7 @@ public class GroupActivity extends PoolActivity {
             return true;
         });
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
-
         $(GroupMessagesHandler.class).attach(findViewById(R.id.messagesRecyclerView));
-
         findViewById(R.id.peopleInGroup).setSelected(true);
     }
 

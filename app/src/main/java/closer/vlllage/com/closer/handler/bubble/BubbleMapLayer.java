@@ -274,7 +274,7 @@ public class BubbleMapLayer {
     }
 
     private float zoomScale(MapBubble mapBubble) {
-        if (mapBubble.getType() == BubbleType.STATUS) {
+        if (mapBubble.getType() != BubbleType.MENU) {
             return (float) Math.min(1, Math.pow(map.getCameraPosition().zoom / 15f, 2f));
         }
 

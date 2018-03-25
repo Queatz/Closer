@@ -19,4 +19,8 @@
     <string name="close_messages">Close messages</string>
     <string name="say_something">Say something…</string>
     <string name="share">Share</string>
+    <string name="enter_code">Enter code…</string>
+    <string name="verify_number">Verify number</string>
+    <string name="create_group">Create group</string>
+    <string name="enter_group_name">Enter group name…</string>
 </resources>
