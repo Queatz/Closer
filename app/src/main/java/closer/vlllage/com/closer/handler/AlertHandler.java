@@ -24,7 +24,7 @@ public class AlertHandler extends PoolMember {
         nameEditText.post(nameEditText::requestFocus);
         nameEditText.post(() -> KeyboardUtil.showKeyboard(nameEditText, true));
 
-        final AlertDialog dialog = new AlertDialog.Builder($(ActivityHandler.class).getActivity())
+        final AlertDialog dialog = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog)
                 .setView(view)
                 .setPositiveButton(buttonTitle, (d, w) -> {
                     String input = nameEditText.getText().toString();

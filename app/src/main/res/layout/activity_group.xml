@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
@@ -31,7 +32,7 @@
             android:paddingTop="8dp"
             android:paddingRight="16dp"
             android:paddingBottom="8dp"
-            android:text="888 Friends"
+            tools:text="888 Friends"
             android:textAllCaps="true"
             android:textColor="@color/white_75"
             android:textSize="12sp"
@@ -55,7 +56,7 @@
             android:paddingBottom="8dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="Jacob, Bun, Mai, Phoung (invited), Le My, Stella"
+            tools:text="Jacob, Bun, Mai, Phoung (invited), Le My, Stella"
             android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -82,6 +83,9 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/closeButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             android:background="@drawable/clickable_blue_light_flat"
             android:focusedByDefault="false"
             android:hint="@string/say_something"
@@ -97,9 +101,6 @@
             android:textColorHint="@color/highlight"
             android:textColorHighlight="@color/white_75"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/closeButton"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             tools:text="Hey guys let's go out" />
 
         <android.support.v7.widget.RecyclerView
@@ -111,6 +112,44 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/peopleInGroup" />
+
+        <EditText
+            android:id="@+id/searchContacts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/closeButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:visibility="gone"
+            android:background="@drawable/clickable_blue_light_flat"
+            android:focusedByDefault="false"
+            android:hint="@string/phone_number_or_name"
+            android:imeOptions="actionGo"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:selectAllOnFocus="true"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/highlight"
+            android:textColorHighlight="@color/white_75"
+            android:textSize="12sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contactsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/searchContacts"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup"
+            android:visibility="gone"/>
 
     </android.support.constraint.ConstraintLayout>
 

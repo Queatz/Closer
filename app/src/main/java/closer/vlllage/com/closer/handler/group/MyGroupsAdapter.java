@@ -17,6 +17,8 @@ import closer.vlllage.com.closer.handler.VerifyNumberHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 
+import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
+
 public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder> {
 
     public MyGroupsAdapter(PoolMember poolMember) {
@@ -48,6 +50,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         } else {
             groupName.setOnClickListener(view -> {
                 Intent intent = new Intent($(ActivityHandler.class).getActivity(), GroupActivity.class);
+                intent.putExtra(EXTRA_GROUP_ID, "1");
                 Rect bounds = new Rect();
                 holder.itemView.getGlobalVisibleRect(bounds);
 

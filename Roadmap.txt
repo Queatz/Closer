@@ -103,3 +103,4 @@ Todo (complete list)
 
     [ ] Other
         [ ] Show call button if phone number is available
+        [ ] Swipe left/right to change group in messages
