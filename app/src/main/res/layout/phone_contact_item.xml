@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/clickable_light"
+    android:clickable="true"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <ImageView
+        android:id="@+id/phoneIcon"
+        android:importantForAccessibility="no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:tint="@android:color/white"
+        android:alpha=".75"
+        android:src="@drawable/ic_person_add_black_24dp"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintTop_toTopOf="@+id/phoneIcon"
+        app:layout_constraintLeft_toRightOf="@+id/phoneIcon"
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:text="Mai Pham" />
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/phoneIcon"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        android:textSize="12sp"
+        android:textColor="@color/white_75"
+        android:text="(408) 893-4193" />
+
+</android.support.constraint.ConstraintLayout>

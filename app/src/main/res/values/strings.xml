@@ -25,4 +25,5 @@
     <string name="enter_group_name">Enter group name…</string>
     <string name="wait_for_it">Wait for it…</string>
     <string name="phone_number_or_name">Phone number or contact</string>
+    <string name="show_contacts">Show phone contacts</string>
 </resources>

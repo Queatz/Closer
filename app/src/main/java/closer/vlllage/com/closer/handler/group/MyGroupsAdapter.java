@@ -29,7 +29,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
     @Override
     public MyGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyGroupViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.group_item, parent, false));
+            .inflate(R.layout.group_item, parent, false));
     }
 
     @Override

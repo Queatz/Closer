@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
+
+import static android.Manifest.permission.READ_CONTACTS;
 
 public class GroupActivity extends CircularRevealActivity {
 
@@ -20,6 +24,7 @@ public class GroupActivity extends CircularRevealActivity {
     private RecyclerView messagesRecyclerView;
     private EditText searchContacts;
     private RecyclerView contactsRecyclerView;
+    private Button showPhoneContactsButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +36,7 @@ public class GroupActivity extends CircularRevealActivity {
         contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
         peopleInGroup = findViewById(R.id.peopleInGroup);
         groupName = findViewById(R.id.groupName);
+        showPhoneContactsButton = findViewById(R.id.showPhoneContactsButton);
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
@@ -43,6 +49,15 @@ public class GroupActivity extends CircularRevealActivity {
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
             $(GroupHandler.class).setGroupById(getIntent().getStringExtra(EXTRA_GROUP_ID));
         }
+
+        showPhoneContactsButton.setOnClickListener(view -> {
+            $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
+                if (granted) {
+                    $(GroupContactsHandler.class).showContactsForQuery("");
+                    showPhoneContactsButton.setVisibility(View.GONE);
+                }
+            });
+        });
     }
 
     @Override
@@ -56,11 +71,22 @@ public class GroupActivity extends CircularRevealActivity {
             messagesRecyclerView.setVisibility(View.VISIBLE);
             searchContacts.setVisibility(View.GONE);
             contactsRecyclerView.setVisibility(View.GONE);
+            showPhoneContactsButton.setVisibility(View.GONE);
         } else {
             replyMessage.setVisibility(View.GONE);
             messagesRecyclerView.setVisibility(View.GONE);
             searchContacts.setVisibility(View.VISIBLE);
             contactsRecyclerView.setVisibility(View.VISIBLE);
+
+            if(!$(PermissionHandler.class).has(READ_CONTACTS) && $(GroupContactsHandler.class).isEmpty()) {
+                showPhoneContactsButton.setVisibility(View.VISIBLE);
+            }
+
+            if($(PermissionHandler.class).has(READ_CONTACTS)) {
+                $(GroupContactsHandler.class).showContactsForQuery("");
+            }
+
+            searchContacts.setText("");
         }
     }
 }

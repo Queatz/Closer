@@ -10,6 +10,7 @@ Top
     [ ] Load
 [ ] Group messaging
     [ ] Verify number
+        [ ] Send code layout
     [ ] Send
     [ ] Receive
 

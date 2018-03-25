@@ -149,7 +149,23 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/peopleInGroup"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
+        <Button style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/showPhoneContactsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/searchContacts"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:background="@drawable/clickable_light"
+            android:textColor="@android:color/white"
+            android:text="@string/show_contacts"/>
 
     </android.support.constraint.ConstraintLayout>
 
