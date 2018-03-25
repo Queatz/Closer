@@ -6,6 +6,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
+import java.util.function.Function;
 
 import closer.vlllage.com.closer.handler.bubble.BubbleMapLayer;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
@@ -52,5 +53,9 @@ public class BubbleHandler extends PoolMember {
 
     public void remove(MapBubble mapBubble) {
         bubbleMapLayer.remove(mapBubble);
+    }
+
+    public void remove(Function<MapBubble, Boolean> callback) {
+        bubbleMapLayer.remove(callback);
     }
 }

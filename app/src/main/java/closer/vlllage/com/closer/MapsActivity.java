@@ -23,6 +23,7 @@ import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
 import closer.vlllage.com.closer.handler.SuggestionHandler;
+import closer.vlllage.com.closer.handler.TimerHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolActivity;
@@ -49,13 +50,21 @@ public class MapsActivity extends PoolActivity {
             } else {
                 $(ReplyLayoutHandler.class).replyTo(mapBubble);
             }
-        }, (mapBubble, position) -> {}, mapBubble -> {}));
+        }, (mapBubble, position) -> {}, mapBubble -> {
+            $(BubbleHandler.class).remove(mapBubble);
+            MapBubble menuBubble = new MapBubble(mapBubble.getLatLng(), "Menu", "");
+            menuBubble.setPinned(true);
+            menuBubble.setOnTop(true);
+            menuBubble.setType(BubbleType.MENU);
+            $(TimerHandler.class).post(() -> $(BubbleHandler.class).add(menuBubble), 225);
+        }));
         $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
         $(MapHandler.class).setOnMapClickedListener(latLng -> {
             if ($(ReplyLayoutHandler.class).isVisible()) {
                 $(ReplyLayoutHandler.class).showReplyLayout(false);
             } else {
                 $(SuggestionHandler.class).clearSuggestions();
+                $(BubbleHandler.class).remove(mapBubble -> BubbleType.MENU.equals(mapBubble.getType()));
             }
         });
         $(MapHandler.class).setOnMapLongClickedListener(latLng -> {

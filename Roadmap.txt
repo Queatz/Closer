@@ -3,10 +3,17 @@ Top
 =================
 
 [ ] Add to group from contact
-[ ] Add suggestion
-[ ] Load suggestion
+    [ ] SMS
+    [ ] Push notification
+[ ] Suggestion
+    [ ] Add
+    [ ] Load
+[ ] Group messaging
+    [ ] Verify number
+    [ ] Send
+    [ ] Receive
 
-Todo
+Todo (complete list)
 =================
 
 [ ] Backend
@@ -54,7 +61,11 @@ Todo
         [ ] Send message
             [ ] Show sending
             [ ] Show sent
-        [ ] Show dates in recycler (on message tap)
+        [ ] Group events inline with message
+            [ ] Show new days
+            [ ] Show people joined
+            [ ] Show people left
+            [ ] Show group renamed
 
     [-] Shuffle button
         [X] Position map

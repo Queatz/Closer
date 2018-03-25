@@ -12,23 +12,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:background="@drawable/clickable_blue_light"
         android:clickable="true"
         android:focusable="true"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:padding="12dp">
 
         <TextView
             android:id="@+id/bubbleText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:padding="12dp"
             android:textSize="14sp"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:maxWidth="196dp"
             tools:text="Skinny dipping at the beach" />
+
+        <TextView
+            android:id="@+id/action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="4dp"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="@color/white_75"
+            android:textAllCaps="true"
+            android:text="@string/share" />
 
     </LinearLayout>
 

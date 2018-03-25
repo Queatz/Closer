@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * Created by jacob on 2/18/18.
@@ -225,6 +226,17 @@ public class BubbleMapLayer {
 
             animator.start();
         });
+    }
+
+    public void remove(Function<MapBubble, Boolean> callback) {
+        Set<MapBubble> remove = new HashSet<>();
+        for (MapBubble mapBubble : mapBubbles) {
+            if (callback.apply(mapBubble)) {
+                remove.add(mapBubble);
+            }
+        }
+
+        remove.forEach(this::remove);
     }
 
     public void replace(List<MapBubble> mapBubbles) {
