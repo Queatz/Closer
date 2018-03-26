@@ -2,16 +2,13 @@
 Verify
 ======
 
-[ ] group name title
-[ ] real phone contacts
-[ ]
 [ ]
 
 Top
 =================
 
 [ ] Add to group from contact
-    [ ] Confirm add dialog
+    [ ] Search filter by number
     [ ] SMS
     [ ] Push notification
 

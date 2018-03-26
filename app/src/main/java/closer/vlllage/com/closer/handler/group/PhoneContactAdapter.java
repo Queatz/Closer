@@ -17,10 +17,12 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter.PhoneContactViewHolder> {
 
     private final List<PhoneContact> contacts;
+    private OnPhoneContactClickListener onPhoneContactClickListener;
 
-    public PhoneContactAdapter(PoolMember poolMember, List<PhoneContact> contacts) {
+    public PhoneContactAdapter(PoolMember poolMember, List<PhoneContact> contacts, OnPhoneContactClickListener onPhoneContactClickListener) {
         super(poolMember);
         this.contacts = contacts;
+        this.onPhoneContactClickListener = onPhoneContactClickListener;
     }
 
     @NonNull
@@ -35,6 +37,11 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
         PhoneContact contact = contacts.get(position);
         holder.name.setText(contact.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : contact.getName());
         holder.number.setText(contact.getPhoneNumber() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : contact.getPhoneNumber());
+        holder.itemView.setOnClickListener(view -> {
+            if (onPhoneContactClickListener != null) {
+                onPhoneContactClickListener.onPhoneContactClicked(contact);
+            }
+        });
     }
 
     @Override
@@ -43,7 +50,6 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
     }
 
     class PhoneContactViewHolder extends RecyclerView.ViewHolder {
-
         TextView name;
         TextView number;
 
@@ -52,5 +58,9 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
             name = itemView.findViewById(R.id.name);
             number = itemView.findViewById(R.id.number);
         }
+    }
+
+    public interface OnPhoneContactClickListener {
+        void onPhoneContactClicked(PhoneContact phoneContact);
     }
 }

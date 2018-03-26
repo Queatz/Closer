@@ -34,4 +34,5 @@
     <string name="close">Close</string>
     <string name="set_group_name">Set group name</string>
     <string name="unknown">Unknown</string>
+    <string name="add_to_group">Add to group</string>
 </resources>

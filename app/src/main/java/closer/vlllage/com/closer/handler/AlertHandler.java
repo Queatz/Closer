@@ -51,7 +51,7 @@ public class AlertHandler extends PoolMember {
         });
     }
 
-    public void showAlert(@StringRes int message, @StringRes int title, @Nullable int button,
+    public void showAlert(@StringRes int message, @StringRes int title, int button,
                           @Nullable OnSubmitCallback onSubmitCallback) {
         final AlertDialog dialog = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog)
                 .setPositiveButton(button, (d, w) -> {
