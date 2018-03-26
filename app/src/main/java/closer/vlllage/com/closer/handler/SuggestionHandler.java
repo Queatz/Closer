@@ -26,6 +26,7 @@ public class SuggestionHandler extends PoolMember {
     };
 
     public void shuffle() {
+        $(BubbleHandler.class).remove(mapBubble -> BubbleType.MENU.equals(mapBubble.getType()));
         clearSuggestions();
 
         Set<MapBubble> nextBubbles = new HashSet<>();

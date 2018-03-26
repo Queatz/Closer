@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -47,6 +48,14 @@ public class StatusLayoutHandler extends PoolMember {
             }
         });
 
+        myStatusEditText.setOnFocusChangeListener((view, focused) -> {
+            if (focused) {
+                tentativeStatus = myStatusEditText.getText().toString();
+            } else {
+                tentativeStatus = null;
+            }
+        });
+
         myStatusVisibleButton.setOnClickListener(v -> {
             if (tentativeStatus == null || tentativeStatus.trim().isEmpty()) {
                 amIVisible = false;
@@ -65,6 +74,14 @@ public class StatusLayoutHandler extends PoolMember {
 
         amIVisible = $(AccountHandler.class).getActive();
         myStatusEditText.setText($(AccountHandler.class).getStatus());
+
+        myStatusEditText.setOnEditorActionListener((textView, action, keyEvent) -> {
+            if (action == EditorInfo.IME_ACTION_GO) {
+                myStatusVisibleButton.callOnClick();
+            }
+
+            return false;
+        });
 
         if (amIVisible) {
             tentativeStatus = null;

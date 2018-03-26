@@ -16,12 +16,6 @@ public class GroupActivityTransitionHandler extends PoolMember {
         Rect bounds = new Rect();
         view.getGlobalVisibleRect(bounds);
 
-        // Offset for status bar
-        final int[] location = new int[2];
-        view.getRootView().findViewById(android.R.id.content).getLocationInWindow(location);
-        int windowTopOffset = location[1];
-        bounds.offset(0, -windowTopOffset);
-
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.setSourceBounds(bounds);
         $(ActivityHandler.class).getActivity().startActivity(intent);

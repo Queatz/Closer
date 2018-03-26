@@ -30,7 +30,7 @@ public abstract class CircularRevealActivity extends PoolActivity {
                         0,
                         (float) Math.hypot(getWindow().getDecorView().getWidth(), getWindow().getDecorView().getHeight())
                 );
-                animator.setDuration(225);
+                animator.setDuration(350);
                 animator.setInterpolator(new AccelerateInterpolator());
                 animator.start();
             });

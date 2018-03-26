@@ -56,7 +56,7 @@ public class MapsActivity extends PoolActivity {
             $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), "1");
 
         }, mapBubble -> {
-            $(BubbleHandler.class).remove(mapBubble);
+            $(SuggestionHandler.class).clearSuggestions();
             MapBubble menuBubble = new MapBubble(mapBubble.getLatLng(), "Menu", "");
             menuBubble.setPinned(true);
             menuBubble.setOnTop(true);
