@@ -5,12 +5,14 @@ Top
 [ ] Add to group from contact
     [ ] SMS
     [ ] Push notification
+
 [ ] Suggestion
     [ ] Add
     [ ] Load
+
 [ ] Group messaging
     [ ] Verify number
-        [ ] Send code layout
+        [X] Send code layout
     [ ] Send
     [ ] Receive
 
@@ -38,10 +40,10 @@ Todo (complete list)
     [ ]  Limit query to 100 closest phones
 
 [ ] App
-    [ ] Group Contacts
+    [-] Group Contacts
         [ ] Set group name
-        [ ] Show phone contacts button
-            [ ] Permission request (read contacts)
+        [X] Show phone contacts button
+            [X] Permission request (read contacts)
         [ ] Add to group from contacts
 
     [ ] Group Messages
@@ -52,6 +54,7 @@ Todo (complete list)
         [ ] Messages websocket
         [ ] Forward group messages through WebSocket if active
             [ ] fallback onto push notifications
+            [ ] fallback onto SMS
             [ ] load all
         [ ] Show messages
         [ ] Setup local realm database
@@ -73,8 +76,8 @@ Todo (complete list)
         [X] Show 3 suggestions
         [X] Tap again
             [X] Hide active suggestions
-        [ ] Tap suggestion
-            [ ] Share place...
+        [X] Tap suggestion
+            [X] Share place...
                 [ ] Select group from menu
             [ ] Add photos to place
 
@@ -83,20 +86,17 @@ Todo (complete list)
         [ ] Remove suggestion
 
     [ ] Verify Number
-        [ ] Tap "Verify your number to join groups" at button of app screen
-            [ ] Dialog with phone number
+        [X] Tap "Verify your number to join groups" at button of app screen
+            [X] Dialog with phone number
                 [ ] Auto-fill phone number
                 [ ] Allow them to enter their number
-                [ ] Send code button
+                [X] Send code button
         [ ] Get SMS
         [ ] Enter 6-digit code
         [ ] Success!
 
     [ ] Evrytyme
         [ ] My status always not updating / in sync with reality
-        [ ] Bubble not showing up first time
-        [ ] My location not showing up first time
-        [ ] Map not centering once permission is granted
         [ ] Never switch my status to turn on if not really turned on (no lies!)
         [ ] Turn on MUST re-ask for permission
             [ ] Must say what's up go to app settings if perma denied
