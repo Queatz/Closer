@@ -6,9 +6,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.pool.PoolMember;
 
-public class MapBubbleSuggestionView {
-    public static View from(ViewGroup layer, MapBubble mapBubble, MapBubbleSuggestionClickListener onClickListener) {
+public class MapBubbleSuggestionView extends PoolMember {
+    public View from(ViewGroup layer, MapBubble mapBubble, MapBubbleSuggestionClickListener onClickListener) {
         View view = LayoutInflater.from(layer.getContext()).inflate(R.layout.map_bubble_suggestion, layer, false);
 
         view.findViewById(R.id.click).setOnClickListener(v -> onClickListener.onSuggestionClick(mapBubble));
@@ -17,7 +18,7 @@ public class MapBubbleSuggestionView {
         return view;
     }
 
-    public static void update(View view, MapBubble mapBubble) {
+    public void update(View view, MapBubble mapBubble) {
         TextView textView = view.findViewById(R.id.bubbleText);
         textView.setText(mapBubble.getStatus());
     }

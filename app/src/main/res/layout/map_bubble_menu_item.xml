@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:background="@drawable/clickable_light">
+
+    <TextView
+        android:id="@+id/menuItemTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="12sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:padding="12dp"
+        tools:text="Add a suggestion..." />
+
+</FrameLayout>

@@ -31,19 +31,12 @@ public class BubbleMapLayer {
     private final Map<MapBubble, ViewPropertyAnimator> mapBubbleAppearDisappearAnimations = new HashMap<>();
     private GoogleMap map;
     private ViewGroup view;
-    private MapBubbleView.OnMapBubbleClickListener onClickListener;
-    private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener;
-    private MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener;
+    private BubbleView bubbleView;
 
-    public void attach(GoogleMap map, ViewGroup view,
-                       MapBubbleView.OnMapBubbleClickListener onClickListener,
-                       MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener,
-                       MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener) {
+    public void attach(GoogleMap map, ViewGroup view, BubbleView bubbleView) {
         this.map = map;
         this.view = view;
-        this.onClickListener = onClickListener;
-        this.onMenuItemClickListener = onMenuItemClickListener;
-        this.onMapBubbleSuggestionClickListener = onMapBubbleSuggestionClickListener;
+        this.bubbleView = bubbleView;
     }
 
     public void add(MapBubble mapBubble) {
@@ -53,17 +46,7 @@ public class BubbleMapLayer {
 
         mapBubbles.add(mapBubble);
 
-        switch (mapBubble.getType()) {
-            case MENU:
-                mapBubble.setView(MapBubbleMenuView.from(view, mapBubble, onMenuItemClickListener));
-                break;
-            case SUGGESTION:
-                mapBubble.setView(MapBubbleSuggestionView.from(view, mapBubble, onMapBubbleSuggestionClickListener));
-                break;
-            default:
-                mapBubble.setView(MapBubbleView.from(view, mapBubble, onClickListener));
-                break;
-        }
+        mapBubble.setView(bubbleView.createView(view, mapBubble));
 
         view.addView(mapBubble.getView());
 
@@ -140,7 +123,7 @@ public class BubbleMapLayer {
             return;
         }
 
-        MapBubbleView.update(mapBubble.getView(), mapBubble);
+        bubbleView.updateView(mapBubble);
         mapBubble.getView().setPivotX(mapBubble.getView().getWidth() / 2);
         mapBubble.getView().setPivotY(mapBubble.getView().getHeight());
         view.post(() -> update(mapBubble));
@@ -279,5 +262,10 @@ public class BubbleMapLayer {
         }
 
         return 1;
+    }
+
+    public interface BubbleView {
+        View createView(ViewGroup view, MapBubble mapBubble);
+        void updateView(MapBubble mapBubble);
     }
 }

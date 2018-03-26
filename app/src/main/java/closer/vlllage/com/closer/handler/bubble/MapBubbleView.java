@@ -6,13 +6,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.pool.PoolMember;
 
 /**
  * Created by jacob on 2/18/18.
  */
 
-public class MapBubbleView {
-    public static View from(ViewGroup layer, MapBubble mapBubble, OnMapBubbleClickListener onClickListener) {
+public class MapBubbleView extends PoolMember {
+    public View from(ViewGroup layer, MapBubble mapBubble, OnMapBubbleClickListener onClickListener) {
         View view = LayoutInflater.from(layer.getContext()).inflate(R.layout.map_bubble, layer, false);
 
         view.findViewById(R.id.click).setOnClickListener(v -> onClickListener.onMapBubbleClick(mapBubble));
@@ -21,7 +22,7 @@ public class MapBubbleView {
         return view;
     }
 
-    public static void update(View view, MapBubble mapBubble) {
+    public void update(View view, MapBubble mapBubble) {
         if (mapBubble.getName().isEmpty()) {
             view.findViewById(R.id.name).setVisibility(View.GONE);
         } else {

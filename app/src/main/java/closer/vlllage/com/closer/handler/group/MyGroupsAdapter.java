@@ -1,7 +1,5 @@
 package closer.vlllage.com.closer.handler.group;
 
-import android.content.Intent;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,15 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import closer.vlllage.com.closer.GroupActivity;
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.ActivityHandler;
+import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.AlertHandler;
 import closer.vlllage.com.closer.handler.VerifyNumberHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
-
-import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
 
 public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder> {
 
@@ -49,20 +44,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
             });
         } else {
             groupName.setOnClickListener(view -> {
-                Intent intent = new Intent($(ActivityHandler.class).getActivity(), GroupActivity.class);
-                intent.putExtra(EXTRA_GROUP_ID, "1");
-                Rect bounds = new Rect();
-                holder.itemView.getGlobalVisibleRect(bounds);
-
-                // Offset for status bar
-                final int[] location = new int[2];
-                holder.itemView.getRootView().findViewById(android.R.id.content).getLocationInWindow(location);
-                int windowTopOffset = location[1];
-                bounds.offset(0, -windowTopOffset);
-
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                intent.setSourceBounds(bounds);
-                $(ActivityHandler.class).getActivity().startActivity(intent);
+                $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, "1");
             });
         }
     }

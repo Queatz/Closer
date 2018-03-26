@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
 import closer.vlllage.com.closer.handler.DisposableHandler;
+import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.IntentHandler;
 import closer.vlllage.com.closer.handler.LocationHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
@@ -50,7 +51,11 @@ public class MapsActivity extends PoolActivity {
             } else {
                 $(ReplyLayoutHandler.class).replyTo(mapBubble);
             }
-        }, (mapBubble, position) -> {}, mapBubble -> {
+        }, (mapBubble, position) -> {
+            $(BubbleHandler.class).remove(mapBubble);
+            $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), "1");
+
+        }, mapBubble -> {
             $(BubbleHandler.class).remove(mapBubble);
             MapBubble menuBubble = new MapBubble(mapBubble.getLatLng(), "Menu", "");
             menuBubble.setPinned(true);

@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -17,14 +18,45 @@ import closer.vlllage.com.closer.pool.PoolMember;
 
 public class BubbleHandler extends PoolMember {
 
+    private MapBubbleView.OnMapBubbleClickListener onClickListener;
+    private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener;
+    private MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener;
+
     private final BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
 
     public void attach(GoogleMap map, ViewGroup bubbleMapLayerLayout,
                        MapBubbleView.OnMapBubbleClickListener onClickListener,
                        MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener,
                        MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener) {
-        bubbleMapLayer.attach(map, bubbleMapLayerLayout, onClickListener,
-                onMenuItemClickListener, onMapBubbleSuggestionClickListener);
+        bubbleMapLayer.attach(map, bubbleMapLayerLayout, getBubbleView());
+        this.onClickListener = onClickListener;
+        this.onMenuItemClickListener = onMenuItemClickListener;
+        this.onMapBubbleSuggestionClickListener = onMapBubbleSuggestionClickListener;
+    }
+
+    private BubbleMapLayer.BubbleView getBubbleView() {
+        return new BubbleMapLayer.BubbleView() {
+            @Override
+            public View createView(ViewGroup view, MapBubble mapBubble) {
+                switch (mapBubble.getType()) {
+                    case MENU:
+                        return $(MapBubbleMenuView.class).from(view, mapBubble, onMenuItemClickListener);
+                    case SUGGESTION:
+                        return $(MapBubbleSuggestionView.class).from(view, mapBubble, onMapBubbleSuggestionClickListener);
+                    default:
+                        return $(MapBubbleView.class).from(view, mapBubble, onClickListener);
+                }
+            }
+
+            @Override
+            public void updateView(MapBubble mapBubble) {
+                switch (mapBubble.getType()) {
+                    case STATUS:
+                        $(MapBubbleView.class).update(mapBubble.getView(), mapBubble);
+                        break;
+                }
+            }
+        };
     }
 
     public void add(final MapBubble mapBubble) {
