@@ -29,7 +29,7 @@ public class AlertHandler extends PoolMember {
                 .setPositiveButton(buttonTitle, (d, w) -> {
                     String input = nameEditText.getText().toString();
 
-                    if (onSubmitCallback != null){
+                    if (onSubmitCallback != null) {
                         onSubmitCallback.onSubmit(input);
                     }
                 })
@@ -49,6 +49,27 @@ public class AlertHandler extends PoolMember {
 
             return false;
         });
+    }
+
+    public void showAlert(@StringRes int message, @StringRes int title, @Nullable int button,
+                          @Nullable OnSubmitCallback onSubmitCallback) {
+        final AlertDialog dialog = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog)
+                .setPositiveButton(button, (d, w) -> {
+                    if (onSubmitCallback != null) {
+                        onSubmitCallback.onSubmit(null);
+                    }
+                })
+                .create();
+
+        if (message != 0) {
+            dialog.setMessage($(ResourcesHandler.class).getResources().getString(message));
+        }
+
+        if (title != 0) {
+            dialog.setTitle(title);
+        }
+
+        dialog.show();
     }
 
     public interface OnSubmitCallback {

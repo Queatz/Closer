@@ -10,16 +10,16 @@
         android:id="@+id/input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_code"
+        android:hint="@string/phone_number_hint"
         android:focusedByDefault="true"
         android:selectAllOnFocus="true"
         android:imeOptions="actionGo"
         android:textAlignment="center"
         android:paddingTop="16dp"
         android:padding="8dp"
-        android:maxLength="5"
+        android:maxLength="24"
         android:background="@null"
-        android:inputType="number|numberSigned"
+        android:inputType="phone"
         android:maxLines="1" />
 
 </LinearLayout>

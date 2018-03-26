@@ -26,4 +26,10 @@
     <string name="wait_for_it">Wait for it…</string>
     <string name="phone_number_or_name">Phone number or contact</string>
     <string name="show_contacts">Search phone contacts</string>
+    <string name="send_code">Send code</string>
+    <string name="enter_your_phone_number">Enter your phone number</string>
+    <string name="phone_number_hint">(000) 000-0000</string>
+    <string name="number_verified">Phone number verified</string>
+    <string name="welcome_to_closer">Welcome to Closer</string>
+    <string name="close">Close</string>
 </resources>
