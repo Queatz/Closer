@@ -1,8 +1,17 @@
 
+Verify
+======
+
+[ ] group name title
+[ ] real phone contacts
+[ ]
+[ ]
+
 Top
 =================
 
 [ ] Add to group from contact
+    [ ] Confirm add dialog
     [ ] SMS
     [ ] Push notification
 
@@ -11,10 +20,15 @@ Top
     [ ] Load
 
 [ ] Group messaging
+    [ ] Set group name
     [ ] Verify number
         [X] Send code layout
     [ ] Send
     [ ] Receive
+
+[ ] Backend
+    [ ] Add suggestion
+    [ ] Load all nearby suggestions on app launch
 
 Todo (complete list)
 =================
@@ -22,6 +36,8 @@ Todo (complete list)
 [ ] Backend
     [ ] Set up websocket
     [ ] Set up SSH
+        [ ] Secret header to talk to server
+            [ ] Embed in app network requests (gitignored + example gateway file)
     [ ] API
         [ ] /verify-number?number=1234567890&code=12345
         [ ] /leave-group
@@ -34,14 +50,14 @@ Todo (complete list)
         [ ] /add-photo?place=12345
     [-] Set up Twilio
         [ ] Send verification number to phone
-        [ ] Save phone number
+        [ ] Save phone number with account id
         [ ] Save temporary verification code on server
         [ ] Expire code in 15 minutes
     [ ]  Limit query to 100 closest phones
 
 [ ] App
     [-] Group Contacts
-        [ ] Set group name
+        [X] Set group name
         [X] Show phone contacts button
             [X] Permission request (read contacts)
         [ ] Add to group from contacts
@@ -81,7 +97,7 @@ Todo (complete list)
                 [ ] Select group from menu
             [ ] Add photos to place
 
-    [ ] Influencer
+    [ ] Long-press
         [ ] Add suggestion
         [ ] Remove suggestion
 
@@ -89,7 +105,7 @@ Todo (complete list)
         [X] Tap "Verify your number to join groups" at button of app screen
             [X] Dialog with phone number
                 [ ] Auto-fill phone number
-                [ ] Allow them to enter their number
+                [X] Allow them to enter their number
                 [X] Send code button
         [ ] Get SMS
         [ ] Enter 6-digit code

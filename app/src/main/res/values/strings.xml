@@ -32,4 +32,6 @@
     <string name="number_verified">Phone number verified</string>
     <string name="welcome_to_closer">Welcome to Closer</string>
     <string name="close">Close</string>
+    <string name="set_group_name">Set group name</string>
+    <string name="unknown">Unknown</string>
 </resources>

@@ -4,6 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
 
+import closer.vlllage.com.closer.handler.PhoneContactsHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class GroupContactsHandler extends PoolMember {
@@ -15,7 +16,7 @@ public class GroupContactsHandler extends PoolMember {
     public void attach(RecyclerView contactsRecyclerView, EditText searchContacts) {
         this.contactsRecyclerView = contactsRecyclerView;
         this.searchContacts = searchContacts;
-        phoneContactAdapter = new PhoneContactAdapter(this);
+        phoneContactAdapter = new PhoneContactAdapter(this, $(PhoneContactsHandler.class).getAllContacts());
 
         contactsRecyclerView.setAdapter(phoneContactAdapter);
         contactsRecyclerView.setLayoutManager(new LinearLayoutManager(
@@ -26,7 +27,7 @@ public class GroupContactsHandler extends PoolMember {
     }
 
     public boolean isEmpty() {
-        return true;
+        return phoneContactAdapter.getItemCount() == 0;
     }
 
     public void showContactsForQuery(String query) {
