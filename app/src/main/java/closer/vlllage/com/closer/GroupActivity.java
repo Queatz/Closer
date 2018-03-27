@@ -53,7 +53,7 @@ public class GroupActivity extends CircularRevealActivity {
         showPhoneContactsButton.setOnClickListener(view -> {
             $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
                 if (granted) {
-                    $(GroupContactsHandler.class).showContactsForQuery("");
+                    $(GroupContactsHandler.class).showContactsForQuery();
                     showPhoneContactsButton.setVisibility(View.GONE);
                 }
             });
@@ -83,7 +83,7 @@ public class GroupActivity extends CircularRevealActivity {
             }
 
             if($(PermissionHandler.class).has(READ_CONTACTS)) {
-                $(GroupContactsHandler.class).showContactsForQuery("");
+                $(GroupContactsHandler.class).showContactsForQuery();
             }
 
             searchContacts.setText("");

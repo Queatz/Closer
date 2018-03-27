@@ -19,7 +19,7 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
     private final List<PhoneContact> contacts;
     private OnPhoneContactClickListener onPhoneContactClickListener;
 
-    public PhoneContactAdapter(PoolMember poolMember, List<PhoneContact> contacts, OnPhoneContactClickListener onPhoneContactClickListener) {
+    public PhoneContactAdapter(PoolMember poolMember, @NonNull List<PhoneContact> contacts, OnPhoneContactClickListener onPhoneContactClickListener) {
         super(poolMember);
         this.contacts = contacts;
         this.onPhoneContactClickListener = onPhoneContactClickListener;
@@ -47,6 +47,12 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
     @Override
     public int getItemCount() {
         return contacts.size();
+    }
+
+    public void setContacts(List<PhoneContact> contacts) {
+        this.contacts.clear();
+        this.contacts.addAll(contacts);
+        notifyDataSetChanged();
     }
 
     class PhoneContactViewHolder extends RecyclerView.ViewHolder {

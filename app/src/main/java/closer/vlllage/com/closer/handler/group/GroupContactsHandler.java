@@ -2,7 +2,12 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.AlertHandler;
@@ -30,6 +35,23 @@ public class GroupContactsHandler extends PoolMember {
                 LinearLayoutManager.VERTICAL,
                 false
         ));
+
+        searchContacts.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                showContactsForQuery(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     public boolean isEmpty() {
@@ -37,6 +59,41 @@ public class GroupContactsHandler extends PoolMember {
     }
 
     public void showContactsForQuery(String query) {
+        query = query.trim().toLowerCase();
 
+        List<PhoneContact> allContacts = $(PhoneContactsHandler.class).getAllContacts();
+
+        if (allContacts == null) {
+            return;
+        }
+
+        if (query.isEmpty()) {
+            phoneContactAdapter.setContacts(allContacts);
+            return;
+        }
+
+        String queryPhone = query.replaceAll("[^0-9]", "");
+
+        List<PhoneContact> contacts = new ArrayList<>();
+        for(PhoneContact contact : allContacts) {
+            if (contact.getName() != null) {
+                if (contact.getName().toLowerCase().contains(query)) {
+                    contacts.add(contact);
+                    continue;
+                }
+            }
+
+            if (contact.getPhoneNumber() != null) {
+                if (contact.getPhoneNumber().replaceAll("[^0-9]", "").contains(queryPhone)) {
+                    contacts.add(contact);
+                }
+            }
+        }
+
+        phoneContactAdapter.setContacts(contacts);
+    }
+
+    public void showContactsForQuery() {
+        showContactsForQuery(searchContacts.getText().toString());
     }
 }

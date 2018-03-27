@@ -13,8 +13,14 @@ import closer.vlllage.com.closer.pool.PoolMember;
 
 public class PhoneContactsHandler extends PoolMember {
 
+    private List<PhoneContact> contacts;
+
     @Nullable
     public List<PhoneContact> getAllContacts() {
+        if (contacts != null && !contacts.isEmpty()) {
+            return contacts;
+        }
+
         ContentResolver contentResolver = $(ApplicationHandler.class).getApp().getContentResolver();
 
         if (contentResolver == null) {
@@ -45,10 +51,15 @@ public class PhoneContactsHandler extends PoolMember {
 
                 } while (cursor.moveToNext());
 
+                this.contacts = contactsList;
                 return contactsList;
             }
         }
 
         return null;
+    }
+
+    public void forceReload() {
+        contacts = null;
     }
 }

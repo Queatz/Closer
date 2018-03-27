@@ -1,4 +1,10 @@
 
+Verify that
+=================
+
+[ ] Search contacts works
+[ ] Allow contacts shows current contacts for query
+
 Next
 =================
 
@@ -6,12 +12,6 @@ Next
 
 Top
 =================
-
-[ ] Local db
-    [ ] Suggestion (name, latLng)
-    [ ] Group (name)
-    [ ] GroupContact (groupId, name, number, closerAccountId)
-    [ ] GroupMessage (groupId, contactId, time, text, attachments)
 
 [ ] Add to group from contact
     [ ] Search filter by number
