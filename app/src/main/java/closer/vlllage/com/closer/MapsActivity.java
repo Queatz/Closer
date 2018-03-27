@@ -13,7 +13,6 @@ import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
 import closer.vlllage.com.closer.handler.DisposableHandler;
-import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.IntentHandler;
 import closer.vlllage.com.closer.handler.LocationHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
@@ -27,6 +26,7 @@ import closer.vlllage.com.closer.handler.SuggestionHandler;
 import closer.vlllage.com.closer.handler.TimerHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
+import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
 public class MapsActivity extends PoolActivity {
@@ -53,8 +53,9 @@ public class MapsActivity extends PoolActivity {
             }
         }, (mapBubble, position) -> {
             $(BubbleHandler.class).remove(mapBubble);
-            $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), "1");
-
+            if (mapBubble.getOnItemClickListener() != null) {
+                mapBubble.getOnItemClickListener().onItemClick(position);
+            }
         }, mapBubble -> {
             $(SuggestionHandler.class).clearSuggestions();
             MapBubble menuBubble = new MapBubble(mapBubble.getLatLng(), "Menu", "");
@@ -73,13 +74,16 @@ public class MapsActivity extends PoolActivity {
             }
         });
         $(MapHandler.class).setOnMapLongClickedListener(latLng -> {
-            MapBubble menuBubble = new MapBubble(latLng, "Menu", "");
-            menuBubble.setPinned(true);
-            menuBubble.setOnTop(true);
-            menuBubble.setType(BubbleType.MENU);
+            MapBubble menuBubble = new MapBubble(latLng, BubbleType.MENU);
+            menuBubble.setOnItemClickListener(position -> $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng()));
             $(BubbleHandler.class).add(menuBubble);
+            $(MapBubbleMenuView.class)
+                    .getMenuAdapter(menuBubble)
+                    .setMenuItems(getString(R.string.add_suggestion_here));
         });
-        $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class).add($(ApiHandler.class).load(latLng).map(MapBubble::from).subscribe(mapBubbles -> $(BubbleHandler.class).replace(mapBubbles), this::networkError)));
+        $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class)
+                .add($(ApiHandler.class).load(latLng).map(MapBubble::from).subscribe(mapBubbles ->
+                        $(BubbleHandler.class).replace(mapBubbles), this::networkError)));
         $(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();
         $(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));

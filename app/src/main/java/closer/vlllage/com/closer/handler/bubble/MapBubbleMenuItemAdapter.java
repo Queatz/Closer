@@ -7,12 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 
 public class MapBubbleMenuItemAdapter extends PoolRecyclerAdapter<MapBubbleMenuItemAdapter.MenuItemViewHolder> {
 
+    private List<String> menuItems = new ArrayList<>();
     private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onClickListener;
     private MapBubble mapBubble;
 
@@ -31,18 +36,26 @@ public class MapBubbleMenuItemAdapter extends PoolRecyclerAdapter<MapBubbleMenuI
 
     @Override
     public void onBindViewHolder(@NonNull MapBubbleMenuItemAdapter.MenuItemViewHolder holder, int position) {
-        if (position == 0) {
-            holder.menuItemTitle.setText("Add a suggestions...");
-        } else {
-            holder.menuItemTitle.setText("Manage my suggestions...");
-        }
+            holder.menuItemTitle.setText(menuItems.get(position));
 
         holder.itemView.setOnClickListener(view -> onClickListener.onMenuItemClick(mapBubble, position));
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return menuItems.size();
+    }
+
+    public void setMenuItems(List<String> menuItems) {
+        this.menuItems.clear();
+        this.menuItems.addAll(menuItems);
+        notifyDataSetChanged();
+    }
+
+    public void setMenuItems(String... menuItems) {
+        this.menuItems.clear();
+        this.menuItems.addAll(Arrays.asList(menuItems));
+        notifyDataSetChanged();
     }
 
     class MenuItemViewHolder extends RecyclerView.ViewHolder {

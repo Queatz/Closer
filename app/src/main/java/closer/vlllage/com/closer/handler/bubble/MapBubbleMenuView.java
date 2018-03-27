@@ -23,13 +23,11 @@ public class MapBubbleMenuView extends PoolMember {
 
         recyclerView.setAdapter(new MapBubbleMenuItemAdapter(this, mapBubble, onClickListener));
 
-        update(view, mapBubble);
-
         return view;
     }
 
-    public void update(View view, MapBubble mapBubble) {
-
+    public MapBubbleMenuItemAdapter getMenuAdapter(MapBubble mapBubble) {
+        return (MapBubbleMenuItemAdapter) ((RecyclerView) mapBubble.getView().findViewById(R.id.menuRecyclerView)).getAdapter();
     }
 
     public interface OnMapBubbleMenuItemClickListener {

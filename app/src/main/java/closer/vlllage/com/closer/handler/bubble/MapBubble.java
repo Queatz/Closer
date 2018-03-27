@@ -24,11 +24,19 @@ public class MapBubble {
     private String action;
     private boolean onTop;
     private BubbleType type = BubbleType.STATUS;
+    private OnItemClickListener onItemClickListener;
 
     public MapBubble(LatLng latLng, String name, String status) {
         this.latLng = latLng;
         this.name = name;
         this.status = status;
+    }
+
+    public MapBubble(LatLng latLng, BubbleType type) {
+        this.latLng = latLng;
+        this.type = type;
+        setPinned(true);
+        setOnTop(true);
     }
 
     public LatLng getLatLng() {
@@ -128,5 +136,17 @@ public class MapBubble {
     public MapBubble setType(BubbleType type) {
         this.type = type;
         return this;
+    }
+
+    public OnItemClickListener getOnItemClickListener() {
+        return onItemClickListener;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 }

@@ -4,28 +4,50 @@ Verify that
 
 [ ] Search contacts works
 [ ] Allow contacts shows current contacts for query
+[ ] Add suggestion works (long-press)
+[ ] Shuffle suggestions uses real suggestions
 
 Next
 =================
 
 [ ] Get UI to perfection
 
+[ ] Hook up models (local only)
+    [ ] Create: group
+        From recycler last item
+    [ ] Create&/Link: Add contact to group
+        From contact list
+    [ ] Create&Link:Send message to group
+        From group messages view
+    [ ] Create: Suggestion
+        From long-press on map
+
+[ ] Use model queries
+    [ ] Load real suggestions
+    [ ] Load real groups
+    [ ] Load real group messages
+    [ ] Load real group contacts
+
+[ ] Clean
+    [ ] AlertHandler
+    [ ] Bubble menu adapter
+
 Top
 =================
 
 [ ] Add to group from contact
-    [ ] Search filter by number
-    [ ] SMS
+    [ ] SMS (from backend)
     [ ] Push notification
 
 [ ] Suggestion
+    [ ] Select group from menu
     [ ] Add
     [ ] Load
+    [ ] Long-press to force reload suggestions from server
 
 [ ] Group messaging
     [ ] Set group name
     [ ] Verify number
-        [X] Send code layout
     [ ] Send
     [ ] Receive
 
@@ -44,6 +66,7 @@ Todo (complete list)
     [ ] API
         [ ] /verify-number?number=1234567890&code=12345
         [ ] /leave-group
+        [ ] /group/329239?set-name=Newcumers
         [ ] /add-to-group
             [ ] Phone number linked -> Push Notification
                 [ ] Push: "Bun added you to 888 Friends"
@@ -55,16 +78,10 @@ Todo (complete list)
         [ ] Send verification number to phone
         [ ] Save phone number with account id
         [ ] Save temporary verification code on server
-        [ ] Expire code in 15 minutes
+            [ ] Expire code in 15 minutes
     [ ]  Limit query to 100 closest phones
 
 [ ] App
-    [-] Group Contacts
-        [X] Set group name
-        [X] Show phone contacts button
-            [X] Permission request (read contacts)
-        [ ] Add to group from contacts
-
     [ ] Group Messages
         [ ] Setup SSH Websocket
             [ ] Handle messages
@@ -90,16 +107,6 @@ Todo (complete list)
             [ ] Show people left
             [ ] Show group renamed
 
-    [-] Shuffle button
-        [X] Position map
-        [X] Show 3 suggestions
-        [X] Tap again
-            [X] Hide active suggestions
-        [X] Tap suggestion
-            [X] Share place...
-                [ ] Select group from menu
-            [ ] Add photos to place
-
     [ ] Long-press
         [ ] Add suggestion
         [ ] Remove suggestion
@@ -124,3 +131,4 @@ Todo (complete list)
     [ ] Other
         [ ] Show call button if phone number is available
         [ ] Swipe left/right to change group in messages
+        [ ] Add public photos to a suggestion

@@ -8,22 +8,17 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Suggestion;
+import io.realm.RealmResults;
 
 public class SuggestionHandler extends PoolMember {
 
     private final Set<MapBubble> suggestionBubbles = new HashSet<>();
-
-    private final static String[] suggestions = new String[] {
-            "Dance at Rose Room",
-            "Hot yoga at Kathleane",
-            "Nude photoshoot at the beach",
-            "Relax all day at Zilker",
-            "Dance at Kingdom and Empire",
-            "See if we can sleep over at Jacob & Mai's",
-    };
 
     public void shuffle() {
         $(BubbleHandler.class).remove(mapBubble -> BubbleType.MENU.equals(mapBubble.getType()));
@@ -31,24 +26,48 @@ public class SuggestionHandler extends PoolMember {
 
         Set<MapBubble> nextBubbles = new HashSet<>();
 
-        for (int i = 0; i < 3; i++) {
-            LatLng latLng = $(MapHandler.class).getCenter();
-            latLng = new LatLng(latLng.latitude + (Math.random() - .5) * .1, latLng.longitude + (Math.random() - .5) * .1);
+        LatLng mapCenter = $(MapHandler.class).getCenter();
 
-            MapBubble suggestionBubble = new MapBubble(latLng, "Suggestion", suggestions[new Random().nextInt(suggestions.length)]);
-            suggestionBubble.setPinned(true);
-            suggestionBubble.setOnTop(true);
-            suggestionBubble.setType(BubbleType.SUGGESTION);
+        getRandomSuggestions(mapCenter).addChangeListener(results -> {
+            results.removeAllChangeListeners();
 
-            $(TimerHandler.class).post(() -> {
-                $(BubbleHandler.class).add(suggestionBubble);
-                suggestionBubbles.add(suggestionBubble);
-            }, 225 * 2 + i * 95);
+            Random random = new Random();
+            Set<Suggestion> suggested = new HashSet<>();
+            for (int i = 0; i < 3; i++) {
+                Suggestion suggestion = results.get(random.nextInt(results.size()));
 
-            nextBubbles.add(suggestionBubble);
-        }
+                if (suggestion == null) {
+                    continue;
+                }
 
-        $(MapHandler.class).centerOn(nextBubbles);
+                if (suggested.contains(suggestion)) {
+                    continue;
+                }
+
+                suggested.add(suggestion);
+
+                MapBubble suggestionBubble = new MapBubble(new LatLng(
+                        suggestion.getLatitude(),
+                        suggestion.getLongitude()
+                ), "Suggestion", suggestion.getName());
+                suggestionBubble.setPinned(true);
+                suggestionBubble.setOnTop(true);
+                suggestionBubble.setType(BubbleType.SUGGESTION);
+
+                $(TimerHandler.class).post(() -> {
+                    $(BubbleHandler.class).add(suggestionBubble);
+                    suggestionBubbles.add(suggestionBubble);
+                }, 225 * 2 + i * 95);
+
+                nextBubbles.add(suggestionBubble);
+            }
+
+            $(MapHandler.class).centerOn(nextBubbles);
+        });
+    }
+
+    private RealmResults<Suggestion> getRandomSuggestions(LatLng near) {
+        return $(StoreHandler.class).getStore().getRealm().where(Suggestion.class).findAllAsync();
     }
 
     public void clearSuggestions() {
@@ -61,5 +80,26 @@ public class SuggestionHandler extends PoolMember {
 
     public void attach(View shuffleButton) {
         shuffleButton.setOnClickListener(view -> this.shuffle());
+    }
+
+    public void createNewSuggestion(final LatLng latLng) {
+        $(AlertHandler.class).makeAlert(String.class)
+            .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_suggestion_here))
+            .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_suggestion))
+            .setPositiveButtonCallback(result -> createNewSuggestion(latLng, result.getResult()))
+            .show();
+    }
+
+    private void createNewSuggestion(LatLng latLng, String name) {
+        if (name == null || name.isEmpty()) {
+            return;
+        }
+
+        Suggestion suggestion = $(StoreHandler.class).create(Suggestion.class);
+        $(StoreHandler.class).execute(transaction -> {
+            suggestion.setName(name);
+            suggestion.setLatitude(latLng.latitude);
+            suggestion.setLongitude(latLng.longitude);
+        });
     }
 }
