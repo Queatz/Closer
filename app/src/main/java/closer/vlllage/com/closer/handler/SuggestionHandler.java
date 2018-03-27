@@ -5,6 +5,7 @@ import android.view.View;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -14,7 +15,8 @@ import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Suggestion;
-import io.objectbox.query.Query;
+import io.objectbox.android.AndroidScheduler;
+import io.objectbox.reactive.SubscriptionBuilder;
 
 public class SuggestionHandler extends PoolMember {
 
@@ -28,7 +30,7 @@ public class SuggestionHandler extends PoolMember {
 
         LatLng mapCenter = $(MapHandler.class).getCenter();
 
-        getRandomSuggestions(mapCenter).subscribe().observer(suggestions -> {
+        getRandomSuggestions(mapCenter).observer(suggestions -> {
             Random random = new Random();
             Set<Suggestion> suggested = new HashSet<>();
             for (int i = 0; i < 3; i++) {
@@ -64,8 +66,8 @@ public class SuggestionHandler extends PoolMember {
         });
     }
 
-    private Query<Suggestion> getRandomSuggestions(LatLng near) {
-        return $(StoreHandler.class).getStore().box(Suggestion.class).query().build();
+    private SubscriptionBuilder<List<Suggestion>> getRandomSuggestions(LatLng near) {
+        return $(StoreHandler.class).getStore().box(Suggestion.class).query().build().subscribe().on(AndroidScheduler.mainThread());
     }
 
     public void clearSuggestions() {
@@ -81,10 +83,10 @@ public class SuggestionHandler extends PoolMember {
     }
 
     public void createNewSuggestion(final LatLng latLng) {
-        $(AlertHandler.class).makeAlert(String.class)
+        $(AlertHandler.class).makeAlert()
             .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_suggestion_here))
             .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_suggestion))
-            .setLayoutResId(R.layout.set_name_modal)
+            .setLayoutResId(R.layout.make_suggestion_modal)
             .setTextView(R.id.input, result -> createNewSuggestion(latLng, result))
             .show();
     }

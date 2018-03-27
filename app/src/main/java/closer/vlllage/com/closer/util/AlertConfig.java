@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.util;
 
+import android.support.annotation.LayoutRes;
 import android.view.View;
 
 public class AlertConfig<T> {
@@ -7,7 +8,7 @@ public class AlertConfig<T> {
     private final ShowCallback showCallback;
     private String title;
     private String message;
-    private Integer layoutResId;
+    private @LayoutRes Integer layoutResId;
     private String positiveButton;
     private ButtonCallback<T> positiveButtonCallback;
     private String negativeButton;
@@ -47,7 +48,7 @@ public class AlertConfig<T> {
         return layoutResId;
     }
 
-    public AlertConfig<T> setLayoutResId(Integer layoutResId) {
+    public AlertConfig<T> setLayoutResId(@LayoutRes Integer layoutResId) {
         this.layoutResId = layoutResId;
         return this;
     }

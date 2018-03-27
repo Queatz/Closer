@@ -38,4 +38,5 @@
     <string name="add_suggestion_here">Add suggestion here…</string>
     <string name="make_suggestion">Make suggestion…</string>
     <string name="add_suggestion">Add suggestion</string>
+    <string name="make_a_suggestion">Map a suggestion…</string>
 </resources>

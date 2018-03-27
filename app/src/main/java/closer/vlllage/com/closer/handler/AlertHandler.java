@@ -85,10 +85,6 @@ public class AlertHandler extends PoolMember {
         return new AlertConfig<T>(this::showAlertConfig);
     }
 
-    public AlertConfig<String> makeInputAlert() {
-        return new AlertConfig<String>(this::showAlertConfig);
-    }
-
     private <T> void showAlertConfig(final AlertConfig<T> alertConfig) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog);
         TextView textView = null;
@@ -141,8 +137,8 @@ public class AlertHandler extends PoolMember {
 
         AlertDialog alertDialog = dialogBuilder.create();
 
-        if (textView != null && textView instanceof EditText) {
-            ((EditText) textView).setOnEditorActionListener((v, actionId, event) -> {
+        if (textView != null) {
+            textView.setOnEditorActionListener((v, actionId, event) -> {
                 if (actionId == EditorInfo.IME_ACTION_GO) {
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).callOnClick();
                     return true;
@@ -152,7 +148,7 @@ public class AlertHandler extends PoolMember {
             });
         }
 
-        alertConfig.show();
+        alertDialog.show();
     }
 
     public interface OnSubmitCallback {

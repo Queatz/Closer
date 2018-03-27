@@ -74,6 +74,8 @@ public class MapsActivity extends PoolActivity {
             }
         });
         $(MapHandler.class).setOnMapLongClickedListener(latLng -> {
+            $(BubbleHandler.class).remove(mapBubble -> BubbleType.MENU.equals(mapBubble.getType()));
+
             MapBubble menuBubble = new MapBubble(latLng, BubbleType.MENU);
             menuBubble.setOnItemClickListener(position -> $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng()));
             $(BubbleHandler.class).add(menuBubble);
