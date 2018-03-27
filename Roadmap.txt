@@ -1,11 +1,17 @@
 
-Verify
-======
+Next
+=================
 
-[ ]
+[ ] Get UI to perfection
 
 Top
 =================
+
+[ ] Local db
+    [ ] Suggestion (name, latLng)
+    [ ] Group (name)
+    [ ] GroupContact (groupId, name, number, closerAccountId)
+    [ ] GroupMessage (groupId, contactId, time, text, attachments)
 
 [ ] Add to group from contact
     [ ] Search filter by number
