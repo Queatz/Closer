@@ -10,6 +10,7 @@ import android.widget.TextView;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.AlertHandler;
+import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.handler.VerifyNumberHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
@@ -40,7 +41,11 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
             });
         } else if (position == getItemCount() - 1) {
             groupName.setOnClickListener(view -> {
-                $(AlertHandler.class).showAlert(R.layout.set_name_modal, R.string.create_group, R.string.create_group, null, null);
+                $(AlertHandler.class).makeAlert()
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
+                        .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_group))
+                        .setLayoutResId(R.layout.set_name_modal)
+                        .show();
             });
         } else {
             groupName.setOnClickListener(view -> {

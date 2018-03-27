@@ -12,6 +12,7 @@ import java.util.List;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.AlertHandler;
 import closer.vlllage.com.closer.handler.PhoneContactsHandler;
+import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class GroupContactsHandler extends PoolMember {
@@ -24,9 +25,10 @@ public class GroupContactsHandler extends PoolMember {
         this.contactsRecyclerView = contactsRecyclerView;
         this.searchContacts = searchContacts;
         phoneContactAdapter = new PhoneContactAdapter(this, $(PhoneContactsHandler.class).getAllContacts(), phoneContact -> {
-            $(AlertHandler.class).showAlert(0, R.string.add_to_group, R.string.add_to_group, input -> {
-
-            });
+            $(AlertHandler.class).makeAlert()
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_to_group))
+                    .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_to_group))
+                    .show();
         });
 
         contactsRecyclerView.setAdapter(phoneContactAdapter);
