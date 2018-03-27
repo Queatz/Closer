@@ -11,9 +11,12 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.AlertHandler;
+import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.PhoneContactsHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+
+import static android.Manifest.permission.READ_CONTACTS;
 
 public class GroupContactsHandler extends PoolMember {
 
@@ -21,15 +24,20 @@ public class GroupContactsHandler extends PoolMember {
     private EditText searchContacts;
     private PhoneContactAdapter phoneContactAdapter;
 
+    @SuppressWarnings("MissingPermission")
     public void attach(RecyclerView contactsRecyclerView, EditText searchContacts) {
         this.contactsRecyclerView = contactsRecyclerView;
         this.searchContacts = searchContacts;
-        phoneContactAdapter = new PhoneContactAdapter(this, $(PhoneContactsHandler.class).getAllContacts(), phoneContact -> {
+        phoneContactAdapter = new PhoneContactAdapter(this, phoneContact -> {
             $(AlertHandler.class).makeAlert()
                     .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_to_group))
                     .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_to_group))
                     .show();
         });
+
+        if($(PermissionHandler.class).has(READ_CONTACTS)) {
+            phoneContactAdapter.setContacts($(PhoneContactsHandler.class).getAllContacts());
+        }
 
         contactsRecyclerView.setAdapter(phoneContactAdapter);
         contactsRecyclerView.setLayoutManager(new LinearLayoutManager(
@@ -60,7 +68,12 @@ public class GroupContactsHandler extends PoolMember {
         return phoneContactAdapter.getItemCount() == 0;
     }
 
+    @SuppressWarnings("MissingPermission")
     public void showContactsForQuery(String query) {
+        if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
+            return;
+        }
+
         query = query.trim().toLowerCase();
 
         List<PhoneContact> allContacts = $(PhoneContactsHandler.class).getAllContacts();
@@ -85,7 +98,7 @@ public class GroupContactsHandler extends PoolMember {
                 }
             }
 
-            if (contact.getPhoneNumber() != null) {
+            if (!queryPhone.isEmpty() && contact.getPhoneNumber() != null) {
                 if (contact.getPhoneNumber().replaceAll("[^0-9]", "").contains(queryPhone)) {
                     contacts.add(contact);
                 }

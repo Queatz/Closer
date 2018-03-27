@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.group.MyGroupsAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Group;
+import io.objectbox.android.AndroidScheduler;
 
 public class MyGroupsLayoutHandler extends PoolMember {
     private ViewGroup myGroupsLayout;
@@ -19,7 +22,11 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 LinearLayoutManager.HORIZONTAL,
                 false
         ));
-        myGroupsRecyclerView.setAdapter(new MyGroupsAdapter(this));
+        MyGroupsAdapter myGroupsAdapter = new MyGroupsAdapter(this);
+        myGroupsRecyclerView.setAdapter(myGroupsAdapter);
+        $(StoreHandler.class).getStore().box(Group.class).query().build()
+                .subscribe().on(AndroidScheduler.mainThread())
+                .observer(myGroupsAdapter::setGroups);
     }
 
     public int getHeight() {

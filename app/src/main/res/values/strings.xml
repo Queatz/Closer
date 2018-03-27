@@ -39,4 +39,7 @@
     <string name="make_suggestion">Make suggestion…</string>
     <string name="add_suggestion">Add suggestion</string>
     <string name="make_a_suggestion">Map a suggestion…</string>
+    <string name="share_with">Share with…</string>
+    <string name="add_new_group">+ New Group</string>
+    <string name="verify_your_number">Verify your number</string>
 </resources>

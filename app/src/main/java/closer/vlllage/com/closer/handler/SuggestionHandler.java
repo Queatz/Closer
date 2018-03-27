@@ -67,7 +67,7 @@ public class SuggestionHandler extends PoolMember {
     }
 
     private SubscriptionBuilder<List<Suggestion>> getRandomSuggestions(LatLng near) {
-        return $(StoreHandler.class).getStore().box(Suggestion.class).query().build().subscribe().on(AndroidScheduler.mainThread());
+        return $(StoreHandler.class).getStore().box(Suggestion.class).query().build().subscribe().single().on(AndroidScheduler.mainThread());
     }
 
     public void clearSuggestions() {

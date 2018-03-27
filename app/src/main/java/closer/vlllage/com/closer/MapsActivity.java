@@ -9,10 +9,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
 import closer.vlllage.com.closer.handler.DisposableHandler;
+import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.IntentHandler;
 import closer.vlllage.com.closer.handler.LocationHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
@@ -28,6 +32,9 @@ import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.pool.PoolActivity;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Group;
+import io.objectbox.android.AndroidScheduler;
 
 public class MapsActivity extends PoolActivity {
 
@@ -58,11 +65,25 @@ public class MapsActivity extends PoolActivity {
             }
         }, mapBubble -> {
             $(SuggestionHandler.class).clearSuggestions();
-            MapBubble menuBubble = new MapBubble(mapBubble.getLatLng(), "Menu", "");
-            menuBubble.setPinned(true);
-            menuBubble.setOnTop(true);
-            menuBubble.setType(BubbleType.MENU);
-            $(TimerHandler.class).post(() -> $(BubbleHandler.class).add(menuBubble), 225);
+
+            $(StoreHandler.class).getStore().box(Group.class).query().build().subscribe().single().on(AndroidScheduler.mainThread()).observer(groups -> {
+                List<String> groupNames = new ArrayList<>();
+                for(Group group : groups) {
+                    groupNames.add(group.getName());
+                }
+
+                MapBubble menuBubble = new MapBubble(mapBubble.getLatLng(), BubbleType.MENU);
+                menuBubble.setPinned(true);
+                menuBubble.setOnTop(true);
+                $(TimerHandler.class).post(() -> {
+                    $(BubbleHandler.class).add(menuBubble);
+                    $(MapBubbleMenuView.class).setMenuTitle(menuBubble, getString(R.string.share_with));
+                    $(MapBubbleMenuView.class).getMenuAdapter(menuBubble).setMenuItems(groupNames);
+                    menuBubble.setOnItemClickListener(position -> {
+                        $(GroupActivityTransitionHandler.class).showGroupMessages(menuBubble.getView(), groups.get(position).getId());
+                    });
+                }, 225);
+            });
         }));
         $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
         $(MapHandler.class).setOnMapClickedListener(latLng -> {

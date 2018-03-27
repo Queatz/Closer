@@ -1,12 +1,4 @@
 
-Verify that
-=================
-
-[ ] Search contacts works
-[ ] Allow contacts shows current contacts for query
-[ ] Add suggestion works (long-press)
-[ ] Shuffle suggestions uses real suggestions
-
 Next
 =================
 
@@ -16,18 +8,12 @@ Next
 [ ] Closer update bubble pivot after text changed
 
 [ ] Hook up models (local only)
-    [ ] Create: group
-        From recycler last item
     [ ] Create&/Link: Add contact to group
         From contact list
     [ ] Create&Link:Send message to group
         From group messages view
-    [X] Create: Suggestion
-        From long-press on map
 
 [ ] Use model queries
-    [X] Load real suggestions
-    [ ] Load real groups
     [ ] Load real group messages
     [ ] Load real group contacts
 

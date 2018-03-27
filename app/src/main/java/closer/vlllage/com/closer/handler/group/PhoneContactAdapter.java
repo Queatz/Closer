@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
@@ -16,12 +17,11 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 
 public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter.PhoneContactViewHolder> {
 
-    private final List<PhoneContact> contacts;
+    private final List<PhoneContact> contacts = new ArrayList<>();
     private OnPhoneContactClickListener onPhoneContactClickListener;
 
-    public PhoneContactAdapter(PoolMember poolMember, @NonNull List<PhoneContact> contacts, OnPhoneContactClickListener onPhoneContactClickListener) {
+    public PhoneContactAdapter(PoolMember poolMember, OnPhoneContactClickListener onPhoneContactClickListener) {
         super(poolMember);
-        this.contacts = contacts;
         this.onPhoneContactClickListener = onPhoneContactClickListener;
     }
 

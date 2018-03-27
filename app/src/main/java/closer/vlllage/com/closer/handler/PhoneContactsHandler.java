@@ -1,9 +1,11 @@
 package closer.vlllage.com.closer.handler;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ public class PhoneContactsHandler extends PoolMember {
     private List<PhoneContact> contacts;
 
     @Nullable
+    @RequiresPermission(Manifest.permission.READ_CONTACTS)
     public List<PhoneContact> getAllContacts() {
         if (contacts != null && !contacts.isEmpty()) {
             return contacts;
