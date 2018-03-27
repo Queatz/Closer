@@ -14,7 +14,7 @@ import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Suggestion;
-import io.realm.RealmResults;
+import io.objectbox.query.Query;
 
 public class SuggestionHandler extends PoolMember {
 
@@ -28,13 +28,11 @@ public class SuggestionHandler extends PoolMember {
 
         LatLng mapCenter = $(MapHandler.class).getCenter();
 
-        getRandomSuggestions(mapCenter).addChangeListener(results -> {
-            results.removeAllChangeListeners();
-
+        getRandomSuggestions(mapCenter).subscribe().observer(suggestions -> {
             Random random = new Random();
             Set<Suggestion> suggested = new HashSet<>();
             for (int i = 0; i < 3; i++) {
-                Suggestion suggestion = results.get(random.nextInt(results.size()));
+                Suggestion suggestion = suggestions.get(random.nextInt(suggestions.size()));
 
                 if (suggestion == null) {
                     continue;
@@ -66,8 +64,8 @@ public class SuggestionHandler extends PoolMember {
         });
     }
 
-    private RealmResults<Suggestion> getRandomSuggestions(LatLng near) {
-        return $(StoreHandler.class).getStore().getRealm().where(Suggestion.class).findAllAsync();
+    private Query<Suggestion> getRandomSuggestions(LatLng near) {
+        return $(StoreHandler.class).getStore().box(Suggestion.class).query().build();
     }
 
     public void clearSuggestions() {
@@ -86,7 +84,8 @@ public class SuggestionHandler extends PoolMember {
         $(AlertHandler.class).makeAlert(String.class)
             .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_suggestion_here))
             .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_suggestion))
-            .setPositiveButtonCallback(result -> createNewSuggestion(latLng, result.getResult()))
+            .setLayoutResId(R.layout.set_name_modal)
+            .setTextView(R.id.input, result -> createNewSuggestion(latLng, result))
             .show();
     }
 
@@ -96,10 +95,9 @@ public class SuggestionHandler extends PoolMember {
         }
 
         Suggestion suggestion = $(StoreHandler.class).create(Suggestion.class);
-        $(StoreHandler.class).execute(transaction -> {
-            suggestion.setName(name);
-            suggestion.setLatitude(latLng.latitude);
-            suggestion.setLongitude(latLng.longitude);
-        });
+        suggestion.setName(name);
+        suggestion.setLatitude(latLng.latitude);
+        suggestion.setLongitude(latLng.longitude);
+        $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
     }
 }

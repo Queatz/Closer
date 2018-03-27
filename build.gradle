@@ -1,7 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+    ext.objectboxVersion = '1.4.3'
+
     repositories {
         google()
         jcenter()
@@ -9,7 +10,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.0-alpha07'
         classpath 'com.google.gms:google-services:3.2.0'
-        classpath 'io.realm:realm-gradle-plugin:5.0.0'
+        classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
     }
 }
 

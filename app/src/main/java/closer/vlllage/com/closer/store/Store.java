@@ -1,24 +1,25 @@
 package closer.vlllage.com.closer.store;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import android.app.Application;
+
+import closer.vlllage.com.closer.store.models.BaseObject;
+import closer.vlllage.com.closer.store.models.MyObjectBox;
+import io.objectbox.Box;
+import io.objectbox.BoxStore;
 
 public class Store {
 
-    private static final String REALM_FILE = "closer.realm";
-    private final Realm realm;
+    private final BoxStore boxStore;
 
-    public Store() {
-        RealmConfiguration config = new RealmConfiguration.Builder().name(REALM_FILE).build();
-        Realm.setDefaultConfiguration(config);
-        realm = Realm.getDefaultInstance();
+    Store(Application app) {
+        boxStore = MyObjectBox.builder().androidContext(app).build();
     }
 
     public void close() {
-        realm.close();
+        boxStore.close();
     }
 
-    public Realm getRealm() {
-        return realm;
+    public <T extends BaseObject> Box<T> box(Class<T> clazz) {
+        return boxStore.boxFor(clazz);
     }
 }

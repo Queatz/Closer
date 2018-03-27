@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
+apply plugin: 'io.objectbox'
 
 android {
     compileSdkVersion 27

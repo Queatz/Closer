@@ -6,7 +6,6 @@ import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.BaseObject;
 import closer.vlllage.com.closer.util.PhoneUtil;
-import io.realm.Realm;
 
 public class StoreHandler extends PoolMember {
 
@@ -14,8 +13,7 @@ public class StoreHandler extends PoolMember {
 
     @Override
     protected void onPoolInit() {
-        Realm.init($(ApplicationHandler.class).getApp());
-        store = new Store();
+        store = new Store($(ApplicationHandler.class).getApp());
     }
 
     @Override
@@ -29,23 +27,15 @@ public class StoreHandler extends PoolMember {
 
     public <T extends BaseObject> T create(Class<T> clazz) {
         try {
-            T realmObject = clazz.getConstructor().newInstance();
-            realmObject.setId(newLocalId());
-            insert(realmObject);
-            return realmObject;
+            T baseObject = clazz.getConstructor().newInstance();
+            baseObject.setId(newLocalId());
+            store.box(clazz).put(baseObject);
+            return baseObject;
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
 
         return null;
-    }
-
-    public  <T extends BaseObject> void insert(T realmObject) {
-        store.getRealm().executeTransactionAsync(transaction -> store.getRealm().insert(realmObject));
-    }
-
-    public void execute(Realm.Transaction transaction) {
-        $(StoreHandler.class).getStore().getRealm().executeTransactionAsync(transaction);
     }
 
     private String newLocalId() {

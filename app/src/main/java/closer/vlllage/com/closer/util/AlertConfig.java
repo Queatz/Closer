@@ -12,7 +12,8 @@ public class AlertConfig<T> {
     private ButtonCallback<T> positiveButtonCallback;
     private String negativeButton;
     private ButtonCallback<T> negativeButtonCallback;
-    private Integer autofocusView;
+    private Integer textView;
+    private OnTextViewSubmitCallback onTextViewSubmitCallback;
     private OnAfterViewCreatedCallback onAfterViewCreated;
     private AlertResult<T> alertResult;
 
@@ -87,21 +88,19 @@ public class AlertConfig<T> {
         return this;
     }
 
-    public Integer getAutofocusView() {
-        return autofocusView;
+    public Integer getTextViewId() {
+        return textView;
     }
 
 
-    public void setAutofocusView(Integer autofocusView) {
-        this.autofocusView = autofocusView;
+    public AlertConfig<T> setTextView(Integer textView, OnTextViewSubmitCallback onTextViewSubmitCallback) {
+        this.textView = textView;
+        this.onTextViewSubmitCallback = onTextViewSubmitCallback;
+        return this;
     }
 
     public OnAfterViewCreatedCallback getOnAfterViewCreated() {
         return onAfterViewCreated;
-    }
-
-    public void setOnAfterViewCreated(OnAfterViewCreatedCallback onAfterViewCreated) {
-        this.onAfterViewCreated = onAfterViewCreated;
     }
 
     public AlertResult<T> getAlertResult() {
@@ -110,6 +109,15 @@ public class AlertConfig<T> {
 
     public AlertConfig<T> setAlertResult(AlertResult<T> alertResult) {
         this.alertResult = alertResult;
+        return this;
+    }
+
+    public OnTextViewSubmitCallback getOnTextViewSubmitCallback() {
+        return onTextViewSubmitCallback;
+    }
+
+    public AlertConfig<T> setOnAfterViewCreated(OnAfterViewCreatedCallback onAfterViewCreated) {
+        this.onAfterViewCreated = onAfterViewCreated;
         return this;
     }
 
@@ -123,6 +131,10 @@ public class AlertConfig<T> {
 
     public interface OnAfterViewCreatedCallback {
         void onAfterViewCreated(View view);
+    }
+
+    public interface OnTextViewSubmitCallback {
+        void onTextViewSubmit(String value);
     }
 
     public static class AlertResult<T> {

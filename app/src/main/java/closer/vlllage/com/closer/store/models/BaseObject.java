@@ -1,10 +1,6 @@
 package closer.vlllage.com.closer.store.models;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class BaseObject extends RealmObject {
-    @PrimaryKey
+public class BaseObject {
     private String id;
     private boolean localOnly;
 

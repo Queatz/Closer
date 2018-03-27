@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -14,6 +15,8 @@ import closer.vlllage.com.closer.util.AlertConfig;
 import closer.vlllage.com.closer.util.KeyboardUtil;
 
 public class AlertHandler extends PoolMember {
+
+    @Deprecated
     public void showAlert(@LayoutRes int layout, @StringRes int buttonTitle,
                           @StringRes int title, @Nullable String prefillInput,
                           @Nullable OnSubmitCallback onSubmitCallback) {
@@ -52,6 +55,7 @@ public class AlertHandler extends PoolMember {
         });
     }
 
+    @Deprecated
     public void showAlert(@StringRes int message, @StringRes int title, int button,
                           @Nullable OnSubmitCallback onSubmitCallback) {
         final AlertDialog dialog = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog)
@@ -81,48 +85,74 @@ public class AlertHandler extends PoolMember {
         return new AlertConfig<T>(this::showAlertConfig);
     }
 
-    private <T> void showAlertConfig(final AlertConfig<T> alertConfig) {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog);
+    public AlertConfig<String> makeInputAlert() {
+        return new AlertConfig<String>(this::showAlertConfig);
+    }
 
+    private <T> void showAlertConfig(final AlertConfig<T> alertConfig) {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog);
+        TextView textView = null;
         if (alertConfig.getLayoutResId() != null) {
             View view = View.inflate($(ActivityHandler.class).getActivity(), alertConfig.getLayoutResId(), null);
 
-            if (alertConfig.getAutofocusView() != null) {
-                View autoFocusTextView = view.findViewById(alertConfig.getAutofocusView());
-                autoFocusTextView.post(autoFocusTextView::requestFocus);
-                autoFocusTextView.post(() -> KeyboardUtil.showKeyboard(autoFocusTextView, true));
+            if (alertConfig.getTextViewId() != null) {
+                textView = view.findViewById(alertConfig.getTextViewId());
+                TextView finalTextView = textView;
+                textView.post(textView::requestFocus);
+                textView.post(() -> KeyboardUtil.showKeyboard(finalTextView, true));
+
+                if (alertConfig.getOnTextViewSubmitCallback() != null) {
+                    dialogBuilder.setOnDismissListener(dialogInterface -> {
+                        alertConfig.getOnTextViewSubmitCallback().onTextViewSubmit(finalTextView.getText().toString());
+                    });
+                }
             }
 
             if (alertConfig.getOnAfterViewCreated() != null) {
                 alertConfig.getOnAfterViewCreated().onAfterViewCreated(view);
             }
+
+            dialogBuilder.setView(view);
         }
 
         if (alertConfig.getPositiveButton() != null) {
-            dialog.setPositiveButton(alertConfig.getPositiveButton(), (d, w) -> {
+            dialogBuilder.setPositiveButton(alertConfig.getPositiveButton(), (d, w) -> {
                 if (alertConfig.getPositiveButtonCallback() != null) {
                     alertConfig.getPositiveButtonCallback().onClick(alertConfig.getAlertResult());
                 }
             });
         }
 
-        if (alertConfig.getPositiveButton() != null) {
-            dialog.setPositiveButton(alertConfig.getPositiveButton(), (d, w) -> {
-                if (alertConfig.getPositiveButtonCallback() != null) {
-                    alertConfig.getPositiveButtonCallback().onClick(alertConfig.getAlertResult());
+        if (alertConfig.getNegativeButton() != null) {
+            dialogBuilder.setNegativeButton(alertConfig.getNegativeButton(), (d, w) -> {
+                if (alertConfig.getNegativeButtonCallback() != null) {
+                    alertConfig.getNegativeButtonCallback().onClick(alertConfig.getAlertResult());
                 }
             });
         }
 
         if (alertConfig.getMessage() != null) {
-            dialog.setMessage(alertConfig.getMessage());
+            dialogBuilder.setMessage(alertConfig.getMessage());
         }
 
         if (alertConfig.getTitle() != null) {
-            dialog.setTitle(alertConfig.getTitle());
+            dialogBuilder.setTitle(alertConfig.getTitle());
         }
 
-        dialog.show();
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        if (textView != null && textView instanceof EditText) {
+            ((EditText) textView).setOnEditorActionListener((v, actionId, event) -> {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).callOnClick();
+                    return true;
+                }
+
+                return false;
+            });
+        }
+
+        alertConfig.show();
     }
 
     public interface OnSubmitCallback {

@@ -4,6 +4,7 @@ import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.AlertHandler;
+import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class GroupHandler extends PoolMember {
@@ -21,9 +22,14 @@ public class GroupHandler extends PoolMember {
         peopleInGroup.setText("Jacob, Bun, Mai, Phoung (invited), Le My, Stella");
 
         groupName.setOnClickListener(view -> {
-            $(AlertHandler.class).showAlert(R.layout.set_name_modal, R.string.set_group_name, 0, "888 Friends", input -> {
-
-            });
+            $(AlertHandler.class).makeAlert()
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.set_group_name))
+                    .setLayoutResId(R.layout.set_name_modal)
+                    .setOnAfterViewCreated(alertView -> {
+                        TextView input = alertView.findViewById(R.id.input);
+                        input.setText("888 Friends");
+                    })
+                    .show();
         });
     }
 }

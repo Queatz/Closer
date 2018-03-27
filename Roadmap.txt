@@ -12,6 +12,9 @@ Next
 
 [ ] Get UI to perfection
 
+[ ] Closer manual phone number add in recycler
+[ ] Closer update bubble pivot after text changed
+
 [ ] Hook up models (local only)
     [ ] Create: group
         From recycler last item
@@ -19,11 +22,11 @@ Next
         From contact list
     [ ] Create&Link:Send message to group
         From group messages view
-    [ ] Create: Suggestion
+    [X] Create: Suggestion
         From long-press on map
 
 [ ] Use model queries
-    [ ] Load real suggestions
+    [X] Load real suggestions
     [ ] Load real groups
     [ ] Load real group messages
     [ ] Load real group contacts
@@ -93,8 +96,6 @@ Todo (complete list)
             [ ] fallback onto SMS
             [ ] load all
         [ ] Show messages
-        [ ] Setup local realm database
-            [ ] Store messages in local realm
         [ ] Tap on name menu
             [ ] Rename group...
             [ ] Leave group :(?...
