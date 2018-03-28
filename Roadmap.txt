@@ -28,14 +28,7 @@ Top
     [ ] SMS (from backend)
     [ ] Push notification
 
-[ ] Suggestion
-    [ ] Select group from menu
-    [ ] Add
-    [ ] Load
-    [ ] Long-press to force reload suggestions from server
-
 [ ] Group messaging
-    [ ] Set group name
     [ ] Verify number
     [ ] Send
     [ ] Receive
@@ -83,7 +76,6 @@ Todo (complete list)
             [ ] load all
         [ ] Show messages
         [ ] Tap on name menu
-            [ ] Rename group...
             [ ] Leave group :(?...
         [ ] Send message
             [ ] Show sending
@@ -94,16 +86,9 @@ Todo (complete list)
             [ ] Show people left
             [ ] Show group renamed
 
-    [ ] Long-press
-        [ ] Add suggestion
-        [ ] Remove suggestion
+    [ ] Long-press to force reload suggestions from server
 
     [ ] Verify Number
-        [X] Tap "Verify your number to join groups" at button of app screen
-            [X] Dialog with phone number
-                [ ] Auto-fill phone number
-                [X] Allow them to enter their number
-                [X] Send code button
         [ ] Get SMS
         [ ] Enter 6-digit code
         [ ] Success!
