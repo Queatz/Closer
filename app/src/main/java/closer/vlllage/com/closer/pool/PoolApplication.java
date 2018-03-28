@@ -16,7 +16,7 @@ public abstract class PoolApplication extends Application {
         super.onTerminate();
     }
 
-    protected <T extends PoolMember> T $(Class<T> member) {
+    public <T extends PoolMember> T $(Class<T> member) {
         return pool.$(member);
     }
 

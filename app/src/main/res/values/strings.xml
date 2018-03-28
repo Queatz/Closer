@@ -42,4 +42,5 @@
     <string name="share_with">Share with…</string>
     <string name="add_new_group">+ New Group</string>
     <string name="verify_your_number">Verify your number</string>
+    <string name="not_found">Not found</string>
 </resources>

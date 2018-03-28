@@ -13,12 +13,7 @@ public class StoreHandler extends PoolMember {
 
     @Override
     protected void onPoolInit() {
-        store = new Store($(ApplicationHandler.class).getApp());
-    }
-
-    @Override
-    protected void onPoolEnd() {
-        store.close();
+        store = $(ApplicationHandler.class).getApp().$(StoreRefHandler.class).get();
     }
 
     public Store getStore() {
