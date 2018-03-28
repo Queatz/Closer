@@ -31,6 +31,10 @@ public class SuggestionHandler extends PoolMember {
         LatLng mapCenter = $(MapHandler.class).getCenter();
 
         getRandomSuggestions(mapCenter).observer(suggestions -> {
+            if (suggestions.isEmpty()) {
+                return;
+            }
+
             Random random = new Random();
             Set<Suggestion> suggested = new HashSet<>();
             for (int i = 0; i < 3; i++) {

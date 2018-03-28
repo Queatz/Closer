@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -22,17 +23,26 @@ public abstract class CircularRevealActivity extends PoolActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (getIntent().getSourceBounds() != null) {
-            getWindow().getDecorView().post(() -> {
-                Rect sourceBounds = getIntent().getSourceBounds();
-                Animator animator = ViewAnimationUtils.createCircularReveal(findViewById(getBackgroundId()),
-                        sourceBounds.centerX(),
-                        sourceBounds.centerY(),
-                        0,
-                        (float) Math.hypot(getWindow().getDecorView().getWidth(), getWindow().getDecorView().getHeight())
-                );
-                animator.setDuration(350);
-                animator.setInterpolator(new AccelerateInterpolator());
-                animator.start();
+
+            ViewTreeObserver viewTreeObserver = getWindow().getDecorView().getRootView().getViewTreeObserver();
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    Rect sourceBounds = CircularRevealActivity.this.getIntent().getSourceBounds();
+                    Animator animator = ViewAnimationUtils.createCircularReveal(CircularRevealActivity.this.findViewById(CircularRevealActivity.this.getBackgroundId()),
+                            sourceBounds.centerX(),
+                            sourceBounds.centerY(),
+                            0,
+                            (float) Math.hypot(CircularRevealActivity.this.getWindow().getDecorView().getWidth(), CircularRevealActivity.this.getWindow().getDecorView().getHeight())
+                    );
+                    animator.setDuration(350);
+                    animator.setInterpolator(new AccelerateInterpolator());
+                    animator.start();
+
+                    if (viewTreeObserver.isAlive()) {
+                        viewTreeObserver.removeOnGlobalLayoutListener(this);
+                    }
+                }
             });
         }
 

@@ -31,12 +31,7 @@ public class AlertHandler extends PoolMember {
                 TextView finalTextView = textView;
                 textView.post(textView::requestFocus);
                 textView.post(() -> KeyboardUtil.showKeyboard(finalTextView, true));
-
-                if (alertConfig.getOnTextViewSubmitCallback() != null) {
-                    dialogBuilder.setOnDismissListener(dialogInterface -> {
-                        alertConfig.getOnTextViewSubmitCallback().onTextViewSubmit(finalTextView.getText().toString());
-                    });
-                }
+                dialogBuilder.setOnDismissListener(dialogInterface -> KeyboardUtil.showKeyboard(finalTextView, false));
             }
 
             if (alertConfig.getOnAfterViewCreated() != null) {
@@ -47,7 +42,12 @@ public class AlertHandler extends PoolMember {
         }
 
         if (alertConfig.getPositiveButton() != null) {
+            TextView finalTextView = textView;
             dialogBuilder.setPositiveButton(alertConfig.getPositiveButton(), (d, w) -> {
+                if (alertConfig.getOnTextViewSubmitCallback() != null && finalTextView != null) {
+                    alertConfig.getOnTextViewSubmitCallback().onTextViewSubmit(finalTextView.getText().toString());
+                }
+
                 if (alertConfig.getPositiveButtonCallback() != null) {
                     alertConfig.getPositiveButtonCallback().onClick(alertConfig.getAlertResult());
                 }

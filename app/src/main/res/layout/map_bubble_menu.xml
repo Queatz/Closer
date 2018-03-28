@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/clickable_blue_8dp"
+        android:background="@drawable/clickable_blue_light_8dp"
         android:elevation="4dp">
 
         <TextView
@@ -44,6 +44,6 @@
         android:layout_marginBottom="4dp"
         android:elevation="4dp"
         android:rotation="45"
-        android:background="@drawable/map_bubble_knob_blue"/>
+        android:background="@drawable/map_bubble_knob_blue_light"/>
 
 </LinearLayout>
