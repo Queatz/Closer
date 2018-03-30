@@ -22,14 +22,17 @@ public abstract class CircularRevealActivity extends PoolActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (getIntent().getSourceBounds() != null) {
+        View background = findViewById(getBackgroundId());
 
-            ViewTreeObserver viewTreeObserver = getWindow().getDecorView().getRootView().getViewTreeObserver();
+        if (getIntent().getSourceBounds() != null) {
+            ViewTreeObserver viewTreeObserver = background.getViewTreeObserver();
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
+                    background.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
                     Rect sourceBounds = CircularRevealActivity.this.getIntent().getSourceBounds();
-                    Animator animator = ViewAnimationUtils.createCircularReveal(CircularRevealActivity.this.findViewById(CircularRevealActivity.this.getBackgroundId()),
+                    Animator animator = ViewAnimationUtils.createCircularReveal(background,
                             sourceBounds.centerX(),
                             sourceBounds.centerY(),
                             0,
@@ -38,16 +41,12 @@ public abstract class CircularRevealActivity extends PoolActivity {
                     animator.setDuration(350);
                     animator.setInterpolator(new AccelerateInterpolator());
                     animator.start();
-
-                    if (viewTreeObserver.isAlive()) {
-                        viewTreeObserver.removeOnGlobalLayoutListener(this);
-                    }
                 }
             });
         }
 
-        findViewById(getBackgroundId()).setOnTouchListener((view, motionEvent) -> {
-            findViewById(getBackgroundId()).setOnTouchListener(null);
+        background.setOnTouchListener((view, motionEvent) -> {
+            background.setOnTouchListener(null);
             finish();
             return true;
         });

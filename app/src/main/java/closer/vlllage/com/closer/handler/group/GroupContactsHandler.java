@@ -11,6 +11,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.AlertHandler;
+import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.PhoneContactsHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
@@ -36,7 +37,9 @@ public class GroupContactsHandler extends PoolMember {
         });
 
         if($(PermissionHandler.class).has(READ_CONTACTS)) {
-            phoneContactAdapter.setContacts($(PhoneContactsHandler.class).getAllContacts());
+            $(DisposableHandler.class).add(
+                    $(PhoneContactsHandler.class).getAllContacts().subscribe(phoneContactAdapter::setContacts)
+            );
         }
 
         contactsRecyclerView.setAdapter(phoneContactAdapter);
@@ -69,43 +72,43 @@ public class GroupContactsHandler extends PoolMember {
     }
 
     @SuppressWarnings("MissingPermission")
-    public void showContactsForQuery(String query) {
+    public void showContactsForQuery(String originalQuery) {
         if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
             return;
         }
 
-        query = query.trim().toLowerCase();
+        $(DisposableHandler.class).add($(PhoneContactsHandler.class).getAllContacts().subscribe(allContacts -> {
+            String query = originalQuery.trim().toLowerCase();
 
-        List<PhoneContact> allContacts = $(PhoneContactsHandler.class).getAllContacts();
+            if (allContacts == null) {
+                return;
+            }
 
-        if (allContacts == null) {
-            return;
-        }
+            if (query.isEmpty()) {
+                phoneContactAdapter.setContacts(allContacts);
+                return;
+            }
 
-        if (query.isEmpty()) {
-            phoneContactAdapter.setContacts(allContacts);
-            return;
-        }
+            String queryPhone = query.replaceAll("[^0-9]", "");
 
-        String queryPhone = query.replaceAll("[^0-9]", "");
+            List<PhoneContact> contacts = new ArrayList<>();
+            for(PhoneContact contact : allContacts) {
+                if (contact.getName() != null) {
+                    if (contact.getName().toLowerCase().contains(query)) {
+                        contacts.add(contact);
+                        continue;
+                    }
+                }
 
-        List<PhoneContact> contacts = new ArrayList<>();
-        for(PhoneContact contact : allContacts) {
-            if (contact.getName() != null) {
-                if (contact.getName().toLowerCase().contains(query)) {
-                    contacts.add(contact);
-                    continue;
+                if (!queryPhone.isEmpty() && contact.getPhoneNumber() != null) {
+                    if (contact.getPhoneNumber().replaceAll("[^0-9]", "").contains(queryPhone)) {
+                        contacts.add(contact);
+                    }
                 }
             }
 
-            if (!queryPhone.isEmpty() && contact.getPhoneNumber() != null) {
-                if (contact.getPhoneNumber().replaceAll("[^0-9]", "").contains(queryPhone)) {
-                    contacts.add(contact);
-                }
-            }
-        }
-
-        phoneContactAdapter.setContacts(contacts);
+            phoneContactAdapter.setContacts(contacts);
+        }));
     }
 
     public void showContactsForQuery() {
