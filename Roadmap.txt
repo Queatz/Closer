@@ -1,11 +1,10 @@
 
-Next
+ Next Flows
 =================
 
-[ ] Get UI to perfection
 
-[ ] Closer manual phone number add in recycler
-[ ] Closer update bubble pivot after text changed
+[ ]
+[ ] Show manual phone number in recycler once starting to type
 
 [ ] Hook up models (local only)
     [ ] Create&/Link: Add contact to group
@@ -17,9 +16,8 @@ Next
     [ ] Load real group messages
     [ ] Load real group contacts
 
-[ ] Clean
-    [ ] AlertHandler
-    [ ] Bubble menu adapter
+[ ] Verify number
+    [ ]
 
 Top
 =================
