@@ -12,6 +12,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.ArrayList;
 import java.util.List;
 
+import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
@@ -112,9 +113,13 @@ public class MapsActivity extends PoolActivity {
                     .getMenuAdapter(menuBubble)
                     .setMenuItems(getString(R.string.share_this_location), getString(R.string.add_suggestion_here));
         });
-        $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class)
-                .add($(ApiHandler.class).load(latLng).map(MapBubble::from).subscribe(mapBubbles ->
-                        $(BubbleHandler.class).replace(mapBubbles), this::networkError)));
+        $(MapHandler.class).setOnMapIdleListener(latLng -> {
+            $(DisposableHandler.class).add($(ApiHandler.class).getPhonesNear(latLng).map(MapBubble::from).subscribe(mapBubbles ->
+                            $(BubbleHandler.class).replace(mapBubbles), this::networkError));
+
+            $(DisposableHandler.class).add($(ApiHandler.class).getSuggestionsNear(latLng).map(SuggestionResult::from).subscribe(suggestions ->
+                            $(SuggestionHandler.class).loadAll(suggestions), this::networkError));
+        });
         $(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();
         $(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));

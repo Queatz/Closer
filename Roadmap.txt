@@ -10,7 +10,7 @@
  [ ] GET /verify                                        -> check status             -> { verified: true }
  [ ] GET /group                                         -> my groups                -> [{group}, {group}, ...]
  [ ] GET /group/:id                                     -> group details            -> {contacts, name, ...}
- [ ] GET /group/:id/messages                            -> recent group messages (7 days or last 100)-> [{groupmessage},{groupmessage}, ...]
+ [ ] GET /group/:id/messages                            -> recent group messages (7 days or last 100) -> [{groupmessage},{groupmessage}, ...]
  [ ] POST /group { name: 'Group Name' }                 -> create group             -> { success: true }
  [ ] POST /group/:id/messages { text: , attachment: }   -> send message to group    -> { success: true }
  [ ] POST /group/:id { invite: 'phone number' }         -> invite to group          -> { success: true }

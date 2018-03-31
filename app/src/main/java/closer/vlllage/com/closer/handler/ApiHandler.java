@@ -7,6 +7,7 @@ import java.util.List;
 import closer.vlllage.com.closer.api.ApiService;
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
+import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.util.LatLngStr;
 import io.reactivex.Observable;
@@ -20,8 +21,18 @@ public class ApiHandler extends PoolMember {
         api.setAuthorization(auth);
     }
 
-    public Observable<List<PhoneResult>> load(LatLng latLng) {
-        return api.getBackend().near(LatLngStr.from(latLng))
+    public Observable<List<PhoneResult>> getPhonesNear(LatLng latLng) {
+        return api.getBackend().getPhonesNear(LatLngStr.from(latLng))
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<List<SuggestionResult>> getSuggestionsNear(LatLng latLng) {
+        return api.getBackend().getSuggestionsNear(LatLngStr.from(latLng))
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<SuccessResult> addSuggestion(String name, LatLng latLng) {
+        return api.getBackend().addSuggestion(name, LatLngStr.from(latLng))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -36,7 +47,7 @@ public class ApiHandler extends PoolMember {
     }
 
     public Observable<SuccessResult> sendMessage(String phone, String message) {
-        return api.getBackend().send(phone, message)
+        return api.getBackend().sendMessage(phone, message)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

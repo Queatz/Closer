@@ -4,6 +4,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
+import closer.vlllage.com.closer.api.models.SuggestionResult;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -13,11 +14,13 @@ import retrofit2.http.Query;
 public interface Backend {
     String BASE_URL = "http://closer.vlllage.com/";
 
-    @GET("map/{latLng}")
-    Observable<List<PhoneResult>> near(@Path("latLng") String latLng);
+    // Phone
+
+    @GET("map/{geo}")
+    Observable<List<PhoneResult>> getPhonesNear(@Path("geo") String geo);
 
     @POST("phone/{phone}")
-    Observable<SuccessResult> send(@Path("phone") String phone, @Query("message") String message);
+    Observable<SuccessResult> sendMessage(@Path("phone") String phone, @Query("message") String message);
 
     @GET("phone")
     Observable<PhoneResult> phone();
@@ -30,5 +33,13 @@ public interface Backend {
             @Query("active") Boolean active,
             @Query("deviceToken") String pushDeviceToken
     );
+
+    // Suggestion
+
+    @GET("suggestion/{latLng}")
+    Observable<List<SuggestionResult>> getSuggestionsNear(@Path("latLng") String latLng);
+
+    @POST("suggestion")
+    Observable<SuccessResult> addSuggestion(@Query("name") String name, @Query("geo") String geo);
 
 }

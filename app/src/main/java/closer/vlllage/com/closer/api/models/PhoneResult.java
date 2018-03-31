@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PhoneResult {
     public String id;
-    public List<Float> geo;
+    public List<Double> geo;
     public String name;
     public String status;
     public Boolean active;

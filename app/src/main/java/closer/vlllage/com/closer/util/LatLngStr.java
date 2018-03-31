@@ -12,10 +12,10 @@ public class LatLngStr {
 
     public static LatLng to(String latLng) {
         String[] parts = latLng.split(",");
-        return new LatLng(Float.valueOf(parts[0]), Float.valueOf(parts[1]));
+        return new LatLng(Double.valueOf(parts[0]), Double.valueOf(parts[1]));
     }
 
-    public static LatLng to(List<Float> latLng) {
+    public static LatLng to(List<Double> latLng) {
         if (latLng == null) {
             return null;
         }

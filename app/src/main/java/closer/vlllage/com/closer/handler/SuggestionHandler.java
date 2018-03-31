@@ -15,8 +15,10 @@ import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Suggestion;
+import closer.vlllage.com.closer.store.models.Suggestion_;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.reactive.SubscriptionBuilder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class SuggestionHandler extends PoolMember {
 
@@ -96,14 +98,33 @@ public class SuggestionHandler extends PoolMember {
     }
 
     private void createNewSuggestion(LatLng latLng, String name) {
-        if (name == null || name.isEmpty()) {
+        if (name == null || name.trim().isEmpty()) {
             return;
         }
 
-        Suggestion suggestion = $(StoreHandler.class).create(Suggestion.class);
-        suggestion.setName(name);
-        suggestion.setLatitude(latLng.latitude);
-        suggestion.setLongitude(latLng.longitude);
-        $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
+        $(DisposableHandler.class).add($(ApiHandler.class).addSuggestion(name.trim(), latLng)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(successResult -> {}));
+
+        if ("local first" == null) {
+            Suggestion suggestion = $(StoreHandler.class).create(Suggestion.class);
+            suggestion.setName(name);
+            suggestion.setLatitude(latLng.latitude);
+            suggestion.setLongitude(latLng.longitude);
+            $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
+        }
+    }
+
+    public void loadAll(List<Suggestion> suggestions) {
+        for (Suggestion suggestion : suggestions) {
+            $(StoreHandler.class).getStore().box(Suggestion.class).query()
+                    .equal(Suggestion_.id, suggestion.getId())
+                    .build().subscribe().single().on(AndroidScheduler.mainThread())
+                    .observer(result -> {
+                        if (result.isEmpty()) {
+                            $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
+                        }
+            });
+        }
     }
 }
