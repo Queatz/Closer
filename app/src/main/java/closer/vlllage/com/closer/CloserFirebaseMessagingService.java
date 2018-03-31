@@ -7,6 +7,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 import closer.vlllage.com.closer.handler.NotificationHandler;
+import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.util.LatLngStr;
 
 public class CloserFirebaseMessagingService extends FirebaseMessagingService {
@@ -16,12 +17,31 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
 
         Map<String, String> data = remoteMessage.getData();
         if (data.size() > 0) {
-            LatLng latLng = data.containsKey("latLng") ? LatLngStr.to(data.get("latLng")) : null;
-            app.getPool().$(NotificationHandler.class).showNotification(
-                    data.get("phone"),
-                    latLng,
-                    data.containsKey("name") ? data.get("name") : "",
-                    data.get("message"));
+
+            if (data.containsKey("action")) {
+                switch (data.get("action")) {
+                    case "refresh":
+                        if (data.containsKey("what")) {
+                            switch (data.get("what")) {
+                                case "groups":
+                                    app.getPool().$(RefreshHandler.class).refreshMyGroups();
+                                    break;
+                                case "messages":
+                                    app.getPool().$(RefreshHandler.class).refreshMyMessages();
+                                    break;
+                            }
+                        }
+                        break;
+                    case "message":
+                        LatLng latLng = data.containsKey("latLng") ? LatLngStr.to(data.get("latLng")) : null;
+                        app.getPool().$(NotificationHandler.class).showNotification(
+                                data.get("phone"),
+                                latLng,
+                                data.containsKey("name") ? data.get("name") : "",
+                                data.get("message"));
+                        break;
+                }
+            }
         }
     }
 }

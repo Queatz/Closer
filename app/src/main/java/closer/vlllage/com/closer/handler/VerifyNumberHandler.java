@@ -4,6 +4,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class VerifyNumberHandler extends PoolMember {
+
     public void verify() {
         $(AlertHandler.class).makeAlert(String.class)
             .setLayoutResId(R.layout.send_code_layout)
@@ -33,7 +34,10 @@ public class VerifyNumberHandler extends PoolMember {
     }
 
     private void codeConfirmed() {
-        $(AlertHandler.class).makeAlert()
+//        $(PersistenceHandler.class).setIsVerified(true);
+        $(MyGroupsLayoutHandler.class).showVerifyMyNumber(false);
+
+        $(AlertHandler.class).makeAlert(String.class)
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.yaay))
                 .setMessage($(ResourcesHandler.class).getResources().getString(R.string.number_verified))
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.welcome_to_closer))

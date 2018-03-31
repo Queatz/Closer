@@ -5,6 +5,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 import closer.vlllage.com.closer.api.ApiService;
+import closer.vlllage.com.closer.api.models.GroupMessageResult;
+import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
@@ -48,6 +50,22 @@ public class ApiHandler extends PoolMember {
 
     public Observable<SuccessResult> sendMessage(String phone, String message) {
         return api.getBackend().sendMessage(phone, message)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Boolean> isVerified() {
+        return api.getBackend().getIsVerified()
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(verifiedResult -> verifiedResult.verified);
+    }
+
+    public Observable<List<GroupMessageResult>> myMessages() {
+        return api.getBackend().myMessages()
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<List<GroupResult>> myGroups() {
+        return api.getBackend().myGroups()
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

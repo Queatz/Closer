@@ -40,40 +40,45 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
     public void onBindViewHolder(@NonNull MyGroupViewHolder holder, int position) {
         TextView groupName = holder.itemView.findViewById(R.id.groupName);
 
-        groupName.setBackgroundResource(position == 0 ? R.drawable.clickable_accent :
-                position == getItemCount() - 1 ? R.drawable.clickable_blue_light :
-                        R.drawable.clickable_blue);
-
-        groupName.setText(position == 0 ? $(ResourcesHandler.class).getResources().getString(R.string.verify_your_number) :
-                position == getItemCount() - 1 ? $(ResourcesHandler.class).getResources().getString(R.string.add_new_group) :
-                groups.get(position - 1).getName());
-
-        if (position == 0) {
+        if (position < actions.size()) {
+            groupName.setBackgroundResource(R.drawable.clickable_accent);
+            groupName.setText(actions.get(position));
             groupName.setOnClickListener(view -> $(VerifyNumberHandler.class).verify());
-        } else if (position == getItemCount() - 1) {
+            return;
+        }
+
+        position -= actions.size();
+        boolean isNewGroupButton = position >= groups.size();
+
+        if (isNewGroupButton) {
+            groupName.setBackgroundResource(R.drawable.clickable_blue_light);
+            groupName.setText($(ResourcesHandler.class).getResources().getString(R.string.add_new_group));
             groupName.setOnClickListener(view ->
                     $(AlertHandler.class).makeAlert()
-                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
-                        .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_a_new_group))
-                        .setLayoutResId(R.layout.set_name_modal)
-                        .setTextView(R.id.input, name -> createGroup(groupName, name))
-                        .show());
-        } else {
-            Group group = groups.get(position - 1);
-
-            groupName.setOnClickListener(view ->
-                    $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, group.getId()));
-
-            groupName.setOnLongClickListener(view -> {
-                $(AlertHandler.class).makeAlert()
-                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.leave_group, group.getName()))
-                        .setTitle($(ResourcesHandler.class).getResources().getString(R.string.leave_group_title, group.getName()))
-                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.leave_group_message))
-                        .show();
-
-                return true;
-            });
+                            .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
+                            .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_a_new_group))
+                            .setLayoutResId(R.layout.set_name_modal)
+                            .setTextView(R.id.input, name -> createGroup(groupName, name))
+                            .show());
+            return;
         }
+
+        Group group = groups.get(position);
+        groupName.setBackgroundResource(R.drawable.clickable_blue);
+        groupName.setText(group.getName());
+
+        groupName.setOnClickListener(view ->
+                $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, group.getId()));
+
+        groupName.setOnLongClickListener(view -> {
+            $(AlertHandler.class).makeAlert()
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.leave_group, group.getName()))
+                    .setTitle($(ResourcesHandler.class).getResources().getString(R.string.leave_group_title, group.getName()))
+                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.leave_group_message))
+                    .show();
+
+            return true;
+        });
     }
 
     private void createGroup(TextView groupName, String name) {
@@ -90,11 +95,16 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
 
     @Override
     public int getItemCount() {
-        return 1 + 1 + groups.size();
+        return actions.size() + groups.size() + 1/* New Group */;
     }
 
-    public void setGroups(List<Group> groups) {
+    public void setGroups(@NonNull List<Group> groups) {
         this.groups = groups;
+        notifyDataSetChanged();
+    }
+
+    public void setActions(@NonNull List<String> actions) {
+        this.actions = actions;
         notifyDataSetChanged();
     }
 

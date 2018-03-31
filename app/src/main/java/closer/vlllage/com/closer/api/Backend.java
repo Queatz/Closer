@@ -2,9 +2,12 @@ package closer.vlllage.com.closer.api;
 
 import java.util.List;
 
+import closer.vlllage.com.closer.api.models.GroupMessageResult;
+import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
+import closer.vlllage.com.closer.api.models.VerifiedResult;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -34,6 +37,11 @@ public interface Backend {
             @Query("deviceToken") String pushDeviceToken
     );
 
+    // Verify Number
+
+    @GET("verify")
+    Observable<VerifiedResult> getIsVerified();
+
     // Suggestion
 
     @GET("suggestion/{latLng}")
@@ -42,4 +50,9 @@ public interface Backend {
     @POST("suggestion")
     Observable<SuccessResult> addSuggestion(@Query("name") String name, @Query("geo") String geo);
 
+    @GET("message")
+    Observable<List<GroupMessageResult>> myMessages();
+
+    @GET("group")
+    Observable<List<GroupResult>> myGroups();
 }

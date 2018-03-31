@@ -24,6 +24,7 @@ import closer.vlllage.com.closer.handler.MapHandler;
 import closer.vlllage.com.closer.handler.MyBubbleHandler;
 import closer.vlllage.com.closer.handler.MyGroupsLayoutHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
+import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
@@ -125,6 +126,18 @@ public class MapsActivity extends PoolActivity {
         $(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));
         $(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
         $(MyGroupsLayoutHandler.class).attach(findViewById(R.id.myGroupsLayout));
+
+        boolean verifiedNumber = $(PersistenceHandler.class).getIsVerified();
+        $(MyGroupsLayoutHandler.class).showVerifyMyNumber(!verifiedNumber);
+        if (!verifiedNumber) {
+            $(DisposableHandler.class).add($(ApiHandler.class).isVerified().subscribe(verified -> {
+                $(PersistenceHandler.class).setIsVerified(verified);
+
+                if (verified) {
+                    $(MyGroupsLayoutHandler.class).showVerifyMyNumber(false);
+                }
+            }));
+        }
 
         if (getIntent() != null) {
             $(IntentHandler.class).onNewIntent(getIntent());

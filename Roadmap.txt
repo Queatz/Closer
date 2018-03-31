@@ -1,27 +1,32 @@
 
 =====================
+  Now
+=====================
+
+ Finish up invites
+
+=====================
   Backend
 =====================
 
  [X] GET /suggestion/0,0
  [X] POST /suggestion { latLng, name }                  -> add suggestion           -> { success: true }
- [ ] POST /verify { set-number: '000-000-0000' }        -> set my phone number (sends sms code) -> { success: true }
- [ ] POST /verify { verify-code: '000000' }             -> verify number            -> { success: true }
- [ ] GET /verify                                        -> check status             -> { verified: true }
- [ ] GET /group                                         -> my groups                -> [{group}, {group}, ...]
- [ ] GET /group/:id                                     -> group details            -> {contacts, name, ...}
- [ ] GET /group/:id/messages                            -> recent group messages (7 days or last 100) -> [{groupmessage},{groupmessage}, ...]
- [ ] POST /group { name: 'Group Name' }                 -> create group             -> { success: true }
- [ ] POST /group/:id/messages { text: , attachment: }   -> send message to group    -> { success: true }
- [ ] POST /group/:id { invite: 'phone number' }         -> invite to group          -> { success: true }
+ [X] POST /verify { set-number: '000-000-0000' }        -> set my phone number (sends sms code) -> { success: true }
+ [X] POST /verify { verify-code: '000000' }             -> verify number            -> { success: true }
+ [X] GET /verify                                        -> check status             -> { verified: true }
+ [X] GET /group                                         -> my groups                -> [{group}, {group}, ...]
+ [X] POST /group { name: 'Group Name' }                 -> create group             -> { success: true }
+ [X] POST /group/:id { invite: 'phone number' }         -> invite to group          -> { success: true }
  [ ] POST /group/:id { leave: true }                    -> leave group              -> { success: true }
+ [ ] GET /message                                       -> get all my messages      -> [{message}, ...]
+ [ ] POST /message { group: , text: , attachment: }     -> send message to group    -> { success: true }
 
 =====================
   Pushes
 =====================
 
- [ ] New group message -> reload last 100
- [ ] Added to group -> reload groups
+ [.] New group message -> load recent messages
+ [.] Added to group -> reload groups
 
 ======================
   To the finish line
@@ -38,39 +43,42 @@
     [ ] Check GET /verify
         [ ] Hide verify Your Number if { verified: true }
 
-[ ] Finish create group
-    [ ] Send to server
-    [ ] Remove change name
-    [ ] Make create group dialog
+[.] Finish create group
+    [.] Send to server
+    [X] Remove change name
+    [.] Make create group dialog
 
-[ ] Finish add contacts to groups
+[.] Finish add contacts to groups
     [ ] Show as-you-type formatted phone number in recycler (once starting to type)
-    [ ] Add contact as (invited)
-        [ ] Send invite to /invite/?group&phoneNumber
-    [ ] Check if phone number has account
-        [ ] SMS (from backend)
-        [ ] Push notification
+    [.] Add contact as (invited)
+        [.] Send invite to /group { invite: }
+    [.] Check if phone number has account
+        [.] SMS (from backend)
+        [.] Push notification
 
 [ ] Finish group messages
-    [ ] Show messages with location attachment
-    [ ] Tap message to call contact
+    [ ] Show messages with location/suggestion attachment
+    [X] Tap message to call contact
         [ ] Call Mai? (408) 893-4193 [ CALL ]
-    [ ] Send message
-        [ ] Show sending
-        [ ] Show sent
+    [.] Send message
+        [.] Show sending
+        [.] Show sent
     [ ] Group events inline with message
         [ ] Show new days
         [ ] Show people joined group
         [ ] Show people left group
+    [.] Show group members
+        [.] Show which are invited but not joined yet
     [ ] Show attachments
         [ ] Send message with suggestion attachment
         [ ] Long-press on map, share with group, populate location in messages
 
-[ ] Finish leave group
-    [ ] Long-press on group
-    [ ] Send network call to /group?leave=true
-    [ ] Reload my groups list
-    [ ] Show "Successfully left group" dialog
+[.] Finish leave group
+    [X] Long-press on group
+    [.] Send network call to /group {leave: true}
+    [.] Reload my groups list
+    [.] Remove from local-store
+    [.] Show "Successfully left <group_name>" dialog
 
 [ ] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D
 
