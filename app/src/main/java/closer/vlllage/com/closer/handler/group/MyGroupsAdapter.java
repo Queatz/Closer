@@ -20,8 +20,6 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 
-import static closer.vlllage.com.closer.util.PhoneUtil.rndId;
-
 public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder> {
 
     private List<String> actions = new ArrayList<>();
@@ -56,17 +54,25 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
             groupName.setOnClickListener(view ->
                     $(AlertHandler.class).makeAlert()
                         .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
-                        .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_group))
+                        .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_a_new_group))
                         .setLayoutResId(R.layout.set_name_modal)
                         .setTextView(R.id.input, name -> createGroup(groupName, name))
                         .show());
         } else {
-            if (groups.get(position - 1).getId() == null) {
-                groups.get(position - 1).setId(rndId());
-                $(StoreHandler.class).getStore().box(Group.class).put(groups.get(position - 1));
-            }
+            Group group = groups.get(position - 1);
+
             groupName.setOnClickListener(view ->
-                    $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, groups.get(position - 1).getId()));
+                    $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, group.getId()));
+
+            groupName.setOnLongClickListener(view -> {
+                $(AlertHandler.class).makeAlert()
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.leave_group, group.getName()))
+                        .setTitle($(ResourcesHandler.class).getResources().getString(R.string.leave_group_title, group.getName()))
+                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.leave_group_message))
+                        .show();
+
+                return true;
+            });
         }
     }
 

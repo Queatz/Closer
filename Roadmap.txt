@@ -62,20 +62,15 @@
         [ ] Show new days
         [ ] Show people joined group
         [ ] Show people left group
+    [ ] Show attachments
+        [ ] Send message with suggestion attachment
+        [ ] Long-press on map, share with group, populate location in messages
 
 [ ] Finish leave group
     [ ] Long-press on group
     [ ] Send network call to /group?leave=true
     [ ] Reload my groups list
     [ ] Show "Successfully left group" dialog
-
-[ ] Finish suggestions
-    [X] Add suggestion sends /new?suggestion=
-    [X] Load all nearby suggestions on map move
-    [ ] Send message with suggestion attachment
-
-[ ] Share location with group
-    [ ] Long-press on map, share with group, populate location in messages
 
 [ ] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D
 

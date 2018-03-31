@@ -21,7 +21,8 @@
     <string name="share">Share</string>
     <string name="enter_code">Enter the code…</string>
     <string name="verify_number">Verify number</string>
-    <string name="create_group">Create new group</string>
+    <string name="create_a_new_group">Create a new group</string>
+    <string name="create_group">Create group</string>
     <string name="enter_group_name">Enter group name…</string>
     <string name="wait_for_it">Wait for it…</string>
     <string name="phone_number_or_name">Phone number or contact</string>
@@ -51,4 +52,7 @@
     <string name="resend_code">Re-send code</string>
     <string name="oh_no">Oh no!</string>
     <string name="number_not_verified">Your number could not be verified.</string>
+    <string name="leave_group">Yes, leave %1$s</string>
+    <string name="leave_group_message">After leaving this group, you will need to be invited again to re-join.</string>
+    <string name="leave_group_title">Leave %1$s?</string>
 </resources>
