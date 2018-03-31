@@ -1,42 +1,81 @@
 
- Next Flows
-=================
+=====================
+  Backend
+=====================
+
+ [X] GET /suggestion/0,0
+ [ ] POST /suggestion { latLng, name }                  -> add suggestion           -> { success: true }
+ [ ] POST /verify { set-number: '000-000-0000' }        -> set my phone number (sends sms code) -> { success: true }
+ [ ] POST /verify { verify-code: '000000' }             -> verify number            -> { success: true }
+ [ ] GET /verify                                        -> check status             -> { verified: true }
+ [ ] GET /group                                         -> my groups                -> [{group}, {group}, ...]
+ [ ] GET /group/:id                                     -> group details            -> {contacts, name, ...}
+ [ ] GET /group/:id/messages                            -> recent group messages (7 days or last 100)-> [{groupmessage},{groupmessage}, ...]
+ [ ] POST /group { name: 'Group Name' }                 -> create group             -> { success: true }
+ [ ] POST /group/:id/messages { text: , attachment: }   -> send message to group    -> { success: true }
+ [ ] POST /group/:id { invite: 'phone number' }         -> invite to group          -> { success: true }
+ [ ] POST /group/:id { leave: true }                    -> leave group              -> { success: true }
+
+======================
+  To the finish line
+======================
+
+[ ] Finish verify phone number
+    [ ] Enter number dialog -> /send-code/:number <Authorization>
+        [ ] Save number & code with <Authorization>
+    [ ] Enter code dialog -> /verify-code/:number <Authorization>
+        [ ] Save number from code with <Authorization>
+    [ ] Reshow dialog if code is invalid
+    [ ] Show success dialog
+        [ ] Refresh groups when code succeeds
+    [ ] Check GET /verify
+        [ ] Hide verify Your Number if { verified: true }
+
+[ ] Finish create group
+    [ ] Send to server
+    [ ] Remove change name
+    [ ] Make create group dialog
+
+[ ] Finish add contacts to groups
+    [ ] Show as-you-type formatted phone number in recycler (once starting to type)
+    [ ] Add contact as (invited)
+        [ ] Send invite to /invite/?group&phoneNumber
+    [ ] Check if phone number has account
+        [ ] SMS (from backend)
+        [ ] Push notification
+
+[ ] Finish group messages
+    [ ] Show messages with location attachment
+    [ ] Tap message to call contact
+        [ ] Call Mai? (408) 893-4193 [ CALL ]
+    [ ] Send message
+        [ ] Show sending
+        [ ] Show sent
+    [ ] Group events inline with message
+        [ ] Show new days
+        [ ] Show people joined group
+        [ ] Show people left group
+
+[ ] Finish leave group
+    [ ] Long-press on group
+    [ ] Send network call to /group?leave=true
+    [ ] Reload my groups list
+    [ ] Show "Successfully left group" dialog
+
+[ ] Finish suggestions
+    [ ] Add suggestion sends /new?suggestion=
+    [ ] Load all nearby suggestions on map move
+    [ ] Send message with suggestion attachment
+
+[ ] Share location with group
+    [ ] Long-press on map, share with group, populate location in messages
+
+[ ] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D
 
 
-[ ]
-[ ] Show manual phone number in recycler once starting to type
-
-[ ] Hook up models (local only)
-    [ ] Create&/Link: Add contact to group
-        From contact list
-    [ ] Create&Link:Send message to group
-        From group messages view
-
-[ ] Use model queries
-    [ ] Load real group messages
-    [ ] Load real group contacts
-
-[ ] Verify number
-    [ ]
-
-Top
-=================
-
-[ ] Add to group from contact
-    [ ] SMS (from backend)
-    [ ] Push notification
-
-[ ] Group messaging
-    [ ] Verify number
-    [ ] Send
-    [ ] Receive
-
-[ ] Backend
-    [ ] Add suggestion
-    [ ] Load all nearby suggestions on app launch
-
+===============================
 Todo (complete list)
-=================
+===============================
 
 [ ] Backend
     [ ] Set up websocket
@@ -82,7 +121,6 @@ Todo (complete list)
             [ ] Show new days
             [ ] Show people joined
             [ ] Show people left
-            [ ] Show group renamed
 
     [ ] Long-press to force reload suggestions from server
 

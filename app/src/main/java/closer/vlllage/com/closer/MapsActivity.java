@@ -98,11 +98,19 @@ public class MapsActivity extends PoolActivity {
             $(BubbleHandler.class).remove(mapBubble -> BubbleType.MENU.equals(mapBubble.getType()));
 
             MapBubble menuBubble = new MapBubble(latLng, BubbleType.MENU);
-            menuBubble.setOnItemClickListener(position -> $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng()));
+            menuBubble.setOnItemClickListener(position -> {
+                switch (position) {
+                    case 0:
+                        break;
+                    case 1:
+                        $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng());
+                        break;
+                }
+            });
             $(BubbleHandler.class).add(menuBubble);
             $(MapBubbleMenuView.class)
                     .getMenuAdapter(menuBubble)
-                    .setMenuItems(getString(R.string.add_suggestion_here));
+                    .setMenuItems(getString(R.string.share_this_location), getString(R.string.add_suggestion_here));
         });
         $(MapHandler.class).setOnMapIdleListener(latLng -> $(DisposableHandler.class)
                 .add($(ApiHandler.class).load(latLng).map(MapBubble::from).subscribe(mapBubbles ->

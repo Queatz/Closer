@@ -19,7 +19,7 @@
     <string name="close_messages">Close messages</string>
     <string name="say_something">Say something…</string>
     <string name="share">Share</string>
-    <string name="enter_code">Enter code…</string>
+    <string name="enter_code">Enter the code…</string>
     <string name="verify_number">Verify number</string>
     <string name="create_group">Create new group</string>
     <string name="enter_group_name">Enter group name…</string>
@@ -29,8 +29,8 @@
     <string name="send_code">Send code</string>
     <string name="enter_your_phone_number">Enter your phone number</string>
     <string name="phone_number_hint">(000) 000-0000</string>
-    <string name="number_verified">Phone number verified</string>
-    <string name="welcome_to_closer">Welcome to Closer</string>
+    <string name="number_verified">Your phone number has been verified.</string>
+    <string name="welcome_to_closer">Welcome to Closer!</string>
     <string name="close">Close</string>
     <string name="set_group_name">Set group name</string>
     <string name="unknown">Unknown</string>
@@ -43,4 +43,12 @@
     <string name="add_new_group">+ New Group</string>
     <string name="verify_your_number">Verify your number</string>
     <string name="not_found">Not found</string>
+    <string name="invite">Invite</string>
+    <string name="share_this_location">Share this location…</string>
+    <string name="automatic">You will be automatically added to groups you\'ve already been invited to.</string>
+    <string name="call">Call</string>
+    <string name="yaay">Yaay!</string>
+    <string name="resend_code">Re-send code</string>
+    <string name="oh_no">Oh no!</string>
+    <string name="number_not_verified">Your number could not be verified.</string>
 </resources>
