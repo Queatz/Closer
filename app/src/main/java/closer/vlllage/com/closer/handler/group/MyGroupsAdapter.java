@@ -20,6 +20,8 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 
+import static closer.vlllage.com.closer.util.PhoneUtil.rndId;
+
 public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder> {
 
     private List<String> actions = new ArrayList<>();
@@ -56,15 +58,19 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
                         .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
                         .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_group))
                         .setLayoutResId(R.layout.set_name_modal)
-                        .setTextView(R.id.input, this::createGroup)
+                        .setTextView(R.id.input, name -> createGroup(groupName, name))
                         .show());
         } else {
+            if (groups.get(position - 1).getId() == null) {
+                groups.get(position - 1).setId(rndId());
+                $(StoreHandler.class).getStore().box(Group.class).put(groups.get(position - 1));
+            }
             groupName.setOnClickListener(view ->
                     $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, groups.get(position - 1).getId()));
         }
     }
 
-    private void createGroup(String name) {
+    private void createGroup(TextView groupName, String name) {
         if (name == null || name.isEmpty()) {
             return;
         }
@@ -72,6 +78,8 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         Group group = $(StoreHandler.class).create(Group.class);
         group.setName(name);
         $(StoreHandler.class).getStore().box(Group.class).put(group);
+
+        $(GroupActivityTransitionHandler.class).showGroupMessages(groupName, group.getId());
     }
 
     @Override

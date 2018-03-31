@@ -3,8 +3,6 @@ package closer.vlllage.com.closer.handler.group;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.AlertHandler;
-import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -29,29 +27,6 @@ public class GroupHandler extends PoolMember {
         }
 
         peopleInGroup.setText("Jacob, Bun, Mai, Phoung (invited), Le My, Stella");
-
-        groupName.setOnClickListener(view -> {
-            $(AlertHandler.class).makeAlert()
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.set_group_name))
-                    .setLayoutResId(R.layout.set_name_modal)
-                    .setTextView(R.id.input, value -> {
-                        if (group == null) {
-                            return;
-                        }
-
-                        group.setName(value);
-                        groupName.setText(value);
-                        $(StoreHandler.class).getStore().box(Group.class).put(group);
-                    })
-                    .setOnAfterViewCreated(alertView -> {
-                        TextView input = alertView.findViewById(R.id.input);
-
-                        if (group != null && group.getName() != null) {
-                            input.setText(group.getName());
-                        }
-                    })
-                    .show();
-        });
     }
 
     private void setGroup(Group group) {

@@ -4,7 +4,7 @@
 =====================
 
  [X] GET /suggestion/0,0
- [ ] POST /suggestion { latLng, name }                  -> add suggestion           -> { success: true }
+ [X] POST /suggestion { latLng, name }                  -> add suggestion           -> { success: true }
  [ ] POST /verify { set-number: '000-000-0000' }        -> set my phone number (sends sms code) -> { success: true }
  [ ] POST /verify { verify-code: '000000' }             -> verify number            -> { success: true }
  [ ] GET /verify                                        -> check status             -> { verified: true }
@@ -15,6 +15,13 @@
  [ ] POST /group/:id/messages { text: , attachment: }   -> send message to group    -> { success: true }
  [ ] POST /group/:id { invite: 'phone number' }         -> invite to group          -> { success: true }
  [ ] POST /group/:id { leave: true }                    -> leave group              -> { success: true }
+
+=====================
+  Pushes
+=====================
+
+ [ ] New group message -> reload last 100
+ [ ] Added to group -> reload groups
 
 ======================
   To the finish line
@@ -63,8 +70,8 @@
     [ ] Show "Successfully left group" dialog
 
 [ ] Finish suggestions
-    [ ] Add suggestion sends /new?suggestion=
-    [ ] Load all nearby suggestions on map move
+    [X] Add suggestion sends /new?suggestion=
+    [X] Load all nearby suggestions on map move
     [ ] Send message with suggestion attachment
 
 [ ] Share location with group
