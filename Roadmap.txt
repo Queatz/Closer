@@ -6,22 +6,6 @@
  Finish up invites
 
 =====================
-  Backend
-=====================
-
- [X] GET /suggestion/0,0
- [X] POST /suggestion { latLng, name }                  -> add suggestion           -> { success: true }
- [X] POST /verify { set-number: '000-000-0000' }        -> set my phone number (sends sms code) -> { success: true }
- [X] POST /verify { verify-code: '000000' }             -> verify number            -> { success: true }
- [X] GET /verify                                        -> check status             -> { verified: true }
- [X] GET /group                                         -> my groups                -> [{group}, {group}, ...]
- [X] POST /group { name: 'Group Name' }                 -> create group             -> { success: true }
- [X] POST /group/:id { invite: 'phone number' }         -> invite to group          -> { success: true }
- [ ] POST /group/:id { leave: true }                    -> leave group              -> { success: true }
- [ ] GET /message                                       -> get all my messages      -> [{message}, ...]
- [ ] POST /message { group: , text: , attachment: }     -> send message to group    -> { success: true }
-
-=====================
   Pushes
 =====================
 

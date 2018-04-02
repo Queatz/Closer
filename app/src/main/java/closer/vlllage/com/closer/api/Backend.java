@@ -42,6 +42,12 @@ public interface Backend {
     @GET("verify")
     Observable<VerifiedResult> getIsVerified();
 
+    @POST("verify")
+    Observable<SuccessResult> setPhoneNumber(@Query("set-number") String phoneNumber);
+
+    @POST("verify")
+    Observable<SuccessResult> sendVerificationCode(@Query("verify-code") String verificationCode);
+
     // Suggestion
 
     @GET("suggestion/{latLng}")
@@ -50,9 +56,25 @@ public interface Backend {
     @POST("suggestion")
     Observable<SuccessResult> addSuggestion(@Query("name") String name, @Query("geo") String geo);
 
+    // Group Message
+
     @GET("message")
     Observable<List<GroupMessageResult>> myMessages();
 
+    @POST("message")
+    Observable<SuccessResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query("attachment") String attachment);
+
+    // Group
+
     @GET("group")
     Observable<List<GroupResult>> myGroups();
+
+    @POST("group")
+    Observable<List<GroupResult>> createGroup(@Query("name") String groupName);
+
+    @POST("group/{id}")
+    Observable<SuccessResult> inviteToGroup(@Query("invite") String phoneNumber);
+
+    @POST("group/{id}")
+    Observable<SuccessResult> leaveGroup(@Query("leave") boolean leaveGroup);
 }
