@@ -68,4 +68,34 @@ public class ApiHandler extends PoolMember {
         return api.getBackend().myGroups()
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    public Observable<SuccessResult> setPhoneNumber(String phoneNumber) {
+        return api.getBackend().setPhoneNumber(phoneNumber)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<SuccessResult> sendVerificationCode(String verificationCode) {
+        return api.getBackend().sendVerificationCode(verificationCode)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<SuccessResult> sendGroupMessage(String groupId, String text, Object attachment) {
+        return api.getBackend().sendGroupMessage(groupId, text, attachment == null ? null : $(JsonHandler.class).to(attachment))
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<SuccessResult> createGroup(String groupName) {
+        return api.getBackend().createGroup(groupName)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<SuccessResult> inviteToGroup(String phoneNumber) {
+        return api.getBackend().inviteToGroup(phoneNumber)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<SuccessResult> leaveGroup() {
+        return api.getBackend().leaveGroup(true)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

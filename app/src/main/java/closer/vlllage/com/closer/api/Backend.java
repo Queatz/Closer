@@ -70,7 +70,7 @@ public interface Backend {
     Observable<List<GroupResult>> myGroups();
 
     @POST("group")
-    Observable<List<GroupResult>> createGroup(@Query("name") String groupName);
+    Observable<SuccessResult> createGroup(@Query("name") String groupName);
 
     @POST("group/{id}")
     Observable<SuccessResult> inviteToGroup(@Query("invite") String phoneNumber);
