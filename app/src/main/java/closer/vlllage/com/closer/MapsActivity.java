@@ -25,10 +25,12 @@ import closer.vlllage.com.closer.handler.MyBubbleHandler;
 import closer.vlllage.com.closer.handler.MyGroupsLayoutHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
+import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
 import closer.vlllage.com.closer.handler.SuggestionHandler;
+import closer.vlllage.com.closer.handler.SyncHandler;
 import closer.vlllage.com.closer.handler.TimerHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
@@ -53,6 +55,8 @@ public class MapsActivity extends PoolActivity {
         setContentView(R.layout.activity_maps);
 
         $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
+        $(TimerHandler.class).postDisposable(() -> $(SyncHandler.class).syncAll(), 1325);
+        $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
 
         $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map, findViewById(R.id.bubbleMapLayer), mapBubble -> {
             if ($(MyBubbleHandler.class).isMyBubble(mapBubble)) {
@@ -77,7 +81,7 @@ public class MapsActivity extends PoolActivity {
                 MapBubble menuBubble = new MapBubble(mapBubble.getLatLng(), BubbleType.MENU);
                 menuBubble.setPinned(true);
                 menuBubble.setOnTop(true);
-                $(TimerHandler.class).post(() -> {
+                $(TimerHandler.class).postDisposable(() -> {
                     $(BubbleHandler.class).add(menuBubble);
                     $(MapBubbleMenuView.class).setMenuTitle(menuBubble, getString(R.string.share_with));
                     $(MapBubbleMenuView.class).getMenuAdapter(menuBubble).setMenuItems(groupNames);

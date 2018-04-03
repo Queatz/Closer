@@ -1,34 +1,20 @@
 
-=====================
+======================
   Now
-=====================
+======================
+
 
  Finish up invites
 
-=====================
-  Pushes
-=====================
-
- [.] New group message -> RefreshHandler
- [.] Added to group -> RefreshHandler
 
 ======================
   To the finish line
 ======================
 
-[ ] Technical Challenges
-    [ ] Local Ids
-    [ ] Sync late
-
-[.] Finish create group
-
 [.] Finish add contacts to groups
     [ ] Show as-you-type formatted phone number in recycler (once starting to type)
     [.] Add contact as (invited)
-        [.] Send invite to /group { invite: }
-    [.] Check if phone number has account
-        [.] SMS (from backend)
-        [.] Push notification
+        [X] Send invite to /group { invite: }
 
 [ ] Finish group messages
     [ ] Show messages with location/suggestion attachment
@@ -47,12 +33,7 @@
         [ ] Send message with suggestion attachment
         [ ] Long-press on map, share with group, populate location in messages
 
-[.] Finish leave group
-    [X] Long-press on group
-    [X] Send network call to /group {leave: true}
-    [.] Reload my groups list
-    [.] Remove from local-store
-    [.] Show "Successfully left <group_name>" dialog
+[ ] Add indexes on to/from/etc.
 
 [.] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D
 

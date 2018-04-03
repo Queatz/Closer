@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.handler.SyncHandler;
 import closer.vlllage.com.closer.handler.VerifyNumberHandler;
@@ -93,6 +94,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
                         .setMessage($(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()))
                         .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
                         .show();
+                $(RefreshHandler.class).refreshMyGroups();
             } else {
                 $(DefaultAlerts.class).thatDidntWork();
             }

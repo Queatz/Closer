@@ -59,7 +59,7 @@ public class SuggestionHandler extends PoolMember {
                 suggestionBubble.setOnTop(true);
                 suggestionBubble.setType(BubbleType.SUGGESTION);
 
-                $(TimerHandler.class).post(() -> {
+                $(TimerHandler.class).postDisposable(() -> {
                     $(BubbleHandler.class).add(suggestionBubble);
                     suggestionBubbles.add(suggestionBubble);
                 }, 225 * 2 + i * 95);

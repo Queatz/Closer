@@ -12,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
 
+    private static final String AUTHORIZATION = "Authorization";
     private final Backend backend;
     private String authorization;
 
@@ -19,12 +20,13 @@ public class ApiService {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         httpClient.addInterceptor(chain -> {
-            Request request = chain.request().newBuilder().addHeader("Authorization", authorization).build();
+            Request request = chain.request().newBuilder().addHeader(AUTHORIZATION, authorization).build();
             return chain.proceed(request);
         });
 
         httpClient.addInterceptor(chain -> {
             Logger.getAnonymousLogger().warning("NETWORK: REQUEST: " + chain.request().toString());
+
             Response response = chain.proceed(chain.request());
 
             if (response.body() == null) {
@@ -48,6 +50,10 @@ public class ApiService {
     }
 
     public Backend getBackend() {
+        if (authorization == null) {
+            throw new RuntimeException("Must set 'Authorization' header prior to using backend");
+        }
+
         return backend;
     }
 

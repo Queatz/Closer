@@ -2,22 +2,44 @@ package closer.vlllage.com.closer.handler;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.List;
+
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.BaseObject;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
+import closer.vlllage.com.closer.store.models.GroupMessage_;
+import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.store.models.Suggestion;
+import closer.vlllage.com.closer.store.models.Suggestion_;
+import io.objectbox.Property;
+import io.objectbox.android.AndroidScheduler;
 
 public class SyncHandler extends PoolMember {
     public void syncAll() {
-
+        syncAll(Suggestion.class, Suggestion_.localOnly);
+        syncAll(Group.class, Group_.localOnly);
+        syncAll(GroupMessage.class, GroupMessage_.localOnly);
     }
 
-    public void sync(BaseObject obj) {
+    public <T extends BaseObject> void sync(T obj) {
         obj.setLocalOnly(true);
         send(obj);
         syncAll();
+    }
+
+    private void syncAll(Class<? extends BaseObject> clazz, Property localOnlyProperty) {
+        $(StoreHandler.class).getStore().box(clazz).query()
+                .equal(localOnlyProperty, true)
+                .build().subscribe().single().on(AndroidScheduler.mainThread())
+                .observer(this::syncAll);
+    }
+
+    private void syncAll(List<? extends BaseObject> objs) {
+        for (BaseObject obj : objs) {
+            sync(obj);
+        }
     }
 
     private void send(final BaseObject obj) {

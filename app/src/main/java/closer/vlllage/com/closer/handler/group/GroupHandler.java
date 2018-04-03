@@ -32,7 +32,7 @@ public class GroupHandler extends PoolMember {
     private void setGroup(Group group) {
         this.group = group;
 
-        if (group.getName() != null) {
+        if (group != null && group.getName() != null) {
             groupName.setText(group.getName());
         } else {
             groupName.setText(R.string.not_found);

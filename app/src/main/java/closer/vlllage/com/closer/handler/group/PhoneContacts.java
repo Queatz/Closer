@@ -27,12 +27,12 @@ public class PhoneContacts extends PoolMember {
             ContentResolver contentResolver = $(ApplicationHandler.class).getApp().getContentResolver();
 
             if (contentResolver == null) {
-                return null;
+                return new ArrayList<PhoneContact>();
             }
 
             try(Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)) {
                 if (cursor == null) {
-                    return null;
+                    return new ArrayList<PhoneContact>();
                 }
 
                 if (cursor.moveToFirst()) {
@@ -50,7 +50,7 @@ public class PhoneContacts extends PoolMember {
                 }
             }
 
-            return null;
+            return new ArrayList<PhoneContact>();
         }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
 
