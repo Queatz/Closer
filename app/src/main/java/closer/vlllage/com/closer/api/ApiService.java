@@ -1,5 +1,8 @@
 package closer.vlllage.com.closer.api;
 
+import com.google.gson.GsonBuilder;
+
+import java.text.DateFormat;
 import java.util.logging.Logger;
 
 import io.reactivex.schedulers.Schedulers;
@@ -43,7 +46,7 @@ public class ApiService {
         backend = new Retrofit.Builder()
                 .baseUrl(Backend.BASE_URL)
                 .client(httpClient.build())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setDateFormat(DateFormat.FULL).create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(Backend.class);

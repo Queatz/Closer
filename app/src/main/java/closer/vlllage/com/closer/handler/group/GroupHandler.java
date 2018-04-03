@@ -2,11 +2,19 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.widget.TextView;
 
+import org.greenrobot.essentials.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupContact;
+import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.Group_;
+import io.objectbox.android.AndroidScheduler;
 
 public class GroupHandler extends PoolMember {
 
@@ -26,7 +34,25 @@ public class GroupHandler extends PoolMember {
                     .build().findFirst());
         }
 
-        peopleInGroup.setText("Jacob, Bun, Mai, Phoung (invited), Le My, Stella");
+        if (group != null) {
+            peopleInGroup.setText("");
+            $(StoreHandler.class).getStore().box(GroupContact.class).query()
+                    .equal(GroupContact_.groupId, group.getId())
+// todo                    .notEqual(GroupContact_.contactId, $(PersistenceHandler.class).getPhone())
+                    .build().subscribe().single().on(AndroidScheduler.mainThread())
+                    .observer(groupContacts -> {
+                        if (groupContacts.isEmpty()) {
+                            peopleInGroup.setText("-");
+                            return;
+                        }
+
+                        List<String> names = new ArrayList<>();
+                        for (GroupContact groupContact : groupContacts) {
+                            names.add(groupContact.getContactName());
+                        }
+                        peopleInGroup.setText(StringUtils.join(names, ", "));
+                    });
+        }
     }
 
     private void setGroup(Group group) {

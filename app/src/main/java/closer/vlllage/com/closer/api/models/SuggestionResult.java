@@ -7,6 +7,7 @@ import closer.vlllage.com.closer.store.models.Suggestion;
 
 public class SuggestionResult {
     public String id;
+    public String kind;
     public List<Double> geo;
     public String name;
 

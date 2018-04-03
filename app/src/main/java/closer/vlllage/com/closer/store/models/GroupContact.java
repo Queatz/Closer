@@ -6,6 +6,7 @@ import io.objectbox.annotation.Entity;
 public class GroupContact extends BaseObject {
     private String groupId;
     private String contactId;
+    private String contactName;
 
     public String getGroupId() {
         return groupId;
@@ -22,6 +23,15 @@ public class GroupContact extends BaseObject {
 
     public GroupContact setContactId(String contactId) {
         this.contactId = contactId;
+        return this;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public GroupContact setContactName(String contactName) {
+        this.contactName = contactName;
         return this;
     }
 }

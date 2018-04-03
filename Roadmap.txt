@@ -14,7 +14,6 @@
 [.] Finish add contacts to groups
     [ ] Show as-you-type formatted phone number in recycler (once starting to type)
     [.] Add contact as (invited)
-        [X] Send invite to /group { invite: }
 
 [ ] Finish group messages
     [ ] Show messages with location/suggestion attachment
@@ -33,7 +32,7 @@
         [ ] Send message with suggestion attachment
         [ ] Long-press on map, share with group, populate location in messages
 
-[ ] Add indexes on to/from/etc.
+[ ] Add Arango indexes on to/from/etc.
 
 [.] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D
 

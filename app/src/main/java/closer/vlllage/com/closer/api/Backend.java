@@ -4,8 +4,8 @@ import java.util.List;
 
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
-import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.api.models.StateResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.api.models.VerifiedResult;
@@ -16,7 +16,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Backend {
-    String BASE_URL = "http://closer.vlllage.com/";
+    //    String BASE_URL = "http://closer.vlllage.com/";
+    String BASE_URL = "http://10.0.2.2:8080/closer/";
 
     // Phone
 
@@ -68,7 +69,7 @@ public interface Backend {
     // Group
 
     @GET("group")
-    Observable<List<GroupResult>> myGroups();
+    Observable<StateResult> myGroups();
 
     @POST("group")
     Observable<CreateResult> createGroup(@Query("name") String groupName);

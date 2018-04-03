@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import closer.vlllage.com.closer.handler.AccountHandler;
+import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
@@ -39,6 +41,8 @@ public class GroupActivity extends CircularRevealActivity {
         showPhoneContactsButton = findViewById(R.id.showPhoneContactsButton);
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
+
+        $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
 
         $(GroupHandler.class).attach(groupName, peopleInGroup);
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {

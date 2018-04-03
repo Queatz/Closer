@@ -7,8 +7,8 @@ import java.util.List;
 import closer.vlllage.com.closer.api.ApiService;
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
-import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.api.models.StateResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -65,7 +65,7 @@ public class ApiHandler extends PoolMember {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<GroupResult>> myGroups() {
+    public Observable<StateResult> myGroups() {
         return api.getBackend().myGroups()
                 .observeOn(AndroidSchedulers.mainThread());
     }
