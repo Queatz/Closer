@@ -9,6 +9,7 @@
     <string name="off">Off</string>
     <string name="update_name">Update name</string>
     <string name="set_name">Your name here</string>
+    <string name="add_a_name">Add a name…</string>
 
     <string name="notification_channel" translatable="false">notifications</string>
     <string name="message_not_sent">Couldn\'t send message</string>
@@ -66,4 +67,7 @@
     <string name="boo">Boo</string>
     <string name="add_contact">+ Add Contact</string>
     <string name="contact_invited_inline">%1$s (invited)</string>
+    <string name="invite_by_phone">Invite by phone</string>
+    <string name="invite_to_group">Invite to %1$s?</string>
+    <string name="invite_by_phone_name_info">If you\'d like, add a name so others in the group know who you\'re inviting.</string>
 </resources>

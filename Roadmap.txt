@@ -2,11 +2,7 @@
   To the finish line
 ======================
 
-[.] Finish add contacts to groups
-    [ ] Show as-you-type formatted phone number in recycler (once starting to type)
-    [.] Add contact as (invited)
-
-[ ] Finish group messages
+[ ] Finish
     [ ] Show messages with location/suggestion attachment
     [.] Send message
         [.] Show sending
@@ -15,8 +11,6 @@
         [ ] Show new days "Wednesday, January 23rd"
         [ ] Show people joined group "Jen joined the group"
         [ ] Show people left group "Jen left the group"
-    [ ] Show group members
-        [.] Show which are invited but not joined yet
     [ ] Show attachments
         [ ] Send message with suggestion attachment
         [ ] Long-press on map, share with group, populate location in messages

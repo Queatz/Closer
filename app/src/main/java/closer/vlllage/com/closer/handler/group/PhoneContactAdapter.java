@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 
 public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter.PhoneContactViewHolder> {
 
+    private String phoneNumber = null;
     private final List<PhoneContact> contacts = new ArrayList<>();
     private OnPhoneContactClickListener onPhoneContactClickListener;
 
@@ -34,8 +35,15 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
 
     @Override
     public void onBindViewHolder(@NonNull PhoneContactViewHolder holder, int position) {
-        PhoneContact contact = contacts.get(position);
-        holder.name.setText(contact.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : contact.getName());
+        PhoneContact contact;
+
+        if (position < getSuggestionCount()) {
+            contact = new PhoneContact(null, phoneNumber);
+        } else {
+            contact = contacts.get(position - getSuggestionCount());
+        }
+
+        holder.name.setText(contact.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.invite_by_phone) : contact.getName());
         holder.number.setText(contact.getPhoneNumber() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : contact.getPhoneNumber());
         holder.itemView.setOnClickListener(view -> {
             if (onPhoneContactClickListener != null) {
@@ -46,13 +54,22 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
 
     @Override
     public int getItemCount() {
-        return contacts.size();
+        return contacts.size() + getSuggestionCount();
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+        notifyDataSetChanged();
     }
 
     public void setContacts(List<PhoneContact> contacts) {
         this.contacts.clear();
         this.contacts.addAll(contacts);
         notifyDataSetChanged();
+    }
+
+    private int getSuggestionCount() {
+        return phoneNumber == null ? 0 : 1;
     }
 
     class PhoneContactViewHolder extends RecyclerView.ViewHolder {

@@ -34,12 +34,24 @@ public class GroupContactsHandler extends PoolMember {
         this.contactsRecyclerView = contactsRecyclerView;
         this.searchContacts = searchContacts;
         phoneContactAdapter = new PhoneContactAdapter(this, phoneContact -> {
-            $(AlertHandler.class).make()
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_phone_name, phoneContact.getFirstName()))
-                    .setMessage(phoneContact.getPhoneNumber())
-                    .setPositiveButtonCallback(alertResult -> inviteToGroup(group, phoneContact))
-                    .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_phone_to_group, phoneContact.getFirstName(), group.getName()))
-                    .show();
+            if (phoneContact.getName() == null) {
+                $(AlertHandler.class).make()
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.invite))
+                        .setLayoutResId(R.layout.invite_by_number_modal)
+                        .setTextView(R.id.input, name -> {
+                            phoneContact.setName(name);
+                            inviteToGroup(group, phoneContact);
+                        })
+                        .setTitle($(ResourcesHandler.class).getResources().getString(R.string.invite_to_group, group.getName()))
+                        .show();
+            } else {
+                $(AlertHandler.class).make()
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_phone_name, phoneContact.getFirstName()))
+                        .setMessage(phoneContact.getPhoneNumber())
+                        .setPositiveButtonCallback(alertResult -> inviteToGroup(group, phoneContact))
+                        .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_phone_to_group, phoneContact.getFirstName(), group.getName()))
+                        .show();
+            }
         });
 
         if($(PermissionHandler.class).has(READ_CONTACTS)) {
@@ -97,6 +109,10 @@ public class GroupContactsHandler extends PoolMember {
 
     @SuppressWarnings("MissingPermission")
     public void showContactsForQuery(String originalQuery) {
+        String phoneNumber = $(PhoneNumberHandler.class).normalize(originalQuery);
+
+        phoneContactAdapter.setPhoneNumber(phoneNumber);
+
         if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
             return;
         }

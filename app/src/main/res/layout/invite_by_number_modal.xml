@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingTop="8dp">
+
+    <TextView
+        android:id="@+id/infoMessageText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/invite_by_phone_name_info" />
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_a_name"
+        android:focusedByDefault="true"
+        android:selectAllOnFocus="true"
+        android:imeOptions="actionGo"
+        android:textAlignment="center"
+        android:paddingTop="16dp"
+        android:padding="8dp"
+        android:maxLength="24"
+        android:background="@null"
+        android:inputType="textCapWords"
+        android:maxLines="1" />
+
+</LinearLayout>
