@@ -90,8 +90,8 @@ public class ApiHandler extends PoolMember {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<SuccessResult> inviteToGroup(String groupId, String phoneNumber) {
-        return api.getBackend().inviteToGroup(groupId, phoneNumber)
+    public Observable<SuccessResult> inviteToGroup(String groupId, String name, String phoneNumber) {
+        return api.getBackend().inviteToGroup(groupId, name, phoneNumber)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

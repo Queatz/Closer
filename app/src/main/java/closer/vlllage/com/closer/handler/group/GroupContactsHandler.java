@@ -74,7 +74,10 @@ public class GroupContactsHandler extends PoolMember {
     }
 
     private void inviteToGroup(Group group, PhoneContact phoneContact) {
-        $(DisposableHandler.class).add($(ApiHandler.class).inviteToGroup(group.getId(), phoneContact.getPhoneNumber()).subscribe(
+        $(DisposableHandler.class).add($(ApiHandler.class).inviteToGroup(group.getId(),
+                phoneContact.getName(),
+                phoneContact.getPhoneNumber()
+        ).subscribe(
                 successResult -> {
                     if (successResult.success) {
                         $(AlertHandler.class).make()

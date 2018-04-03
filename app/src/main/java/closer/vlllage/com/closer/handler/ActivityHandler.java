@@ -8,6 +8,10 @@ public class ActivityHandler extends PoolMember {
 
     private Activity activity;
 
+    public boolean isPresent() {
+        return this.activity != null && !this.activity.isDestroyed();
+    }
+
     public Activity getActivity() {
         if (this.activity == null) {
             throw new IllegalStateException("Activity was not set!");

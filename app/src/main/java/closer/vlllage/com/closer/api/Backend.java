@@ -75,7 +75,7 @@ public interface Backend {
     Observable<CreateResult> createGroup(@Query("name") String groupName);
 
     @POST("group/{id}")
-    Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("invite") String phoneNumber);
+    Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("name") String name, @Query("invite") String phoneNumber);
 
     @POST("group/{id}")
     Observable<SuccessResult> leaveGroup(@Path("id") String groupId, @Query("leave") boolean leaveGroup);

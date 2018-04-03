@@ -9,11 +9,14 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
+import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
+import closer.vlllage.com.closer.store.models.GroupInvite;
+import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 
@@ -22,6 +25,8 @@ public class GroupHandler extends PoolMember {
     private TextView groupName;
     private TextView peopleInGroup;
     private Group group;
+    private List<String> contactNames = new ArrayList<>();
+    private List<String> contactInvites = new ArrayList<>();
 
     public void attach(TextView groupName, TextView peopleInGroup) {
         this.groupName = groupName;
@@ -44,18 +49,40 @@ public class GroupHandler extends PoolMember {
                     .notEqual(GroupContact_.contactId, phoneId)
                     .build().subscribe().single().on(AndroidScheduler.mainThread())
                     .observer(groupContacts -> {
-                        if (groupContacts.isEmpty()) {
-                            peopleInGroup.setText(R.string.add_contact);
-                            return;
+                        contactNames = new ArrayList<>();
+                        for (GroupContact groupContact : groupContacts) {
+                            contactNames.add(groupContact.getContactName());
                         }
 
-                        List<String> names = new ArrayList<>();
-                        for (GroupContact groupContact : groupContacts) {
-                            names.add(groupContact.getContactName());
+                        redrawContacts();
+                    });
+
+            $(StoreHandler.class).getStore().box(GroupInvite.class).query()
+                    .equal(GroupInvite_.group, group.getId())
+                    .build().subscribe().single().on(AndroidScheduler.mainThread())
+                    .observer(groupInvites -> {
+                        contactInvites = new ArrayList<>();
+                        for (GroupInvite groupInvite : groupInvites) {
+                            contactInvites.add($(ResourcesHandler.class).getResources().getString(R.string.contact_invited_inline, groupInvite.getName()));
                         }
-                        peopleInGroup.setText(StringUtils.join(names, ", "));
+                        redrawContacts();
                     });
         }
+    }
+
+    private void redrawContacts() {
+        List<String> names = new ArrayList<>();
+
+        names.addAll(contactNames);
+        names.addAll(contactInvites);
+
+        if (names.isEmpty()) {
+            peopleInGroup.setText(R.string.add_contact);
+            return;
+        }
+
+
+        peopleInGroup.setText(StringUtils.join(names, ", "));
     }
 
     private void setGroup(Group group) {

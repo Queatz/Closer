@@ -1,7 +1,5 @@
 package closer.vlllage.com.closer.api.models;
 
-public class GroupResult {
-    public String id;
-    public String kind;
+public class GroupResult extends ModelResult {
     public String name;
 }

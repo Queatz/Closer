@@ -4,6 +4,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -17,6 +18,13 @@ public class AlertHandler extends PoolMember {
     }
 
     private void showAlertConfig(final AlertConfig alertConfig) {
+        if (!$(ActivityHandler.class).isPresent()) {
+            if (alertConfig.getMessage() != null) {
+                Toast.makeText($(ApplicationHandler.class).getApp(), alertConfig.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog);
         TextView textView = null;
         if (alertConfig.getLayoutResId() != null) {

@@ -15,7 +15,7 @@
         [ ] Show new days "Wednesday, January 23rd"
         [ ] Show people joined group "Jen joined the group"
         [ ] Show people left group "Jen left the group"
-    [.] Show group members
+    [ ] Show group members
         [.] Show which are invited but not joined yet
     [ ] Show attachments
         [ ] Send message with suggestion attachment

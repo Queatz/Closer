@@ -9,13 +9,19 @@ import java.util.Map;
 import java.util.Set;
 
 import closer.vlllage.com.closer.api.models.GroupContactResult;
+import closer.vlllage.com.closer.api.models.GroupInviteResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
+import closer.vlllage.com.closer.api.models.ModelResult;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.BaseObject;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
+import closer.vlllage.com.closer.store.models.GroupInvite;
+import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Group_;
+import io.objectbox.Property;
 
 public class RefreshHandler extends PoolMember {
 
@@ -34,7 +40,36 @@ public class RefreshHandler extends PoolMember {
         $(DisposableHandler.class).add($(ApiHandler.class).myGroups().subscribe(stateResult -> {
             handleGroups(stateResult.groups);
             handleGroupContacts(stateResult.groupContacts);
+            handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, this::transformGroupInviteResult);
         }, error -> $(DefaultAlerts.class).syncError()));
+    }
+
+    private <T extends BaseObject, R extends ModelResult> void handleFullListResult(
+            List<R> results, Class<T> clazz,
+            Property idProperty,
+            ResultTransformer<T, R> transformer) {
+        Set<String> serverIdList = new HashSet<>();
+        for (R obj : results) {
+            serverIdList.add(obj.id);
+        }
+
+        $(StoreHandler.class).findAll(clazz, idProperty, serverIdList).observer(existingObjs -> {
+            Map<String, T> existingObjsMap = new HashMap<>();
+            for (T existingObj : existingObjs) {
+                existingObjsMap.put(existingObj.getId(), existingObj);
+            }
+
+            List<T> objsToAdd = new ArrayList<>();
+
+            for (R result : results) {
+                if (!existingObjsMap.containsKey(result.id)) {
+                    objsToAdd.add(transformer.transform(result));
+                }
+            }
+
+            $(StoreHandler.class).getStore().box(clazz).put(objsToAdd);
+            $(StoreHandler.class).removeAllExcept(clazz, idProperty, serverIdList);
+        });
     }
 
     private void handleGroupContacts(List<GroupContactResult> groupContacts) {
@@ -106,5 +141,17 @@ public class RefreshHandler extends PoolMember {
         groupContact.setGroupId(groupContactResult.to);
         groupContact.setContactName(groupContactResult.phone.name);
         return groupContact;
+    }
+
+    private GroupInvite transformGroupInviteResult(GroupInviteResult result) {
+        GroupInvite groupInvite = new GroupInvite();
+        groupInvite.setId(result.id);
+        groupInvite.setGroup(result.group);
+        groupInvite.setName(result.name);
+        return groupInvite;
+    }
+
+    interface ResultTransformer<T, R> {
+        T transform(R result);
     }
 }
