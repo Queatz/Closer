@@ -1,12 +1,3 @@
-
-======================
-  Now
-======================
-
-
- Finish up invites
-
-
 ======================
   To the finish line
 ======================
@@ -17,90 +8,25 @@
 
 [ ] Finish group messages
     [ ] Show messages with location/suggestion attachment
-    [X] Tap message to call contact
-        [ ] Call Mai? (408) 893-4193 [ CALL ]
     [.] Send message
         [.] Show sending
         [.] Show sent
     [ ] Group events inline with message
-        [ ] Show new days
-        [ ] Show people joined group
-        [ ] Show people left group
+        [ ] Show new days "Wednesday, January 23rd"
+        [ ] Show people joined group "Jen joined the group"
+        [ ] Show people left group "Jen left the group"
     [.] Show group members
         [.] Show which are invited but not joined yet
     [ ] Show attachments
         [ ] Send message with suggestion attachment
         [ ] Long-press on map, share with group, populate location in messages
 
-[ ] Add Arango indexes on to/from/etc.
+[ ] Resolve TODOs
+    [ ] // todo     send push to all members of that group to refresh messages
+    [ ] // todo     send push to all members of that group to refresh groups
+    [ ] // todo Send message to group
+    [ ] // TODO Convert any group invites
+
+    [ ] // todo Insert all new messages
 
 [.] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D
-
-
-===============================
-Todo (complete list)
-===============================
-
-[ ] Backend
-    [ ] Set up websocket
-    [ ] Set up SSH
-        [ ] Secret header to talk to server
-            [ ] Embed in app network requests (gitignored + example gateway file)
-    [ ] API
-        [ ] /verify-number?number=1234567890&code=12345
-        [ ] /leave-group
-        [ ] /group/329239?set-name=Newcumers
-        [ ] /add-to-group
-            [ ] Phone number linked -> Push Notification
-                [ ] Push: "Bun added you to 888 Friends"
-            [ ] Phone number not linked -> SMS
-                [ ] SMS: "Jacob invited you to join him on Closer"
-        [ ] /add-place?lat=&lng=&name=&comment=this place is awesome - lemy
-        [ ] /add-photo?place=12345
-    [-] Set up Twilio
-        [ ] Send verification number to phone
-        [ ] Save phone number with account id
-        [ ] Save temporary verification code on server
-            [ ] Expire code in 15 minutes
-    [ ]  Limit query to 100 closest phones
-
-[ ] App
-    [ ] Group Messages
-        [ ] Setup SSH Websocket
-            [ ] Handle messages
-        [ ] Load all messages
-        [ ] Show "Mai and Stella are typing..." text
-        [ ] Messages websocket
-        [ ] Forward group messages through WebSocket if active
-            [ ] fallback onto push notifications
-            [ ] fallback onto SMS
-            [ ] load all
-        [ ] Show messages
-        [ ] Tap on name menu
-            [ ] Leave group :(?...
-        [ ] Send message
-            [ ] Show sending
-            [ ] Show sent
-        [ ] Group events inline with message
-            [ ] Show new days
-            [ ] Show people joined
-            [ ] Show people left
-
-    [ ] Long-press to force reload suggestions from server
-
-    [ ] Verify Number
-        [ ] Get SMS
-        [ ] Enter 6-digit code
-        [ ] Success!
-
-    [ ] Evrytyme
-        [ ] My status always not updating / in sync with reality
-        [ ] Never switch my status to turn on if not really turned on (no lies!)
-        [ ] Turn on MUST re-ask for permission
-            [ ] Must say what's up go to app settings if perma denied
-                [ ] PermissionsHandler.isDenied
-
-    [ ] Other
-        [ ] Show call button if phone number is available
-        [ ] Swipe left/right to change group in messages
-        [ ] Add public photos to a suggestion
