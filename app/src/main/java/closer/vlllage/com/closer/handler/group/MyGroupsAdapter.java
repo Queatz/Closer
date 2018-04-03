@@ -109,9 +109,8 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         Group group = $(StoreHandler.class).create(Group.class);
         group.setName(name);
         $(StoreHandler.class).getStore().box(Group.class).put(group);
-        $(SyncHandler.class).sync(group);
-
-        $(GroupActivityTransitionHandler.class).showGroupMessages(view, group.getId());
+        $(SyncHandler.class).sync(group, groupId ->
+                $(GroupActivityTransitionHandler.class).showGroupMessages(view, groupId));
     }
 
     @Override

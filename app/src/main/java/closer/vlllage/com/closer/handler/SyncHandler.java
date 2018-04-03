@@ -24,9 +24,12 @@ public class SyncHandler extends PoolMember {
     }
 
     public <T extends BaseObject> void sync(T obj) {
+        sync(obj, null);
+    }
+
+    public <T extends BaseObject> void sync(T obj, OnSyncResult onSyncResult) {
         obj.setLocalOnly(true);
-        send(obj);
-        syncAll();
+        send(obj, onSyncResult);
     }
 
     private void syncAll(Class<? extends BaseObject> clazz, Property localOnlyProperty) {
@@ -42,19 +45,19 @@ public class SyncHandler extends PoolMember {
         }
     }
 
-    private void send(final BaseObject obj) {
+    private void send(final BaseObject obj, OnSyncResult onSyncResult) {
         if (obj instanceof Group) {
-            sendCreateGroup((Group) obj);
+            sendCreateGroup((Group) obj,onSyncResult);
         } else if (obj instanceof Suggestion) {
-            sendCreateSuggestion((Suggestion) obj);
+            sendCreateSuggestion((Suggestion) obj,onSyncResult);
         } else if (obj instanceof GroupMessage) {
-            sendCreateGroupMessage((GroupMessage) obj);
+            sendCreateGroupMessage((GroupMessage) obj,onSyncResult);
         } else {
             throw new RuntimeException("Unknown object type for sync: " + obj);
         }
     }
 
-    private void sendCreateSuggestion(Suggestion suggestion) {
+    private void sendCreateSuggestion(Suggestion suggestion, OnSyncResult onSyncResult) {
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).addSuggestion(
                 suggestion.getName(),
                 new LatLng(suggestion.getLatitude(), suggestion.getLongitude())
@@ -63,13 +66,16 @@ public class SyncHandler extends PoolMember {
                         suggestion.setId(createResult.id);
                         suggestion.setLocalOnly(false);
                         $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
+                        if (onSyncResult != null) {
+                            onSyncResult.onSync(createResult.id);
+                        }
                     } else {
                         $(DefaultAlerts.class).syncError();
                     }
                 }, error -> $(DefaultAlerts.class).syncError()));
     }
 
-    private void sendCreateGroup(Group group) {
+    private void sendCreateGroup(Group group, OnSyncResult onSyncResult) {
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).createGroup(
                 group.getName()
         ).subscribe(createResult -> {
@@ -77,13 +83,16 @@ public class SyncHandler extends PoolMember {
                 group.setId(createResult.id);
                 group.setLocalOnly(false);
                 $(StoreHandler.class).getStore().box(Group.class).put(group);
+                if (onSyncResult != null) {
+                    onSyncResult.onSync(createResult.id);
+                }
             } else {
                 $(DefaultAlerts.class).syncError();
             }
         }, error -> $(DefaultAlerts.class).syncError()));
     }
 
-    private void sendCreateGroupMessage(GroupMessage groupMessage) {
+    private void sendCreateGroupMessage(GroupMessage groupMessage, OnSyncResult onSyncResult) {
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).sendGroupMessage(
                 groupMessage.getGroupId(),
                 groupMessage.getText(),
@@ -93,9 +102,16 @@ public class SyncHandler extends PoolMember {
                 groupMessage.setId(createResult.id);
                 groupMessage.setLocalOnly(false);
                 $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
+                if (onSyncResult != null) {
+                    onSyncResult.onSync(createResult.id);
+                }
             } else {
                 $(DefaultAlerts.class).syncError();
             }
         }, error -> $(DefaultAlerts.class).syncError()));
+    }
+
+    public interface OnSyncResult {
+        void onSync(String id);
     }
 }
