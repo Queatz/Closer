@@ -64,4 +64,5 @@
     <string name="great">Great!</string>
     <string name="sync_didnt_work">Sync didn\'t work</string>
     <string name="boo">Boo</string>
+    <string name="add_contact">+ Add Contact</string>
 </resources>

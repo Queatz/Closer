@@ -39,7 +39,7 @@ public class ApiHandler extends PoolMember {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<SuccessResult> updatePhone(String latLng, String name, String status, Boolean active, String deviceToken) {
+    public Observable<CreateResult> updatePhone(String latLng, String name, String status, Boolean active, String deviceToken) {
         return api.getBackend().phoneUpdate(latLng, name, status, active, deviceToken)
                 .observeOn(AndroidSchedulers.mainThread());
     }

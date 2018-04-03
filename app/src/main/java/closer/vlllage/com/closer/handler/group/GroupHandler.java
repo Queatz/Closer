@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -36,13 +37,15 @@ public class GroupHandler extends PoolMember {
 
         if (group != null) {
             peopleInGroup.setText("");
+            String phoneId = $(PersistenceHandler.class).getPhoneId();
+            if (phoneId == null) phoneId = "";
             $(StoreHandler.class).getStore().box(GroupContact.class).query()
                     .equal(GroupContact_.groupId, group.getId())
-// todo                    .notEqual(GroupContact_.contactId, $(PersistenceHandler.class).getPhone())
+                    .notEqual(GroupContact_.contactId, phoneId)
                     .build().subscribe().single().on(AndroidScheduler.mainThread())
                     .observer(groupContacts -> {
                         if (groupContacts.isEmpty()) {
-                            peopleInGroup.setText("-");
+                            peopleInGroup.setText(R.string.add_contact);
                             return;
                         }
 

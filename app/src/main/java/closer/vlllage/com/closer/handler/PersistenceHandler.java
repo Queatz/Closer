@@ -15,6 +15,7 @@ public class PersistenceHandler extends PoolMember {
     private static final String PREFERENCE_DEVICE_TOKEN = "closer.device-token";
     private static final String PREFERENCE_PHONE = "closer.phone";
     private static final String PREFERENCE_VERIFIED = "closer.verified";
+    private static final String PREFERENCE_PHONE_ID = "closer.phone.id";
 
     private SharedPreferences sharedPreferences;
 
@@ -77,5 +78,14 @@ public class PersistenceHandler extends PoolMember {
     @SuppressLint("ApplySharedPref")
     public void setIsVerified(boolean verified) {
         sharedPreferences.edit().putBoolean(PREFERENCE_VERIFIED, verified).commit();
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public void setPhoneId(String phoneId) {
+        sharedPreferences.edit().putString(PREFERENCE_PHONE_ID, phoneId).commit();
+    }
+
+    public String getPhoneId() {
+        return sharedPreferences.getString(PREFERENCE_PHONE_ID, null);
     }
 }

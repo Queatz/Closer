@@ -66,7 +66,9 @@ public class AccountHandler extends PoolMember {
     public void updateDeviceToken(String deviceToken) {
         $(PersistenceHandler.class).setDeviceToken(deviceToken);
         $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, null, null, null, deviceToken)
-            .subscribe(success -> {}, this::onError));
+            .subscribe(createResult -> {
+                $(PersistenceHandler.class).setPhoneId(createResult.id);
+            }, this::onError));
     }
 
     public String getName() {

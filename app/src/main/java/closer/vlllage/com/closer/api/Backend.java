@@ -31,7 +31,7 @@ public interface Backend {
     Observable<PhoneResult> phone();
 
     @POST("phone")
-    Observable<SuccessResult> phoneUpdate(
+    Observable<CreateResult> phoneUpdate(
             @Query("geo") String latLng,
             @Query("name") String name,
             @Query("status") String status,
