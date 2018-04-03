@@ -10,7 +10,7 @@ public class GroupMessage extends BaseObject {
     private String contactId;
     private Date time;
     private String text;
-    private String attachments;
+    private String attachment;
 
     public String getGroupId() {
         return groupId;
@@ -48,12 +48,12 @@ public class GroupMessage extends BaseObject {
         return this;
     }
 
-    public String getAttachments() {
-        return attachments;
+    public String getAttachment() {
+        return attachment;
     }
 
-    public GroupMessage setAttachments(String attachments) {
-        this.attachments = attachments;
+    public GroupMessage setAttachment(String attachment) {
+        this.attachment = attachment;
         return this;
     }
 }

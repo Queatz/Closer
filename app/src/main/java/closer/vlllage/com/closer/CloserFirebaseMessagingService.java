@@ -24,17 +24,17 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
                         if (data.containsKey("what")) {
                             switch (data.get("what")) {
                                 case "groups":
-                                    app.getPool().$(RefreshHandler.class).refreshMyGroups();
+                                    app.$(RefreshHandler.class).refreshMyGroups();
                                     break;
                                 case "messages":
-                                    app.getPool().$(RefreshHandler.class).refreshMyMessages();
+                                    app.$(RefreshHandler.class).refreshMyMessages();
                                     break;
                             }
                         }
                         break;
                     case "message":
                         LatLng latLng = data.containsKey("latLng") ? LatLngStr.to(data.get("latLng")) : null;
-                        app.getPool().$(NotificationHandler.class).showNotification(
+                        app.$(NotificationHandler.class).showNotification(
                                 data.get("phone"),
                                 latLng,
                                 data.containsKey("name") ? data.get("name") : "",

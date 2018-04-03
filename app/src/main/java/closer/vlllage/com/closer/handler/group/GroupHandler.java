@@ -38,4 +38,8 @@ public class GroupHandler extends PoolMember {
             groupName.setText(R.string.not_found);
         }
     }
+
+    public Group getGroup() {
+        return group;
+    }
 }

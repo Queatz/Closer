@@ -55,4 +55,13 @@
     <string name="leave_group">Yes, leave %1$s</string>
     <string name="leave_group_message">After leaving this group, you will need to be invited again to re-join.</string>
     <string name="leave_group_title">Leave %1$s?</string>
+    <string name="ok">Ok</string>
+    <string name="group_no_more">%1$s no more</string>
+    <string name="that_didnt_work">That didn\'t work</string>
+    <string name="add_phone_name">Invite %1$s</string>
+    <string name="add_phone_to_group">Invite %1$s to %2$s?</string>
+    <string name="phone_invited">%1$s has been invited to %2$s</string>
+    <string name="great">Great!</string>
+    <string name="sync_didnt_work">Sync didn\'t work</string>
+    <string name="boo">Boo</string>
 </resources>

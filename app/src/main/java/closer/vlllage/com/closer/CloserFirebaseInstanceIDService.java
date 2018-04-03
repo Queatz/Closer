@@ -9,7 +9,6 @@ public class CloserFirebaseInstanceIDService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
-        App app = (App) getApplication();
-        app.getPool().$(AccountHandler.class).updateDeviceToken(deviceToken);
+        ((App) getApplication()).$(AccountHandler.class).updateDeviceToken(deviceToken);
     }
 }

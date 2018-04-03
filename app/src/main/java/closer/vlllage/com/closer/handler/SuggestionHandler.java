@@ -18,7 +18,6 @@ import closer.vlllage.com.closer.store.models.Suggestion;
 import closer.vlllage.com.closer.store.models.Suggestion_;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.reactive.SubscriptionBuilder;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class SuggestionHandler extends PoolMember {
 
@@ -89,7 +88,7 @@ public class SuggestionHandler extends PoolMember {
     }
 
     public void createNewSuggestion(final LatLng latLng) {
-        $(AlertHandler.class).makeAlert()
+        $(AlertHandler.class).make()
             .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_suggestion_here))
             .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_suggestion))
             .setLayoutResId(R.layout.make_suggestion_modal)
@@ -102,17 +101,12 @@ public class SuggestionHandler extends PoolMember {
             return;
         }
 
-        $(DisposableHandler.class).add($(ApiHandler.class).addSuggestion(name.trim(), latLng)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(successResult -> {}));
-
-        if ("local first" == null) {
-            Suggestion suggestion = $(StoreHandler.class).create(Suggestion.class);
-            suggestion.setName(name);
-            suggestion.setLatitude(latLng.latitude);
-            suggestion.setLongitude(latLng.longitude);
-            $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
-        }
+        Suggestion suggestion = $(StoreHandler.class).create(Suggestion.class);
+        suggestion.setName(name.trim());
+        suggestion.setLatitude(latLng.latitude);
+        suggestion.setLongitude(latLng.longitude);
+        $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
+        $(SyncHandler.class).sync(suggestion);
     }
 
     public void loadAll(List<Suggestion> suggestions) {

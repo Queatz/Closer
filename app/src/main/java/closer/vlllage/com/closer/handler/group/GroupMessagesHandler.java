@@ -23,7 +23,7 @@ public class GroupMessagesHandler extends PoolMember {
 
         groupMessagesAdapter = new GroupMessagesAdapter(this);
         groupMessagesAdapter.setOnMessageClickListener(message -> {
-            $(AlertHandler.class).makeAlert()
+            $(AlertHandler.class).make()
                     .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.call))
                     .show();
         });

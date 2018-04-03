@@ -12,8 +12,12 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.AlertHandler;
+import closer.vlllage.com.closer.handler.ApiHandler;
+import closer.vlllage.com.closer.handler.DefaultAlerts;
+import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
+import closer.vlllage.com.closer.handler.SyncHandler;
 import closer.vlllage.com.closer.handler.VerifyNumberHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
@@ -54,10 +58,10 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
             groupName.setBackgroundResource(R.drawable.clickable_blue_light);
             groupName.setText($(ResourcesHandler.class).getResources().getString(R.string.add_new_group));
             groupName.setOnClickListener(view ->
-                    $(AlertHandler.class).makeAlert()
+                    $(AlertHandler.class).make()
                             .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
                             .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_a_new_group))
-                            .setLayoutResId(R.layout.set_name_modal)
+                            .setLayoutResId(R.layout.create_group_modal)
                             .setTextView(R.id.input, name -> createGroup(groupName, name))
                             .show());
             return;
@@ -71,8 +75,9 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
                 $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, group.getId()));
 
         groupName.setOnLongClickListener(view -> {
-            $(AlertHandler.class).makeAlert()
+            $(AlertHandler.class).make()
                     .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.leave_group, group.getName()))
+                    .setPositiveButtonCallback(result -> leaveGroup(group))
                     .setTitle($(ResourcesHandler.class).getResources().getString(R.string.leave_group_title, group.getName()))
                     .setMessage($(ResourcesHandler.class).getResources().getString(R.string.leave_group_message))
                     .show();
@@ -81,7 +86,20 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         });
     }
 
-    private void createGroup(TextView groupName, String name) {
+    private void leaveGroup(Group group) {
+        $(DisposableHandler.class).add($(ApiHandler.class).leaveGroup(group.getId()).subscribe(successResult -> {
+            if (successResult.success) {
+                $(AlertHandler.class).make()
+                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()))
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
+                        .show();
+            } else {
+                $(DefaultAlerts.class).thatDidntWork();
+            }
+        }, error -> $(DefaultAlerts.class).thatDidntWork()));
+    }
+
+    private void createGroup(View view, String name) {
         if (name == null || name.isEmpty()) {
             return;
         }
@@ -89,8 +107,9 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         Group group = $(StoreHandler.class).create(Group.class);
         group.setName(name);
         $(StoreHandler.class).getStore().box(Group.class).put(group);
+        $(SyncHandler.class).sync(group);
 
-        $(GroupActivityTransitionHandler.class).showGroupMessages(groupName, group.getId());
+        $(GroupActivityTransitionHandler.class).showGroupMessages(view, group.getId());
     }
 
     @Override

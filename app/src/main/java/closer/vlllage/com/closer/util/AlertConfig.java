@@ -3,20 +3,20 @@ package closer.vlllage.com.closer.util;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 
-public class AlertConfig<T> {
+public class AlertConfig {
 
     private final ShowCallback showCallback;
     private String title;
     private String message;
     private @LayoutRes Integer layoutResId;
     private String positiveButton;
-    private ButtonCallback<T> positiveButtonCallback;
+    private ButtonCallback positiveButtonCallback;
     private String negativeButton;
-    private ButtonCallback<T> negativeButtonCallback;
+    private ButtonCallback negativeButtonCallback;
     private Integer textView;
     private OnTextViewSubmitCallback onTextViewSubmitCallback;
     private OnAfterViewCreatedCallback onAfterViewCreated;
-    private AlertResult<T> alertResult;
+    private AlertResult alertResult;
 
     public AlertConfig(ShowCallback showCallback) {
         this.showCallback = showCallback;
@@ -30,7 +30,7 @@ public class AlertConfig<T> {
         return title;
     }
 
-    public AlertConfig<T> setTitle(String title) {
+    public AlertConfig setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -39,7 +39,7 @@ public class AlertConfig<T> {
         return message;
     }
 
-    public AlertConfig<T> setMessage(String message) {
+    public AlertConfig setMessage(String message) {
         this.message = message;
         return this;
     }
@@ -48,7 +48,7 @@ public class AlertConfig<T> {
         return layoutResId;
     }
 
-    public AlertConfig<T> setLayoutResId(@LayoutRes Integer layoutResId) {
+    public AlertConfig setLayoutResId(@LayoutRes Integer layoutResId) {
         this.layoutResId = layoutResId;
         return this;
     }
@@ -57,16 +57,16 @@ public class AlertConfig<T> {
         return positiveButton;
     }
 
-    public AlertConfig<T> setPositiveButton(String positiveButton) {
+    public AlertConfig setPositiveButton(String positiveButton) {
         this.positiveButton = positiveButton;
         return this;
     }
 
-    public ButtonCallback<T> getPositiveButtonCallback() {
+    public ButtonCallback getPositiveButtonCallback() {
         return positiveButtonCallback;
     }
 
-    public AlertConfig<T> setPositiveButtonCallback(ButtonCallback<T> positiveButtonCallback) {
+    public AlertConfig setPositiveButtonCallback(ButtonCallback positiveButtonCallback) {
         this.positiveButtonCallback = positiveButtonCallback;
         return this;
     }
@@ -75,16 +75,16 @@ public class AlertConfig<T> {
         return negativeButton;
     }
 
-    public AlertConfig<T> setNegativeButton(String negativeButton) {
+    public AlertConfig setNegativeButton(String negativeButton) {
         this.negativeButton = negativeButton;
         return this;
     }
 
-    public ButtonCallback<T> getNegativeButtonCallback() {
+    public ButtonCallback getNegativeButtonCallback() {
         return negativeButtonCallback;
     }
 
-    public AlertConfig<T> setNegativeButtonCallback(ButtonCallback<T> negativeButtonCallback) {
+    public AlertConfig setNegativeButtonCallback(ButtonCallback negativeButtonCallback) {
         this.negativeButtonCallback = negativeButtonCallback;
         return this;
     }
@@ -94,7 +94,7 @@ public class AlertConfig<T> {
     }
 
 
-    public AlertConfig<T> setTextView(Integer textView, OnTextViewSubmitCallback onTextViewSubmitCallback) {
+    public AlertConfig setTextView(Integer textView, OnTextViewSubmitCallback onTextViewSubmitCallback) {
         this.textView = textView;
         this.onTextViewSubmitCallback = onTextViewSubmitCallback;
         return this;
@@ -104,11 +104,11 @@ public class AlertConfig<T> {
         return onAfterViewCreated;
     }
 
-    public AlertResult<T> getAlertResult() {
+    public AlertResult getAlertResult() {
         return alertResult;
     }
 
-    public AlertConfig<T> setAlertResult(AlertResult<T> alertResult) {
+    public AlertConfig setAlertResult(AlertResult alertResult) {
         this.alertResult = alertResult;
         return this;
     }
@@ -117,7 +117,7 @@ public class AlertConfig<T> {
         return onTextViewSubmitCallback;
     }
 
-    public AlertConfig<T> setOnAfterViewCreated(OnAfterViewCreatedCallback onAfterViewCreated) {
+    public AlertConfig setOnAfterViewCreated(OnAfterViewCreatedCallback onAfterViewCreated) {
         this.onAfterViewCreated = onAfterViewCreated;
         return this;
     }
@@ -126,8 +126,8 @@ public class AlertConfig<T> {
         void show(AlertConfig alertConfig);
     }
 
-    public interface ButtonCallback<T> {
-        void onClick(AlertResult<T> alertResult);
+    public interface ButtonCallback {
+        void onClick(AlertResult alertResult);
     }
 
     public interface OnAfterViewCreatedCallback {
@@ -138,14 +138,14 @@ public class AlertConfig<T> {
         void onTextViewSubmit(String value);
     }
 
-    public static class AlertResult<T> {
-        private T result;
+    public static class AlertResult {
+        private Object result;
 
-        public T getResult() {
+        public Object getResult() {
             return result;
         }
 
-        public AlertResult<T> setResult(T result) {
+        public AlertResult setResult(Object result) {
             this.result = result;
             return this;
         }

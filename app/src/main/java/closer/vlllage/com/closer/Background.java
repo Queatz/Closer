@@ -36,9 +36,13 @@ public class Background extends BroadcastReceiver {
                     return;
                 }
 
-                app.getPool().$(ApiHandler.class).setAuthorization(app.getPool().$(AccountHandler.class).getPhone());
+                app.$(ApiHandler.class).setAuthorization(app.$(AccountHandler.class).getPhone());
 
-                app.getPool().$(DisposableHandler.class).add(app.getPool().$(ApiHandler.class).sendMessage(phone, replyMessage.toString()).subscribe(success -> {}, error -> {
+                app.$(DisposableHandler.class).add(app.$(ApiHandler.class).sendMessage(phone, replyMessage.toString()).subscribe(successResult -> {
+                    if (!successResult.success) {
+                        Toast.makeText(app, R.string.message_not_sent, Toast.LENGTH_SHORT).show();
+                    }
+                }, error -> {
                     Toast.makeText(app, R.string.message_not_sent, Toast.LENGTH_SHORT).show();
                 }));
 

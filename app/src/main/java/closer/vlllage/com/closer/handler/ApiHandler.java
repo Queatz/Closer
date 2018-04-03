@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 import closer.vlllage.com.closer.api.ApiService;
+import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
@@ -33,7 +34,7 @@ public class ApiHandler extends PoolMember {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<SuccessResult> addSuggestion(String name, LatLng latLng) {
+    public Observable<CreateResult> addSuggestion(String name, LatLng latLng) {
         return api.getBackend().addSuggestion(name, LatLngStr.from(latLng))
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -79,23 +80,23 @@ public class ApiHandler extends PoolMember {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<SuccessResult> sendGroupMessage(String groupId, String text, Object attachment) {
+    public Observable<CreateResult> sendGroupMessage(String groupId, String text, Object attachment) {
         return api.getBackend().sendGroupMessage(groupId, text, attachment == null ? null : $(JsonHandler.class).to(attachment))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<SuccessResult> createGroup(String groupName) {
+    public Observable<CreateResult> createGroup(String groupName) {
         return api.getBackend().createGroup(groupName)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<SuccessResult> inviteToGroup(String phoneNumber) {
-        return api.getBackend().inviteToGroup(phoneNumber)
+    public Observable<SuccessResult> inviteToGroup(String groupId, String phoneNumber) {
+        return api.getBackend().inviteToGroup(groupId, phoneNumber)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<SuccessResult> leaveGroup() {
-        return api.getBackend().leaveGroup(true)
+    public Observable<SuccessResult> leaveGroup(String groupId) {
+        return api.getBackend().leaveGroup(groupId, true)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

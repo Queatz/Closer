@@ -11,11 +11,15 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.AlertHandler;
+import closer.vlllage.com.closer.handler.ApiHandler;
+import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.PhoneContactsHandler;
+import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.models.Group;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -26,13 +30,15 @@ public class GroupContactsHandler extends PoolMember {
     private PhoneContactAdapter phoneContactAdapter;
 
     @SuppressWarnings("MissingPermission")
-    public void attach(RecyclerView contactsRecyclerView, EditText searchContacts) {
+    public void attach(Group group, RecyclerView contactsRecyclerView, EditText searchContacts) {
         this.contactsRecyclerView = contactsRecyclerView;
         this.searchContacts = searchContacts;
         phoneContactAdapter = new PhoneContactAdapter(this, phoneContact -> {
-            $(AlertHandler.class).makeAlert()
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_to_group))
-                    .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_to_group))
+            $(AlertHandler.class).make()
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_phone_name, phoneContact.getFirstName()))
+                    .setMessage(phoneContact.getPhoneNumber())
+                    .setPositiveButtonCallback(alertResult -> inviteToGroup(group, phoneContact))
+                    .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_phone_to_group, phoneContact.getFirstName(), group.getName()))
                     .show();
         });
 
@@ -65,6 +71,21 @@ public class GroupContactsHandler extends PoolMember {
 
             }
         });
+    }
+
+    private void inviteToGroup(Group group, PhoneContact phoneContact) {
+        $(DisposableHandler.class).add($(ApiHandler.class).inviteToGroup(group.getId(), phoneContact.getPhoneNumber()).subscribe(
+                successResult -> {
+                    if (successResult.success) {
+                        $(AlertHandler.class).make()
+                                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.phone_invited, phoneContact.getName(), group.getName()))
+                                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.yaay))
+                                .show();
+                        $(RefreshHandler.class).refreshMyGroups();
+                    } else {
+                        $(DefaultAlerts.class).thatDidntWork();
+                    }
+                }, error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
     public boolean isEmpty() {

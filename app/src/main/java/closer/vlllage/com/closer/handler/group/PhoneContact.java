@@ -26,4 +26,14 @@ public class PhoneContact {
         this.phoneNumber = phoneNumber;
         return this;
     }
+
+    public String getFirstName() {
+        int firstWhiteSpace = name.indexOf(" ");
+
+        if (firstWhiteSpace == -1) {
+            return name;
+        }
+
+        return name.substring(0, firstWhiteSpace);
+    }
 }

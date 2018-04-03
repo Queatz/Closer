@@ -12,15 +12,11 @@ import closer.vlllage.com.closer.util.KeyboardUtil;
 
 public class AlertHandler extends PoolMember {
 
-    public AlertConfig makeAlert() {
-        return new AlertConfig<>(this::showAlertConfig);
+    public AlertConfig make() {
+        return new AlertConfig(this::showAlertConfig);
     }
 
-    public <T> AlertConfig<T> makeAlert(Class<T> clazz) {
-        return new AlertConfig<T>(this::showAlertConfig);
-    }
-
-    private <T> void showAlertConfig(final AlertConfig<T> alertConfig) {
+    private void showAlertConfig(final AlertConfig alertConfig) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog);
         TextView textView = null;
         if (alertConfig.getLayoutResId() != null) {

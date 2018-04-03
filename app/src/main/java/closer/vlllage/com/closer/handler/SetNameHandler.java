@@ -7,7 +7,7 @@ import closer.vlllage.com.closer.pool.PoolMember;
 
 public class SetNameHandler extends PoolMember {
     public void modifyName() {
-        $(AlertHandler.class).makeAlert()
+        $(AlertHandler.class).make()
                 .setLayoutResId(R.layout.set_name_modal)
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.update_name))
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.update_name))

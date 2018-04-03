@@ -12,7 +12,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
@@ -72,9 +71,11 @@ public class ReplyLayoutHandler extends PoolMember {
     }
 
     private void reply() {
-        $(DisposableHandler.class).add($(ApiHandler.class).sendMessage(replyingToMapBubble.getPhone(), replyMessage.getText().toString()).subscribe(success -> {}, error -> {
-            Toast.makeText($(ActivityHandler.class).getActivity(), R.string.message_not_sent, Toast.LENGTH_SHORT).show();
-        }));
+        $(DisposableHandler.class).add($(ApiHandler.class).sendMessage(replyingToMapBubble.getPhone(), replyMessage.getText().toString()).subscribe(successResult -> {
+            if (!successResult.success) {
+                $(DefaultAlerts.class).thatDidntWork();
+            }
+        }, error -> $(DefaultAlerts.class).thatDidntWork()));
         replyMessage.setText("");
         showReplyLayout(false);
     }
@@ -83,8 +84,7 @@ public class ReplyLayoutHandler extends PoolMember {
         replyingToMapBubble = mapBubble;
 
         replyLayoutName.setText(replyingToMapBubble.getName().isEmpty() ?
-            $(ResourcesHandler.class).getResources().getString(R.string.app_name) :
-                replyingToMapBubble.getName());
+            $(ResourcesHandler.class).getResources().getString(R.string.app_name) : replyingToMapBubble.getName());
 
         replyLayoutStatus.setText(replyingToMapBubble.getStatus());
 

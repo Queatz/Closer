@@ -13,7 +13,7 @@ public class PhoneContactsHandler extends PoolMember {
 
     @Override
     protected void onPoolInit() {
-        phoneContacts = $(ApplicationHandler.class).getApp().getPool().$(PhoneContacts.class);
+        phoneContacts = $(ApplicationHandler.class).getApp().$(PhoneContacts.class);
     }
 
     public Observable<List<PhoneContact>> getAllContacts() {

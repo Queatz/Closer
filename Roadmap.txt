@@ -16,10 +16,11 @@
   To the finish line
 ======================
 
+[ ] Technical Challenges
+    [ ] Local Ids
+    [ ] Sync late
+
 [.] Finish create group
-    [.] Send to server
-    [X] Remove change name
-    [.] Make create group dialog
 
 [.] Finish add contacts to groups
     [ ] Show as-you-type formatted phone number in recycler (once starting to type)
@@ -48,12 +49,12 @@
 
 [.] Finish leave group
     [X] Long-press on group
-    [.] Send network call to /group {leave: true}
+    [X] Send network call to /group {leave: true}
     [.] Reload my groups list
     [.] Remove from local-store
     [.] Show "Successfully left <group_name>" dialog
 
-[ ] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D
+[.] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D
 
 
 ===============================

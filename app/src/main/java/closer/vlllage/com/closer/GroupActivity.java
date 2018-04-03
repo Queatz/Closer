@@ -41,14 +41,14 @@ public class GroupActivity extends CircularRevealActivity {
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
         $(GroupHandler.class).attach(groupName, peopleInGroup);
-        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage);
-        $(GroupContactsHandler.class).attach(contactsRecyclerView, searchContacts);
-        peopleInGroup.setSelected(true);
-        peopleInGroup.setOnClickListener(view -> toggleContactsView());
-
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
             $(GroupHandler.class).setGroupById(getIntent().getStringExtra(EXTRA_GROUP_ID));
         }
+
+        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage);
+        $(GroupContactsHandler.class).attach($(GroupHandler.class).getGroup(), contactsRecyclerView, searchContacts);
+        peopleInGroup.setSelected(true);
+        peopleInGroup.setOnClickListener(view -> toggleContactsView());
 
         showPhoneContactsButton.setOnClickListener(view -> {
             $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {

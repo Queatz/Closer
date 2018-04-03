@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.api;
 
 import java.util.List;
 
+import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
@@ -54,7 +55,7 @@ public interface Backend {
     Observable<List<SuggestionResult>> getSuggestionsNear(@Path("latLng") String latLng);
 
     @POST("suggestion")
-    Observable<SuccessResult> addSuggestion(@Query("name") String name, @Query("geo") String geo);
+    Observable<CreateResult> addSuggestion(@Query("name") String name, @Query("geo") String geo);
 
     // Group Message
 
@@ -62,7 +63,7 @@ public interface Backend {
     Observable<List<GroupMessageResult>> myMessages();
 
     @POST("message")
-    Observable<SuccessResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query("attachment") String attachment);
+    Observable<CreateResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query("attachment") String attachment);
 
     // Group
 
@@ -70,11 +71,11 @@ public interface Backend {
     Observable<List<GroupResult>> myGroups();
 
     @POST("group")
-    Observable<SuccessResult> createGroup(@Query("name") String groupName);
+    Observable<CreateResult> createGroup(@Query("name") String groupName);
 
     @POST("group/{id}")
-    Observable<SuccessResult> inviteToGroup(@Query("invite") String phoneNumber);
+    Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("invite") String phoneNumber);
 
     @POST("group/{id}")
-    Observable<SuccessResult> leaveGroup(@Query("leave") boolean leaveGroup);
+    Observable<SuccessResult> leaveGroup(@Path("id") String groupId, @Query("leave") boolean leaveGroup);
 }

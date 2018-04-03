@@ -6,7 +6,7 @@ import closer.vlllage.com.closer.pool.PoolMember;
 public class VerifyNumberHandler extends PoolMember {
 
     public void verify() {
-        $(AlertHandler.class).makeAlert(String.class)
+        $(AlertHandler.class).make()
             .setLayoutResId(R.layout.send_code_layout)
             .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.send_code))
             .setTextView(R.id.input, this::sendPhoneNumber)
@@ -18,15 +18,15 @@ public class VerifyNumberHandler extends PoolMember {
     private void sendPhoneNumber(String phoneNumber) {
         $(DisposableHandler.class).add($(ApiHandler.class).setPhoneNumber(phoneNumber).subscribe(result -> {
             if (!result.success) {
-                // Do something
+                $(DefaultAlerts.class).thatDidntWork();
             }
-        }));
+        }, error -> $(DefaultAlerts.class).thatDidntWork()));
 
         getCode();
     }
 
     private void getCode() {
-        $(AlertHandler.class).makeAlert(String.class)
+        $(AlertHandler.class).make()
                 .setLayoutResId(R.layout.verify_number_layout)
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.verify_number))
                 .setTextView(R.id.input, this::sendVerificationCode)
@@ -45,11 +45,11 @@ public class VerifyNumberHandler extends PoolMember {
     }
 
     private void codeNotConfirmed() {
-        $(AlertHandler.class).makeAlert(String.class)
-                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.resend_code))
-                .setPositiveButtonCallback(result -> getCode())
+        $(AlertHandler.class).make()
                 .setMessage($(ResourcesHandler.class).getResources().getString(R.string.number_not_verified))
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.oh_no))
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.resend_code))
+                .setPositiveButtonCallback(result -> getCode())
                 .show();
     }
 
@@ -57,10 +57,10 @@ public class VerifyNumberHandler extends PoolMember {
         $(PersistenceHandler.class).setIsVerified(true);
         $(MyGroupsLayoutHandler.class).showVerifyMyNumber(false);
 
-        $(AlertHandler.class).makeAlert(String.class)
-                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.yaay))
-                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.number_verified))
+        $(AlertHandler.class).make()
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.welcome_to_closer))
+                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.number_verified))
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.yaay))
                 .show();
     }
 }

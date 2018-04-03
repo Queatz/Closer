@@ -19,8 +19,4 @@ public abstract class PoolApplication extends Application {
     public <T extends PoolMember> T $(Class<T> member) {
         return pool.$(member);
     }
-
-    public Pool getPool() {
-        return pool;
-    }
 }
