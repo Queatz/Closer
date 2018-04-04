@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.GroupContact;
+import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 
 public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapter.GroupMessageViewHolder> {
@@ -38,8 +42,21 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     @Override
     public void onBindViewHolder(@NonNull GroupMessageViewHolder holder, int position) {
         GroupMessage groupMessage = groupMessages.get(position);
-        holder.name.setText(groupMessage.getContactId());
+
+        GroupContact groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
+                .equal(GroupContact_.contactId, groupMessage.getContactId())
+                .build()
+                .findFirst();
+
+        if (groupContact == null) {
+            holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
+        } else {
+            holder.name.setText(groupContact.getContactName());
+        }
+
         holder.message.setText(groupMessage.getText());
+
+        holder.message.setAlpha(groupMessage.isLocalOnly() ? .5f : 1f);
 
         holder.itemView.setOnClickListener(view -> {
             if (onMessageClickListener != null) {
