@@ -92,8 +92,11 @@ public class GroupContactsHandler extends PoolMember {
         ).subscribe(
                 successResult -> {
                     if (successResult.success) {
+                        String message = phoneContact.getName() == null || phoneContact.getName().trim().isEmpty() ?
+                                $(ResourcesHandler.class).getResources().getString(R.string.phone_invited, phoneContact.getPhoneNumber(), group.getName()) :
+                                $(ResourcesHandler.class).getResources().getString(R.string.phone_invited, phoneContact.getName(), group.getName());
                         $(AlertHandler.class).make()
-                                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.phone_invited, phoneContact.getName(), group.getName()))
+                                .setMessage(message)
                                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.yaay))
                                 .show();
                         $(RefreshHandler.class).refreshMyGroups();

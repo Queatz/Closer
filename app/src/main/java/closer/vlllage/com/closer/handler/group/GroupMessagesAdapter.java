@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import closer.vlllage.com.closer.store.models.GroupMessage;
 
 public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapter.GroupMessageViewHolder> {
 
-    private List<GroupMessage> messages = new ArrayList<>();
+    private List<GroupMessage> groupMessages = new ArrayList<>();
     private OnMessageClickListener onMessageClickListener;
 
     public GroupMessagesAdapter(PoolMember poolMember) {
@@ -36,21 +37,36 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
     @Override
     public void onBindViewHolder(@NonNull GroupMessageViewHolder holder, int position) {
+        GroupMessage groupMessage = groupMessages.get(position);
+        holder.name.setText(groupMessage.getContactId());
+        holder.message.setText(groupMessage.getText());
+
         holder.itemView.setOnClickListener(view -> {
             if (onMessageClickListener != null) {
-                onMessageClickListener.onMessageClick(messages.get(position));
+                onMessageClickListener.onMessageClick(groupMessages.get(position));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return groupMessages.size();
+    }
+
+    public void setGroupMessages(List<GroupMessage> groupMessages) {
+        this.groupMessages = groupMessages;
+        notifyDataSetChanged();
     }
 
     class GroupMessageViewHolder extends RecyclerView.ViewHolder {
+
+        TextView name;
+        TextView message;
+
         public GroupMessageViewHolder(View itemView) {
             super(itemView);
+            name = itemView.findViewById(R.id.name);
+            message = itemView.findViewById(R.id.message);
         }
     }
 

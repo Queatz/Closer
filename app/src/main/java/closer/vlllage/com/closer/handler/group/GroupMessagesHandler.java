@@ -2,13 +2,28 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.ActivityHandler;
 import closer.vlllage.com.closer.handler.AlertHandler;
+import closer.vlllage.com.closer.handler.DefaultAlerts;
+import closer.vlllage.com.closer.handler.DisposableHandler;
+import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
+import closer.vlllage.com.closer.handler.SyncHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.GroupMessage;
+import closer.vlllage.com.closer.store.models.GroupMessage_;
+import io.objectbox.android.AndroidScheduler;
 
 public class GroupMessagesHandler extends PoolMember {
 
@@ -24,9 +39,52 @@ public class GroupMessagesHandler extends PoolMember {
         groupMessagesAdapter = new GroupMessagesAdapter(this);
         groupMessagesAdapter.setOnMessageClickListener(message -> {
             $(AlertHandler.class).make()
+                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.call_phone, message.getContactId()))
                     .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.call))
                     .show();
         });
         recyclerView.setAdapter(groupMessagesAdapter);
+
+        replyMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
+                if (EditorInfo.IME_ACTION_GO == action) {
+                    boolean success = send(textView.getText().toString());
+                    if (success) {
+                        textView.setText("");
+                    }
+                }
+
+                return false;
+            }
+        });
+
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMessage.class).query()
+                .equal(GroupMessage_.groupId, $(GroupHandler.class).getGroup().getId())
+                .build()
+                .subscribe().on(AndroidScheduler.mainThread())
+                .observer(this::setGroupMessages));
+    }
+
+    private void setGroupMessages(List<GroupMessage> groupMessages) {
+        Collections.reverse(groupMessages);
+        groupMessagesAdapter.setGroupMessages(groupMessages);
+    }
+
+    private boolean send(String text) {
+        if ($(PersistenceHandler.class).getPhoneId() == null) {
+            $(DefaultAlerts.class).thatDidntWork();
+            return false;
+        }
+
+        GroupMessage groupMessage = new GroupMessage();
+        groupMessage.setText(text);
+        groupMessage.setGroupId($(GroupHandler.class).getGroup().getId());
+        groupMessage.setContactId($(PersistenceHandler.class).getPhoneId());
+        groupMessage.setTime(new Date());
+        $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
+        $(SyncHandler.class).sync(groupMessage);
+
+        return true;
     }
 }

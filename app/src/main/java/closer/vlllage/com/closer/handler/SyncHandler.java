@@ -45,7 +45,7 @@ public class SyncHandler extends PoolMember {
         }
     }
 
-    private void send(final BaseObject obj, OnSyncResult onSyncResult) {
+    private <T extends BaseObject> void send(final T obj, OnSyncResult onSyncResult) {
         if (obj instanceof Group) {
             sendCreateGroup((Group) obj,onSyncResult);
         } else if (obj instanceof Suggestion) {

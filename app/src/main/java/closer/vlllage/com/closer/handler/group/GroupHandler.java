@@ -51,7 +51,7 @@ public class GroupHandler extends PoolMember {
                     .observer(groupContacts -> {
                         contactNames = new ArrayList<>();
                         for (GroupContact groupContact : groupContacts) {
-                            contactNames.add(groupContact.getContactName());
+                            contactNames.add(getContactName(groupContact));
                         }
 
                         redrawContacts();
@@ -63,11 +63,27 @@ public class GroupHandler extends PoolMember {
                     .observer(groupInvites -> {
                         contactInvites = new ArrayList<>();
                         for (GroupInvite groupInvite : groupInvites) {
-                            contactInvites.add($(ResourcesHandler.class).getResources().getString(R.string.contact_invited_inline, groupInvite.getName()));
+                            contactInvites.add($(ResourcesHandler.class).getResources().getString(R.string.contact_invited_inline, getInviteName(groupInvite)));
                         }
                         redrawContacts();
                     });
         }
+    }
+
+    private String getContactName(GroupContact groupContact) {
+        if (groupContact.getContactName() == null || groupContact.getContactName().trim().isEmpty()) {
+            return $(ResourcesHandler.class).getResources().getString(R.string.no_name);
+        }
+
+        return groupContact.getContactName();
+    }
+
+    private String getInviteName(GroupInvite groupInvite) {
+        if (groupInvite.getName() == null || groupInvite.getName().trim().isEmpty()) {
+            return $(ResourcesHandler.class).getResources().getString(R.string.no_name);
+        }
+
+        return groupInvite.getName();
     }
 
     private void redrawContacts() {

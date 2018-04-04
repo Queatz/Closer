@@ -3,7 +3,6 @@
 ======================
 
 [ ] Finish
-    [ ] Show messages with location/suggestion attachment
     [.] Send message
         [.] Show sending
         [.] Show sent

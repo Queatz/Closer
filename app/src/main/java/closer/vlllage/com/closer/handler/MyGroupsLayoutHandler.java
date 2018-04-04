@@ -13,11 +13,9 @@ import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import io.objectbox.android.AndroidScheduler;
-import io.objectbox.reactive.DataSubscription;
 
 public class MyGroupsLayoutHandler extends PoolMember {
     private ViewGroup myGroupsLayout;
-    private DataSubscription dataObserver;
     private MyGroupsAdapter myGroupsAdapter;
 
     public void attach(ViewGroup myGroupsLayout) {
@@ -30,14 +28,9 @@ public class MyGroupsLayoutHandler extends PoolMember {
         ));
         myGroupsAdapter = new MyGroupsAdapter(this);
         myGroupsRecyclerView.setAdapter(myGroupsAdapter);
-        dataObserver = $(StoreHandler.class).getStore().box(Group.class).query().build()
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Group.class).query().build()
                 .subscribe().on(AndroidScheduler.mainThread())
-                .observer(myGroupsAdapter::setGroups);
-    }
-
-    @Override
-    protected void onPoolEnd() {
-        dataObserver.cancel();
+                .observer(myGroupsAdapter::setGroups));
     }
 
     public int getHeight() {
