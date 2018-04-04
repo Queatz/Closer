@@ -28,7 +28,6 @@ public class SyncHandler extends PoolMember {
     }
 
     public <T extends BaseObject> void sync(T obj, OnSyncResult onSyncResult) {
-        obj.setLocalOnly(true);
         send(obj, onSyncResult);
     }
 
@@ -58,6 +57,9 @@ public class SyncHandler extends PoolMember {
     }
 
     private void sendCreateSuggestion(Suggestion suggestion, OnSyncResult onSyncResult) {
+        suggestion.setLocalOnly(true);
+        $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
+
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).addSuggestion(
                 suggestion.getName(),
                 new LatLng(suggestion.getLatitude(), suggestion.getLongitude())
@@ -76,6 +78,9 @@ public class SyncHandler extends PoolMember {
     }
 
     private void sendCreateGroup(Group group, OnSyncResult onSyncResult) {
+        group.setLocalOnly(true);
+        $(StoreHandler.class).getStore().box(Group.class).put(group);
+
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).createGroup(
                 group.getName()
         ).subscribe(createResult -> {
@@ -93,6 +98,9 @@ public class SyncHandler extends PoolMember {
     }
 
     private void sendCreateGroupMessage(GroupMessage groupMessage, OnSyncResult onSyncResult) {
+        groupMessage.setLocalOnly(true);
+        $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
+
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).sendGroupMessage(
                 groupMessage.getGroupId(),
                 groupMessage.getText(),

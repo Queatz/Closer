@@ -211,15 +211,17 @@ public class BubbleMapLayer {
         });
     }
 
-    public void remove(Function<MapBubble, Boolean> callback) {
-        Set<MapBubble> remove = new HashSet<>();
+    public void remove(RemoveCallback callback) {
+        Set<MapBubble> toRemove = new HashSet<>();
         for (MapBubble mapBubble : mapBubbles) {
             if (callback.apply(mapBubble)) {
-                remove.add(mapBubble);
+                toRemove.add(mapBubble);
             }
         }
 
-        remove.forEach(this::remove);
+        for (MapBubble mapBubble : toRemove) {
+            this.remove(mapBubble);
+        }
     }
 
     public void replace(List<MapBubble> mapBubbles) {
@@ -267,5 +269,9 @@ public class BubbleMapLayer {
     public interface BubbleView {
         View createView(ViewGroup view, MapBubble mapBubble);
         void updateView(MapBubble mapBubble);
+    }
+
+    public interface RemoveCallback {
+        boolean apply(MapBubble mapBubble);
     }
 }
