@@ -69,6 +69,7 @@
     <string name="contact_invited_inline">%1$s (invited)</string>
     <string name="invite_by_phone">Invite by phone</string>
     <string name="invite_to_group">Invite to %1$s?</string>
+    <string name="send_message">Send message</string>
     <string name="invite_by_phone_name_info">If you\'d like, add a name so others in the group know who you\'re inviting.</string>
     <string name="no_name">No name</string>
     <string name="call_phone">Call %1$s?</string>

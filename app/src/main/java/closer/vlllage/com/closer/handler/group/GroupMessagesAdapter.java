@@ -44,7 +44,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         GroupMessage groupMessage = groupMessages.get(position);
 
         GroupContact groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
-                .equal(GroupContact_.contactId, groupMessage.getContactId())
+                .equal(GroupContact_.id, groupMessage.getContactId())
                 .build()
                 .findFirst();
 

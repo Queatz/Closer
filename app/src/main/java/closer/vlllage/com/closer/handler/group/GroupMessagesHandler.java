@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -29,7 +30,7 @@ public class GroupMessagesHandler extends PoolMember {
 
     private GroupMessagesAdapter groupMessagesAdapter;
 
-    public void attach(RecyclerView recyclerView, EditText replyMessage) {
+    public void attach(RecyclerView recyclerView, EditText replyMessage, ImageButton sendButton) {
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 $(ActivityHandler.class).getActivity(),
                 LinearLayoutManager.VERTICAL,
@@ -49,13 +50,28 @@ public class GroupMessagesHandler extends PoolMember {
             @Override
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
                 if (EditorInfo.IME_ACTION_GO == action) {
+                    if (replyMessage.getText().toString().trim().isEmpty()) {
+                        return false;
+                    }
                     boolean success = send(textView.getText().toString());
                     if (success) {
                         textView.setText("");
                     }
+
+                    return true;
                 }
 
                 return false;
+            }
+        });
+
+        sendButton.setOnClickListener(view -> {
+            if (replyMessage.getText().toString().trim().isEmpty()) {
+                return;
+            }
+            boolean success = send(replyMessage.getText().toString());
+            if (success) {
+                replyMessage.setText("");
             }
         });
 
@@ -77,10 +93,14 @@ public class GroupMessagesHandler extends PoolMember {
             return false;
         }
 
+        if ($(GroupHandler.class).getGroupContact() == null) {
+            return false;
+        }
+
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setText(text);
         groupMessage.setGroupId($(GroupHandler.class).getGroup().getId());
-        groupMessage.setContactId($(PersistenceHandler.class).getPhoneId());
+        groupMessage.setContactId($(GroupHandler.class).getGroupContact().getId());
         groupMessage.setTime(new Date());
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
         $(SyncHandler.class).sync(groupMessage);

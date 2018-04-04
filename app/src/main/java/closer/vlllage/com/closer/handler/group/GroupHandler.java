@@ -25,6 +25,7 @@ public class GroupHandler extends PoolMember {
     private TextView groupName;
     private TextView peopleInGroup;
     private Group group;
+    private GroupContact groupContact;
     private List<String> contactNames = new ArrayList<>();
     private List<String> contactInvites = new ArrayList<>();
 
@@ -38,6 +39,7 @@ public class GroupHandler extends PoolMember {
             setGroup($(StoreHandler.class).getStore().box(Group.class).query()
                     .equal(Group_.id, groupId)
                     .build().findFirst());
+            setGroupContact();
         }
 
         if (group != null) {
@@ -68,6 +70,21 @@ public class GroupHandler extends PoolMember {
                         redrawContacts();
                     });
         }
+    }
+
+    private void setGroupContact() {
+        if (group == null) {
+            return;
+        }
+
+        if ($(PersistenceHandler.class).getPhoneId() == null) {
+            return;
+        }
+
+        groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
+                .equal(GroupContact_.groupId, group.getId())
+                .equal(GroupContact_.contactId, $(PersistenceHandler.class).getPhoneId())
+                .build().findFirst();
     }
 
     private String getContactName(GroupContact groupContact) {
@@ -113,5 +130,9 @@ public class GroupHandler extends PoolMember {
 
     public Group getGroup() {
         return group;
+    }
+
+    public GroupContact getGroupContact() {
+        return groupContact;
     }
 }

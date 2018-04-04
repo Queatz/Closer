@@ -10,6 +10,7 @@ import java.util.Set;
 
 import closer.vlllage.com.closer.api.models.GroupContactResult;
 import closer.vlllage.com.closer.api.models.GroupInviteResult;
+import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.ModelResult;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -20,8 +21,12 @@ import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupInvite;
 import closer.vlllage.com.closer.store.models.GroupInvite_;
+import closer.vlllage.com.closer.store.models.GroupMessage;
+import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Group_;
+import io.objectbox.Box;
 import io.objectbox.Property;
+import io.objectbox.query.QueryBuilder;
 
 public class RefreshHandler extends PoolMember {
 
@@ -31,9 +36,7 @@ public class RefreshHandler extends PoolMember {
     }
 
     public void refreshMyMessages() {
-        $(DisposableHandler.class).add($(ApiHandler.class).myMessages().subscribe(messages -> {
-            // todo Insert all new messages
-        }, error -> $(DefaultAlerts.class).syncError()));
+        $(DisposableHandler.class).add($(ApiHandler.class).myMessages().subscribe(this::handleMessages, error -> $(DefaultAlerts.class).syncError()));
     }
 
     public void refreshMyGroups() {
@@ -42,6 +45,36 @@ public class RefreshHandler extends PoolMember {
             handleGroupContacts(stateResult.groupContacts);
             handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, this::transformGroupInviteResult);
         }, error -> $(DefaultAlerts.class).syncError()));
+    }
+
+    private void handleMessages(final List<GroupMessageResult> messages) {
+        QueryBuilder<GroupMessage> query = $(StoreHandler.class).getStore().box(GroupMessage.class).query();
+
+        boolean isFirst = true;
+        for (GroupMessageResult message : messages) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                query.or();
+            }
+
+            query.equal(GroupMessage_.id, message.id);
+        }
+
+        query.build().subscribe().single()
+                .observer(groupMessages -> {
+                    Set<String> existingIds = new HashSet<>();
+                    for(GroupMessage groupMessage : groupMessages) {
+                        existingIds.add(groupMessage.getId());
+                    }
+
+                    Box<GroupMessage> groupMessageBox = $(StoreHandler.class).getStore().box(GroupMessage.class);
+                    for (GroupMessageResult message : messages) {
+                        if (!existingIds.contains(message.id)) {
+                            groupMessageBox.put(transformGroupMessageResult(message));
+                        }
+                    }
+                });
     }
 
     private <T extends BaseObject, R extends ModelResult> void handleFullListResult(
@@ -149,6 +182,16 @@ public class RefreshHandler extends PoolMember {
         groupInvite.setGroup(result.group);
         groupInvite.setName(result.name);
         return groupInvite;
+    }
+
+    private GroupMessage transformGroupMessageResult(GroupMessageResult result) {
+        GroupMessage groupMessage = new GroupMessage();
+        groupMessage.setId(result.id);
+        groupMessage.setContactId(result.from);
+        groupMessage.setGroupId(result.to);
+        groupMessage.setText(result.text);
+        groupMessage.setTime(result.created);
+        return groupMessage;
     }
 
     interface ResultTransformer<T, R> {

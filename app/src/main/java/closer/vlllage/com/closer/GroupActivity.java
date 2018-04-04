@@ -49,7 +49,7 @@ public class GroupActivity extends CircularRevealActivity {
             $(GroupHandler.class).setGroupById(getIntent().getStringExtra(EXTRA_GROUP_ID));
         }
 
-        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage);
+        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, findViewById(R.id.sendButton));
         $(GroupContactsHandler.class).attach($(GroupHandler.class).getGroup(), contactsRecyclerView, searchContacts);
         peopleInGroup.setSelected(true);
         peopleInGroup.setOnClickListener(view -> toggleContactsView());
