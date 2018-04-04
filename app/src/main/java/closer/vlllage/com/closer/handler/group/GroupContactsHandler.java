@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.AlertHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
@@ -18,6 +19,7 @@ import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.PhoneContactsHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
+import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Group;
 
@@ -86,11 +88,19 @@ public class GroupContactsHandler extends PoolMember {
     }
 
     private void inviteToGroup(Group group, PhoneContact phoneContact) {
+        String myName = $(AccountHandler.class).getName();
+        if (myName == null || myName.trim().isEmpty()) {
+            $(SetNameHandler.class).modifyName(name -> sendInviteToGroup(group, phoneContact), true);
+        } else {
+            sendInviteToGroup(group, phoneContact);
+        }
+    }
+
+    private void sendInviteToGroup(Group group, PhoneContact phoneContact) {
         $(DisposableHandler.class).add($(ApiHandler.class).inviteToGroup(group.getId(),
                 phoneContact.getName(),
                 phoneContact.getPhoneNumber()
-        ).subscribe(
-                successResult -> {
+        ).subscribe(successResult -> {
                     if (successResult.success) {
                         String message = phoneContact.getName() == null || phoneContact.getName().trim().isEmpty() ?
                                 $(ResourcesHandler.class).getResources().getString(R.string.phone_invited, phoneContact.getPhoneNumber(), group.getName()) :

@@ -10,6 +10,8 @@
 
  [ ] Add public photos to suggestion
  [ ] All messages from person go to one notification box
+ [ ] App Shortcuts for top groups
+ [ ] Long press on action button -> Settings, Suggestions, More
  
 # Message Attachment Types
 

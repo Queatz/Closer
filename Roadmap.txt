@@ -3,6 +3,7 @@
 ======================
 
 [ ] Finish
+    [X] Ask to set your name when inviting people if my name is not set
     [.] Send message
         [.] Show sending
         [.] Show sent
@@ -13,6 +14,7 @@
     [ ] Show attachments
         [ ] Send message with suggestion attachment
         [ ] Long-press on map, share with group, populate location in messages
+    [ ] Make sure phone numbers can only be associated once...
 
 [ ] Resolve TODOs
     [ ] // todo     send push to all members of that group to refresh messages

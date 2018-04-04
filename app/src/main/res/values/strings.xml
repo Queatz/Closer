@@ -7,7 +7,7 @@
     <string name="closer_notifications">Closer notifications</string>
     <string name="what_s_up">Tell everyone…</string>
     <string name="off">Off</string>
-    <string name="update_name">Update name</string>
+    <string name="update_name">Update your name</string>
     <string name="set_name">Your name here</string>
     <string name="add_a_name">Add a name…</string>
 
@@ -71,6 +71,8 @@
     <string name="invite_to_group">Invite to %1$s?</string>
     <string name="send_message">Send message</string>
     <string name="invite_by_phone_name_info">If you\'d like, add a name so others in the group know who you\'re inviting.</string>
+    <string name="set_name_optional_info">If you\'d like, update your name so others in the group know who you are.</string>
     <string name="no_name">No name</string>
     <string name="call_phone">Call %1$s?</string>
+    <string name="skip">Skip</string>
 </resources>
