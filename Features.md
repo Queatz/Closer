@@ -1,3 +1,7 @@
+# Presence
+
+ [ ] Privacy policy
+
 # Enhancements
 
  [ ] Show call button if phone number is available
@@ -24,3 +28,4 @@
 
 [ ] "Network unavailable"
 [ ] For permanently unsyncables allow user do discard
+    [ ] Examine button
