@@ -3,25 +3,19 @@
 ======================
 
 [ ] Finish
-    [X] Ask to set your name when inviting people if my name is not set
-    [.] Send message
-        [.] Show sending
-        [.] Show sent
     [ ] Group events inline with message
         [ ] Show new days "Wednesday, January 23rd"
         [ ] Show people joined group "Jen joined the group"
         [ ] Show people left group "Jen left the group"
     [ ] Show attachments
+        [ ] Share this location... -> share with group, populate location in messages
+            [ ] Tap message to show the location on the map
+        [ ] Share suggestion... -> share with group, populate suggestion in messages
+            [ ] Tap message to show suggestion on the map
         [ ] Send message with suggestion attachment
-        [ ] Long-press on map, share with group, populate location in messages
-    [ ] Make sure phone numbers can only be associated once...
 
 [ ] Resolve TODOs
-    [ ] // todo     send push to all members of that group to refresh messages
-    [ ] // todo     send push to all members of that group to refresh groups
-    [ ] // todo Send message to group
     [ ] // TODO Convert any group invites
 
-    [ ] // todo Insert all new messages
 
 [.] FINISH IT ALL UP!!!! :D :D :D :D :D :D :D :D :D

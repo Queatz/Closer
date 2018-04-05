@@ -153,6 +153,10 @@ public class MapsActivity extends PoolActivity {
             $(AccountHandler.class).updateDeviceToken(deviceToken);
         }
 
+        if ($(AccountHandler.class).getActive()) {
+            $(AccountHandler.class).updateStatus($(AccountHandler.class).getStatus());
+        }
+
         $(SuggestionHandler.class).attach(findViewById(R.id.actionButton));
     }
 

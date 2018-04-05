@@ -19,3 +19,8 @@
  [ ] Suggestion
  [ ] Action (person invited, joined, left)
  [ ] Photo
+ 
+# More
+
+[ ] "Network unavailable"
+[ ] For permanently unsyncables allow user do discard
