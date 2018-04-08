@@ -31,7 +31,12 @@ public class MyGroupsLayoutHandler extends PoolMember {
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Group.class).query()
                 .sort($(SortHandler.class).sortGroups())
                 .build().subscribe().on(AndroidScheduler.mainThread())
-                .observer(myGroupsAdapter::setGroups));
+                .observer(this::setGroups));
+    }
+
+    private void setGroups(List<Group> groups) {
+        $(AppShortcutsHandler.class).setGroupShortcuts(groups);
+        myGroupsAdapter.setGroups(groups);
     }
 
     public int getHeight() {

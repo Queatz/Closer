@@ -12,8 +12,7 @@ import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
 
 public class GroupActivityTransitionHandler extends PoolMember {
     public void showGroupMessages(@Nullable View view, String groupId) {
-        Intent intent = new Intent($(ActivityHandler.class).getActivity(), GroupActivity.class);
-        intent.putExtra(EXTRA_GROUP_ID, groupId);
+        Intent intent = getIntent(groupId);
 
         if (view != null) {
             Rect bounds = new Rect();
@@ -28,7 +27,14 @@ public class GroupActivityTransitionHandler extends PoolMember {
             intent.setSourceBounds(bounds);
         }
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         $(ActivityHandler.class).getActivity().startActivity(intent);
+    }
+
+    public Intent getIntent(String groupId) {
+        Intent intent = new Intent($(ApplicationHandler.class).getApp(), GroupActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.putExtra(EXTRA_GROUP_ID, groupId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        return intent;
     }
 }
