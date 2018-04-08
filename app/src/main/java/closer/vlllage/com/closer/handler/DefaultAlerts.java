@@ -6,8 +6,13 @@ import closer.vlllage.com.closer.pool.PoolMember;
 public class DefaultAlerts extends PoolMember {
 
     public void thatDidntWork() {
+        thatDidntWork(null);
+    }
+
+    public void thatDidntWork(String message) {
         $(AlertHandler.class).make()
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.that_didnt_work))
+                .setMessage(message)
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
                 .show();
     }

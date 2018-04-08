@@ -11,7 +11,7 @@ import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
 public class ScreenUtil {
     public static void ensureScreenIsOn(Context context) {
-        PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
         if(pm != null && !pm.isInteractive()) {
             PowerManager.WakeLock wl = pm.newWakeLock(FLAG_KEEP_SCREEN_ON | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE,"closer:notification");

@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
+import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
+import closer.vlllage.com.closer.handler.TopHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
@@ -29,6 +31,7 @@ public class GroupActivity extends CircularRevealActivity {
     private RecyclerView contactsRecyclerView;
     private Button showPhoneContactsButton;
     private ImageButton sendButton;
+    private String groupId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,7 +52,8 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(GroupHandler.class).attach(groupName, peopleInGroup);
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
-            $(GroupHandler.class).setGroupById(getIntent().getStringExtra(EXTRA_GROUP_ID));
+            groupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
+            $(GroupHandler.class).setGroupById(groupId);
         }
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton);
@@ -65,6 +69,18 @@ public class GroupActivity extends CircularRevealActivity {
                 }
             });
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        $(ApplicationHandler.class).getApp().$(TopHandler.class).setGroupActive(groupId);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        $(ApplicationHandler.class).getApp().$(TopHandler.class).setGroupActive(null);
     }
 
     @Override

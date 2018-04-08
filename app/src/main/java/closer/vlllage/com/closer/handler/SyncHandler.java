@@ -71,8 +71,6 @@ public class SyncHandler extends PoolMember {
                         if (onSyncResult != null) {
                             onSyncResult.onSync(createResult.id);
                         }
-                    } else {
-                        $(DefaultAlerts.class).syncError();
                     }
                 }, error -> $(DefaultAlerts.class).syncError()));
     }
@@ -91,8 +89,6 @@ public class SyncHandler extends PoolMember {
                 if (onSyncResult != null) {
                     onSyncResult.onSync(createResult.id);
                 }
-            } else {
-                $(DefaultAlerts.class).syncError();
             }
         }, error -> $(DefaultAlerts.class).syncError()));
     }
@@ -113,8 +109,6 @@ public class SyncHandler extends PoolMember {
                 if (onSyncResult != null) {
                     onSyncResult.onSync(createResult.id);
                 }
-            } else {
-                $(DefaultAlerts.class).syncError();
             }
         }, error -> $(DefaultAlerts.class).syncError()));
     }

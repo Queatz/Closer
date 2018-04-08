@@ -2,8 +2,9 @@
   Development
 ======================
 
+[ ] Figure out why invites are not working
+
 [ ] Finish
-    [o] Convert group invites
     [o] Group events inline with message
         [o] Show people joined group "Jen joined the group"
         [o] Show people left group "Jen left the group"
@@ -14,19 +15,6 @@
         [o] Share suggestion... -> share with group, populate suggestion in messages
             [o] Tap message to show suggestion on the map
         [ ] Send message with suggestion attachment
-    [ ] Delete group invites (long-press on contacts)
-
-======================
-  Testing
-======================
-
-[ ] Invite by phone number to non-Closer user
-[ ] Invite by phone number to existing Closer user
-[ ] Message sending
-    [ ] Refreshes all people in the group
-[ ] Person joined group
-    [ ] Refreshes all people in the group
-[ ] Verify number adds to group invites
 
 ======================
   To the finish line

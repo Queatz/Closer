@@ -24,26 +24,31 @@ public abstract class CircularRevealActivity extends PoolActivity {
         super.onPostCreate(savedInstanceState);
         View background = findViewById(getBackgroundId());
 
-        if (getIntent().getSourceBounds() != null) {
-            ViewTreeObserver viewTreeObserver = background.getViewTreeObserver();
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    background.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        ViewTreeObserver viewTreeObserver = background.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                background.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                    Rect sourceBounds = CircularRevealActivity.this.getIntent().getSourceBounds();
-                    Animator animator = ViewAnimationUtils.createCircularReveal(background,
-                            sourceBounds.centerX(),
-                            sourceBounds.centerY(),
-                            0,
-                            (float) Math.hypot(CircularRevealActivity.this.getWindow().getDecorView().getWidth(), CircularRevealActivity.this.getWindow().getDecorView().getHeight())
-                    );
-                    animator.setDuration(350);
-                    animator.setInterpolator(new AccelerateInterpolator());
-                    animator.start();
+                if (getIntent().getSourceBounds() == null) {
+                    Rect rect = new Rect();
+                    getWindow().getDecorView().getGlobalVisibleRect(rect);
+                    rect.top = rect.bottom;
+                    getIntent().setSourceBounds(rect);
                 }
-            });
-        }
+
+                Rect sourceBounds = CircularRevealActivity.this.getIntent().getSourceBounds();
+                Animator animator = ViewAnimationUtils.createCircularReveal(background,
+                        sourceBounds.centerX(),
+                        sourceBounds.centerY(),
+                        0,
+                        (float) Math.hypot(CircularRevealActivity.this.getWindow().getDecorView().getWidth(), CircularRevealActivity.this.getWindow().getDecorView().getHeight())
+                );
+                animator.setDuration(350);
+                animator.setInterpolator(new AccelerateInterpolator());
+                animator.start();
+            }
+        });
 
         background.setOnTouchListener((view, motionEvent) -> {
             background.setOnTouchListener(null);

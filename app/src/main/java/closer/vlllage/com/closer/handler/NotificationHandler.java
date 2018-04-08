@@ -14,6 +14,7 @@ import android.support.v4.app.RemoteInput;
 import com.google.android.gms.maps.model.LatLng;
 
 import closer.vlllage.com.closer.Background;
+import closer.vlllage.com.closer.GroupActivity;
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -21,6 +22,7 @@ import closer.vlllage.com.closer.util.PhoneUtil;
 import closer.vlllage.com.closer.util.ScreenUtil;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_LAT_LNG;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_NAME;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_PHONE;
@@ -33,17 +35,8 @@ public class NotificationHandler extends PoolMember {
     private static final int REQUEST_CODE_NOTIFICATION = 101;
     public static final String EXTRA_NOTIFICATION = "notification";
 
-    public void showNotification(String phone, LatLng latLng, String name, String message) {
-        String notificationChannel = $(ResourcesHandler.class).getResources().getString(R.string.notification_channel);
+    public void showBubbleMessageNotification(String phone, LatLng latLng, String name, String message) {
         Context context = $(ApplicationHandler.class).getApp();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(notificationChannel,
-                    context.getString(R.string.closer_notifications),
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            ((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE))
-                    .createNotificationChannel(channel);
-        }
 
         RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
                 .setLabel(context.getString(R.string.reply))
@@ -80,31 +73,99 @@ public class NotificationHandler extends PoolMember {
         backgroundIntent.putExtra(EXTRA_PHONE, phone);
         backgroundIntent.putExtra(EXTRA_NOTIFICATION, notificationTag);
 
-        PendingIntent replyPendingIntent =
-                PendingIntent.getBroadcast(context,
-                        REQUEST_CODE_NOTIFICATION,
-                        backgroundIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        show(contentIntent, backgroundIntent, remoteInput, name, message, notificationTag);
+    }
 
-        NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_notification,
-                        context.getString(R.string.reply), replyPendingIntent)
-                        .addRemoteInput(remoteInput)
-                        .build();
+    public void showInvitedToGroupNotification(String invitedBy, String groupName, String groupId) {
+        Context context = $(ApplicationHandler.class).getApp();
 
-        Notification newMessageNotification =
-                new NotificationCompat.Builder(context, notificationChannel)
+        Intent intent = new Intent(context, GroupActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+
+        intent.putExtra(EXTRA_GROUP_ID, groupId);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(
+                context,
+                REQUEST_CODE_NOTIFICATION,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        show(contentIntent, null, null, $(ResourcesHandler.class).getResources().getString(R.string.app_name),
+                $(ResourcesHandler.class).getResources().getString(R.string.invited_to_group_notification, invitedBy, groupName),
+                groupId + "/invited");
+    }
+
+    public void showGroupMessageNotification(String text, String messageFrom, String groupName, String groupId) {
+        Context context = $(ApplicationHandler.class).getApp();
+
+        Intent intent = new Intent(context, GroupActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+
+        intent.putExtra(EXTRA_GROUP_ID, groupId);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(
+                context,
+                REQUEST_CODE_NOTIFICATION,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        show(contentIntent, null, null,
+                $(ResourcesHandler.class).getResources().getString(R.string.group_message_notification, messageFrom, groupName),
+                text,
+                groupId + "/message");
+    }
+
+    private void show(PendingIntent contentIntent, Intent backgroundIntent,
+                      RemoteInput remoteInput,
+                      String name,
+                      String message,
+                      String notificationTag) {
+        Context context = $(ApplicationHandler.class).getApp();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(notificationChannel(),
+                    context.getString(R.string.closer_notifications),
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            ((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE))
+                    .createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context, notificationChannel())
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(name)
                         .setContentText(message)
                         .setAutoCancel(true)
-                        .setContentIntent(contentIntent)
-                        .addAction(action)
-                        .build();
+                        .setContentIntent(contentIntent);
+
+        if (remoteInput != null) {
+            PendingIntent replyPendingIntent =
+                    PendingIntent.getBroadcast(context,
+                            REQUEST_CODE_NOTIFICATION,
+                            backgroundIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Action action =
+                    new NotificationCompat.Action.Builder(R.drawable.ic_notification,
+                            context.getString(R.string.reply), replyPendingIntent)
+                            .addRemoteInput(remoteInput)
+                            .build();
+
+            builder.addAction(action);
+        }
+
+        Notification newMessageNotification = builder.build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationTag, NOTIFICATION_ID, newMessageNotification);
 
         ScreenUtil.ensureScreenIsOn(context);
     }
+
+    private String notificationChannel() {
+        return $(ResourcesHandler.class).getResources().getString(R.string.notification_channel);
+    }
+
 }

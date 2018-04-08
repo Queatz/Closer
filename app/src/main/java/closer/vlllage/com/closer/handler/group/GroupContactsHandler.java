@@ -111,7 +111,7 @@ public class GroupContactsHandler extends PoolMember {
                                 .show();
                         $(RefreshHandler.class).refreshMyGroups();
                     } else {
-                        $(DefaultAlerts.class).thatDidntWork();
+                        $(DefaultAlerts.class).thatDidntWork(successResult.error);
                     }
                 }, error -> $(DefaultAlerts.class).thatDidntWork()));
     }

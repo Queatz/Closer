@@ -191,6 +191,7 @@ public class RefreshHandler extends PoolMember {
         groupMessage.setGroupId(result.to);
         groupMessage.setText(result.text);
         groupMessage.setTime(result.created);
+        groupMessage.setAttachment(result.attachment);
         return groupMessage;
     }
 
