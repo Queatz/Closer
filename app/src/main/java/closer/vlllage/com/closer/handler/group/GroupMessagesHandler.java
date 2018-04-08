@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -68,13 +67,13 @@ public class GroupMessagesHandler extends PoolMember {
 
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMessage.class).query()
                 .equal(GroupMessage_.groupId, $(GroupHandler.class).getGroup().getId())
+                .sort((groupMessage, groupMessageOther) -> groupMessage.getTime() == null || groupMessageOther.getTime() == null ? 0 : groupMessageOther.getTime().compareTo(groupMessage.getTime()))
                 .build()
                 .subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroupMessages));
     }
 
     private void setGroupMessages(List<GroupMessage> groupMessages) {
-        Collections.reverse(groupMessages);
         groupMessagesAdapter.setGroupMessages(groupMessages);
     }
 
