@@ -136,10 +136,7 @@ public class MapsActivity extends PoolActivity {
         if (!verifiedNumber) {
             $(DisposableHandler.class).add($(ApiHandler.class).isVerified().subscribe(verified -> {
                 $(PersistenceHandler.class).setIsVerified(verified);
-
-                if (verified) {
-                    $(MyGroupsLayoutHandler.class).showVerifyMyNumber(false);
-                }
+                $(MyGroupsLayoutHandler.class).showVerifyMyNumber(!verified);
             }));
         }
 

@@ -73,7 +73,7 @@ public class NotificationHandler extends PoolMember {
         backgroundIntent.putExtra(EXTRA_PHONE, phone);
         backgroundIntent.putExtra(EXTRA_NOTIFICATION, notificationTag);
 
-        show(contentIntent, backgroundIntent, remoteInput, name, message, notificationTag);
+        show(contentIntent, backgroundIntent, remoteInput, name, message, notificationTag, true);
     }
 
     public void showInvitedToGroupNotification(String invitedBy, String groupName, String groupId) {
@@ -93,7 +93,7 @@ public class NotificationHandler extends PoolMember {
 
         show(contentIntent, null, null, $(ResourcesHandler.class).getResources().getString(R.string.app_name),
                 $(ResourcesHandler.class).getResources().getString(R.string.invited_to_group_notification, invitedBy, groupName),
-                groupId + "/invited");
+                groupId + "/invited", true);
     }
 
     public void showGroupMessageNotification(String text, String messageFrom, String groupName, String groupId) {
@@ -114,14 +114,15 @@ public class NotificationHandler extends PoolMember {
         show(contentIntent, null, null,
                 $(ResourcesHandler.class).getResources().getString(R.string.group_message_notification, messageFrom, groupName),
                 text,
-                groupId + "/message");
+                groupId + "/message", true);
     }
 
     private void show(PendingIntent contentIntent, Intent backgroundIntent,
                       RemoteInput remoteInput,
                       String name,
                       String message,
-                      String notificationTag) {
+                      String notificationTag,
+                      boolean sound) {
         Context context = $(ApplicationHandler.class).getApp();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -139,6 +140,10 @@ public class NotificationHandler extends PoolMember {
                         .setContentText(message)
                         .setAutoCancel(true)
                         .setContentIntent(contentIntent);
+
+        if (sound) {
+            builder.setDefaults(Notification.DEFAULT_ALL);
+        }
 
         if (remoteInput != null) {
             PendingIntent replyPendingIntent =
