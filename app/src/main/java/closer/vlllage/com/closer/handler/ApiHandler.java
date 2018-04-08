@@ -80,8 +80,8 @@ public class ApiHandler extends PoolMember {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<CreateResult> sendGroupMessage(String groupId, String text, Object attachment) {
-        return api.getBackend().sendGroupMessage(groupId, text, attachment == null ? null : $(JsonHandler.class).to(attachment))
+    public Observable<CreateResult> sendGroupMessage(String groupId, String text, String attachment) {
+        return api.getBackend().sendGroupMessage(groupId, text, attachment)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

@@ -114,6 +114,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         holder.action.setVisibility(View.GONE);
         holder.name.setVisibility(View.VISIBLE);
+        holder.message.setVisibility(View.VISIBLE);
         holder.message.setGravity(Gravity.START);
 
         GroupContact groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()

@@ -57,7 +57,7 @@ public class MapsActivity extends PoolActivity {
         $(TimerHandler.class).postDisposable(() -> $(SyncHandler.class).syncAll(), 1325);
         $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
 
-        $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map, findViewById(R.id.bubbleMapLayer), mapBubble -> {
+        $(BubbleHandler.class).attach(findViewById(R.id.bubbleMapLayer), mapBubble -> {
             if ($(MyBubbleHandler.class).isMyBubble(mapBubble)) {
                 $(SetNameHandler.class).modifyName();
             } else {
@@ -84,7 +84,9 @@ public class MapsActivity extends PoolActivity {
 
                 $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), group.getId());
             });
-        }));
+        });
+
+        $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map));
         $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
         $(MapHandler.class).setOnMapClickedListener(latLng -> {
             if ($(ReplyLayoutHandler.class).isVisible()) {
@@ -106,6 +108,8 @@ public class MapsActivity extends PoolActivity {
 
                             if (!success) {
                                 $(DefaultAlerts.class).thatDidntWork();
+                            } else {
+                                $(GroupActivityTransitionHandler.class).showGroupMessages(menuBubble.getView(), group.getId());
                             }
                         });
                         break;

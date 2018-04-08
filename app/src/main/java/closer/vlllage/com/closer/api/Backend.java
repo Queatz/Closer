@@ -64,7 +64,7 @@ public interface Backend {
     Observable<List<GroupMessageResult>> myMessages();
 
     @POST("message")
-    Observable<CreateResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query("attachment") String attachment);
+    Observable<CreateResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
 
     // Group
 

@@ -25,3 +25,4 @@
 # More
 
 [ ] "Network unavailable"
+[ ] Name null checks backend

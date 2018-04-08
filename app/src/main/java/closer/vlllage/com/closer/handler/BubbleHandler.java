@@ -20,17 +20,23 @@ public class BubbleHandler extends PoolMember {
     private MapBubbleView.OnMapBubbleClickListener onClickListener;
     private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener;
     private MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener;
+    private ViewGroup bubbleMapLayerLayout;
 
     private final BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
 
-    public void attach(GoogleMap map, ViewGroup bubbleMapLayerLayout,
+    public void attach(ViewGroup bubbleMapLayerLayout,
                        MapBubbleView.OnMapBubbleClickListener onClickListener,
                        MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener,
                        MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener) {
-        bubbleMapLayer.attach(map, bubbleMapLayerLayout, getBubbleView());
+        this.bubbleMapLayerLayout = bubbleMapLayerLayout;
         this.onClickListener = onClickListener;
         this.onMenuItemClickListener = onMenuItemClickListener;
         this.onMapBubbleSuggestionClickListener = onMapBubbleSuggestionClickListener;
+        bubbleMapLayer.attach(bubbleMapLayerLayout, getBubbleView());
+    }
+
+    public void attach(GoogleMap map) {
+        bubbleMapLayer.attach(map);
     }
 
     private BubbleMapLayer.BubbleView getBubbleView() {

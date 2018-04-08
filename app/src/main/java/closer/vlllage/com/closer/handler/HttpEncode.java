@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.handler;
 
+import android.support.annotation.Nullable;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -10,7 +12,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpEncode extends PoolMember {
 
-    public String encode(String string) {
+    @Nullable
+    public String encode(@Nullable String string) {
+        if (string == null) {
+            return null;
+        }
+
         try {
             return URLEncoder.encode(string, UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
@@ -19,7 +26,12 @@ public class HttpEncode extends PoolMember {
         }
     }
 
-    public String decode(String string) {
+    @Nullable
+    public String decode(@Nullable String string) {
+        if (string == null) {
+            return null;
+        }
+
         try {
             return URLDecoder.decode(string, UTF_8.toString());
         } catch (UnsupportedEncodingException e) {

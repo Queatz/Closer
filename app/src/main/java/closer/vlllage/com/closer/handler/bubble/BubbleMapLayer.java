@@ -33,10 +33,13 @@ public class BubbleMapLayer {
     private ViewGroup view;
     private BubbleView bubbleView;
 
-    public void attach(GoogleMap map, ViewGroup view, BubbleView bubbleView) {
-        this.map = map;
+    public void attach(ViewGroup view, BubbleView bubbleView) {
         this.view = view;
         this.bubbleView = bubbleView;
+    }
+
+    public void attach(GoogleMap map) {
+        this.map = map;
     }
 
     public void add(MapBubble mapBubble) {
@@ -103,6 +106,10 @@ public class BubbleMapLayer {
         View view = mapBubble.getView();
 
         if (view == null) {
+            return;
+        }
+
+        if (map == null) {
             return;
         }
 
@@ -259,7 +266,7 @@ public class BubbleMapLayer {
     }
 
     private float zoomScale(MapBubble mapBubble) {
-        if (mapBubble.getType() != BubbleType.MENU) {
+        if (map != null && mapBubble.getType() != BubbleType.MENU) {
             return (float) Math.min(1, Math.pow(map.getCameraPosition().zoom / 15f, 2f));
         }
 

@@ -69,7 +69,10 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        $(LocationHandler.class).getCurrentLocation(this::onLocationFound);
+        if (centerOnMapLoad == null) {
+            $(LocationHandler.class).getCurrentLocation(this::onLocationFound);
+        }
+
         $(PermissionHandler.class)
                 .check(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
                 .when(granted -> map.setMyLocationEnabled(granted));
@@ -84,7 +87,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         onMapChangedListener.onMapChanged();
 
         if (centerOnMapLoad != null) {
-            map.moveCamera(CameraUpdateFactory.newLatLng(centerOnMapLoad));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOnMapLoad, 15));
             centerOnMapLoad = null;
         }
     }
