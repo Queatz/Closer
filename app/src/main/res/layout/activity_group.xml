@@ -104,7 +104,7 @@
             android:focusedByDefault="false"
             android:hint="@string/say_something"
             android:imeOptions="actionGo"
-            android:inputType="textShortMessage"
+            android:inputType="textShortMessage|textCapSentences"
             android:maxLines="1"
             android:paddingLeft="16dp"
             android:paddingTop="8dp"

@@ -12,13 +12,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.ActivityHandler;
-import closer.vlllage.com.closer.handler.AlertHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
-import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.handler.SyncHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -38,12 +35,6 @@ public class GroupMessagesHandler extends PoolMember {
         ));
 
         groupMessagesAdapter = new GroupMessagesAdapter(this);
-        groupMessagesAdapter.setOnMessageClickListener(message -> {
-            $(AlertHandler.class).make()
-                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.call_phone, message.getContactId()))
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.call))
-                    .show();
-        });
         recyclerView.setAdapter(groupMessagesAdapter);
 
         replyMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {

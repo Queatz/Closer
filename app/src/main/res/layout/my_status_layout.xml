@@ -26,7 +26,7 @@
         android:imeOptions="actionGo"
         android:background="@null"
         android:selectAllOnFocus="true"
-        android:inputType="textShortMessage"
+        android:inputType="textShortMessage|textCapSentences"
         android:hint="@string/what_s_up"
         android:textSize="12sp"
         android:maxLength="24"

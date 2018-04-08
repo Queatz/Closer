@@ -19,7 +19,7 @@
         android:padding="8dp"
         android:maxLength="48"
         android:background="@null"
-        android:inputType="textShortMessage"
+        android:inputType="textShortMessage|textCapSentences"
         android:maxLines="1" />
 
 </LinearLayout>

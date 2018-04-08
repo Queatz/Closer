@@ -29,7 +29,7 @@ public class LocationHandler extends PoolMember {
                 .when(granted -> {
                     if (granted) {
                         fusedLocationProvider.getLastLocation().addOnCompleteListener(task -> {
-                            if (task.getResult() == null) {
+                            if (!task.isSuccessful() ||task.getResult() == null) {
                                 waitForLocation(callback);
                                 return;
                             }
@@ -42,7 +42,7 @@ public class LocationHandler extends PoolMember {
 
     @SuppressLint("MissingPermission")
     private void waitForLocation(LocationCallback callback) {
-        LocationRequest locationRequest = new LocationRequest()
+        LocationRequest locationRequest = LocationRequest.create()
                 .setExpirationDuration(10000)
                 .setNumUpdates(1);
 

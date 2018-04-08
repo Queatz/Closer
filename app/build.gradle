@@ -7,7 +7,7 @@ android {
         applicationId 'closer.vlllage.com.closer'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 21
+        versionCode 24
         versionName '1.0'
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
@@ -17,12 +17,16 @@ android {
             storePassword "closertome"
             keyAlias "closer"
             keyPassword "closertome"
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
         debug {
             storeFile file("../../../android.jks")
             storePassword "closertome"
             keyAlias "closer"
             keyPassword "closertome"
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
     buildTypes {

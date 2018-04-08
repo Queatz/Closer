@@ -2,15 +2,20 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.JsonHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
@@ -43,12 +48,31 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     public void onBindViewHolder(@NonNull GroupMessageViewHolder holder, int position) {
         GroupMessage groupMessage = groupMessages.get(position);
 
+        if (groupMessage.getAttachment() != null) {
+            try {
+                JsonObject jsonObject = $(JsonHandler.class).from(groupMessage.getAttachment(), JsonObject.class);
+                if (jsonObject.has("message")) {
+                    holder.name.setVisibility(View.GONE);
+                    holder.message.setGravity(Gravity.CENTER_HORIZONTAL);
+                    holder.message.setText(jsonObject.get("message").getAsString());
+                    holder.message.setAlpha(.5f);
+                    holder.itemView.setOnClickListener(null);
+                    return;
+                }
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+
+        holder.name.setVisibility(View.VISIBLE);
+        holder.message.setGravity(Gravity.START);
+
         GroupContact groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
                 .equal(GroupContact_.id, groupMessage.getContactId())
                 .build()
                 .findFirst();
 
-        if (groupContact == null) {
+        if (groupContact == null || groupContact.getContactName() == null) {
             holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
         } else {
             holder.name.setText(groupContact.getContactName());

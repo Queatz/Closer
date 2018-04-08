@@ -28,8 +28,9 @@ public class MyGroupsLayoutHandler extends PoolMember {
         ));
         myGroupsAdapter = new MyGroupsAdapter(this);
         myGroupsRecyclerView.setAdapter(myGroupsAdapter);
-        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Group.class).query().build()
-                .subscribe().on(AndroidScheduler.mainThread())
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Group.class).query()
+                .sort((group, groupOther) -> group.getUpdated() == null || groupOther.getUpdated() == null ? 0 : groupOther.getUpdated().compareTo(group.getUpdated()))
+                .build().subscribe().on(AndroidScheduler.mainThread())
                 .observer(myGroupsAdapter::setGroups));
     }
 

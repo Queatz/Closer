@@ -99,4 +99,9 @@ public class ApiHandler extends PoolMember {
         return api.getBackend().leaveGroup(groupId, true)
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    public Observable<SuccessResult> cancelInvite(String groupId, String groupInviteId) {
+        return api.getBackend().cancelInvite(groupId, groupInviteId)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

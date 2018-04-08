@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.store.models;
 
+import java.util.Date;
+
 import io.objectbox.annotation.BaseEntity;
 import io.objectbox.annotation.Id;
 
@@ -8,6 +10,7 @@ public class BaseObject {
     @Id private long objectBoxId;
     private String id;
     private boolean localOnly;
+    private Date updated;
 
     public String getId() {
         return id;
@@ -33,5 +36,14 @@ public class BaseObject {
 
     public void setObjectBoxId(long objectBoxId) {
         this.objectBoxId = objectBoxId;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public BaseObject setUpdated(Date updated) {
+        this.updated = updated;
+        return this;
     }
 }

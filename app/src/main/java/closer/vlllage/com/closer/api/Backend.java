@@ -79,4 +79,7 @@ public interface Backend {
 
     @POST("group/{id}")
     Observable<SuccessResult> leaveGroup(@Path("id") String groupId, @Query("leave") boolean leaveGroup);
+
+    @POST("group/{id}")
+    Observable<SuccessResult> cancelInvite(@Path("id") String groupId, @Query("cancel-invite") String groupInviteId);
 }

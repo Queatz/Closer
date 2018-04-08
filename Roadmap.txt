@@ -2,19 +2,14 @@
   Development
 ======================
 
-[ ] Figure out why invites are not working
-
 [ ] Finish
-    [o] Group events inline with message
-        [o] Show people joined group "Jen joined the group"
-        [o] Show people left group "Jen left the group"
-        [ ] Show new days "Wednesday, January 23rd"
+    [ ] Show new days "Wednesday, January 23rd"
     [o] Show attachments
-        [ ] Share this location... -> share with group, populate location in messages
-            [ ] Tap message to show the location on the map
+        [o] Share this location... -> share with group, populate location in messages
+            [o] Tap message to show the location on the map
         [o] Share suggestion... -> share with group, populate suggestion in messages
             [o] Tap message to show suggestion on the map
-        [ ] Send message with suggestion attachment
+            [o] Send message with suggestion attachment
 
 ======================
   To the finish line

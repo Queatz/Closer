@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -46,10 +47,10 @@ public class GroupHandler extends PoolMember {
             peopleInGroup.setText("");
             String phoneId = $(PersistenceHandler.class).getPhoneId();
             if (phoneId == null) phoneId = "";
-            $(StoreHandler.class).getStore().box(GroupContact.class).query()
+            $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupContact.class).query()
                     .equal(GroupContact_.groupId, group.getId())
                     .notEqual(GroupContact_.contactId, phoneId)
-                    .build().subscribe().single().on(AndroidScheduler.mainThread())
+                    .build().subscribe().on(AndroidScheduler.mainThread())
                     .observer(groupContacts -> {
                         contactNames = new ArrayList<>();
                         for (GroupContact groupContact : groupContacts) {
@@ -57,18 +58,18 @@ public class GroupHandler extends PoolMember {
                         }
 
                         redrawContacts();
-                    });
+                    }));
 
-            $(StoreHandler.class).getStore().box(GroupInvite.class).query()
+            $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupInvite.class).query()
                     .equal(GroupInvite_.group, group.getId())
-                    .build().subscribe().single().on(AndroidScheduler.mainThread())
+                    .build().subscribe().on(AndroidScheduler.mainThread())
                     .observer(groupInvites -> {
                         contactInvites = new ArrayList<>();
                         for (GroupInvite groupInvite : groupInvites) {
                             contactInvites.add($(ResourcesHandler.class).getResources().getString(R.string.contact_invited_inline, getInviteName(groupInvite)));
                         }
                         redrawContacts();
-                    });
+                    }));
         }
     }
 

@@ -55,7 +55,7 @@
         android:imeOptions="actionGo"
         android:hint="@string/write_a_reply"
         android:padding="8dp"
-        android:inputType="textShortMessage"
+        android:inputType="textShortMessage|textCapSentences"
         android:background="@null"
         android:maxLines="1"/>
 

@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,9 +40,9 @@ public class RefreshHandler extends PoolMember {
 
     public void refreshMyGroups() {
         $(DisposableHandler.class).add($(ApiHandler.class).myGroups().subscribe(stateResult -> {
-            handleGroups(stateResult.groups);
+            handleFullListResult(stateResult.groups, Group.class, Group_.id, this::createGroupFromGroupResult, this::updateGroupFromGroupResult);
+            handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, this::transformGroupInviteResult, null);
             handleGroupContacts(stateResult.groupContacts);
-            handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, this::transformGroupInviteResult);
         }, error -> $(DefaultAlerts.class).syncError()));
     }
 
@@ -80,7 +79,8 @@ public class RefreshHandler extends PoolMember {
     private <T extends BaseObject, R extends ModelResult> void handleFullListResult(
             List<R> results, Class<T> clazz,
             Property idProperty,
-            ResultTransformer<T, R> transformer) {
+            CreateTransformer<T, R> createTransformer,
+            UpdateTransformer<T, R> updateTransformer) {
         Set<String> serverIdList = new HashSet<>();
         for (R obj : results) {
             serverIdList.add(obj.id);
@@ -96,7 +96,9 @@ public class RefreshHandler extends PoolMember {
 
             for (R result : results) {
                 if (!existingObjsMap.containsKey(result.id)) {
-                    objsToAdd.add(transformer.transform(result));
+                    objsToAdd.add(createTransformer.transform(result));
+                } else if (updateTransformer != null) {
+                    objsToAdd.add(updateTransformer.transform(existingObjsMap.get(result.id), result));
                 }
             }
 
@@ -135,35 +137,17 @@ public class RefreshHandler extends PoolMember {
         });
     }
 
-    private void handleGroups(List<GroupResult> groups) {
-        Set<String> allMyGroupIds = new HashSet<>();
-        for (GroupResult groupResult : groups) {
-            allMyGroupIds.add(groupResult.id);
-        }
-
-        $(StoreHandler.class).findAll(Group.class, Group_.id, allMyGroupIds).observer(existingGroups -> {
-            Collection<String> existingGroupIds = new HashSet<>();
-            for (Group existingGroup : existingGroups) {
-                existingGroupIds.add(existingGroup.getId());
-            }
-
-            List<Group> groupsToAdd = new ArrayList<>();
-
-            for (GroupResult groupResult : groups) {
-                if (!existingGroupIds.contains(groupResult.id)) {
-                    groupsToAdd.add(createGroupFromGroupResult(groupResult));
-                }
-            }
-
-            $(StoreHandler.class).getStore().box(Group.class).put(groupsToAdd);
-            $(StoreHandler.class).removeAllExcept(Group.class, Group_.id, allMyGroupIds);
-        });
-    }
-
     private Group createGroupFromGroupResult(GroupResult groupResult) {
         Group group = new Group();
         group.setId(groupResult.id);
         group.setName(groupResult.name);
+        group.setUpdated(groupResult.updated);
+        return group;
+    }
+
+    private Group updateGroupFromGroupResult(Group group, GroupResult groupResult) {
+        group.setName(groupResult.name);
+        group.setUpdated(groupResult.updated);
         return group;
     }
 
@@ -173,6 +157,7 @@ public class RefreshHandler extends PoolMember {
         groupContact.setContactId(groupContactResult.from);
         groupContact.setGroupId(groupContactResult.to);
         groupContact.setContactName(groupContactResult.phone.name);
+        groupContact.setUpdated(groupContactResult.updated);
         return groupContact;
     }
 
@@ -181,6 +166,7 @@ public class RefreshHandler extends PoolMember {
         groupInvite.setId(result.id);
         groupInvite.setGroup(result.group);
         groupInvite.setName(result.name);
+        groupInvite.setUpdated(result.updated);
         return groupInvite;
     }
 
@@ -191,11 +177,16 @@ public class RefreshHandler extends PoolMember {
         groupMessage.setGroupId(result.to);
         groupMessage.setText(result.text);
         groupMessage.setTime(result.created);
+        groupMessage.setUpdated(result.updated);
         groupMessage.setAttachment(result.attachment);
         return groupMessage;
     }
 
-    interface ResultTransformer<T, R> {
+    interface CreateTransformer<T, R> {
         T transform(R result);
+    }
+
+    interface UpdateTransformer<T, R> {
+        T transform(T exisiting, R result);
     }
 }

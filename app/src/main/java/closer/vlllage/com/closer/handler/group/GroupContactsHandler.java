@@ -21,7 +21,11 @@ import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupInvite;
+import closer.vlllage.com.closer.store.models.GroupInvite_;
+import io.objectbox.android.AndroidScheduler;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -54,6 +58,14 @@ public class GroupContactsHandler extends PoolMember {
                         .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_phone_to_group, phoneContact.getFirstName(), group.getName()))
                         .show();
             }
+        }, groupInvite -> {
+            $(AlertHandler.class).make()
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.cancel_invite))
+                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.confirm_cancel_invite, groupInvite.getName()))
+                    .setPositiveButtonCallback(alertResult -> {
+                        cancelInvite(groupInvite);
+                    })
+                    .show();
         });
 
         if($(PermissionHandler.class).has(READ_CONTACTS)) {
@@ -85,6 +97,26 @@ public class GroupContactsHandler extends PoolMember {
 
             }
         });
+
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupInvite.class).query()
+                .equal(GroupInvite_.group, group.getId())
+                .build().subscribe().on(AndroidScheduler.mainThread()).observer(groupInvites -> {
+                    phoneContactAdapter.setInvites(groupInvites);
+                }));
+    }
+
+    private void cancelInvite(GroupInvite groupInvite) {
+        $(DisposableHandler.class).add($(ApiHandler.class).cancelInvite(groupInvite.getGroup(), groupInvite.getId()).subscribe(successResult -> {
+            if (successResult.success) {
+                $(AlertHandler.class).make()
+                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.invite_cancelled))
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
+                        .show();
+                $(RefreshHandler.class).refreshMyGroups();
+            } else {
+                $(DefaultAlerts.class).thatDidntWork(successResult.error);
+            }
+        }));
     }
 
     private void inviteToGroup(Group group, PhoneContact phoneContact) {

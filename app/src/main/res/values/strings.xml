@@ -77,4 +77,8 @@
     <string name="skip">Skip</string>
     <string name="invited_to_group_notification">%1$s added you to %2$s</string>
     <string name="group_message_notification">%1$s (%2$s)</string>
+    <string name="invited">Invited</string>
+    <string name="cancel_invite">Cancel Invite</string>
+    <string name="confirm_cancel_invite">Cancel %1$s\'s invite?</string>
+    <string name="invite_cancelled">Invite cancelled</string>
 </resources>
