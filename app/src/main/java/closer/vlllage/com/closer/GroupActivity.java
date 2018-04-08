@@ -50,7 +50,7 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
 
-        $(GroupHandler.class).attach(groupName, peopleInGroup);
+        $(GroupHandler.class).attach(this, groupName, peopleInGroup);
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
             groupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
             $(GroupHandler.class).setGroupById(groupId);

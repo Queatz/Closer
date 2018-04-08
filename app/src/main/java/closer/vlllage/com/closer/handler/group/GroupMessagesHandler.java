@@ -11,10 +11,13 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
+import closer.vlllage.com.closer.CircularRevealActivity;
 import closer.vlllage.com.closer.handler.ActivityHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
+import closer.vlllage.com.closer.handler.MapActivityHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
+import closer.vlllage.com.closer.handler.SortHandler;
 import closer.vlllage.com.closer.handler.SyncHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -35,6 +38,10 @@ public class GroupMessagesHandler extends PoolMember {
 
         groupMessagesAdapter = new GroupMessagesAdapter(this);
         recyclerView.setAdapter(groupMessagesAdapter);
+
+        groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> {
+            ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
+        });
 
         replyMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -67,7 +74,7 @@ public class GroupMessagesHandler extends PoolMember {
 
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMessage.class).query()
                 .equal(GroupMessage_.groupId, $(GroupHandler.class).getGroup().getId())
-                .sort((groupMessage, groupMessageOther) -> groupMessage.getTime() == null || groupMessageOther.getTime() == null ? 0 : groupMessageOther.getTime().compareTo(groupMessage.getTime()))
+                .sort($(SortHandler.class).sortGroupMessages())
                 .build()
                 .subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroupMessages));

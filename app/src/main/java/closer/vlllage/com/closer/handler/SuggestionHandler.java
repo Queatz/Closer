@@ -51,13 +51,7 @@ public class SuggestionHandler extends PoolMember {
 
                 suggested.add(suggestion);
 
-                MapBubble suggestionBubble = new MapBubble(new LatLng(
-                        suggestion.getLatitude(),
-                        suggestion.getLongitude()
-                ), "Suggestion", suggestion.getName());
-                suggestionBubble.setPinned(true);
-                suggestionBubble.setOnTop(true);
-                suggestionBubble.setType(BubbleType.SUGGESTION);
+                MapBubble suggestionBubble = suggestionBubbleFrom(suggestion);
 
                 $(TimerHandler.class).postDisposable(() -> {
                     $(BubbleHandler.class).add(suggestionBubble);
@@ -71,15 +65,25 @@ public class SuggestionHandler extends PoolMember {
         });
     }
 
+    public MapBubble suggestionBubbleFrom(Suggestion suggestion) {
+        MapBubble suggestionBubble = new MapBubble(new LatLng(
+                suggestion.getLatitude(),
+                suggestion.getLongitude()
+        ), "Suggestion", suggestion.getName());
+        suggestionBubble.setPinned(true);
+        suggestionBubble.setOnTop(true);
+        suggestionBubble.setType(BubbleType.SUGGESTION);
+        suggestionBubble.setTag(suggestion);
+
+        return suggestionBubble;
+    }
+
     private SubscriptionBuilder<List<Suggestion>> getRandomSuggestions(LatLng near) {
         return $(StoreHandler.class).getStore().box(Suggestion.class).query().build().subscribe().single().on(AndroidScheduler.mainThread());
     }
 
     public void clearSuggestions() {
-        for (MapBubble mapBubble : suggestionBubbles) {
-            $(BubbleHandler.class).remove(mapBubble);
-        }
-
+        $(BubbleHandler.class).remove(mapBubble -> BubbleType.SUGGESTION.equals(mapBubble.getType()));
         suggestionBubbles.clear();
     }
 

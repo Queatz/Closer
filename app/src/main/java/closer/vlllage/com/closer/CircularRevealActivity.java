@@ -13,6 +13,9 @@ import android.view.animation.DecelerateInterpolator;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
 public abstract class CircularRevealActivity extends PoolActivity {
+    private Rect sourceBounds;
+    private Runnable finishCallback;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,20 +27,21 @@ public abstract class CircularRevealActivity extends PoolActivity {
         super.onPostCreate(savedInstanceState);
         View background = findViewById(getBackgroundId());
 
+        sourceBounds = getIntent().getSourceBounds();
+
         ViewTreeObserver viewTreeObserver = background.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 background.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                if (getIntent().getSourceBounds() == null) {
+                if (sourceBounds == null) {
                     Rect rect = new Rect();
                     getWindow().getDecorView().getGlobalVisibleRect(rect);
                     rect.top = rect.bottom;
-                    getIntent().setSourceBounds(rect);
+                    sourceBounds = rect;
                 }
 
-                Rect sourceBounds = CircularRevealActivity.this.getIntent().getSourceBounds();
                 Animator animator = ViewAnimationUtils.createCircularReveal(background,
                         sourceBounds.centerX(),
                         sourceBounds.centerY(),
@@ -61,8 +65,6 @@ public abstract class CircularRevealActivity extends PoolActivity {
 
     @Override
     public void finish() {
-        Rect sourceBounds = getIntent().getSourceBounds();
-
         if (sourceBounds == null) {
             super.finish();
             return;
@@ -87,6 +89,10 @@ public abstract class CircularRevealActivity extends PoolActivity {
                 CircularRevealActivity.super.finish();
                 getWindow().getDecorView().setVisibility(View.GONE);
                 overridePendingTransition(0, 0);
+
+                if (finishCallback != null) {
+                    finishCallback.run();
+                }
             }
 
             @Override
@@ -100,5 +106,10 @@ public abstract class CircularRevealActivity extends PoolActivity {
             }
         });
         animator.start();
+    }
+
+    public void finish(Runnable callback) {
+        finishCallback = callback;
+        finish();
     }
 }

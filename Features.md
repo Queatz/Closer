@@ -10,9 +10,11 @@
  [ ] Show white dot when unread messages in group
  [.] Show "Bun is typing..."
  [.] Websocket (exact same as push notifications, zero difference!)
+ [ ] Show new days in group messages "Wednesday, January 23rd"
 
 # Features
 
+ [ ] Search for places
  [ ] Single emoji floats many of them over your screen
     [ ] Bubble to allow draw over screen
  [ ] Add public photos to suggestion

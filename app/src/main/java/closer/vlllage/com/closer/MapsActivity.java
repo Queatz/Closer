@@ -9,15 +9,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
+import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.GroupMessageSuggestionsHandler;
 import closer.vlllage.com.closer.handler.IntentHandler;
 import closer.vlllage.com.closer.handler.LocationHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
@@ -28,6 +27,7 @@ import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
+import closer.vlllage.com.closer.handler.ShareHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
 import closer.vlllage.com.closer.handler.SuggestionHandler;
 import closer.vlllage.com.closer.handler.SyncHandler;
@@ -36,13 +36,12 @@ import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.pool.PoolActivity;
-import closer.vlllage.com.closer.store.StoreHandler;
-import closer.vlllage.com.closer.store.models.Group;
-import io.objectbox.android.AndroidScheduler;
+import closer.vlllage.com.closer.store.models.Suggestion;
 
 public class MapsActivity extends PoolActivity {
 
     public static final String EXTRA_LAT_LNG = "latLng";
+    public static final String EXTRA_SUGGESTION = "suggestion";
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_STATUS = "status";
     public static final String EXTRA_PHONE = "phone";
@@ -71,24 +70,19 @@ public class MapsActivity extends PoolActivity {
             }
         }, mapBubble -> {
             $(SuggestionHandler.class).clearSuggestions();
-
-            $(StoreHandler.class).getStore().box(Group.class).query().build().subscribe().single().on(AndroidScheduler.mainThread()).observer(groups -> {
-                List<String> groupNames = new ArrayList<>();
-                for(Group group : groups) {
-                    groupNames.add(group.getName());
+            $(ShareHandler.class).shareTo(mapBubble.getLatLng(), group -> {
+                boolean success = false;
+                if (mapBubble.getTag() instanceof Suggestion) {
+                    Suggestion suggestion = (Suggestion) mapBubble.getTag();
+                    success = $(GroupMessageSuggestionsHandler.class).shareSuggestion(suggestion, group);
                 }
 
-                MapBubble menuBubble = new MapBubble(mapBubble.getLatLng(), BubbleType.MENU);
-                menuBubble.setPinned(true);
-                menuBubble.setOnTop(true);
-                $(TimerHandler.class).postDisposable(() -> {
-                    $(BubbleHandler.class).add(menuBubble);
-                    $(MapBubbleMenuView.class).setMenuTitle(menuBubble, getString(R.string.share_with));
-                    $(MapBubbleMenuView.class).getMenuAdapter(menuBubble).setMenuItems(groupNames);
-                    menuBubble.setOnItemClickListener(position -> {
-                        $(GroupActivityTransitionHandler.class).showGroupMessages(menuBubble.getView(), groups.get(position).getId());
-                    });
-                }, 225);
+                if (!success) {
+                    $(DefaultAlerts.class).thatDidntWork();
+                    return;
+                }
+
+                $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), group.getId());
             });
         }));
         $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
@@ -107,6 +101,13 @@ public class MapsActivity extends PoolActivity {
             menuBubble.setOnItemClickListener(position -> {
                 switch (position) {
                     case 0:
+                        $(ShareHandler.class).shareTo(menuBubble.getLatLng(), group -> {
+                            boolean success = $(GroupMessageSuggestionsHandler.class).shareLocation(menuBubble.getLatLng(), group);
+
+                            if (!success) {
+                                $(DefaultAlerts.class).thatDidntWork();
+                            }
+                        });
                         break;
                     case 1:
                         $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng());

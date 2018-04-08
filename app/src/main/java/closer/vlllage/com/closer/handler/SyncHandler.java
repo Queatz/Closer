@@ -100,7 +100,7 @@ public class SyncHandler extends PoolMember {
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).sendGroupMessage(
                 groupMessage.getGroupId(),
                 groupMessage.getText(),
-                groupMessage.getAttachment()
+                $(HttpEncode.class).encode(groupMessage.getAttachment())
         ).subscribe(createResult -> {
             if (createResult.success) {
                 groupMessage.setId(createResult.id);

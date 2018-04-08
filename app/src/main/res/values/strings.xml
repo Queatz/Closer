@@ -81,4 +81,10 @@
     <string name="cancel_invite">Cancel Invite</string>
     <string name="confirm_cancel_invite">Cancel %1$s\'s invite?</string>
     <string name="invite_cancelled">Invite cancelled</string>
+    <string name="shared_location">Shared location</string>
+    <string name="shared_a_location">Shared a location</string>
+    <string name="show_location">Show location</string>
+    <string name="show_on_map">Show on map</string>
+    <string name="phone_shared_a_suggestion">%1$s shared a suggestion</string>
+    <string name="phone_shared_a_location">%1$s shared a location</string>
 </resources>

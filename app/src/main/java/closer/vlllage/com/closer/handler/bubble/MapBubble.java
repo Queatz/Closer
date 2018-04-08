@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.store.models.Suggestion;
 import closer.vlllage.com.closer.util.LatLngStr;
 
 /**
@@ -25,6 +26,7 @@ public class MapBubble {
     private boolean onTop;
     private BubbleType type = BubbleType.STATUS;
     private OnItemClickListener onItemClickListener;
+    private Object tag;
 
     public MapBubble(LatLng latLng, String name, String status) {
         this.latLng = latLng;
@@ -144,6 +146,14 @@ public class MapBubble {
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setTag(Suggestion tag) {
+        this.tag = tag;
+    }
+
+    public Object getTag() {
+        return tag;
     }
 
     public interface OnItemClickListener {

@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
 import closer.vlllage.com.closer.pool.PoolMember;
 
@@ -17,5 +18,13 @@ public class JsonHandler extends PoolMember {
 
     public String to(Object obj) {
         return gson.toJson(obj);
+    }
+
+    public JsonElement toJsonTree(Object obj) {
+        return gson.toJsonTree(obj);
+    }
+
+    public <T> T from(JsonElement jsonElement, Class<T> clazz) {
+        return gson.fromJson(jsonElement, clazz);
     }
 }
