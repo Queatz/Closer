@@ -36,7 +36,7 @@ public class ReplyLayoutHandler extends PoolMember {
         this.replyMessage = replyLayout.findViewById(R.id.message);
         this.replyLayoutName = replyLayout.findViewById(R.id.replyLayoutName);
         this.replyLayoutStatus = replyLayout.findViewById(R.id.replyLayoutStatus);
-        this.getDirectionsButton = replyLayout.findViewById(R.id.getdDirectionsButton);
+        this.getDirectionsButton = replyLayout.findViewById(R.id.getDirectionsButton);
 
         sendButton.setOnClickListener(view -> reply());
 

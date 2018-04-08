@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.OutboundHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class MapBubbleSuggestionView extends PoolMember {
@@ -14,6 +15,8 @@ public class MapBubbleSuggestionView extends PoolMember {
 
         view.findViewById(R.id.click).setOnClickListener(v -> onClickListener.onSuggestionClick(mapBubble));
         update(view, mapBubble);
+
+        view.findViewById(R.id.directionsButton).setOnClickListener(v -> $(OutboundHandler.class).openDirections(mapBubble.getLatLng()));
 
         return view;
     }

@@ -11,36 +11,54 @@
         android:id="@+id/click"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:orientation="vertical"
         android:background="@drawable/clickable_blue_light"
         android:clickable="true"
         android:focusable="true"
         android:elevation="4dp"
-        android:padding="12dp">
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="6dp">
 
-        <TextView
-            android:id="@+id/bubbleText"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:maxWidth="196dp"
-            tools:text="Skinny dipping at the beach" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/action"
+            <TextView
+                android:id="@+id/bubbleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:maxWidth="196dp"
+                tools:text="Skinny dipping at the beach" />
+
+            <TextView
+                android:id="@+id/action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="4dp"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="@color/white_75"
+                android:textAllCaps="true"
+                android:text="@string/share" />
+
+        </LinearLayout>
+
+        <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/directionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="4dp"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:textColor="@color/white_75"
-            android:textAllCaps="true"
-            android:text="@string/share" />
+            android:minWidth="0dp"
+            android:src="@drawable/ic_directions_black_24dp"
+            android:tint="@android:color/white" />
 
     </LinearLayout>
 
