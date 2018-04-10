@@ -3,17 +3,6 @@
  [ ] Privacy policy
  [ ] Fancy marketing screenshots with written text on Play Store
 
-# Enhancements
-
- [o] Handle permanently denied permissions
- [o] Show white dot when unread messages in group
- [o] Show "Bun is typing..."
- [o] WebSocket (exact same as push notifications, zero difference!)
- [o] Move pushes to background thread (worker)
- [ ] Show call button if phone number is available
- [ ] Show new days in group messages "Wednesday, January 23rd"
- [ ] Only allow app to talk to backend (signature header)
-
 # Features
 
  [o] Search for places
@@ -23,6 +12,17 @@
  [b] All messages from person go to one notification box
  [ ] Long press on action button -> Settings, Suggestions, More
  
+# Enhancements
+
+ [o] Show "Bun is typing..."
+ [o] WebSocket (exact same as push notifications, zero difference!)
+ [o] Move pushes to background thread (server worker)
+ [ ] Show white dot when unread messages in group
+ [ ] Handle permanently denied permissions
+ [ ] Show call button if phone number is available
+ [ ] Show new days in group messages "Wednesday, January 23rd"
+ [ ] Only allow app to talk to backend (signature header)
+
 # More
 
 [ ] "Network unavailable"

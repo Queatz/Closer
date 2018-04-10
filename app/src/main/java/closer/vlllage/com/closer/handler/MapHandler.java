@@ -61,7 +61,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
             return;
         }
 
-        map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
     }
 
     @SuppressLint("MissingPermission")
