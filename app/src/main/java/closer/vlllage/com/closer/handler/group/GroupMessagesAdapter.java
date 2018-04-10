@@ -156,6 +156,10 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             return "";
         }
 
+        if (new Date().getTime() - date.getTime() < 5 * MINUTE_IN_MILLIS) {
+            return "";
+        }
+
         if (DateUtils.isToday(date.getTime())) {
             return DateUtils.getRelativeTimeSpanString(date.getTime()).toString();
         }
