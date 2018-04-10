@@ -10,6 +10,7 @@
     <color name="disabled">@color/selectable</color>
     <color name="highlight">#66ffffff</color>
     <color name="white_75">#aaffffff</color>
+    <color name="white_50">#88ffffff</color>
     <color name="black_15">#33000000</color>
     <color name="blue_200">#90CAF9</color>
 </resources>

@@ -3,46 +3,63 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@color/white_75"
-        android:textStyle="bold"
-        tools:text="Stella" />
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white_75"
+            android:textStyle="bold"
+            tools:text="Stella" />
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:textIsSelectable="true"
+            tools:text="Where are we going this weekend?" />
+
+        <TextView
+            android:id="@+id/action"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center_vertical"
+            android:elevation="2dp"
+            android:textAllCaps="true"
+            android:background="@drawable/clickable_accent"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="Show Location" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@android:color/white"
-        android:textIsSelectable="true"
-        tools:text="Where are we going this weekend?" />
-
-    <TextView
-        android:id="@+id/action"
+        android:id="@+id/time"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:gravity="center_vertical"
-        android:elevation="2dp"
-        android:textAllCaps="true"
-        android:background="@drawable/clickable_accent"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="10sp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        tools:text="Show Location" />
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:textSize="12sp"
+        android:textColor="@color/white_50"
+        tools:text="8:45pm" />
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.handler.JsonHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -24,6 +27,9 @@ import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.Suggestion;
+
+import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
+import static android.text.format.DateUtils.WEEK_IN_MILLIS;
 
 public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapter.GroupMessageViewHolder> {
 
@@ -59,6 +65,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                 JsonObject jsonObject = $(JsonHandler.class).from(groupMessage.getAttachment(), JsonObject.class);
                 if (jsonObject.has("message")) {
                     holder.name.setVisibility(View.GONE);
+                    holder.time.setVisibility(View.GONE);
                     holder.message.setGravity(Gravity.CENTER_HORIZONTAL);
                     holder.message.setText(jsonObject.get("message").getAsString());
                     holder.message.setAlpha(.5f);
@@ -70,6 +77,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     boolean suggestionHasNoName = suggestion == null || suggestion.getName() == null || suggestion.getName().isEmpty();
 
                     holder.name.setVisibility(View.VISIBLE);
+                    holder.time.setVisibility(View.VISIBLE);
+                    holder.time.setText(getTimeString(groupMessage.getTime()));
 
                     GroupContact groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
                             .equal(GroupContact_.id, groupMessage.getContactId())
@@ -116,6 +125,9 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         holder.name.setVisibility(View.VISIBLE);
         holder.message.setVisibility(View.VISIBLE);
         holder.message.setGravity(Gravity.START);
+        holder.time.setVisibility(View.VISIBLE);
+
+        holder.time.setText(getTimeString(groupMessage.getTime()));
 
         GroupContact groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
                 .equal(GroupContact_.id, groupMessage.getContactId())
@@ -139,6 +151,24 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         });
     }
 
+    private String getTimeString(Date date) {
+        if (date == null) {
+            return "";
+        }
+
+        if (DateUtils.isToday(date.getTime())) {
+            return DateUtils.getRelativeTimeSpanString(date.getTime()).toString();
+        }
+
+        return DateUtils.getRelativeDateTimeString(
+                $(ApplicationHandler.class).getApp(),
+                date.getTime(),
+                MINUTE_IN_MILLIS,
+                WEEK_IN_MILLIS,
+                0
+        ).toString();
+    }
+
     @Override
     public int getItemCount() {
         return groupMessages.size();
@@ -154,12 +184,14 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         TextView name;
         TextView message;
         TextView action;
+        TextView time;
 
         public GroupMessageViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
             message = itemView.findViewById(R.id.message);
             action = itemView.findViewById(R.id.action);
+            time = itemView.findViewById(R.id.time);
         }
     }
 
