@@ -8,9 +8,9 @@ import java.net.URLEncoder;
 
 import closer.vlllage.com.closer.pool.PoolMember;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 public class HttpEncode extends PoolMember {
+
+    private static final String UTF_8 = "UTF-8";
 
     @Nullable
     public String encode(@Nullable String string) {
@@ -19,7 +19,7 @@ public class HttpEncode extends PoolMember {
         }
 
         try {
-            return URLEncoder.encode(string, UTF_8.toString());
+            return URLEncoder.encode(string, UTF_8);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
@@ -33,7 +33,7 @@ public class HttpEncode extends PoolMember {
         }
 
         try {
-            return URLDecoder.decode(string, UTF_8.toString());
+            return URLDecoder.decode(string, UTF_8);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
