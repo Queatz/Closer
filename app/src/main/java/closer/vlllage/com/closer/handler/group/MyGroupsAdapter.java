@@ -19,7 +19,6 @@ import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.handler.SyncHandler;
-import closer.vlllage.com.closer.handler.VerifyNumberHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -27,7 +26,7 @@ import closer.vlllage.com.closer.store.models.Group;
 
 public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder> {
 
-    private List<String> actions = new ArrayList<>();
+    private List<GroupActionBarButton> actions = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     public MyGroupsAdapter(PoolMember poolMember) {
@@ -46,9 +45,10 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         TextView groupName = holder.itemView.findViewById(R.id.groupName);
 
         if (position < actions.size()) {
+            GroupActionBarButton actionBarButton = actions.get(position);
             groupName.setBackgroundResource(R.drawable.clickable_accent);
-            groupName.setText(actions.get(position));
-            groupName.setOnClickListener(view -> $(VerifyNumberHandler.class).verify());
+            groupName.setText(actionBarButton.getName());
+            groupName.setOnClickListener(view -> actionBarButton.getOnClick().run());
             return;
         }
 
@@ -123,7 +123,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         notifyDataSetChanged();
     }
 
-    public void setActions(@NonNull List<String> actions) {
+    public void setActions(@NonNull List<GroupActionBarButton> actions) {
         this.actions = actions;
         notifyDataSetChanged();
     }

@@ -88,4 +88,8 @@
     <string name="phone_shared_a_suggestion">%1$s shared a suggestion</string>
     <string name="phone_shared_a_location">%1$s shared a location</string>
     <string name="just_now">Just now</string>
+    <string name="use_your_location">Use your location</string>
+    <string name="enable_location_permission">Enable location permission</string>
+    <string name="open_settings">Open settings</string>
+    <string name="enable_location_permission_rationale">Open your system settings for Closer, tap on Permissions, and then turn on Location.</string>
 </resources>

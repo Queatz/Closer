@@ -57,6 +57,22 @@ public class PermissionHandler extends PoolMember {
         return true;
     }
 
+    public boolean denied(String... permissions) {
+        Activity activity = $(ActivityHandler.class).getActivity();
+
+        if (has(permissions)) {
+            return false;
+        }
+
+        for (String permission : permissions) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public class LocationCheck {
 
         private Boolean override;

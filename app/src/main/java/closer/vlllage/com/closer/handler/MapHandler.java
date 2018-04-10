@@ -66,7 +66,6 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -75,9 +74,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
             $(LocationHandler.class).getCurrentLocation(this::onLocationFound);
         }
 
-        $(PermissionHandler.class)
-                .check(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-                .when(granted -> map.setMyLocationEnabled(granted));
+        updateMyLocationEnabled();
 
         onMapReadyListener.onMapReady(map);
         map.setOnCameraMoveListener(this::mapChanged);
@@ -92,6 +89,17 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOnMapLoad, DEFAULT_ZOOM));
             centerOnMapLoad = null;
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    public void updateMyLocationEnabled() {
+        if (map == null) {
+            return;
+        }
+
+        $(PermissionHandler.class)
+                .check(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+                .when(granted -> map.setMyLocationEnabled(granted));
     }
 
     private void mapChanged() {
