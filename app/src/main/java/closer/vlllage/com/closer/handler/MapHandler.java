@@ -21,6 +21,8 @@ import closer.vlllage.com.closer.pool.PoolMember;
 
 public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
+    private static final float DEFAULT_ZOOM = 15F;
+
     private GoogleMap map;
     private View mapView;
     private LatLng centerOnMapLoad;
@@ -61,7 +63,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
             return;
         }
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
     @SuppressLint("MissingPermission")
@@ -87,7 +89,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         onMapChangedListener.onMapChanged();
 
         if (centerOnMapLoad != null) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOnMapLoad, 15));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOnMapLoad, DEFAULT_ZOOM));
             centerOnMapLoad = null;
         }
     }
@@ -118,7 +120,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraPosition cameraPosition = CameraPosition.builder()
                 .target(latLng)
-                .zoom(15)
+                .zoom(DEFAULT_ZOOM)
                 .tilt(45)
                 .build();
         map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));

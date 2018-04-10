@@ -121,8 +121,12 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             }
         }
 
+        boolean previousMessageIsSameContact = position + 1 < getItemCount() - 1 &&
+                groupMessages.get(position + 1).getAttachment() == null &&
+                groupMessages.get(position + 1).getContactId().equals(groupMessage.getContactId());
+
         holder.action.setVisibility(View.GONE);
-        holder.name.setVisibility(View.VISIBLE);
+        holder.name.setVisibility(previousMessageIsSameContact ? View.GONE : View.VISIBLE);
         holder.message.setVisibility(View.VISIBLE);
         holder.message.setGravity(Gravity.START);
         holder.time.setVisibility(View.VISIBLE);
