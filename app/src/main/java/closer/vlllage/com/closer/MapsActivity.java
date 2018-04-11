@@ -46,6 +46,7 @@ public class MapsActivity extends PoolActivity {
     public static final String EXTRA_STATUS = "status";
     public static final String EXTRA_PHONE = "phone";
     public static final String EXTRA_MESSAGE = "message";
+    private boolean locationPermissionWasDenied;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +174,13 @@ public class MapsActivity extends PoolActivity {
 
         boolean locationPermissionDenied = $(PermissionHandler.class).denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
         $(MyGroupsLayoutHandler.class).showAllowLocationPermissionsInSettings(locationPermissionDenied);
+
+        if (locationPermissionGranted && locationPermissionWasDenied) {
+            $(MapHandler.class).updateMyLocationEnabled();
+            $(MapHandler.class).locateMe();
+        }
+
+        locationPermissionWasDenied = locationPermissionDenied;
     }
 
     @Override

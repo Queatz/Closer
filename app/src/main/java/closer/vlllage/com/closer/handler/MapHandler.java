@@ -71,7 +71,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         map = googleMap;
 
         if (centerOnMapLoad == null) {
-            $(LocationHandler.class).getCurrentLocation(this::onLocationFound);
+            locateMe();
         }
 
         updateMyLocationEnabled();
@@ -89,6 +89,10 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOnMapLoad, DEFAULT_ZOOM));
             centerOnMapLoad = null;
         }
+    }
+
+    public void locateMe() {
+        $(LocationHandler.class).getCurrentLocation(this::onLocationFound);
     }
 
     @SuppressLint("MissingPermission")

@@ -22,7 +22,7 @@
  [o] Move pushes to background thread (server worker)
  [ ] Show white dot when unread messages in group
  [ ] Handle permanently denied permissions
-    [ ] Location
+    [X] Location
     [ ] Contacts
  [ ] Show call button if phone number is available
  [ ] Show new days in group messages "Wednesday, January 23rd"
