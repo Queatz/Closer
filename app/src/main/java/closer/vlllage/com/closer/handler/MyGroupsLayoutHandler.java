@@ -38,8 +38,40 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 .sort($(SortHandler.class).sortGroups())
                 .build().subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroups));
+
+
+        List<GroupActionBarButton> endActions = new ArrayList<>();
+        endActions.add(new GroupActionBarButton(
+                $(ResourcesHandler.class).getResources().getString(R.string.add_new_group),
+                () -> $(AlertHandler.class).make()
+                                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
+                                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_a_new_group))
+                                .setLayoutResId(R.layout.create_group_modal)
+                                .setTextView(R.id.input, this::createGroup)
+                                .show(),
+                null,
+                R.drawable.clickable_blue_light));
+        endActions.add(new GroupActionBarButton(
+                $(ResourcesHandler.class).getResources().getString(R.string.search_public_groups),
+                () -> {},
+                null,
+                R.drawable.clickable_green_light
+
+        ));
+        myGroupsAdapter.setEndActions(endActions);
     }
 
+    private void createGroup(String name) {
+        if (name == null || name.isEmpty()) {
+            return;
+        }
+
+        Group group = $(StoreHandler.class).create(Group.class);
+        group.setName(name);
+        $(StoreHandler.class).getStore().box(Group.class).put(group);
+        $(SyncHandler.class).sync(group, groupId ->
+                $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId));
+    }
     private void setGroups(List<Group> groups) {
         $(AppShortcutsHandler.class).setGroupShortcuts(groups);
         myGroupsAdapter.setGroups(groups);
@@ -101,17 +133,14 @@ public class MyGroupsLayoutHandler extends PoolMember {
             }
 
             String action = $(ResourcesHandler.class).getResources().getString(R.string.show_help);
-            showHelpButton = new GroupActionBarButton(action, () -> $(AlertHandler.class).make()
-                    .setTitle($(ResourcesHandler.class).getResources().getString(R.string.help))
-                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.help_message))
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
-                    .show(), () -> {
+            showHelpButton = new GroupActionBarButton(action, () -> $(DefaultAlerts.class).longMessage(null, R.string.help_message), () -> {
                 $(PersistenceHandler.class).setIsHelpHidden(true);
                 $(AlertHandler.class).make()
                         .setMessage($(ResourcesHandler.class).getResources().getString(R.string.you_hid_the_help_bubble))
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
                         .show();
                 showHelpButton(false);
-            });
+            }, R.drawable.clickable_green_light);
             actions.add(0, showHelpButton);
         } else {
             if (showHelpButton == null) {

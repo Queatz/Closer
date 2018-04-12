@@ -5,7 +5,6 @@
 
 # Features
 
- [ ] Help bubble, long-press to delete
  [ ] Public groups
     [ ] O-- Search public groups
         [ ] Add a group description
@@ -28,7 +27,6 @@
  [o] Show "Bun is typing..."
  [o] WebSocket (exact same as push notifications, zero difference!)
  [o] Move pushes to background thread (server worker)
- [ ] Show white dot when unread messages in group
  [ ] Handle permanently denied permissions
     [X] Location
     [ ] Contacts
@@ -44,18 +42,22 @@
 # Other Ideas
 
  [ ] Expiring suggestions, 5/6 messages, yellow dot
- [ ] Fun events exclusive to Closer users
-    [ ] Offer normally-not-free things to Closer users
-    [ ] Subscribe to event channels (dancing, artsy, act)
-        [ ] Channels
-        [ ] Red bubbles
-        [ ] Auto-added to all, unsubscribe from any/all
  [ ] Closer beta tester parties (as a thank you for testing)
  [ ] (Idea) All photographers photograph you at the same time, improve your portfolio -> validate for 5 markets
  
  # $ Ideas
  
   [ ] Sell API access
-  [ ] Sell map bubbles
+  [ ] Sell temporary map bubbles
   [ ] Sell push notifications
   [ ] ???
+  
+# Arcchive
+
+ [ ] Show white dot when unread messages in group
+ [ ] Fun events exclusive to Closer users
+    [ ] Offer normally-not-free things to Closer users
+    [ ] Subscribe to event channels (dancing, artsy, act)
+        [ ] Channels
+        [ ] Red bubbles
+        [ ] Auto-added to all, unsubscribe from any/all

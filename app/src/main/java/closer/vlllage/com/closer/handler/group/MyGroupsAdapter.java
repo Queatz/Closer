@@ -18,15 +18,14 @@ import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
-import closer.vlllage.com.closer.handler.SyncHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
-import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 
 public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder> {
 
     private List<GroupActionBarButton> actions = new ArrayList<>();
+    private List<GroupActionBarButton> endActions = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     public MyGroupsAdapter(PoolMember poolMember) {
@@ -46,7 +45,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
 
         if (position < actions.size()) {
             GroupActionBarButton actionBarButton = actions.get(position);
-            groupName.setBackgroundResource(R.drawable.clickable_accent);
+            groupName.setBackgroundResource(actionBarButton.getBackgroundDrawableRes());
             groupName.setText(actionBarButton.getName());
             groupName.setOnClickListener(view -> actionBarButton.getOnClick().run());
             groupName.setOnLongClickListener(view -> {
@@ -61,18 +60,21 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         }
 
         position -= actions.size();
-        boolean isNewGroupButton = position >= groups.size();
+        boolean isEndActionButton = position >= groups.size();
 
-        if (isNewGroupButton) {
-            groupName.setBackgroundResource(R.drawable.clickable_blue_light);
-            groupName.setText($(ResourcesHandler.class).getResources().getString(R.string.add_new_group));
-            groupName.setOnClickListener(view ->
-                    $(AlertHandler.class).make()
-                            .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
-                            .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_a_new_group))
-                            .setLayoutResId(R.layout.create_group_modal)
-                            .setTextView(R.id.input, name -> createGroup(groupName, name))
-                            .show());
+        if (isEndActionButton) {
+            GroupActionBarButton actionBarButton = endActions.get(position - groups.size());
+            groupName.setBackgroundResource(actionBarButton.getBackgroundDrawableRes());
+            groupName.setText(actionBarButton.getName());
+            groupName.setOnClickListener(view -> actionBarButton.getOnClick().run());
+            groupName.setOnLongClickListener(view -> {
+                if (actionBarButton.getOnLongClick() != null) {
+                    actionBarButton.getOnLongClick().run();
+                    return true;
+                }
+
+                return false;
+            });
             return;
         }
 
@@ -109,21 +111,9 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         }, error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
-    private void createGroup(View view, String name) {
-        if (name == null || name.isEmpty()) {
-            return;
-        }
-
-        Group group = $(StoreHandler.class).create(Group.class);
-        group.setName(name);
-        $(StoreHandler.class).getStore().box(Group.class).put(group);
-        $(SyncHandler.class).sync(group, groupId ->
-                $(GroupActivityTransitionHandler.class).showGroupMessages(view, groupId));
-    }
-
     @Override
     public int getItemCount() {
-        return actions.size() + groups.size() + 1/* New Group */;
+        return actions.size() + groups.size() + endActions.size();
     }
 
     public void setGroups(@NonNull List<Group> groups) {
@@ -134,6 +124,12 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
     public void setActions(@NonNull List<GroupActionBarButton> actions) {
         this.actions = actions;
         notifyDataSetChanged();
+    }
+
+    public MyGroupsAdapter setEndActions(List<GroupActionBarButton> endActions) {
+        this.endActions = endActions;
+        notifyDataSetChanged();
+        return this;
     }
 
     class MyGroupViewHolder extends RecyclerView.ViewHolder {
