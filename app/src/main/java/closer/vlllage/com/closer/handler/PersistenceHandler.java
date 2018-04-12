@@ -16,6 +16,7 @@ public class PersistenceHandler extends PoolMember {
     private static final String PREFERENCE_PHONE = "closer.phone";
     private static final String PREFERENCE_VERIFIED = "closer.verified";
     private static final String PREFERENCE_PHONE_ID = "closer.phone.id";
+    private static final String PREFERENCE_HELP_IS_HIDDEN = "closer.state.help-is-hidden";
 
     private SharedPreferences sharedPreferences;
 
@@ -48,6 +49,14 @@ public class PersistenceHandler extends PoolMember {
 
     public boolean getIsVerified() {
         return sharedPreferences.getBoolean(PREFERENCE_VERIFIED, false);
+    }
+
+    public String getPhoneId() {
+        return sharedPreferences.getString(PREFERENCE_PHONE_ID, null);
+    }
+
+    public boolean getIsHelpHidden() {
+        return sharedPreferences.getBoolean(PREFERENCE_HELP_IS_HIDDEN, false);
     }
 
     @SuppressLint("ApplySharedPref")
@@ -85,7 +94,8 @@ public class PersistenceHandler extends PoolMember {
         sharedPreferences.edit().putString(PREFERENCE_PHONE_ID, phoneId).commit();
     }
 
-    public String getPhoneId() {
-        return sharedPreferences.getString(PREFERENCE_PHONE_ID, null);
+    @SuppressLint("ApplySharedPref")
+    public void setIsHelpHidden(boolean helpIsHidden) {
+        sharedPreferences.edit().putBoolean(PREFERENCE_HELP_IS_HIDDEN, helpIsHidden).commit();
     }
 }

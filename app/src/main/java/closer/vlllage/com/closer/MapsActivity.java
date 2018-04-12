@@ -161,6 +161,8 @@ public class MapsActivity extends PoolActivity {
         }
 
         $(SuggestionHandler.class).attach(findViewById(R.id.actionButton));
+
+        $(MyGroupsLayoutHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
     }
 
     @Override

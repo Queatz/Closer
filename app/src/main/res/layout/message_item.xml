@@ -30,6 +30,7 @@
             android:textSize="12sp"
             android:textColor="@android:color/white"
             android:textIsSelectable="true"
+            android:linksClickable="true"
             tools:text="Where are we going this weekend?" />
 
         <TextView

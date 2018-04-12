@@ -49,6 +49,14 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
             groupName.setBackgroundResource(R.drawable.clickable_accent);
             groupName.setText(actionBarButton.getName());
             groupName.setOnClickListener(view -> actionBarButton.getOnClick().run());
+            groupName.setOnLongClickListener(view -> {
+                if (actionBarButton.getOnLongClick() != null) {
+                    actionBarButton.getOnLongClick().run();
+                    return true;
+                }
+
+                return false;
+            });
             return;
         }
 

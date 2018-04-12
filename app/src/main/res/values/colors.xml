@@ -5,6 +5,8 @@
     <color name="colorPrimaryLight">#64B5F6</color>
     <color name="colorAccent">#FFC107</color>
     <color name="colorAccentLight">#FFD54F</color>
+    <color name="green">#8BC34A</color>
+    <color name="greenLight">#AED581</color>
     <color name="name">#66000000</color>
     <color name="selectable">#BDBDBD</color>
     <color name="disabled">@color/selectable</color>

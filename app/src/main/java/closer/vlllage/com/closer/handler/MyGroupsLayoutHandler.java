@@ -22,6 +22,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
 
     private GroupActionBarButton verifyYourNumberButton;
     private GroupActionBarButton allowPermissionsButton;
+    private GroupActionBarButton showHelpButton;
 
     public void attach(ViewGroup myGroupsLayout) {
         this.myGroupsLayout = myGroupsLayout;
@@ -88,6 +89,36 @@ public class MyGroupsLayoutHandler extends PoolMember {
             }
 
             actions.remove(allowPermissionsButton);
+        }
+
+        myGroupsAdapter.setActions(actions);
+    }
+
+    public void showHelpButton(boolean show) {
+        if (show) {
+            if (showHelpButton != null) {
+                return;
+            }
+
+            String action = $(ResourcesHandler.class).getResources().getString(R.string.show_help);
+            showHelpButton = new GroupActionBarButton(action, () -> $(AlertHandler.class).make()
+                    .setTitle($(ResourcesHandler.class).getResources().getString(R.string.help))
+                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.help_message))
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
+                    .show(), () -> {
+                $(PersistenceHandler.class).setIsHelpHidden(true);
+                $(AlertHandler.class).make()
+                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.you_hid_the_help_bubble))
+                        .show();
+                showHelpButton(false);
+            });
+            actions.add(0, showHelpButton);
+        } else {
+            if (showHelpButton == null) {
+                return;
+            }
+
+            actions.remove(showHelpButton);
         }
 
         myGroupsAdapter.setActions(actions);
