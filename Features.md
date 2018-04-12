@@ -2,12 +2,13 @@
 
  [ ] Privacy policy
  [ ] Fancy marketing screenshots with written text on Play Store
+ [ ] Closer launch party (once totally complete :)
 
 # Features
 
- [ ] Public groups
-    [ ] O-- Search public groups
-        [ ] Add a group description
+ [.] Public groups
+    [.] O-- Search public groups
+        [.] Add a group description
     [ ] Search for groups
  [o] Search for places (green)
  [o] Single emoji floats many of them over your screen

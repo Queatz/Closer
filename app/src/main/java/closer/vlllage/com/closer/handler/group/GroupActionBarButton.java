@@ -10,13 +10,10 @@ public class GroupActionBarButton {
     private Runnable onClick;
     private Runnable onLongClick;
     private @DrawableRes int backgroundDrawableRes;
+    private @DrawableRes int icon;
 
     public GroupActionBarButton(String name, Runnable onClick) {
         this(name, onClick, null, R.drawable.clickable_accent);
-    }
-
-    public GroupActionBarButton(String name, Runnable onClick, Runnable onLongClick) {
-        this(name, onClick, onLongClick, R.drawable.clickable_accent);
     }
 
     public GroupActionBarButton(String name, Runnable onClick, Runnable onLongClick, @DrawableRes int backgroundDrawableRes) {
@@ -59,6 +56,15 @@ public class GroupActionBarButton {
 
     public GroupActionBarButton setBackgroundDrawableRes(int backgroundDrawableRes) {
         this.backgroundDrawableRes = backgroundDrawableRes;
+        return this;
+    }
+
+    public int getIcon() {
+        return icon;
+    }
+
+    public GroupActionBarButton setIcon(int icon) {
+        this.icon = icon;
         return this;
     }
 }

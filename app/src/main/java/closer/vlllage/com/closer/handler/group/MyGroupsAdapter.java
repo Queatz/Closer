@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.handler.group;
 
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.ActivityHandler;
 import closer.vlllage.com.closer.handler.AlertHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
@@ -46,6 +49,13 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         if (position < actions.size()) {
             GroupActionBarButton actionBarButton = actions.get(position);
             groupName.setBackgroundResource(actionBarButton.getBackgroundDrawableRes());
+            groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(actionBarButton.getIcon(), 0, 0, 0);
+            groupName.setCompoundDrawablePadding($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                groupName.setCompoundDrawableTintList(ColorStateList.valueOf(
+                        $(ResourcesHandler.class).getResources().getColor(android.R.color.white, $(ActivityHandler.class).getActivity().getTheme())
+                ));
+            }
             groupName.setText(actionBarButton.getName());
             groupName.setOnClickListener(view -> actionBarButton.getOnClick().run());
             groupName.setOnLongClickListener(view -> {
@@ -65,6 +75,13 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         if (isEndActionButton) {
             GroupActionBarButton actionBarButton = endActions.get(position - groups.size());
             groupName.setBackgroundResource(actionBarButton.getBackgroundDrawableRes());
+            groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(actionBarButton.getIcon(), 0, 0, 0);
+            groupName.setCompoundDrawablePadding($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                groupName.setCompoundDrawableTintList(ColorStateList.valueOf(
+                        $(ResourcesHandler.class).getResources().getColor(android.R.color.white, $(ActivityHandler.class).getActivity().getTheme())
+                ));
+            }
             groupName.setText(actionBarButton.getName());
             groupName.setOnClickListener(view -> actionBarButton.getOnClick().run());
             groupName.setOnLongClickListener(view -> {
@@ -80,6 +97,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
 
         Group group = groups.get(position);
         groupName.setBackgroundResource(R.drawable.clickable_blue);
+        groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
         groupName.setText(group.getName());
 
         groupName.setOnClickListener(view ->

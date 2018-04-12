@@ -57,7 +57,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 null,
                 R.drawable.clickable_green_light
 
-        ));
+        ).setIcon(R.drawable.ic_search_black_24dp));
         myGroupsAdapter.setEndActions(endActions);
     }
 
