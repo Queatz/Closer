@@ -42,7 +42,7 @@
     <string name="add_suggestion">Add suggestion</string>
     <string name="make_a_suggestion">Map a suggestion…</string>
     <string name="share_with">Share with…</string>
-    <string name="add_new_group">+ New Group</string>
+    <string name="add_new_group">+ New group</string>
     <string name="verify_your_number">Verify your number</string>
     <string name="not_found">Not found</string>
     <string name="invite">Invite</string>
@@ -78,7 +78,7 @@
     <string name="invited_to_group_notification">%1$s added you to %2$s</string>
     <string name="group_message_notification">%1$s (%2$s)</string>
     <string name="invited">Invited</string>
-    <string name="cancel_invite">Cancel Invite</string>
+    <string name="cancel_invite">Cancel invite</string>
     <string name="confirm_cancel_invite">Cancel %1$s\'s invite?</string>
     <string name="invite_cancelled">Invite cancelled</string>
     <string name="shared_location">Shared location</string>
@@ -102,5 +102,5 @@
         🌞 <b>Groups are small,</b> just for you and a few friends.  Feel free to search for public groups as well, which appear in green.\n\n
         🐅 <b>To leave a group,</b> simply press and hold on the group\'s name. You can do the same with this help bubble.</string>
     <string name="you_hid_the_help_bubble">You hid the help bubble</string>
-    <string name="search_public_groups">Search Groups</string>
+    <string name="search_public_groups">Search groups</string>
 </resources>

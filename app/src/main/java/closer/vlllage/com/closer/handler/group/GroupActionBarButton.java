@@ -1,22 +1,23 @@
 package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.DrawableRes;
+import android.view.View;
 
 import closer.vlllage.com.closer.R;
 
 public class GroupActionBarButton {
 
     private String name;
-    private Runnable onClick;
-    private Runnable onLongClick;
+    private View.OnClickListener onClick;
+    private View.OnClickListener onLongClick;
     private @DrawableRes int backgroundDrawableRes;
     private @DrawableRes int icon;
 
-    public GroupActionBarButton(String name, Runnable onClick) {
+    public GroupActionBarButton(String name, View.OnClickListener onClick) {
         this(name, onClick, null, R.drawable.clickable_accent);
     }
 
-    public GroupActionBarButton(String name, Runnable onClick, Runnable onLongClick, @DrawableRes int backgroundDrawableRes) {
+    public GroupActionBarButton(String name, View.OnClickListener onClick, View.OnClickListener onLongClick, @DrawableRes int backgroundDrawableRes) {
         this.name = name;
         this.onClick = onClick;
         this.onLongClick = onLongClick;
@@ -32,20 +33,20 @@ public class GroupActionBarButton {
         return this;
     }
 
-    public Runnable getOnClick() {
+    public View.OnClickListener getOnClick() {
         return onClick;
     }
 
-    public GroupActionBarButton setOnClick(Runnable onClick) {
+    public GroupActionBarButton setOnClick(View.OnClickListener onClick) {
         this.onClick = onClick;
         return this;
     }
 
-    public Runnable getOnLongClick() {
+    public View.OnClickListener getOnLongClick() {
         return onLongClick;
     }
 
-    public GroupActionBarButton setOnLongClick(Runnable onLongClick) {
+    public GroupActionBarButton setOnLongClick(View.OnClickListener onLongClick) {
         this.onLongClick = onLongClick;
         return this;
     }

@@ -2,7 +2,7 @@
 
  [ ] Privacy policy
  [ ] Fancy marketing screenshots with written text on Play Store
- [ ] Closer launch party (once totally complete :)
+ [ ] Closer launch party (once totally complete :) free wines, cheese, give aways
 
 # Features
 
@@ -42,19 +42,19 @@
 
 # Other Ideas
 
- [ ] Expiring suggestions, 5/6 messages, yellow dot
- [ ] Closer beta tester parties (as a thank you for testing)
  [ ] (Idea) All photographers photograph you at the same time, improve your portfolio -> validate for 5 markets
  
  # $ Ideas
  
-  [ ] Sell API access
+  [ ] Sell API access for public groups / map
   [ ] Sell temporary map bubbles
   [ ] Sell push notifications
   [ ] ???
   
 # Arcchive
 
+ [ ] Expiring suggestions, 5/6 messages, yellow dot
+ [ ] Closer beta tester parties (as a thank you for testing)
  [ ] Show white dot when unread messages in group
  [ ] Fun events exclusive to Closer users
     [ ] Offer normally-not-free things to Closer users

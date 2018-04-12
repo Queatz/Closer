@@ -43,7 +43,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
         List<GroupActionBarButton> endActions = new ArrayList<>();
         endActions.add(new GroupActionBarButton(
                 $(ResourcesHandler.class).getResources().getString(R.string.add_new_group),
-                () -> $(AlertHandler.class).make()
+                view -> $(AlertHandler.class).make()
                                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
                                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_a_new_group))
                                 .setLayoutResId(R.layout.create_group_modal)
@@ -53,7 +53,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 R.drawable.clickable_blue_light));
         endActions.add(new GroupActionBarButton(
                 $(ResourcesHandler.class).getResources().getString(R.string.search_public_groups),
-                () -> {},
+                view -> $(SearchActivityHandler.class).show(view),
                 null,
                 R.drawable.clickable_green_light
 
@@ -88,7 +88,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
             }
 
             String action = $(ResourcesHandler.class).getResources().getString(R.string.verify_your_number);
-            verifyYourNumberButton = new GroupActionBarButton(action, () -> $(VerifyNumberHandler.class).verify());
+            verifyYourNumberButton = new GroupActionBarButton(action, view -> $(VerifyNumberHandler.class).verify());
             actions.add(verifyYourNumberButton);
         } else {
             if (verifyYourNumberButton == null) {
@@ -108,7 +108,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
             }
 
             String action = $(ResourcesHandler.class).getResources().getString(R.string.use_your_location);
-            allowPermissionsButton = new GroupActionBarButton(action, () -> $(AlertHandler.class).make()
+            allowPermissionsButton = new GroupActionBarButton(action, view -> $(AlertHandler.class).make()
                     .setTitle($(ResourcesHandler.class).getResources().getString(R.string.enable_location_permission))
                     .setMessage($(ResourcesHandler.class).getResources().getString(R.string.enable_location_permission_rationale))
                     .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.open_settings))
@@ -133,7 +133,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
             }
 
             String action = $(ResourcesHandler.class).getResources().getString(R.string.show_help);
-            showHelpButton = new GroupActionBarButton(action, () -> $(DefaultAlerts.class).longMessage(null, R.string.help_message), () -> {
+            showHelpButton = new GroupActionBarButton(action, view -> $(DefaultAlerts.class).longMessage(null, R.string.help_message), view -> {
                 $(PersistenceHandler.class).setIsHelpHidden(true);
                 $(AlertHandler.class).make()
                         .setMessage($(ResourcesHandler.class).getResources().getString(R.string.you_hid_the_help_bubble))

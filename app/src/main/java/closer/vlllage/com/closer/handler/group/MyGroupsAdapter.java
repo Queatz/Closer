@@ -57,10 +57,10 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
                 ));
             }
             groupName.setText(actionBarButton.getName());
-            groupName.setOnClickListener(view -> actionBarButton.getOnClick().run());
+            groupName.setOnClickListener(actionBarButton.getOnClick());
             groupName.setOnLongClickListener(view -> {
                 if (actionBarButton.getOnLongClick() != null) {
-                    actionBarButton.getOnLongClick().run();
+                    actionBarButton.getOnLongClick().onClick(view);
                     return true;
                 }
 
@@ -83,10 +83,10 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
                 ));
             }
             groupName.setText(actionBarButton.getName());
-            groupName.setOnClickListener(view -> actionBarButton.getOnClick().run());
+            groupName.setOnClickListener(actionBarButton.getOnClick());
             groupName.setOnLongClickListener(view -> {
                 if (actionBarButton.getOnLongClick() != null) {
-                    actionBarButton.getOnLongClick().run();
+                    actionBarButton.getOnLongClick().onClick(view);
                     return true;
                 }
 
