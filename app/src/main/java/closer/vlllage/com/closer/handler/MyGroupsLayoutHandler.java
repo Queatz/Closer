@@ -50,7 +50,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
                                 .setTextView(R.id.input, this::createGroup)
                                 .show(),
                 null,
-                R.drawable.clickable_blue_light));
+                R.drawable.clickable_blue_light).setIcon(R.drawable.ic_group_add_black_24dp));
         endActions.add(new GroupActionBarButton(
                 $(ResourcesHandler.class).getResources().getString(R.string.search_public_groups),
                 view -> $(SearchActivityHandler.class).show(view),

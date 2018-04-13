@@ -2,15 +2,18 @@
 
  [ ] Privacy policy
  [ ] Fancy marketing screenshots with written text on Play Store
- [ ] Closer launch party (once totally complete :) free wines, cheese, give aways
+ [ ] Closer launch party (once totally complete :) free wine fridays 2pm, cheese, give aways
 
 # Features
 
  [.] Public groups
     [.] O-- Search public groups
-        [.] Add a group description
+        [.] Add a public group (from search, similar to contacts invite)
+        [ ] Add a description
+    [ ] Public groups don't expire messages (last ~30 across all public ones)
     [ ] Search for groups
  [o] Search for places (green)
+
  [o] Single emoji floats many of them over your screen
     [o] Bubble to allow draw over screen
  [o] Add public photos to suggestion
@@ -19,6 +22,7 @@
  
 # Enhancements
 
+ [ ] HTTPS
  [ ] Some messages are duplicated
  [ ] Profile icon in status bar
  [ ] Randomize message hint
@@ -28,12 +32,8 @@
  [o] Show "Bun is typing..."
  [o] WebSocket (exact same as push notifications, zero difference!)
  [o] Move pushes to background thread (server worker)
- [ ] Handle permanently denied permissions
-    [X] Location
-    [ ] Contacts
- [ ] Show call button if phone number is available
+ [ ] Handle permanently denied contacts permissions
  [ ] Only allow app to talk to backend (signature header)
- [ ] Mute notifications for 12 hours
 
 # More
 
@@ -53,6 +53,8 @@
   
 # Arcchive
 
+ [ ] Mute notifications for 12 hours
+ [ ] Show call button if phone number is available
  [ ] Expiring suggestions, 5/6 messages, yellow dot
  [ ] Closer beta tester parties (as a thank you for testing)
  [ ] Show white dot when unread messages in group
