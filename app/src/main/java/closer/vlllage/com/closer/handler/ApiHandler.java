@@ -60,8 +60,8 @@ public class ApiHandler extends PoolMember {
                 .map(verifiedResult -> verifiedResult.verified);
     }
 
-    public Observable<List<GroupMessageResult>> myMessages() {
-        return api.getBackend().myMessages()
+    public Observable<List<GroupMessageResult>> myMessages(LatLng latLng) {
+        return api.getBackend().myMessages(LatLngStr.from(latLng))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

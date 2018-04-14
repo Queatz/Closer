@@ -9,6 +9,7 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import closer.vlllage.com.closer.CircularRevealActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.ActivityHandler;
 import closer.vlllage.com.closer.handler.AlertHandler;
@@ -74,8 +75,8 @@ public class SearchHandler extends PoolMember {
     }
 
     private void openGroup(String groupId) {
-        $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId);
-        $(ActivityHandler.class).getActivity().finish();
+        ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId));
+
     }
 
     private void createGroup(String groupName) {

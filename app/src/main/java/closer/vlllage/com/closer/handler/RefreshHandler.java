@@ -39,7 +39,12 @@ public class RefreshHandler extends PoolMember {
     }
 
     public void refreshMyMessages() {
-        $(DisposableHandler.class).add($(ApiHandler.class).myMessages().subscribe(this::handleMessages, error -> $(DefaultAlerts.class).syncError()));
+        $(LocationHandler.class).getCurrentLocation(location -> {
+            $(DisposableHandler.class).add($(ApiHandler.class).myMessages(location == null ? null : new LatLng(
+                    location.getLatitude(),
+                    location.getLongitude()
+            )).subscribe(this::handleMessages, error -> $(DefaultAlerts.class).syncError()));
+        });
     }
 
     public void refreshMyGroups() {
@@ -71,15 +76,25 @@ public class RefreshHandler extends PoolMember {
 
         query.build().subscribe().single()
                 .observer(groupMessages -> {
-                    Set<String> existingIds = new HashSet<>();
-                    for(GroupMessage groupMessage : groupMessages) {
-                        existingIds.add(groupMessage.getId());
+                    Map<String, GroupMessage> existingObjsMap = new HashMap<>();
+                    for (GroupMessage existingObj : groupMessages) {
+                        existingObjsMap.put(existingObj.getId(), existingObj);
                     }
+
 
                     Box<GroupMessage> groupMessageBox = $(StoreHandler.class).getStore().box(GroupMessage.class);
                     for (GroupMessageResult message : messages) {
-                        if (!existingIds.contains(message.id)) {
+                        if (!existingObjsMap.containsKey(message.id)) {
                             groupMessageBox.put(transformGroupMessageResult(message));
+                        } else {
+                            GroupMessage groupMessage = existingObjsMap.get(message.id);
+
+                            // For public group messages
+                            if (groupMessage.getContactId() == null || !groupMessage.getContactId().equals(message.from)) {
+                                groupMessage.setContactId(message.from);
+                                groupMessageBox.put(groupMessage);
+
+                            }
                         }
                     }
                 });

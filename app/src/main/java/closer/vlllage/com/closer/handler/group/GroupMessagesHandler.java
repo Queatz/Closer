@@ -54,7 +54,7 @@ public class GroupMessagesHandler extends PoolMember {
                     if (replyMessage.getText().toString().trim().isEmpty()) {
                         return false;
                     }
-                    boolean success = send(textView.getText().toString());
+                    boolean success = send(replyMessage.getText().toString());
                     if (success) {
                         textView.setText("");
                     }
@@ -81,6 +81,10 @@ public class GroupMessagesHandler extends PoolMember {
 
         Group group = $(GroupHandler.class).getGroup();
 
+        if (group == null) {
+            return;
+        }
+
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
                 .equal(GroupMessage_.groupId, group.getId());
 
@@ -106,13 +110,21 @@ public class GroupMessagesHandler extends PoolMember {
         }
 
         if ($(GroupHandler.class).getGroupContact() == null) {
-            return false;
+            if ($(GroupHandler.class).getGroup().isPublic()) {
+                // todo: create groupcontact locally and sync if public
+            } else {
+                return false;
+            }
         }
 
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setText(text);
         groupMessage.setGroupId($(GroupHandler.class).getGroup().getId());
-        groupMessage.setContactId($(GroupHandler.class).getGroupContact().getId());
+
+        if ($(GroupHandler.class).getGroupContact() != null) {
+            groupMessage.setContactId($(GroupHandler.class).getGroupContact().getId());
+        }
+
         groupMessage.setTime(new Date());
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
         $(SyncHandler.class).sync(groupMessage);

@@ -55,7 +55,7 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
 
-        $(GroupHandler.class).attach(this, groupName, peopleInGroup);
+        $(GroupHandler.class).attach(groupName, peopleInGroup);
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
             groupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
             $(GroupHandler.class).setGroupById(groupId);
@@ -64,6 +64,11 @@ public class GroupActivity extends CircularRevealActivity {
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton);
 
         Group group = $(GroupHandler.class).getGroup();
+
+        if (group == null) {
+            // todo: load group, then continue
+            return;
+        }
 
         if (group.isPublic()) {
             findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);

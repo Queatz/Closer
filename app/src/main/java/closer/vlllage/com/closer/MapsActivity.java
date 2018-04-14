@@ -143,7 +143,7 @@ public class MapsActivity extends PoolActivity {
             $(DisposableHandler.class).add($(ApiHandler.class).isVerified().subscribe(verified -> {
                 $(PersistenceHandler.class).setIsVerified(verified);
                 $(MyGroupsLayoutHandler.class).showVerifyMyNumber(!verified);
-            }));
+            }, this::networkError));
         }
 
         if (getIntent() != null) {

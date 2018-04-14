@@ -7,7 +7,6 @@ import org.greenrobot.essentials.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import closer.vlllage.com.closer.GroupActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
@@ -31,7 +30,7 @@ public class GroupHandler extends PoolMember {
     private List<String> contactNames = new ArrayList<>();
     private List<String> contactInvites = new ArrayList<>();
 
-    public void attach(GroupActivity groupActivity, TextView groupName, TextView peopleInGroup) {
+    public void attach(TextView groupName, TextView peopleInGroup) {
         this.groupName = groupName;
         this.peopleInGroup = peopleInGroup;
     }

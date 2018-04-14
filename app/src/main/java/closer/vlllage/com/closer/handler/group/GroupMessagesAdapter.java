@@ -133,10 +133,14 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         holder.time.setText(getTimeString(groupMessage.getTime()));
 
-        GroupContact groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
-                .equal(GroupContact_.id, groupMessage.getContactId())
-                .build()
-                .findFirst();
+        GroupContact groupContact = null;
+
+        if (groupMessage.getContactId() != null) {
+            groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
+                    .equal(GroupContact_.id, groupMessage.getContactId())
+                    .build()
+                    .findFirst();
+        }
 
         if (groupContact == null || groupContact.getContactName() == null) {
             holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
