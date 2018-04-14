@@ -65,8 +65,8 @@ public class ApiHandler extends PoolMember {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<StateResult> myGroups() {
-        return api.getBackend().myGroups()
+    public Observable<StateResult> myGroups(LatLng latLng) {
+        return api.getBackend().myGroups(LatLngStr.from(latLng))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -87,6 +87,11 @@ public class ApiHandler extends PoolMember {
 
     public Observable<CreateResult> createGroup(String groupName) {
         return api.getBackend().createGroup(groupName)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<CreateResult> createPublicGroup(String groupName, String about, LatLng latLng) {
+        return api.getBackend().createPublicGroup(groupName, about, LatLngStr.from(latLng), true)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

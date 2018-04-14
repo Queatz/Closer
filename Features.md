@@ -1,47 +1,85 @@
+
+[ ] Double check that phone statuses are allowed to be oerwritten clientside
+
+# Advertise Closer in SF and NY and LA and CO (NOT Austin!! :P)
+
+[ ] Locallized screenshots
+[ ] "Pulses" of invites so masses of people join at the exact same time
+    [ ] Limited join times (can only join on Sturday at 2pm!)
+[ ] Get location queries implemented
+    [X] Suggestions (app, backend)
+        [ ] (local) Expanding bounding box query helper
+    [X] Public groups (backend)
+    [X] Active phones (backend)
+[ ] Get Async push notification queues working (copy from Vlllage)
+
+# Public Groups
+
+[ ] Tests
+    [ ] Create public group
+    [ ] Get public groups
+    [ ] Get messages for public groups
+    [ ] Suggestions are local
+    [ ] Active phones are local
+
+# Feature: Mute groups
+
+[ ] POST /group?mute=true/false
+    [ ] GroupMute model
+        [ ] Use GroupMute for push notifications to omit phones
+    [ ] Don't send notifications if mute token exists
+
+[ ] App
+    [ ] Mute group
+        [ ] Bell/slashed-bell icon top right
+
+
 # Presence
 
- [ ] Privacy policy
+ [ ] Privacy policy - http://closer.vlllage.com/privacy
  [ ] Fancy marketing screenshots with written text on Play Store
- [ ] Closer launch party (once totally complete :) free wine fridays 2pm, cheese, give aways
+ [ ] Closer launch party (once totally complete :) free wine fridays 2pm, cheese, give aways announce through closer
 
 # Features
 
- [.] Public groups
-    [.] O-- Search public groups
-        [.] Add a public group (from search, similar to contacts invite)
-        [ ] Add a description
-    [ ] Public groups don't expire messages (last ~30 across all public ones)
-    [ ] Search for groups
- [o] Search for places (green)
+ [o] Search for places on the map (green button)
 
  [o] Single emoji floats many of them over your screen
     [o] Bubble to allow draw over screen
+    [ ] Get screen wake lock working
  [o] Add public photos to suggestion
+ [ ] Long-press add photo to map
  [b] All messages from person go to one notification box
  [ ] Profile -> Settings, Suggestions, More
+ 
  
 # Enhancements
 
  [ ] HTTPS
  [ ] Some messages are duplicated
  [ ] Profile icon in status bar
- [ ] Randomize message hint
+ [.] Randomize message hint
  [ ] Don't show timestamps that are the same as the previous message
  [ ] Show no recent activity message
+ [.] Don't allow direct messages if active=false
+    [ ] Show dialog "X has already left the map"
 
  [o] Show "Bun is typing..."
  [o] WebSocket (exact same as push notifications, zero difference!)
  [o] Move pushes to background thread (server worker)
  [ ] Handle permanently denied contacts permissions
+    [ ] Dialog telling to go to settings
  [ ] Only allow app to talk to backend (signature header)
+ [ ] Bubble arrow is cut off when in landscape mode
 
 # More
 
  [ ] "Network unavailable"
  [ ] Name null checks backend
 
-# Other Ideas
+# Group Ideas
 
+ [ ] Your Sexy Photos
  [ ] (Idea) All photographers photograph you at the same time, improve your portfolio -> validate for 5 markets
  
  # $ Ideas

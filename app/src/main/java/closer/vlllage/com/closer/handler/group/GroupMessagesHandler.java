@@ -21,9 +21,11 @@ import closer.vlllage.com.closer.handler.SortHandler;
 import closer.vlllage.com.closer.handler.SyncHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import io.objectbox.android.AndroidScheduler;
+import io.objectbox.query.QueryBuilder;
 
 import static android.text.format.DateUtils.HOUR_IN_MILLIS;
 
@@ -77,9 +79,16 @@ public class GroupMessagesHandler extends PoolMember {
         Date twelveHoursAgo = new Date();
         twelveHoursAgo.setTime(twelveHoursAgo.getTime() - 12 * HOUR_IN_MILLIS);
 
-        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMessage.class).query()
-                .equal(GroupMessage_.groupId, $(GroupHandler.class).getGroup().getId())
-                .greater(GroupMessage_.time, twelveHoursAgo)
+        Group group = $(GroupHandler.class).getGroup();
+
+        QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
+                .equal(GroupMessage_.groupId, group.getId());
+
+        if (!group.isPublic()) {
+            queryBuilder.greater(GroupMessage_.time, twelveHoursAgo);
+        }
+
+        $(DisposableHandler.class).add(queryBuilder
                 .sort($(SortHandler.class).sortGroupMessages())
                 .build()
                 .subscribe().on(AndroidScheduler.mainThread())

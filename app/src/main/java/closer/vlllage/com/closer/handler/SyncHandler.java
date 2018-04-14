@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
+import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.BaseObject;
@@ -15,6 +16,7 @@ import closer.vlllage.com.closer.store.models.Suggestion;
 import closer.vlllage.com.closer.store.models.Suggestion_;
 import io.objectbox.Property;
 import io.objectbox.android.AndroidScheduler;
+import io.reactivex.Observable;
 
 public class SyncHandler extends PoolMember {
     public void syncAll() {
@@ -79,9 +81,18 @@ public class SyncHandler extends PoolMember {
         group.setLocalOnly(true);
         $(StoreHandler.class).getStore().box(Group.class).put(group);
 
-        $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).createGroup(
-                group.getName()
-        ).subscribe(createResult -> {
+        Observable<CreateResult> createApiRequest;
+
+        if (group.isPublic()) {
+            createApiRequest = $(ApiHandler.class).createPublicGroup(group.getName(), group.getAbout(), new LatLng(
+                    group.getLatitude(),
+                    group.getLongitude()
+            ));
+        } else {
+            createApiRequest = $(ApiHandler.class).createGroup(group.getName());
+        }
+
+        $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add(createApiRequest.subscribe(createResult -> {
             if (createResult.success) {
                 group.setId(createResult.id);
                 group.setLocalOnly(false);

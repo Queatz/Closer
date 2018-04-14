@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.group.MyGroupsAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 
 public class MyGroupsLayoutHandler extends PoolMember {
@@ -35,6 +36,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
         myGroupsAdapter = new MyGroupsAdapter(this);
         myGroupsRecyclerView.setAdapter(myGroupsAdapter);
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Group.class).query()
+                .notEqual(Group_.isPublic, true)
                 .sort($(SortHandler.class).sortGroups())
                 .build().subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroups));
@@ -72,6 +74,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
         $(SyncHandler.class).sync(group, groupId ->
                 $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId));
     }
+
     private void setGroups(List<Group> groups) {
         $(AppShortcutsHandler.class).setGroupShortcuts(groups);
         myGroupsAdapter.setGroups(groups);

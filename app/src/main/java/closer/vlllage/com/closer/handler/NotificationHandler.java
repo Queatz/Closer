@@ -96,7 +96,7 @@ public class NotificationHandler extends PoolMember {
                 groupId + "/invited", true);
     }
 
-    public void showGroupMessageNotification(String text, String messageFrom, String groupName, String groupId) {
+    public void showGroupMessageNotification(String text, String messageFrom, String groupName, String groupId, String isPassive) {
         Context context = $(ApplicationHandler.class).getApp();
 
         Intent intent = new Intent(context, GroupActivity.class);
@@ -114,7 +114,7 @@ public class NotificationHandler extends PoolMember {
         show(contentIntent, null, null,
                 $(ResourcesHandler.class).getResources().getString(R.string.group_message_notification, messageFrom, groupName),
                 text,
-                groupId + "/message", true);
+                groupId + "/message", !Boolean.valueOf(isPassive));
     }
 
     private void show(PendingIntent contentIntent, Intent backgroundIntent,

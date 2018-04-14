@@ -23,10 +23,6 @@ public class AccountHandler extends PoolMember {
     public void updateGeo(LatLng latLng) {
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_GEO, latLng));
 
-        if (!$(PersistenceHandler.class).getMyActive()) {
-            return;
-        }
-
         $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(LatLngStr.from(latLng), null, null, null, null)
             .subscribe(success -> {}, this::onError));
     }

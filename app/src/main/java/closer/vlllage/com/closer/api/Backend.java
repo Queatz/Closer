@@ -69,10 +69,13 @@ public interface Backend {
     // Group
 
     @GET("group")
-    Observable<StateResult> myGroups();
+    Observable<StateResult> myGroups(@Query("geo") String latLng);
 
     @POST("group")
     Observable<CreateResult> createGroup(@Query("name") String groupName);
+
+    @POST("group")
+    Observable<CreateResult> createPublicGroup(@Query("name") String groupName, @Query("about") String about, @Query("geo") String geo, @Query("public") boolean isPublic);
 
     @POST("group/{id}")
     Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("name") String name, @Query("invite") String phoneNumber);

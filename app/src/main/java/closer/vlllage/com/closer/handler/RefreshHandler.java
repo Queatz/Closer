@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.handler;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +29,8 @@ import io.objectbox.Box;
 import io.objectbox.Property;
 import io.objectbox.query.QueryBuilder;
 
+import static java.lang.Boolean.TRUE;
+
 public class RefreshHandler extends PoolMember {
 
     public void refreshAll() {
@@ -39,11 +43,16 @@ public class RefreshHandler extends PoolMember {
     }
 
     public void refreshMyGroups() {
-        $(DisposableHandler.class).add($(ApiHandler.class).myGroups().subscribe(stateResult -> {
-            handleFullListResult(stateResult.groups, Group.class, Group_.id, this::createGroupFromGroupResult, this::updateGroupFromGroupResult);
-            handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, this::transformGroupInviteResult, null);
-            handleGroupContacts(stateResult.groupContacts);
-        }, error -> $(DefaultAlerts.class).syncError()));
+        $(LocationHandler.class).getCurrentLocation(location -> {
+            $(DisposableHandler.class).add($(ApiHandler.class).myGroups(location == null ? null : new LatLng(
+                    location.getLatitude(),
+                    location.getLongitude()
+            )).subscribe(stateResult -> {
+                handleFullListResult(stateResult.groups, Group.class, Group_.id, this::createGroupFromGroupResult, this::updateGroupFromGroupResult);
+                handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, this::transformGroupInviteResult, null);
+                handleGroupContacts(stateResult.groupContacts);
+            }, error -> $(DefaultAlerts.class).syncError()));
+        });
     }
 
     private void handleMessages(final List<GroupMessageResult> messages) {
@@ -142,12 +151,16 @@ public class RefreshHandler extends PoolMember {
         group.setId(groupResult.id);
         group.setName(groupResult.name);
         group.setUpdated(groupResult.updated);
+        group.setAbout(groupResult.about);
+        group.setPublic(TRUE.equals(groupResult.isPublic));
         return group;
     }
 
     private Group updateGroupFromGroupResult(Group group, GroupResult groupResult) {
         group.setName(groupResult.name);
         group.setUpdated(groupResult.updated);
+        group.setAbout(groupResult.about);
+        group.setPublic(TRUE.equals(groupResult.isPublic));
         return group;
     }
 

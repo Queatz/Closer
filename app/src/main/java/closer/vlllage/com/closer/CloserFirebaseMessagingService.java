@@ -36,7 +36,8 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
                                     data.get("text"),
                                     data.get("messageFrom"),
                                     data.get("groupName"),
-                                    data.get("groupId"));
+                                    data.get("groupId"),
+                                    data.get("passive"));
                         }
 
                         app.$(RefreshHandler.class).refreshMyMessages();

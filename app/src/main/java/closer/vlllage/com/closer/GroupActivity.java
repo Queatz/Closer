@@ -13,10 +13,13 @@ import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
+import closer.vlllage.com.closer.handler.RefreshHandler;
+import closer.vlllage.com.closer.handler.TimerHandler;
 import closer.vlllage.com.closer.handler.TopHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
+import closer.vlllage.com.closer.store.models.Group;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -50,6 +53,8 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
 
+        $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
+
         $(GroupHandler.class).attach(this, groupName, peopleInGroup);
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
             groupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
@@ -57,18 +62,26 @@ public class GroupActivity extends CircularRevealActivity {
         }
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton);
-        $(GroupContactsHandler.class).attach($(GroupHandler.class).getGroup(), contactsRecyclerView, searchContacts);
-        peopleInGroup.setSelected(true);
-        peopleInGroup.setOnClickListener(view -> toggleContactsView());
 
-        showPhoneContactsButton.setOnClickListener(view -> {
-            $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
-                if (granted) {
-                    $(GroupContactsHandler.class).showContactsForQuery();
-                    showPhoneContactsButton.setVisibility(View.GONE);
-                }
+        Group group = $(GroupHandler.class).getGroup();
+
+        if (group.isPublic()) {
+            findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
+            peopleInGroup.setVisibility(View.GONE);
+        } else {
+            $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts);
+            peopleInGroup.setSelected(true);
+            peopleInGroup.setOnClickListener(view -> toggleContactsView());
+
+            showPhoneContactsButton.setOnClickListener(view -> {
+                $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
+                    if (granted) {
+                        $(GroupContactsHandler.class).showContactsForQuery();
+                        showPhoneContactsButton.setVisibility(View.GONE);
+                    }
+                });
             });
-        });
+        }
     }
 
     @Override
