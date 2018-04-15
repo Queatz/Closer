@@ -17,48 +17,76 @@ public class LocationHandler extends PoolMember {
 
     @Override
     protected void onPoolInit() {
-        fusedLocationProvider = LocationServices.getFusedLocationProviderClient(
-                $(ActivityHandler.class).getActivity()
-        );
+        if ($(ActivityHandler.class).isPresent()) {
+            fusedLocationProvider = LocationServices.getFusedLocationProviderClient(
+                    $(ActivityHandler.class).getActivity()
+            );
+        } else {
+            fusedLocationProvider = LocationServices.getFusedLocationProviderClient(
+                    $(ApplicationHandler.class).getApp()
+            );
+        }
+    }
+
+    public void getCurrentLocation(LocationCallback callback) {
+        getCurrentLocation(callback, null);
     }
 
     @SuppressLint("MissingPermission")
-    public void getCurrentLocation(LocationCallback callback) {
+    public void getCurrentLocation(LocationCallback callback, LocationUnavailableCallback locationUnavailableCallback) {
         $(PermissionHandler.class)
                 .check(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 .when(granted -> {
                     if (granted) {
                         fusedLocationProvider.getLastLocation().addOnCompleteListener(task -> {
-                            if (!task.isSuccessful() ||task.getResult() == null) {
-                                waitForLocation(callback);
+                            if (!task.isSuccessful() || task.getResult() == null) {
+                                waitForLocation(callback, locationUnavailableCallback);
                                 return;
                             }
 
                             callback.onLocationFound(task.getResult());
                         });
+                    } else if (locationUnavailableCallback != null) {
+                        locationUnavailableCallback.onLocationUnavailable();
                     }
                 });
     }
 
     @SuppressLint("MissingPermission")
-    private void waitForLocation(LocationCallback callback) {
+    private void waitForLocation(LocationCallback callback, LocationUnavailableCallback locationUnavailableCallback) {
         LocationRequest locationRequest = LocationRequest.create()
                 .setExpirationDuration(10000)
                 .setNumUpdates(1);
 
-        fusedLocationProvider.requestLocationUpdates(locationRequest, new com.google.android.gms.location.LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult.getLastLocation() == null) {
-                    return;
+        fusedLocationProvider.getLocationAvailability().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && !task.getResult().isLocationAvailable()) {
+                if (locationUnavailableCallback != null) {
+                    locationUnavailableCallback.onLocationUnavailable();
                 }
+            } else {
+                fusedLocationProvider.requestLocationUpdates(locationRequest, new com.google.android.gms.location.LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult.getLastLocation() == null) {
+                            if (locationUnavailableCallback != null) {
+                                locationUnavailableCallback.onLocationUnavailable();
+                            }
 
-                callback.onLocationFound(locationResult.getLastLocation());
+                            return;
+                        }
+
+                        callback.onLocationFound(locationResult.getLastLocation());
+                    }
+                }, $(ActivityHandler.class).getActivity().getMainLooper());
             }
-        }, $(ActivityHandler.class).getActivity().getMainLooper());
+        });
     }
 
     public interface LocationCallback {
         void onLocationFound(Location location);
+    }
+
+    public interface LocationUnavailableCallback {
+        void onLocationUnavailable();
     }
 }

@@ -28,6 +28,7 @@ public class GroupMessageSuggestionsHandler extends PoolMember {
     public boolean shareSuggestion(@NonNull Suggestion suggestion, @NonNull Group group) {
         GroupContact groupContact = getGroupContactForGroup(group);
 
+        // todo remove:
         if (groupContact == null) {
             return false;
         }

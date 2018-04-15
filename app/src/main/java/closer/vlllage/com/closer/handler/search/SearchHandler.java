@@ -85,11 +85,6 @@ public class SearchHandler extends PoolMember {
         }
 
         $(LocationHandler.class).getCurrentLocation(location -> {
-            if (location == null) {
-                $(DefaultAlerts.class).thatDidntWork($(ResourcesHandler.class).getResources().getString(R.string.location_is_needed));
-                return;
-            }
-
             $(AlertHandler.class).make()
                     .setTitle($(ResourcesHandler.class).getResources().getString(R.string.group_as_public, groupName))
                     .setLayoutResId(R.layout.create_public_group_modal)
@@ -106,7 +101,7 @@ public class SearchHandler extends PoolMember {
                     })
                     .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_public_group))
                     .show();
-        });
+        }, () -> $(DefaultAlerts.class).thatDidntWork($(ResourcesHandler.class).getResources().getString(R.string.location_is_needed)));
     }
 
     private void showGroupsForQuery(String searchQuery) {

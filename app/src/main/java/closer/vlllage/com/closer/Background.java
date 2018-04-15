@@ -39,7 +39,9 @@ public class Background extends BroadcastReceiver {
                 app.$(ApiHandler.class).setAuthorization(app.$(AccountHandler.class).getPhone());
 
                 app.$(DisposableHandler.class).add(app.$(ApiHandler.class).sendMessage(phone, replyMessage.toString()).subscribe(successResult -> {
-                    if (!successResult.success) {
+                    if (successResult.success) {
+                        Toast.makeText(app, R.string.message_sent, Toast.LENGTH_SHORT).show();
+                    } else {
                         Toast.makeText(app, R.string.message_not_sent, Toast.LENGTH_SHORT).show();
                     }
                 }, error -> {

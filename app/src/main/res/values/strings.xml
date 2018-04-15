@@ -109,5 +109,6 @@
     <string name="open">Open</string>
     <string name="tell_more_about_group">This group is about…</string>
     <string name="group_as_public">%1$s (Public group)</string>
-    <string name="location_is_needed">Your location is needed to create public groups.</string>
+    <string name="location_is_needed">Your phone\'s current location is needed to create public groups.</string>
+    <string name="message_sent">Message sent</string>
 </resources>
