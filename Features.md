@@ -15,13 +15,6 @@
 
 [ ] Fully async group ID in Group Activity
 
-[ ] Tests
-    [ ] Create public group
-    [ ] Get public groups
-    [ ] Get messages for public groups
-    [ ] Suggestions are local
-    [ ] Active phones are local
-
 # Feature: Mute groups
 
 [ ] POST /group?mute=true/false
@@ -51,8 +44,7 @@
  [ ] Long-press add photo to map
  [b] All messages from person go to one notification box
  [ ] Profile -> Settings, Suggestions, More
- 
- 
+
 # Enhancements
 
  [ ] HTTPS
