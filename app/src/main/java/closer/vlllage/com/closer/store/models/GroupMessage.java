@@ -6,27 +6,27 @@ import io.objectbox.annotation.Entity;
 
 @Entity
 public class GroupMessage extends BaseObject {
-    private String groupId;
-    private String contactId;
+    private String to;
+    private String from;
     private Date time;
     private String text;
     private String attachment;
 
-    public String getGroupId() {
-        return groupId;
+    public String getTo() {
+        return to;
     }
 
-    public GroupMessage setGroupId(String groupId) {
-        this.groupId = groupId;
+    public GroupMessage setTo(String to) {
+        this.to = to;
         return this;
     }
 
-    public String getContactId() {
-        return contactId;
+    public String getFrom() {
+        return from;
     }
 
-    public GroupMessage setContactId(String contactId) {
-        this.contactId = contactId;
+    public GroupMessage setFrom(String from) {
+        this.from = from;
         return this;
     }
 

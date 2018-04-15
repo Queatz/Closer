@@ -109,7 +109,7 @@ public class SyncHandler extends PoolMember {
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
 
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).sendGroupMessage(
-                groupMessage.getGroupId(),
+                groupMessage.getTo(),
                 groupMessage.getText(),
                 $(HttpEncode.class).encode(groupMessage.getAttachment())
         ).subscribe(createResult -> {

@@ -86,7 +86,7 @@ public class GroupMessagesHandler extends PoolMember {
         }
 
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
-                .equal(GroupMessage_.groupId, group.getId());
+                .equal(GroupMessage_.to, group.getId());
 
         if (!group.isPublic()) {
             queryBuilder.greater(GroupMessage_.time, twelveHoursAgo);
@@ -123,12 +123,8 @@ public class GroupMessagesHandler extends PoolMember {
 
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setText(text);
-        groupMessage.setGroupId($(GroupHandler.class).getGroup().getId());
-
-        if ($(GroupHandler.class).getGroupContact() != null) {
-            groupMessage.setContactId($(GroupHandler.class).getGroupContact().getId());
-        }
-
+        groupMessage.setTo($(GroupHandler.class).getGroup().getId());
+        groupMessage.setFrom($(PersistenceHandler.class).getPhoneId());
         groupMessage.setTime(new Date());
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
         $(SyncHandler.class).sync(groupMessage);

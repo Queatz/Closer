@@ -42,6 +42,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="-8dp"
         android:layout_marginBottom="4dp"
+        android:layout_weight="1"
         android:elevation="4dp"
         android:rotation="45"
         android:background="@drawable/map_bubble_knob_blue_light"/>

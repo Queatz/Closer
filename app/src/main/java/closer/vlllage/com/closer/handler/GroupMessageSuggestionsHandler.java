@@ -26,26 +26,19 @@ public class GroupMessageSuggestionsHandler extends PoolMember {
     }
 
     public boolean shareSuggestion(@NonNull Suggestion suggestion, @NonNull Group group) {
-        GroupContact groupContact = getGroupContactForGroup(group);
-
-        // todo remove:
-        if (groupContact == null) {
-            return false;
-        }
-
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("suggestion", $(JsonHandler.class).toJsonTree(suggestion));
 
-        saveMessageWithAttachment(groupContact, jsonObject);
+        saveMessageWithAttachment(group, jsonObject);
 
         return true;
     }
 
-    private void saveMessageWithAttachment(GroupContact groupContact, JsonObject jsonObject) {
+    private void saveMessageWithAttachment(Group group, JsonObject jsonObject) {
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setAttachment($(JsonHandler.class).to(jsonObject));
-        groupMessage.setGroupId(groupContact.getGroupId());
-        groupMessage.setContactId(groupContact.getId());
+        groupMessage.setTo(group.getId());
+        groupMessage.setFrom($(PersistenceHandler.class).getPhoneId());
         groupMessage.setTime(new Date());
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
         $(SyncHandler.class).sync(groupMessage);

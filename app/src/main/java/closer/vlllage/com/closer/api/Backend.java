@@ -4,6 +4,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
+import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.StateResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
@@ -76,6 +77,9 @@ public interface Backend {
 
     @POST("group")
     Observable<CreateResult> createPublicGroup(@Query("name") String groupName, @Query("about") String about, @Query("geo") String geo, @Query("public") boolean isPublic);
+
+    @GET("group/{id}")
+    Observable<GroupResult> getGroup(@Path("id") String groupId);
 
     @POST("group/{id}")
     Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("name") String name, @Query("invite") String phoneNumber);

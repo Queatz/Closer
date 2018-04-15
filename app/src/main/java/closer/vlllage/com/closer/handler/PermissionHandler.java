@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -46,10 +47,10 @@ public class PermissionHandler extends PoolMember {
     }
 
     public boolean has(String... permissions) {
-        Activity activity = $(ActivityHandler.class).getActivity();
+        Context context = $(ApplicationHandler.class).getApp();
 
         for (String permission : permissions) {
-            if (ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
         }

@@ -1,21 +1,19 @@
 
-[ ] Double check that phone statuses are allowed to be oerwritten clientside
+#
+# Advertise Closer in SF and NY and LA and CO (NOT Austin!! :P)                  <-- !!
+#
 
-# Advertise Closer in SF and NY and LA and CO (NOT Austin!! :P)
-
-[ ] Locallized screenshots
+[ ] Localized screenshots (NY, LA, SF)
 [ ] "Pulses" of invites so masses of people join at the exact same time
     [ ] Limited join times (can only join on Sturday at 2pm!)
 [ ] Get location queries implemented
-    [X] Suggestions (app, backend)
-        [ ] (local) Expanding bounding box query helper
-    [X] Public groups (backend)
-    [X] Active phones (backend)
+    [ ] (local) Expanding bounding box query helper for suggestions
 [ ] Get Async push notification queues working (copy from Vlllage)
+[ ] HTTPS
 
 # Public Groups
 
-[ ] Share suggestion / location with public group
+[ ] Fully async group ID in Group Activity
 
 [ ] Tests
     [ ] Create public group

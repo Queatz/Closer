@@ -23,9 +23,9 @@ import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
-import closer.vlllage.com.closer.store.models.GroupContact;
-import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupMessage;
+import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.store.models.Suggestion;
 
 import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
@@ -80,17 +80,14 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     holder.time.setVisibility(View.VISIBLE);
                     holder.time.setText(getTimeString(groupMessage.getTime()));
 
-                    GroupContact groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
-                            .equal(GroupContact_.id, groupMessage.getContactId())
-                            .build()
-                            .findFirst();
+                    Phone phone = getPhone(groupMessage.getFrom());
 
                     String contactName;
 
-                    if (groupContact == null || groupContact.getContactName() == null) {
+                    if (phone == null || phone.getName() == null) {
                         contactName = $(ResourcesHandler.class).getResources().getString(R.string.unknown);
                     } else {
-                        contactName = groupContact.getContactName();
+                        contactName = phone.getName();
                     }
 
                     if (suggestionHasNoName) {
@@ -123,7 +120,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         boolean previousMessageIsSameContact = position + 1 < getItemCount() - 1 &&
                 groupMessages.get(position + 1).getAttachment() == null &&
-                groupMessages.get(position + 1).getContactId().equals(groupMessage.getContactId());
+                groupMessages.get(position + 1).getFrom() != null &&
+                groupMessages.get(position + 1).getFrom().equals(groupMessage.getFrom());
 
         holder.action.setVisibility(View.GONE);
         holder.name.setVisibility(previousMessageIsSameContact ? View.GONE : View.VISIBLE);
@@ -133,19 +131,16 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         holder.time.setText(getTimeString(groupMessage.getTime()));
 
-        GroupContact groupContact = null;
+        Phone phone = null;
 
-        if (groupMessage.getContactId() != null) {
-            groupContact = $(StoreHandler.class).getStore().box(GroupContact.class).query()
-                    .equal(GroupContact_.id, groupMessage.getContactId())
-                    .build()
-                    .findFirst();
+        if (groupMessage.getFrom() != null) {
+            phone = getPhone(groupMessage.getFrom());
         }
 
-        if (groupContact == null || groupContact.getContactName() == null) {
+        if (phone == null || phone.getName() == null) {
             holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
         } else {
-            holder.name.setText(groupContact.getContactName());
+            holder.name.setText(phone.getName());
         }
 
         holder.message.setText(groupMessage.getText());
@@ -157,6 +152,13 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                 onMessageClickListener.onMessageClick(groupMessages.get(position));
             }
         });
+    }
+
+    private Phone getPhone(String phoneId) {
+        return $(StoreHandler.class).getStore().box(Phone.class).query()
+                .equal(Phone_.id, phoneId)
+                .build()
+                .findFirst();
     }
 
     private String getTimeString(Date date) {

@@ -14,6 +14,7 @@ import closer.vlllage.com.closer.api.models.GroupInviteResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.ModelResult;
+import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.BaseObject;
@@ -25,6 +26,8 @@ import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Group_;
+import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 import io.objectbox.Box;
 import io.objectbox.Property;
 import io.objectbox.query.QueryBuilder;
@@ -40,7 +43,7 @@ public class RefreshHandler extends PoolMember {
 
     public void refreshMyMessages() {
         $(LocationHandler.class).getCurrentLocation(location -> {
-            $(DisposableHandler.class).add($(ApiHandler.class).myMessages(location == null ? null : new LatLng(
+            $(DisposableHandler.class).add($(ApiHandler.class).myMessages(new LatLng(
                     location.getLatitude(),
                     location.getLongitude()
             )).subscribe(this::handleMessages, error -> $(DefaultAlerts.class).syncError()));
@@ -49,18 +52,27 @@ public class RefreshHandler extends PoolMember {
 
     public void refreshMyGroups() {
         $(LocationHandler.class).getCurrentLocation(location -> {
-            $(DisposableHandler.class).add($(ApiHandler.class).myGroups(location == null ? null : new LatLng(
+            $(DisposableHandler.class).add($(ApiHandler.class).myGroups(new LatLng(
                     location.getLatitude(),
                     location.getLongitude()
             )).subscribe(stateResult -> {
-                handleFullListResult(stateResult.groups, Group.class, Group_.id, this::createGroupFromGroupResult, this::updateGroupFromGroupResult);
-                handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, this::transformGroupInviteResult, null);
+                handleFullListResult(stateResult.groups, Group.class, Group_.id, true, this::createGroupFromGroupResult, this::updateGroupFromGroupResult);
+                handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, true, this::transformGroupInviteResult, null);
                 handleGroupContacts(stateResult.groupContacts);
             }, error -> $(DefaultAlerts.class).syncError()));
         });
     }
 
     private void handleMessages(final List<GroupMessageResult> messages) {
+        List<PhoneResult> phoneResults = new ArrayList<>();
+        for (GroupMessageResult groupMessageResult : messages) {
+            if (groupMessageResult.phone != null) {
+                phoneResults.add(groupMessageResult.phone);
+            }
+        }
+
+        handlePhones(phoneResults);
+
         QueryBuilder<GroupMessage> query = $(StoreHandler.class).getStore().box(GroupMessage.class).query();
 
         boolean isFirst = true;
@@ -86,23 +98,16 @@ public class RefreshHandler extends PoolMember {
                     for (GroupMessageResult message : messages) {
                         if (!existingObjsMap.containsKey(message.id)) {
                             groupMessageBox.put(transformGroupMessageResult(message));
-                        } else {
-                            GroupMessage groupMessage = existingObjsMap.get(message.id);
-
-                            // For public group messages
-                            if (groupMessage.getContactId() == null || !groupMessage.getContactId().equals(message.from)) {
-                                groupMessage.setContactId(message.from);
-                                groupMessageBox.put(groupMessage);
-
-                            }
                         }
                     }
                 });
     }
 
     private <T extends BaseObject, R extends ModelResult> void handleFullListResult(
-            List<R> results, Class<T> clazz,
+            List<R> results,
+            Class<T> clazz,
             Property idProperty,
+            boolean deleteLocalNotReturnedFromServer,
             CreateTransformer<T, R> createTransformer,
             UpdateTransformer<T, R> updateTransformer) {
         Set<String> serverIdList = new HashSet<>();
@@ -127,15 +132,25 @@ public class RefreshHandler extends PoolMember {
             }
 
             $(StoreHandler.class).getStore().box(clazz).put(objsToAdd);
-            $(StoreHandler.class).removeAllExcept(clazz, idProperty, serverIdList);
+
+            if (deleteLocalNotReturnedFromServer) {
+                $(StoreHandler.class).removeAllExcept(clazz, idProperty, serverIdList);
+            }
         });
     }
 
     private void handleGroupContacts(List<GroupContactResult> groupContacts) {
         Set<String> allMyGroupContactIds = new HashSet<>();
+        List<PhoneResult> phoneResults = new ArrayList<>();
         for (GroupContactResult groupContactResult : groupContacts) {
             allMyGroupContactIds.add(groupContactResult.id);
+
+            if (groupContactResult.phone != null) {
+                phoneResults.add(groupContactResult.phone);
+            }
         }
+
+        handlePhones(phoneResults);
 
         $(StoreHandler.class).findAll(GroupContact.class, GroupContact_.id, allMyGroupContactIds).observer(existingGroupContacts -> {
             Map<String, GroupContact> existingGroupContactsMap = new HashMap<>();
@@ -159,6 +174,29 @@ public class RefreshHandler extends PoolMember {
             $(StoreHandler.class).getStore().box(GroupContact.class).put(groupsToAdd);
             $(StoreHandler.class).removeAllExcept(GroupContact.class, GroupContact_.id, allMyGroupContactIds);
         });
+    }
+
+    private void handlePhones(List<PhoneResult> phoneResults) {
+        handleFullListResult(phoneResults, Phone.class, Phone_.id, false, this::createPhoneFromResult, this::updatePhoneFromResult);
+    }
+
+    private Phone createPhoneFromResult(PhoneResult phoneResult) {
+        return updatePhoneFromResult(new Phone(), phoneResult);
+    }
+
+    private Phone updatePhoneFromResult(Phone phone, PhoneResult phoneResult) {
+        phone.setId(phoneResult.id);
+        phone.setUpdated(phoneResult.updated);
+
+        if (phoneResult.geo != null && phoneResult.geo.size() == 2) {
+            phone.setLatitude(phoneResult.geo.get(0));
+            phone.setLongitude(phoneResult.geo.get(1));
+        }
+
+        phone.setName(phoneResult.name);
+        phone.setStatus(phoneResult.status);
+
+        return phone;
     }
 
     private Group createGroupFromGroupResult(GroupResult groupResult) {
@@ -201,8 +239,8 @@ public class RefreshHandler extends PoolMember {
     private GroupMessage transformGroupMessageResult(GroupMessageResult result) {
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setId(result.id);
-        groupMessage.setContactId(result.from);
-        groupMessage.setGroupId(result.to);
+        groupMessage.setFrom(result.from);
+        groupMessage.setTo(result.to);
         groupMessage.setText(result.text);
         groupMessage.setTime(result.created);
         groupMessage.setUpdated(result.updated);

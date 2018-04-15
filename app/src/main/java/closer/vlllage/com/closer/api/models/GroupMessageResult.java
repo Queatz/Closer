@@ -8,4 +8,5 @@ public class GroupMessageResult extends ModelResult {
     public String text;
     public String attachment;
     public Date created;
+    public PhoneResult phone;
 }

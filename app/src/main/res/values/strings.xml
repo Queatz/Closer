@@ -93,15 +93,15 @@
     <string name="enable_location_permission">Enable location permission</string>
     <string name="open_settings">Open settings</string>
     <string name="enable_location_permission_rationale">Open your system settings for Closer, tap on Permissions, and then turn on Location.</string>
-    <string name="show_help">🥂 Show help</string>
+    <string name="show_help">Show help</string>
     <string name="help">Help</string>
     <string name="help_message">Thanks for using Closer!\n\n
         There are many apps out there that help you find new friends.
         While this app does the same, Closer is all about getting closer to your current friends.\n\n
-        💖 <b>Verify your number</b> to be automatically added to any groups you\'ve already been invited to.\n\n
-        🏘 <b>Add your own groups,</b> invite your friends, and make stuff happen.\n\n
-        🌞 <b>Groups are small,</b> just for you and a few friends.  Feel free to search for public groups as well, which appear in green.\n\n
-        🐅 <b>To leave a group,</b> simply press and hold on the group\'s name. You can do the same with this help bubble.</string>
+        <b>Verify your number</b> to be automatically added to any groups you\'ve already been invited to.\n\n
+        <b>Add your own groups,</b> invite your friends, and make stuff happen.\n\n
+        <b>Groups are small,</b> just for you and a few friends.  Feel free to search for public groups as well, which appear in green.\n\n
+        <b>To leave a group,</b> simply press and hold on the group\'s name. You can do the same with this help bubble.</string>
     <string name="you_hid_the_help_bubble">Congrats, you hid the help bubble!</string>
     <string name="search_public_groups">Public groups</string>
     <string name="public_groups">Public groups</string>
