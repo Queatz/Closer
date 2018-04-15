@@ -15,6 +15,8 @@
 
 # Public Groups
 
+[ ] Share suggestion / location with public group
+
 [ ] Tests
     [ ] Create public group
     [ ] Get public groups

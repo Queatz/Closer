@@ -109,6 +109,10 @@ public class GroupMessagesHandler extends PoolMember {
             return false;
         }
 
+        if ($(GroupHandler.class).getGroup() == null) {
+            return false;
+        }
+
         if ($(GroupHandler.class).getGroupContact() == null) {
             if ($(GroupHandler.class).getGroup().isPublic()) {
                 // todo: create groupcontact locally and sync if public

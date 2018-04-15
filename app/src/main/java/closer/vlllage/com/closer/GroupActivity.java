@@ -12,6 +12,7 @@ import android.widget.TextView;
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.ApplicationHandler;
+import closer.vlllage.com.closer.handler.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.TimerHandler;
@@ -62,11 +63,13 @@ public class GroupActivity extends CircularRevealActivity {
         }
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton);
+        $(MiniWindowHandler.class).attach(findViewById(R.id.groupName), findViewById(R.id.backgroundColor));
 
         Group group = $(GroupHandler.class).getGroup();
 
         if (group == null) {
-            // todo: load group, then continue
+            // todo: load group, then continue (async)
+            // todo: Check local, check remote, then return
             return;
         }
 

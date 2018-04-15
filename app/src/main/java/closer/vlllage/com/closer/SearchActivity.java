@@ -2,9 +2,11 @@ package closer.vlllage.com.closer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.EditText;
 
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
+import closer.vlllage.com.closer.handler.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.search.SearchHandler;
 
 public class SearchActivity extends CircularRevealActivity {
@@ -18,10 +20,16 @@ public class SearchActivity extends CircularRevealActivity {
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
+        EditText searchGroups = findViewById(R.id.searchGroups);
+
         $(SearchHandler.class).attach(
-                findViewById(R.id.searchGroups),
+                searchGroups,
                 findViewById(R.id.groupsRecyclerView)
         );
+
+        $(MiniWindowHandler.class).attach(findViewById(R.id.titleText), findViewById(R.id.backgroundColor));
+
+        findViewById(R.id.closeButton).requestFocus();
     }
 
     @Override

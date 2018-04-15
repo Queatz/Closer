@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="pad">8dp</dimen>
+    <dimen name="miniWindowHeight">350dp</dimen>
+    <dimen name="miniWindowTopMargin">84dp</dimen>
 </resources>

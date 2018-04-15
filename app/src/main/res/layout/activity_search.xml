@@ -8,14 +8,15 @@
     android:fitsSystemWindows="true">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/backgroundColor"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="@dimen/miniWindowTopMargin"
         android:background="@color/green"
         android:clickable="true"
         android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_max="350dp"
+        app:layout_constraintHeight_max="@dimen/miniWindowHeight"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,6 +49,9 @@
             android:contentDescription="@string/close_messages"
             android:src="@drawable/ic_expand_more_black_24dp"
             android:tint="@android:color/white"
+            android:focusedByDefault="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
