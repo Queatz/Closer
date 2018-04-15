@@ -33,6 +33,7 @@ public class SuggestionHandler extends PoolMember {
 
         getRandomSuggestions(mapCenter).observer(suggestions -> {
             if (suggestions.isEmpty()) {
+                $(ToastHandler.class).show(R.string.no_suggestions_here);
                 return;
             }
 
@@ -79,7 +80,10 @@ public class SuggestionHandler extends PoolMember {
     }
 
     private SubscriptionBuilder<List<Suggestion>> getRandomSuggestions(LatLng near) {
-        return $(StoreHandler.class).getStore().box(Suggestion.class).query().build().subscribe().single().on(AndroidScheduler.mainThread());
+        return $(StoreHandler.class).getStore().box(Suggestion.class).query()
+                .between(Suggestion_.latitude, near.latitude - .5d, near.latitude + .5d)
+                .between(Suggestion_.longitude, near.longitude - .5d, near.longitude + .5d)
+                .build().subscribe().single().on(AndroidScheduler.mainThread());
     }
 
     public void clearSuggestions() {

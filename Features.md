@@ -11,9 +11,10 @@
 [ ] Get Async push notification queues working (copy from Vlllage)
 [ ] HTTPS
 
-# Public Groups
+# Coolness
 
-[ ] Fully async group ID in Group Activity
+ [ ] NFC tags to open chats about a location
+    [ ] Chat about this tree, download Closer and tap here with NFC enabled.
 
 # Feature: Mute groups
 
@@ -35,6 +36,7 @@
 
 # Features
 
+ [ ] Fully async group ID in Group Activity
  [o] Search for places on the map (green button)
 
  [o] Single emoji floats many of them over your screen
