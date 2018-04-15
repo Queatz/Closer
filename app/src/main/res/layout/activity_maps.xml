@@ -48,6 +48,15 @@
 
             <include layout="@layout/my_groups_layout"/>
 
+            <ImageButton
+                android:id="@+id/showPublicGroups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/clickable_green_light_fill"
+                android:elevation="4dp"
+                android:src="@drawable/ic_expand_less_black_24dp"
+                android:tint="@android:color/white"/>
+
         </LinearLayout>
     </RelativeLayout>
 

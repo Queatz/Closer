@@ -1,4 +1,8 @@
 
+ [ ] Create a check-in base
+ [ ] Check-in with photos
+
+
 #
 # Advertise Closer in SF and NY and LA and CO (NOT Austin!! :P)                  <-- !!
 #
@@ -16,6 +20,9 @@
  [ ] NFC tags to open chats about a location
     [ ] Chat about this tree, download Closer and tap here with NFC enabled.
 
+ [ ] Photos on map (when zoomed in)
+ [ ] Camera icon appears on map to add photo (when zoomed in)
+
 # Feature: Mute groups
 
 [ ] POST /group?mute=true/false
@@ -26,7 +33,6 @@
 [ ] App
     [ ] Mute group
         [ ] Bell/slashed-bell icon top right
-
 
 # Presence
 
@@ -49,8 +55,8 @@
 
 # Enhancements
 
- [ ] HTTPS
- [ ] Some messages are duplicated
+ [.] HTTPS
+ [.] Some messages are duplicated
  [ ] Profile icon in status bar
  [.] Randomize message hint
  [ ] Don't show timestamps that are the same as the previous message
@@ -64,7 +70,6 @@
  [ ] Handle permanently denied contacts permissions
     [ ] Dialog telling to go to settings
  [ ] Only allow app to talk to backend (signature header)
- [ ] Bubble arrow is cut off when in landscape mode
 
 # More
 

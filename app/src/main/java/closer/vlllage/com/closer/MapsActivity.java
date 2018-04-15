@@ -26,6 +26,7 @@ import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
+import closer.vlllage.com.closer.handler.SearchActivityHandler;
 import closer.vlllage.com.closer.handler.SetNameHandler;
 import closer.vlllage.com.closer.handler.ShareHandler;
 import closer.vlllage.com.closer.handler.StatusLayoutHandler;
@@ -163,6 +164,8 @@ public class MapsActivity extends PoolActivity {
         $(SuggestionHandler.class).attach(findViewById(R.id.actionButton));
 
         $(MyGroupsLayoutHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
+
+        findViewById(R.id.showPublicGroups).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
     }
 
     @Override
