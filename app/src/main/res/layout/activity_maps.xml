@@ -51,11 +51,11 @@
             <ImageButton
                 android:id="@+id/showPublicGroups"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/clickable_green_light_fill"
+                android:layout_height="32dp"
                 android:elevation="4dp"
-                android:src="@drawable/ic_expand_less_black_24dp"
-                android:tint="@android:color/white"/>
+                android:background="@android:color/transparent"
+                android:src="@drawable/grass"
+                android:scaleType="centerCrop"/>
 
         </LinearLayout>
     </RelativeLayout>

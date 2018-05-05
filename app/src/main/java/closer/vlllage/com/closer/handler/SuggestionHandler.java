@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,9 +30,7 @@ public class SuggestionHandler extends PoolMember {
 
         Set<MapBubble> nextBubbles = new HashSet<>();
 
-        LatLng mapCenter = $(MapHandler.class).getCenter();
-
-        getRandomSuggestions(mapCenter).observer(suggestions -> {
+        getRandomSuggestions($(MapHandler.class).getVisibleRegion().latLngBounds).observer(suggestions -> {
             if (suggestions.isEmpty()) {
                 $(ToastHandler.class).show(R.string.no_suggestions_here);
                 return;
@@ -79,10 +78,10 @@ public class SuggestionHandler extends PoolMember {
         return suggestionBubble;
     }
 
-    private SubscriptionBuilder<List<Suggestion>> getRandomSuggestions(LatLng near) {
+    private SubscriptionBuilder<List<Suggestion>> getRandomSuggestions(LatLngBounds bounds) {
         return $(StoreHandler.class).getStore().box(Suggestion.class).query()
-                .between(Suggestion_.latitude, near.latitude - .5d, near.latitude + .5d)
-                .between(Suggestion_.longitude, near.longitude - .5d, near.longitude + .5d)
+                .between(Suggestion_.latitude, bounds.southwest.latitude, bounds.northeast.latitude)
+                .between(Suggestion_.longitude, bounds.southwest.longitude, bounds.northeast.longitude)
                 .build().subscribe().single().on(AndroidScheduler.mainThread());
     }
 

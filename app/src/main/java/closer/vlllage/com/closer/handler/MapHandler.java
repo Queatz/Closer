@@ -13,6 +13,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.VisibleRegion;
 
 import java.util.Collection;
 
@@ -133,7 +134,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         CameraPosition cameraPosition = CameraPosition.builder()
                 .target(latLng)
                 .zoom(DEFAULT_ZOOM)
-                .tilt(45)
+                .tilt(60)
                 .build();
         map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
@@ -144,6 +145,14 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         }
 
         return map.getCameraPosition().target;
+    }
+
+    public VisibleRegion getVisibleRegion() {
+        if (map == null) {
+            return null;
+        }
+
+        return map.getProjection().getVisibleRegion();
     }
 
     public void centerOn(Collection<MapBubble> mapBubbles) {
