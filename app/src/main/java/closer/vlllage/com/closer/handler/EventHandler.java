@@ -70,14 +70,11 @@ public class EventHandler extends PoolMember {
                     endsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
                             viewHolder.endsAtTimePicker.getCurrentHour(), viewHolder.endsAtTimePicker.getCurrentMinute(), 0);
 
-                    startsAt.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    endsAt.setTimeZone(TimeZone.getTimeZone("UTC"));
-
                     createNewEvent(latLng,
                             viewHolder.eventName.getText().toString(),
                             viewHolder.eventPrice.getText().toString(),
-                            endsAt.getTime(),
-                            startsAt.getTime());
+                            startsAt.getTime(),
+                            endsAt.getTime());
                 })
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.post_event))
                 .show();

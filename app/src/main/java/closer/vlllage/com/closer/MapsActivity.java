@@ -9,6 +9,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.Date;
+
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
@@ -38,7 +40,11 @@ import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.pool.PoolActivity;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Suggestion;
+import io.objectbox.android.AndroidScheduler;
 
 public class MapsActivity extends PoolActivity {
 
@@ -172,6 +178,16 @@ public class MapsActivity extends PoolActivity {
         $(SuggestionHandler.class).attach(findViewById(R.id.actionButton));
 
         $(MyGroupsLayoutHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
+
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Event.class).query()
+                    .greater(Event_.endsAt, new Date())
+                .build().subscribe().on(AndroidScheduler.mainThread())
+                .observer(events -> {
+                    $(BubbleHandler.class).remove(mapBubble -> mapBubble.getType() == BubbleType.EVENT);
+                    for (Event event : events) {
+                        $(BubbleHandler.class).add($(EventHandler.class).eventBubbleFrom(event));
+                    }
+                }));
 
         findViewById(R.id.showPublicGroups).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
     }

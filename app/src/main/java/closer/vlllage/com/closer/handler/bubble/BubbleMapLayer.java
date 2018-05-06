@@ -181,6 +181,10 @@ public class BubbleMapLayer {
         }
 
         view.post(() -> {
+            if (mapBubble.getView() == null) {
+                return;
+            }
+
             ViewPropertyAnimator animator = mapBubble.getView()
                     .animate()
                     .scaleX(0)

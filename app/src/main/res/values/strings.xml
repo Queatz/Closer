@@ -120,4 +120,6 @@
     <string name="ends_at">Ends at</string>
     <string name="starts_at">Starts at</string>
     <string name="view">View</string>
+    <string name="event_start_end_time">%1$s - %2$s %3$s</string>
+    <string name="cancelled">Cancelled</string>
 </resources>

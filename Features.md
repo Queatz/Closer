@@ -12,23 +12,25 @@ POST EVENT
 ==========
 
 App:
- [ ] Load events on map move (RefreshHandler)
- [.] Tap on event bubble
-    [.] Share event -> Share with...
-    [.] Open event chat
-        [ ] Show HOST next to the event host in messages
+ [.] Tap on event bubble (opens event chat)
+    [ ] Title is event name, full text
+    [ ] Red background
+    [.] Share button -> Share with...
+        [ ] Share event message type
+        [ ] Show groups, same as when in bubble
+    [ ] Show HOST next to the event host in messages
     [.] If creator is me: Cancel this event option
-       [ ] Show event as cancelled on the map
-
- [ ] Push events briefing every morning (8:30am)
-    [ ] JobScheduler check events at specified time
- [ ] Red arrows pointing towards events off-screen (2 mi)
 
 Backend:
  [.] POST /event?name=&geo=&about=&startsAt=&endsAt=
  [.] GET /event?geo=l,l (20 nearest, incl cancelled)
  [.] Auto-create event group "event:1456"
  [ ] POST /event/1234?cancel=true
+
+Daily notification:
+ [ ] Push notification events briefing every morning (8:30am)
+    [ ] JobScheduler check events at specified time
+ [ ] Red arrows pointing towards events off-screen (2 mi)
 
  [ ] Release today
 
@@ -38,20 +40,26 @@ Backend:
 
 ### P0 ###
 
+ [o] P0 (Polish) Set map margin top no status bar
+ [o] P0 (Polish) Fully async group ID in Group Activity (gray before loaded, "loading..." title)
+ [o] P0 (Polish) Use suggested name on number verified
+ [ ] P0 (Polish) Use "No name" always in place of "Unknown" or "null"
+ [o] P0 (Polish) Hide inviting when searching contacts
+ [o] P0 (Polish) Don't allow direct messages if active=false ("X has already left the map")
+ [ ] P0 (Polish) Settings bubble at end pink [Set event notification time]
+ [ ] P0 (Polish) Settings show privacy policy (/static/privacy)
+ [o] P0 (Polish) Randomize message hint
+ 
 ### P1 ###
 
- [o] P0 App Feedback bubble
- [o] P1 (Polish) Set map margin top no status bar
- [o] P1 (Polish) Use suggested name on number verified
- [o] P1 (Polish) Hide inviting when searching contacts
- [ ] P1 (Polish) Share photos (in chats)
+ [o] P1 (Feature) App Feedback bubble
+    [ ] Bubble
+    [ ] Endpoint
+    [ ] Email
  [ ] P1 (Polish) Don't reactivate bubble when using push notification
- [ ] P1 (Polish) Use "No name" always in place of "Unknown" or "null"
- [o] P1 (Polish) Fully async group ID in Group Activity (gray before loaded, "loading..." title)
- [o] P1 (Polish) HTTPS
  [o] P1 (Polish) Some messages/groups are duplicated
- [o] P1 (Polish) Randomize message hint
- [o] P1 (Polish) Don't allow direct messages if active=false ("X has already left the map")
+ [ ] P1 (Polish) Handle permanently denied contacts permissions (Dialog telling to go to settings)
+ [o] P1 (Polish) HTTPS
  [ ] P1 (Polish) Don't show timestamps that are the same as the previous message
  [ ] P1 (Polish) Show no recent activity message
  [ ] P1 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-SIGNATURE
@@ -59,9 +67,7 @@ Backend:
  [ ] P1 (Polish) Name null checks backend
  [o] P1 (Polish) Show "Bun is typing..."
  [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
- [ ] P1 (Polish) Handle permanently denied contacts permissions (Dialog telling to go to settings)
- [ ] P1 (Polish) Settings bubble at end pink [Set event notification time]
- [ ] P1 (Polish) Settings show privacy policy (/static/privacy)
+ [ ] P1 (Polish) Share photos (in chats)
 
 ### P2 ###
 
