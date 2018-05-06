@@ -6,98 +6,97 @@
  [ ] 
  [ ] 
 
-# Scratchpad
+# Potential Directions
 
- [ ] (Profile) Intro app just name face hello text / Overlord
+POST EVENT
+==========
 
- [ ] (Event) (Learn) Learn Something Together / entrances to journeys
- [ ] (Event) (Learn) Run classes for programming weekend slime quest, village, etc
- [ ] (Event) (Pay) Host themed house parties / get 10 / Free / $10 / $20
- [ ] (Event) (Pay) Become a member purple bubble / get more
- [ ] (Event) (Pay) Get paid to host events
- [ ] (Event) (Fun) Schedule event here ($10, 6:30pm - 8:00pm today)
- [ ] (Event) (Fun) Exotic parties
- [ ] (Event) (Fun) Introduction parties
- [ ] (Event) (Fun) 3 events per day
- [ ] (Event) (Fun) there's 3 events today
- [ ] (Event) (Fun) Level 1 2 3 curated events paid hosts
- [ ] (Event) (Fun) Closer automatic events, you can go if you want / # people interested / random cues
- [ ] (Event) (Fun) Passes to private events / areas (unlock new areas)
- [ ] (Event) (Fun) Condor (unlock all events in Austin)
-
- [ ] (Feature) Pinned public groups
- [ ] (Feature) Chats on map (Open chat here...) -> Opens group messages, anyone can drop in from bub
- [ ] (Feature) Set your name bubble
- [ ] (Feature) Use suggested name on number verified
- [ ] (Feature) Hide inviting when searching contacts
+App:
+ [X] Add "Add event here..." option to long-press menu at the top
+    [X] Say what's up
+    [X] Set event starting and ending time
+    [X] Set event more info text
+    [X] Set event cover price (optional)
+    [X] POST EVENT button
+ [X] APIs
+    [ ] Center map on newly created event
+    [ ] Offline first support
+ [.] Load events on map move
+ [.] Show event bubbles (red)
+    [.] Add support for red color to MapBubble
+    [.] Host, message, time
  
- [ ] (Polish) Share photos (in chats)
- [ ] (Polish) Don't reactiviaavete bubble when using pushn notification
- [ ] (Polish) Use "No name" in place of "Unknown" or "null"
+ [.] Tap on event bubble
+ [.] Share event -> Share with...
+ [.] Open event chat
+    [ ] Show HOST next to the event host in messages
 
- [ ] (Quest) 4 Quests starting today (purple bubble to show all on map pops down from top)
- [ ] (Quest) Starting Point
- [ ] (Quest) Name & About Text
- [ ] (Quest) Starting Time
- [ ] (Quest) Group Chat
- [ ] (Quest) Hosted by 3 people
- [ ] (Quest) QPs Quest Points
- [ ] (Quest) Get quest medal after successful (Level 3 adventurer)
- [ ] (Quest) 3 days, 2 hours remaining to complete this quest
- [ ] (Quest) Clear beginning, clear ending, clear duration, clear difficulty, clear group size
+ [ ] Push events briefing every morning (8:30am)
+    [ ] JobScheduler check events at specified time
+ [ ] Red arrows pointing towards events off-screen (2 mi)
+ [ ] If creator is me: Cancel this event option
+
+Backend:
+ [.] POST /event?name=&geo=&about=&startsAt=&endsAt=
+ [.] GET /event?geo=l,l (20 nearest, incl cancelled)
+ [.] Auto-create event group "event:1456"
+ [ ] POST /event/1234?cancel=true
+
+ [ ] Release today
+
+# Scratchpad
 
 # More Goodies
 
- [ ] (Feature) Share photo to group (tap on group)
+### P0 ###
+
+### P1 ###
+
+ [o] P1 (Polish) Set map margin top no status bar
+ [o] P1 (Polish) Use suggested name on number verified
+ [o] P1 (Polish) Hide inviting when searching contacts
+ [ ] P1 (Polish) Share photos (in chats)
+ [ ] P1 (Polish) Don't reactivate bubble when using push notification
+ [ ] P1 (Polish) Use "No name" always in place of "Unknown" or "null"
+ [o] P1 (Polish) Fully async group ID in Group Activity (gray before loaded, "loading..." title)
+ [o] P1 (Polish) HTTPS
+ [o] P1 (Polish) Some messages/groups are duplicated
+ [o] P1 (Polish) Randomize message hint
+ [o] P1 (Polish) Don't allow direct messages if active=false ("X has already left the map")
+ [ ] P1 (Polish) Don't show timestamps that are the same as the previous message
+ [ ] P1 (Polish) Show no recent activity message
+ [ ] P1 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-SIGNATURE
+ [ ] P1 (Polish) "Network unavailable"
+ [ ] P1 (Polish) Name null checks backend
+ [o] P1 (Polish) Show "Bun is typing..."
+ [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
+ [ ] P1 (Polish) Handle permanently denied contacts permissions (Dialog telling to go to settings)
+ [ ] P1 (Polish) Settings bubble at end pink [Set event notification time]
+ [ ] P1 (Polish) Settings show privacy policy (/static/privacy)
+
+### P2 ###
+
+ [ ] P2 (Polish) Show inactive contacts (haven't seen any activity in >1 month)
+ [b] P2 (Polish) All messages from person go to one notification box
+ [o] P2 (Polish) Search for places on the map (green button)
+ [ ] P2 (Polish) Get Async push notification queues working (copy from Vlllage)
+ [ ] P2 (Feature) Add photo / video circles to map tap to fly into
+ [o] P2 (Feature) Pinned public groups
+ [o] P2 (Feature) Chats on map (Open chat here...) -> Opens group messages, anyone can drop in from bub
+ [o] P2 (Feature) Add your name bubble
+ [ ] P2 (Feature) Share photo to group (tap on group from menu)
     [ ] Tap on photos to view all shared to group
         [ ] Share icon on photo
- [ ] (Feature) Settings bubble at end pink
 
- [ ] (Feature) Discoveries (bubbles on map)
- [ ] (Feature) Photos on map (when zoomed in)
- [ ] (Feature) Camera icon appears on map to add photo (when zoomed in)
+### P3 ###
 
- [ ] (Plan) plans (public, group) Jacob wants to go to sushi
- [ ] (Plan) Longpress -> Make a plan, share with groups
-    [ ] 33 minutes left 8 spots left
- [ ] (Challenge) Post challenge video
- [ ] (Challenge) Challenges and profiles and high score boards
-
-# Features
-
- [o] (Polish) Fully async group ID in Group Activity
- [o] (Polish) Search for places on the map (green button)
- [ ] (Polish) Get Async push notification queues working (copy from Vlllage)
-
- [o] Single emoji floats many of them over your screen
+ [o] P3 (Feature) Single emoji floats many of them over your screen
     [o] Bubble to allow draw over screen
- [o] Add public photos to suggestion
+ [o] P3 (Feature) Add public photos to suggestion
     [ ] Get screen wake lock working
- [b] All messages from person go to one notification box
- [ ] Long-press add photo to map
- [ ] Profile -> Settings, Suggestions, More
-
-# Enhancements
-
- [.] (Polish) HTTPS
- [.] (Polish) Some messages are duplicated
- [.] (Polish) Randomize message hint
- [.] (Polish) Don't allow direct messages if active=false
-    [ ] Show dialog "X has already left the map"
- [ ] (Polish) Profile icon in status bar
- [ ] (Polish) Don't show timestamps that are the same as the previous message
- [ ] (Polish) Show no recent activity message
-
- [o] (Polish) Show "Bun is typing..."
- [o] (Polish) WebSocket (exact same as push notifications, zero difference!)
- [o] (Polish) Move pushes to background thread (server worker)
- [ ] (Polish) Handle permanently denied contacts permissions
-    [ ] Dialog telling to go to settings
- [ ] (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-SIGNATURE
- [ ] (Polish) Show inactive contacts (haven't seen any activity in >1 month)
-
- [ ] (Polish) "Network unavailable"
- [ ] (Polish) Name null checks backend
+ [ ] P3 (Feature) Photos on map (when zoomed in, dots when zoomed out)
+ [ ] P3 (Feature) Camera icon appears on map to add photo (when zoomed in)
+ [o] P3 (Feature) Set profile photo
 
 #
 # Advertise Closer in SF and NY and LA and CO (NOT Austin!! :P)                  <-- !!
@@ -111,7 +110,7 @@
 
 # Feature: Mute groups
 
-[ ] (Feature) POST /group?mute=true/false
+[ ] P3 (Feature) POST /group?mute=true/false
     [ ] GroupMute model
         [ ] Use GroupMute for push notifications to omit phones
     [ ] Don't send notifications if mute token exists
@@ -120,9 +119,10 @@
 
 # Presence
 
- [ ] Privacy policy - http://closer.vlllage.com/privacy
- [ ] Fancy marketing screenshots with written text on Play Store
- [ ] Closer launch party (once totally complete :) free wine fridays 2pm, cheese, give aways announce through closer
+ [ ] P1 (Release) Privacy policy - http://closer.vlllage.com/privacy
+ [ ] P2 (Release) Fancy marketing screenshots with written text on Play Store
+ [ ] P2 (Release) Closer launch party (once totally complete :) free wine fridays 2pm, cheese, give aways announce through closer
+ [ ] P2 (Release) Closer infatuation parties
 
  # $ Ideas
  
@@ -135,8 +135,7 @@
   
 # MKTG  
  [ ] Do Something Different :) -- square cards in coffee shop bathrooms
- [ ] Make Closer cards - What would they say? Hide around austin
- [ ] Closer flip books (super cute, app at end)
+ [ ] Closer flip books (super cute stories, app at end)
 
 # Arcchive
 
@@ -179,3 +178,39 @@ $50 = 9-10 bubble nearby
 
 Bubbles last for 24h
 Buy from start-stop
+
+
+ [ ] (Profile) Intro app just name face hello text / Overlord
+
+ [ ] (Event) (Learn) Learn Something Together / entrances to journeys
+ [ ] (Event) (Learn) Run classes for programming weekend slime quest, village, etc
+ [ ] (Event) (Pay) Host themed house parties / get 10 / Free / $10 / $20
+ [ ] (Event) (Pay) Become a member purple bubble / get more
+ [ ] (Event) (Pay) Get paid to host events
+ [ ] (Event) (Fun) Exotic parties
+ [ ] (Event) (Fun) Introduction parties
+ [ ] (Event) (Fun) 3 events per day
+ [ ] (Event) (Fun) there's 3 events today
+ [ ] (Event) (Fun) Level 1 2 3 curated events paid hosts
+ [ ] (Event) (Fun) Closer automatic events, you can go if you want / # people interested / random cues
+ [ ] (Event) (Fun) Passes to private events / areas (unlock new areas)
+ [ ] (Event) (Fun) Condor (unlock all events in Austin)
+
+ [ ] (Quest) 4 Quests starting today (purple bubble to show all on map pops down from top)
+ [ ] (Quest) Starting Point
+ [ ] (Quest) Name & About Text
+ [ ] (Quest) Starting Time
+ [ ] (Quest) Group Chat
+ [ ] (Quest) Hosted by 3 people
+ [ ] (Quest) QPs Quest Points
+ [ ] (Quest) Get quest medal after successful (Level 3 adventurer)
+ [ ] (Quest) 3 days, 2 hours remaining to complete this quest
+ [ ] (Quest) Clear beginning, clear ending, clear duration, clear difficulty, clear group size
+
+ [ ] (Feature) Discoveries (bubbles on map)
+
+ [ ] (Plan) plans (public, group) Jacob wants to go to sushi
+ [ ] (Plan) Longpress -> Make a plan, share with groups
+    [ ] 33 minutes left 8 spots left
+ [ ] (Challenge) Post challenge video
+ [ ] (Challenge) Challenges and profiles and high score boards

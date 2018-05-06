@@ -3,11 +3,15 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorPrimaryLight">#64B5F6</color>
+    <color name="blue200">#90CAF9</color>
     <color name="colorAccent">#FFC107</color>
     <color name="colorAccentLight">#FFD54F</color>
     <color name="green">#8BC34A</color>
     <color name="greenLight">#AED581</color>
     <color name="green200">#C5E1A5</color>
+    <color name="red">#f44336</color>
+    <color name="redLight">#E57373</color>
+    <color name="red200">#EF9A9A</color>
     <color name="name">#66000000</color>
     <color name="selectable">#BDBDBD</color>
     <color name="disabled">@color/selectable</color>
@@ -16,5 +20,4 @@
     <color name="white_75">#aaffffff</color>
     <color name="white_50">#88ffffff</color>
     <color name="black_15">#33000000</color>
-    <color name="blue200">#90CAF9</color>
 </resources>

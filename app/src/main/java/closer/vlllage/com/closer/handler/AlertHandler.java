@@ -6,7 +6,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.util.AlertConfig;
 import closer.vlllage.com.closer.util.KeyboardUtil;
@@ -25,7 +24,7 @@ public class AlertHandler extends PoolMember {
             return;
         }
 
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), R.style.AppTheme_AlertDialog);
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder($(ActivityHandler.class).getActivity(), alertConfig.getTheme());
         TextView textView = null;
         if (alertConfig.getLayoutResId() != null) {
             View view = View.inflate($(ActivityHandler.class).getActivity(), alertConfig.getLayoutResId(), null);
@@ -39,7 +38,7 @@ public class AlertHandler extends PoolMember {
             }
 
             if (alertConfig.getOnAfterViewCreated() != null) {
-                alertConfig.getOnAfterViewCreated().onAfterViewCreated(view);
+                alertConfig.getOnAfterViewCreated().onAfterViewCreated(alertConfig, view);
             }
 
             dialogBuilder.setView(view);

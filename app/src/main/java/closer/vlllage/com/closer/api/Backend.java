@@ -89,4 +89,18 @@ public interface Backend {
 
     @POST("group/{id}")
     Observable<SuccessResult> cancelInvite(@Path("id") String groupId, @Query("cancel-invite") String groupInviteId);
+
+    // Event
+
+    @GET("event")
+    Observable<StateResult> getEvents(@Query("geo") String latLng);
+
+    @GET("event")
+    Observable<StateResult> getEvent(@Path("id") String eventId);
+
+    @POST("event")
+    Observable<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("geo") String geo, @Query("startsAt") String startsAt, @Query("endsAt") String endsAt);
+
+    @POST("event/{id}")
+    Observable<CreateResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);
 }

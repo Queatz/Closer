@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
+import closer.vlllage.com.closer.handler.EventHandler;
 import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.GroupMessageSuggestionsHandler;
 import closer.vlllage.com.closer.handler.IntentHandler;
@@ -105,6 +106,12 @@ public class MapsActivity extends PoolActivity {
             menuBubble.setOnItemClickListener(position -> {
                 switch (position) {
                     case 0:
+                        $(EventHandler.class).createNewEvent();
+                        break;
+                    case 1:
+                        $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng());
+                        break;
+                    case 2:
                         $(ShareHandler.class).shareTo(menuBubble.getLatLng(), group -> {
                             boolean success = $(GroupMessageSuggestionsHandler.class).shareLocation(menuBubble.getLatLng(), group);
 
@@ -115,15 +122,14 @@ public class MapsActivity extends PoolActivity {
                             }
                         });
                         break;
-                    case 1:
-                        $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng());
-                        break;
                 }
             });
             $(BubbleHandler.class).add(menuBubble);
             $(MapBubbleMenuView.class)
                     .getMenuAdapter(menuBubble)
-                    .setMenuItems(getString(R.string.share_this_location), getString(R.string.add_suggestion_here));
+                    .setMenuItems(getString(R.string.add_event_here),
+                            getString(R.string.add_suggestion_here),
+                            getString(R.string.share_this_location));
         });
         $(MapHandler.class).setOnMapIdleListener(latLng -> {
             $(DisposableHandler.class).add($(ApiHandler.class).getPhonesNear(latLng).map(MapBubble::from).subscribe(mapBubbles ->

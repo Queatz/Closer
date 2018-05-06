@@ -28,7 +28,7 @@ public class SetNameHandler extends PoolMember {
                         onNameModifiedCallback.onNameModified(name);
                     }
                 })
-                .setOnAfterViewCreated(view -> {
+                .setOnAfterViewCreated((alertConfig, view) -> {
                     ((TextView) view.findViewById(R.id.input)).setText($(AccountHandler.class).getName());
 
                     if (allowSkip) {

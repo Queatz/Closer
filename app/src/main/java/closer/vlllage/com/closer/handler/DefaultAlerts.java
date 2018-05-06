@@ -31,7 +31,7 @@ public class DefaultAlerts extends PoolMember {
         $(AlertHandler.class).make()
                 .setTitle(title == null ? null : $(ResourcesHandler.class).getResources().getString(title))
                 .setLayoutResId(R.layout.long_message_modal)
-                .setOnAfterViewCreated(view -> {
+                .setOnAfterViewCreated((alertConfig, view) -> {
                     ((TextView) view.findViewById(R.id.messageText)).setText(message);
                 })
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))

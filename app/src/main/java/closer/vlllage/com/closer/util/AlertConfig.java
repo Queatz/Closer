@@ -1,7 +1,10 @@
 package closer.vlllage.com.closer.util;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.StyleRes;
 import android.view.View;
+
+import closer.vlllage.com.closer.R;
 
 public class AlertConfig {
 
@@ -16,7 +19,8 @@ public class AlertConfig {
     private Integer textView;
     private OnTextViewSubmitCallback onTextViewSubmitCallback;
     private OnAfterViewCreatedCallback onAfterViewCreated;
-    private AlertResult alertResult;
+    private Object alertResult;
+    private @StyleRes int theme = R.style.AppTheme_AlertDialog;
 
     public AlertConfig(ShowCallback showCallback) {
         this.showCallback = showCallback;
@@ -104,11 +108,11 @@ public class AlertConfig {
         return onAfterViewCreated;
     }
 
-    public AlertResult getAlertResult() {
+    public Object getAlertResult() {
         return alertResult;
     }
 
-    public AlertConfig setAlertResult(AlertResult alertResult) {
+    public AlertConfig setAlertResult(Object alertResult) {
         this.alertResult = alertResult;
         return this;
     }
@@ -122,32 +126,28 @@ public class AlertConfig {
         return this;
     }
 
+    public int getTheme() {
+        return theme;
+    }
+
+    public AlertConfig setTheme(int theme) {
+        this.theme = theme;
+        return this;
+    }
+
     public interface ShowCallback {
         void show(AlertConfig alertConfig);
     }
 
     public interface ButtonCallback {
-        void onClick(AlertResult alertResult);
+        void onClick(Object alertResult);
     }
 
     public interface OnAfterViewCreatedCallback {
-        void onAfterViewCreated(View view);
+        void onAfterViewCreated(AlertConfig alertConfig, View view);
     }
 
     public interface OnTextViewSubmitCallback {
         void onTextViewSubmit(String value);
-    }
-
-    public static class AlertResult {
-        private Object result;
-
-        public Object getResult() {
-            return result;
-        }
-
-        public AlertResult setResult(Object result) {
-            this.result = result;
-            return this;
-        }
     }
 }

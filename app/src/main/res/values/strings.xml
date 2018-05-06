@@ -112,4 +112,11 @@
     <string name="location_is_needed">Your phone\'s current location is needed to create public groups.</string>
     <string name="message_sent">Message sent</string>
     <string name="no_suggestions_here">I couldn\'t find any suggestions here</string>
+    <string name="add_event_here">Post event here…</string>
+    <string name="post_event">Post event</string>
+    <string name="enter_event_details">Enter event details…</string>
+    <string name="enter_event_price">Enter event price (optional)</string>
+    <string name="when">When</string>
+    <string name="ends_at">Ends at</string>
+    <string name="starts_at">Starts at</string>
 </resources>

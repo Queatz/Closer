@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/AppTheme.Red">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_event_details"
+            android:focusedByDefault="true"
+            android:selectAllOnFocus="true"
+            android:imeOptions="actionNext"
+            android:paddingTop="24dp"
+            android:paddingRight="24dp"
+            android:paddingLeft="24dp"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:background="@null"
+            android:inputType="textCapSentences|textMultiLine" />
+
+        <RelativeLayout
+            android:id="@+id/changeDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:padding="24dp"
+                android:layout_alignParentLeft="true"
+                android:text="@string/when"/>
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:padding="24dp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/red"
+                android:text="Today"/>
+
+        </RelativeLayout>
+
+        <DatePicker
+            android:id="@+id/datePicker"
+            style="@style/AppTheme.Red"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:headerBackground="@color/red"
+            android:calendarTextColor="@color/red" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:padding="24dp"
+            android:text="@string/starts_at"/>
+
+        <TimePicker
+            android:id="@+id/startsAt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:headerBackground="@color/red"
+            android:numbersSelectorColor="@color/red" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:padding="24dp"
+            android:text="@string/ends_at"/>
+
+        <TimePicker
+            android:id="@+id/endsAt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:headerBackground="@color/red"
+            android:numbersSelectorColor="@color/red" />
+
+        <EditText
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_event_price"
+            android:selectAllOnFocus="true"
+            android:imeOptions="actionGo"
+            android:padding="24dp"
+            android:background="@null"
+            android:inputType="textShortMessage" />
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
