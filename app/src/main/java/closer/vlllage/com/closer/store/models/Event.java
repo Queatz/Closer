@@ -12,6 +12,7 @@ public class Event extends BaseObject {
     private Double longitude;
     private Date startsAt;
     private Date endsAt;
+    private boolean cancelled;
 
     public String getName() {
         return name;
@@ -64,6 +65,15 @@ public class Event extends BaseObject {
 
     public Event setEndsAt(Date endsAt) {
         this.endsAt = endsAt;
+        return this;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public Event setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
         return this;
     }
 }

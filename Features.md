@@ -12,7 +12,7 @@ POST EVENT
 ==========
 
 App:
- [ ] Load events on map move
+ [ ] Load events on map move (RefreshHandler)
  [.] Tap on event bubble
     [.] Share event -> Share with...
     [.] Open event chat

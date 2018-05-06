@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupContactResult;
 import closer.vlllage.com.closer.api.models.GroupInviteResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
@@ -18,6 +19,8 @@ import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.BaseObject;
+import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
@@ -59,6 +62,17 @@ public class RefreshHandler extends PoolMember {
                 handleFullListResult(stateResult.groups, Group.class, Group_.id, true, this::createGroupFromGroupResult, this::updateGroupFromGroupResult);
                 handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, true, this::transformGroupInviteResult, null);
                 handleGroupContacts(stateResult.groupContacts);
+            }, error -> $(DefaultAlerts.class).syncError()));
+        });
+    }
+
+    public void refreshEvents() {
+        $(LocationHandler.class).getCurrentLocation(location -> {
+            $(DisposableHandler.class).add($(ApiHandler.class).getEvents(new LatLng(
+                    location.getLatitude(),
+                    location.getLongitude()
+            )).subscribe(eventResults -> {
+                handleFullListResult(eventResults, Event.class, Event_.id, false, this::createEventFromEventResult, this::updateEventFromEventResult);
             }, error -> $(DefaultAlerts.class).syncError()));
         });
     }
@@ -199,6 +213,24 @@ public class RefreshHandler extends PoolMember {
         return phone;
     }
 
+    private Event createEventFromEventResult(EventResult eventResult) {
+        Event event = new Event();
+        event.setId(eventResult.id);
+        updateEventFromEventResult(event, eventResult);
+        return event;
+    }
+
+    private Event updateEventFromEventResult(Event event, EventResult eventResult) {
+        event.setName(eventResult.name);
+        event.setAbout(eventResult.about);
+        event.setLatitude(eventResult.geo.get(0));
+        event.setLongitude(eventResult.geo.get(1));
+        event.setEndsAt(eventResult.endsAt);
+        event.setStartsAt(eventResult.startsAt);
+        event.setCancelled(eventResult.cancelled);
+        return event;
+    }
+
     private Group createGroupFromGroupResult(GroupResult groupResult) {
         Group group = new Group();
         group.setId(groupResult.id);
@@ -253,6 +285,6 @@ public class RefreshHandler extends PoolMember {
     }
 
     interface UpdateTransformer<T, R> {
-        T transform(T exisiting, R result);
+        T transform(T existing, R result);
     }
 }
