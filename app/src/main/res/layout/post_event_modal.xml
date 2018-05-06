@@ -22,7 +22,7 @@
             android:paddingLeft="24dp"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:background="@null"
-            android:maxLength="160"
+            android:maxLength="128"
             android:maxLines="1"
             android:inputType="textCapSentences|textShortMessage" />
 
@@ -54,9 +54,9 @@
 
         <DatePicker
             android:id="@+id/datePicker"
-            style="@style/AppTheme.Red"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:headerBackground="@color/red"
             android:calendarTextColor="@color/red" />
 

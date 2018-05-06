@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.api;
 import java.util.List;
 
 import closer.vlllage.com.closer.api.models.CreateResult;
+import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
@@ -93,14 +94,14 @@ public interface Backend {
     // Event
 
     @GET("event")
-    Observable<StateResult> getEvents(@Query("geo") String latLng);
+    Observable<List<EventResult>> getEvents(@Query("geo") String latLng);
 
     @GET("event")
-    Observable<StateResult> getEvent(@Path("id") String eventId);
+    Observable<EventResult> getEvent(@Path("id") String eventId);
 
     @POST("event")
-    Observable<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("geo") String geo, @Query("startsAt") String startsAt, @Query("endsAt") String endsAt);
+    Observable<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("geo") String geo, @Query(value = "startsAt", encoded = true) String startsAt, @Query(value = "endsAt", encoded = true) String endsAt);
 
     @POST("event/{id}")
-    Observable<CreateResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);
+    Observable<SuccessResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);
 }

@@ -8,6 +8,7 @@ import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.BaseObject;
+import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
@@ -48,14 +49,38 @@ public class SyncHandler extends PoolMember {
 
     private <T extends BaseObject> void send(final T obj, OnSyncResult onSyncResult) {
         if (obj instanceof Group) {
-            sendCreateGroup((Group) obj,onSyncResult);
+            sendCreateGroup((Group) obj, onSyncResult);
         } else if (obj instanceof Suggestion) {
-            sendCreateSuggestion((Suggestion) obj,onSyncResult);
+            sendCreateSuggestion((Suggestion) obj, onSyncResult);
         } else if (obj instanceof GroupMessage) {
-            sendCreateGroupMessage((GroupMessage) obj,onSyncResult);
+            sendCreateGroupMessage((GroupMessage) obj, onSyncResult);
+        } else if (obj instanceof Event) {
+            sendCreateEvent((Event) obj, onSyncResult);
         } else {
             throw new RuntimeException("Unknown object type for sync: " + obj);
         }
+    }
+
+    private void sendCreateEvent(Event event, OnSyncResult onSyncResult) {
+        event.setLocalOnly(true);
+        $(StoreHandler.class).getStore().box(Event.class).put(event);
+
+        $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).createEvent(
+                event.getName(),
+                event.getAbout(),
+                new LatLng(event.getLatitude(), event.getLongitude()),
+                event.getStartsAt(),
+                event.getEndsAt()
+        ).subscribe(createResult -> {
+            if (createResult.success) {
+                event.setId(createResult.id);
+                event.setLocalOnly(false);
+                $(StoreHandler.class).getStore().box(Event.class).put(event);
+                if (onSyncResult != null) {
+                    onSyncResult.onSync(createResult.id);
+                }
+            }
+        }, error -> $(DefaultAlerts.class).syncError()));
     }
 
     private void sendCreateSuggestion(Suggestion suggestion, OnSyncResult onSyncResult) {

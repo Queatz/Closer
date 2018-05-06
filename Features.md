@@ -12,28 +12,17 @@ POST EVENT
 ==========
 
 App:
- [X] Add "Add event here..." option to long-press menu at the top
-    [X] Say what's up
-    [X] Set event starting and ending time
-    [X] Set event cover price (optional)
-    [X] POST EVENT button
- [X] APIs
-    [ ] Offline first support
-    [X] Center map on newly created event
- [.] Load events on map move
- [X] Show event bubbles (red)
-    [X] Add support for red color to MapBubble
-    [X] Message, time
- 
+ [ ] Load events on map move
  [.] Tap on event bubble
- [.] Share event -> Share with...
- [.] Open event chat
-    [ ] Show HOST next to the event host in messages
+    [.] Share event -> Share with...
+    [.] Open event chat
+        [ ] Show HOST next to the event host in messages
+    [.] If creator is me: Cancel this event option
+       [ ] Show event as cancelled on the map
 
  [ ] Push events briefing every morning (8:30am)
     [ ] JobScheduler check events at specified time
  [ ] Red arrows pointing towards events off-screen (2 mi)
- [ ] If creator is me: Cancel this event option
 
 Backend:
  [.] POST /event?name=&geo=&about=&startsAt=&endsAt=

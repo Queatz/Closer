@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 
 import static android.text.format.DateUtils.DAY_IN_MILLIS;
@@ -69,6 +70,9 @@ public class EventHandler extends PoolMember {
                     endsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
                             viewHolder.endsAtTimePicker.getCurrentHour(), viewHolder.endsAtTimePicker.getCurrentMinute(), 0);
 
+                    startsAt.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    endsAt.setTimeZone(TimeZone.getTimeZone("UTC"));
+
                     createNewEvent(latLng,
                             viewHolder.eventName.getText().toString(),
                             viewHolder.eventPrice.getText().toString(),
@@ -80,13 +84,26 @@ public class EventHandler extends PoolMember {
     }
 
     private void createNewEvent(LatLng latLng, String name, String price, Date startsAt, Date endsAt) {
-        MapBubble mapBubble = new MapBubble(latLng, "Event", name);
+        Event event = $(StoreHandler.class).create(Event.class);
+        event.setName(name.trim());
+        event.setAbout(price.trim());
+        event.setLatitude(latLng.latitude);
+        event.setLongitude(latLng.longitude);
+        event.setStartsAt(startsAt);
+        event.setEndsAt(endsAt);
+        $(StoreHandler.class).getStore().box(Event.class).put(event);
+        $(SyncHandler.class).sync(event);
+
+        MapBubble mapBubble = eventBubbleFrom(event);
+        $(MapHandler.class).centerMap(mapBubble.getLatLng());
+    }
+
+    public MapBubble eventBubbleFrom(Event event) {
+        MapBubble mapBubble = new MapBubble(new LatLng(event.getLatitude(), event.getLongitude()), "Event", event.getName());
         mapBubble.setType(BubbleType.EVENT);
         mapBubble.setPinned(true);
-        mapBubble.setTag((Event) null);
-        $(BubbleHandler.class).add(mapBubble);
-
-        $(MapHandler.class).centerMap(latLng);
+        mapBubble.setTag(event);
+        return mapBubble;
     }
 
     private static class CreateEventViewHolder {
