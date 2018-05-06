@@ -72,6 +72,8 @@ public class MapsActivity extends PoolActivity {
                 mapBubble.getOnItemClickListener().onItemClick(position);
             }
         }, mapBubble -> {
+            // todo (tap event)
+        }, mapBubble -> {
             $(SuggestionHandler.class).clearSuggestions();
             $(ShareHandler.class).shareTo(mapBubble.getLatLng(), group -> {
                 boolean success = false;
@@ -106,7 +108,7 @@ public class MapsActivity extends PoolActivity {
             menuBubble.setOnItemClickListener(position -> {
                 switch (position) {
                     case 0:
-                        $(EventHandler.class).createNewEvent();
+                        $(EventHandler.class).createNewEvent(menuBubble.getLatLng());
                         break;
                     case 1:
                         $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng());

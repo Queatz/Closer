@@ -15,16 +15,15 @@ App:
  [X] Add "Add event here..." option to long-press menu at the top
     [X] Say what's up
     [X] Set event starting and ending time
-    [X] Set event more info text
     [X] Set event cover price (optional)
     [X] POST EVENT button
  [X] APIs
-    [ ] Center map on newly created event
     [ ] Offline first support
+    [X] Center map on newly created event
  [.] Load events on map move
- [.] Show event bubbles (red)
-    [.] Add support for red color to MapBubble
-    [.] Host, message, time
+ [X] Show event bubbles (red)
+    [X] Add support for red color to MapBubble
+    [X] Message, time
  
  [.] Tap on event bubble
  [.] Share event -> Share with...
@@ -52,6 +51,7 @@ Backend:
 
 ### P1 ###
 
+ [o] P0 App Feedback bubble
  [o] P1 (Polish) Set map margin top no status bar
  [o] P1 (Polish) Use suggested name on number verified
  [o] P1 (Polish) Hide inviting when searching contacts

@@ -22,7 +22,9 @@
             android:paddingLeft="24dp"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:background="@null"
-            android:inputType="textCapSentences|textMultiLine" />
+            android:maxLength="160"
+            android:maxLines="1"
+            android:inputType="textCapSentences|textShortMessage" />
 
         <RelativeLayout
             android:id="@+id/changeDate"
@@ -94,6 +96,7 @@
             android:selectAllOnFocus="true"
             android:imeOptions="actionGo"
             android:padding="24dp"
+            android:maxLength="5"
             android:background="@null"
             android:inputType="textShortMessage" />
 

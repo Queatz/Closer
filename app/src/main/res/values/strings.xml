@@ -119,4 +119,5 @@
     <string name="when">When</string>
     <string name="ends_at">Ends at</string>
     <string name="starts_at">Starts at</string>
+    <string name="view">View</string>
 </resources>

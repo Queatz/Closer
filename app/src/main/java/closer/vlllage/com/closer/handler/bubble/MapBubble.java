@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.api.models.PhoneResult;
-import closer.vlllage.com.closer.store.models.Suggestion;
 import closer.vlllage.com.closer.util.LatLngStr;
 
 /**
@@ -148,7 +147,7 @@ public class MapBubble {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setTag(Suggestion tag) {
+    public void setTag(Object tag) {
         this.tag = tag;
     }
 

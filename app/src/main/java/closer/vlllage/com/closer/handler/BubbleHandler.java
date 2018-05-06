@@ -10,6 +10,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.handler.bubble.BubbleMapLayer;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
+import closer.vlllage.com.closer.handler.bubble.MapBubbleEventView;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleSuggestionView;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleView;
@@ -20,17 +21,18 @@ public class BubbleHandler extends PoolMember {
     private MapBubbleView.OnMapBubbleClickListener onClickListener;
     private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener;
     private MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener;
-    private ViewGroup bubbleMapLayerLayout;
+    private MapBubbleEventView.MapBubbleEventClickListener onMapBubbleEventClickListener;
 
     private final BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
 
     public void attach(ViewGroup bubbleMapLayerLayout,
                        MapBubbleView.OnMapBubbleClickListener onClickListener,
                        MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener,
+                       MapBubbleEventView.MapBubbleEventClickListener onMapBubbleEventClickListener,
                        MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener) {
-        this.bubbleMapLayerLayout = bubbleMapLayerLayout;
         this.onClickListener = onClickListener;
         this.onMenuItemClickListener = onMenuItemClickListener;
+        this.onMapBubbleEventClickListener = onMapBubbleEventClickListener;
         this.onMapBubbleSuggestionClickListener = onMapBubbleSuggestionClickListener;
         bubbleMapLayer.attach(bubbleMapLayerLayout, getBubbleView());
     }
@@ -48,6 +50,8 @@ public class BubbleHandler extends PoolMember {
                         return $(MapBubbleMenuView.class).from(view, mapBubble, onMenuItemClickListener);
                     case SUGGESTION:
                         return $(MapBubbleSuggestionView.class).from(view, mapBubble, onMapBubbleSuggestionClickListener);
+                    case EVENT:
+                        return $(MapBubbleEventView.class).from(view, mapBubble, onMapBubbleEventClickListener);
                     default:
                         return $(MapBubbleView.class).from(view, mapBubble, onClickListener);
                 }

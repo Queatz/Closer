@@ -7,16 +7,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.bubble.BubbleType;
+import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.models.Event;
 
 import static android.text.format.DateUtils.DAY_IN_MILLIS;
 
 public class EventHandler extends PoolMember {
-    public void createNewEvent() {
+    public void createNewEvent(final LatLng latLng) {
         $(AlertHandler.class).make()
                 .setTheme(R.style.AppTheme_AlertDialog_Red)
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.post_event))
@@ -55,9 +61,32 @@ public class EventHandler extends PoolMember {
                 })
                 .setPositiveButtonCallback(alertResult -> {
                     CreateEventViewHolder viewHolder = (CreateEventViewHolder) alertResult;
+                    Calendar startsAt = Calendar.getInstance(TimeZone.getDefault());
+                    Calendar endsAt = Calendar.getInstance(TimeZone.getDefault());
+
+                    startsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
+                            viewHolder.startsAtTimePicker.getCurrentHour(), viewHolder.startsAtTimePicker.getCurrentMinute(), 0);
+                    endsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
+                            viewHolder.endsAtTimePicker.getCurrentHour(), viewHolder.endsAtTimePicker.getCurrentMinute(), 0);
+
+                    createNewEvent(latLng,
+                            viewHolder.eventName.getText().toString(),
+                            viewHolder.eventPrice.getText().toString(),
+                            endsAt.getTime(),
+                            startsAt.getTime());
                 })
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.post_event))
                 .show();
+    }
+
+    private void createNewEvent(LatLng latLng, String name, String price, Date startsAt, Date endsAt) {
+        MapBubble mapBubble = new MapBubble(latLng, "Event", name);
+        mapBubble.setType(BubbleType.EVENT);
+        mapBubble.setPinned(true);
+        mapBubble.setTag((Event) null);
+        $(BubbleHandler.class).add(mapBubble);
+
+        $(MapHandler.class).centerMap(latLng);
     }
 
     private static class CreateEventViewHolder {
