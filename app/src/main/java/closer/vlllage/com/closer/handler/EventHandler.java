@@ -62,6 +62,7 @@ public class EventHandler extends PoolMember {
                 })
                 .setPositiveButtonCallback(alertResult -> {
                     CreateEventViewHolder viewHolder = (CreateEventViewHolder) alertResult;
+
                     Calendar startsAt = Calendar.getInstance(TimeZone.getDefault());
                     Calendar endsAt = Calendar.getInstance(TimeZone.getDefault());
 

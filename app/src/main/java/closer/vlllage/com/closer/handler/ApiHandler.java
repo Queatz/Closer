@@ -96,7 +96,7 @@ public class ApiHandler extends PoolMember {
     }
 
     public Observable<CreateResult> createEvent(String name, String about, LatLng latLng, Date startsAt, Date endsAt) {
-        return uiThread(api.getBackend().createEvent(name, about, LatLngStr.from(latLng), $(HttpEncode.class).encode($(JsonHandler.class).to(startsAt)), $(HttpEncode.class).encode($(JsonHandler.class).to(endsAt))));
+        return uiThread(api.getBackend().createEvent(name, about, LatLngStr.from(latLng), $(HttpEncode.class).encode($(DateFormatter.class).format(startsAt)), $(HttpEncode.class).encode($(DateFormatter.class).format(endsAt))));
     }
 
     public Observable<List<EventResult>> getEvents(LatLng latLng) {

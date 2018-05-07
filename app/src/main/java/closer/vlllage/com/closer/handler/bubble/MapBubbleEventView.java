@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.OutboundHandler;
@@ -45,6 +46,7 @@ public class MapBubbleEventView extends PoolMember {
             return;
         }
 
+        timeFormatter.setTimeZone(TimeZone.getDefault());
         String startTime = timeFormatter.format(event.getStartsAt());
         String endTime = timeFormatter.format(event.getEndsAt());
         String day = DateUtils.getRelativeTimeSpanString(

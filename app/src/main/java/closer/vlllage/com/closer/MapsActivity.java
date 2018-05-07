@@ -9,7 +9,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.AccountHandler;
@@ -145,6 +146,8 @@ public class MapsActivity extends PoolActivity {
 
             $(DisposableHandler.class).add($(ApiHandler.class).getSuggestionsNear(latLng).map(SuggestionResult::from).subscribe(suggestions ->
                             $(SuggestionHandler.class).loadAll(suggestions), this::networkError));
+
+            $(RefreshHandler.class).refreshEvents(latLng);
         });
         $(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();
@@ -180,7 +183,7 @@ public class MapsActivity extends PoolActivity {
         $(MyGroupsLayoutHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
 
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Event.class).query()
-                    .greater(Event_.endsAt, new Date())
+                    .greater(Event_.endsAt, Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime())
                 .build().subscribe().on(AndroidScheduler.mainThread())
                 .observer(events -> {
                     $(BubbleHandler.class).remove(mapBubble -> mapBubble.getType() == BubbleType.EVENT);

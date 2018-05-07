@@ -18,8 +18,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Backend {
-        String BASE_URL = "http://closer.vlllage.com/";
-//    String BASE_URL = "http://10.0.2.2:8080/closer/";
+//        String BASE_URL = "http://closer.vlllage.com/";
+    String BASE_URL = "http://10.0.2.2:8080/closer/";
 
     // Phone
 
@@ -96,11 +96,11 @@ public interface Backend {
     @GET("event")
     Observable<List<EventResult>> getEvents(@Query("geo") String latLng);
 
-    @GET("event")
+    @GET("event/{id}")
     Observable<EventResult> getEvent(@Path("id") String eventId);
 
     @POST("event")
-    Observable<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("geo") String geo, @Query(value = "startsAt", encoded = true) String startsAt, @Query(value = "endsAt", encoded = true) String endsAt);
+    Observable<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("geo") String geo, @Query(value = "starts-at", encoded = true) String startsAt, @Query(value = "ends-at", encoded = true) String endsAt);
 
     @POST("event/{id}")
     Observable<SuccessResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);

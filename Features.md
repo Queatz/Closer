@@ -22,10 +22,8 @@ App:
     [.] If creator is me: Cancel this event option
 
 Backend:
- [.] POST /event?name=&geo=&about=&startsAt=&endsAt=
- [.] GET /event?geo=l,l (20 nearest, incl cancelled)
  [.] Auto-create event group "event:1456"
- [ ] POST /event/1234?cancel=true
+ [ ] 4 Tests
 
 Daily notification:
  [ ] Push notification events briefing every morning (8:30am)

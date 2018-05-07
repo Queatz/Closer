@@ -7,7 +7,6 @@ public class EventResult extends ModelResult {
     public List<Double> geo;
     public String name;
     public String about;
-    public Date created;
     public Date startsAt;
     public Date endsAt;
     public boolean cancelled;

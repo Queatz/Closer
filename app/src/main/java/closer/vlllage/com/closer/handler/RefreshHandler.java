@@ -66,15 +66,10 @@ public class RefreshHandler extends PoolMember {
         });
     }
 
-    public void refreshEvents() {
-        $(LocationHandler.class).getCurrentLocation(location -> {
-            $(DisposableHandler.class).add($(ApiHandler.class).getEvents(new LatLng(
-                    location.getLatitude(),
-                    location.getLongitude()
-            )).subscribe(eventResults -> {
-                handleFullListResult(eventResults, Event.class, Event_.id, false, this::createEventFromEventResult, this::updateEventFromEventResult);
-            }, error -> $(DefaultAlerts.class).syncError()));
-        });
+    public void refreshEvents(LatLng latLng) {
+        $(DisposableHandler.class).add($(ApiHandler.class).getEvents(latLng).subscribe(eventResults -> {
+            handleFullListResult(eventResults, Event.class, Event_.id, false, this::createEventFromEventResult, this::updateEventFromEventResult);
+        }, error -> $(DefaultAlerts.class).syncError()));
     }
 
     private void handleMessages(final List<GroupMessageResult> messages) {
