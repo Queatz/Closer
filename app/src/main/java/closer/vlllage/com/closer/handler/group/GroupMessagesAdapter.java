@@ -85,7 +85,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     String contactName;
 
                     if (phone == null || phone.getName() == null) {
-                        contactName = $(ResourcesHandler.class).getResources().getString(R.string.unknown);
+                        contactName = $(ResourcesHandler.class).getResources().getString(R.string.no_name);
                     } else {
                         contactName = phone.getName();
                     }
@@ -138,7 +138,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         }
 
         if (phone == null || phone.getName() == null) {
-            holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
+            holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.no_name));
         } else {
             holder.name.setText(phone.getName());
         }

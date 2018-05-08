@@ -1,3 +1,8 @@
+# Validate
+
+ [ ] P0 (Polish) Use "No name" always in place of "Unknown" or "null"
+ [o] P0 (Polish) Hide inviting when searching contacts
+ 
 # Incoming
 
  [ ] 
@@ -20,6 +25,7 @@ App:
         [ ] Show groups, same as when in bubble
     [ ] Show HOST next to the event host in messages
     [.] If creator is me: Cancel this event option
+    [ ] Don't replace existing bubbles on map
 
 Backend:
  [.] Auto-create event group "event:1456"
@@ -38,18 +44,16 @@ Daily notification:
 
 ### P0 ###
 
- [o] P0 (Polish) Set map margin top no status bar
- [o] P0 (Polish) Fully async group ID in Group Activity (gray before loaded, "loading..." title)
- [o] P0 (Polish) Use suggested name on number verified
- [ ] P0 (Polish) Use "No name" always in place of "Unknown" or "null"
- [o] P0 (Polish) Hide inviting when searching contacts
- [o] P0 (Polish) Don't allow direct messages if active=false ("X has already left the map")
- [ ] P0 (Polish) Settings bubble at end pink [Set event notification time]
- [ ] P0 (Polish) Settings show privacy policy (/static/privacy)
- [o] P0 (Polish) Randomize message hint
+ [o] P? (Polish) Set map margin top no status bar
+ [o] P? (Polish) Fully async group ID in Group Activity (gray before loaded, "loading..." title)
+ [o] P? (Polish) Don't allow direct messages if active=false ("X has already left the map")
+ [ ] P? (Polish) Settings bubble at end pink [Set event notification time]
+ [ ] P? (Polish) Settings show privacy policy (/static/privacy)
+ [o] P? (Polish) Randomize message hint
  
 ### P1 ###
 
+ [o] P1 (Polish) Use suggested name on number verified
  [o] P1 (Feature) App Feedback bubble
     [ ] Bubble
     [ ] Endpoint

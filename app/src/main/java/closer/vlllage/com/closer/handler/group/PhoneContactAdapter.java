@@ -64,7 +64,7 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
 
         holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.invite));
         holder.name.setText(contact.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.invite_by_phone) : contact.getName());
-        holder.number.setText(contact.getPhoneNumber() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : contact.getPhoneNumber());
+        holder.number.setText(contact.getPhoneNumber() == null ? $(ResourcesHandler.class).getResources().getString(R.string.no_name) : contact.getPhoneNumber());
         holder.itemView.setOnClickListener(view -> {
             if (onPhoneContactClickListener != null) {
                 onPhoneContactClickListener.onPhoneContactClicked(contact);
@@ -95,7 +95,7 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
     }
 
     private int getSuggestionCount() {
-        return (phoneNumber == null ? 0 : 1) + invites.size();
+        return phoneNumber == null ? 0 : 1 + invites.size();
     }
 
     class PhoneContactViewHolder extends RecyclerView.ViewHolder {
