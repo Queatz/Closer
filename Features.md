@@ -17,9 +17,7 @@ POST EVENT
 ==========
 
 App:
- [.] Tap on event bubble (opens event chat)
-    [ ] Title is event name, full text
-    [X] Red background
+ [X] Tap on event bubble (opens event chat)
     [.] Share button -> Share with...
         [ ] Share event message type
         [ ] Show groups, same as when in bubble
@@ -27,6 +25,8 @@ App:
     [.] If creator is me: Cancel this event option
     [.] Don't replace existing bubbles on map
     [.] CreateResult with other details, such as group
+    [ ] expire group chats after event ends
+    [ ] push notifications for new events
 
 Backend:
  [.] Auto-create event group "event:1456"
@@ -46,7 +46,6 @@ Daily notification:
 ### P0 ###
 
  [o] P? (Polish) Set map margin top no status bar
- [o] P? (Polish) Fully async group ID in Group Activity (gray before loaded, "loading..." title)
  [o] P? (Polish) Don't allow direct messages if active=false ("X has already left the map")
  [ ] P? (Polish) Settings bubble at end pink [Set event notification time]
  [ ] P? (Polish) Settings show privacy policy (/static/privacy)

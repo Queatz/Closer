@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.group;
 
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import org.greenrobot.essentials.StringUtils;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.api.models.GroupResult;
+import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
@@ -20,6 +23,7 @@ import closer.vlllage.com.closer.store.models.GroupInvite;
 import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class GroupHandler extends PoolMember {
 
@@ -27,6 +31,7 @@ public class GroupHandler extends PoolMember {
     private TextView peopleInGroup;
     private Group group;
     private GroupContact groupContact;
+    private BehaviorSubject<Group> groupChanged = BehaviorSubject.create();
     private List<String> contactNames = new ArrayList<>();
     private List<String> contactInvites = new ArrayList<>();
 
@@ -36,48 +41,53 @@ public class GroupHandler extends PoolMember {
     }
 
     public void setGroupById(String groupId) {
-        if (groupId != null) {
-            setGroup($(StoreHandler.class).getStore().box(Group.class).query()
-                    .equal(Group_.id, groupId)
-                    .build().findFirst());
-            setGroupContact();
-        }
-
-        if (group != null) {
-            peopleInGroup.setText("");
-            String phoneId = $(PersistenceHandler.class).getPhoneId();
-            if (phoneId == null) phoneId = "";
-            $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupContact.class).query()
-                    .equal(GroupContact_.groupId, group.getId())
-                    .notEqual(GroupContact_.contactId, phoneId)
-                    .build().subscribe().on(AndroidScheduler.mainThread())
-                    .observer(groupContacts -> {
-                        contactNames = new ArrayList<>();
-                        for (GroupContact groupContact : groupContacts) {
-                            contactNames.add(getContactName(groupContact));
-                        }
-
-                        redrawContacts();
-                    }));
-
-            $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupInvite.class).query()
-                    .equal(GroupInvite_.group, group.getId())
-                    .build().subscribe().on(AndroidScheduler.mainThread())
-                    .observer(groupInvites -> {
-                        contactInvites = new ArrayList<>();
-                        for (GroupInvite groupInvite : groupInvites) {
-                            contactInvites.add($(ResourcesHandler.class).getResources().getString(R.string.contact_invited_inline, getInviteName(groupInvite)));
-                        }
-                        redrawContacts();
-                    }));
-        }
-    }
-
-    private void setGroupContact() {
-        if (group == null) {
+        if (groupId == null) {
+            setGroup(null);
             return;
         }
 
+        setGroup($(StoreHandler.class).getStore().box(Group.class).query()
+                .equal(Group_.id, groupId)
+                .build().findFirst());
+
+        if (group == null) {
+            $(DisposableHandler.class).add($(ApiHandler.class).getGroup(groupId)
+                    .map(GroupResult::from)
+                    .subscribe(this::setGroup));
+        }
+    }
+
+    private void onGroupSet(@NonNull Group group) {
+        setGroupContact();
+        peopleInGroup.setText("");
+        String phoneId = $(PersistenceHandler.class).getPhoneId();
+        if (phoneId == null) phoneId = "";
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupContact.class).query()
+                .equal(GroupContact_.groupId, group.getId())
+                .notEqual(GroupContact_.contactId, phoneId)
+                .build().subscribe().on(AndroidScheduler.mainThread())
+                .observer(groupContacts -> {
+                    contactNames = new ArrayList<>();
+                    for (GroupContact groupContact : groupContacts) {
+                        contactNames.add(getContactName(groupContact));
+                    }
+
+                    redrawContacts();
+                }));
+
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupInvite.class).query()
+                .equal(GroupInvite_.group, group.getId())
+                .build().subscribe().on(AndroidScheduler.mainThread())
+                .observer(groupInvites -> {
+                    contactInvites = new ArrayList<>();
+                    for (GroupInvite groupInvite : groupInvites) {
+                        contactInvites.add($(ResourcesHandler.class).getResources().getString(R.string.contact_invited_inline, getInviteName(groupInvite)));
+                    }
+                    redrawContacts();
+                }));
+    }
+
+    private void setGroupContact() {
         if ($(PersistenceHandler.class).getPhoneId() == null) {
             return;
         }
@@ -124,6 +134,8 @@ public class GroupHandler extends PoolMember {
 
         if (group != null && group.getName() != null) {
             groupName.setText(group.getName());
+            onGroupSet(group);
+            groupChanged.onNext(group);
         } else {
             groupName.setText(R.string.not_found);
         }
@@ -135,5 +147,9 @@ public class GroupHandler extends PoolMember {
 
     public GroupContact getGroupContact() {
         return groupContact;
+    }
+
+    public BehaviorSubject<Group> onGroupChanged() {
+        return groupChanged;
     }
 }

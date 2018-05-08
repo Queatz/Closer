@@ -12,6 +12,7 @@ import android.widget.TextView;
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.ApplicationHandler;
+import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
@@ -20,7 +21,6 @@ import closer.vlllage.com.closer.handler.TopHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
-import closer.vlllage.com.closer.store.models.Group;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -65,35 +65,29 @@ public class GroupActivity extends CircularRevealActivity {
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton);
         $(MiniWindowHandler.class).attach(findViewById(R.id.groupName), findViewById(R.id.backgroundColor));
 
-        Group group = $(GroupHandler.class).getGroup();
-
-        if (group == null) {
-            // todo: load group, then continue (async)
-            // todo: Check local, check remote, then return
-            return;
-        }
-
-        if (group.isPublic()) {
-            if (group.hasEvent()) {
-                findViewById(R.id.backgroundColor).setBackgroundResource(R.color.red);
+        $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
+            if (group.isPublic()) {
+                if (group.hasEvent()) {
+                    findViewById(R.id.backgroundColor).setBackgroundResource(R.color.red);
+                } else {
+                    findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
+                }
+                peopleInGroup.setVisibility(View.GONE);
             } else {
-                findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
-            }
-            peopleInGroup.setVisibility(View.GONE);
-        } else {
-            $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts);
-            peopleInGroup.setSelected(true);
-            peopleInGroup.setOnClickListener(view -> toggleContactsView());
+                $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts);
+                peopleInGroup.setSelected(true);
+                peopleInGroup.setOnClickListener(view -> toggleContactsView());
 
-            showPhoneContactsButton.setOnClickListener(view -> {
-                $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
-                    if (granted) {
-                        $(GroupContactsHandler.class).showContactsForQuery();
-                        showPhoneContactsButton.setVisibility(View.GONE);
-                    }
+                showPhoneContactsButton.setOnClickListener(view -> {
+                    $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
+                        if (granted) {
+                            $(GroupContactsHandler.class).showContactsForQuery();
+                            showPhoneContactsButton.setVisibility(View.GONE);
+                        }
+                    });
                 });
-            });
-        }
+            }
+        }));
     }
 
     @Override

@@ -228,14 +228,7 @@ public class RefreshHandler extends PoolMember {
     }
 
     private Group createGroupFromGroupResult(GroupResult groupResult) {
-        Group group = new Group();
-        group.setId(groupResult.id);
-        group.setName(groupResult.name);
-        group.setUpdated(groupResult.updated);
-        group.setAbout(groupResult.about);
-        group.setPublic(TRUE.equals(groupResult.isPublic));
-        group.setEventId(groupResult.eventId);
-        return group;
+        return GroupResult.from(groupResult);
     }
 
     private Group updateGroupFromGroupResult(Group group, GroupResult groupResult) {
@@ -243,6 +236,7 @@ public class RefreshHandler extends PoolMember {
         group.setUpdated(groupResult.updated);
         group.setAbout(groupResult.about);
         group.setPublic(TRUE.equals(groupResult.isPublic));
+        group.setEventId(groupResult.eventId);
         return group;
     }
 
