@@ -19,13 +19,14 @@ POST EVENT
 App:
  [.] Tap on event bubble (opens event chat)
     [ ] Title is event name, full text
-    [ ] Red background
+    [X] Red background
     [.] Share button -> Share with...
         [ ] Share event message type
         [ ] Show groups, same as when in bubble
     [ ] Show HOST next to the event host in messages
     [.] If creator is me: Cancel this event option
-    [ ] Don't replace existing bubbles on map
+    [.] Don't replace existing bubbles on map
+    [.] CreateResult with other details, such as group
 
 Backend:
  [.] Auto-create event group "event:1456"

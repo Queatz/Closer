@@ -6,4 +6,5 @@ public class GroupResult extends ModelResult {
     public String name;
     public String about;
     @SerializedName("public") public Boolean isPublic;
+    public String eventId;
 }

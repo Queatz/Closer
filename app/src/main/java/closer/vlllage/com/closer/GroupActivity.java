@@ -74,7 +74,11 @@ public class GroupActivity extends CircularRevealActivity {
         }
 
         if (group.isPublic()) {
-            findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
+            if (group.hasEvent()) {
+                findViewById(R.id.backgroundColor).setBackgroundResource(R.color.red);
+            } else {
+                findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
+            }
             peopleInGroup.setVisibility(View.GONE);
         } else {
             $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts);

@@ -10,4 +10,5 @@ public class EventResult extends ModelResult {
     public Date startsAt;
     public Date endsAt;
     public boolean cancelled;
+    public String groupId;
 }

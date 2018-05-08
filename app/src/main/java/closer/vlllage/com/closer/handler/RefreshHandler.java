@@ -223,6 +223,7 @@ public class RefreshHandler extends PoolMember {
         event.setEndsAt(eventResult.endsAt);
         event.setStartsAt(eventResult.startsAt);
         event.setCancelled(eventResult.cancelled);
+        event.setGroupId(eventResult.groupId);
         return event;
     }
 
@@ -233,6 +234,7 @@ public class RefreshHandler extends PoolMember {
         group.setUpdated(groupResult.updated);
         group.setAbout(groupResult.about);
         group.setPublic(TRUE.equals(groupResult.isPublic));
+        group.setEventId(groupResult.eventId);
         return group;
     }
 

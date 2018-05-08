@@ -8,6 +8,7 @@ import io.objectbox.annotation.Entity;
 public class Event extends BaseObject {
     private String name;
     private String about;
+    private String groupId;
     private Double latitude;
     private Double longitude;
     private Date startsAt;
@@ -75,5 +76,18 @@ public class Event extends BaseObject {
     public Event setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
         return this;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public Event setGroupId(String groupId) {
+        this.groupId = groupId;
+        return this;
+    }
+
+    public boolean hasGroup() {
+        return groupId != null;
     }
 }

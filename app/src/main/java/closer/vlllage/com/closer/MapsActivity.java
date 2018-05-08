@@ -79,7 +79,13 @@ public class MapsActivity extends PoolActivity {
                 mapBubble.getOnItemClickListener().onItemClick(position);
             }
         }, mapBubble -> {
-            // todo (tap event)
+            String groupId = ((Event) mapBubble.getTag()).getGroupId();
+
+            if (groupId != null) {
+                $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), groupId);
+            } else {
+                $(DefaultAlerts.class).thatDidntWork();
+            }
         }, mapBubble -> {
             $(SuggestionHandler.class).clearSuggestions();
             $(ShareHandler.class).shareTo(mapBubble.getLatLng(), group -> {

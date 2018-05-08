@@ -7,6 +7,7 @@ public class Group extends BaseObject {
     private String name;
     private String about;
     private boolean isPublic;
+    private String eventId;
     private Double latitude;
     private Double longitude;
 
@@ -53,5 +54,18 @@ public class Group extends BaseObject {
     public Group setLongitude(Double longitude) {
         this.longitude = longitude;
         return this;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public Group setEventId(String eventId) {
+        this.eventId = eventId;
+        return this;
+    }
+
+    public boolean hasEvent() {
+        return eventId != null;
     }
 }
