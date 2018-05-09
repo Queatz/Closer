@@ -12,6 +12,7 @@ import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Event;
 
 import static android.text.format.DateUtils.DAY_IN_MILLIS;
+import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
 
 public class EventDetailsHandler extends PoolMember {
     private final SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mma", Locale.US);
@@ -39,5 +40,13 @@ public class EventDetailsHandler extends PoolMember {
         } else {
             return eventTimeText;
         }
+    }
+
+    public String formatRelative(Date date) {
+        return DateUtils.getRelativeTimeSpanString(
+                date.getTime(),
+                new Date().getTime(),
+                MINUTE_IN_MILLIS
+        ).toString();
     }
 }

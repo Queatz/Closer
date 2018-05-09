@@ -130,4 +130,5 @@
     <string name="event_cancelled">%1$s has been cancelled</string>
     <string name="cancel_event">Cancel event</string>
     <string name="event_will_be_cancelled">%1$s will be cancelled</string>
+    <string name="event_notification">%1$s starts %2$s</string>
 </resources>

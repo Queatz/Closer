@@ -18,6 +18,7 @@ import closer.vlllage.com.closer.GroupActivity;
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.util.PhoneUtil;
 import closer.vlllage.com.closer.util.ScreenUtil;
 
@@ -117,6 +118,27 @@ public class NotificationHandler extends PoolMember {
                 groupId + "/message", !Boolean.valueOf(isPassive));
     }
 
+    public void showEventNotification(Event event) {
+        Context context = $(ApplicationHandler.class).getApp();
+
+        Intent intent = new Intent(context, GroupActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+
+        intent.putExtra(EXTRA_GROUP_ID, event.getGroupId());
+
+        PendingIntent contentIntent = PendingIntent.getActivity(
+                context,
+                REQUEST_CODE_NOTIFICATION,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        show(contentIntent, null, null,
+                $(ResourcesHandler.class).getResources().getString(R.string.event_notification, event.getName(), $(EventDetailsHandler.class).formatRelative(event.getStartsAt())),
+                $(EventDetailsHandler.class).formatEventDetails(event),
+                event.getId() + "/group", false);
+    }
+
     private void show(PendingIntent contentIntent, Intent backgroundIntent,
                       RemoteInput remoteInput,
                       String name,
@@ -172,5 +194,4 @@ public class NotificationHandler extends PoolMember {
     private String notificationChannel() {
         return $(ResourcesHandler.class).getResources().getString(R.string.notification_channel);
     }
-
 }

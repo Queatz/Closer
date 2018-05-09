@@ -6,9 +6,11 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
+import closer.vlllage.com.closer.handler.JsonHandler;
 import closer.vlllage.com.closer.handler.NotificationHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.TopHandler;
+import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.util.LatLngStr;
 
 public class CloserFirebaseMessagingService extends FirebaseMessagingService {
@@ -21,6 +23,10 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
 
             if (data.containsKey("action")) {
                 switch (data.get("action")) {
+                    case "event":
+                        app.$(NotificationHandler.class).showEventNotification(
+                                app.$(JsonHandler.class).from(data.get("event"), Event.class));
+                        break;
                     case "group.invited":
                         app.$(NotificationHandler.class).showInvitedToGroupNotification(
                                 data.get("invitedBy"),

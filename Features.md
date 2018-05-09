@@ -15,8 +15,9 @@ App:
 
  [.] Push notifications
     [.] Events briefing every morning (8:30am)
-    [.] JobScheduler check events at specified time
+        [.] JobScheduler check events at specified time
     [.] Send new event notifications to nearby devices
+        [.] "JuiceLand party starts in 2 hours - 8:00pm"
 
  [ ] Release today + update Backend.java!
 
