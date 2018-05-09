@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.handler.DisposableHandler;
+import closer.vlllage.com.closer.handler.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
@@ -29,6 +30,7 @@ public class GroupActivity extends CircularRevealActivity {
     public static final String EXTRA_GROUP_ID = "groupId";
     private TextView peopleInGroup;
     private TextView groupName;
+    private TextView groupDetails;
     private EditText replyMessage;
     private RecyclerView messagesRecyclerView;
     private EditText searchContacts;
@@ -46,6 +48,7 @@ public class GroupActivity extends CircularRevealActivity {
         searchContacts = findViewById(R.id.searchContacts);
         contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
         peopleInGroup = findViewById(R.id.peopleInGroup);
+        groupDetails = findViewById(R.id.groupDetails);
         groupName = findViewById(R.id.groupName);
         showPhoneContactsButton = findViewById(R.id.showPhoneContactsButton);
         sendButton = findViewById(R.id.sendButton);
@@ -87,6 +90,11 @@ public class GroupActivity extends CircularRevealActivity {
                     });
                 });
             }
+        }));
+
+        $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(event -> {
+            groupDetails.setVisibility(View.VISIBLE);
+            groupDetails.setText($(EventDetailsHandler.class).formatEventDetails(event));
         }));
     }
 

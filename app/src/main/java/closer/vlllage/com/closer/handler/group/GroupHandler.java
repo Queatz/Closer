@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.DisposableHandler;
@@ -16,6 +17,8 @@ import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
@@ -32,6 +35,7 @@ public class GroupHandler extends PoolMember {
     private Group group;
     private GroupContact groupContact;
     private BehaviorSubject<Group> groupChanged = BehaviorSubject.create();
+    private BehaviorSubject<Event> eventChanged = BehaviorSubject.create();
     private List<String> contactNames = new ArrayList<>();
     private List<String> contactInvites = new ArrayList<>();
 
@@ -136,8 +140,27 @@ public class GroupHandler extends PoolMember {
             groupName.setText(group.getName());
             onGroupSet(group);
             groupChanged.onNext(group);
+            setEventById(group.getEventId());
         } else {
             groupName.setText(R.string.not_found);
+        }
+    }
+
+    private void setEventById(String eventId) {
+        if (eventId == null) {
+            return;
+        }
+
+        Event event = $(StoreHandler.class).getStore().box(Event.class).query()
+                .equal(Event_.id, eventId)
+                .build().findFirst();
+
+        if (event != null) {
+            eventChanged.onNext(event);
+        } else {
+            $(DisposableHandler.class).add($(ApiHandler.class).getEvent(eventId).map(EventResult::from).subscribe(eventFromServer -> {
+                eventChanged.onNext(eventFromServer);
+            }));
         }
     }
 
@@ -151,5 +174,9 @@ public class GroupHandler extends PoolMember {
 
     public BehaviorSubject<Group> onGroupChanged() {
         return groupChanged;
+    }
+
+    public BehaviorSubject<Event> onEventChanged() {
+        return eventChanged;
     }
 }

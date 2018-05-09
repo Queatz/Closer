@@ -59,7 +59,7 @@ public class RefreshHandler extends PoolMember {
                     location.getLatitude(),
                     location.getLongitude()
             )).subscribe(stateResult -> {
-                handleFullListResult(stateResult.groups, Group.class, Group_.id, true, this::createGroupFromGroupResult, this::updateGroupFromGroupResult);
+                handleFullListResult(stateResult.groups, Group.class, Group_.id, true, GroupResult::from, this::updateGroupFromGroupResult);
                 handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, true, this::transformGroupInviteResult, null);
                 handleGroupContacts(stateResult.groupContacts);
             }, error -> $(DefaultAlerts.class).syncError()));
@@ -68,7 +68,7 @@ public class RefreshHandler extends PoolMember {
 
     public void refreshEvents(LatLng latLng) {
         $(DisposableHandler.class).add($(ApiHandler.class).getEvents(latLng).subscribe(eventResults -> {
-            handleFullListResult(eventResults, Event.class, Event_.id, false, this::createEventFromEventResult, this::updateEventFromEventResult);
+            handleFullListResult(eventResults, Event.class, Event_.id, false, EventResult::from, EventResult::updateFrom);
         }, error -> $(DefaultAlerts.class).syncError()));
     }
 
@@ -206,29 +206,6 @@ public class RefreshHandler extends PoolMember {
         phone.setStatus(phoneResult.status);
 
         return phone;
-    }
-
-    private Event createEventFromEventResult(EventResult eventResult) {
-        Event event = new Event();
-        event.setId(eventResult.id);
-        updateEventFromEventResult(event, eventResult);
-        return event;
-    }
-
-    private Event updateEventFromEventResult(Event event, EventResult eventResult) {
-        event.setName(eventResult.name);
-        event.setAbout(eventResult.about);
-        event.setLatitude(eventResult.geo.get(0));
-        event.setLongitude(eventResult.geo.get(1));
-        event.setEndsAt(eventResult.endsAt);
-        event.setStartsAt(eventResult.startsAt);
-        event.setCancelled(eventResult.cancelled);
-        event.setGroupId(eventResult.groupId);
-        return event;
-    }
-
-    private Group createGroupFromGroupResult(GroupResult groupResult) {
-        return GroupResult.from(groupResult);
     }
 
     private Group updateGroupFromGroupResult(Group group, GroupResult groupResult) {

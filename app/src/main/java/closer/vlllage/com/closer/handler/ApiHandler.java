@@ -108,6 +108,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().getEvents(LatLngStr.from(latLng)));
     }
 
+    public Observable<EventResult> getEvent(String eventId) {
+        return uiThread(api.getBackend().getEvent(eventId));
+    }
+
     public Observable<SuccessResult> cancelEvent(String eventId) {
         return uiThread(api.getBackend().cancelEvent(eventId, true));
     }
