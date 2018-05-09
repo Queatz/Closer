@@ -12,15 +12,11 @@ POST EVENT
 ==========
 
 App:
- [X] Event actions bar
-    [.] Share
-        [ ] Handle "share event" message type in group messages
-        [ ] Show groups, same as when in bubble
 
- [ ] Push notifications
-    [ ] Events briefing every morning (8:30am)
-    [ ] JobScheduler check events at specified time
-    [ ] Send new event notifications to nearby devices
+ [.] Push notifications
+    [.] Events briefing every morning (8:30am)
+    [.] JobScheduler check events at specified time
+    [.] Send new event notifications to nearby devices
 
  [ ] Release today + update Backend.java!
 

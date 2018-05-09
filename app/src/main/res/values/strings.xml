@@ -88,6 +88,7 @@
     <string name="show_location">Show location</string>
     <string name="show_on_map">Show on map</string>
     <string name="phone_shared_a_suggestion">%1$s shared a suggestion</string>
+    <string name="phone_shared_an_event">%1$s shared an event</string>
     <string name="phone_shared_a_location">%1$s shared a location</string>
     <string name="just_now">Just now</string>
     <string name="use_your_location">Use your location</string>

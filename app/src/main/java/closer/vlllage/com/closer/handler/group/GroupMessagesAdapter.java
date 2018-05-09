@@ -18,11 +18,13 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.ApplicationHandler;
+import closer.vlllage.com.closer.handler.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.JsonHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
@@ -36,6 +38,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     private List<GroupMessage> groupMessages = new ArrayList<>();
     private OnMessageClickListener onMessageClickListener;
     private OnSuggestionClickListener onSuggestionClickListener;
+    private OnEventClickListener onEventClickListener;
 
     public GroupMessagesAdapter(PoolMember poolMember) {
         super(poolMember);
@@ -47,6 +50,10 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
     public void setOnSuggestionClickListener(OnSuggestionClickListener onSuggestionClickListener) {
         this.onSuggestionClickListener = onSuggestionClickListener;
+    }
+
+    public void setOnEventClickListener(OnEventClickListener onEventClickListener) {
+        this.onEventClickListener = onEventClickListener;
     }
 
     @NonNull
@@ -71,6 +78,38 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     holder.message.setAlpha(.5f);
                     holder.itemView.setOnClickListener(null);
                     holder.action.setVisibility(View.GONE);
+                } else if (jsonObject.has("event")) {
+                    final Event event = $(JsonHandler.class).from(jsonObject.get("event"), Event.class);
+
+                    holder.name.setVisibility(View.VISIBLE);
+                    holder.time.setVisibility(View.VISIBLE);
+                    holder.time.setText(getTimeString(groupMessage.getTime()));
+
+                    Phone phone = getPhone(groupMessage.getFrom());
+
+                    String contactName;
+
+                    if (phone == null || phone.getName() == null) {
+                        contactName = $(ResourcesHandler.class).getResources().getString(R.string.no_name);
+                    } else {
+                        contactName = phone.getName();
+                    }
+
+                    holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.phone_shared_an_event, contactName));
+
+                    holder.message.setVisibility(View.VISIBLE);
+                    holder.message.setText(
+                            (event.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : event.getName()) +
+                                    "\n" +
+                                    $(EventDetailsHandler.class).formatEventDetails(event));
+
+                    holder.action.setVisibility(View.VISIBLE);
+                    holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.show_on_map));
+                    holder.action.setOnClickListener(view -> {
+                        if (onEventClickListener != null) {
+                            onEventClickListener.onEventClick(event);
+                        }
+                    });
                 } else if (jsonObject.has("suggestion")) {
                     final Suggestion suggestion = $(JsonHandler.class).from(jsonObject.get("suggestion"), Suggestion.class);
 
@@ -110,6 +149,11 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                             onSuggestionClickListener.onSuggestionClick(suggestion);
                         }
                     });
+                } else {
+                    holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
+                    holder.message.setText("");
+                    holder.time.setVisibility(View.VISIBLE);
+                    holder.time.setText(getTimeString(groupMessage.getTime()));
                 }
 
                 return;
@@ -215,5 +259,9 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
     public interface OnSuggestionClickListener {
         void onSuggestionClick(Suggestion suggestion);
+    }
+
+    public interface OnEventClickListener {
+        void onEventClick(Event event);
     }
 }

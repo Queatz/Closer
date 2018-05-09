@@ -47,6 +47,10 @@ public class GroupMessagesHandler extends PoolMember {
             ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
         });
 
+        groupMessagesAdapter.setOnEventClickListener(event -> {
+            ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(MapActivityHandler.class).showEventOnMap(event));
+        });
+
         replyMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
