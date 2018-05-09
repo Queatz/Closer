@@ -22,7 +22,6 @@ App:
         [ ] Handle "share event" message type
         [ ] Show groups, same as when in bubble
     [.] Cancel event
-    [.] Show on map
  [ ] Show HOST next to the event host in messages
  [.] Time + price in event description of group chat
 

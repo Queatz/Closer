@@ -54,9 +54,63 @@
             android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="gone"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/groupName" />
+
+        <LinearLayout
+            android:id="@+id/eventToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupDetails">
+            <Button
+                android:id="@+id/actionShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textSize="12sp"
+                android:drawableTint="@android:color/white"
+                android:drawableTop="@drawable/ic_share_black_24dp"
+                android:drawablePadding="4dp"
+                android:background="@drawable/clickable_light"
+                android:text="@string/share"
+                android:textColor="@android:color/white"/>
+            <Button
+                android:id="@+id/actionShowOnMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textSize="12sp"
+                android:drawableTint="@android:color/white"
+                android:drawableTop="@drawable/ic_my_location_black_24dp"
+                android:drawablePadding="4dp"
+                android:background="@drawable/clickable_light"
+                android:text="@string/show_on_map"
+                android:textColor="@android:color/white"/>
+            <Button
+                android:id="@+id/actionCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textSize="12sp"
+                android:drawableTint="@android:color/white"
+                android:drawableTop="@drawable/ic_close_black_24dp"
+                android:drawablePadding="4dp"
+                android:background="@drawable/clickable_light"
+                android:text="@string/cancel"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/peopleInGroup"
@@ -78,9 +132,10 @@
             android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupName" />
+            app:layout_constraintTop_toBottomOf="@+id/eventToolbar" />
 
         <ImageButton
             android:id="@+id/closeButton"
@@ -140,6 +195,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@+id/replyMessage"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

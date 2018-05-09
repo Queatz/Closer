@@ -10,10 +10,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.handler.AccountHandler;
+import closer.vlllage.com.closer.handler.ActivityHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.MapActivityHandler;
 import closer.vlllage.com.closer.handler.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
@@ -22,6 +24,7 @@ import closer.vlllage.com.closer.handler.TopHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
+import closer.vlllage.com.closer.store.models.Event;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -31,6 +34,10 @@ public class GroupActivity extends CircularRevealActivity {
     private TextView peopleInGroup;
     private TextView groupName;
     private TextView groupDetails;
+    private View eventToolbar;
+    private Button actionShare;
+    private Button actionShowOnMap;
+    private Button actionCancel;
     private EditText replyMessage;
     private RecyclerView messagesRecyclerView;
     private EditText searchContacts;
@@ -50,8 +57,12 @@ public class GroupActivity extends CircularRevealActivity {
         peopleInGroup = findViewById(R.id.peopleInGroup);
         groupDetails = findViewById(R.id.groupDetails);
         groupName = findViewById(R.id.groupName);
+        eventToolbar = findViewById(R.id.eventToolbar);
         showPhoneContactsButton = findViewById(R.id.showPhoneContactsButton);
         sendButton = findViewById(R.id.sendButton);
+        actionShare = findViewById(R.id.actionShare);
+        actionShowOnMap = findViewById(R.id.actionShowOnMap);
+        actionCancel = findViewById(R.id.actionCancel);
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
@@ -94,7 +105,12 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(event -> {
             groupDetails.setVisibility(View.VISIBLE);
+            eventToolbar.setVisibility(View.VISIBLE);
             groupDetails.setText($(EventDetailsHandler.class).formatEventDetails(event));
+
+            actionShare.setOnClickListener(view -> {});
+            actionShowOnMap.setOnClickListener(view -> showEventOnMap(event));
+            actionCancel.setOnClickListener(view -> {});
         }));
     }
 
@@ -113,6 +129,12 @@ public class GroupActivity extends CircularRevealActivity {
     @Override
     protected int getBackgroundId() {
         return R.id.background;
+    }
+
+    private void showEventOnMap(Event event) {
+        ((CircularRevealActivity) $(ActivityHandler.class).getActivity())
+                .finish(() -> $(MapActivityHandler.class).showEventOnMap(event));
+
     }
 
     private void toggleContactsView() {

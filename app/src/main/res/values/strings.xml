@@ -20,6 +20,7 @@
     <string name="close_messages">Close messages</string>
     <string name="say_something">Say something…</string>
     <string name="share">Share</string>
+    <string name="cancel">Cancel</string>
     <string name="enter_code">Enter the code…</string>
     <string name="verify_number">Verify number</string>
     <string name="create_a_new_group">Add new group</string>
