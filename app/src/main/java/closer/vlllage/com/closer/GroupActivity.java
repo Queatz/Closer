@@ -2,6 +2,7 @@ package closer.vlllage.com.closer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.List;
+
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ActivityHandler;
 import closer.vlllage.com.closer.handler.AlertHandler;
@@ -19,18 +22,25 @@ import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.MapActivityHandler;
 import closer.vlllage.com.closer.handler.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
+import closer.vlllage.com.closer.handler.SortHandler;
 import closer.vlllage.com.closer.handler.TimerHandler;
 import closer.vlllage.com.closer.handler.TopHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
+import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
+import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Group_;
+import io.objectbox.query.QueryBuilder;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -46,6 +56,7 @@ public class GroupActivity extends CircularRevealActivity {
     private Button actionCancel;
     private EditText replyMessage;
     private RecyclerView messagesRecyclerView;
+    private RecyclerView shareWithRecyclerView;
     private EditText searchContacts;
     private RecyclerView contactsRecyclerView;
     private Button showPhoneContactsButton;
@@ -60,6 +71,7 @@ public class GroupActivity extends CircularRevealActivity {
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
         searchContacts = findViewById(R.id.searchContacts);
         contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
+        shareWithRecyclerView = findViewById(R.id.shareWithRecyclerView);
         peopleInGroup = findViewById(R.id.peopleInGroup);
         groupDetails = findViewById(R.id.groupDetails);
         groupName = findViewById(R.id.groupName);
@@ -114,7 +126,9 @@ public class GroupActivity extends CircularRevealActivity {
             eventToolbar.setVisibility(View.VISIBLE);
             groupDetails.setText($(EventDetailsHandler.class).formatEventDetails(event));
 
-            actionShare.setOnClickListener(view -> {});
+            actionShare.setOnClickListener(view -> {
+                share(event);
+            });
             actionShowOnMap.setOnClickListener(view -> showEventOnMap(event));
 
             if (!event.isCancelled() && event.getCreator() != null && event.getCreator().equals($(PersistenceHandler.class).getPhoneId())) {
@@ -162,6 +176,38 @@ public class GroupActivity extends CircularRevealActivity {
         ((CircularRevealActivity) $(ActivityHandler.class).getActivity())
                 .finish(() -> $(MapActivityHandler.class).showEventOnMap(event));
 
+    }
+
+    private void share(Event event) {
+        if (shareWithRecyclerView.getVisibility() == View.VISIBLE) {
+            shareWithRecyclerView.setVisibility(View.GONE);
+            messagesRecyclerView.setVisibility(View.VISIBLE);
+            actionShare.setText(R.string.share);
+            return;
+        }
+
+        shareWithRecyclerView.setVisibility(View.VISIBLE);
+        messagesRecyclerView.setVisibility(View.GONE);
+        actionShare.setText(R.string.cancel);
+
+        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
+                .equal(Group_.isPublic, true);
+
+        List<Group> groups = queryBuilder.sort($(SortHandler.class).sortGroups()).build().find();
+
+        SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(GroupHandler.class), group -> {
+            $(GroupMessageAttachmentHandler.class).shareEvent(event, group);
+        }, null);
+
+        searchGroupsAdapter.setGroups(groups);
+        searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.share));
+
+        shareWithRecyclerView.setAdapter(searchGroupsAdapter);
+        shareWithRecyclerView.setLayoutManager(new LinearLayoutManager(
+                shareWithRecyclerView.getContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+        ));
     }
 
     private void toggleContactsView() {

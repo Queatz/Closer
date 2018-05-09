@@ -16,17 +16,13 @@ App:
     [.] Share
         [ ] Handle "share event" message type in group messages
         [ ] Show groups, same as when in bubble
-    [.] Cancel event
 
-Backend:
- [ ] 4 Tests
-
-Daily notification:
- [ ] Push notification events briefing every morning (8:30am)
+ [ ] Push notifications
+    [ ] Events briefing every morning (8:30am)
     [ ] JobScheduler check events at specified time
- [ ] Red arrows pointing towards events off-screen (2 mi)
+    [ ] Send new event notifications to nearby devices
 
- [ ] Release today
+ [ ] Release today + update Backend.java!
 
 # Scratchpad
 
@@ -40,7 +36,7 @@ Daily notification:
  [ ] P? (Polish) Settings bubble at end pink [Set event notification time]
  [ ] P? (Polish) Settings show privacy policy (/static/privacy)
  [o] P? (Polish) Randomize message hint
- [ ] P? (Polish)  Show HOST next to the event host in messages
+ [ ] P? (Polish) Show HOST next to the event host in messages
 
 ### P1 ###
 
@@ -75,6 +71,7 @@ Daily notification:
  [ ] P2 (Feature) Share photo to group (tap on group from menu)
     [ ] Tap on photos to view all shared to group
         [ ] Share icon on photo
+ [ ] P2 (Feature) Red arrows pointing towards events off-screen (2 mi)
 
 ### P3 ###
 

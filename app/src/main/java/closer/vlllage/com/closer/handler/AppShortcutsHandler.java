@@ -30,6 +30,10 @@ public class AppShortcutsHandler extends PoolMember {
         List<ShortcutInfo> shortcuts = new ArrayList<>();
 
         for (Group group : groups) {
+            if (group.getName() == null || group.getName().isEmpty()) {
+                continue;
+            }
+
             ShortcutInfo shortcut = new ShortcutInfo.Builder($(ApplicationHandler.class).getApp(), "group:" + group.getId())
                     .setShortLabel(group.getName())
                     .setIntent($(GroupActivityTransitionHandler.class).getIntent(group.getId()))

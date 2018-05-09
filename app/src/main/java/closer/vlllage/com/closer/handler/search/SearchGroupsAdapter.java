@@ -27,6 +27,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     private final List<Group> groups = new ArrayList<>();
     private OnGroupClickListener onGroupClickListener;
     private OnCreateGroupClickListener onCreateGroupClickListener;
+    private String actionText;
 
     public SearchGroupsAdapter(PoolMember poolMember, OnGroupClickListener onGroupClickListener, OnCreateGroupClickListener onCreateGroupClickListener) {
         super(poolMember);
@@ -59,14 +60,14 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
         holder.name.setText(group.getName());
         if (group.hasEvent()) {
-            holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.open_event));
+            holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_event));
             Event event = $(StoreHandler.class).getStore().box(Event.class).query()
                     .equal(Event_.id, group.getEventId())
                     .build().findFirst();
             holder.about.setText(event != null ? $(EventDetailsHandler.class).formatEventDetails(event) :
                 $(ResourcesHandler.class).getResources().getString(R.string.event));
         } else {
-            holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.open));
+            holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open));
             holder.about.setText($(Val.class).of(group.getAbout()));
         }
         holder.itemView.setOnClickListener(view -> {
@@ -94,6 +95,10 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
     private int getCreateGroupCount() {
         return (createPublicGroupName == null ? 0 : 1);
+    }
+
+    public void setActionText(String actionText) {
+        this.actionText = actionText;
     }
 
     class SearchGroupsViewHolder extends RecyclerView.ViewHolder {

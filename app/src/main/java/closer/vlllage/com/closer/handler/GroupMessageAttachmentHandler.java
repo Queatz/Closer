@@ -10,13 +10,14 @@ import java.util.Date;
 
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.Suggestion;
 
-public class GroupMessageSuggestionsHandler extends PoolMember {
+public class GroupMessageAttachmentHandler extends PoolMember {
 
     public boolean shareLocation(@NonNull LatLng latLng, @NonNull Group group) {
         Suggestion suggestion = new Suggestion();
@@ -28,6 +29,15 @@ public class GroupMessageSuggestionsHandler extends PoolMember {
     public boolean shareSuggestion(@NonNull Suggestion suggestion, @NonNull Group group) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("suggestion", $(JsonHandler.class).toJsonTree(suggestion));
+
+        saveMessageWithAttachment(group, jsonObject);
+
+        return true;
+    }
+
+    public boolean shareEvent(@NonNull Event event, @NonNull Group group) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("event", $(JsonHandler.class).toJsonTree(event));
 
         saveMessageWithAttachment(group, jsonObject);
 

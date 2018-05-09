@@ -201,6 +201,18 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/peopleInGroup" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/shareWithRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@+id/replyMessage"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup" />
+
         <EditText
             android:id="@+id/searchContacts"
             android:layout_width="match_parent"

@@ -18,7 +18,7 @@ import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.EventBubbleHandler;
 import closer.vlllage.com.closer.handler.EventHandler;
 import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
-import closer.vlllage.com.closer.handler.GroupMessageSuggestionsHandler;
+import closer.vlllage.com.closer.handler.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.IntentHandler;
 import closer.vlllage.com.closer.handler.LocationHandler;
 import closer.vlllage.com.closer.handler.MapHandler;
@@ -88,7 +88,7 @@ public class MapsActivity extends PoolActivity {
                 boolean success = false;
                 if (mapBubble.getTag() instanceof Suggestion) {
                     Suggestion suggestion = (Suggestion) mapBubble.getTag();
-                    success = $(GroupMessageSuggestionsHandler.class).shareSuggestion(suggestion, group);
+                    success = $(GroupMessageAttachmentHandler.class).shareSuggestion(suggestion, group);
                 }
 
                 if (!success) {
@@ -124,7 +124,7 @@ public class MapsActivity extends PoolActivity {
                         break;
                     case 2:
                         $(ShareHandler.class).shareTo(menuBubble.getLatLng(), group -> {
-                            boolean success = $(GroupMessageSuggestionsHandler.class).shareLocation(menuBubble.getLatLng(), group);
+                            boolean success = $(GroupMessageAttachmentHandler.class).shareLocation(menuBubble.getLatLng(), group);
 
                             if (!success) {
                                 $(DefaultAlerts.class).thatDidntWork();
