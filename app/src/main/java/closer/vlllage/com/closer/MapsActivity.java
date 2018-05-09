@@ -9,15 +9,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.BubbleHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
+import closer.vlllage.com.closer.handler.EventBubbleHandler;
 import closer.vlllage.com.closer.handler.EventHandler;
 import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.GroupMessageSuggestionsHandler;
@@ -41,11 +39,8 @@ import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.pool.PoolActivity;
-import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
-import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Suggestion;
-import io.objectbox.android.AndroidScheduler;
 
 public class MapsActivity extends PoolActivity {
 
@@ -188,15 +183,7 @@ public class MapsActivity extends PoolActivity {
 
         $(MyGroupsLayoutHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
 
-        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Event.class).query()
-                    .greater(Event_.endsAt, Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime())
-                .build().subscribe().on(AndroidScheduler.mainThread())
-                .observer(events -> {
-                    $(BubbleHandler.class).remove(mapBubble -> mapBubble.getType() == BubbleType.EVENT);
-                    for (Event event : events) {
-                        $(BubbleHandler.class).add($(EventHandler.class).eventBubbleFrom(event));
-                    }
-                }));
+        $(EventBubbleHandler.class).attach();
 
         findViewById(R.id.showPublicGroups).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
     }

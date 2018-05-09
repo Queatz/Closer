@@ -17,16 +17,15 @@ POST EVENT
 ==========
 
 App:
- [X] Tap on event bubble (opens event chat)
-    [.] Share button -> Share with...
-        [ ] Share event message type
+ [.] Event actions bar
+    [.] Share
+        [ ] Handle "share event" message type
         [ ] Show groups, same as when in bubble
-    [ ] Show HOST next to the event host in messages
-    [.] If creator is me: Cancel this event option
-    [.] Don't replace existing bubbles on map
-    [.] CreateResult with other details, such as group
-    [ ] expire group chats after event ends
-    [ ] push notifications for new events
+    [.] Cancel event
+    [.] Show on map
+ [ ] Show HOST next to the event host in messages
+ [.] Time + price in event description of group chat
+ [.] Show event price on bubble
 
 Backend:
  [.] Auto-create event group "event:1456"
