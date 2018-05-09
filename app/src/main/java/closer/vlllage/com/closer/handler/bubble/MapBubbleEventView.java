@@ -55,8 +55,15 @@ public class MapBubbleEventView extends PoolMember {
                 DAY_IN_MILLIS
         ).toString();
 
-        actionTextView.setText($(ResourcesHandler.class).getResources()
-                .getString(R.string.event_start_end_time, startTime, endTime, day));
+        String eventTimeText = $(ResourcesHandler.class).getResources()
+                .getString(R.string.event_start_end_time, startTime, endTime, day);
+
+        if (event.getAbout() != null && !event.getAbout().trim().isEmpty()) {
+            actionTextView.setText($(ResourcesHandler.class).getResources()
+                    .getString(R.string.event_price_and_time, eventTimeText));
+        } else {
+            actionTextView.setText(eventTimeText);
+        }
     }
 
     public interface MapBubbleEventClickListener {

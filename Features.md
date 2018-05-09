@@ -25,7 +25,6 @@ App:
     [.] Show on map
  [ ] Show HOST next to the event host in messages
  [.] Time + price in event description of group chat
- [.] Show event price on bubble
 
 Backend:
  [.] Auto-create event group "event:1456"
