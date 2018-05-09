@@ -17,7 +17,7 @@ POST EVENT
 ==========
 
 App:
- [.] Event actions bar
+ [X] Event actions bar
     [.] Share
         [ ] Handle "share event" message type
         [ ] Show groups, same as when in bubble

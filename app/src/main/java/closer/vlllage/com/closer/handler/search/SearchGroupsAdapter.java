@@ -11,10 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.handler.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Group;
 
 public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter.SearchGroupsViewHolder> {
@@ -53,9 +57,18 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
         Group group = groups.get(position - getCreateGroupCount());
 
-        holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.open));
         holder.name.setText(group.getName());
-        holder.about.setText($(Val.class).of(group.getAbout()));
+        if (group.hasEvent()) {
+            holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.open_event));
+            Event event = $(StoreHandler.class).getStore().box(Event.class).query()
+                    .equal(Event_.id, group.getEventId())
+                    .build().findFirst();
+            holder.about.setText(event != null ? $(EventDetailsHandler.class).formatEventDetails(event) :
+                $(ResourcesHandler.class).getResources().getString(R.string.event));
+        } else {
+            holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.open));
+            holder.about.setText($(Val.class).of(group.getAbout()));
+        }
         holder.itemView.setOnClickListener(view -> {
             if (onGroupClickListener != null) {
                 onGroupClickListener.onGroupClicked(group);
