@@ -13,6 +13,7 @@ public class EventResult extends ModelResult {
     public Date endsAt;
     public boolean cancelled;
     public String groupId;
+    public String creator;
 
     public static Event from(EventResult eventResult) {
         Event event = new Event();
@@ -30,6 +31,7 @@ public class EventResult extends ModelResult {
         event.setStartsAt(eventResult.startsAt);
         event.setCancelled(eventResult.cancelled);
         event.setGroupId(eventResult.groupId);
+        event.setCreator(eventResult.creator);
         return event;
     }
 }

@@ -9,6 +9,7 @@ public class Event extends BaseObject {
     private String name;
     private String about;
     private String groupId;
+    private String creator;
     private Double latitude;
     private Double longitude;
     private Date startsAt;
@@ -89,5 +90,14 @@ public class Event extends BaseObject {
 
     public boolean hasGroup() {
         return groupId != null;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public Event setCreator(String creator) {
+        this.creator = creator;
+        return this;
     }
 }

@@ -9,16 +9,22 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import closer.vlllage.com.closer.handler.AccountHandler;
 import closer.vlllage.com.closer.handler.ActivityHandler;
+import closer.vlllage.com.closer.handler.AlertHandler;
 import closer.vlllage.com.closer.handler.ApiHandler;
 import closer.vlllage.com.closer.handler.ApplicationHandler;
+import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.MapActivityHandler;
 import closer.vlllage.com.closer.handler.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.PermissionHandler;
+import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.RefreshHandler;
+import closer.vlllage.com.closer.handler.ResourcesHandler;
 import closer.vlllage.com.closer.handler.TimerHandler;
 import closer.vlllage.com.closer.handler.TopHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
@@ -110,7 +116,28 @@ public class GroupActivity extends CircularRevealActivity {
 
             actionShare.setOnClickListener(view -> {});
             actionShowOnMap.setOnClickListener(view -> showEventOnMap(event));
-            actionCancel.setOnClickListener(view -> {});
+
+            if (!event.isCancelled() && event.getCreator() != null && event.getCreator().equals($(PersistenceHandler.class).getPhoneId())) {
+                actionCancel.setOnClickListener(view -> {
+                    $(AlertHandler.class).make()
+                            .setTitle($(ResourcesHandler.class).getResources().getString(R.string.cancel_event))
+                            .setMessage($(ResourcesHandler.class).getResources().getString(R.string.event_will_be_cancelled, event.getName()))
+                            .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.cancel_event))
+                            .setPositiveButtonCallback(result -> {
+                                $(DisposableHandler.class).add($(ApiHandler.class).cancelEvent(event.getId()).subscribe(successResult -> {
+                                    if (successResult.success) {
+                                        $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.event_cancelled, event.getName()));
+                                        $(RefreshHandler.class).refreshEvents(new LatLng(event.getLatitude(), event.getLongitude()));
+                                    } else {
+                                        $(DefaultAlerts.class).thatDidntWork();
+                                    }
+                                }, error -> $(DefaultAlerts.class).thatDidntWork()));
+                            })
+                            .show();
+                });
+            } else {
+                actionCancel.setVisibility(View.GONE);
+            }
         }));
     }
 

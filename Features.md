@@ -1,8 +1,3 @@
-# Validate
-
- [ ] P0 (Polish) Use "No name" always in place of "Unknown" or "null"
- [o] P0 (Polish) Hide inviting when searching contacts
- 
 # Incoming
 
  [ ] 
@@ -19,14 +14,11 @@ POST EVENT
 App:
  [X] Event actions bar
     [.] Share
-        [ ] Handle "share event" message type
+        [ ] Handle "share event" message type in group messages
         [ ] Show groups, same as when in bubble
     [.] Cancel event
- [ ] Show HOST next to the event host in messages
- [.] Time + price in event description of group chat
 
 Backend:
- [.] Auto-create event group "event:1456"
  [ ] 4 Tests
 
 Daily notification:
@@ -42,12 +34,14 @@ Daily notification:
 
 ### P0 ###
 
+ [o] P? (Polish) Warn about creating events in the past
  [o] P? (Polish) Set map margin top no status bar
  [o] P? (Polish) Don't allow direct messages if active=false ("X has already left the map")
  [ ] P? (Polish) Settings bubble at end pink [Set event notification time]
  [ ] P? (Polish) Settings show privacy policy (/static/privacy)
  [o] P? (Polish) Randomize message hint
- 
+ [ ] P? (Polish)  Show HOST next to the event host in messages
+
 ### P1 ###
 
  [o] P1 (Polish) Use suggested name on number verified

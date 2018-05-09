@@ -37,4 +37,11 @@ public class DefaultAlerts extends PoolMember {
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
                 .show();
     }
+
+    public void message(String message) {
+        $(AlertHandler.class).make()
+                .setMessage(message)
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
+                .show();
+    }
 }

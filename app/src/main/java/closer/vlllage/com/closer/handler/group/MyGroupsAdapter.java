@@ -118,10 +118,7 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
     private void leaveGroup(Group group) {
         $(DisposableHandler.class).add($(ApiHandler.class).leaveGroup(group.getId()).subscribe(successResult -> {
             if (successResult.success) {
-                $(AlertHandler.class).make()
-                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()))
-                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
-                        .show();
+                $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()));
                 $(RefreshHandler.class).refreshMyGroups();
             } else {
                 $(DefaultAlerts.class).thatDidntWork();

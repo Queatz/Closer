@@ -126,4 +126,7 @@
     <string name="cancelled">Cancelled</string>
     <string name="event">Event</string>
     <string name="open_event">Open event</string>
+    <string name="event_cancelled">%1$s has been cancelled</string>
+    <string name="cancel_event">Cancel event</string>
+    <string name="event_will_be_cancelled">%1$s will be cancelled</string>
 </resources>
