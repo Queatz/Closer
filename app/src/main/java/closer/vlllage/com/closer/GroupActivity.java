@@ -40,7 +40,6 @@ import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
-import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.query.QueryBuilder;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -191,9 +190,7 @@ public class GroupActivity extends CircularRevealActivity {
         messagesRecyclerView.setVisibility(View.GONE);
         actionShare.setText(R.string.cancel);
 
-        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
-                .equal(Group_.isPublic, true);
-
+        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
         List<Group> groups = queryBuilder.sort($(SortHandler.class).sortGroups()).build().find();
 
         SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(GroupHandler.class), group -> {

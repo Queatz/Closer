@@ -95,7 +95,7 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
     }
 
     private int getSuggestionCount() {
-        return phoneNumber == null ? 0 : 1 + invites.size();
+        return phoneNumber == null ? invites.size() : 1;
     }
 
     class PhoneContactViewHolder extends RecyclerView.ViewHolder {

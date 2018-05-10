@@ -6,66 +6,64 @@
  [ ] 
  [ ] 
 
-# Potential Directions
-
-# Scratchpad
-
-# More Goodies
-
 ### P0 ###
 
- [o] P? (Polish) Set map margin top no status bar
- [o] P? (Polish) Don't allow direct messages if active=false ("X has already left the map")
- [ ] P? (Polish) Settings bubble at end pink [Set event notification time]
- [ ] P? (Polish) Settings show privacy policy (/static/privacy)
- [o] P? (Polish) Randomize message hint
- [ ] P? (Polish) Show HOST next to the event host in messages
+ [ ] P0.3 (Release) Privacy policy - http://closer.vlllage.com/privacy
+ [ ] P0.3 (Polish) Handle permanently denied contacts permissions (Dialog telling to go to settings)
+
+ [o] P0.4 (Polish) Some messages/groups are duplicated
+ [o] P0.4 (Polish) Event bubble burbbles upon creation
+ [ ] P0.4 (Polish) Don't reactivate bubble when using push notification
+
+ [o] P0.5 (Polish) Set map margin top no status bar
+ [ ] P0.5 (Polish) Settings bubble at end pink [Set event notification time]
+ [ ] P0.5 (Polish) Settings show privacy policy (/static/privacy)
+ [o] P0.5 (Polish) Randomize message hint
+
+ [ ] P0.7 (Polish) Show inactive contacts (haven't seen any activity in >1 month)
+
+ [o] P0.8 (Polish) Use suggested name on number verified
+ [ ] P0.8 (Polish) Name null checks backend
+ [ ] P0.8 (Polish) Don't show timestamps that are the same as the previous message
+
+ [o] P0.9 (Feature) Add your name bubble
 
 ### P1 ###
 
- [o] P1 (Polish) Use suggested name on number verified
- [o] P1 (Feature) App Feedback bubble
-    [ ] Bubble
-    [ ] Endpoint
-    [ ] Email
- [ ] P1 (Polish) Don't reactivate bubble when using push notification
- [o] P1 (Polish) Some messages/groups are duplicated
- [ ] P1 (Polish) Handle permanently denied contacts permissions (Dialog telling to go to settings)
- [o] P1 (Polish) HTTPS
- [ ] P1 (Polish) Don't show timestamps that are the same as the previous message
- [ ] P1 (Polish) Show no recent activity message
- [ ] P1 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-SIGNATURE
- [ ] P1 (Polish) "Network unavailable"
- [ ] P1 (Polish) Name null checks backend
- [o] P1 (Polish) Show "Bun is typing..."
- [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
- [ ] P1 (Polish) Share photos (in chats)
- [.] P1 (Polish) Events briefing every morning (8:30am)
-    [.] JobScheduler check events at specified time
-### P2 ###
-
- [ ] P2 (Polish) Show inactive contacts (haven't seen any activity in >1 month)
- [b] P2 (Polish) All messages from person go to one notification box
- [o] P2 (Polish) Search for places on the map (green button)
- [ ] P2 (Polish) Get Async push notification queues working (copy from Vlllage)
- [ ] P2 (Feature) Add photo / video circles to map tap to fly into
- [o] P2 (Feature) Pinned public groups
- [o] P2 (Feature) Chats on map (Open chat here...) -> Opens group messages, anyone can drop in from bub
- [o] P2 (Feature) Add your name bubble
- [ ] P2 (Feature) Share photo to group (tap on group from menu)
+ [ ] P1 (Photos) Add photo / video circles to map tap to fly into
+ [ ] P1 (Photos) Share photos (in chats)
+ [ ] P1 (Photos) Camera icon appears on map to add photo (when zoomed in in circle menu around your location)
+ [ ] P1 (Photos) Photos on map (when zoomed in, dots when zoomed out)
+ [ ] P1 (Photos) Share (multiple) photos to group from external app (tap on group from menu)
+ [o] P1 (Photos) Add public photos to suggestion
+    [ ] Get screen wake lock working
     [ ] Tap on photos to view all shared to group
         [ ] Share icon on photo
+ [o] P1 (Polish) HTTPS
+ [ ] P1 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-SIGNATURE
+ [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
+ [o] P1 (Polish) Show "Bun is typing..."
+    [.] JobScheduler check events at specified time
+
+### P2 ###
+
+ [b] P2 (Polish) All messages from person go to one notification box
+ [o] P2 (Polish) Search for places on the map (green button... suggestions from google...)
+ [ ] P2 (Polish) Get Async push notification queues working (copy from Vlllage)
+ [o] P2 (Feature) Pinned public groups
+ [o] P2 (Feature) Chats on map (Open chat here...) -> Opens group messages, anyone can drop in from bub
  [ ] P2 (Feature) Red arrows pointing towards events off-screen (2 mi)
+ [o] P2 (Feature) Set profile photo
+ [o] P2 (Feature) Single emoji floats many of them over your screen
+    [o] Bubble to allow draw over screen permission
 
 ### P3 ###
 
- [o] P3 (Feature) Single emoji floats many of them over your screen
-    [o] Bubble to allow draw over screen
- [o] P3 (Feature) Add public photos to suggestion
-    [ ] Get screen wake lock working
- [ ] P3 (Feature) Photos on map (when zoomed in, dots when zoomed out)
- [ ] P3 (Feature) Camera icon appears on map to add photo (when zoomed in)
- [o] P3 (Feature) Set profile photo
+ [ ] Closer place search
+     [ ] Thumbs up for verified number?
+ [ ] Directions button in long press menu
+ [ ] Android Auto
+ [ ] Closer Reminders (location, event, suggestion...)
 
 #
 # Advertise Closer in SF and NY and LA and CO (NOT Austin!! :P)                  <-- !!
@@ -74,8 +72,9 @@
 [.] Localized screenshots (NY, LA, SF)
 [ ] "Pulses" of invites so masses of people join at the exact same time
     [ ] Limited join times (can only join on Saturday at 2pm!)
-[ ] Get location queries implemented
-    [ ] (local) Expanding bounding box query helper for suggestions
+
+# MKTG: Marketing Feature
+Market with free tacos / market closer as a temporary app download / download closer on October 25th treasure box
 
 # Feature: Mute groups
 
@@ -85,13 +84,6 @@
     [ ] Don't send notifications if mute token exists
     [ ] Mute group
         [ ] Bell/slashed-bell icon top right
-
-# Presence
-
- [ ] P1 (Release) Privacy policy - http://closer.vlllage.com/privacy
- [ ] P2 (Release) Fancy marketing screenshots with written text on Play Store
- [ ] P2 (Release) Closer launch party (once totally complete :) free wine fridays 2pm, cheese, give aways announce through closer
- [ ] P2 (Release) Closer infatuation parties
 
  # $ Ideas
  
