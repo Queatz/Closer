@@ -14,7 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_event_details"
-            android:focusedByDefault="true"
             android:selectAllOnFocus="true"
             android:imeOptions="actionNext"
             android:paddingTop="24dp"
@@ -30,6 +29,7 @@
             android:id="@+id/changeDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:background="?android:attr/selectableItemBackground">
 
             <TextView

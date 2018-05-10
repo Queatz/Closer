@@ -1,6 +1,8 @@
 package closer.vlllage.com.closer.handler;
 
+import android.support.v4.widget.NestedScrollView;
 import android.text.format.DateUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -58,27 +60,55 @@ public class EventHandler extends PoolMember {
                         }
                     });
 
+                    viewHolder.scrollView.setOnTouchListener(new View.OnTouchListener() {
+
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if (viewHolder.eventName.hasFocus()) {
+                                viewHolder.eventName.clearFocus();
+                            }
+                            if (viewHolder.eventPrice.hasFocus()) {
+                                viewHolder.eventPrice.clearFocus();
+                            }
+                            return false;
+                        }
+                    });
+
                     alertConfig.setAlertResult(viewHolder);
+                })
+                .setButtonClickCallback(alertResult -> {
+                    CreateEventViewHolder viewHolder = (CreateEventViewHolder) alertResult;
+                    boolean isValid = new Date().before(getViewState(viewHolder).endsAt.getTime());
+                    if (!isValid) {
+                        $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.event_must_not_end_in_the_past));
+                    }
+                    return isValid;
                 })
                 .setPositiveButtonCallback(alertResult -> {
                     CreateEventViewHolder viewHolder = (CreateEventViewHolder) alertResult;
 
-                    Calendar startsAt = Calendar.getInstance(TimeZone.getDefault());
-                    Calendar endsAt = Calendar.getInstance(TimeZone.getDefault());
-
-                    startsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
-                            viewHolder.startsAtTimePicker.getCurrentHour(), viewHolder.startsAtTimePicker.getCurrentMinute(), 0);
-                    endsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
-                            viewHolder.endsAtTimePicker.getCurrentHour(), viewHolder.endsAtTimePicker.getCurrentMinute(), 0);
+                    CreateEventViewState event = getViewState(viewHolder);
 
                     createNewEvent(latLng,
                             viewHolder.eventName.getText().toString(),
                             viewHolder.eventPrice.getText().toString(),
-                            startsAt.getTime(),
-                            endsAt.getTime());
+                            event.startsAt.getTime(),
+                            event.endsAt.getTime());
                 })
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.post_event))
                 .show();
+    }
+
+    private CreateEventViewState getViewState(CreateEventViewHolder viewHolder) {
+        Calendar startsAt = Calendar.getInstance(TimeZone.getDefault());
+        Calendar endsAt = Calendar.getInstance(TimeZone.getDefault());
+
+        startsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
+                viewHolder.startsAtTimePicker.getCurrentHour(), viewHolder.startsAtTimePicker.getCurrentMinute(), 0);
+        endsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
+                viewHolder.endsAtTimePicker.getCurrentHour(), viewHolder.endsAtTimePicker.getCurrentMinute(), 0);
+
+        return new CreateEventViewState(startsAt, endsAt);
     }
 
     private void createNewEvent(LatLng latLng, String name, String price, Date startsAt, Date endsAt) {
@@ -112,6 +142,7 @@ public class EventHandler extends PoolMember {
         View changeDateButton;
         EditText eventName;
         EditText eventPrice;
+        NestedScrollView scrollView;
 
         CreateEventViewHolder(View view) {
             this.startsAtTimePicker = view.findViewById(R.id.startsAt);
@@ -121,6 +152,17 @@ public class EventHandler extends PoolMember {
             this.changeDateButton = view.findViewById(R.id.changeDate);
             this.eventName = view.findViewById(R.id.name);
             this.eventPrice = view.findViewById(R.id.price);
+            scrollView = (NestedScrollView) view;
+        }
+    }
+
+    private class CreateEventViewState {
+        Calendar startsAt;
+        Calendar endsAt;
+
+        public CreateEventViewState(Calendar startsAt, Calendar endsAt) {
+            this.startsAt = startsAt;
+            this.endsAt = endsAt;
         }
     }
 }

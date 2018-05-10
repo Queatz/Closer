@@ -30,6 +30,9 @@ public class EventBubbleHandler extends PoolMember {
 
                     visibleEvents.clear();
                     for (Event event : events) {
+                        if (event.getId() == null || event.getGroupId() == null) {
+                            continue;
+                        }
                         visibleEvents.add(event.getId());
                     }
                 }));

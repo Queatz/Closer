@@ -131,4 +131,5 @@
     <string name="cancel_event">Cancel event</string>
     <string name="event_will_be_cancelled">%1$s will be cancelled</string>
     <string name="event_notification">%1$s starts %2$s</string>
+    <string name="event_must_not_end_in_the_past">Event must not end in the past</string>
 </resources>

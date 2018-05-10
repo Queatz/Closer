@@ -19,6 +19,7 @@ public class AlertConfig {
     private Integer textView;
     private OnTextViewSubmitCallback onTextViewSubmitCallback;
     private OnAfterViewCreatedCallback onAfterViewCreated;
+    private ButtonClickCallback buttonClickCallback;
     private Object alertResult;
     private @StyleRes int theme = R.style.AppTheme_AlertDialog;
 
@@ -93,6 +94,15 @@ public class AlertConfig {
         return this;
     }
 
+    public ButtonClickCallback getButtonClickCallback() {
+        return buttonClickCallback;
+    }
+
+    public AlertConfig setButtonClickCallback(ButtonClickCallback buttonClickCallback) {
+        this.buttonClickCallback = buttonClickCallback;
+        return this;
+    }
+
     public Integer getTextViewId() {
         return textView;
     }
@@ -141,6 +151,10 @@ public class AlertConfig {
 
     public interface ButtonCallback {
         void onClick(Object alertResult);
+    }
+
+    public interface ButtonClickCallback {
+        boolean onButtonClick(Object alertResult);
     }
 
     public interface OnAfterViewCreatedCallback {

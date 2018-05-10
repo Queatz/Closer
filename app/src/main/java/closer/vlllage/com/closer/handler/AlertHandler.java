@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler;
 
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -83,6 +84,27 @@ public class AlertHandler extends PoolMember {
                 }
 
                 return false;
+            });
+        }
+
+        if (alertConfig.getButtonClickCallback() != null) {
+            alertDialog.setOnShowListener(dialog -> {
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(view -> {
+                    if (alertConfig.getButtonClickCallback().onButtonClick(alertConfig.getAlertResult())) {
+                        if (alertConfig.getPositiveButtonCallback() != null) {
+                            alertConfig.getPositiveButtonCallback().onClick(alertConfig.getAlertResult());
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(view -> {
+                    if (alertConfig.getButtonClickCallback().onButtonClick(alertConfig.getAlertResult())) {
+                        if (alertConfig.getNegativeButtonCallback() != null) {
+                            alertConfig.getNegativeButtonCallback().onClick(alertConfig.getAlertResult());
+                            dialog.dismiss();
+                        }
+                    }
+                });
             });
         }
 

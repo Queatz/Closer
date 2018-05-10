@@ -14,8 +14,6 @@
 
 ### P0 ###
 
- [o] P0 (Polish) 1st time post event can't click
- [o] P? (Polish) Warn about creating events in the past
  [o] P? (Polish) Set map margin top no status bar
  [o] P? (Polish) Don't allow direct messages if active=false ("X has already left the map")
  [ ] P? (Polish) Settings bubble at end pink [Set event notification time]
