@@ -193,7 +193,7 @@ public class GroupContactsHandler extends PoolMember {
             }
 
             phoneContactAdapter.setContacts(contacts);
-        }));
+        }, error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
     public void showContactsForQuery() {

@@ -22,6 +22,7 @@ import closer.vlllage.com.closer.handler.ApplicationHandler;
 import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.MapActivityHandler;
 import closer.vlllage.com.closer.handler.MiniWindowHandler;
@@ -119,7 +120,7 @@ public class GroupActivity extends CircularRevealActivity {
                     });
                 });
             }
-        }));
+        }, error -> $(DefaultAlerts.class).syncError()));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(event -> {
             groupDetails.setVisibility(View.VISIBLE);
@@ -152,7 +153,7 @@ public class GroupActivity extends CircularRevealActivity {
             } else {
                 actionCancel.setVisibility(View.GONE);
             }
-        }));
+        }, error -> $(DefaultAlerts.class).syncError()));
     }
 
     @Override
@@ -196,7 +197,14 @@ public class GroupActivity extends CircularRevealActivity {
         List<Group> groups = queryBuilder.sort($(SortHandler.class).sortGroups()).build().find();
 
         SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(GroupHandler.class), group -> {
-            $(GroupMessageAttachmentHandler.class).shareEvent(event, group);
+            boolean success = $(GroupMessageAttachmentHandler.class).shareEvent(event, group);
+
+            if (success) {
+                ((CircularRevealActivity) $(ActivityHandler.class).getActivity())
+                        .finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
+            } else {
+                $(DefaultAlerts.class).thatDidntWork();
+            }
         }, null);
 
         searchGroupsAdapter.setGroups(groups);

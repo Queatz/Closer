@@ -128,7 +128,7 @@ public class PermissionHandler extends PoolMember {
                             $(DisposableHandler.class).dispose(disposable);
                         }
                     }
-            );
+            , error -> $(DefaultAlerts.class).thatDidntWork());
 
             $(DisposableHandler.class).add(disposable);
         }

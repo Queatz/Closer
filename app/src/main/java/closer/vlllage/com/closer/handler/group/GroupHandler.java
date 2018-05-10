@@ -12,6 +12,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.handler.ApiHandler;
+import closer.vlllage.com.closer.handler.DefaultAlerts;
 import closer.vlllage.com.closer.handler.DisposableHandler;
 import closer.vlllage.com.closer.handler.PersistenceHandler;
 import closer.vlllage.com.closer.handler.ResourcesHandler;
@@ -160,7 +161,7 @@ public class GroupHandler extends PoolMember {
         } else {
             $(DisposableHandler.class).add($(ApiHandler.class).getEvent(eventId).map(EventResult::from).subscribe(eventFromServer -> {
                 eventChanged.onNext(eventFromServer);
-            }));
+            }, error -> $(DefaultAlerts.class).thatDidntWork()));
         }
     }
 

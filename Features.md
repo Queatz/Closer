@@ -8,25 +8,13 @@
 
 # Potential Directions
 
-POST EVENT
-==========
-
-App:
-
- [.] Push notifications
-    [.] Events briefing every morning (8:30am)
-        [.] JobScheduler check events at specified time
-    [.] Send new event notifications to nearby devices
-        [.] "JuiceLand party starts in 2 hours - 8:00pm"
-
- [ ] Release today + update Backend.java!
-
 # Scratchpad
 
 # More Goodies
 
 ### P0 ###
 
+ [o] P0 (Polish) 1st time post event can't click
  [o] P? (Polish) Warn about creating events in the past
  [o] P? (Polish) Set map margin top no status bar
  [o] P? (Polish) Don't allow direct messages if active=false ("X has already left the map")
@@ -54,7 +42,8 @@ App:
  [o] P1 (Polish) Show "Bun is typing..."
  [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
  [ ] P1 (Polish) Share photos (in chats)
-
+ [.] P1 (Polish) Events briefing every morning (8:30am)
+    [.] JobScheduler check events at specified time
 ### P2 ###
 
  [ ] P2 (Polish) Show inactive contacts (haven't seen any activity in >1 month)
