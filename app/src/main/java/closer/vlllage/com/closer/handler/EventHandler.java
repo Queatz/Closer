@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.handler;
 
-import android.support.v4.widget.NestedScrollView;
+import android.os.Build;
 import android.text.format.DateUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,12 +15,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import closer.vlllage.com.closer.InterceptableScrollView;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.util.KeyboardUtil;
 
 import static android.text.format.DateUtils.DAY_IN_MILLIS;
 
@@ -60,19 +62,26 @@ public class EventHandler extends PoolMember {
                         }
                     });
 
-                    viewHolder.scrollView.setOnTouchListener(new View.OnTouchListener() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        viewHolder.scrollView.setOnInterceptTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                if (viewHolder.eventName.hasFocus()) {
+                                    viewHolder.eventName.clearFocus();
+                                    viewHolder.scrollView.requestFocus();
+                                    KeyboardUtil.showKeyboard(viewHolder.eventName, false);
+                                }
 
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (viewHolder.eventName.hasFocus()) {
-                                viewHolder.eventName.clearFocus();
+                                if (viewHolder.eventPrice.hasFocus()) {
+                                    viewHolder.eventPrice.clearFocus();
+                                    viewHolder.scrollView.requestFocus();
+                                    KeyboardUtil.showKeyboard(viewHolder.eventPrice, false);
+                                }
+
+                                return false;
                             }
-                            if (viewHolder.eventPrice.hasFocus()) {
-                                viewHolder.eventPrice.clearFocus();
-                            }
-                            return false;
-                        }
-                    });
+                        });
+                    }
 
                     alertConfig.setAlertResult(viewHolder);
                 })
@@ -142,7 +151,7 @@ public class EventHandler extends PoolMember {
         View changeDateButton;
         EditText eventName;
         EditText eventPrice;
-        NestedScrollView scrollView;
+        InterceptableScrollView scrollView;
 
         CreateEventViewHolder(View view) {
             this.startsAtTimePicker = view.findViewById(R.id.startsAt);
@@ -152,7 +161,7 @@ public class EventHandler extends PoolMember {
             this.changeDateButton = view.findViewById(R.id.changeDate);
             this.eventName = view.findViewById(R.id.name);
             this.eventPrice = view.findViewById(R.id.price);
-            scrollView = (NestedScrollView) view;
+            scrollView = (InterceptableScrollView) view;
         }
     }
 

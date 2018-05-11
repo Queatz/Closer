@@ -1,13 +1,25 @@
+# Word
+
+ [ ] "Sometimes I post what I'm up to on my app"
+ [ ] Fb ads
+
 # Incoming
 
- [ ] 
- [ ] 
- [ ] 
- [ ] 
- [ ] 
+ [ ] find your equals / ai engine app
+ [ ] Photos of people in Austin blog / things they like to do
+ [ ] Closer home work on map icons on map
+ [ ] Closer friends on map
+ [ ] Closer weekly/monthly holidays
+ [ ] Groups in groups? Or group domains? Layers? I.e. dev squads for X number of projects
+ [ ] Closer search bar at top
+ [ ] Long press menu directions, share, save, camera, remind
+ [ ] Closer become an ambassador in your area (things to do as an ambassador)
+ [ ] Closer enter invite code to join secret group
+ [ ] Goodies.  That pop up on the map when you're near by them
 
 ### P0 ###
 
+ [ ] P0.2 (Release) New screenshots
  [ ] P0.3 (Release) Privacy policy - http://closer.vlllage.com/privacy
  [ ] P0.3 (Polish) Handle permanently denied contacts permissions (Dialog telling to go to settings)
 
@@ -31,7 +43,7 @@
 ### P1 ###
 
  [ ] P1 (Photos) Add photo / video circles to map tap to fly into
- [ ] P1 (Photos) Share photos (in chats)
+ [ ] P1 (Photos) Share photos (in chats, camera icon on send button pre-text entered)
  [ ] P1 (Photos) Camera icon appears on map to add photo (when zoomed in in circle menu around your location)
  [ ] P1 (Photos) Photos on map (when zoomed in, dots when zoomed out)
  [ ] P1 (Photos) Share (multiple) photos to group from external app (tap on group from menu)
@@ -73,8 +85,9 @@
 [ ] "Pulses" of invites so masses of people join at the exact same time
     [ ] Limited join times (can only join on Saturday at 2pm!)
 
-# MKTG: Marketing Feature
-Market with free tacos / market closer as a temporary app download / download closer on October 25th treasure box
+# MKTG: Marketing Feature Roles
+ [ ] Market with free tacos / market closer as a temporary app download / download closer on October 25th treasure box
+ [ ] Roles: Suggestion finder, event hoster, etc
 
 # Feature: Mute groups
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<closer.vlllage.com.closer.InterceptableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/AppTheme.Red">
@@ -14,8 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_event_details"
-            android:selectAllOnFocus="true"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionGo"
             android:paddingTop="24dp"
             android:paddingRight="24dp"
             android:paddingLeft="24dp"
@@ -93,7 +92,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_event_price"
-            android:selectAllOnFocus="true"
             android:imeOptions="actionGo"
             android:padding="24dp"
             android:maxLength="5"
@@ -101,4 +99,4 @@
             android:inputType="textShortMessage" />
 
     </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+</closer.vlllage.com.closer.InterceptableScrollView>
