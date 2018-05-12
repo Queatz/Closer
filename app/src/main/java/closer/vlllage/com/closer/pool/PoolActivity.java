@@ -6,9 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import closer.vlllage.com.closer.App;
-import closer.vlllage.com.closer.handler.ActivityHandler;
-import closer.vlllage.com.closer.handler.ApplicationHandler;
-import closer.vlllage.com.closer.handler.PermissionHandler;
+import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
+import closer.vlllage.com.closer.handler.data.PermissionHandler;
 
 public abstract class PoolActivity extends FragmentActivity {
     private final Pool pool = new Pool();

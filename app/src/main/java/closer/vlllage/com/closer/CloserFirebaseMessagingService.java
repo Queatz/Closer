@@ -6,12 +6,12 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
-import closer.vlllage.com.closer.handler.JsonHandler;
-import closer.vlllage.com.closer.handler.NotificationHandler;
-import closer.vlllage.com.closer.handler.RefreshHandler;
-import closer.vlllage.com.closer.handler.TopHandler;
+import closer.vlllage.com.closer.handler.helpers.JsonHandler;
+import closer.vlllage.com.closer.handler.data.NotificationHandler;
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.helpers.TopHandler;
 import closer.vlllage.com.closer.store.models.Event;
-import closer.vlllage.com.closer.util.LatLngStr;
+import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 
 public class CloserFirebaseMessagingService extends FirebaseMessagingService {
     @Override
@@ -61,7 +61,7 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
                         }
                         break;
                     case "message":
-                        LatLng latLng = data.containsKey("latLng") ? LatLngStr.to(data.get("latLng")) : null;
+                        LatLng latLng = data.containsKey("latLng") ? app.$(LatLngStr.class).to(data.get("latLng")) : null;
                         app.$(NotificationHandler.class).showBubbleMessageNotification(
                                 data.get("phone"),
                                 latLng,

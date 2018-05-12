@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import closer.vlllage.com.closer.handler.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

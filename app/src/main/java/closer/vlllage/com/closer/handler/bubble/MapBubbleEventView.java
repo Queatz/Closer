@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.EventDetailsHandler;
-import closer.vlllage.com.closer.handler.OutboundHandler;
+import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.helpers.OutboundHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Event;
 

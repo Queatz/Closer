@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.EditText;
 
-import closer.vlllage.com.closer.handler.AccountHandler;
-import closer.vlllage.com.closer.handler.ApiHandler;
-import closer.vlllage.com.closer.handler.MiniWindowHandler;
+import closer.vlllage.com.closer.handler.data.AccountHandler;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.search.SearchHandler;
 
 public class SearchActivity extends CircularRevealActivity {

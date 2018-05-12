@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.OutboundHandler;
+import closer.vlllage.com.closer.handler.helpers.OutboundHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class MapBubbleSuggestionView extends PoolMember {

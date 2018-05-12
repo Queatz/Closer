@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.store;
 
-import closer.vlllage.com.closer.handler.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class StoreRefHandler extends PoolMember {

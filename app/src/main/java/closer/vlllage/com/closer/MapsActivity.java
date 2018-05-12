@@ -9,32 +9,37 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
-import closer.vlllage.com.closer.handler.AccountHandler;
-import closer.vlllage.com.closer.handler.ApiHandler;
-import closer.vlllage.com.closer.handler.BubbleHandler;
-import closer.vlllage.com.closer.handler.DefaultAlerts;
-import closer.vlllage.com.closer.handler.DisposableHandler;
-import closer.vlllage.com.closer.handler.EventBubbleHandler;
-import closer.vlllage.com.closer.handler.EventHandler;
-import closer.vlllage.com.closer.handler.GroupActivityTransitionHandler;
-import closer.vlllage.com.closer.handler.GroupMessageAttachmentHandler;
-import closer.vlllage.com.closer.handler.IntentHandler;
-import closer.vlllage.com.closer.handler.LocationHandler;
-import closer.vlllage.com.closer.handler.MapHandler;
-import closer.vlllage.com.closer.handler.MyBubbleHandler;
-import closer.vlllage.com.closer.handler.MyGroupsLayoutHandler;
-import closer.vlllage.com.closer.handler.PermissionHandler;
-import closer.vlllage.com.closer.handler.PersistenceHandler;
-import closer.vlllage.com.closer.handler.RefreshHandler;
-import closer.vlllage.com.closer.handler.ReplyLayoutHandler;
-import closer.vlllage.com.closer.handler.SearchActivityHandler;
-import closer.vlllage.com.closer.handler.SetNameHandler;
-import closer.vlllage.com.closer.handler.ShareHandler;
-import closer.vlllage.com.closer.handler.StatusLayoutHandler;
-import closer.vlllage.com.closer.handler.SuggestionHandler;
-import closer.vlllage.com.closer.handler.SyncHandler;
-import closer.vlllage.com.closer.handler.TimerHandler;
+import closer.vlllage.com.closer.handler.data.AccountHandler;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.event.EventBubbleHandler;
+import closer.vlllage.com.closer.handler.event.EventHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
+import closer.vlllage.com.closer.handler.helpers.LatLngStr;
+import closer.vlllage.com.closer.handler.map.IntentHandler;
+import closer.vlllage.com.closer.handler.data.LocationHandler;
+import closer.vlllage.com.closer.handler.map.MapHandler;
+import closer.vlllage.com.closer.handler.map.MyBubbleHandler;
+import closer.vlllage.com.closer.handler.map.MyGroupsLayoutHandler;
+import closer.vlllage.com.closer.handler.data.PermissionHandler;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.map.ReplyLayoutHandler;
+import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
+import closer.vlllage.com.closer.handler.map.SetNameHandler;
+import closer.vlllage.com.closer.handler.map.ShareHandler;
+import closer.vlllage.com.closer.handler.map.StatusLayoutHandler;
+import closer.vlllage.com.closer.handler.map.SuggestionHandler;
+import closer.vlllage.com.closer.handler.data.SyncHandler;
+import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
@@ -143,7 +148,7 @@ public class MapsActivity extends PoolActivity {
                             getString(R.string.share_this_location));
         });
         $(MapHandler.class).setOnMapIdleListener(latLng -> {
-            $(DisposableHandler.class).add($(ApiHandler.class).getPhonesNear(latLng).map(MapBubble::from).subscribe(mapBubbles ->
+            $(DisposableHandler.class).add($(ApiHandler.class).getPhonesNear(latLng).map(this::mapBubbleFrom).subscribe(mapBubbles ->
                             $(BubbleHandler.class).replace(mapBubbles), this::networkError));
 
             $(DisposableHandler.class).add($(ApiHandler.class).getSuggestionsNear(latLng).map(SuggestionResult::from).subscribe(suggestions ->
@@ -222,6 +227,24 @@ public class MapsActivity extends PoolActivity {
         }
 
         super.onBackPressed();
+    }
+
+    public List<MapBubble> mapBubbleFrom(List<PhoneResult> phoneResults) {
+        List<MapBubble> mapBubbles = new ArrayList<>();
+
+        for (PhoneResult phoneResult : phoneResults) {
+            if (phoneResult.geo == null) {
+                continue;
+            }
+
+            mapBubbles.add(new MapBubble(
+                    $(LatLngStr.class).to(phoneResult.geo),
+                    phoneResult.name == null ? "" : phoneResult.name,
+                    phoneResult.status
+            ).setPhone(phoneResult.id));
+        }
+
+        return mapBubbles;
     }
 
     private void networkError(Throwable throwable) {

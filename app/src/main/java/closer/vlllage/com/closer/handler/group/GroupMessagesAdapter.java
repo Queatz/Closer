@@ -17,10 +17,10 @@ import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.ApplicationHandler;
-import closer.vlllage.com.closer.handler.EventDetailsHandler;
-import closer.vlllage.com.closer.handler.JsonHandler;
-import closer.vlllage.com.closer.handler.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
+import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.helpers.JsonHandler;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;

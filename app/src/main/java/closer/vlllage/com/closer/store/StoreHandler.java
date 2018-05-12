@@ -4,10 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 
-import closer.vlllage.com.closer.handler.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.BaseObject;
-import closer.vlllage.com.closer.util.PhoneUtil;
 import io.objectbox.Property;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
@@ -29,7 +29,7 @@ public class StoreHandler extends PoolMember {
     public <T extends BaseObject> T create(Class<T> clazz) {
         try {
             T baseObject = clazz.getConstructor().newInstance();
-            baseObject.setId(newLocalId());
+            baseObject.setId($(Val.class).rndId());
             store.box(clazz).put(baseObject);
             return baseObject;
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
@@ -37,10 +37,6 @@ public class StoreHandler extends PoolMember {
         }
 
         return null;
-    }
-
-    private String newLocalId() {
-        return PhoneUtil.rndId();
     }
 
     public <T extends BaseObject> void removeAllExcept(Class<T> clazz, Property idProperty, Collection<String> idsToKeep) {

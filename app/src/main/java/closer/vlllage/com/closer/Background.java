@@ -8,14 +8,14 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.widget.Toast;
 
-import closer.vlllage.com.closer.handler.AccountHandler;
-import closer.vlllage.com.closer.handler.ApiHandler;
-import closer.vlllage.com.closer.handler.DisposableHandler;
+import closer.vlllage.com.closer.handler.data.AccountHandler;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_PHONE;
-import static closer.vlllage.com.closer.handler.NotificationHandler.EXTRA_NOTIFICATION;
-import static closer.vlllage.com.closer.handler.NotificationHandler.KEY_TEXT_REPLY;
-import static closer.vlllage.com.closer.handler.NotificationHandler.NOTIFICATION_ID;
+import static closer.vlllage.com.closer.handler.data.NotificationHandler.EXTRA_NOTIFICATION;
+import static closer.vlllage.com.closer.handler.data.NotificationHandler.KEY_TEXT_REPLY;
+import static closer.vlllage.com.closer.handler.data.NotificationHandler.NOTIFICATION_ID;
 
 public class Background extends BroadcastReceiver {
     @Override
