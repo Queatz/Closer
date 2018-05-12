@@ -78,8 +78,6 @@
 
 ### P0 ###
 
- [ ] P0.3 (Polish) Handle permanently denied contacts permissions (Dialog telling to go to settings)
-
  [o] P0.4 (Polish) Some messages/groups are duplicated
  [o] P0.4 (Polish) Event bubble burbbles upon creation
  [ ] P0.4 (Polish) Don't reactivate bubble when using push notification
@@ -88,10 +86,6 @@
  [o] P0.5 (Polish) Randomize message hint
 
  [ ] P0.7 (Polish) Show inactive contacts (haven't seen any activity in >1 month)
-
- [o] P0.8 (Polish) Use suggested name on number verified
- [ ] P0.8 (Polish) Name null checks backend
- [ ] P0.8 (Polish) Don't show timestamps that are the same as the previous message
 
  [o] P0.9 (Feature) Add your name bubble
 

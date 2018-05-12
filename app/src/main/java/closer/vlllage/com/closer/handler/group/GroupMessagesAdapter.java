@@ -162,18 +162,26 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             }
         }
 
-        boolean previousMessageIsSameContact = position + 1 < getItemCount() - 1 &&
+        boolean previousMessageIsSameContact = position + 1 < getItemCount() &&
                 groupMessages.get(position + 1).getAttachment() == null &&
                 groupMessages.get(position + 1).getFrom() != null &&
                 groupMessages.get(position + 1).getFrom().equals(groupMessage.getFrom());
+
+        boolean previousMessageIsSameTime = position + 1 < getItemCount() &&
+                groupMessages.get(position + 1).getAttachment() == null &&
+                getTimeString(groupMessages.get(position + 1).getTime()).equals(getTimeString(groupMessage.getTime()));
 
         holder.action.setVisibility(View.GONE);
         holder.name.setVisibility(previousMessageIsSameContact ? View.GONE : View.VISIBLE);
         holder.message.setVisibility(View.VISIBLE);
         holder.message.setGravity(Gravity.START);
-        holder.time.setVisibility(View.VISIBLE);
 
-        holder.time.setText(getTimeString(groupMessage.getTime()));
+        if (previousMessageIsSameTime) {
+            holder.time.setVisibility(View.GONE);
+        } else {
+            holder.time.setVisibility(View.VISIBLE);
+            holder.time.setText(getTimeString(groupMessage.getTime()));
+        }
 
         Phone phone = null;
 

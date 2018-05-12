@@ -74,7 +74,11 @@ public class GroupHandler extends PoolMember {
                 .observer(groupContacts -> {
                     contactNames = new ArrayList<>();
                     for (GroupContact groupContact : groupContacts) {
-                        contactNames.add(getContactName(groupContact));
+                        if (isInactive(groupContact)) {
+                            contactNames.add($(ResourcesHandler.class).getResources().getString(R.string.contact_inactive_inline, getContactName(groupContact)));
+                        } else {
+                            contactNames.add(getContactName(groupContact));
+                        }
                     }
 
                     redrawContacts();
@@ -109,6 +113,10 @@ public class GroupHandler extends PoolMember {
         }
 
         return groupContact.getContactName();
+    }
+
+    private boolean isInactive(GroupContact groupContact) {
+        return false;
     }
 
     private String getInviteName(GroupInvite groupInvite) {
