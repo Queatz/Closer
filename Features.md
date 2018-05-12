@@ -1,7 +1,53 @@
-# Word
 
- [ ] "Sometimes I post what I'm up to on my app"
- [ ] Fb ads
+# MKTG # The Truth # MKTG#
+
+ [ ] (The Influecner) Run free classes
+ 
+ "I'm hosting free Android & Angular classes in my garage for Closer users"
+ 
+  - Android
+  - Angular 6
+  - Flute
+  - Confidante Training
+ 
+ 
+ [ ] (The Stickers) Laptop, Mazda 3, Miata, Around town
+ 
+  - Just do it
+ 
+
+ [ ] (The Free Tacos) 
+
+ Free tacos when you install the Closer app
+
+ [ ] (The Event Games)
+ 
+ TODAY ONLY - find mermaids on E 6th from 9-11pm with the Closer app!
+    involves real people
+    FOUND MERMAID - enter her name
+    hide and seek feel
+    shows area on the map
+    shows key location icons on map if you are playing
+
+ Start a game - nerds of zilker - get all their names - name games
+
+ GO! You have 2 hours to find all 6 mermaids!
+    See mermaids on map
+    See area of game on map
+    Each mermaid has a challenge for you / your group
+
+ Winners at the end of the event
+ 
+ Yellow color
+
+ [ ] (???) 
+ 
+ 
+
+# Sum Of It All
+
+ [ ] Games
+ [ ] Local Area Groups
 
 # Incoming
 
@@ -16,6 +62,15 @@
  [ ] Closer become an ambassador in your area (things to do as an ambassador)
  [ ] Closer enter invite code to join secret group
  [ ] Goodies.  That pop up on the map when you're near by them
+
+ [ ] Private Group Invites on map when zoomed in past satallite view
+    [ ] Revival chat
+    [ ] Revival nerds
+    [ ] The Bonnevile House
+        -5109 Bonneville Bend-
+    [ ] Send notification to people right here
+    [ ] Messages expire after 1h
+ [ ] Purple events - private to some of your groups
 
 ### P0 ###
 
