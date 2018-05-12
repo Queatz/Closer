@@ -176,6 +176,7 @@ public class RefreshHandler extends PoolMember {
                     groupsToAdd.add(createGroupContactFromGroupContactResult(groupContactResult));
                 } else {
                     existingGroupContactsMap.get(groupContactResult.id).setContactName(groupContactResult.phone.name);
+                    existingGroupContactsMap.get(groupContactResult.id).setContactActive(groupContactResult.phone.updated);
                     $(StoreHandler.class).getStore().box(GroupContact.class).put(
                             existingGroupContactsMap.get(groupContactResult.id)
                     );
@@ -225,6 +226,7 @@ public class RefreshHandler extends PoolMember {
         groupContact.setContactId(groupContactResult.from);
         groupContact.setGroupId(groupContactResult.to);
         groupContact.setContactName(groupContactResult.phone.name);
+        groupContact.setContactActive(groupContactResult.phone.updated);
         groupContact.setUpdated(groupContactResult.updated);
         return groupContact;
     }

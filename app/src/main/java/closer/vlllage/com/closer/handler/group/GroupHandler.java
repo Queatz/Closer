@@ -6,15 +6,16 @@ import android.widget.TextView;
 import org.greenrobot.essentials.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -28,6 +29,8 @@ import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 import io.reactivex.subjects.BehaviorSubject;
+
+import static android.text.format.DateUtils.DAY_IN_MILLIS;
 
 public class GroupHandler extends PoolMember {
 
@@ -116,7 +119,9 @@ public class GroupHandler extends PoolMember {
     }
 
     private boolean isInactive(GroupContact groupContact) {
-        return false;
+        Date fifteenDaysAgo = new Date();
+        fifteenDaysAgo.setTime(fifteenDaysAgo.getTime() - 15 * DAY_IN_MILLIS);
+        return groupContact.getContactActive().before(fifteenDaysAgo);
     }
 
     private String getInviteName(GroupInvite groupInvite) {

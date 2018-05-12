@@ -81,12 +81,8 @@
  [o] P0.4 (Polish) Some messages/groups are duplicated
  [o] P0.4 (Polish) Event bubble burbbles upon creation
  [ ] P0.4 (Polish) Don't reactivate bubble when using push notification
-
  [ ] P0.5 (Polish) Settings bubble at end pink [Set event notification time]
  [o] P0.5 (Polish) Randomize message hint
-
- [ ] P0.7 (Polish) Show inactive contacts (haven't seen any activity in >1 month)
-
  [o] P0.9 (Feature) Add your name bubble
 
 ### P1 ###

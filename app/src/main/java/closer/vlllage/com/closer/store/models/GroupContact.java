@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.store.models;
 
+import java.util.Date;
+
 import io.objectbox.annotation.Entity;
 
 @Entity
@@ -7,6 +9,7 @@ public class GroupContact extends BaseObject {
     private String groupId;
     private String contactId;
     private String contactName;
+    private Date contactActive;
 
     public String getGroupId() {
         return groupId;
@@ -32,6 +35,15 @@ public class GroupContact extends BaseObject {
 
     public GroupContact setContactName(String contactName) {
         this.contactName = contactName;
+        return this;
+    }
+
+    public Date getContactActive() {
+        return contactActive;
+    }
+
+    public GroupContact setContactActive(Date contactActive) {
+        this.contactActive = contactActive;
         return this;
     }
 }
