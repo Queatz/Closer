@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.util.AlertConfig;
-import closer.vlllage.com.closer.util.KeyboardUtil;
 
 public class AlertHandler extends PoolMember {
 
@@ -34,8 +33,8 @@ public class AlertHandler extends PoolMember {
                 textView = view.findViewById(alertConfig.getTextViewId());
                 TextView finalTextView = textView;
                 textView.post(textView::requestFocus);
-                textView.post(() -> KeyboardUtil.showKeyboard(finalTextView, true));
-                dialogBuilder.setOnDismissListener(dialogInterface -> KeyboardUtil.showKeyboard(finalTextView, false));
+                textView.post(() -> $(KeyboardHandler.class).showKeyboard(finalTextView, true));
+                dialogBuilder.setOnDismissListener(dialogInterface -> $(KeyboardHandler.class).showKeyboard(finalTextView, false));
             }
 
             if (alertConfig.getOnAfterViewCreated() != null) {

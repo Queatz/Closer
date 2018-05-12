@@ -22,7 +22,6 @@ import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
-import closer.vlllage.com.closer.util.KeyboardUtil;
 
 import static android.text.format.DateUtils.DAY_IN_MILLIS;
 
@@ -69,13 +68,13 @@ public class EventHandler extends PoolMember {
                                 if (viewHolder.eventName.hasFocus()) {
                                     viewHolder.eventName.clearFocus();
                                     viewHolder.scrollView.requestFocus();
-                                    KeyboardUtil.showKeyboard(viewHolder.eventName, false);
+                                    $(KeyboardHandler.class).showKeyboard(viewHolder.eventName, false);
                                 }
 
                                 if (viewHolder.eventPrice.hasFocus()) {
                                     viewHolder.eventPrice.clearFocus();
                                     viewHolder.scrollView.requestFocus();
-                                    KeyboardUtil.showKeyboard(viewHolder.eventPrice, false);
+                                    $(KeyboardHandler.class).showKeyboard(viewHolder.eventPrice, false);
                                 }
 
                                 return false;

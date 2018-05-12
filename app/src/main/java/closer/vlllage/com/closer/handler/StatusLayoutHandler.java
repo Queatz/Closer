@@ -13,7 +13,6 @@ import android.widget.EditText;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolMember;
-import closer.vlllage.com.closer.util.KeyboardUtil;
 
 public class StatusLayoutHandler extends PoolMember {
 
@@ -69,7 +68,7 @@ public class StatusLayoutHandler extends PoolMember {
             }
 
             updateStatusButton();
-            KeyboardUtil.showKeyboard(myStatusEditText, false);
+            $(KeyboardHandler.class).showKeyboard(myStatusEditText, false);
         });
 
         amIVisible = $(AccountHandler.class).getActive();

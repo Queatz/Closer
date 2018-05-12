@@ -17,7 +17,6 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.util.AnimationDuration;
-import closer.vlllage.com.closer.util.KeyboardUtil;
 
 public class ReplyLayoutHandler extends PoolMember {
 
@@ -125,7 +124,7 @@ public class ReplyLayoutHandler extends PoolMember {
             animation.setDuration(AnimationDuration.ENTER_DURATION);
             replyLayout.post(() -> {
                 replyMessage.requestFocus();
-                KeyboardUtil.showKeyboard(replyMessage, true);
+                $(KeyboardHandler.class).showKeyboard(replyMessage, true);
             });
         } else {
             animation = new TranslateAnimation(0, 0, replyLayout.getTranslationY(), -totalHeight);
@@ -148,7 +147,7 @@ public class ReplyLayoutHandler extends PoolMember {
             });
             animation.setInterpolator(new DecelerateInterpolator());
             animation.setDuration(AnimationDuration.EXIT_DURATION);
-            KeyboardUtil.showKeyboard(replyMessage, false);
+            $(KeyboardHandler.class).showKeyboard(replyMessage, false);
         }
 
         replyLayout.startAnimation(animation);

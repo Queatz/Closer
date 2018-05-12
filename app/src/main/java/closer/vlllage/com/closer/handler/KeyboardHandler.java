@@ -1,11 +1,13 @@
-package closer.vlllage.com.closer.util;
+package closer.vlllage.com.closer.handler;
 
 import android.app.Service;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-public class KeyboardUtil {
-    public static void showKeyboard(View view, boolean show) {
+import closer.vlllage.com.closer.pool.PoolMember;
+
+public class KeyboardHandler extends PoolMember {
+    public void showKeyboard(View view, boolean show) {
         InputMethodManager inputMethodManager = (InputMethodManager) view.getContext()
                 .getSystemService(Service.INPUT_METHOD_SERVICE);
 
