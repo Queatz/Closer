@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Event;
 
