@@ -22,7 +22,7 @@ import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.OutboundHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
-import closer.vlllage.com.closer.AnimationDuration;
+import closer.vlllage.com.closer.ui.AnimationDuration;
 
 public class ReplyLayoutHandler extends PoolMember {
 

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
-import closer.vlllage.com.closer.CircularRevealActivity;
+import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;

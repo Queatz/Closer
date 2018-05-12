@@ -30,7 +30,7 @@
             tools:visibility="visible"
             tools:text="@string/go_out_with" />
 
-        <closer.vlllage.com.closer.MaxHeightFrameLayout
+        <closer.vlllage.com.closer.ui.MaxHeightFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:maxHeight="200dp">
@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </closer.vlllage.com.closer.MaxHeightFrameLayout>
+        </closer.vlllage.com.closer.ui.MaxHeightFrameLayout>
 
     </LinearLayout>
 

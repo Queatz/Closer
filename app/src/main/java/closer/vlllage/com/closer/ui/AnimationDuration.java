@@ -1,4 +1,4 @@
-package closer.vlllage.com.closer;
+package closer.vlllage.com.closer.ui;
 
 public interface AnimationDuration {
     int ENTER_DURATION = 195;

@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import closer.vlllage.com.closer.InterceptableScrollView;
+import closer.vlllage.com.closer.ui.InterceptableScrollView;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;

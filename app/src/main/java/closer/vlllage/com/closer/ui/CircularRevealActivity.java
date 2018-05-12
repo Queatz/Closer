@@ -1,4 +1,4 @@
-package closer.vlllage.com.closer;
+package closer.vlllage.com.closer.ui;
 
 import android.animation.Animator;
 import android.graphics.Rect;
@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
+import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
 public abstract class CircularRevealActivity extends PoolActivity {

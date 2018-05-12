@@ -8,6 +8,7 @@ import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.search.SearchHandler;
+import closer.vlllage.com.closer.ui.CircularRevealActivity;
 
 public class SearchActivity extends CircularRevealActivity {
 

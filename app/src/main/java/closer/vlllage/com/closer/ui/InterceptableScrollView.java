@@ -1,4 +1,4 @@
-package closer.vlllage.com.closer;
+package closer.vlllage.com.closer.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -9,7 +9,7 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
-import closer.vlllage.com.closer.CircularRevealActivity;
+import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
