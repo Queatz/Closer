@@ -1,4 +1,9 @@
 
+ [ ] The Closer Austin Launch Squad
+  - host events
+  - engage with users
+  - generate random activity
+
 # MKTG # The Truth # MKTG#
 
  [ ] (The Influecner) Run free classes
@@ -10,11 +15,9 @@
   - Flute
   - Confidante Training
  
- 
  [ ] (The Stickers) Laptop, Mazda 3, Miata, Around town
  
   - Just do it
- 
 
  [ ] (The Free Tacos) 
 
@@ -44,10 +47,11 @@
  
  
 
-# Sum Of It All
+# Sum
 
  [ ] Games
  [ ] Local Area Groups
+ [ ] Profiles of people
 
 # Incoming
 
@@ -63,7 +67,7 @@
  [ ] Closer enter invite code to join secret group
  [ ] Goodies.  That pop up on the map when you're near by them
 
- [ ] Private Group Invites on map when zoomed in past satallite view
+ [o] Private Group Invites on map when zoomed in past satallite view
     [ ] Revival chat
     [ ] Revival nerds
     [ ] The Bonnevile House
@@ -74,17 +78,13 @@
 
 ### P0 ###
 
- [ ] P0.2 (Release) New screenshots
- [ ] P0.3 (Release) Privacy policy - http://closer.vlllage.com/privacy
  [ ] P0.3 (Polish) Handle permanently denied contacts permissions (Dialog telling to go to settings)
 
  [o] P0.4 (Polish) Some messages/groups are duplicated
  [o] P0.4 (Polish) Event bubble burbbles upon creation
  [ ] P0.4 (Polish) Don't reactivate bubble when using push notification
 
- [o] P0.5 (Polish) Set map margin top no status bar
  [ ] P0.5 (Polish) Settings bubble at end pink [Set event notification time]
- [ ] P0.5 (Polish) Settings show privacy policy (/static/privacy)
  [o] P0.5 (Polish) Randomize message hint
 
  [ ] P0.7 (Polish) Show inactive contacts (haven't seen any activity in >1 month)

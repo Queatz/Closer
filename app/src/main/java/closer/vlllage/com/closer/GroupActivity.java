@@ -24,6 +24,7 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
+import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
@@ -112,6 +113,16 @@ public class GroupActivity extends CircularRevealActivity {
                 peopleInGroup.setOnClickListener(view -> toggleContactsView());
 
                 showPhoneContactsButton.setOnClickListener(view -> {
+                    if ($(PermissionHandler.class).denied(READ_CONTACTS)) {
+                        $(AlertHandler.class).make()
+                                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.enable_contacts_permission))
+                                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.enable_contacts_permission_rationale))
+                                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.open_settings))
+                                .setPositiveButtonCallback(alertResult -> $(SystemSettingsHandler.class).showSystemSettings())
+                                .show();
+                        return;
+                    }
+
                     $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
                         if (granted) {
                             $(GroupContactsHandler.class).showContactsForQuery();

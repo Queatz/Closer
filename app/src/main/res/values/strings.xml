@@ -95,6 +95,7 @@
     <string name="enable_location_permission">Enable location permission</string>
     <string name="open_settings">Open settings</string>
     <string name="enable_location_permission_rationale">Open your system settings for Closer, tap on Permissions, and then turn on Location.</string>
+    <string name="enable_contacts_permission_rationale">Open your system settings for Closer, tap on Permissions, and then turn on Contacts.</string>
     <string name="show_help">Show help</string>
     <string name="help">Help</string>
     <string name="help_message">Thanks for using Closer!\n\n
@@ -132,4 +133,5 @@
     <string name="event_will_be_cancelled">%1$s will be cancelled</string>
     <string name="event_notification">%1$s starts %2$s</string>
     <string name="event_must_not_end_in_the_past">Event must not end in the past</string>
+    <string name="enable_contacts_permission">Enable contacts permission</string>
 </resources>
