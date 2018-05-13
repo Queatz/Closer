@@ -17,6 +17,13 @@
         android:layout_height="match_parent"
         android:isScrollContainer="true" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:scaleType="fitXY"
+        android:elevation="4dp"
+        android:src="@drawable/leaves_repeating" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

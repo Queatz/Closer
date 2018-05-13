@@ -150,6 +150,9 @@ public class StatusLayoutHandler extends PoolMember {
     public void setCurrentStatus(String currentStatus) {
         this.currentStatus = currentStatus;
         $(AccountHandler.class).updateStatus(currentStatus);
-        $(MapHandler.class).centerMap($(MyBubbleHandler.class).getMyBubble().getLatLng());
+
+        if ($(MyBubbleHandler.class).getMyBubble() != null) {
+            $(MapHandler.class).centerMap($(MyBubbleHandler.class).getMyBubble().getLatLng());
+        }
     }
 }

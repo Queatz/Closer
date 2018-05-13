@@ -1,68 +1,169 @@
 
- [ ] The Closer Austin Launch Squad
-  - host events
-  - engage with users
-  - generate random activity
+# Top
 
-# MKTG # The Truth # MKTG#
+ [ ] Post photos and videos
+ [ ] Purple dots
+ [ ] Mini-games (challenges, one-off games) [NSFW]
 
- [ ] (The Influecner) Run free classes
- 
- "I'm hosting free Android & Angular classes in my garage for Closer users"
- 
-  - Android
-  - Angular 6
-  - Flute
-  - Confidante Training
- 
- [ ] (The Stickers) Laptop, Mazda 3, Miata, Around town
- 
-  - Just do it
+# What I'm Seeing
 
- [ ] (The Free Tacos) 
+ [ ] Chat here...
+ [ ] Purple dots - chats on the map - most recent 20
+    [ ] Load on map move and zoom >= 13
+    [ ] Animate in / out (boop!)
+    [ ] Push notifications to people < .5 miles
+    [ ] Expires after 12 hours of inactivity
+ [ ] chat has photo ? Photos on map - hangouts on map
+    [ ] Pin group on map -> Add name -> Does not expire
+    <!-- [ ] Add your profile here -->
+        <!-- [ ] Picture with words over it, "first name, says..." -->
+    <!-- [ ] See all profiles here -->
+        <!-- [ ] Swipe left / right -->
+    <!-- [ ] You've found 2/5 of Jacob's profiles.  Keep exploring the map to find them all! -->
+    [ ] Show on map, share
+    [ ] Settings ... icon - change background (enabled if number is verified)
+    [ ] Post photos / videos in chat (a funny and a must :P)
 
- Free tacos when you install the Closer app
+# Named Areas / Locations on map (admins can edit) (detail size)
 
- [ ] (The Event Games)
- 
- TODAY ONLY - find mermaids on E 6th from 9-11pm with the Closer app!
-    involves real people
-    FOUND MERMAID - enter her name
-    hide and seek feel
-    shows area on the map
-    shows key location icons on map if you are playing
+ : The Naked Woods
+ : The Burping Tree
+ : The Sleeping Forest
+ : Trail of the haunted man
+ : The Tree of Aurora Mae
+ : The Spirit Garden
 
- Start a game - nerds of zilker - get all their names - name games
+### Which means...
 
- GO! You have 2 hours to find all 6 mermaids!
-    See mermaids on map
-    See area of game on map
-    Each mermaid has a challenge for you / your group
+ [ ] New models
+    [ ] Geo Chat Group
+    [ ] Profile
+    [ ] Geo Group Profile
+    [ ] Geo Named
+ [ ] New endpoints
+    [ ] /geo-chat/:id
+    [ ] /profile/:id
+    [ ] /photo
+        [ ] Static file storage and serve (copy from vlllage)
+        [ ] Static file separate
+ [ ] New UI
+    [ ] New bubble types
+        [ ] Purple dots (12dp @ 13z)
+        [ ] Image dots (24dp @ 13z)
+    [ ] Purple backgrounds
+    [ ] Geo chat background
+    [ ] Geo chat profiles
+        [ ] Profile cards
+            [ ] Profile full zoom view (cross activity animation)
+        [ ] Add profile placeholder layout
+        [ ] Remove profile
+    [ ] Geo chat settings
+        [ ] Pin group -> Set name
+        [ ] Set photo
+    [ ] Camera icon in group
+    [ ] Photo group message attachment
+    [ ] Zoom photo view
+    [ ] Names on map
 
- Winners at the end of the event
- 
- Yellow color
+### QuestIRL
 
- [ ] (???) 
- 
- 
+ [ ] Event (criminal is on the loose)
+ [ ] Actors
+ [ ] Challenge Questions
+ [ ] Locations
+ [ ] Transit / Car / Actors
+
+ [ ] Anyone can set one up
+
+# Interview Process (for Jacob)
+
+ [ ] Initial meet & greet
+    [ ] What is one thing you're good at?
+    [ ] What is one thing you want to do but haven't done yet?
+    [ ] What is one thing you like doing with other people?
+
+ [ ] For each answer, drive to that location and photo them there
+    [ ] Create their profile at that location with their answer
 
 # Sum
 
  [ ] Games
+    [ ] Start here by 5pm, icon on map
+    [ ]"Get to know meek park"
+        [ ] Clues
+        [ ] Names on map
+ [ ] Scavenger Hunts
+    [ ] How to Play
+    [ ] Icons for locations (while game is active)
+    [ ] Difficulty 1, 2, 3 stars
+    [ ] Reward
  [ ] Local Area Groups
  [ ] Profiles of people
+    [ ] Discovery
+        [ ] From hubs / add your profile to places you frequent
+        [ ] From local area chats
 
-# Incoming
+### P0 ###
+
+ [o] P0 (Polish) Crash when location is unknown
+ [o] P0.1 (Polish) After denying location, don't ask again
+ [o] P0.1 (Polish) No network icon in app not toast! "You are offline"
+ [o] P0.2 (Polish) HTTPS
+ [0] P0.3 (Polish) Closer only cancel events not in the past
+ [0] P0.3 (Polish) Tapping into message box when share is active in event cancels share
+ [o] P0.4 (Polish) Some messages/groups are duplicated
+ [o] P0.4 (Polish) Event bubble burbbles upon creation
+ [ ] P0.4 (Polish) Don't reactivate bubble when using push notification
+ [ ] P0.5 (Polish) Settings bubble at end pink [Set event notification time]
+ [o] P0.5 (Polish) Randomize message hint
+ [ ] P0.8 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-SIGNATURE
+ [o] P0.9 (Feature) Add your name bubble
+
+### P1 ###
+
+ [ ] P1 (Photos) Add photo / video circles to map tap to fly into
+ [ ] P1 (Photos) Share photos (in chats, camera icon on send button pre-text entered)
+ [ ] P1 (Photos) Camera icon appears on map to add photo (when zoomed in in circle menu around your location)
+ [ ] P1 (Photos) Photos on map (when zoomed in, dots when zoomed out)
+ [ ] P1 (Photos) Share (multiple) photos to group from external app (tap on group from menu)
+ [o] P1 (Photos) Add public photos to suggestion
+    [ ] Tap on photos to view all shared to group
+        [ ] Share icon on photo
+ [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
+ [o] P1 (Polish) Show "Bun is typing..."
+    [.] JobScheduler check events at specified time
+
+### P2 ###
+
+ [b] P2 (Polish) All messages from person go to one notification box
+ [o] P2 (Polish) Search for places on the map (green button... suggestions from google...)
+ [ ] P2 (Polish) Get Async push notification queues working (copy from Vlllage)
+ [o] P2 (Feature) Pinned public groups
+ [o] P2 (Feature) Chats on map (Open chat here...) -> Opens group messages, anyone can drop in from hub
+ [o] P2 (Feature) Set profile photo
+ [o] P2 (Feature) Single emoji floats many of them over your screen
+    [o] Bubble to allow draw over screen permission
+
+### P3 ###
+
+ [ ] Closer place search
+     [ ] Thumbs up for verified number?
+ [ ] Directions button in long press menu
+ [ ] Android Auto
+ [ ] Search history button, reveals things from the past here
+ [ ] OSM MapView (toggleable)
+ [ ] Closer Reminders (location, event, suggestion...)
+
+# Incoming - Needs Review
 
  [ ] find your equals / ai engine app
- [ ] Photos of people in Austin blog / things they like to do
+ [.] Photos of people in Austin blog / things they like to do
+ [.] Long press menu directions, share, save, remind, camera, remind
  [ ] Closer home work on map icons on map
  [ ] Closer friends on map
  [ ] Closer weekly/monthly holidays
  [ ] Groups in groups? Or group domains? Layers? I.e. dev squads for X number of projects
  [ ] Closer search bar at top
- [ ] Long press menu directions, share, save, camera, remind
  [ ] Closer become an ambassador in your area (things to do as an ambassador)
  [ ] Closer enter invite code to join secret group
  [ ] Goodies.  That pop up on the map when you're near by them
@@ -75,52 +176,6 @@
     [ ] Send notification to people right here
     [ ] Messages expire after 1h
  [ ] Purple events - private to some of your groups
-
-### P0 ###
-
- [o] P0.4 (Polish) Some messages/groups are duplicated
- [o] P0.4 (Polish) Event bubble burbbles upon creation
- [ ] P0.4 (Polish) Don't reactivate bubble when using push notification
- [ ] P0.5 (Polish) Settings bubble at end pink [Set event notification time]
- [o] P0.5 (Polish) Randomize message hint
- [o] P0.9 (Feature) Add your name bubble
-
-### P1 ###
-
- [ ] P1 (Photos) Add photo / video circles to map tap to fly into
- [ ] P1 (Photos) Share photos (in chats, camera icon on send button pre-text entered)
- [ ] P1 (Photos) Camera icon appears on map to add photo (when zoomed in in circle menu around your location)
- [ ] P1 (Photos) Photos on map (when zoomed in, dots when zoomed out)
- [ ] P1 (Photos) Share (multiple) photos to group from external app (tap on group from menu)
- [o] P1 (Photos) Add public photos to suggestion
-    [ ] Get screen wake lock working
-    [ ] Tap on photos to view all shared to group
-        [ ] Share icon on photo
- [o] P1 (Polish) HTTPS
- [ ] P1 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-SIGNATURE
- [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
- [o] P1 (Polish) Show "Bun is typing..."
-    [.] JobScheduler check events at specified time
-
-### P2 ###
-
- [b] P2 (Polish) All messages from person go to one notification box
- [o] P2 (Polish) Search for places on the map (green button... suggestions from google...)
- [ ] P2 (Polish) Get Async push notification queues working (copy from Vlllage)
- [o] P2 (Feature) Pinned public groups
- [o] P2 (Feature) Chats on map (Open chat here...) -> Opens group messages, anyone can drop in from bub
- [ ] P2 (Feature) Red arrows pointing towards events off-screen (2 mi)
- [o] P2 (Feature) Set profile photo
- [o] P2 (Feature) Single emoji floats many of them over your screen
-    [o] Bubble to allow draw over screen permission
-
-### P3 ###
-
- [ ] Closer place search
-     [ ] Thumbs up for verified number?
- [ ] Directions button in long press menu
- [ ] Android Auto
- [ ] Closer Reminders (location, event, suggestion...)
 
 #
 # Advertise Closer in SF and NY and LA and CO (NOT Austin!! :P)                  <-- !!
@@ -233,3 +288,57 @@ Buy from start-stop
     [ ] 33 minutes left 8 spots left
  [ ] (Challenge) Post challenge video
  [ ] (Challenge) Challenges and profiles and high score boards
+
+# What isi z
+
+ [ ] The Closer Austin Launch Squad
+  - host events
+  - engage with users
+  - generate random activity
+
+
+
+# MKTG # The Truth # MKTG#
+
+ [ ] (The Influecner) Run free classes
+
+ "I'm hosting free Android & Angular classes in my garage for Closer users"
+
+  - Android
+  - Angular 6
+  - Flute
+  - Confidante Training
+
+ [ ] (The Stickers) Laptop, Mazda 3, Miata, Around town
+
+  - Just do it
+
+ [ ] (The Free Tacos)
+
+ Free tacos when you install the Closer app
+
+ [ ] (The Event Games)
+
+ TODAY ONLY - find mermaids on E 6th from 9-11pm with the Closer app!
+    involves real people
+    FOUND MERMAID - enter her name
+    hide and seek feel
+    shows area on the map
+    shows key location icons on map if you are playing
+    answer questions about people
+
+ Start a game - nerds of zilker - get all their names - name games
+
+ GO! You have 2 hours to find all 6 mermaids!
+    See mermaids on map
+    See area of game on map
+    Each mermaid has a challenge for you / your group
+
+ Winners at the end of the event
+
+ Yellow color
+
+ [ ] SH
+    [ ] What happened to Albert?
+
+ [ ] (???)

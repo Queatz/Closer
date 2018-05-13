@@ -26,6 +26,7 @@ import closer.vlllage.com.closer.pool.PoolMember;
 
 public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
+    private static final float GEO_GROUPS_ZOOM = 13F;
     private static final float DEFAULT_ZOOM = 15F;
 
     private GoogleMap map;
