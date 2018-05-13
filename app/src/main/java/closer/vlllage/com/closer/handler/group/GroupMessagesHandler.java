@@ -2,6 +2,8 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
+import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
@@ -32,8 +36,13 @@ import static android.text.format.DateUtils.HOUR_IN_MILLIS;
 public class GroupMessagesHandler extends PoolMember {
 
     private GroupMessagesAdapter groupMessagesAdapter;
+    private EditText replyMessage;
+    private ImageButton sendButton;
 
     public void attach(RecyclerView recyclerView, EditText replyMessage, ImageButton sendButton) {
+        this.replyMessage = replyMessage;
+        this.sendButton = sendButton;
+
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 $(ActivityHandler.class).getActivity(),
                 LinearLayoutManager.VERTICAL,
@@ -62,7 +71,6 @@ public class GroupMessagesHandler extends PoolMember {
                     if (success) {
                         textView.setText("");
                     }
-
                     return true;
                 }
 
@@ -72,11 +80,31 @@ public class GroupMessagesHandler extends PoolMember {
 
         sendButton.setOnClickListener(view -> {
             if (replyMessage.getText().toString().trim().isEmpty()) {
+                $(CameraHandler.class).showCamera();
                 return;
             }
+
             boolean success = send(replyMessage.getText().toString());
             if (success) {
                 replyMessage.setText("");
+            }
+        });
+
+        updateSendButton();
+        replyMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                updateSendButton();
             }
         });
 
@@ -102,6 +130,15 @@ public class GroupMessagesHandler extends PoolMember {
                 .subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroupMessages));
     }
+
+    private void updateSendButton() {
+        if (replyMessage.getText().toString().trim().isEmpty()) {
+            sendButton.setImageResource(R.drawable.ic_camera_black_24dp);
+        } else {
+            sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp);
+        }
+    }
+
 
     private void setGroupMessages(List<GroupMessage> groupMessages) {
         groupMessagesAdapter.setGroupMessages(groupMessages);
