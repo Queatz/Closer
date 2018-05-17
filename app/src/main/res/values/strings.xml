@@ -91,6 +91,7 @@
     <string name="phone_shared_a_suggestion">%1$s shared a suggestion</string>
     <string name="phone_shared_an_event">%1$s shared an event</string>
     <string name="phone_shared_a_location">%1$s shared a location</string>
+    <string name="phone_shared_a_photo">%1$s shared a photo</string>
     <string name="just_now">Just now</string>
     <string name="use_your_location">Use your location</string>
     <string name="enable_location_permission">Enable location permission</string>
@@ -135,4 +136,5 @@
     <string name="event_notification">%1$s starts %2$s</string>
     <string name="event_must_not_end_in_the_past">Event must not end in the past</string>
     <string name="enable_contacts_permission">Enable contacts permission</string>
+    <string name="photo">Photo</string>
 </resources>

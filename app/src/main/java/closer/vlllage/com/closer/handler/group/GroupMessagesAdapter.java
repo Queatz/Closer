@@ -7,18 +7,20 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -67,12 +69,15 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     public void onBindViewHolder(@NonNull GroupMessageViewHolder holder, int position) {
         GroupMessage groupMessage = groupMessages.get(position);
 
+        holder.photo.setVisibility(View.GONE);
+
         if (groupMessage.getAttachment() != null) {
             try {
                 JsonObject jsonObject = $(JsonHandler.class).from(groupMessage.getAttachment(), JsonObject.class);
                 if (jsonObject.has("message")) {
                     holder.name.setVisibility(View.GONE);
                     holder.time.setVisibility(View.GONE);
+                    holder.message.setVisibility(View.VISIBLE);
                     holder.message.setGravity(Gravity.CENTER_HORIZONTAL);
                     holder.message.setText(jsonObject.get("message").getAsString());
                     holder.message.setAlpha(.5f);
@@ -149,6 +154,26 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                             onSuggestionClickListener.onSuggestionClick(suggestion);
                         }
                     });
+                } else if (jsonObject.has("photo")) {
+                    Phone phone = getPhone(groupMessage.getFrom());
+                    String contactName;
+
+                    if (phone == null || phone.getName() == null) {
+                        contactName = $(ResourcesHandler.class).getResources().getString(R.string.no_name);
+                    } else {
+                        contactName = phone.getName();
+                    }
+
+                    holder.name.setVisibility(View.VISIBLE);
+                    holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.phone_shared_a_photo, contactName));
+                    holder.time.setVisibility(View.VISIBLE);
+                    holder.time.setText(getTimeString(groupMessage.getTime()));
+                    holder.message.setVisibility(View.GONE);
+                    holder.itemView.setOnClickListener(null);
+                    holder.action.setVisibility(View.GONE);// or Share / save photo?
+                    holder.photo.setVisibility(View.VISIBLE);
+                    Picasso.get().cancelRequest(holder.photo);
+                    Picasso.get().load(jsonObject.get("photo").getAsString()).into(holder.photo);
                 } else {
                     holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
                     holder.message.setText("");
@@ -251,6 +276,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         TextView message;
         TextView action;
         TextView time;
+        ImageView photo;
 
         public GroupMessageViewHolder(View itemView) {
             super(itemView);
@@ -258,6 +284,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             message = itemView.findViewById(R.id.message);
             action = itemView.findViewById(R.id.action);
             time = itemView.findViewById(R.id.time);
+            photo = itemView.findViewById(R.id.photo);
         }
     }
 
