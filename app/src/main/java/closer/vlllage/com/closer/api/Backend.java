@@ -79,6 +79,9 @@ public interface Backend {
     @POST("group")
     Observable<CreateResult> createPublicGroup(@Query("name") String groupName, @Query("about") String about, @Query("geo") String geo, @Query("public") boolean isPublic);
 
+    @POST("group")
+    Observable<CreateResult> createPhysicalGroup(@Query("geo") String geo, @Query("physical") boolean physical);
+
     @GET("group/{id}")
     Observable<GroupResult> getGroup(@Path("id") String groupId);
 
@@ -90,6 +93,9 @@ public interface Backend {
 
     @POST("group/{id}")
     Observable<SuccessResult> cancelInvite(@Path("id") String groupId, @Query("cancel-invite") String groupInviteId);
+
+    @POST("group/{id}")
+    Observable<SuccessResult> convertToHub(@Path("id") String groupId, @Query("hub") boolean hub);
 
     // Event
 

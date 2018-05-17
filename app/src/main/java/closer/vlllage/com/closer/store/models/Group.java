@@ -7,6 +7,8 @@ public class Group extends BaseObject {
     private String name;
     private String about;
     private boolean isPublic;
+    private boolean hub;
+    private boolean physical;
     private String eventId;
     private Double latitude;
     private Double longitude;
@@ -35,6 +37,24 @@ public class Group extends BaseObject {
 
     public Group setPublic(boolean aPublic) {
         isPublic = aPublic;
+        return this;
+    }
+
+    public boolean isHub() {
+        return hub;
+    }
+
+    public Group setHub(boolean hub) {
+        this.hub = hub;
+        return this;
+    }
+
+    public boolean isPhysical() {
+        return physical;
+    }
+
+    public Group setPhysical(boolean physical) {
+        this.physical = physical;
         return this;
     }
 

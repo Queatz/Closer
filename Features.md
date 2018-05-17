@@ -1,9 +1,32 @@
 
+# Feedback From Users
+
+ [ ] Has has has to feel private
+ [ ] Private party (Private mode?)
+
 # Top
 
  [ ] Post photos and videos
+    [x] closer-files.vlllage.com (https)
+        [ ] HTTPS
  [ ] Purple dots
  [ ] Mini-games (challenges, one-off games) [NSFW]
+
+ [ ] New group params
+    [ ] /group/?physical=true
+    [ ] /group/?hub=true
+ [ ] New UI
+    [ ] New bubble types
+        [ ] Purple dots (12dp @ 13z)
+        [ ] Image dots (24dp @ 13z)
+    [ ] Purple backgrounds (physical=true)
+    [ ] Geo chat background
+    [ ] Geo chat settings (3rd icon)
+        [ ] Pin group -> Set name
+        [ ] Set photo
+    [ ] Upload photos "photo" attr
+    [ ] Photo group message attachment
+    [ ] Zoom photo view, slide left/right
 
 # What I'm Seeing
 
@@ -15,16 +38,13 @@
     [ ] Expires after 12 hours of inactivity
  [ ] chat has photo ? Photos on map - hangouts on map
     [ ] Pin group on map -> Add name -> Does not expire
-    <!-- [ ] Add your profile here -->
-        <!-- [ ] Picture with words over it, "first name, says..." -->
-    <!-- [ ] See all profiles here -->
-        <!-- [ ] Swipe left / right -->
-    <!-- [ ] You've found 2/5 of Jacob's profiles.  Keep exploring the map to find them all! -->
     [ ] Show on map, share
     [ ] Settings ... icon - change background (enabled if number is verified)
     [ ] Post photos / videos in chat (a funny and a must :P)
 
 # Named Areas / Locations on map (admins can edit) (detail size)
+
+ [ ] Names on map
 
  : The Naked Woods
  : The Burping Tree
@@ -33,37 +53,9 @@
  : The Tree of Aurora Mae
  : The Spirit Garden
 
-### Which means...
+# Incoming
 
- [ ] New models
-    [ ] Geo Chat Group
-    [ ] Profile
-    [ ] Geo Group Profile
-    [ ] Geo Named
- [ ] New endpoints
-    [ ] /geo-chat/:id
-    [ ] /profile/:id
-    [ ] /photo
-        [ ] Static file storage and serve (copy from vlllage)
-        [ ] Static file separate
- [ ] New UI
-    [ ] New bubble types
-        [ ] Purple dots (12dp @ 13z)
-        [ ] Image dots (24dp @ 13z)
-    [ ] Purple backgrounds
-    [ ] Geo chat background
-    [ ] Geo chat profiles
-        [ ] Profile cards
-            [ ] Profile full zoom view (cross activity animation)
-        [ ] Add profile placeholder layout
-        [ ] Remove profile
-    [ ] Geo chat settings
-        [ ] Pin group -> Set name
-        [ ] Set photo
-    [ ] Camera icon in group
-    [ ] Photo group message attachment
-    [ ] Zoom photo view
-    [ ] Names on map
+ [ ] Automatic Events (suggestions from the Closer AI itself)
 
 ### QuestIRL
 
@@ -107,8 +99,10 @@
 
  [o] P0 (Polish) Crash when location is unknown
  [o] P0.1 (Polish) After denying location, don't ask again
+ [o] P0.1 (Polish) Contacts not showing up on Android 7.0
  [o] P0.1 (Polish) No network icon in app not toast! "You are offline"
  [o] P0.2 (Polish) HTTPS
+ [ ] P0.2 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-APP-ID
  [0] P0.3 (Polish) Closer only cancel events not in the past
  [0] P0.3 (Polish) Tapping into message box when share is active in event cancels share
  [o] P0.4 (Polish) Some messages/groups are duplicated
@@ -116,7 +110,6 @@
  [ ] P0.4 (Polish) Don't reactivate bubble when using push notification
  [ ] P0.5 (Polish) Settings bubble at end pink [Set event notification time]
  [o] P0.5 (Polish) Randomize message hint
- [ ] P0.8 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-SIGNATURE
  [o] P0.9 (Feature) Add your name bubble
 
 ### P1 ###
@@ -342,3 +335,14 @@ Buy from start-stop
     [ ] What happened to Albert?
 
  [ ] (???)
+
+     [ ] Add your profile here
+         [ ] Picture with words over it, "first name, says..."
+     [ ] See all profiles here
+         [ ] Swipe left / right
+     [ ] You've found 2/5 of Jacob's profiles.  Keep exploring the map to find them all!
+    [ ] Geo chat profiles
+        [ ] Profile cards
+            [ ] Profile full zoom view (cross activity animation)
+        [ ] Add profile placeholder layout
+        [ ] Remove profile

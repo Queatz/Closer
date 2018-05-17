@@ -103,9 +103,16 @@ public class GroupActivity extends CircularRevealActivity {
             if (group.isPublic()) {
                 if (group.hasEvent()) {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.color.red);
+                } else if (group.isPhysical()) {
+                    findViewById(R.id.backgroundColor).setBackgroundResource(R.color.purple);
                 } else {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
                 }
+
+                if (group.isHub()) {
+                    // TODO set background Picasso https://closer-files.vlllage.com/group:1234
+                }
+
                 peopleInGroup.setVisibility(View.GONE);
             } else {
                 $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts);
