@@ -24,6 +24,6 @@ public class PhotoActivity extends PoolActivity {
                     .into(photo);
         }
 
-        photo.setOnClickListener(view -> finish());
+        findViewById(R.id.activityLayout).setOnClickListener(view -> finishAfterTransition());
     }
 }
