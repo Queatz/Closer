@@ -17,6 +17,7 @@ public class ApiService {
 
     private static final String AUTHORIZATION = "Authorization";
     private final Backend backend;
+    private final PhotoUploadBackend photoUploadBackend;
     private String authorization;
 
     public ApiService() {
@@ -50,6 +51,20 @@ public class ApiService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(Backend.class);
+
+        OkHttpClient.Builder httpPhotoUploadClient = new OkHttpClient.Builder();
+
+        httpPhotoUploadClient.addInterceptor(chain -> {
+            Request request = chain.request().newBuilder().addHeader("X-CLOSER-UPLOAD", "iamsupersupersecret").build();
+            return chain.proceed(request);
+        });
+
+        photoUploadBackend = new Retrofit.Builder()
+                .baseUrl(PhotoUploadBackend.BASE_URL)
+                .client(httpPhotoUploadClient.build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build()
+                .create(PhotoUploadBackend.class);
     }
 
     public Backend getBackend() {
@@ -58,6 +73,10 @@ public class ApiService {
         }
 
         return backend;
+    }
+
+    public PhotoUploadBackend getPhotoUploadBackend() {
+        return photoUploadBackend;
     }
 
     public void setAuthorization(String authorization) {

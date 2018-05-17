@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.helpers;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -10,16 +9,19 @@ import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
 
+import closer.vlllage.com.closer.handler.group.GroupHandler;
+import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+
+import static android.app.Activity.RESULT_OK;
 
 public class CameraHandler extends PoolMember {
 
     private static final String AUTHORITY = "closer.vlllage.com.closer.fileprovider";
     private static int REQUEST_CODE_CAMERA = 1044;
 
-    private Uri imageUrl;
+    private Uri photoUri;
 
     public void showCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -41,10 +43,10 @@ public class CameraHandler extends PoolMember {
             return;
         }
 
-        imageUrl = FileProvider.getUriForFile($(ActivityHandler.class).getActivity(), AUTHORITY, photo);
+        photoUri = FileProvider.getUriForFile($(ActivityHandler.class).getActivity(), AUTHORITY, photo);
 
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.INTERNAL_CONTENT_URI.getPath());
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUrl);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
         $(ActivityHandler.class).getActivity().startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
     }
 
@@ -53,13 +55,12 @@ public class CameraHandler extends PoolMember {
             return;
         }
 
-        try {
-            Bitmap image = MediaStore.Images.Media.getBitmap($(ActivityHandler.class).getActivity().getContentResolver(), imageUrl);
-            $(DefaultAlerts.class).message("Image captured (" + image.getWidth() + ", " + image.getHeight() + ") - feature not yet supported.");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (resultCode != RESULT_OK) {
             $(DefaultAlerts.class).thatDidntWork();
+            return;
         }
+
+        $(PhotoUploadGroupMessageHandler.class).createGroupMessageFromUri(photoUri, $(GroupHandler.class).getGroup().getId());
     }
 
     @Nullable

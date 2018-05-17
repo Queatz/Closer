@@ -2,8 +2,12 @@ package closer.vlllage.com.closer.handler.data;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import closer.vlllage.com.closer.api.ApiService;
 import closer.vlllage.com.closer.api.models.CreateResult;
@@ -16,10 +20,18 @@ import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.helpers.DateFormatter;
 import closer.vlllage.com.closer.handler.helpers.HttpEncode;
-import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.handler.helpers.LatLngStr;
+import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.pool.PoolMember;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.internal.Util;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Source;
 
 public class ApiHandler extends PoolMember {
 
@@ -116,6 +128,42 @@ public class ApiHandler extends PoolMember {
 
     public Observable<SuccessResult> cancelEvent(String eventId) {
         return uiThread(api.getBackend().cancelEvent(eventId, true));
+    }
+
+    public Observable<String> uploadPhoto(InputStream photo) {
+        RequestBody body = new RequestBody() {
+            @Nullable
+            @Override
+            public MediaType contentType() {
+                return MediaType.parse("image/*");
+            }
+
+            @Override
+            public long contentLength() {
+                try {
+                    return photo.available();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) {
+                Source source = Okio.source(photo);
+                try {
+                    sink.writeAll(source);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    Util.closeQuietly(source);
+                }
+            }
+        };
+        MultipartBody.Part part = MultipartBody.Part.createFormData("photo", "closer-photo", body);
+        String id = $(Val.class).rndId();
+        return uiThread(api.getPhotoUploadBackend().uploadPhoto(id, part))
+                .map(responseBody -> id);
     }
 
     private <T> Observable<T> uiThread(Observable<T> observable) {

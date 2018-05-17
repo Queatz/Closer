@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Date;
 
@@ -33,7 +34,7 @@ public class GroupMessageAttachmentHandler extends PoolMember {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("suggestion", $(JsonHandler.class).toJsonTree(suggestion));
 
-        saveMessageWithAttachment(group, jsonObject);
+        saveMessageWithAttachment(group.getId(), jsonObject);
 
         return true;
     }
@@ -42,15 +43,22 @@ public class GroupMessageAttachmentHandler extends PoolMember {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("event", $(JsonHandler.class).toJsonTree(event));
 
-        saveMessageWithAttachment(group, jsonObject);
+        saveMessageWithAttachment(group.getId(), jsonObject);
 
         return true;
     }
 
-    private void saveMessageWithAttachment(Group group, JsonObject jsonObject) {
+    public boolean sharePhoto(@NonNull String photoUrl, @NonNull String groupId) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("photo", new JsonPrimitive(photoUrl));
+        saveMessageWithAttachment(groupId, jsonObject);
+        return true;
+    }
+
+    private void saveMessageWithAttachment(String groupId, JsonObject jsonObject) {
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setAttachment($(JsonHandler.class).to(jsonObject));
-        groupMessage.setTo(group.getId());
+        groupMessage.setTo(groupId);
         groupMessage.setFrom($(PersistenceHandler.class).getPhoneId());
         groupMessage.setTime(new Date());
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
