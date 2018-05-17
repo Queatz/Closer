@@ -56,7 +56,6 @@ public class CameraHandler extends PoolMember {
         }
 
         if (resultCode != RESULT_OK) {
-            $(DefaultAlerts.class).thatDidntWork();
             return;
         }
 

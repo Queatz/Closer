@@ -6,9 +6,6 @@
 
 # Top
 
- [ ] Post photos and videos
-    [x] closer-files.vlllage.com (https)
-        [ ] HTTPS
  [ ] Purple dots
  [ ] Mini-games (challenges, one-off games) [NSFW]
 
@@ -24,9 +21,6 @@
     [ ] Geo chat settings (3rd icon)
         [ ] Pin group -> Set name
         [ ] Set photo
-    [ ] Upload photos "photo" attr
-    [ ] Photo group message attachment
-    [ ] Zoom photo view, slide left/right
 
 # What I'm Seeing
 
@@ -56,6 +50,7 @@
 # Incoming
 
  [ ] Automatic Events (suggestions from the Closer AI itself)
+ [ ] Zoom photo view, slide left/right
 
 ### QuestIRL
 
@@ -102,7 +97,8 @@
  [o] P0.1 (Polish) After denying location, don't ask again
  [o] P0.1 (Polish) Contacts not showing up on Android 7.0
  [o] P0.1 (Polish) No network icon in app not toast! "You are offline"
- [o] P0.2 (Polish) HTTPS
+ [o] P0.2 (Polish) HTTPS (closer.vllage.com)
+ [o] P0.2 (Polish) HTTPS (closer-files.vllage.com)
  [ ] P0.2 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-APP-ID
  [0] P0.3 (Polish) Closer only cancel events not in the past
  [0] P0.3 (Polish) Tapping into message box when share is active in event cancels share
@@ -116,7 +112,6 @@
 ### P1 ###
 
  [ ] P1 (Photos) Add photo / video circles to map tap to fly into
- [ ] P1 (Photos) Share photos (in chats, camera icon on send button pre-text entered)
  [ ] P1 (Photos) Camera icon appears on map to add photo (when zoomed in in circle menu around your location)
  [ ] P1 (Photos) Photos on map (when zoomed in, dots when zoomed out)
  [ ] P1 (Photos) Share (multiple) photos to group from external app (tap on group from menu)

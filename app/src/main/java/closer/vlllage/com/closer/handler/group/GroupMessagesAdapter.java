@@ -31,6 +31,7 @@ import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.store.models.Suggestion;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
 import static android.text.format.DateUtils.WEEK_IN_MILLIS;
@@ -175,7 +176,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     holder.photo.setVisibility(View.VISIBLE);
                     holder.photo.setOnClickListener(view -> $(PhotoActivityTransitionHandler.class).show(view, photo));
                     Picasso.get().cancelRequest(holder.photo);
-                    Picasso.get().load(photo).into(holder.photo);
+                    Picasso.get().load(photo).transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.imageCorners), 0)).into(holder.photo);
                 } else {
                     holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
                     holder.message.setText("");
