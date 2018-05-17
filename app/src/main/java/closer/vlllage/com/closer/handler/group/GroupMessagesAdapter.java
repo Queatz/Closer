@@ -164,6 +164,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                         contactName = phone.getName();
                     }
 
+                    final String photo = jsonObject.get("photo").getAsString() + "?s=500";
                     holder.name.setVisibility(View.VISIBLE);
                     holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.phone_shared_a_photo, contactName));
                     holder.time.setVisibility(View.VISIBLE);
@@ -172,8 +173,9 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     holder.itemView.setOnClickListener(null);
                     holder.action.setVisibility(View.GONE);// or Share / save photo?
                     holder.photo.setVisibility(View.VISIBLE);
+                    holder.photo.setOnClickListener(view -> $(PhotoActivityTransitionHandler.class).show(view, photo));
                     Picasso.get().cancelRequest(holder.photo);
-                    Picasso.get().load(jsonObject.get("photo").getAsString()).into(holder.photo);
+                    Picasso.get().load(photo).into(holder.photo);
                 } else {
                     holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
                     holder.message.setText("");
