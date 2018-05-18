@@ -37,8 +37,6 @@ import io.objectbox.Box;
 import io.objectbox.Property;
 import io.objectbox.query.QueryBuilder;
 
-import static java.lang.Boolean.TRUE;
-
 public class RefreshHandler extends PoolMember {
 
     public void refreshAll() {
@@ -61,7 +59,7 @@ public class RefreshHandler extends PoolMember {
                     location.getLatitude(),
                     location.getLongitude()
             )).subscribe(stateResult -> {
-                handleFullListResult(stateResult.groups, Group.class, Group_.id, true, GroupResult::from, this::updateGroupFromGroupResult);
+                handleFullListResult(stateResult.groups, Group.class, Group_.id, true, GroupResult::from, GroupResult::updateFrom);
                 handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, true, this::transformGroupInviteResult, null);
                 handleGroupContacts(stateResult.groupContacts);
             }, error -> $(DefaultAlerts.class).syncError()));
@@ -209,15 +207,6 @@ public class RefreshHandler extends PoolMember {
         phone.setStatus(phoneResult.status);
 
         return phone;
-    }
-
-    private Group updateGroupFromGroupResult(Group group, GroupResult groupResult) {
-        group.setName(groupResult.name);
-        group.setUpdated(groupResult.updated);
-        group.setAbout(groupResult.about);
-        group.setPublic(TRUE.equals(groupResult.isPublic));
-        group.setEventId(groupResult.eventId);
-        return group;
     }
 
     private GroupContact createGroupContactFromGroupContactResult(GroupContactResult groupContactResult) {

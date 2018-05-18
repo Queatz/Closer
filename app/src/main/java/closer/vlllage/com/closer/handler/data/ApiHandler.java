@@ -102,6 +102,14 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().createPublicGroup(groupName, about, $(LatLngStr.class).from(latLng), true));
     }
 
+    public Observable<CreateResult> createPhysicalGroup(LatLng latLng) {
+        return uiThread(api.getBackend().createPhysicalGroup($(LatLngStr.class).from(latLng), true));
+    }
+
+    public Observable<SuccessResult> convertToHub(String groupId) {
+        return uiThread(api.getBackend().convertToHub(groupId, true));
+    }
+
     public Observable<SuccessResult> inviteToGroup(String groupId, String name, String phoneNumber) {
         return uiThread(api.getBackend().inviteToGroup(groupId, name, phoneNumber));
     }

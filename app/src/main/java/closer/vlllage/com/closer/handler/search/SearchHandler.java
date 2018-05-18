@@ -76,7 +76,6 @@ public class SearchHandler extends PoolMember {
 
     private void openGroup(String groupId) {
         ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId));
-
     }
 
     private void createGroup(String groupName) {

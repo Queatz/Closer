@@ -137,4 +137,5 @@
     <string name="event_must_not_end_in_the_past">Event must not end in the past</string>
     <string name="enable_contacts_permission">Enable contacts permission</string>
     <string name="photo">Photo</string>
+    <string name="talk_here">Talk here…</string>
 </resources>

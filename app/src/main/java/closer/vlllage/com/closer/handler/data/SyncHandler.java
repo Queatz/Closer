@@ -112,7 +112,12 @@ public class SyncHandler extends PoolMember {
 
         Observable<CreateResult> createApiRequest;
 
-        if (group.isPublic()) {
+        if (group.isPhysical()) {
+            createApiRequest = $(ApiHandler.class).createPhysicalGroup(new LatLng(
+                    group.getLatitude(),
+                    group.getLongitude()
+            ));
+        } else if (group.isPublic()) {
             createApiRequest = $(ApiHandler.class).createPublicGroup(group.getName(), group.getAbout(), new LatLng(
                     group.getLatitude(),
                     group.getLongitude()

@@ -1,4 +1,13 @@
 
+# MKTG
+
+ [ | | ] Present app at meetups
+ [ | | ] Meetup next steps video
+ [ | | ] Finding a nitch / campers of tx
+ [ | | ] Go to hiking groups and present Closer
+ [ | | ] Hire ppl to consistently host events no matter what - do you consistently go on hikes/camping/etc? get paid to host!
+ [ | | ] Rephrase as you get to try Early Access
+
 # Feedback From Users
 
  [ ] Has has has to feel private
@@ -6,12 +15,14 @@
 
 # Top
 
+ [ ] Physical group and hub on backend
  [ ] Purple dots
  [ ] Mini-games (challenges, one-off games) [NSFW]
+    [ ] Answers the questions:
+        "Who's got the biggest boobs in Austin, TX?"
+        "Who's got the cutest boobs in Austin, TX?"
+        "Who's got the perkiest boobs in Austin, TX?"
 
- [ ] New group params
-    [ ] /group/?physical=true
-    [ ] /group/?hub=true
  [ ] New UI
     [ ] New bubble types
         [ ] Purple dots (12dp @ 13z)
@@ -24,7 +35,6 @@
 
 # What I'm Seeing
 
- [ ] Chat here...
  [ ] Purple dots - chats on the map - most recent 20
     [ ] Load on map move and zoom >= 13
     [ ] Animate in / out (boop!)
@@ -34,7 +44,6 @@
     [ ] Pin group on map -> Add name -> Does not expire
     [ ] Show on map, share
     [ ] Settings ... icon - change background (enabled if number is verified)
-    [ ] Post photos / videos in chat (a funny and a must :P)
 
 # Named Areas / Locations on map (admins can edit) (detail size)
 
@@ -51,6 +60,10 @@
 
  [ ] Automatic Events (suggestions from the Closer AI itself)
  [ ] Zoom photo view, slide left/right
+ [ ] Closer image actions download share
+ [ ] Cancelled events disappear after 2H
+ [ ] Post message when event is cancelled inside the event { "attachment" : "message" }
+ [ ] Closer rotate photo Picasso
 
 ### QuestIRL
 
@@ -100,7 +113,9 @@
  [o] P0.2 (Polish) HTTPS (closer.vllage.com)
  [o] P0.2 (Polish) HTTPS (closer-files.vllage.com)
  [ ] P0.2 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-APP-ID
- [0] P0.3 (Polish) Closer only cancel events not in the past
+ [ ] P0.3 (Polish) Post videos in chat (a funny and a must :P)
+ [0] P0.3 (Polish) Don't allow events to start after they end
+ [0] P0.3 (Polish) Only cancel events not in the past
  [0] P0.3 (Polish) Tapping into message box when share is active in event cancels share
  [o] P0.4 (Polish) Some messages/groups are duplicated
  [o] P0.4 (Polish) Event bubble burbbles upon creation
