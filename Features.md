@@ -15,14 +15,6 @@
 
 # Top
 
- [ ] Physical group and hub on backend
- [ ] Purple dots
- [ ] Mini-games (challenges, one-off games) [NSFW]
-    [ ] Answers the questions:
-        "Who's got the biggest boobs in Austin, TX?"
-        "Who's got the cutest boobs in Austin, TX?"
-        "Who's got the perkiest boobs in Austin, TX?"
-
  [ ] New UI
     [ ] New bubble types
         [ ] Purple dots (12dp @ 13z)
@@ -44,6 +36,14 @@
     [ ] Pin group on map -> Add name -> Does not expire
     [ ] Show on map, share
     [ ] Settings ... icon - change background (enabled if number is verified)
+
+# Mini-games
+
+ [ ] Mini-games (challenges, one-off games) [NSFW]
+    [ ] Answers the questions:
+        "Who's got the biggest boobs in Austin, TX?"
+        "Who's got the cutest boobs in Austin, TX?"
+        "Who's got the perkiest boobs in Austin, TX?"
 
 # Named Areas / Locations on map (admins can edit) (detail size)
 
@@ -110,6 +110,7 @@
  [o] P0.1 (Polish) After denying location, don't ask again
  [o] P0.1 (Polish) Contacts not showing up on Android 7.0
  [o] P0.1 (Polish) No network icon in app not toast! "You are offline"
+ [o] P0.2 (Polish) event not syncing when created offline
  [o] P0.2 (Polish) HTTPS (closer.vllage.com)
  [o] P0.2 (Polish) HTTPS (closer-files.vllage.com)
  [ ] P0.2 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-APP-ID

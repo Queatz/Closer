@@ -2,6 +2,8 @@ package closer.vlllage.com.closer.handler.group;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import closer.vlllage.com.closer.handler.bubble.BubbleType;
+import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -23,5 +25,13 @@ public class PhysicalGroupHandler extends PoolMember {
 
     private void openGroup(String groupId) {
         $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId);
+    }
+
+    public MapBubble physicalGroupBubbleFrom(Group group) {
+        MapBubble mapBubble = new MapBubble(new LatLng(group.getLatitude(), group.getLongitude()), "Group", "");
+        mapBubble.setType(BubbleType.PHYSICAL_GROUP);
+        mapBubble.setPinned(true);
+        mapBubble.setTag(group);
+        return mapBubble;
     }
 }

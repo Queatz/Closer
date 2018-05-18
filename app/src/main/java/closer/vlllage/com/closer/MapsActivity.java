@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
+import closer.vlllage.com.closer.handler.group.PhysicalGroupBubbleHandler;
 import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -46,6 +47,7 @@ import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.pool.PoolActivity;
 import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Suggestion;
 
 public class MapsActivity extends PoolActivity {
@@ -104,6 +106,9 @@ public class MapsActivity extends PoolActivity {
 
                 $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), group.getId());
             });
+        }, mapBubble -> {
+            String groupId = ((Group) mapBubble.getTag()).getId();
+            $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), groupId);
         });
 
         $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map));
@@ -195,6 +200,7 @@ public class MapsActivity extends PoolActivity {
         $(MyGroupsLayoutHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
 
         $(EventBubbleHandler.class).attach();
+        $(PhysicalGroupBubbleHandler.class).attach();
 
         findViewById(R.id.showPublicGroups).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
     }

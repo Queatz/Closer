@@ -5,4 +5,5 @@ public enum BubbleType {
     MENU,
     SUGGESTION,
     EVENT,
+    PHYSICAL_GROUP,
 }

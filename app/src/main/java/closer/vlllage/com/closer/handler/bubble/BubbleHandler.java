@@ -16,6 +16,7 @@ public class BubbleHandler extends PoolMember {
     private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener;
     private MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener;
     private MapBubbleEventView.MapBubbleEventClickListener onMapBubbleEventClickListener;
+    private MapBubblePhysicalGroupView.MapBubblePhysicalGroupClickListener onMapBubblePhysicalGroupClickListener;
 
     private final BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
 
@@ -23,11 +24,13 @@ public class BubbleHandler extends PoolMember {
                        MapBubbleView.OnMapBubbleClickListener onClickListener,
                        MapBubbleMenuView.OnMapBubbleMenuItemClickListener onMenuItemClickListener,
                        MapBubbleEventView.MapBubbleEventClickListener onMapBubbleEventClickListener,
-                       MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener) {
+                       MapBubbleSuggestionView.MapBubbleSuggestionClickListener onMapBubbleSuggestionClickListener,
+                       MapBubblePhysicalGroupView.MapBubblePhysicalGroupClickListener onMapBubblePhysicalGroupClickListener) {
         this.onClickListener = onClickListener;
         this.onMenuItemClickListener = onMenuItemClickListener;
         this.onMapBubbleEventClickListener = onMapBubbleEventClickListener;
         this.onMapBubbleSuggestionClickListener = onMapBubbleSuggestionClickListener;
+        this.onMapBubblePhysicalGroupClickListener = onMapBubblePhysicalGroupClickListener;
         bubbleMapLayer.attach(bubbleMapLayerLayout, getBubbleView());
     }
 
@@ -46,6 +49,8 @@ public class BubbleHandler extends PoolMember {
                         return $(MapBubbleSuggestionView.class).from(view, mapBubble, onMapBubbleSuggestionClickListener);
                     case EVENT:
                         return $(MapBubbleEventView.class).from(view, mapBubble, onMapBubbleEventClickListener);
+                    case PHYSICAL_GROUP:
+                        return $(MapBubblePhysicalGroupView.class).from(view, mapBubble, onMapBubblePhysicalGroupClickListener);
                     default:
                         return $(MapBubbleView.class).from(view, mapBubble, onClickListener);
                 }

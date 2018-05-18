@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    android:scaleX=".5"
+    android:scaleY=".5">
+
+    <LinearLayout
+        android:id="@+id/click"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/clickable_purple"
+        android:clickable="true"
+        android:elevation="2dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_wifi_black_24dp"
+            android:layout_margin="@dimen/pad"
+            android:tint="@android:color/white"/>
+
+    </LinearLayout>
+
+</LinearLayout>
