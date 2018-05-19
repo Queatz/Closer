@@ -1,8 +1,5 @@
 package closer.vlllage.com.closer;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.Date;
 import java.util.List;
@@ -214,26 +211,13 @@ public class GroupActivity extends CircularRevealActivity {
     }
 
     public void setGroupBackground(Group group) {
+        ImageView backgroundPhoto = findViewById(R.id.backgroundPhoto);
         if (group.getPhoto() != null) {
-            Picasso.get()
-                    .load(group.getPhoto())
-                    .into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
-                            findViewById(R.id.backgroundColor).setBackground(drawable);
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
+            backgroundPhoto.setVisibility(View.VISIBLE);
+            backgroundPhoto.setImageDrawable(null);
+            Picasso.get().load(group.getPhoto()).into(backgroundPhoto);
+        } else {
+            backgroundPhoto.setVisibility(View.GONE);
         }
     }
 

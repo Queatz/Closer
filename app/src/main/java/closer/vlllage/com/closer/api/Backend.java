@@ -18,8 +18,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Backend {
-//    String BASE_URL = "http://closer.vlllage.com/";
-    String BASE_URL = "http://10.0.2.2:8080/closer/";
+    String BASE_URL = "http://closer.vlllage.com/";
 
     // Phone
 

@@ -13,13 +13,6 @@
  [ ] Has has has to feel private
  [ ] Private party (Private mode?)
 
-# Top
-
- [ ] (Backend) Alert push to nearby people for physical groups
- [ ] physical groups load hubs based on map Geo, same as events
-
- [ ] Auto update when setting group name background upon success
-
 # Incoming
 
  [ ] Mini-games (challenges, one-off games, "things" ppl do) [NSFW]
@@ -27,12 +20,6 @@
         "Who's got the biggest boobs in Austin, TX?"
         "Who's got the cutest boobs in Austin, TX?"
         "Who's got the perkiest boobs in Austin, TX?"
-
- [ ] Automatic Events (suggestions from the Closer AI itself)
- [ ] Zoom photo view, slide left/right
- [ ] Closer actions on photos download share
- [ ] Post message when event is cancelled inside the event { "attachment" : "message" }
- [ ] Closer rotate photo Picasso
 
 ### P0 ###
 
@@ -51,6 +38,7 @@
  [o] P0.3 (Polish) Tapping into message box when share is active in event cancels share
  [o] P0.3 (Polish) Use aspect/placeholder (save it on photo group message attachment)
  [o] P0.3 (Polish) Sofer sync error message
+ [ ] P0.3 (Polish) Auto update when setting group name background upon success
 
  [o] P0.4 (Polish) Some messages/groups are duplicated
  [o] P0.4 (Polish) Stop event bubble from burbbling upon creation
@@ -60,6 +48,7 @@
  [o] P0.5 (Polish) Randomize message hint
 
  [o] P0.9 (Feature) Add your name bubble (in my groups layout)
+ [ ] P0.9 (Polish) Closer rotate photo Picasso
 
 ### Incoming - Needs Review ###
 
@@ -85,6 +74,7 @@
  [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
  [o] P1 (Polish) Show "Bun is typing..."
     [.] JobScheduler check events at specified time
+ [ ] P1 (Polish) Post message when event is cancelled inside the event { "attachment" : "message" }
 
 ### P2 ###
 
@@ -95,6 +85,9 @@
  [o] P2 (Feature) Set profile photo
  [o] P2 (Feature) Single emoji floats many of them over your screen
     [o] Bubble to allow draw over screen permission
+ [ ] P2 (Feature) In zoom photo view, slide left/right
+ [ ] P2 (Feature) Closer actions on photos download share
+
 
 ### P3 ###
 
@@ -104,3 +97,4 @@
  [ ] Search history button, reveals things from the past here (neat feature)
  [ ] OSM MapView (toggleable)
  [ ] Closer Reminders (location, event, suggestion...)
+ [ ] Automatic Events (suggestions from the Closer AI itself)

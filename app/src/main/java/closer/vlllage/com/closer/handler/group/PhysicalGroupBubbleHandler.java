@@ -32,6 +32,8 @@ public class PhysicalGroupBubbleHandler extends PoolMember {
                 .and()
                 .greater(Group_.updated, oneMonthAgo)
                 .or()
+                .equal(Group_.physical, true)
+                .and()
                 .greater(Group_.updated, oneHourAgo)
                 .build()
                 .subscribe()
