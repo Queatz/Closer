@@ -19,11 +19,10 @@
     [ ] Background
         [ ] Image dots on map if background is set
     [ ] Name
-        [ ] Converts to hub
  [ ] (Backend) Alert push to nearby people for physical groups
+ [ ] physical groups load hubs based on map Geo, same as events
 
  [ ] Auto update when setting group name background upon success
- [ ] physical groups load hubs based on map Geo, same as events
 
 # Incoming
 

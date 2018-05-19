@@ -165,6 +165,7 @@ public class MapsActivity extends PoolActivity {
                             $(SuggestionHandler.class).loadAll(suggestions), this::networkError));
 
             $(RefreshHandler.class).refreshEvents(latLng);
+            $(RefreshHandler.class).refreshPhysicalGroups(latLng);
         });
         $(MapHandler.class).attach((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();

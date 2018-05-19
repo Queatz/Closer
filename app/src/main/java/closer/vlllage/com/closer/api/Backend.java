@@ -82,6 +82,9 @@ public interface Backend {
     @POST("group")
     Observable<CreateResult> createPhysicalGroup(@Query("geo") String geo, @Query("physical") boolean physical);
 
+    @GET("group")
+    Observable<List<GroupResult>> getPhysicalGroups(@Query("geo") String latLng, @Query("kind") String kind);
+
     @GET("group/{id}")
     Observable<GroupResult> getGroup(@Path("id") String groupId);
 

@@ -72,6 +72,13 @@ public class RefreshHandler extends PoolMember {
         }, error -> $(DefaultAlerts.class).syncError()));
     }
 
+
+    public void refreshPhysicalGroups(LatLng latLng) {
+        $(DisposableHandler.class).add($(ApiHandler.class).getPhysicalGroups(latLng).subscribe(groupResults -> {
+            handleFullListResult(groupResults, Group.class, Group_.id, false, GroupResult::from, GroupResult::updateFrom);
+        }, error -> $(DefaultAlerts.class).syncError()));
+    }
+
     private void handleMessages(final List<GroupMessageResult> messages) {
         List<PhoneResult> phoneResults = new ArrayList<>();
         for (GroupMessageResult groupMessageResult : messages) {

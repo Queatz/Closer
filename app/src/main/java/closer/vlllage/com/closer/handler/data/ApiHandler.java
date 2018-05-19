@@ -142,6 +142,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().cancelEvent(eventId, true));
     }
 
+    public Observable<List<GroupResult>> getPhysicalGroups(LatLng latLng) {
+        return uiThread(api.getBackend().getPhysicalGroups($(LatLngStr.class).from(latLng), "physical"));
+    }
+
     public Observable<String> uploadPhoto(InputStream photo) {
         RequestBody body = new RequestBody() {
             @Nullable
