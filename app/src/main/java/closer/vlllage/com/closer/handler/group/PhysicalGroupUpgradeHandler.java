@@ -20,7 +20,7 @@ public class PhysicalGroupUpgradeHandler extends PoolMember {
                         group.setName(result);
                     }, error -> $(DefaultAlerts.class).thatDidntWork()));
                 })
-                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.set_name))
                 .show();
     }
 

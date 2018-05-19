@@ -28,13 +28,11 @@ public class PhysicalGroupBubbleHandler extends PoolMember {
         oneMonthAgo.setTime(oneMonthAgo.getTime() - 30 * DAY_IN_MILLIS);
 
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Group.class).query()
-                .equal(Group_.hub, true)
-                .and()
-                .greater(Group_.updated, oneMonthAgo)
-                .or()
                 .equal(Group_.physical, true)
                 .and()
                 .greater(Group_.updated, oneHourAgo)
+                .or()
+                .equal(Group_.hub, true)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())

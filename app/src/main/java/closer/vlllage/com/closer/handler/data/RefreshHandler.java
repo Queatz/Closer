@@ -77,6 +77,9 @@ public class RefreshHandler extends PoolMember {
         $(DisposableHandler.class).add($(ApiHandler.class).getPhysicalGroups(latLng).subscribe(groupResults -> {
             handleFullListResult(groupResults, Group.class, Group_.id, false, GroupResult::from, GroupResult::updateFrom);
         }, error -> $(DefaultAlerts.class).syncError()));
+
+        $(DisposableHandler.class).add($(ApiHandler.class).myMessages(latLng)
+                .subscribe(this::handleMessages, error -> $(DefaultAlerts.class).syncError()));
     }
 
     private void handleMessages(final List<GroupMessageResult> messages) {

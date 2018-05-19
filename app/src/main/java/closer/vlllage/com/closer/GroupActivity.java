@@ -215,7 +215,7 @@ public class GroupActivity extends CircularRevealActivity {
         if (group.getPhoto() != null) {
             backgroundPhoto.setVisibility(View.VISIBLE);
             backgroundPhoto.setImageDrawable(null);
-            Picasso.get().load(group.getPhoto()).into(backgroundPhoto);
+            Picasso.get().load(group.getPhoto() + "?s=500").into(backgroundPhoto);
         } else {
             backgroundPhoto.setVisibility(View.GONE);
         }
@@ -241,10 +241,6 @@ public class GroupActivity extends CircularRevealActivity {
     private void showEventOnMap(Event event) {
         ((CircularRevealActivity) $(ActivityHandler.class).getActivity())
                 .finish(() -> $(MapActivityHandler.class).showEventOnMap(event));
-
-    }
-
-    private void share(Group group) {
 
     }
 

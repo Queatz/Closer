@@ -24,6 +24,7 @@
 ### P0 ###
 
  [o] P0 (Polish) Crash when location is unknown
+ [o] P0 (Polish) Load messages from physical groups at map location
  [o] P0.1 (Polish) Don't ask location on app launch, locate me button
  [o] P0.1 (Polish) After denying location, don't ask again
  [o] P0.1 (Polish) Contacts not showing up on Android 7.0

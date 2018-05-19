@@ -1,4 +1,7 @@
 
+Game: Supported locations, a new location is launching on Saturday
+Closer new types of places to go, new reasons YES / place dedicated to talking about life problems
+
 # # - - --- -- -- -- --- - - # #
 # # - - - CAUTION ZONE - - - # #
 # # - - --- -- -- -- --- - - # #
