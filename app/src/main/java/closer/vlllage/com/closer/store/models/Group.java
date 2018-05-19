@@ -12,6 +12,7 @@ public class Group extends BaseObject {
     private String eventId;
     private Double latitude;
     private Double longitude;
+    private String photo;
 
     public String getName() {
         return name;
@@ -87,5 +88,13 @@ public class Group extends BaseObject {
 
     public boolean hasEvent() {
         return eventId != null;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

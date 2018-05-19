@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
@@ -150,8 +151,8 @@ public class GroupHandler extends PoolMember {
     private void setGroup(Group group) {
         this.group = group;
 
-        if (group != null && group.getName() != null) {
-            groupName.setText(group.getName());
+        if (group != null) {
+            groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
             onGroupSet(group);
             groupChanged.onNext(group);
             setEventById(group.getEventId());

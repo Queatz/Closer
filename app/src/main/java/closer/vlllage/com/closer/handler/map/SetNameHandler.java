@@ -17,8 +17,8 @@ public class SetNameHandler extends PoolMember {
     public void modifyName(final OnNameModifiedCallback onNameModifiedCallback, boolean allowSkip) {
         $(AlertHandler.class).make()
                 .setLayoutResId(R.layout.set_name_modal)
-                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.update_name))
-                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.update_name))
+                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.update_your_name))
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.update_your_name))
                 .setNegativeButton(allowSkip ? $(ResourcesHandler.class).getResources().getString(R.string.skip) : null)
                 .setNegativeButtonCallback(allowSkip ? result -> {
                     if (onNameModifiedCallback != null) {

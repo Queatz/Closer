@@ -108,7 +108,7 @@ public class StatusLayoutHandler extends PoolMember {
                 myStatusVisibleButton.setText(R.string.turn_off);
                 myStatusVisibleButton.setTextColor(resources.getColor(R.color.disabled));
             } else {
-                myStatusVisibleButton.setText(R.string.update);
+                myStatusVisibleButton.setText(R.string.update_name);
                 myStatusVisibleButton.setTextColor(resources.getColor(R.color.colorPrimary));
             }
         }

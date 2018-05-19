@@ -92,10 +92,18 @@ public class EventHandler extends PoolMember {
                 })
                 .setButtonClickCallback(alertResult -> {
                     CreateEventViewHolder viewHolder = (CreateEventViewHolder) alertResult;
-                    boolean isValid = new Date().before(getViewState(viewHolder).endsAt.getTime());
+                    boolean isValid = getViewState(viewHolder).endsAt.before(getViewState(viewHolder).startsAt.getTime());
                     if (!isValid) {
-                        $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.event_must_not_end_in_the_past));
+                        $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.event_must_not_end_before_it_starts));
                     }
+
+                    if (isValid) {
+                        isValid = new Date().before(getViewState(viewHolder).endsAt.getTime());
+                        if (!isValid) {
+                            $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.event_must_not_end_in_the_past));
+                        }
+                    }
+
                     return isValid;
                 })
                 .setPositiveButtonCallback(alertResult -> {

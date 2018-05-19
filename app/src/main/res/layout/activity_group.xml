@@ -84,7 +84,7 @@
                 android:drawablePadding="4dp"
                 android:background="@drawable/clickable_light"
                 android:text="@string/share"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
             <Button
                 android:id="@+id/actionShowOnMap"
                 android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                 android:drawablePadding="4dp"
                 android:background="@drawable/clickable_light"
                 android:text="@string/show_on_map"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
             <Button
                 android:id="@+id/actionCancel"
                 android:layout_width="wrap_content"
@@ -110,7 +110,37 @@
                 android:drawablePadding="4dp"
                 android:background="@drawable/clickable_light"
                 android:text="@string/cancel"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
+            <Button
+                android:id="@+id/actionSettingsSetName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textSize="12sp"
+                android:drawableTint="@android:color/white"
+                android:drawableTop="@drawable/ic_edit_location_black_24dp"
+                android:drawablePadding="4dp"
+                android:background="@drawable/clickable_light"
+                android:text="@string/set_name"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                tools:visibility="visible" />
+            <Button
+                android:id="@+id/actionSettingsSetBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textSize="12sp"
+                android:drawableTint="@android:color/white"
+                android:drawableTop="@drawable/ic_camera_black_24dp"
+                android:drawablePadding="4dp"
+                android:background="@drawable/clickable_light"
+                android:text="@string/set_background"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <TextView

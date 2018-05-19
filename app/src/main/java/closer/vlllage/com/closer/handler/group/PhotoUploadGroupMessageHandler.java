@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.group;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
@@ -12,23 +13,22 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class PhotoUploadGroupMessageHandler extends PoolMember {
-    public void createGroupMessageFromUri(Uri photoUri, String groupId) {
+    public void upload(@NonNull Uri photoUri, @NonNull OnPhotoUploadedListener onPhotoUploadedListener) {
         try {
             $(DisposableHandler.class).add($(ApiHandler.class).uploadPhoto(
                     $(ActivityHandler.class).getActivity().getContentResolver().openInputStream(photoUri))
-                    .subscribe(photoId -> {
-                boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto(getPhotoPathFromId(photoId), groupId);
-                if (!success) {
-                    $(DefaultAlerts.class).thatDidntWork();
-                }
-            }, error -> $(DefaultAlerts.class).thatDidntWork()));
+                    .subscribe(onPhotoUploadedListener::onPhotoUploaded, error -> $(DefaultAlerts.class).thatDidntWork()));
         } catch (IOException e) {
             e.printStackTrace();
             $(DefaultAlerts.class).thatDidntWork();
         }
     }
 
-    private String getPhotoPathFromId(String photoId) {
+    String getPhotoPathFromId(String photoId) {
         return PhotoUploadBackend.BASE_URL + photoId;
+    }
+
+    public interface OnPhotoUploadedListener {
+        void onPhotoUploaded(String photoId);
     }
 }

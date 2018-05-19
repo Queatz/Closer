@@ -1,5 +1,8 @@
 package closer.vlllage.com.closer;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,32 +14,37 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.handler.data.AccountHandler;
-import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
-import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
-import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
-import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
-import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
-import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
-import closer.vlllage.com.closer.handler.map.MapActivityHandler;
-import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
-import closer.vlllage.com.closer.handler.helpers.SortHandler;
-import closer.vlllage.com.closer.handler.helpers.TimerHandler;
-import closer.vlllage.com.closer.handler.helpers.TopHandler;
+import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
+import closer.vlllage.com.closer.handler.group.PhysicalGroupUpgradeHandler;
+import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
+import closer.vlllage.com.closer.handler.helpers.AlertHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
+import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
+import closer.vlllage.com.closer.handler.helpers.TimerHandler;
+import closer.vlllage.com.closer.handler.helpers.TopHandler;
+import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
@@ -45,10 +53,13 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.query.QueryBuilder;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static com.google.android.gms.common.util.Strings.isEmptyOrWhitespace;
 
 public class GroupActivity extends CircularRevealActivity {
 
     public static final String EXTRA_GROUP_ID = "groupId";
+    public static final String EXTRA_RESPOND = "respond";
+
     private TextView peopleInGroup;
     private TextView groupName;
     private TextView groupDetails;
@@ -56,6 +67,8 @@ public class GroupActivity extends CircularRevealActivity {
     private Button actionShare;
     private Button actionShowOnMap;
     private Button actionCancel;
+    private Button actionSettingsSetName;
+    private Button actionSettingsSetBackground;
     private EditText replyMessage;
     private RecyclerView messagesRecyclerView;
     private RecyclerView shareWithRecyclerView;
@@ -83,6 +96,8 @@ public class GroupActivity extends CircularRevealActivity {
         actionShare = findViewById(R.id.actionShare);
         actionShowOnMap = findViewById(R.id.actionShowOnMap);
         actionCancel = findViewById(R.id.actionCancel);
+        actionSettingsSetName = findViewById(R.id.actionSettingsSetName);
+        actionSettingsSetBackground = findViewById(R.id.actionSettingsSetBackground);
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
@@ -94,6 +109,13 @@ public class GroupActivity extends CircularRevealActivity {
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
             groupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
             $(GroupHandler.class).setGroupById(groupId);
+
+            if (getIntent().hasExtra(EXTRA_RESPOND)) {
+                replyMessage.postDelayed(() -> {
+                    replyMessage.requestFocus();
+                    $(KeyboardHandler.class).showKeyboard(replyMessage, true);
+                }, 500);
+            }
         }
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton);
@@ -105,13 +127,32 @@ public class GroupActivity extends CircularRevealActivity {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.color.red);
                 } else if (group.isPhysical()) {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.color.purple);
+                    eventToolbar.setVisibility(View.VISIBLE);
+                    actionShare.setVisibility(View.GONE);
+                    actionCancel.setVisibility(View.GONE);
+                    actionShowOnMap.setVisibility(View.VISIBLE);
+                    actionShowOnMap.setOnClickListener(view -> showGroupOnMap(group));
+
+                    if (true || $(PersistenceHandler.class).getIsVerified()) {
+                        if (isEmptyOrWhitespace(group.getName())) {
+                            actionSettingsSetName.setVisibility(View.VISIBLE);
+                            actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group));
+                        } else {
+                            actionSettingsSetName.setVisibility(View.GONE);
+                        }
+
+                        if (isEmptyOrWhitespace(group.getPhoto())) {
+                            actionSettingsSetBackground.setVisibility(View.VISIBLE);
+                            actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group));
+                        } else {
+                            actionSettingsSetBackground.setVisibility(View.GONE);
+                        }
+                    }
                 } else {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
                 }
 
-                if (group.isHub()) {
-                    // TODO set background Picasso https://closer-files.vlllage.com/group:1234
-                }
+                setGroupBackground(group);
 
                 peopleInGroup.setVisibility(View.GONE);
             } else {
@@ -145,12 +186,10 @@ public class GroupActivity extends CircularRevealActivity {
             eventToolbar.setVisibility(View.VISIBLE);
             groupDetails.setText($(EventDetailsHandler.class).formatEventDetails(event));
 
-            actionShare.setOnClickListener(view -> {
-                share(event);
-            });
+            actionShare.setOnClickListener(view -> share(event));
             actionShowOnMap.setOnClickListener(view -> showEventOnMap(event));
 
-            if (!event.isCancelled() && event.getCreator() != null && event.getCreator().equals($(PersistenceHandler.class).getPhoneId())) {
+            if (!event.isCancelled() && event.getCreator() != null && new Date().before(event.getEndsAt()) && event.getCreator().equals($(PersistenceHandler.class).getPhoneId())) {
                 actionCancel.setOnClickListener(view -> {
                     $(AlertHandler.class).make()
                             .setTitle($(ResourcesHandler.class).getResources().getString(R.string.cancel_event))
@@ -174,6 +213,30 @@ public class GroupActivity extends CircularRevealActivity {
         }, error -> $(DefaultAlerts.class).syncError()));
     }
 
+    public void setGroupBackground(Group group) {
+        if (group.getPhoto() != null) {
+            Picasso.get()
+                    .load(group.getPhoto())
+                    .into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
+                            findViewById(R.id.backgroundColor).setBackground(drawable);
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -195,6 +258,15 @@ public class GroupActivity extends CircularRevealActivity {
         ((CircularRevealActivity) $(ActivityHandler.class).getActivity())
                 .finish(() -> $(MapActivityHandler.class).showEventOnMap(event));
 
+    }
+
+    private void share(Group group) {
+
+    }
+
+    private void showGroupOnMap(Group group) {
+        ((CircularRevealActivity) $(ActivityHandler.class).getActivity())
+                .finish(() -> $(MapActivityHandler.class).showGroupOnMap(group));
     }
 
     private void share(Event event) {

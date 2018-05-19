@@ -3,12 +3,13 @@
     <string name="reply">Reply</string>
     <string name="turn_off">Turn off</string>
     <string name="turn_on">Turn on</string>
-    <string name="update">Update</string>
+    <string name="update_name">Update name</string>
     <string name="closer_notifications">Closer notifications</string>
     <string name="what_s_up">Tell everyone…</string>
     <string name="off">Off</string>
-    <string name="update_name">Update your name</string>
-    <string name="set_name">Your name here</string>
+    <string name="update_your_name">Update your name</string>
+    <string name="your_name_here">Your name here</string>
+    <string name="set_name">Set name</string>
     <string name="add_a_name">Add a name…</string>
 
     <string name="notification_channel" translatable="false">notifications</string>
@@ -138,4 +139,7 @@
     <string name="enable_contacts_permission">Enable contacts permission</string>
     <string name="photo">Photo</string>
     <string name="talk_here">Talk here…</string>
+    <string name="settings">Settings</string>
+    <string name="event_must_not_end_before_it_starts">Event must not end before it starts</string>
+    <string name="set_background">Set background</string>
 </resources>

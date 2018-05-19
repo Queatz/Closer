@@ -10,6 +10,7 @@ import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Suggestion;
 
+import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_EVENT_ID;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_LAT_LNG;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_NAME;
@@ -28,7 +29,7 @@ public class IntentHandler extends PoolMember {
                         intent.hasExtra(EXTRA_NAME) ? intent.getStringExtra(EXTRA_NAME) : "",
                         intent.getStringExtra(EXTRA_STATUS)
                 ).setPhone(intent.getStringExtra(EXTRA_PHONE)));
-            } else if (intent.hasExtra(EXTRA_EVENT_ID)) {
+            } else if (intent.hasExtra(EXTRA_EVENT_ID) || intent.hasExtra(EXTRA_GROUP_ID)) {
                 float[] latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG);
                 LatLng latLng = new LatLng(latLngFloats[0], latLngFloats[1]);
                 $(MapHandler.class).centerMap(latLng);

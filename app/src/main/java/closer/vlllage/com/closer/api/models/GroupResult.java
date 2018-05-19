@@ -16,6 +16,7 @@ public class GroupResult extends ModelResult {
     public Boolean hub;
     public String eventId;
     public List<Double> geo;
+    private String photo;
 
     public static Group from(GroupResult groupResult) {
         Group group = new Group();
@@ -32,6 +33,7 @@ public class GroupResult extends ModelResult {
         group.setPhysical(TRUE.equals(groupResult.physical));
         group.setHub(TRUE.equals(groupResult.hub));
         group.setEventId(groupResult.eventId);
+        group.setPhoto(groupResult.photo);
 
         if (groupResult.geo != null && !groupResult.geo.isEmpty()) {
             group.setLatitude(groupResult.geo.get(0));

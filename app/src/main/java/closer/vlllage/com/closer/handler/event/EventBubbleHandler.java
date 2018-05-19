@@ -21,6 +21,7 @@ public class EventBubbleHandler extends PoolMember {
     public void attach() {
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Event.class).query()
                 .greater(Event_.endsAt, Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime())
+                .notEqual(Event_.cancelled, true)
                 .build().subscribe().on(AndroidScheduler.mainThread())
                 .observer(events -> {
                     $(BubbleHandler.class).remove(mapBubble -> mapBubble.getType() == BubbleType.EVENT && !visibleEvents.contains(((Event) mapBubble.getTag()).getId()));

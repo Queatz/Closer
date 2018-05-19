@@ -24,10 +24,13 @@ public class PhysicalGroupHandler extends PoolMember {
     }
 
     private void openGroup(String groupId) {
-        $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId);
+        $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId, true);
     }
 
     public MapBubble physicalGroupBubbleFrom(Group group) {
+        if (group.getLatitude() == null || group.getLongitude() == null) {
+            return null;
+        }
         MapBubble mapBubble = new MapBubble(new LatLng(group.getLatitude(), group.getLongitude()), "Group", "");
         mapBubble.setType(BubbleType.PHYSICAL_GROUP);
         mapBubble.setPinned(true);

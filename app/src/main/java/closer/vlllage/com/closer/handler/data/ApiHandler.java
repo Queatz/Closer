@@ -106,8 +106,8 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().createPhysicalGroup($(LatLngStr.class).from(latLng), true));
     }
 
-    public Observable<SuccessResult> convertToHub(String groupId) {
-        return uiThread(api.getBackend().convertToHub(groupId, true));
+    public Observable<SuccessResult> convertToHub(String groupId, String name) {
+        return uiThread(api.getBackend().convertToHub(groupId, name, true));
     }
 
     public Observable<SuccessResult> inviteToGroup(String groupId, String name, String phoneNumber) {
@@ -116,6 +116,10 @@ public class ApiHandler extends PoolMember {
 
     public Observable<SuccessResult> leaveGroup(String groupId) {
         return uiThread(api.getBackend().leaveGroup(groupId, true));
+    }
+
+    public Observable<SuccessResult> setGroupPhoto(String groupId, String photo) {
+        return uiThread(api.getBackend().setGroupPhoto(groupId, photo));
     }
 
     public Observable<SuccessResult> cancelInvite(String groupId, String groupInviteId) {

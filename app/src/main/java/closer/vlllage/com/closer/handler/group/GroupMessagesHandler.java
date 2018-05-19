@@ -14,20 +14,20 @@ import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.helpers.CameraHandler;
-import closer.vlllage.com.closer.ui.CircularRevealActivity;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
+import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
+import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.map.MapActivityHandler;
-import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
-import closer.vlllage.com.closer.handler.data.SyncHandler;
+import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
+import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
@@ -80,7 +80,12 @@ public class GroupMessagesHandler extends PoolMember {
 
         sendButton.setOnClickListener(view -> {
             if (replyMessage.getText().toString().trim().isEmpty()) {
-                $(CameraHandler.class).showCamera();
+                $(CameraHandler.class).showCamera((photoUri, groupId) -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
+                    boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), groupId);
+                    if (!success) {
+                        $(DefaultAlerts.class).thatDidntWork();
+                    }
+                }));
                 return;
             }
 

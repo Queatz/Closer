@@ -11,7 +11,6 @@ import android.widget.Toast;
 import java.io.File;
 
 import closer.vlllage.com.closer.handler.group.GroupHandler;
-import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 import static android.app.Activity.RESULT_OK;
@@ -23,7 +22,11 @@ public class CameraHandler extends PoolMember {
 
     private Uri photoUri;
 
-    public void showCamera() {
+    private OnPhotoCapturedListener onPhotoCapturedListener;
+
+    public void showCamera(@NonNull OnPhotoCapturedListener onPhotoCapturedListener) {
+        this.onPhotoCapturedListener = onPhotoCapturedListener;
+
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         File photo;
@@ -59,7 +62,9 @@ public class CameraHandler extends PoolMember {
             return;
         }
 
-        $(PhotoUploadGroupMessageHandler.class).createGroupMessageFromUri(photoUri, $(GroupHandler.class).getGroup().getId());
+        if (onPhotoCapturedListener != null) {
+            onPhotoCapturedListener.onPhotoCaptured(photoUri, $(GroupHandler.class).getGroup().getId());
+        }
     }
 
     @Nullable
@@ -73,5 +78,9 @@ public class CameraHandler extends PoolMember {
             }
         }
         return File.createTempFile(part, ext, tempDir);
+    }
+
+    public interface OnPhotoCapturedListener {
+        void onPhotoCaptured(Uri photoUri, String groupId);
     }
 }

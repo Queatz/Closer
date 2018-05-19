@@ -18,8 +18,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Backend {
-    String BASE_URL = "http://closer.vlllage.com/";
-//    String BASE_URL = "http://10.0.2.2:8080/closer/";
+//    String BASE_URL = "http://closer.vlllage.com/";
+    String BASE_URL = "http://10.0.2.2:8080/closer/";
 
     // Phone
 
@@ -95,7 +95,10 @@ public interface Backend {
     Observable<SuccessResult> cancelInvite(@Path("id") String groupId, @Query("cancel-invite") String groupInviteId);
 
     @POST("group/{id}")
-    Observable<SuccessResult> convertToHub(@Path("id") String groupId, @Query("hub") boolean hub);
+    Observable<SuccessResult> convertToHub(@Path("id") String groupId, @Query("name") String name, @Query("hub") boolean hub);
+
+    @POST("group/{id}")
+    Observable<SuccessResult> setGroupPhoto(@Path("id") String groupId, @Query("photo") String photo);
 
     // Event
 

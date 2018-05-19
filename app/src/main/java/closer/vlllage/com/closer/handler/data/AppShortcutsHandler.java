@@ -38,7 +38,7 @@ public class AppShortcutsHandler extends PoolMember {
 
             ShortcutInfo shortcut = new ShortcutInfo.Builder($(ApplicationHandler.class).getApp(), "group:" + group.getId())
                     .setShortLabel(group.getName())
-                    .setIntent($(GroupActivityTransitionHandler.class).getIntent(group.getId()))
+                    .setIntent($(GroupActivityTransitionHandler.class).getIntent(group.getId(), false))
                     .setIcon(Icon.createWithResource($(ApplicationHandler.class).getApp(), R.drawable.ic_notification))
                     .build();
 
