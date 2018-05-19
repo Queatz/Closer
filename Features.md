@@ -15,10 +15,6 @@
 
 # Top
 
- [ ] Settings
-    [ ] Background
-        [ ] Image dots on map if background is set
-    [ ] Name
  [ ] (Backend) Alert push to nearby people for physical groups
  [ ] physical groups load hubs based on map Geo, same as events
 

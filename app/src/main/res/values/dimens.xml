@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="padHalf">4dp</dimen>
     <dimen name="pad">8dp</dimen>
+    <dimen name="padDouble">16dp</dimen>
     <dimen name="miniWindowHeight">350dp</dimen>
     <dimen name="miniWindowTopMargin">84dp</dimen>
     <dimen name="imageCorners">4dp</dimen>
+    <dimen name="physicalGroupCorners">256dp</dimen>
+    <dimen name="physicalGroupPhoto">36dp</dimen>
+    <dimen name="physicalGroupIcon">24dp</dimen>
 </resources>
