@@ -46,6 +46,7 @@ import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.query.QueryBuilder;
 
@@ -117,6 +118,8 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton);
         $(MiniWindowHandler.class).attach(findViewById(R.id.groupName), findViewById(R.id.backgroundColor));
+
+        replyMessage.setOnClickListener(view -> cancelShare());
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (group.isPublic()) {
@@ -250,10 +253,7 @@ public class GroupActivity extends CircularRevealActivity {
     }
 
     private void share(Event event) {
-        if (shareWithRecyclerView.getVisibility() == View.VISIBLE) {
-            shareWithRecyclerView.setVisibility(View.GONE);
-            messagesRecyclerView.setVisibility(View.VISIBLE);
-            actionShare.setText(R.string.share);
+        if (cancelShare()) {
             return;
         }
 
@@ -262,7 +262,7 @@ public class GroupActivity extends CircularRevealActivity {
         actionShare.setText(R.string.cancel);
 
         QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
-        List<Group> groups = queryBuilder.sort($(SortHandler.class).sortGroups()).build().find();
+        List<Group> groups = queryBuilder.sort($(SortHandler.class).sortGroups()).notEqual(Group_.physical, true).build().find();
 
         SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(GroupHandler.class), group -> {
             boolean success = $(GroupMessageAttachmentHandler.class).shareEvent(event, group);
@@ -284,6 +284,17 @@ public class GroupActivity extends CircularRevealActivity {
                 LinearLayoutManager.VERTICAL,
                 false
         ));
+    }
+
+    private boolean cancelShare() {
+        if (shareWithRecyclerView.getVisibility() != View.VISIBLE) {
+            return false;
+        }
+
+        shareWithRecyclerView.setVisibility(View.GONE);
+        messagesRecyclerView.setVisibility(View.VISIBLE);
+        actionShare.setText(R.string.share);
+        return true;
     }
 
     private void toggleContactsView() {

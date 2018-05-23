@@ -13,6 +13,6 @@ public class MapZoomHandler extends PoolMember {
     }
 
     public Observable<Boolean> onZoomGreaterThanChanged(final float zoomGreaterThan) {
-        return onZoomChanged.map(zoom -> zoom > zoomGreaterThan).distinctUntilChanged();
+        return onZoomChanged.map(zoom -> zoom >= zoomGreaterThan).distinctUntilChanged();
     }
 }

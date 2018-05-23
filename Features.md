@@ -17,14 +17,18 @@
  [ ] Has has has to feel private
  [ ] Private party (Private mode?)
 
+# Top
+
+ [ ] Closer friends list / DMs @mentions
+ [ ] Polish errors
+
 # Incoming
 
  [ ] Closer DM / friends / previous notifications
  [ ] Friends on map
     [ ] Areas where I am visible to my friends
  [ ] @mentions in group messages
- [ ] Set your name ongoing toast
- [ ] Closer more localized hubs not all visible zoom level 15 (show / hide)
+ [ ] Set your name ongoing snackbar
  [ ] Closer look into event notification not being sent?
 
  [ ] Mini-games (challenges, one-off games, "things" ppl do) [NSFW]
@@ -33,29 +37,26 @@
         "Who's got the cutest boobs in Austin, TX?"
         "Who's got the perkiest boobs in Austin, TX?"
  [ ] Closer: Hide and seek
- [ ] Closer as: Coffeeshop conversation app (once there's 20 coffeeshops on the app)
- [ ] Closer Story - Who I Am (Photo cards with text on them)
- [ ] Closer: Pinned messages in events
+ [ ] Closer: as: Coffeeshop conversation app (once there's 20 coffeeshops on the app)
+ [ ] Closer: Story - Who I Am / Intro to me (Photo cards with text on them)
  [ ] Closer: check if notifications go to inactive people?
 
- older...
+ ...more...
 
  [ ] Animate zoom up for groups when tapping name to expand vertically
- [ ] Ping specific person get attention in private chat
+ [ ] Ping specific person get attention in private chat / friends
  [ ] Find your equals / ai engine app
  [.] Photos of people in Austin blog / things they like to do
  [.] Long press menu directions, share, save, remind, camera, remind
  [ ] Home / work on map icons on map (Add your own location, share location with group / friends)
     [ ] Friends on map
- [ ] Weekly/monthly "Closer Holidays"
-    [ ] Continuous engagement
  [ ] Groups in groups? Or Group Maps? Layers? I.e. dev squads for X number of projects
  [ ] Search bar at top
  [ ] Become an ambassador in your area (things to do as an ambassador)
  [ ] Enter invite code to join secret group
  [ ] Goodies.  That pop up on the map when you're near by them
 
-### Future ###
+### Future : 100+ MAUs ###
 
  [ ] exclusive experiences with people browser
  [ ] Random gifts app
@@ -63,30 +64,24 @@
 
 ### P0 ###
 
- [o] P0.0 (Polish) Crash when location is unknown
- [o] P0.0 (Polish) Load messages from physical groups at map location
+ [o] P0.0 (Bug) Crash when location is unknown
  [o] P0.1 (Polish) Don't ask location on app launch, locate me button
  [o] P0.1 (Polish) After denying location, don't ask again
- [o] P0.1 (Polish) Contacts not showing up on Android 7.0
- [o] P0.1 (Polish) No network icon in app not toast! "You are offline"
+ [o] P0.1 (Bug) Contacts not showing up on Android 7.0
+ [o] P0.1 (Polish) No network icon in app not toast! "You are offline" & Softer sync error message (X network error)
 
- [o] P0.2 (Polish) event not syncing when created offline
- [o] P0.2 (Polish) HTTPS (closer.vllage.com)
- [o] P0.2 (Polish) HTTPS (closer-files.vllage.com)
- [o] P0.2 (Polish) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-APP-ID
+ [o] P0.2 (Bug) event not syncing when created offline
+ [o] P0.2 (Todo) HTTPS (closer-files.vllage.com)
+ [o] P0.2 (Todo) HTTPS (closer.vllage.com)
+    [o] P0.2 (Todo) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-APP-ID
 
- [ ] P0.3 (Polish) Post videos in chat (a funny and a must :P)
- [o] P0.3 (Polish) Tapping into message box when share is active in event cancels share
- [o] P0.3 (Polish) Use aspect/placeholder (save it on photo group message attachment)
- [o] P0.3 (Polish) Softer sync error message
+ [ ] P0.3 (Feature) Post videos in chat (a funny and a must :P)
+ [o] P0.3 (Feature) Use aspect/placeholder (save it on photo group message attachment)
  [ ] P0.3 (Polish) Auto update when setting group name background upon success
 
- [o] P0.4 (Polish) Some messages/groups are duplicated
+ [o] P0.4 (Bug) Some messages/groups are duplicated
  [o] P0.4 (Polish) Stop event bubble from burbbling upon creation
- [ ] P0.4 (Polish) Don't reactivate bubble when using push notification
-
- [ ] P0.5 (Polish) Settings bubble at end pink [Set event notification time]
- [o] P0.5 (Polish) Randomize message hint
+ [ ] P0.4 (Bug) Don't reactivate bubble when using push notification
 
  [o] P0.9 (Feature) Add your name bubble (in my groups layout)
  [ ] P0.9 (Polish) Closer rotate photo Picasso
@@ -97,8 +92,7 @@
  [o] P1 (Photos) Add public photos to suggestion
  [o] P1 (Polish) WebSocket (exact same as push notifications, ZERO difference!)
  [o] P1 (Polish) Show "Bun is typing..."
-    [.] JobScheduler check events at specified time
- [ ] P1 (Polish) Post message when event is cancelled inside the event { "attachment" : "message" }
+    [.] WorkScheduler check events at specified time
 
 ### P2 ###
 
@@ -122,3 +116,4 @@
  [ ] OSM MapView (toggleable)
  [ ] Closer Reminders (location, event, suggestion...)
  [ ] Automatic Events (suggestions from the Closer AI itself)
+ [ ] Pinned messages in events
