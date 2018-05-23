@@ -16,7 +16,7 @@ import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.ModelResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -49,7 +49,7 @@ public class RefreshHandler extends PoolMember {
             $(DisposableHandler.class).add($(ApiHandler.class).myMessages(new LatLng(
                     location.getLatitude(),
                     location.getLongitude()
-            )).subscribe(this::handleMessages, error -> $(DefaultAlerts.class).syncError()));
+            )).subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).connectionError()));
         });
     }
 
@@ -62,24 +62,24 @@ public class RefreshHandler extends PoolMember {
                 handleFullListResult(stateResult.groups, Group.class, Group_.id, true, GroupResult::from, GroupResult::updateFrom);
                 handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, true, this::transformGroupInviteResult, null);
                 handleGroupContacts(stateResult.groupContacts);
-            }, error -> $(DefaultAlerts.class).syncError()));
+            }, error -> $(ConnectionErrorHandler.class).connectionError()));
         });
     }
 
     public void refreshEvents(LatLng latLng) {
         $(DisposableHandler.class).add($(ApiHandler.class).getEvents(latLng).subscribe(eventResults -> {
             handleFullListResult(eventResults, Event.class, Event_.id, false, EventResult::from, EventResult::updateFrom);
-        }, error -> $(DefaultAlerts.class).syncError()));
+        }, error -> $(ConnectionErrorHandler.class).connectionError()));
     }
 
 
     public void refreshPhysicalGroups(LatLng latLng) {
         $(DisposableHandler.class).add($(ApiHandler.class).getPhysicalGroups(latLng).subscribe(groupResults -> {
             handleFullListResult(groupResults, Group.class, Group_.id, false, GroupResult::from, GroupResult::updateFrom);
-        }, error -> $(DefaultAlerts.class).syncError()));
+        }, error -> $(ConnectionErrorHandler.class).connectionError()));
 
         $(DisposableHandler.class).add($(ApiHandler.class).myMessages(latLng)
-                .subscribe(this::handleMessages, error -> $(DefaultAlerts.class).syncError()));
+                .subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).connectionError()));
     }
 
     private void handleMessages(final List<GroupMessageResult> messages) {

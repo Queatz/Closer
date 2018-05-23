@@ -6,7 +6,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.HttpEncode;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -84,7 +84,7 @@ public class SyncHandler extends PoolMember {
                     onSyncResult.onSync(createResult.id);
                 }
             }
-        }, error -> $(DefaultAlerts.class).syncError()));
+        }, error -> $(ConnectionErrorHandler.class).connectionError()));
     }
 
     private void sendCreateSuggestion(Suggestion suggestion, OnSyncResult onSyncResult) {
@@ -103,7 +103,7 @@ public class SyncHandler extends PoolMember {
                             onSyncResult.onSync(createResult.id);
                         }
                     }
-                }, error -> $(DefaultAlerts.class).syncError()));
+                }, error -> $(ConnectionErrorHandler.class).connectionError()));
     }
 
     private void sendCreateGroup(Group group, OnSyncResult onSyncResult) {
@@ -135,7 +135,7 @@ public class SyncHandler extends PoolMember {
                     onSyncResult.onSync(createResult.id);
                 }
             }
-        }, error -> $(DefaultAlerts.class).syncError()));
+        }, error -> $(ConnectionErrorHandler.class).connectionError()));
     }
 
     private void sendCreateGroupMessage(GroupMessage groupMessage, OnSyncResult onSyncResult) {
@@ -155,7 +155,7 @@ public class SyncHandler extends PoolMember {
                     onSyncResult.onSync(createResult.id);
                 }
             }
-        }, error -> $(DefaultAlerts.class).syncError()));
+        }, error -> $(ConnectionErrorHandler.class).connectionError()));
     }
 
     public interface OnSyncResult {

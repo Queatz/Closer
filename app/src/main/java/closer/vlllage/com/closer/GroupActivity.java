@@ -32,6 +32,7 @@ import closer.vlllage.com.closer.handler.group.PhysicalGroupUpgradeHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
@@ -179,7 +180,7 @@ public class GroupActivity extends CircularRevealActivity {
                     });
                 });
             }
-        }, error -> $(DefaultAlerts.class).syncError()));
+        }, error -> $(ConnectionErrorHandler.class).connectionError()));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(event -> {
             groupDetails.setVisibility(View.VISIBLE);
@@ -210,7 +211,7 @@ public class GroupActivity extends CircularRevealActivity {
             } else {
                 actionCancel.setVisibility(View.GONE);
             }
-        }, error -> $(DefaultAlerts.class).syncError()));
+        }, error -> $(ConnectionErrorHandler.class).connectionError()));
     }
 
     public void setGroupBackground(Group group) {

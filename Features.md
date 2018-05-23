@@ -1,26 +1,12 @@
 
-# MKTG
-
- [ | | ] Do some f*** stunts
-    [ ] 1. Enter stunt name here
-    [ ] 2. Enter stunt name here
-    [ ] 3. Enter stunt name here
-    [ ] 4. Enter stunt name here
- [ | | ] Present app at meetups
- [ | | ] Meetup next steps video
- [ | | ] Finding a nitch / campers of tx
- [ | | ] Go to hiking groups and present Closer
- [ | | ] Hire ppl to consistently host events no matter what - do you consistently go on hikes/camping/etc? get paid to host!
-
-# Feedback From Users
-
- [ ] Has has has to feel private
- [ ] Private party (Private mode?)
-
 # Top
 
  [ ] Closer friends list / DMs @mentions
  [ ] Polish errors
+    [ ] Swap injection
+        [ ] MapsActivity
+        [ ] GroupActivity
+        [ ] SearchActivity
 
 # Incoming
 
@@ -117,3 +103,21 @@
  [ ] Closer Reminders (location, event, suggestion...)
  [ ] Automatic Events (suggestions from the Closer AI itself)
  [ ] Pinned messages in events
+
+# MKTG
+
+ [ | | ] Do some f*** stunts
+    [ ] 1. Enter stunt name here
+    [ ] 2. Enter stunt name here
+    [ ] 3. Enter stunt name here
+    [ ] 4. Enter stunt name here
+ [ | | ] Present app at meetups
+ [ | | ] Meetup next steps video
+ [ | | ] Finding a nitch / campers of tx
+ [ | | ] Go to hiking groups and present Closer
+ [ | | ] Hire ppl to consistently host events no matter what - do you consistently go on hikes/camping/etc? get paid to host!
+
+# Feedback From Users
+
+ [ ] Has has has to feel private
+ [ ] Private party (Private mode?)

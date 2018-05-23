@@ -3,10 +3,10 @@ package closer.vlllage.com.closer.handler.map;
 import com.google.android.gms.maps.model.LatLng;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.data.AccountHandler;
+import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -62,7 +62,7 @@ public class MyBubbleHandler extends PoolMember {
     }
 
     public void start() {
-        $(DisposableHandler.class).add($(AccountHandler.class).changes().subscribe(this::updateFrom, error -> $(DefaultAlerts.class).syncError()));
+        $(DisposableHandler.class).add($(AccountHandler.class).changes().subscribe(this::updateFrom, error -> $(ConnectionErrorHandler.class).connectionError()));
     }
 
     public boolean isMyBubble(MapBubble mapBubble) {
