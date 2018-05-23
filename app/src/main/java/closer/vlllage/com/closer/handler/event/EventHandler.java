@@ -92,7 +92,7 @@ public class EventHandler extends PoolMember {
                 })
                 .setButtonClickCallback(alertResult -> {
                     CreateEventViewHolder viewHolder = (CreateEventViewHolder) alertResult;
-                    boolean isValid = getViewState(viewHolder).endsAt.before(getViewState(viewHolder).startsAt.getTime());
+                    boolean isValid = getViewState(viewHolder).endsAt.getTime().after(getViewState(viewHolder).startsAt.getTime());
                     if (!isValid) {
                         $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.event_must_not_end_before_it_starts));
                     }

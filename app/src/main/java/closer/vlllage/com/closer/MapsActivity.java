@@ -29,6 +29,7 @@ import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.map.IntentHandler;
 import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
+import closer.vlllage.com.closer.handler.map.MapZoomHandler;
 import closer.vlllage.com.closer.handler.map.MyBubbleHandler;
 import closer.vlllage.com.closer.handler.map.MyGroupsLayoutHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
@@ -112,7 +113,10 @@ public class MapsActivity extends PoolActivity {
         });
 
         $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map));
-        $(MapHandler.class).setOnMapChangedListener($(BubbleHandler.class)::update);
+        $(MapHandler.class).setOnMapChangedListener(() -> {
+            $(BubbleHandler.class).update();
+            $(MapZoomHandler.class).update($(MapHandler.class).getZoom());
+        });
         $(MapHandler.class).setOnMapClickedListener(latLng -> {
             if ($(ReplyLayoutHandler.class).isVisible()) {
                 $(ReplyLayoutHandler.class).showReplyLayout(false);
@@ -217,6 +221,9 @@ public class MapsActivity extends PoolActivity {
 
         boolean locationPermissionDenied = $(PermissionHandler.class).denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
         $(MyGroupsLayoutHandler.class).showAllowLocationPermissionsInSettings(locationPermissionDenied);
+
+        boolean isNotificationsPaused = $(PersistenceHandler.class).getIsNotifcationsPaused();
+        $(MyGroupsLayoutHandler.class).showUnmuteNotifications(isNotificationsPaused);
 
         if (locationPermissionGranted && locationPermissionWasDenied) {
             $(MapHandler.class).updateMyLocationEnabled();

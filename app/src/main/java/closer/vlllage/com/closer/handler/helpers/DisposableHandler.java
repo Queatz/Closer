@@ -43,4 +43,12 @@ public class DisposableHandler extends PoolMember {
     public void add(DataSubscription dataSubscription) {
         dataSubscriptions.add(dataSubscription);
     }
+
+    public void dispose(DataSubscription dataSubscription) {
+        if (!dataSubscription.isCanceled()) {
+            dataSubscription.cancel();
+        }
+
+        dataSubscriptions.remove(dataSubscription);
+    }
 }

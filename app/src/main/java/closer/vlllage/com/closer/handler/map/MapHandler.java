@@ -157,6 +157,14 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         return map.getCameraPosition().target;
     }
 
+    public float getZoom() {
+        if (map == null) {
+            return 0;
+        }
+
+        return map.getCameraPosition().zoom;
+    }
+
     public VisibleRegion getVisibleRegion() {
         if (map == null) {
             return null;

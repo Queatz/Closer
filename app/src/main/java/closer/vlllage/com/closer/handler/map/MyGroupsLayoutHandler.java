@@ -10,6 +10,7 @@ import java.util.List;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.AppShortcutsHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
+import closer.vlllage.com.closer.handler.helpers.ToastHandler;
 import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActionBarButton;
@@ -34,6 +35,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
 
     private GroupActionBarButton verifyYourNumberButton;
     private GroupActionBarButton allowPermissionsButton;
+    private GroupActionBarButton unmuteNotificationsButton;
     private GroupActionBarButton showHelpButton;
 
     public void attach(ViewGroup myGroupsLayout) {
@@ -135,6 +137,31 @@ public class MyGroupsLayoutHandler extends PoolMember {
             }
 
             actions.remove(allowPermissionsButton);
+        }
+
+        myGroupsAdapter.setActions(actions);
+    }
+
+    public void showUnmuteNotifications(boolean show) {
+        if (show) {
+            if (unmuteNotificationsButton != null) {
+                return;
+            }
+
+            String action = $(ResourcesHandler.class).getResources().getString(R.string.unmute_notifications);
+            unmuteNotificationsButton = new GroupActionBarButton(action, view -> {
+                $(PersistenceHandler.class).setIsNotificationsPaused(false);
+                $(ToastHandler.class).show(R.string.notifications_on);
+                actions.remove(unmuteNotificationsButton);
+                myGroupsAdapter.setActions(actions);
+            });
+            actions.add(0, unmuteNotificationsButton);
+        } else {
+            if (unmuteNotificationsButton == null) {
+                return;
+            }
+
+            actions.remove(unmuteNotificationsButton);
         }
 
         myGroupsAdapter.setActions(actions);

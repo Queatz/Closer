@@ -39,6 +39,7 @@ public class NotificationHandler extends PoolMember {
     public static final int NOTIFICATION_ID = 0;
     private static final int REQUEST_CODE_NOTIFICATION = 101;
     public static final String EXTRA_NOTIFICATION = "notification";
+    public static final String EXTRA_MUTE = "mute";
 
     public void showBubbleMessageNotification(String phone, LatLng latLng, String name, String message) {
         Context context = $(ApplicationHandler.class).getApp();
@@ -143,6 +144,11 @@ public class NotificationHandler extends PoolMember {
                 event.getId() + "/group", false);
     }
 
+    public void hide(String notificationTag) {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from($(ApplicationHandler.class).getApp());
+        notificationManager.cancel(notificationTag, NOTIFICATION_ID);
+    }
+
     private void show(PendingIntent contentIntent, Intent backgroundIntent,
                       RemoteInput remoteInput,
                       String name,
@@ -150,6 +156,10 @@ public class NotificationHandler extends PoolMember {
                       String notificationTag,
                       boolean sound) {
         Context context = $(ApplicationHandler.class).getApp();
+
+        if ($(PersistenceHandler.class).getIsNotifcationsPaused()) {
+            return;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(notificationChannel(),
@@ -180,12 +190,29 @@ public class NotificationHandler extends PoolMember {
 
             NotificationCompat.Action action =
                     new NotificationCompat.Action.Builder(R.drawable.ic_notification,
-                            context.getString(R.string.reply), replyPendingIntent)
+                            $(ResourcesHandler.class).getResources().getString(R.string.reply), replyPendingIntent)
                             .addRemoteInput(remoteInput)
                             .build();
 
             builder.addAction(action);
         }
+
+        Intent muteBackgroundIntent = new Intent(context, Background.class);
+        muteBackgroundIntent.putExtra(EXTRA_MUTE, true);
+        muteBackgroundIntent.putExtra(EXTRA_NOTIFICATION, notificationTag);
+
+        PendingIntent mutePendingIntent =
+                PendingIntent.getBroadcast(context,
+                        REQUEST_CODE_NOTIFICATION,
+                        muteBackgroundIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Action muteAction =
+                new NotificationCompat.Action.Builder(R.drawable.ic_notifications_paused_white_24dp,
+                        $(ResourcesHandler.class).getResources().getString(R.string.mute), mutePendingIntent)
+                        .build();
+
+        builder.addAction(muteAction);
 
         Notification newMessageNotification = builder.build();
 

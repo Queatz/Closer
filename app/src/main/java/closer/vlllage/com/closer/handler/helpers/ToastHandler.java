@@ -9,6 +9,5 @@ public class ToastHandler extends PoolMember {
 
     public void show(@StringRes int message) {
         Toast.makeText($(ApplicationHandler.class).getApp(), message, Toast.LENGTH_SHORT).show();
-
     }
 }
