@@ -29,6 +29,28 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
+        <TextView
+            android:id="@+id/connectionError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:gravity="center"
+            android:background="@drawable/rounded_white_bkg"
+            android:paddingTop="@dimen/pad"
+            android:paddingBottom="@dimen/pad"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/padDouble"
+            android:elevation="8dp"
+            android:textColor="@color/black_50"
+            android:drawableStart="@drawable/ic_signal_cellular_connected_no_internet_0_bar_black_24dp"
+            android:drawablePadding="@dimen/pad"
+            android:drawableTint="@color/red"
+            android:text="@string/network_down" />
+
         <include layout="@layout/reply_layout" />
 
         <LinearLayout

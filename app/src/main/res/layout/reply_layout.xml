@@ -6,7 +6,7 @@
     android:id="@+id/replyLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_margin="@dimen/padDouble"
     android:layout_centerHorizontal="true"
     android:layout_alignParentTop="true"
     android:background="@drawable/rounded_white_8dp"

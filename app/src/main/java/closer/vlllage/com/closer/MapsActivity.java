@@ -35,6 +35,7 @@ import closer.vlllage.com.closer.handler.map.MyGroupsLayoutHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.map.NetworkConnectionViewHandler;
 import closer.vlllage.com.closer.handler.map.ReplyLayoutHandler;
 import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
@@ -68,6 +69,7 @@ public class MapsActivity extends PoolActivity {
 
         setContentView(R.layout.activity_maps);
 
+        $(NetworkConnectionViewHandler.class).attach(findViewById(R.id.connectionError));
         $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
         $(TimerHandler.class).postDisposable(() -> $(SyncHandler.class).syncAll(), 1325);
         $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
