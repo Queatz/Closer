@@ -84,7 +84,7 @@ public class SyncHandler extends PoolMember {
                     onSyncResult.onSync(createResult.id);
                 }
             }
-        }, error -> $(ConnectionErrorHandler.class).connectionError()));
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
     private void sendCreateSuggestion(Suggestion suggestion, OnSyncResult onSyncResult) {
@@ -103,7 +103,7 @@ public class SyncHandler extends PoolMember {
                             onSyncResult.onSync(createResult.id);
                         }
                     }
-                }, error -> $(ConnectionErrorHandler.class).connectionError()));
+                }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
     private void sendCreateGroup(Group group, OnSyncResult onSyncResult) {
@@ -135,7 +135,7 @@ public class SyncHandler extends PoolMember {
                     onSyncResult.onSync(createResult.id);
                 }
             }
-        }, error -> $(ConnectionErrorHandler.class).connectionError()));
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
     private void sendCreateGroupMessage(GroupMessage groupMessage, OnSyncResult onSyncResult) {
@@ -155,7 +155,7 @@ public class SyncHandler extends PoolMember {
                     onSyncResult.onSync(createResult.id);
                 }
             }
-        }, error -> $(ConnectionErrorHandler.class).connectionError()));
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
     public interface OnSyncResult {

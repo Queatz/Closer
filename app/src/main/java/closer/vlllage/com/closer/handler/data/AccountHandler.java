@@ -1,15 +1,12 @@
 package closer.vlllage.com.closer.handler.data;
 
-import android.widget.Toast;
-
 import com.google.android.gms.maps.model.LatLng;
 
-import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
-import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -45,7 +42,7 @@ public class AccountHandler extends PoolMember {
 
     private void onError(Throwable throwable) {
         throwable.printStackTrace();
-        Toast.makeText($(ApplicationHandler.class).getApp(), R.string.network_down, Toast.LENGTH_SHORT).show();
+        $(ConnectionErrorHandler.class).notifyConnectionError();
     }
 
     public void updateActive(boolean active) {

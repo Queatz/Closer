@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.RemoteInput;
-import android.widget.Toast;
 
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.NotificationHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.ToastHandler;
 
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_PHONE;
 import static closer.vlllage.com.closer.handler.data.NotificationHandler.EXTRA_MUTE;
@@ -44,12 +44,12 @@ public class Background extends BroadcastReceiver {
 
                     app.$(DisposableHandler.class).add(app.$(ApiHandler.class).sendMessage(phone, replyMessage.toString()).subscribe(successResult -> {
                         if (successResult.success) {
-                            Toast.makeText(app, R.string.message_sent, Toast.LENGTH_SHORT).show();
+                            app.$(ToastHandler.class).show(R.string.message_sent);
                         } else {
-                            Toast.makeText(app, R.string.message_not_sent, Toast.LENGTH_SHORT).show();
+                            app.$(ToastHandler.class).show(R.string.message_not_sent);
                         }
                     }, error -> {
-                        Toast.makeText(app, R.string.message_not_sent, Toast.LENGTH_SHORT).show();
+                        app.$(ToastHandler.class).show(R.string.message_not_sent);
                     }));
                 }
             }

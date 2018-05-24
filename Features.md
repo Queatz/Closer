@@ -2,11 +2,6 @@
 # Top
 
  [ ] Closer friends list / DMs @mentions
- [ ] Polish errors
-    [ ] Swap injection
-        [ ] MapsActivity
-        [ ] GroupActivity
-        [ ] SearchActivity
 
 # Incoming
 

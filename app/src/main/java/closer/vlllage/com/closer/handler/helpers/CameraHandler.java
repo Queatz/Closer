@@ -6,7 +6,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
-import android.widget.Toast;
 
 import java.io.File;
 
@@ -42,7 +41,7 @@ public class CameraHandler extends PoolMember {
         }
         catch(Exception e) {
             e.printStackTrace();
-            Toast.makeText($(ActivityHandler.class).getActivity(), "Please check SD card! Image shot is impossible!", Toast.LENGTH_SHORT).show();
+            $(DefaultAlerts.class).thatDidntWork();
             return;
         }
 

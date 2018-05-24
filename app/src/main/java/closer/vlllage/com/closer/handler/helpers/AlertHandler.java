@@ -18,7 +18,7 @@ public class AlertHandler extends PoolMember {
     private void showAlertConfig(final AlertConfig alertConfig) {
         if (!$(ActivityHandler.class).isPresent()) {
             if (alertConfig.getMessage() != null) {
-                Toast.makeText($(ApplicationHandler.class).getApp(), alertConfig.getMessage(), Toast.LENGTH_SHORT).show();
+                $(ToastHandler.class).show(alertConfig.getMessage());
             }
             return;
         }

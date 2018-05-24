@@ -180,7 +180,7 @@ public class GroupActivity extends CircularRevealActivity {
                     });
                 });
             }
-        }, error -> $(ConnectionErrorHandler.class).connectionError()));
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(event -> {
             groupDetails.setVisibility(View.VISIBLE);
@@ -211,7 +211,7 @@ public class GroupActivity extends CircularRevealActivity {
             } else {
                 actionCancel.setVisibility(View.GONE);
             }
-        }, error -> $(ConnectionErrorHandler.class).connectionError()));
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
     public void setGroupBackground(Group group) {

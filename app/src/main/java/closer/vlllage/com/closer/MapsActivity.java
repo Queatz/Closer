@@ -3,7 +3,6 @@ package closer.vlllage.com.closer;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -14,39 +13,40 @@ import java.util.List;
 
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
+import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
+import closer.vlllage.com.closer.handler.bubble.BubbleType;
+import closer.vlllage.com.closer.handler.bubble.MapBubble;
+import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
-import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
-import closer.vlllage.com.closer.handler.group.PhysicalGroupBubbleHandler;
-import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.data.LocationHandler;
+import closer.vlllage.com.closer.handler.data.PermissionHandler;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.event.EventBubbleHandler;
 import closer.vlllage.com.closer.handler.event.EventHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
+import closer.vlllage.com.closer.handler.group.PhysicalGroupBubbleHandler;
+import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler;
+import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.LatLngStr;
+import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.map.IntentHandler;
-import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
 import closer.vlllage.com.closer.handler.map.MapZoomHandler;
 import closer.vlllage.com.closer.handler.map.MyBubbleHandler;
 import closer.vlllage.com.closer.handler.map.MyGroupsLayoutHandler;
-import closer.vlllage.com.closer.handler.data.PermissionHandler;
-import closer.vlllage.com.closer.handler.data.PersistenceHandler;
-import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.map.NetworkConnectionViewHandler;
 import closer.vlllage.com.closer.handler.map.ReplyLayoutHandler;
-import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
 import closer.vlllage.com.closer.handler.map.ShareHandler;
 import closer.vlllage.com.closer.handler.map.StatusLayoutHandler;
 import closer.vlllage.com.closer.handler.map.SuggestionHandler;
-import closer.vlllage.com.closer.handler.data.SyncHandler;
-import closer.vlllage.com.closer.handler.helpers.TimerHandler;
-import closer.vlllage.com.closer.handler.bubble.BubbleType;
-import closer.vlllage.com.closer.handler.bubble.MapBubble;
-import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
+import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.pool.PoolActivity;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
@@ -270,6 +270,6 @@ public class MapsActivity extends PoolActivity {
 
     private void networkError(Throwable throwable) {
         throwable.printStackTrace();
-        Toast.makeText(this, throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        $(ConnectionErrorHandler.class).notifyConnectionError();
     }
 }

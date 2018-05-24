@@ -10,7 +10,7 @@ public class ConnectionErrorHandler extends PoolMember {
         this.onConnectionErrorListener = onConnectionErrorListener;
     }
 
-    public void connectionError() {
+    public void notifyConnectionError() {
         if (onConnectionErrorListener != null) {
             onConnectionErrorListener.onConnectionError();
             return;

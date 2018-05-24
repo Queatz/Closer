@@ -49,7 +49,7 @@ public class RefreshHandler extends PoolMember {
             $(DisposableHandler.class).add($(ApiHandler.class).myMessages(new LatLng(
                     location.getLatitude(),
                     location.getLongitude()
-            )).subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).connectionError()));
+            )).subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
         });
     }
 
@@ -62,24 +62,24 @@ public class RefreshHandler extends PoolMember {
                 handleFullListResult(stateResult.groups, Group.class, Group_.id, true, GroupResult::from, GroupResult::updateFrom);
                 handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, true, this::transformGroupInviteResult, null);
                 handleGroupContacts(stateResult.groupContacts);
-            }, error -> $(ConnectionErrorHandler.class).connectionError()));
+            }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
         });
     }
 
     public void refreshEvents(LatLng latLng) {
         $(DisposableHandler.class).add($(ApiHandler.class).getEvents(latLng).subscribe(eventResults -> {
             handleFullListResult(eventResults, Event.class, Event_.id, false, EventResult::from, EventResult::updateFrom);
-        }, error -> $(ConnectionErrorHandler.class).connectionError()));
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
 
     public void refreshPhysicalGroups(LatLng latLng) {
         $(DisposableHandler.class).add($(ApiHandler.class).getPhysicalGroups(latLng).subscribe(groupResults -> {
             handleFullListResult(groupResults, Group.class, Group_.id, false, GroupResult::from, GroupResult::updateFrom);
-        }, error -> $(ConnectionErrorHandler.class).connectionError()));
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
 
         $(DisposableHandler.class).add($(ApiHandler.class).myMessages(latLng)
-                .subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).connectionError()));
+                .subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
     private void handleMessages(final List<GroupMessageResult> messages) {
