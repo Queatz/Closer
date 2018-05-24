@@ -1,33 +1,34 @@
 
 # Top
 
- [ ] Closer friends list / DMs @mentions
+ [ ](E) Game
+ [ ](R) Closer friends list / DMs / @mentions / review missed DMs
 
 # Incoming
 
- [ ] Closer DM / friends / previous notifications
- [ ] Friends on map
+ [ ](R) Closer DM / friends / previous notifications
+ [ ](R) Friends on map
     [ ] Areas where I am visible to my friends
  [ ] @mentions in group messages
  [ ] Set your name ongoing snackbar
  [ ] Closer look into event notification not being sent?
 
- [ ] Mini-games (challenges, one-off games, "things" ppl do) [NSFW]
+ [ ](E) Mini-games (challenges, one-off games, "things" ppl do) [NSFW]
     [ ] Answers the questions:
         "Who's got the biggest boobs in Austin, TX?"
         "Who's got the cutest boobs in Austin, TX?"
         "Who's got the perkiest boobs in Austin, TX?"
- [ ] Closer: Hide and seek
+ [ ](E) Closer: Hide and seek
  [ ] Closer: as: Coffeeshop conversation app (once there's 20 coffeeshops on the app)
- [ ] Closer: Story - Who I Am / Intro to me (Photo cards with text on them)
+ [ ](R) Closer: Story - Who I Am / Intro to me (Photo cards with text on them)
  [ ] Closer: check if notifications go to inactive people?
 
  ...more...
 
  [ ] Animate zoom up for groups when tapping name to expand vertically
- [ ] Ping specific person get attention in private chat / friends
+ [ ](R) Ping specific person get attention in private chat / friends
  [ ] Find your equals / ai engine app
- [.] Photos of people in Austin blog / things they like to do
+ [.](R) Photos of people in Austin blog / things they like to do
  [.] Long press menu directions, share, save, remind, camera, remind
  [ ] Home / work on map icons on map (Add your own location, share location with group / friends)
     [ ] Friends on map
@@ -35,13 +36,7 @@
  [ ] Search bar at top
  [ ] Become an ambassador in your area (things to do as an ambassador)
  [ ] Enter invite code to join secret group
- [ ] Goodies.  That pop up on the map when you're near by them
-
-### Future : 100+ MAUs ###
-
- [ ] exclusive experiences with people browser
- [ ] Random gifts app
-    [ ] Gift economy register to receive gifts
+ [ ](E) Goodies.  That pop up on the map when you're near by them
 
 ### P0 ###
 
@@ -49,14 +44,13 @@
  [o] P0.1 (Polish) Don't ask location on app launch, locate me button
  [o] P0.1 (Polish) After denying location, don't ask again
  [o] P0.1 (Bug) Contacts not showing up on Android 7.0
- [o] P0.1 (Polish) No network icon in app not toast! "You are offline" & Softer sync error message (X network error)
 
  [o] P0.2 (Bug) event not syncing when created offline
- [o] P0.2 (Todo) HTTPS (closer-files.vllage.com)
- [o] P0.2 (Todo) HTTPS (closer.vllage.com)
+ [o](S) P0.2 (Todo) HTTPS (closer-files.vllage.com)
+ [o](S) P0.2 (Todo) HTTPS (closer.vllage.com)
     [o] P0.2 (Todo) Only allow app to talk to backend (signature header, support multiple header values) X-CLOSER-APP-ID
 
- [ ] P0.3 (Feature) Post videos in chat (a funny and a must :P)
+ [ ](R) P0.3 (Feature) Post videos in chat (a funny and a must :P)
  [o] P0.3 (Feature) Use aspect/placeholder (save it on photo group message attachment)
  [ ] P0.3 (Polish) Auto update when setting group name background upon success
 
@@ -78,10 +72,10 @@
 ### P2 ###
 
  [b] P2 (Polish) All messages from person go to one notification box
- [o] P2 (Polish) Search for places on the map (green button... suggestions from google/other places apis...)
+ [b] P2 (Polish) Search for places on the map (green button... suggestions from google/other places apis...)
  [ ] P2 (Polish) Get Async push notification queues working (copy from Vlllage)
  [o] P2 (Feature) Pinned public groups
- [o] P2 (Feature) Set profile photo
+ [o](R) P2 (Feature) Set profile photo
  [o] P2 (Feature) Single emoji floats many of them over your screen
     [o] Bubble to allow draw over screen permission
  [ ] P2 (Feature) In zoom photo view, slide left/right
@@ -116,3 +110,9 @@
 
  [ ] Has has has to feel private
  [ ] Private party (Private mode?)
+
+### Future : 100+ MAUs ###
+
+ [ ] exclusive experiences with people browser
+ [ ] Random gifts app
+    [ ] Gift economy register to receive gifts

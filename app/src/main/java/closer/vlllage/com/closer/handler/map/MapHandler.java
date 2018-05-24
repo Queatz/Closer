@@ -13,14 +13,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 
 import java.util.Collection;
+import java.util.Date;
 
+import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
-import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
@@ -147,6 +151,10 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
                 .tilt(60)
                 .build();
         map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        if ($(NightDayHandler.class).isNight(new Date(), location)) {
+            map.setMapStyle(MapStyleOptions.loadRawResourceStyle($(ApplicationHandler.class).getApp(), R.raw.google_maps_night_mode));
+        }
     }
 
     public LatLng getCenter() {
