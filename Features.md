@@ -1,4 +1,18 @@
 
+# Incoming
+
+ [ ] Closer photo + text feed
+ [ ] Closer as your personal photo journal (profile feed)
+ [ ] + Add note (at location, or just in general)
+ [ ] 2x2 grid join us private groups
+ [ ] meet person from guild don't matter which person / send private message to guild / anxiety crushers, local tour guides, acting teachers guild, local food tour guides
+ [ ] Invite closer members into private groups from in closer
+ [ ] "you aren't close enough to talk with the parakeet"
+ [ ]
+ [ ]
+ [ ]
+
+
 # Top
 
  [ ](E) Game

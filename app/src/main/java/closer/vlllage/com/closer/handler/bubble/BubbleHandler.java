@@ -95,7 +95,7 @@ public class BubbleHandler extends PoolMember {
         bubbleMapLayer.remove(mapBubble);
     }
 
-    public void remove(BubbleMapLayer.RemoveCallback callback) {
-        bubbleMapLayer.remove(callback);
+    public boolean remove(BubbleMapLayer.RemoveCallback callback) {
+        return bubbleMapLayer.remove(callback);
     }
 }

@@ -225,7 +225,7 @@ public class BubbleMapLayer {
         });
     }
 
-    public void remove(RemoveCallback callback) {
+    public boolean remove(RemoveCallback callback) {
         Set<MapBubble> toRemove = new HashSet<>();
         for (MapBubble mapBubble : mapBubbles) {
             if (callback.apply(mapBubble)) {
@@ -233,9 +233,15 @@ public class BubbleMapLayer {
             }
         }
 
+        if (toRemove.isEmpty()) {
+            return false;
+        }
+
         for (MapBubble mapBubble : toRemove) {
             this.remove(mapBubble);
         }
+
+        return true;
     }
 
     public void replace(List<MapBubble> mapBubbles) {

@@ -123,8 +123,28 @@ public class MapsActivity extends PoolActivity {
             if ($(ReplyLayoutHandler.class).isVisible()) {
                 $(ReplyLayoutHandler.class).showReplyLayout(false);
             } else {
-                $(SuggestionHandler.class).clearSuggestions();
-                $(BubbleHandler.class).remove(mapBubble -> BubbleType.MENU.equals(mapBubble.getType()));
+                boolean anyActionTaken;
+                anyActionTaken = $(SuggestionHandler.class).clearSuggestions();
+                anyActionTaken = anyActionTaken || $(BubbleHandler.class).remove(mapBubble -> BubbleType.MENU.equals(mapBubble.getType()));
+
+                if (!anyActionTaken) {
+                    MapBubble menuBubble = new MapBubble(latLng, BubbleType.MENU);
+                    menuBubble.setOnItemClickListener(position -> {
+                        switch (position) {
+                            case 0:
+                                $(PhysicalGroupHandler.class).createPhysicalGroup(menuBubble.getLatLng());
+                                break;
+                            case 1:
+                                $(EventHandler.class).createNewEvent(menuBubble.getLatLng());
+                                break;
+                        }
+                    });
+                    $(BubbleHandler.class).add(menuBubble);
+                    $(MapBubbleMenuView.class)
+                            .getMenuAdapter(menuBubble)
+                            .setMenuItems(getString(R.string.talk_here),
+                                    getString(R.string.add_event_here));
+                }
             }
         });
         $(MapHandler.class).setOnMapLongClickedListener(latLng -> {
@@ -134,12 +154,6 @@ public class MapsActivity extends PoolActivity {
             menuBubble.setOnItemClickListener(position -> {
                 switch (position) {
                     case 0:
-                        $(PhysicalGroupHandler.class).createPhysicalGroup(menuBubble.getLatLng());
-                        break;
-                    case 1:
-                        $(EventHandler.class).createNewEvent(menuBubble.getLatLng());
-                        break;
-                    case 2:
                         $(ShareHandler.class).shareTo(menuBubble.getLatLng(), group -> {
                             boolean success = $(GroupMessageAttachmentHandler.class).shareLocation(menuBubble.getLatLng(), group);
 
@@ -150,7 +164,7 @@ public class MapsActivity extends PoolActivity {
                             }
                         });
                         break;
-                    case 3:
+                    case 1:
                         $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng());
                         break;
                 }
@@ -158,9 +172,7 @@ public class MapsActivity extends PoolActivity {
             $(BubbleHandler.class).add(menuBubble);
             $(MapBubbleMenuView.class)
                     .getMenuAdapter(menuBubble)
-                    .setMenuItems(getString(R.string.talk_here),
-                            getString(R.string.add_event_here),
-                            getString(R.string.share_this_location),
+                    .setMenuItems(getString(R.string.share_this_location),
                             getString(R.string.add_suggestion_here));
         });
         $(MapHandler.class).setOnMapIdleListener(latLng -> {

@@ -91,9 +91,10 @@ public class SuggestionHandler extends PoolMember {
                 .build().subscribe().single().on(AndroidScheduler.mainThread());
     }
 
-    public void clearSuggestions() {
-        $(BubbleHandler.class).remove(mapBubble -> BubbleType.SUGGESTION.equals(mapBubble.getType()));
+    public boolean clearSuggestions() {
+        boolean anyBubblesRemoved = $(BubbleHandler.class).remove(mapBubble -> BubbleType.SUGGESTION.equals(mapBubble.getType()));
         suggestionBubbles.clear();
+        return anyBubblesRemoved;
     }
 
     public void attach(View shuffleButton) {
