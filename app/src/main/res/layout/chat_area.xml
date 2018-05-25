@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/sendButton"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:minWidth="0dp"
+        android:background="@drawable/clickable_light_flat"
+        android:padding="8dp"
+        android:tint="@android:color/white"
+        android:src="@drawable/ic_chevron_right_black_24dp"
+        android:contentDescription="@string/send_message" />
+
+    <EditText
+        android:id="@+id/replyMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/sendButton"
+        android:background="@drawable/clickable_light_flat"
+        android:focusedByDefault="false"
+        android:hint="@string/say_something"
+        android:imeOptions="actionGo"
+        android:inputType="textShortMessage|textCapSentences"
+        android:maxLines="1"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:selectAllOnFocus="true"
+        android:textColor="@android:color/white"
+        android:textColorHint="@color/highlight"
+        android:textColorHighlight="@color/white_75"
+        android:textSize="12sp"
+        tools:text="Hey guys let's go out" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/messagesRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintBottom_toTopOf="@+id/replyMessage"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

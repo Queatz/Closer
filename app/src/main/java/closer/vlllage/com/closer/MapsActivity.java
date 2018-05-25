@@ -51,6 +51,7 @@ import closer.vlllage.com.closer.pool.PoolActivity;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Suggestion;
+import closer.vlllage.com.closer.ui.DraggableView;
 
 public class MapsActivity extends PoolActivity {
 
@@ -222,6 +223,8 @@ public class MapsActivity extends PoolActivity {
         $(PhysicalGroupBubbleHandler.class).attach();
 
         findViewById(R.id.showPublicGroups).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
+
+        new DraggableView(findViewById(R.id.areaChat), findViewById(R.id.contentView)).moveToBottom();
     }
 
     @Override

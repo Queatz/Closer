@@ -25,6 +25,7 @@
         android:src="@drawable/leaves_repeating" />
 
     <RelativeLayout
+        android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
@@ -88,5 +89,19 @@
 
         </LinearLayout>
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/areaChat"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/padDouble"
+        android:padding="@dimen/padDouble"
+        android:elevation="8dp"
+        android:background="@drawable/clickable_blue_light_8dp">
+
+        <include layout="@layout/chat_area" />
+
+    </FrameLayout>
 
 </RelativeLayout>

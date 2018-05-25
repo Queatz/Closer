@@ -1,13 +1,15 @@
 
 # Incoming
 
- [ ] Closer photo + text feed
- [ ] Closer as your personal photo journal (profile feed)
- [ ] + Add note (at location, or just in general)
- [ ] 2x2 grid join us private groups
- [ ] meet person from guild don't matter which person / send private message to guild / anxiety crushers, local tour guides, acting teachers guild, local food tour guides
- [ ] Invite closer members into private groups from in closer
- [ ] "you aren't close enough to talk with the parakeet"
+ [ ] (Feed) Closer photo + text feed
+ [ ] (Feed) Closer as your personal photo journal (profile feed)
+ [ ] (Feature) + Add note (at location, or just in general)
+ [ ] (Guild) 2x2 grid join us private groups
+ [ ] (Guild) want to meet person from guild don't matter which person / send
+         private message to guild / anxiety crushers, local tour guides,
+         acting teachers guild, local food tour guides
+ [ ] (Feature) Add closer members into private groups from in closer
+ [ ] (Game) "you aren't close enough to talk with the parakeet"
  [ ]
  [ ]
  [ ]
@@ -20,6 +22,8 @@
 
 # Incoming
 
+ [ ](R) Chat "around here in general" no specific location or group
+    [ ] Seen by 3 people
  [ ](R) Closer DM / friends / previous notifications
  [ ](R) Friends on map
     [ ] Areas where I am visible to my friends
@@ -67,6 +71,7 @@
  [ ](R) P0.3 (Feature) Post videos in chat (a funny and a must :P)
  [o] P0.3 (Feature) Use aspect/placeholder (save it on photo group message attachment)
  [ ] P0.3 (Polish) Auto update when setting group name background upon success
+ [ ] P0.3 (Polish) Re-add to groups of old account when verifying number with other accounts with that number
 
  [o] P0.4 (Bug) Some messages/groups are duplicated
  [o] P0.4 (Polish) Stop event bubble from burbbling upon creation
