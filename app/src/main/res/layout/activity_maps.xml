@@ -96,7 +96,10 @@
         android:layout_height="256dp"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/padDouble"
-        android:padding="@dimen/padDouble"
+        android:paddingLeft="@dimen/padDouble"
+        android:paddingTop="@dimen/pad"
+        android:paddingRight="@dimen/padDouble"
+        android:paddingBottom="@dimen/padDouble"
         android:elevation="8dp"
         android:background="@drawable/clickable_blue_light_8dp">
 
