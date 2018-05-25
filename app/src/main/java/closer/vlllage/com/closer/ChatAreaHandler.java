@@ -1,45 +1,44 @@
-package closer.vlllage.com.closer.handler.group;
+package closer.vlllage.com.closer;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import java.util.Date;
 import java.util.List;
 
-import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.data.PersistenceHandler;
-import closer.vlllage.com.closer.handler.data.SyncHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
+import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.map.AreaMessagesHandler;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
-import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
-import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
-import static android.text.format.DateUtils.HOUR_IN_MILLIS;
-
-public class GroupMessagesHandler extends PoolMember {
+public class ChatAreaHandler extends PoolMember {
 
     private GroupMessagesAdapter groupMessagesAdapter;
     private EditText replyMessage;
     private ImageButton sendButton;
+    private RecyclerView recyclerView;
 
-    public void attach(RecyclerView recyclerView, EditText replyMessage, ImageButton sendButton) {
-        this.replyMessage = replyMessage;
-        this.sendButton = sendButton;
+    public void attach(View areaChat) {
+        replyMessage = areaChat.findViewById(R.id.replyMessage);
+        sendButton = areaChat.findViewById(R.id.sendButton);
+        recyclerView = areaChat.findViewById(R.id.messagesRecyclerView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 $(ActivityHandler.class).getActivity(),
@@ -48,25 +47,17 @@ public class GroupMessagesHandler extends PoolMember {
         ));
 
         groupMessagesAdapter = new GroupMessagesAdapter(this);
+        groupMessagesAdapter.setNoPadding(true);
         recyclerView.setAdapter(groupMessagesAdapter);
 
-        groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> {
-            ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
-        });
-
-        groupMessagesAdapter.setOnEventClickListener(event -> {
-            ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(MapActivityHandler.class).showEventOnMap(event));
-        });
-
+        groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
+        groupMessagesAdapter.setOnEventClickListener(event -> $(MapActivityHandler.class).showEventOnMap(event));
         replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {
             if (EditorInfo.IME_ACTION_GO == action) {
                 if (replyMessage.getText().toString().trim().isEmpty()) {
                     return false;
                 }
-                boolean success = send(replyMessage.getText().toString());
-                if (success) {
-                    textView.setText("");
-                }
+                send(replyMessage.getText().toString());
                 return true;
             }
 
@@ -76,7 +67,7 @@ public class GroupMessagesHandler extends PoolMember {
         sendButton.setOnClickListener(view -> {
             if (replyMessage.getText().toString().trim().isEmpty()) {
                 $(CameraHandler.class).showCamera((photoUri, groupId) -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
-                    boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), groupId);
+                    boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), null/*TODO*/);
                     if (!success) {
                         $(DefaultAlerts.class).thatDidntWork();
                     }
@@ -84,13 +75,9 @@ public class GroupMessagesHandler extends PoolMember {
                 return;
             }
 
-            boolean success = send(replyMessage.getText().toString());
-            if (success) {
-                replyMessage.setText("");
-            }
+            send(replyMessage.getText().toString());
         });
 
-        updateSendButton();
         replyMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -107,28 +94,21 @@ public class GroupMessagesHandler extends PoolMember {
                 updateSendButton();
             }
         });
-
-        Date twelveHoursAgo = new Date();
-        twelveHoursAgo.setTime(twelveHoursAgo.getTime() - 12 * HOUR_IN_MILLIS);
-
-        Group group = $(GroupHandler.class).getGroup();
-
-        if (group == null) {
-            return;
-        }
+        updateSendButton();
 
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
-                .equal(GroupMessage_.to, group.getId());
-
-        if (!group.isPublic()) {
-            queryBuilder.greater(GroupMessage_.time, twelveHoursAgo);
-        }
+                .isNull(GroupMessage_.to);
 
         $(DisposableHandler.class).add(queryBuilder
                 .sort($(SortHandler.class).sortGroupMessages())
                 .build()
                 .subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroupMessages));
+    }
+
+    private void send(String message) {
+        $(AreaMessagesHandler.class).send(message);
+        replyMessage.setText("");
     }
 
     private void updateSendButton() {
@@ -139,35 +119,7 @@ public class GroupMessagesHandler extends PoolMember {
         }
     }
 
-
     private void setGroupMessages(List<GroupMessage> groupMessages) {
         groupMessagesAdapter.setGroupMessages(groupMessages);
-    }
-
-    private boolean send(String text) {
-        if ($(PersistenceHandler.class).getPhoneId() == null) {
-            $(DefaultAlerts.class).thatDidntWork();
-            return false;
-        }
-
-        if ($(GroupHandler.class).getGroup() == null) {
-            return false;
-        }
-
-        if ($(GroupHandler.class).getGroupContact() == null) {
-            if (!$(GroupHandler.class).getGroup().isPublic()) {
-                return false;
-            }
-        }
-
-        GroupMessage groupMessage = new GroupMessage();
-        groupMessage.setText(text);
-        groupMessage.setTo($(GroupHandler.class).getGroup().getId());
-        groupMessage.setFrom($(PersistenceHandler.class).getPhoneId());
-        groupMessage.setTime(new Date());
-        $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
-        $(SyncHandler.class).sync(groupMessage);
-
-        return true;
     }
 }

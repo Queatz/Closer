@@ -11,6 +11,8 @@ public class GroupMessage extends BaseObject {
     private Date time;
     private String text;
     private String attachment;
+    private Double latitude;
+    private Double longitude;
 
     public String getTo() {
         return to;
@@ -54,6 +56,24 @@ public class GroupMessage extends BaseObject {
 
     public GroupMessage setAttachment(String attachment) {
         this.attachment = attachment;
+        return this;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public GroupMessage setLatitude(Double latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public GroupMessage setLongitude(Double longitude) {
+        this.longitude = longitude;
         return this;
     }
 }

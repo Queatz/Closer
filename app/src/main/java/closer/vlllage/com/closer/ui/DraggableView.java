@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.ui;
 
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 
@@ -83,7 +84,7 @@ public class DraggableView {
                     return;
                 }
 
-                int h = container.getHeight() - container.getPaddingBottom();
+                int h = container.getHeight() - ((ViewGroup.MarginLayoutParams) view.getLayoutParams()).bottomMargin;
 
                 if (view.findFocus() != null) {
                     if (previousHeight > h) {

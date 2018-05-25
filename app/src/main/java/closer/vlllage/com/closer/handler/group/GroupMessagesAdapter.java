@@ -42,6 +42,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     private OnMessageClickListener onMessageClickListener;
     private OnSuggestionClickListener onSuggestionClickListener;
     private OnEventClickListener onEventClickListener;
+    private boolean noPadding;
 
     public GroupMessagesAdapter(PoolMember poolMember) {
         super(poolMember);
@@ -69,6 +70,10 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     @Override
     public void onBindViewHolder(@NonNull GroupMessageViewHolder holder, int position) {
         GroupMessage groupMessage = groupMessages.get(position);
+
+        if (noPadding) {
+            holder.itemView.setPadding(0, 0, 0, 0);
+        }
 
         holder.photo.setVisibility(View.GONE);
 
@@ -271,6 +276,11 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     public void setGroupMessages(List<GroupMessage> groupMessages) {
         this.groupMessages = groupMessages;
         notifyDataSetChanged();
+    }
+
+    public GroupMessagesAdapter setNoPadding(boolean noPadding) {
+        this.noPadding = noPadding;
+        return this;
     }
 
     class GroupMessageViewHolder extends RecyclerView.ViewHolder {

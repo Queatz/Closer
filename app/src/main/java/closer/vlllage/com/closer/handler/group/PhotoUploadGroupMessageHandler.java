@@ -24,7 +24,7 @@ public class PhotoUploadGroupMessageHandler extends PoolMember {
         }
     }
 
-    String getPhotoPathFromId(String photoId) {
+    public String getPhotoPathFromId(String photoId) {
         return PhotoUploadBackend.BASE_URL + photoId;
     }
 

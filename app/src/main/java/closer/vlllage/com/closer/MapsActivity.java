@@ -225,6 +225,8 @@ public class MapsActivity extends PoolActivity {
         findViewById(R.id.showPublicGroups).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
 
         new DraggableView(findViewById(R.id.areaChat), findViewById(R.id.contentView)).moveToBottom();
+
+        $(ChatAreaHandler.class).attach(findViewById(R.id.areaChat));
     }
 
     @Override
