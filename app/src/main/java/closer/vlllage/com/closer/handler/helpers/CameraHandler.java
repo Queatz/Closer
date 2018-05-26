@@ -9,7 +9,6 @@ import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
-import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 import static android.app.Activity.RESULT_OK;
@@ -62,7 +61,7 @@ public class CameraHandler extends PoolMember {
         }
 
         if (onPhotoCapturedListener != null) {
-            onPhotoCapturedListener.onPhotoCaptured(photoUri, $(GroupHandler.class).getGroup().getId());
+            onPhotoCapturedListener.onPhotoCaptured(photoUri);
         }
     }
 
@@ -80,6 +79,6 @@ public class CameraHandler extends PoolMember {
     }
 
     public interface OnPhotoCapturedListener {
-        void onPhotoCaptured(Uri photoUri, String groupId);
+        void onPhotoCaptured(Uri photoUri);
     }
 }

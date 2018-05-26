@@ -1,9 +1,4 @@
 
-# Talk around here
-
- [ ] POST /talk/?geo=l,l&message=text
- [ ] GET /talk/?geo=l,l&message=text
-
 
 # Incoming
 
@@ -23,8 +18,6 @@
 
 # Top
 
- [ ](R) Talk "around here in general" no specific location or group
-    [ ] Seen by 3 people
  [ ](E) Game
  [ ](R) Closer friends list / DMs / @mentions / review missed DMs
 

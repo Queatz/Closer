@@ -240,6 +240,10 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     }
 
     private Phone getPhone(String phoneId) {
+        if (phoneId == null) {
+            return null;
+        }
+
         return $(StoreHandler.class).getStore().box(Phone.class).query()
                 .equal(Phone_.id, phoneId)
                 .build()

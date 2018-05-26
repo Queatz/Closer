@@ -75,8 +75,8 @@ public class GroupMessagesHandler extends PoolMember {
 
         sendButton.setOnClickListener(view -> {
             if (replyMessage.getText().toString().trim().isEmpty()) {
-                $(CameraHandler.class).showCamera((photoUri, groupId) -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
-                    boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), groupId);
+                $(CameraHandler.class).showCamera(photoUri -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
+                    boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), $(GroupHandler.class).getGroup().getId());
                     if (!success) {
                         $(DefaultAlerts.class).thatDidntWork();
                     }

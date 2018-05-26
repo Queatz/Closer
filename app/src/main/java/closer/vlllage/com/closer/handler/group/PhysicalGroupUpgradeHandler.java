@@ -25,10 +25,10 @@ public class PhysicalGroupUpgradeHandler extends PoolMember {
     }
 
     public void setBackground(Group group) {
-        $(CameraHandler.class).showCamera(((photoUri, groupId) -> {
+        $(CameraHandler.class).showCamera((photoUri -> {
             $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
                 String photo = $(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId);
-                $(DisposableHandler.class).add($(ApiHandler.class).setGroupPhoto(groupId, photo).subscribe(
+                $(DisposableHandler.class).add($(ApiHandler.class).setGroupPhoto(group.getId(), photo).subscribe(
                         successResult -> {
                             if (successResult.success) {
                                 group.setPhoto(photo);

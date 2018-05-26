@@ -9,8 +9,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
+import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler;
@@ -66,12 +69,7 @@ public class ChatAreaHandler extends PoolMember {
 
         sendButton.setOnClickListener(view -> {
             if (replyMessage.getText().toString().trim().isEmpty()) {
-                $(CameraHandler.class).showCamera((photoUri, groupId) -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
-                    boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), null/*TODO*/);
-                    if (!success) {
-                        $(DefaultAlerts.class).thatDidntWork();
-                    }
-                }));
+                $(CameraHandler.class).showCamera(photoUri -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, this::sendPhoto));
                 return;
             }
 
@@ -104,6 +102,18 @@ public class ChatAreaHandler extends PoolMember {
                 .build()
                 .subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroupMessages));
+    }
+
+    private void sendPhoto(String photoId) {
+        $(LocationHandler.class).getCurrentLocation(location -> {
+            boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), new LatLng(
+                    location.getLatitude(),
+                    location.getLongitude()
+            ));
+            if (!success) {
+                $(DefaultAlerts.class).thatDidntWork();
+            }
+        });
     }
 
     private void send(String message) {

@@ -34,7 +34,7 @@ public class GroupMessageAttachmentHandler extends PoolMember {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("suggestion", $(JsonHandler.class).toJsonTree(suggestion));
 
-        saveMessageWithAttachment(group.getId(), jsonObject);
+        saveMessageWithAttachment(group.getId(), null, jsonObject);
 
         return true;
     }
@@ -43,7 +43,7 @@ public class GroupMessageAttachmentHandler extends PoolMember {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("event", $(JsonHandler.class).toJsonTree(event));
 
-        saveMessageWithAttachment(group.getId(), jsonObject);
+        saveMessageWithAttachment(group.getId(), null, jsonObject);
 
         return true;
     }
@@ -51,14 +51,27 @@ public class GroupMessageAttachmentHandler extends PoolMember {
     public boolean sharePhoto(@NonNull String photoUrl, @NonNull String groupId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("photo", new JsonPrimitive(photoUrl));
-        saveMessageWithAttachment(groupId, jsonObject);
+        saveMessageWithAttachment(groupId, null, jsonObject);
         return true;
     }
 
-    private void saveMessageWithAttachment(String groupId, JsonObject jsonObject) {
+    public boolean sharePhoto(@NonNull String photoUrl, @NonNull LatLng latLng) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("photo", new JsonPrimitive(photoUrl));
+        saveMessageWithAttachment(null, latLng, jsonObject);
+        return true;
+    }
+
+    private void saveMessageWithAttachment(String groupId, LatLng latLng, JsonObject jsonObject) {
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setAttachment($(JsonHandler.class).to(jsonObject));
         groupMessage.setTo(groupId);
+
+        if (latLng != null) {
+            groupMessage.setLatitude(latLng.latitude);
+            groupMessage.setLongitude(latLng.longitude);
+        }
+
         groupMessage.setFrom($(PersistenceHandler.class).getPhoneId());
         groupMessage.setTime(new Date());
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
