@@ -18,6 +18,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Backend {
+
     String BASE_URL = "http://closer.vlllage.com/";
 
     // Phone
@@ -66,6 +67,9 @@ public interface Backend {
 
     @POST("message")
     Observable<CreateResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
+
+    @POST("message")
+    Observable<CreateResult> sendAreaMessage(@Query("geo") String latLng, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
 
     // Group
 
