@@ -2,7 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/dark">
 
     <fragment
         android:id="@+id/map"
@@ -21,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:scaleType="fitXY"
-        android:elevation="4dp"
-        android:src="@drawable/leaves_repeating" />
+        android:elevation="4dp" />
 
     <RelativeLayout
         android:id="@+id/contentView"
@@ -84,7 +84,6 @@
                 android:layout_height="32dp"
                 android:elevation="4dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/grass"
                 android:scaleType="centerCrop"/>
 
         </LinearLayout>

@@ -31,8 +31,8 @@ public class DraggableView {
             private float xDiffInTouchPointAndViewTopLeftCorner;
             private float yDiffInTouchPointAndViewTopLeftCorner;
 
-            private TimedValue<Float> trackedX = new TimedValue<>(50);
-            private TimedValue<Float> trackedY = new TimedValue<>(50);
+            private TimedValue<Float> trackedX = new TimedValue<>(75);
+            private TimedValue<Float> trackedY = new TimedValue<>(75);
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

@@ -18,12 +18,14 @@ import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 
 public class ShareHandler extends PoolMember {
 
     public void shareTo(@NonNull LatLng latLng, @NonNull OnGroupSelectedListener onGroupSelectedListener) {
         $(StoreHandler.class).getStore().box(Group.class).query()
+                .notEqual(Group_.physical, true)
                 .sort($(SortHandler.class).sortGroups())
                 .build().subscribe().single().on(AndroidScheduler.mainThread()).observer(groups -> {
             List<String> groupNames = new ArrayList<>();
