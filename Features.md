@@ -1,98 +1,137 @@
 
 
+### How Jacob will use Closer
+
+Jacob will run a few public groups on Closer, including:
+
+ - Jacob's Events on Closer
+ - Miata Friends
+ - Huawei Fandroids
+
+Join Closer, Austin's Adventure & Social Club
+
+ - Free flute lessons!
+ - Free Angular bootcamp!
+ - Free Android bootcamps!
+ - Free hikes!
+ - Free photoshoots!
+ - And much, MUCH more!  Come check us out!
+
+ :::: Closerapp.us / austinsocial.club -> splash page with people and Closer on HUAWEI phone / get in on Google Play badge
+    -> Click anywhere to open in Play Store
+
 # Closer 1.0 MVP (Features)
 
-## Media (5 days)
+********* ********* ********** * * ***** ***********************
 
- [ ] Post Video
- [ ] Post Audio
- [ ] Share Media
-    [ ] Share to Closer from other apps
-    [ ] Select Group dialog with search filtering
- [ ] Dowload actions on photos and videos
+### Media *********
+ [ ] (LG) Post Video
+    [ ] Add MORE button
+        [ ] Add video icon
+ [ ] (LG) Post Audio
+    [ ] Add audio icon to MORE section
+ [ ] (LG) Select Media (not camera)
 
-## Feed & Friends (5 days)
-
- [ ] Feed
- [ ] View Direct Messages
-
- [ ] Profiles
-     [ ] (Feature) Add closer members into private groups from in closer not phone number
+## Feed & Profile *********
+ [ ] (LG) Feed
+    [ ] Covers 25% of screen on bottom / right side (landscape)
+    [ ] Pull up from bottom
+    [ ] Dynamic content
+        [ ] Groups you might like
+        [ ] Recent photos
+        [ ] Recent posts
+        [ ] Events nearby
+        [ ] Suggestions nearby
+ [ ] (LG) View Direct Messages
+ [ ] (LG) Profiles
+     [ ] Add closer members into private groups from in closer not phone number
      [ ] Profile Feed
+        [ ] Public Groups they're in
      [ ] Photo
-     [ ] (Feature) Set your name ongoing snackbar
+     [ ] Set your name ongoing bubble
+        [ ] Make TemporaryBubbleHandler
+            [ ] Animate bubble changes
      [ ] Notifications on/off for person
 
- [ ] Direct Messages & History
-
- [ ] Closer Friends
-    [ ] See my Closer Friends on map
-        [ ] Set areas where I am visible to my Closer Friends
-
-## Public Groups (5 days)
-
- [ ] Public Groups
+## Public Groups **********
+ [ ] (LG) Public Groups
     [ ] Cover Photos
     [ ] Join Group
-    [ ] Members List
-
- [ ] Groups
-    [ ] @mentions in group messages
-        [ ] Popup of people (top left above edittext)
-        [ ] Sends that person a notification no matter what
-    [ ] Pinned messages in events and groups
-
- [ ] Notification Settings
+    [ ] Join -> Joined
+    [ ] See group members button
+    [ ] Members list
+[ ] (LG) @mentions in group messages
+    [ ] Popup of people (top left above edittext)
+    [ ] Sends that person a notification no matter what (pull someone directly into a conversation)
+[ ] (MD) Pinned messages in events and groups
+[ ] (MD) Notification Settings
     [ ] Notifications toggleable on/off for groups
 
-## Epic Events (2 days)
+## Events Icons/Posters *
+ [ ] (SM) Set event map icon (phone-number-verified users)
 
- [ ] Epic Event
-    [ ] Set event map icon (verified users)
-    [ ] Events that have icons on them map
-    [ ] Pay entrance fee through the app
+## Itty-bitty *
+ [ ] (SM) Icons in map tap minimenu [ directions | share ]
 
-## Itty-bitty (2 days)
-
- [ ] Search for places
-    [ ] Google Places API
-
- [ ] Icons in map tap minimenu
-    [ ] directions, share, save, camera (creates talk there and posts photo)
-
-## Infrastructure (1 days)
-
- [ ] HTTPS
- [ ] Closer server app registry
+## Infrastructure *****
+ [ ] (MD) HTTPS x2
+    [ ] closer.vlllage.com
+        [ ] Set up apache
+        [ ] Set up tomcat
+        [ ] Run certbot
+        [ ] Update app
+    [ ] closer-files.vlllage.com
+        [ ] Set up apache
+        [ ] Set up tomcat
+        [ ] Run certbot
+        [ ] Update app
+ [ ] (MD) Closer server app registry
     [ ] X-CLOSER-APP-ID
- [ ] Verification code can only be attempted 3 times before it gets deleted
-    [ ] Dialog explaining this
+ [ ] (SM) Verification code can only be attempted 3 times before it gets deleted
+    [ ] Dialog explaining this on 3rd attempt
+ [ ] (MD) Solve declared dependencies problem
 
-# Bugs (3 days)
+# Bugs ************************
+ [ ] (XS) Change: Tap on my bubble to edit what I say, not name
+ [ ] (XS) Full Width Photos (when in expanded mode)
+ [ ] (XS) Animate zoom up for groups when tapping name to expand vertically
 
- [ ] Local Area Talk Notifications
- [ ] Full Width Photos (when in expanded mode)
- [ ] Offline First Doubles
-    [ ] expose luid until client requests removal of luid on server
- [ ] Area Talk
+ [ ] (SM) Area Talk
     [ ] On container layout changed, reposition talk here
     [ ] Preserve talk box location on screen
     [ ] Tap title to reveal / hide
- [ ] UI
-    [ ] Animate zoom up for groups when tapping name to expand vertically
-    [ ] Use aspect/placeholder (save it on photo group message attachment)
-    [ ] Use small photo as physical group background before highres loads
 
- [ ] Don't ask for location right away
- [ ] Show use my location button when location permission not granted
+ [ ] (SM) Don't ask for location right away
+ [ ] (SM) Show Use my location button when location permission not granted
 
- [ ] Fix contacts not showing up on Android 7.0
- [ ] Fix event not syncing when created offline
- [ ] Auto update group when setting group name background upon success
- [ ] Re-add to groups of old account when verifying number with other accounts with that number
- [ ] Stop event bubble from burbbling upon creation!
- [ ] Don't reactivate people's bubbles when they receive a push notification
+ [ ] (SM) Fix contacts not showing up on Android 7.0
+ [ ] (SM) Fix event not syncing when created offline
+ [ ] (SM) Don't reactivate people's bubbles when they receive a push notification
 
- [ ] Change: Tap on my bubble to edit what I say, not name
+ [ ] (MD) Local Area Talk Notifications
+ [ ] (MD) Offline First Doubles
+    [ ] expose luid until client requests removal of luid on server
+ [ ] (MD) Use aspect/placeholder (save it on photo group message attachment)
+ [ ] (MD) Auto update group when setting group name background upon success
+ [ ] (MD) Re-add to groups of old account when verifying number with other accounts with that number
+ [ ] (MD) Stop event bubble from burbbling upon creation!
 
- [ ] Pay button in events that cost $ -> Opens Google Pay Intent
+ [ ] (MD) Pay button in events that cost $ -> Opens Google Pay Intent
+ [ ] (MD) Dowload actions on photos and videos
+
+ [ ] (SM) Chat max width
+
+# Please Consider
+
+    ## Friends
+
+     [ ] RL Friends
+        [ ] See my RL Friends on map
+            [ ] Set areas where I am visible to my RL Friends
+
+    ## Physical Place Discovery
+
+     [ ] Search for places
+        [ ] Google Places API
+
+     [ ] Add drop in video mode to closer

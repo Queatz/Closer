@@ -36,7 +36,7 @@ public class MapBubblePhysicalGroupView extends PoolMember {
                 photo.setColorFilter(null);
                 photo.setImageTintList(ColorStateList.valueOf($(ResourcesHandler.class).getResources().getColor(android.R.color.transparent)));
                 Picasso.get()
-                        .load(group.getPhoto())
+                        .load(group.getPhoto() + "?s=32")
                         .fit()
                         .transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
                         .into(photo);
@@ -48,7 +48,7 @@ public class MapBubblePhysicalGroupView extends PoolMember {
 
         ((ViewGroup.MarginLayoutParams) photo.getLayoutParams()).setMargins(margin, margin, margin, margin);
         ((ViewGroup.MarginLayoutParams) photo.getLayoutParams()).height = size;
-        ((ViewGroup.MarginLayoutParams) photo.getLayoutParams()).width= size;
+        ((ViewGroup.MarginLayoutParams) photo.getLayoutParams()).width = size;
     }
 
     public interface MapBubblePhysicalGroupClickListener {

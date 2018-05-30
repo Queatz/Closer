@@ -27,13 +27,15 @@
 
     <TextView
         android:id="@+id/about"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/action"
         app:layout_constraintTop_toBottomOf="@+id/name"
         android:textSize="12sp"
         android:textColor="@color/white_75"
+        tools:textColor="@color/selectable"
         tools:text="For all fans of 1 hour workouts" />
 
     <TextView
@@ -44,10 +46,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1"
         android:textSize="12sp"
         android:textColor="@color/white_75"
         android:textAllCaps="true"
         android:textStyle="bold"
+        tools:textColor="@color/selectable"
         android:text="@string/open" />
 
 </android.support.constraint.ConstraintLayout>

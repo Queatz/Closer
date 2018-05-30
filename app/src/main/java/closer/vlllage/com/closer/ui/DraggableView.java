@@ -56,13 +56,16 @@ public class DraggableView {
 
                         if (fromX != null && fromY != null) {
                             double velocity = hypot(motionEvent.getRawX() - fromX, motionEvent.getRawY() - fromY);
-                            double angle = atan2(motionEvent.getRawY() - fromY, motionEvent.getRawX() - fromX);
-                            view.animate()
-                                    .x(clampXForAnimation(view.getX() + 5 * velocity * cos(angle)))
-                                    .y(clampY(view.getY() + velocity * sin(angle)))
-                                    .setInterpolator(new DecelerateInterpolator())
-                                    .setDuration(225)
-                                    .start();
+
+                            if (velocity > 2) {
+                                double angle = atan2(motionEvent.getRawY() - fromY, motionEvent.getRawX() - fromX);
+                                view.animate()
+                                        .x(clampXForAnimation(view.getX() + 5 * velocity * cos(angle)))
+                                        .y(clampY(view.getY() + velocity * sin(angle)))
+                                        .setInterpolator(new DecelerateInterpolator())
+                                        .setDuration(225)
+                                        .start();
+                            }
                         }
                         break;
                 }

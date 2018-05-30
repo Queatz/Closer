@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -50,6 +51,7 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.query.QueryBuilder;
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static com.google.android.gms.common.util.Strings.isEmptyOrWhitespace;
@@ -219,7 +221,18 @@ public class GroupActivity extends CircularRevealActivity {
         if (group.getPhoto() != null) {
             backgroundPhoto.setVisibility(View.VISIBLE);
             backgroundPhoto.setImageDrawable(null);
-            Picasso.get().load(group.getPhoto() + "?s=500").into(backgroundPhoto);
+            Picasso.get().load(group.getPhoto() + "?s=32").transform(new BlurTransformation(this, 2)).into(backgroundPhoto, new Callback() {
+                @Override
+                public void onSuccess() {
+                    Picasso.get().load(group.getPhoto() + "?s=512").noPlaceholder().into(backgroundPhoto);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    e.printStackTrace();
+                    onSuccess();
+                }
+            });
         } else {
             backgroundPhoto.setVisibility(View.GONE);
         }
