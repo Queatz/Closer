@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/home/jacob/Downloads/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/device/ic_signal_cellular_connected_no_internet_0_bar_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/home/jacob/Downloads/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_videocam_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,7 +33,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_signal_cellular_connected_no_internet_0_bar_black_24dp" />
+                            <entry key="outputName" value="ic_videocam_black_24dp" />
                             <entry key="sourceFile" value="$PROJECT_DIR$/wip/notification.svg" />
                           </map>
                         </option>

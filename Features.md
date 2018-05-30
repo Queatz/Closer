@@ -1,36 +1,15 @@
 
-
-### How Jacob will use Closer
-
-Jacob will run a few public groups on Closer, including:
-
- - Jacob's Events on Closer
- - Miata Friends
- - Huawei Fandroids
-
-Join Closer, Austin's Adventure & Social Club
-
- - Free flute lessons!
- - Free Angular bootcamp!
- - Free Android bootcamps!
- - Free hikes!
- - Free photoshoots!
- - And much, MUCH more!  Come check us out!
-
- :::: Closerapp.us / austinsocial.club -> splash page with people and Closer on HUAWEI phone / get in on Google Play badge
-    -> Click anywhere to open in Play Store
-
 # Closer 1.0 MVP (Features)
 
 ********* ********* ********** * * ***** ***********************
 
 ### Media *********
+ [ ] Add audio icon to MORE section
+ [ ] (LG) Select Media (not camera)
  [ ] (LG) Post Video
     [ ] Add MORE button
         [ ] Add video icon
  [ ] (LG) Post Audio
-    [ ] Add audio icon to MORE section
- [ ] (LG) Select Media (not camera)
 
 ## Feed & Profile *********
  [ ] (LG) Feed
@@ -65,7 +44,7 @@ Join Closer, Austin's Adventure & Social Club
     [ ] Sends that person a notification no matter what (pull someone directly into a conversation)
 [ ] (MD) Pinned messages in events and groups
 [ ] (MD) Notification Settings
-    [ ] Notifications toggleable on/off for groups
+    [ ] Notifications toggleable on/off for groups / area talk
 
 ## Events Icons/Posters *
  [ ] (SM) Set event map icon (phone-number-verified users)
@@ -89,7 +68,7 @@ Join Closer, Austin's Adventure & Social Club
     [ ] X-CLOSER-APP-ID
  [ ] (SM) Verification code can only be attempted 3 times before it gets deleted
     [ ] Dialog explaining this on 3rd attempt
- [ ] (MD) Solve declared dependencies problem
+ [ ] (MD) Solve declared dependencies problem (PoolMember)
 
 # Bugs ************************
  [ ] (XS) Change: Tap on my bubble to edit what I say, not name
@@ -99,7 +78,6 @@ Join Closer, Austin's Adventure & Social Club
  [ ] (SM) Area Talk
     [ ] On container layout changed, reposition talk here
     [ ] Preserve talk box location on screen
-    [ ] Tap title to reveal / hide
 
  [ ] (SM) Don't ask for location right away
  [ ] (SM) Show Use my location button when location permission not granted
@@ -121,6 +99,29 @@ Join Closer, Austin's Adventure & Social Club
 
  [ ] (SM) Chat max width
 
+
+
+### How Jacob will use Closer
+
+Jacob will run a few public groups on Closer, including:
+
+ - Jacob's Events on Closer
+ - Miata Friends
+ - Huawei Fandroids
+
+Join Closer, Austin's Adventure & Social Club
+
+ - Free flute lessons!
+ - Free Angular bootcamp!
+ - Free Android bootcamps!
+ - Free hikes!
+ - Free photoshoots!
+ - And much, MUCH more!  Come check us out!
+
+ :::: Closerapp.us / austinsocial.club -> splash page with people and Closer on HUAWEI phone / get in on Google Play badge
+    -> Click anywhere to open in Play Store
+
+
 # Please Consider
 
     ## Friends
@@ -135,3 +136,6 @@ Join Closer, Austin's Adventure & Social Club
         [ ] Google Places API
 
      [ ] Add drop in video mode to closer
+
+     [ ] Closer show dead humans, revive button
+        [ ] Pump in energy

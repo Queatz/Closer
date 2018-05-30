@@ -4,6 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -36,10 +37,14 @@ public class GroupMessagesHandler extends PoolMember {
     private GroupMessagesAdapter groupMessagesAdapter;
     private EditText replyMessage;
     private ImageButton sendButton;
+    private ImageButton sendMoreButton;
+    private View sendMoreLayout;
 
-    public void attach(RecyclerView recyclerView, EditText replyMessage, ImageButton sendButton) {
+    public void attach(RecyclerView recyclerView, EditText replyMessage, ImageButton sendButton, ImageButton sendMoreButton, View sendMoreLayout) {
         this.replyMessage = replyMessage;
         this.sendButton = sendButton;
+        this.sendMoreButton = sendMoreButton;
+        this.sendMoreLayout = sendMoreLayout;
 
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 $(ActivityHandler.class).getActivity(),
@@ -108,6 +113,16 @@ public class GroupMessagesHandler extends PoolMember {
             }
         });
 
+        sendMoreButton.setOnClickListener(view -> {
+            if (sendMoreLayout.getVisibility() == View.VISIBLE) {
+                sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp);
+                sendMoreLayout.setVisibility(View.GONE);
+            } else {
+                sendMoreButton.setImageResource(R.drawable.ic_close_black_24dp);
+                sendMoreLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
         Date twelveHoursAgo = new Date();
         twelveHoursAgo.setTime(twelveHoursAgo.getTime() - 12 * HOUR_IN_MILLIS);
 
@@ -134,8 +149,12 @@ public class GroupMessagesHandler extends PoolMember {
     private void updateSendButton() {
         if (replyMessage.getText().toString().trim().isEmpty()) {
             sendButton.setImageResource(R.drawable.ic_camera_black_24dp);
+            sendMoreButton.setVisibility(View.VISIBLE);
         } else {
             sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp);
+            sendMoreButton.setVisibility(View.GONE);
+            sendMoreLayout.setVisibility(View.GONE);
+            sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp);
         }
     }
 

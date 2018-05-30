@@ -77,6 +77,7 @@ public class GroupActivity extends CircularRevealActivity {
     private RecyclerView contactsRecyclerView;
     private Button showPhoneContactsButton;
     private ImageButton sendButton;
+    private ImageButton sendMoreButton;
     private String groupId;
 
     @Override
@@ -84,6 +85,7 @@ public class GroupActivity extends CircularRevealActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         replyMessage = findViewById(R.id.replyMessage);
+        sendMoreButton = findViewById(R.id.sendMoreButton);
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
         searchContacts = findViewById(R.id.searchContacts);
         contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
@@ -119,7 +121,7 @@ public class GroupActivity extends CircularRevealActivity {
             }
         }
 
-        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton);
+        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
         $(MiniWindowHandler.class).attach(findViewById(R.id.groupName), findViewById(R.id.backgroundColor));
 
         replyMessage.setOnClickListener(view -> cancelShare());
@@ -315,6 +317,7 @@ public class GroupActivity extends CircularRevealActivity {
         if (replyMessage.getVisibility() == View.GONE) {
             replyMessage.setVisibility(View.VISIBLE);
             sendButton.setVisibility(View.VISIBLE);
+            sendMoreButton.setVisibility(View.VISIBLE);
             messagesRecyclerView.setVisibility(View.VISIBLE);
             searchContacts.setVisibility(View.GONE);
             contactsRecyclerView.setVisibility(View.GONE);
@@ -322,6 +325,7 @@ public class GroupActivity extends CircularRevealActivity {
         } else {
             replyMessage.setVisibility(View.GONE);
             sendButton.setVisibility(View.GONE);
+            sendMoreButton.setVisibility(View.GONE);
             messagesRecyclerView.setVisibility(View.GONE);
             searchContacts.setVisibility(View.VISIBLE);
             contactsRecyclerView.setVisibility(View.VISIBLE);

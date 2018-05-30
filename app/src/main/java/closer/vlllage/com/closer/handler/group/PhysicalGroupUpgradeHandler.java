@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.group;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -28,7 +29,7 @@ public class PhysicalGroupUpgradeHandler extends PoolMember {
         $(CameraHandler.class).showCamera((photoUri -> {
             $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
                 String photo = $(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId);
-                $(DisposableHandler.class).add($(ApiHandler.class).setGroupPhoto(group.getId(), photo).subscribe(
+                $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).setGroupPhoto(group.getId(), photo).subscribe(
                         successResult -> {
                             if (successResult.success) {
                                 group.setPhoto(photo);
