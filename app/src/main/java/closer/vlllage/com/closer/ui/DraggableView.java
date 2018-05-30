@@ -3,7 +3,9 @@ package closer.vlllage.com.closer.ui;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
+
+import java.util.Date;
 
 import closer.vlllage.com.closer.R;
 
@@ -16,11 +18,15 @@ import static java.lang.Math.sin;
 
 public class DraggableView {
 
+    private static final int SINGLE_TAP_CONFIRM_TIME_MS = 100;
+    private static final int SINGLE_TAP_CONFIRM_MAX_VELOCITY = 2;
+
     private Float positionBeforeKeyboardOpenedX = null;
     private Float positionBeforeKeyboardOpenedY = null;
     private final View view;
     private final View container;
     private boolean moveToBottom;
+    private Date dragStartTime = new Date();
 
     public DraggableView(final View view, final View container) {
         this.view = view;
@@ -41,6 +47,7 @@ public class DraggableView {
                         view.clearAnimation();
                         xDiffInTouchPointAndViewTopLeftCorner = motionEvent.getRawX() - view.getX();
                         yDiffInTouchPointAndViewTopLeftCorner = motionEvent.getRawY() - view.getY();
+                        dragStartTime = new Date();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         view.setX(clampX(motionEvent.getRawX() - xDiffInTouchPointAndViewTopLeftCorner));
@@ -57,20 +64,39 @@ public class DraggableView {
                         if (fromX != null && fromY != null) {
                             double velocity = hypot(motionEvent.getRawX() - fromX, motionEvent.getRawY() - fromY);
 
-                            if (velocity > 2) {
+                            if (velocity > SINGLE_TAP_CONFIRM_MAX_VELOCITY) {
                                 double angle = atan2(motionEvent.getRawY() - fromY, motionEvent.getRawX() - fromX);
                                 view.animate()
                                         .x(clampXForAnimation(view.getX() + 5 * velocity * cos(angle)))
                                         .y(clampY(view.getY() + velocity * sin(angle)))
-                                        .setInterpolator(new DecelerateInterpolator())
+                                        .setInterpolator(new OvershootInterpolator())
                                         .setDuration(225)
                                         .start();
+                            } else {
+                                centerOnClick();
                             }
+                        } else {
+                            centerOnClick();
                         }
                         break;
                 }
 
                 return true;
+            }
+
+            private boolean isSingleTap() {
+                return new Date().getTime() - dragStartTime.getTime() < SINGLE_TAP_CONFIRM_TIME_MS;
+            }
+
+            private void centerOnClick() {
+                if (isSingleTap()) {
+                    view.animate()
+                            .x(container.getWidth() / 2 - view.getWidth() / 2)
+                            .y(container.getHeight() / 2 - view.getHeight() / 2)
+                            .setInterpolator(new OvershootInterpolator())
+                            .setDuration(225)
+                            .start();
+                }
             }
         });
 
@@ -97,7 +123,7 @@ public class DraggableView {
                         view.animate()
                                 .x(container.getWidth() / 2 - view.getWidth() / 2)
                                 .y(h - view.getHeight() - view.getPaddingBottom())
-                                .setInterpolator(new DecelerateInterpolator())
+                                .setInterpolator(new OvershootInterpolator())
                                 .setDuration(225)
                                 .start();
                     }
@@ -108,7 +134,7 @@ public class DraggableView {
                         view.animate()
                                 .x(positionBeforeKeyboardOpenedX)
                                 .y(positionBeforeKeyboardOpenedY)
-                                .setInterpolator(new DecelerateInterpolator())
+                                .setInterpolator(new OvershootInterpolator())
                                 .setDuration(225)
                                 .start();
 
