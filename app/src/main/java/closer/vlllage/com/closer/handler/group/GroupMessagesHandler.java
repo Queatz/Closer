@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
+import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -63,7 +64,7 @@ public class GroupMessagesHandler extends PoolMember {
             ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(MapActivityHandler.class).showEventOnMap(event));
         });
 
-        replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {
+        this.replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {
             if (EditorInfo.IME_ACTION_GO == action) {
                 if (replyMessage.getText().toString().trim().isEmpty()) {
                     return false;
@@ -78,7 +79,7 @@ public class GroupMessagesHandler extends PoolMember {
             return false;
         });
 
-        sendButton.setOnClickListener(view -> {
+        this.sendButton.setOnClickListener(view -> {
             if (replyMessage.getText().toString().trim().isEmpty()) {
                 $(CameraHandler.class).showCamera(photoUri -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
                     boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), $(GroupHandler.class).getGroup().getId());
@@ -96,7 +97,7 @@ public class GroupMessagesHandler extends PoolMember {
         });
 
         updateSendButton();
-        replyMessage.addTextChangedListener(new TextWatcher() {
+        this.replyMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -113,7 +114,7 @@ public class GroupMessagesHandler extends PoolMember {
             }
         });
 
-        sendMoreButton.setOnClickListener(view -> {
+        this.sendMoreButton.setOnClickListener(view -> {
             if (sendMoreLayout.getVisibility() == View.VISIBLE) {
                 sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp);
                 sendMoreLayout.setVisibility(View.GONE);
@@ -121,6 +122,33 @@ public class GroupMessagesHandler extends PoolMember {
                 sendMoreButton.setImageResource(R.drawable.ic_close_black_24dp);
                 sendMoreLayout.setVisibility(View.VISIBLE);
             }
+        });
+
+        View sendMoreActionAudio = this.sendMoreLayout.findViewById(R.id.sendMoreActionAudio);
+        View sendMoreActionVideo = this.sendMoreLayout.findViewById(R.id.sendMoreActionVideo);
+        View sendMoreActionFile = this.sendMoreLayout.findViewById(R.id.sendMoreActionFile);
+        View sendMoreActionPhoto = this.sendMoreLayout.findViewById(R.id.sendMoreActionPhoto);
+
+        sendMoreActionAudio.setOnClickListener(view -> {
+            this.sendMoreButton.callOnClick();
+            $(DefaultAlerts.class).message("Woah matey!");
+        });
+        sendMoreActionVideo.setOnClickListener(view -> {
+            this.sendMoreButton.callOnClick();
+            $(DefaultAlerts.class).message("Woah matey!");
+        });
+        sendMoreActionFile.setOnClickListener(view -> {
+            this.sendMoreButton.callOnClick();
+            $(DefaultAlerts.class).message("Woah matey!");
+        });
+        sendMoreActionPhoto.setOnClickListener(view -> {
+            this.sendMoreButton.callOnClick();
+            $(MediaHandler.class).getPhoto(photoUri -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
+                boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), $(GroupHandler.class).getGroup().getId());
+                if (!success) {
+                    $(DefaultAlerts.class).thatDidntWork();
+                }
+            }));
         });
 
         Date twelveHoursAgo = new Date();

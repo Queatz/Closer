@@ -4,12 +4,9 @@
 ********* ********* ********** * * ***** ***********************
 
 ### Media *********
- [ ] Add audio icon to MORE section
- [ ] (LG) Select Media (not camera)
- [ ] (LG) Post Video
-    [ ] Add MORE button
-        [ ] Add video icon
- [ ] (LG) Post Audio
+ [ ] (LG) Select Video
+ [ ] (LG) Select Audio
+ [ ] (LG) Select File
 
 ## Feed & Profile *********
  [ ] (LG) Feed

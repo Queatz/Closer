@@ -4,18 +4,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
+import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 import static android.app.Activity.RESULT_OK;
 
 public class CameraHandler extends PoolMember {
 
-    private static final String AUTHORITY = "closer.vlllage.com.closer.fileprovider";
     private static int REQUEST_CODE_CAMERA = 1044;
 
     private Uri photoUri;
@@ -30,7 +29,7 @@ public class CameraHandler extends PoolMember {
         File photo;
 
         try {
-            photo = createTemporaryFile("picture", ".jpg");
+            photo = $(MediaHandler.class).createTemporaryFile("picture", ".jpg");
 
             if (photo == null) {
                 return;
@@ -44,7 +43,7 @@ public class CameraHandler extends PoolMember {
             return;
         }
 
-        photoUri = FileProvider.getUriForFile($(ActivityHandler.class).getActivity(), AUTHORITY, photo);
+        photoUri = FileProvider.getUriForFile($(ActivityHandler.class).getActivity(), MediaHandler.AUTHORITY, photo);
 
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.INTERNAL_CONTENT_URI.getPath());
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
@@ -63,19 +62,6 @@ public class CameraHandler extends PoolMember {
         if (onPhotoCapturedListener != null) {
             onPhotoCapturedListener.onPhotoCaptured(photoUri);
         }
-    }
-
-    @Nullable
-    private File createTemporaryFile(@NonNull String part, @NonNull String ext) throws Exception
-    {
-        File tempDir= $(ActivityHandler.class).getActivity().getCacheDir();
-        tempDir = new File(tempDir.getAbsolutePath() + "/shared/");
-        if (!tempDir.exists()) {
-            if (!tempDir.mkdirs()) {
-                return null;
-            }
-        }
-        return File.createTempFile(part, ext, tempDir);
     }
 
     public interface OnPhotoCapturedListener {

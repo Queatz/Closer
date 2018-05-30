@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
 
+import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
@@ -54,6 +55,7 @@ import io.objectbox.query.QueryBuilder;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static closer.vlllage.com.closer.handler.FeatureType.FEATURE_UPGRADE_PHYSICAL_GROUPS;
 import static com.google.android.gms.common.util.Strings.isEmptyOrWhitespace;
 
 public class GroupActivity extends CircularRevealActivity {
@@ -138,7 +140,7 @@ public class GroupActivity extends CircularRevealActivity {
                     actionShowOnMap.setVisibility(View.VISIBLE);
                     actionShowOnMap.setOnClickListener(view -> showGroupOnMap(group));
 
-                    if (true || $(PersistenceHandler.class).getIsVerified()) {
+                    if ($(FeatureHandler.class).has(FEATURE_UPGRADE_PHYSICAL_GROUPS)) {
                         if (isEmptyOrWhitespace(group.getName())) {
                             actionSettingsSetName.setVisibility(View.VISIBLE);
                             actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group));
