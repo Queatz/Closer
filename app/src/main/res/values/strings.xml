@@ -148,4 +148,5 @@
     <string name="unmute_notifications">Unmute notifications</string>
     <string name="notifications_on">Notifications on</string>
     <string name="more_options">More options</string>
+    <string name="random_suggestion">Get random suggestions</string>
 </resources>

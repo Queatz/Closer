@@ -1,7 +1,5 @@
 package closer.vlllage.com.closer.handler.map;
 
-import android.view.View;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -95,10 +93,6 @@ public class SuggestionHandler extends PoolMember {
         boolean anyBubblesRemoved = $(BubbleHandler.class).remove(mapBubble -> BubbleType.SUGGESTION.equals(mapBubble.getType()));
         suggestionBubbles.clear();
         return anyBubblesRemoved;
-    }
-
-    public void attach(View shuffleButton) {
-        shuffleButton.setOnClickListener(view -> this.shuffle());
     }
 
     public void createNewSuggestion(final LatLng latLng) {

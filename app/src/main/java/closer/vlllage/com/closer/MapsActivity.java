@@ -215,7 +215,7 @@ public class MapsActivity extends PoolActivity {
             $(AccountHandler.class).updateStatus($(AccountHandler.class).getStatus());
         }
 
-        $(SuggestionHandler.class).attach(findViewById(R.id.actionButton));
+        findViewById(R.id.actionButton).setOnClickListener(view -> {});
 
         $(MyGroupsLayoutHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
 

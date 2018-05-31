@@ -70,9 +70,9 @@
                 android:layout_marginBottom="16dp"
                 android:padding="16dp"
                 android:elevation="8dp"
-                android:src="@drawable/ic_shuffle_black_24dp"
+                android:src="@drawable/ic_edit_black_24dp"
                 android:tint="@android:color/white"
-                android:background="@drawable/clickable_accent" />
+                android:background="@drawable/clickable_red" />
 
             <include layout="@layout/my_status_layout"/>
 

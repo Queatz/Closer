@@ -1,6 +1,5 @@
 package closer.vlllage.com.closer.handler.map;
 
-import android.animation.ValueAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

@@ -73,6 +73,13 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 R.drawable.clickable_green_light
 
         ).setIcon(R.drawable.ic_search_black_24dp));
+        endActions.add(new GroupActionBarButton(
+                $(ResourcesHandler.class).getResources().getString(R.string.random_suggestion),
+                view -> $(SuggestionHandler.class).shuffle(),
+                null,
+                R.drawable.clickable_blue_light
+
+        ).setIcon(R.drawable.ic_shuffle_black_24dp));
         myGroupsAdapter.setEndActions(endActions);
     }
 
