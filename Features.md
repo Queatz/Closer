@@ -72,7 +72,6 @@
  [ ] (XS) Full Width Photos (when in expanded mode)
 
  [ ] (SM) Area Talk
-    [ ] On container layout changed, reposition talk here
     [ ] Preserve talk box location on screen
 
  [ ] (SM) Don't ask for location right away
@@ -82,7 +81,7 @@
  [ ] (SM) Fix event not syncing when created offline
  [ ] (SM) Don't reactivate people's bubbles when they receive a push notification
 
- [ ] (MD) Local Area Talk Notifications
+ [ ] (MD) Local Area Talk Notifications (People are talking nearby)
  [ ] (MD) Offline First Doubles
     [ ] expose luid until client requests removal of luid on server
  [ ] (MD) Use aspect/placeholder (save it on photo group message attachment)
@@ -91,6 +90,7 @@
  [ ] (MD) Stop event bubble from burbbling upon creation!
 
  [ ] (MD) Pay button in events that cost $ -> Opens Google Pay Intent
+    [ ] Enter your email to get paied
  [ ] (MD) Dowload actions on photos and videos
 
  [ ] (SM) Chat max width

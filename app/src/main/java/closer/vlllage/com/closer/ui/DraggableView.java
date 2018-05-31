@@ -114,33 +114,34 @@ public class DraggableView {
 
                 int h = container.getHeight() - container.getPaddingBottom();
 
-                if (view.findFocus() != null) {
-                    if (previousHeight > h) {
-                        if (positionBeforeKeyboardOpenedX == null && positionBeforeKeyboardOpenedY == null) {
-                            positionBeforeKeyboardOpenedX = view.getX();
-                            positionBeforeKeyboardOpenedY = view.getY();
-                        }
-                        view.animate()
-                                .x(container.getWidth() / 2 - view.getWidth() / 2)
-                                .y(h - view.getHeight() - view.getPaddingBottom())
-                                .setInterpolator(new OvershootInterpolator())
-                                .setDuration(225)
-                                .start();
+                if (view.findFocus() != null && previousHeight > h) {
+                    if (positionBeforeKeyboardOpenedX == null && positionBeforeKeyboardOpenedY == null) {
+                        positionBeforeKeyboardOpenedX = view.getX();
+                        positionBeforeKeyboardOpenedY = view.getY();
                     }
-                }
+                    view.animate()
+                            .x(container.getWidth() / 2 - view.getWidth() / 2)
+                            .y(h - view.getHeight() - view.getPaddingBottom())
+                            .setInterpolator(new OvershootInterpolator())
+                            .setDuration(225)
+                            .start();
+                } else if (previousHeight <= h && positionBeforeKeyboardOpenedX != null && positionBeforeKeyboardOpenedY != null) {
+                    view.animate()
+                            .x(clampX(positionBeforeKeyboardOpenedX))
+                            .y(clampY(positionBeforeKeyboardOpenedY))
+                            .setInterpolator(new OvershootInterpolator())
+                            .setDuration(225)
+                            .start();
 
-                if (previousHeight <= h) {
-                    if (positionBeforeKeyboardOpenedX != null && positionBeforeKeyboardOpenedY != null) {
-                        view.animate()
-                                .x(positionBeforeKeyboardOpenedX)
-                                .y(positionBeforeKeyboardOpenedY)
-                                .setInterpolator(new OvershootInterpolator())
-                                .setDuration(225)
-                                .start();
-
-                        positionBeforeKeyboardOpenedX = null;
-                        positionBeforeKeyboardOpenedY = null;
-                    }
+                    positionBeforeKeyboardOpenedX = null;
+                    positionBeforeKeyboardOpenedY = null;
+                } else if (clampX(view.getX()) != view.getX() || clampY(view.getX()) != view.getY()) {
+                    view.animate()
+                            .x(clampX(view.getX()))
+                            .y(clampY(view.getY()))
+                            .setInterpolator(new OvershootInterpolator())
+                            .setDuration(225)
+                            .start();
                 }
 
                 previousHeight = container.getHeight();
