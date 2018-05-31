@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import java.io.File;
 
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 import static android.app.Activity.RESULT_OK;
@@ -26,30 +25,13 @@ public class MediaHandler extends PoolMember {
         Intent mediaIntent = new Intent(Intent.ACTION_GET_CONTENT);
         mediaIntent.setType("image/*");
 
-        File photo;
-
-        try {
-            photo = createTemporaryFile("closer", ".jpg");
-
-            if (photo == null) {
-                return;
-            }
-
-            photo.delete();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            $(DefaultAlerts.class).thatDidntWork();
-            return;
-        }
-
         $(ActivityHandler.class).getActivity().startActivityForResult(mediaIntent, REQUEST_CODE_MEDIA);
     }
 
     @Nullable
     public File createTemporaryFile(@NonNull String part, @NonNull String ext) throws Exception
     {
-        File tempDir= $(ActivityHandler.class).getActivity().getCacheDir();
+        File tempDir = $(ActivityHandler.class).getActivity().getCacheDir();
         tempDir = new File(tempDir.getAbsolutePath() + "/shared/");
         if (!tempDir.exists()) {
             if (!tempDir.mkdirs()) {

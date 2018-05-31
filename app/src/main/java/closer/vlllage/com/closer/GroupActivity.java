@@ -124,7 +124,7 @@ public class GroupActivity extends CircularRevealActivity {
         }
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
-        $(MiniWindowHandler.class).attach(findViewById(R.id.groupName), findViewById(R.id.backgroundColor));
+        $(MiniWindowHandler.class).attach(groupName, findViewById(R.id.backgroundColor));
 
         replyMessage.setOnClickListener(view -> cancelShare());
 

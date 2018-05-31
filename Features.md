@@ -67,10 +67,9 @@
     [ ] Dialog explaining this on 3rd attempt
  [ ] (MD) Solve declared dependencies problem (PoolMember)
 
-# Bugs ************************
+# Bugs ***********************
  [ ] (XS) Change: Tap on my bubble to edit what I say, not name
  [ ] (XS) Full Width Photos (when in expanded mode)
- [ ] (XS) Animate zoom up for groups when tapping name to expand vertically
 
  [ ] (SM) Area Talk
     [ ] On container layout changed, reposition talk here
