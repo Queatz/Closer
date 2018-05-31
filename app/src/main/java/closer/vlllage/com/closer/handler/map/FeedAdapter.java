@@ -39,9 +39,9 @@ public class FeedAdapter extends PoolRecyclerAdapter<FeedAdapter.ViewHolder> {
         if (headerViewHolder == null) {
             return;
         }
-        int pad = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad);
+        int pad = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight);
         ViewGroup.MarginLayoutParams params = ((ViewGroup.MarginLayoutParams) headerViewHolder.itemView.getLayoutParams());
-        params.topMargin = (headerHeightCallback == null ? 0 : headerHeightCallback.getHeaderHeight() - pad * 4);
+        params.topMargin = (headerHeightCallback == null ? 0 : headerHeightCallback.getHeaderHeight() - pad);
         headerViewHolder.itemView.setLayoutParams(params);
     }
 

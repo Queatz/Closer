@@ -78,14 +78,6 @@
 
             <include layout="@layout/my_groups_layout"/>
 
-            <ImageButton
-                android:id="@+id/showPublicGroups"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:elevation="4dp"
-                android:background="@android:color/transparent"
-                android:scaleType="centerCrop"/>
-
         </LinearLayout>
     </RelativeLayout>
 
@@ -109,7 +101,9 @@
 
     <closer.vlllage.com.closer.ui.FloatingRecyclerView
         android:id="@+id/feed"
+        android:elevation="16dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"/>
 
 </RelativeLayout>

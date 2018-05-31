@@ -9,10 +9,11 @@
         android:id="@+id/myGroupsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padDouble"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="8dp"
-        android:paddingBottom="16dp"
+        android:paddingBottom="@dimen/feedPeakHeight"
         android:elevation="8dp"
         android:clipChildren="false"
         android:clipToPadding="false" />

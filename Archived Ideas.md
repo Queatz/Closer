@@ -7,6 +7,8 @@ Closer new types of places to go, new reasons YES / place dedicated to talking a
 # # - - --- -- -- -- --- - - # #
 
 
+360 photo in closrr photo
+
 
 
 # Sum

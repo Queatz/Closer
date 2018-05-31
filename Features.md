@@ -1,10 +1,9 @@
 
 # Overview
 
+ * Profiles
  * Post videos, audio, files
  * See recent messages
- * Profiles
- * Feed on map
  * Public group cards
 
 ---------------------------------------------
@@ -20,8 +19,6 @@
 
 ## Feed & Profile **********
  [ ] (LG) Feed
-    [ ] Covers 25% of screen on bottom / right side (landscape)
-    [ ] Pull up from bottom
     [ ] Dynamic content
         [ ] Groups you might like
         [ ] Recent photos from people's posts
@@ -107,8 +104,6 @@
  [ ] (MD) Dowload actions on photos and videos
 
 
-
-
 ### How Jacob will use Closer
 
 Jacob will run a few public groups on Closer, including:
@@ -134,6 +129,8 @@ Join Closer, Austin's Adventure & Social Club
 
     ## Friends
 
+     [ ] Tap on person / group message to view profile
+
      [ ] RL Friends
         [ ] See my RL Friends on map
             [ ] Set areas where I am visible to my RL Friends
@@ -150,3 +147,6 @@ Join Closer, Austin's Adventure & Social Club
 
     # Web
     [ ] Closer profile closerapp.us/123456
+
+
+    Photo contest with rewards

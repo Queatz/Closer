@@ -9,4 +9,5 @@
     <dimen name="physicalGroupCorners">256dp</dimen>
     <dimen name="physicalGroupPhoto">36dp</dimen>
     <dimen name="physicalGroupIcon">24dp</dimen>
+    <dimen name="feedPeakHeight">84dp</dimen>
 </resources>
