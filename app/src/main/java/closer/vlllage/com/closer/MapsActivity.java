@@ -35,6 +35,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
+import closer.vlllage.com.closer.handler.map.FeedHandler;
 import closer.vlllage.com.closer.handler.map.IntentHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
 import closer.vlllage.com.closer.handler.map.MapZoomHandler;
@@ -227,6 +228,7 @@ public class MapsActivity extends PoolActivity {
         new DraggableView(findViewById(R.id.areaChat), findViewById(R.id.contentView)).moveToBottom();
 
         $(ChatAreaHandler.class).attach(findViewById(R.id.areaChat));
+        $(FeedHandler.class).attach(findViewById(R.id.feed));
     }
 
     @Override

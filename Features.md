@@ -1,33 +1,49 @@
 
-# Closer 1.0 MVP (Features)
+# Overview
 
-********* ********* ********** * * ***** ***********************
+ * Post videos, audio, files
+ * See recent messages
+ * Profiles
+ * Feed on map
+ * Public group cards
+
+---------------------------------------------
 
 ### Media *********
+ [ ] (LG) Closer raw files content server
  [ ] (LG) Select Video
+    [ ] Video attachment type
  [ ] (LG) Select Audio
+    [ ] Audio attachment type
  [ ] (LG) Select File
+    [ ] File attachment type
 
-## Feed & Profile *********
+## Feed & Profile **********
  [ ] (LG) Feed
     [ ] Covers 25% of screen on bottom / right side (landscape)
     [ ] Pull up from bottom
     [ ] Dynamic content
         [ ] Groups you might like
-        [ ] Recent photos
-        [ ] Recent posts
+        [ ] Recent photos from people's posts
+        [ ] Recent posts (random order)
         [ ] Events nearby
         [ ] Suggestions nearby
- [ ] (LG) View Direct Messages
+
+ [ ] (LG) View Direct Messages History (recent people + DMs)
+
  [ ] (LG) Profiles
      [ ] Add closer members into private groups from in closer not phone number
      [ ] Profile Feed
         [ ] Public Groups they're in
+        [ ] Public posts
      [ ] Photo
-     [ ] Set your name ongoing bubble
-        [ ] Make TemporaryBubbleHandler
-            [ ] Animate bubble changes
-     [ ] Notifications on/off for person
+     [ ] Groups for each post where people can chat about them
+        [ ] Mini comment-like chat box
+    [ ] Notifications on/off for person
+
+ [ ] (SM) Set your name ongoing bubble
+    [ ] Make TemporaryBubbleHandler
+        [ ] Animate bubble changes
 
 ## Public Groups **********
  [ ] (LG) Public Groups
@@ -43,11 +59,9 @@
 [ ] (MD) Notification Settings
     [ ] Notifications toggleable on/off for groups / area talk
 
-## Events Icons/Posters *
- [ ] (SM) Set event map icon (phone-number-verified users)
-
-## Itty-bitty *
+## Itty-bitty **
  [ ] (SM) Icons in map tap minimenu [ directions | share ]
+ [ ] (SM) Set event map icon (phone-number-verified users)
 
 ## Infrastructure *****
  [ ] (MD) HTTPS x2
@@ -69,10 +83,9 @@
 
 # Bugs ***********************
  [ ] (XS) Change: Tap on my bubble to edit what I say, not name
- [ ] (XS) Full Width Photos (when in expanded mode)
 
- [ ] (SM) Area Talk
-    [ ] Preserve talk box location on screen
+ [ ] (SM) Area Talk: Preserve talk box location on screen
+ [ ] (SM) Area Talk: Chat max width
 
  [ ] (SM) Don't ask for location right away
  [ ] (SM) Show Use my location button when location permission not granted
@@ -81,7 +94,7 @@
  [ ] (SM) Fix event not syncing when created offline
  [ ] (SM) Don't reactivate people's bubbles when they receive a push notification
 
- [ ] (MD) Local Area Talk Notifications (People are talking nearby)
+ [ ] (MD) Local Area Talk Notifications (People are talking nearby -> opens Closer with area chat centered)
  [ ] (MD) Offline First Doubles
     [ ] expose luid until client requests removal of luid on server
  [ ] (MD) Use aspect/placeholder (save it on photo group message attachment)
@@ -93,7 +106,6 @@
     [ ] Enter your email to get paied
  [ ] (MD) Dowload actions on photos and videos
 
- [ ] (SM) Chat max width
 
 
 
@@ -135,3 +147,6 @@ Join Closer, Austin's Adventure & Social Club
 
      [ ] Closer show dead humans, revive button
         [ ] Pump in energy
+
+    # Web
+    [ ] Closer profile closerapp.us/123456

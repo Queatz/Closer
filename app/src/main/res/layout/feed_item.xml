@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/pad"
+    android:layout_marginRight="@dimen/pad"
+    android:layout_marginBottom="@dimen/padDouble"
+    android:background="@drawable/rounded_white_8dp"
+    android:clickable="true"
+    android:elevation="16dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />
+
+</android.support.constraint.ConstraintLayout>

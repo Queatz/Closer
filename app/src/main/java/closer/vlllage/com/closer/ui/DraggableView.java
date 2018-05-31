@@ -64,6 +64,7 @@ public class DraggableView {
                         if (fromX != null && fromY != null) {
                             double velocity = hypot(motionEvent.getRawX() - fromX, motionEvent.getRawY() - fromY);
 
+
                             if (velocity > SINGLE_TAP_CONFIRM_MAX_VELOCITY) {
                                 double angle = atan2(motionEvent.getRawY() - fromY, motionEvent.getRawX() - fromX);
                                 view.animate()
@@ -108,7 +109,8 @@ public class DraggableView {
             public void onGlobalLayout() {
                 if (moveToBottom) {
                     moveToBottom = false;
-                    view.setY(clampY(container.getHeight()));
+                    view.setX(clampX(container.getWidth()));
+                    view.setY(clampY(container.getHeight() / 2.5 - view.getHeight() / 2));
                     return;
                 }
 
