@@ -43,6 +43,7 @@
             android:textColor="@android:color/white"
             android:textIsSelectable="true"
             android:linksClickable="true"
+            android:autoLink="all"
             tools:text="Where are we going this weekend?" />
 
         <TextView

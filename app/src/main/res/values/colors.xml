@@ -28,4 +28,6 @@
     <color name="purpleLight">#ba68c8</color>
     <color name="purple200">#ce93d8</color>
     <color name="offwhite">#f2f2f2</color>
+    <color name="offwhite_transparent">#00f2f2f2</color>
+    <color name="white">#fff</color>
 </resources>
