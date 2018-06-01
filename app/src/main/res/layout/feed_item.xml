@@ -6,7 +6,7 @@
     android:layout_marginLeft="@dimen/pad"
     android:layout_marginRight="@dimen/pad"
     android:layout_marginBottom="@dimen/padDouble"
-    android:background="@drawable/rounded_white_8dp"
+    android:background="@drawable/rounded_off_white_8dp"
     android:clickable="true"
     android:elevation="16dp">
 

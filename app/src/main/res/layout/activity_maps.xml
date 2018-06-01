@@ -62,19 +62,27 @@
             android:gravity="end"
             android:clipToPadding="false">
 
-            <ImageButton
-                android:id="@+id/actionButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:padding="16dp"
-                android:elevation="8dp"
-                android:src="@drawable/ic_edit_black_24dp"
-                android:tint="@android:color/white"
-                android:background="@drawable/clickable_red" />
+                android:orientation="horizontal"
+                android:gravity="bottom">
 
-            <include layout="@layout/my_status_layout"/>
+                <include layout="@layout/my_status_layout"/>
+
+                <ImageButton
+                    android:id="@+id/actionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:padding="16dp"
+                    android:elevation="8dp"
+                    android:src="@drawable/ic_edit_black_24dp"
+                    android:tint="@android:color/white"
+                    android:background="@drawable/clickable_red" />
+
+            </LinearLayout>
 
             <include layout="@layout/my_groups_layout"/>
 

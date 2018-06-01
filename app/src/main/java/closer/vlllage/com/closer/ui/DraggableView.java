@@ -110,7 +110,7 @@ public class DraggableView {
                 if (moveToBottom) {
                     moveToBottom = false;
                     view.setX(clampX(container.getWidth()));
-                    view.setY(clampY(container.getHeight() / 2.5 - view.getHeight() / 2));
+                    view.setY(clampY(container.getHeight() / 3 - view.getHeight() / 2));
                     return;
                 }
 
