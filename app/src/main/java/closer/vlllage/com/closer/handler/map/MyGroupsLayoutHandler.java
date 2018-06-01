@@ -10,8 +10,6 @@ import java.util.List;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.AppShortcutsHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
-import closer.vlllage.com.closer.handler.helpers.ToastHandler;
-import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActionBarButton;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
@@ -22,6 +20,8 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
+import closer.vlllage.com.closer.handler.helpers.ToastHandler;
+import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -37,10 +37,11 @@ public class MyGroupsLayoutHandler extends PoolMember {
     private GroupActionBarButton allowPermissionsButton;
     private GroupActionBarButton unmuteNotificationsButton;
     private GroupActionBarButton showHelpButton;
+    private RecyclerView myGroupsRecyclerView;
 
     public void attach(ViewGroup myGroupsLayout) {
         this.myGroupsLayout = myGroupsLayout;
-        RecyclerView myGroupsRecyclerView = myGroupsLayout.findViewById(R.id.myGroupsRecyclerView);
+        myGroupsRecyclerView = myGroupsLayout.findViewById(R.id.myGroupsRecyclerView);
         myGroupsRecyclerView.setLayoutManager(new LinearLayoutManager(
                 myGroupsRecyclerView.getContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -199,5 +200,14 @@ public class MyGroupsLayoutHandler extends PoolMember {
         }
 
         myGroupsAdapter.setActions(actions);
+    }
+
+    public void showBottomPadding(boolean showBottomPadding) {
+        myGroupsRecyclerView.setPadding(
+                myGroupsRecyclerView.getPaddingLeft(),
+                myGroupsRecyclerView.getPaddingTop(),
+                myGroupsRecyclerView.getPaddingRight(),
+                $(ResourcesHandler.class).getResources().getDimensionPixelSize(showBottomPadding ? R.dimen.feedPeakHeight : R.dimen.pad)
+        );
     }
 }

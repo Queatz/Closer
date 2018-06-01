@@ -33,6 +33,7 @@ import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler;
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler;
 import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.map.FeedHandler;
@@ -191,6 +192,10 @@ public class MapsActivity extends PoolActivity {
         $(ReplyLayoutHandler.class).attach(findViewById(R.id.replyLayout));
         $(StatusLayoutHandler.class).attach(findViewById(R.id.myStatusLayout));
         $(MyGroupsLayoutHandler.class).attach(findViewById(R.id.myGroupsLayout));
+
+        $(KeyboardVisibilityHandler.class).attach(findViewById(R.id.contentView));
+        $(DisposableHandler.class).add($(KeyboardVisibilityHandler.class).isKeyboardVisible()
+                .subscribe(isVisible -> $(MyGroupsLayoutHandler.class).showBottomPadding(!isVisible), Throwable::printStackTrace));
 
         boolean verifiedNumber = $(PersistenceHandler.class).getIsVerified();
         $(MyGroupsLayoutHandler.class).showVerifyMyNumber(!verifiedNumber);
