@@ -25,7 +25,7 @@ Make a Closer Profile
     [ ] Audio attachment type
  [ ] (LG) Select File
     [ ] File attachment type
- [ ] Zoom in on photo
+ [ ] Aspect
 
 ## Feed & Profile **********
 
