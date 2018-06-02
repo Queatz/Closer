@@ -52,7 +52,6 @@ import closer.vlllage.com.closer.pool.PoolActivity;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Suggestion;
-import closer.vlllage.com.closer.ui.DraggableView;
 
 public class MapsActivity extends PoolActivity {
 
@@ -206,10 +205,6 @@ public class MapsActivity extends PoolActivity {
             }, this::networkError));
         }
 
-        if (getIntent() != null) {
-            $(IntentHandler.class).onNewIntent(getIntent());
-        }
-
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
         if (deviceToken != null) {
@@ -226,11 +221,12 @@ public class MapsActivity extends PoolActivity {
 
         $(EventBubbleHandler.class).attach();
         $(PhysicalGroupBubbleHandler.class).attach();
-
-        new DraggableView(findViewById(R.id.areaChat), findViewById(R.id.contentView)).moveToBottom();
-
-        $(ChatAreaHandler.class).attach(findViewById(R.id.areaChat));
+        $(ChatAreaHandler.class).attach(findViewById(R.id.areaChat), findViewById(R.id.contentView));
         $(FeedHandler.class).attach(findViewById(R.id.feed));
+
+        if (getIntent() != null) {
+            onNewIntent(getIntent());
+        }
     }
 
     @Override
@@ -259,6 +255,7 @@ public class MapsActivity extends PoolActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         $(IntentHandler.class).onNewIntent(intent);
+        $(FeedHandler.class).hide();
     }
 
     @Override

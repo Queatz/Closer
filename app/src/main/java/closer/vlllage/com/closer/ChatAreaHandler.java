@@ -28,6 +28,7 @@ import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
+import closer.vlllage.com.closer.ui.DraggableView;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
@@ -37,8 +38,13 @@ public class ChatAreaHandler extends PoolMember {
     private EditText replyMessage;
     private ImageButton sendButton;
     private RecyclerView recyclerView;
+    private DraggableView draggableView;
 
-    public void attach(View areaChat) {
+    public void attach(View areaChat, View contentView) {
+        DraggableView draggableView = new DraggableView(areaChat, contentView);
+        draggableView.moveToBottom();
+        this.draggableView = draggableView;
+
         replyMessage = areaChat.findViewById(R.id.replyMessage);
         sendButton = areaChat.findViewById(R.id.sendButton);
         recyclerView = areaChat.findViewById(R.id.messagesRecyclerView);
@@ -131,5 +137,9 @@ public class ChatAreaHandler extends PoolMember {
 
     private void setGroupMessages(List<GroupMessage> groupMessages) {
         groupMessagesAdapter.setGroupMessages(groupMessages);
+    }
+
+    public void center() {
+        draggableView.center();
     }
 }

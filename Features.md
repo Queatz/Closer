@@ -5,6 +5,15 @@
  * Post videos, audio, files
  * See recent messages
  * Public group cards
+ * STOP the doubling
+
+---
+
+Make a Closer Profile
+
+ * Show everyone in the world what's up with you
+ * Join the influencer community and build a following
+ * Keep in touch with people you've met directly
 
 ---------------------------------------------
 
@@ -16,15 +25,9 @@
     [ ] Audio attachment type
  [ ] (LG) Select File
     [ ] File attachment type
+ [ ] Zoom in on photo
 
 ## Feed & Profile **********
- [ ] (LG) Feed
-    [ ] Dynamic content
-        [ ] Groups you might like
-        [ ] Recent photos from people's posts
-        [ ] Recent posts (random order)
-        [ ] Events nearby
-        [ ] Suggestions nearby
 
  [ ] (LG) View Direct Messages History (recent people + DMs)
 
@@ -127,6 +130,8 @@ Join Closer, Austin's Adventure & Social Club
 
 # Please Consider
 
+    # Range slider on area chat (updates chat in real time)
+
     ## Friends
 
      [ ] Tap on person / group message to view profile
@@ -150,3 +155,13 @@ Join Closer, Austin's Adventure & Social Club
 
 
     Photo contest with rewards
+
+    Feed = notifications, incl. Direct Messages
+
+    [ ] (LG) Feed
+        [ ] Dynamic content
+            [ ] Groups you might like
+            [ ] Recent photos from people's posts
+            [ ] Recent posts (random order)
+            [ ] Events nearby
+            [ ] Suggestions nearby

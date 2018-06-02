@@ -67,13 +67,32 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/time"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:textSize="12sp"
-        android:textColor="@color/white_50"
-        tools:text="8:45pm" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="12sp"
+            android:textColor="@color/white_50"
+            tools:text="8:45pm" />
+
+        <TextView
+            android:id="@+id/group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="12sp"
+            android:textColor="@color/white_50"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="8:45pm" />
+
+    </LinearLayout>
 
 </LinearLayout>

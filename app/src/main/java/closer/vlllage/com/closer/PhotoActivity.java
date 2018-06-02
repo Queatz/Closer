@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
@@ -20,13 +21,33 @@ public class PhotoActivity extends PoolActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
         ImageView photo = findViewById(R.id.photo);
+        String photoUrl = getIntent().getStringExtra(EXTRA_PHOTO);
 
         if (getIntent() != null) {
-            Picasso.get().load(getIntent().getStringExtra(EXTRA_PHOTO))
+            Picasso.get().load(photoUrl)
                     .transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.imageCorners), 0))
-                    .into(photo);
+                    .into(photo, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            loadFullRes(photoUrl);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            loadFullRes(photoUrl);
+                        }
+                    });
         }
 
-        findViewById(R.id.activityLayout).setOnClickListener(view -> finishAfterTransition());
+        findViewById(R.id.photo).setOnClickListener(view -> finishAfterTransition());
+    }
+
+    private void loadFullRes(String photoUrl) {
+        ImageView photo = findViewById(R.id.photo);
+
+        Picasso.get().load(photoUrl.split("\\?")[0] + "?s=1600")
+                .noPlaceholder()
+                .transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.imageCorners), 0))
+                .into(photo);
     }
 }

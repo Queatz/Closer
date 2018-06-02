@@ -1,7 +1,9 @@
 package closer.vlllage.com.closer.ui;
 
+import android.animation.Animator;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.animation.OvershootInterpolator;
 
@@ -27,6 +29,7 @@ public class DraggableView {
     private final View container;
     private boolean moveToBottom;
     private Date dragStartTime = new Date();
+    private ViewPropertyAnimator centerAnimation;
 
     public DraggableView(final View view, final View container) {
         this.view = view;
@@ -64,20 +67,14 @@ public class DraggableView {
                         if (fromX != null && fromY != null) {
                             double velocity = hypot(motionEvent.getRawX() - fromX, motionEvent.getRawY() - fromY);
 
-
                             if (velocity > SINGLE_TAP_CONFIRM_MAX_VELOCITY) {
                                 double angle = atan2(motionEvent.getRawY() - fromY, motionEvent.getRawX() - fromX);
-                                view.animate()
-                                        .x(clampXForAnimation(view.getX() + 5 * velocity * cos(angle)))
-                                        .y(clampY(view.getY() + velocity * sin(angle)))
-                                        .setInterpolator(new OvershootInterpolator())
-                                        .setDuration(225)
-                                        .start();
-                            } else {
-                                centerOnClick();
+                                animate(clampXForAnimation(view.getX() + 5 * velocity * cos(angle)), clampY(view.getY() + velocity * sin(angle)));
+                            } else if (isSingleTap()) {
+                                center();
                             }
-                        } else {
-                            centerOnClick();
+                        } else if (isSingleTap()) {
+                            center();
                         }
                         break;
                 }
@@ -87,17 +84,6 @@ public class DraggableView {
 
             private boolean isSingleTap() {
                 return new Date().getTime() - dragStartTime.getTime() < SINGLE_TAP_CONFIRM_TIME_MS;
-            }
-
-            private void centerOnClick() {
-                if (isSingleTap()) {
-                    view.animate()
-                            .x(container.getWidth() / 2 - view.getWidth() / 2)
-                            .y(container.getHeight() / 2 - view.getHeight() / 2)
-                            .setInterpolator(new OvershootInterpolator())
-                            .setDuration(225)
-                            .start();
-                }
             }
         });
 
@@ -121,34 +107,62 @@ public class DraggableView {
                         positionBeforeKeyboardOpenedX = view.getX();
                         positionBeforeKeyboardOpenedY = view.getY();
                     }
-                    view.animate()
-                            .x(container.getWidth() / 2 - view.getWidth() / 2)
-                            .y(h - view.getHeight() - view.getPaddingBottom())
-                            .setInterpolator(new OvershootInterpolator())
-                            .setDuration(225)
-                            .start();
+                    animate(container.getWidth() / 2 - view.getWidth() / 2, h - view.getHeight() - view.getPaddingBottom());
                 } else if (previousHeight <= h && positionBeforeKeyboardOpenedX != null && positionBeforeKeyboardOpenedY != null) {
-                    view.animate()
-                            .x(clampX(positionBeforeKeyboardOpenedX))
-                            .y(clampY(positionBeforeKeyboardOpenedY))
-                            .setInterpolator(new OvershootInterpolator())
-                            .setDuration(225)
-                            .start();
+                    animate(clampX(positionBeforeKeyboardOpenedX), clampY(positionBeforeKeyboardOpenedY));
 
                     positionBeforeKeyboardOpenedX = null;
                     positionBeforeKeyboardOpenedY = null;
                 } else if (clampX(view.getX()) != view.getX() || clampY(view.getX()) != view.getY()) {
-                    view.animate()
-                            .x(clampX(view.getX()))
-                            .y(clampY(view.getY()))
-                            .setInterpolator(new OvershootInterpolator())
-                            .setDuration(225)
-                            .start();
+                    animate(clampX(view.getX()), clampY(view.getY()));
                 }
 
                 previousHeight = container.getHeight();
             }
         });
+    }
+
+    private void animate(float x, float y) {
+        if (centerAnimation != null) {
+            return;
+        }
+
+        view.animate()
+                .x(x)
+                .y(y)
+                .setInterpolator(new OvershootInterpolator())
+                .setDuration(225)
+                .start();
+    }
+
+    public void center() {
+        centerAnimation = view.animate()
+                .x(container.getWidth() / 2 - view.getWidth() / 2)
+                .y(container.getHeight() / 2 - view.getHeight() / 2)
+                .setInterpolator(new OvershootInterpolator())
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        centerAnimation = null;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        centerAnimation = null;
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .setDuration(225);
+        centerAnimation.start();
     }
 
     public void moveToBottom() {

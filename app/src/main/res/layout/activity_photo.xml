@@ -6,7 +6,7 @@
     android:id="@+id/activityLayout"
     android:background="@color/black_75">
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,7 +14,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_margin="@dimen/pad"
         android:scaleType="fitCenter"
         android:contentDescription="@string/photo"
         android:transitionName="photo" />

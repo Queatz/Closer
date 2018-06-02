@@ -23,11 +23,14 @@ import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
+import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.store.models.Suggestion;
@@ -76,6 +79,41 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         }
 
         holder.photo.setVisibility(View.GONE);
+
+        holder.itemView.setOnClickListener(view -> {
+            if (onMessageClickListener != null) {
+                onMessageClickListener.onMessageClick(groupMessages.get(position));
+            }
+        });
+
+        if (onMessageClickListener != null) {
+            holder.itemView.setBackgroundResource(R.drawable.clickable_green_flat);
+//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
+//            int pad = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad);
+//            params.bottomMargin = pad;
+//            params.leftMargin = pad;
+//            params.rightMargin = pad;
+//            holder.itemView.setPadding(
+//                    holder.itemView.getPaddingLeft(),
+//                    holder.itemView.getPaddingTop(),
+//                    holder.itemView.getPaddingRight(),
+//                    holder.itemView.getPaddingTop()
+//            );
+//            holder.itemView.setElevation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.elevation));
+
+            holder.group.setVisibility(View.VISIBLE);
+            Group group = getGroup(groupMessage.getTo());
+
+            if (group == null) {
+                holder.group.setText(R.string.near_here);
+            } else {
+                if ($(Val.class).isEmpty(group.getName())) {
+                    holder.group.setText(R.string.on_map);
+                } else {
+                    holder.group.setText(group.getName());
+                }
+            }
+        }
 
         if (groupMessage.getAttachment() != null) {
             try {
@@ -176,7 +214,6 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     holder.time.setVisibility(View.VISIBLE);
                     holder.time.setText(getTimeString(groupMessage.getTime()));
                     holder.message.setVisibility(View.GONE);
-                    holder.itemView.setOnClickListener(null);
                     holder.action.setVisibility(View.GONE);// or Share / save photo?
                     holder.photo.setVisibility(View.VISIBLE);
                     holder.photo.setOnClickListener(view -> $(PhotoActivityTransitionHandler.class).show(view, photo));
@@ -200,12 +237,16 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                 groupMessages.get(position + 1).getFrom() != null &&
                 groupMessages.get(position + 1).getFrom().equals(groupMessage.getFrom());
 
+        boolean previousMessageIsSameGroup = position + 1 < getItemCount() &&
+                groupMessages.get(position + 1).getTo() != null &&
+                groupMessages.get(position + 1).getTo().equals(groupMessage.getTo());
+
         boolean previousMessageIsSameTime = position + 1 < getItemCount() &&
                 groupMessages.get(position + 1).getAttachment() == null &&
                 getTimeString(groupMessages.get(position + 1).getTime()).equals(getTimeString(groupMessage.getTime()));
 
         holder.action.setVisibility(View.GONE);
-        holder.name.setVisibility(previousMessageIsSameContact ? View.GONE : View.VISIBLE);
+        holder.name.setVisibility(previousMessageIsSameContact && previousMessageIsSameGroup ? View.GONE : View.VISIBLE);
         holder.message.setVisibility(View.VISIBLE);
         holder.message.setGravity(Gravity.START);
 
@@ -231,12 +272,6 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         holder.message.setText(groupMessage.getText());
 
         holder.message.setAlpha(groupMessage.isLocalOnly() ? .5f : 1f);
-
-        holder.itemView.setOnClickListener(view -> {
-            if (onMessageClickListener != null) {
-                onMessageClickListener.onMessageClick(groupMessages.get(position));
-            }
-        });
     }
 
     private Phone getPhone(String phoneId) {
@@ -246,6 +281,17 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         return $(StoreHandler.class).getStore().box(Phone.class).query()
                 .equal(Phone_.id, phoneId)
+                .build()
+                .findFirst();
+    }
+
+    private Group getGroup(String groupId) {
+        if (groupId == null) {
+            return null;
+        }
+
+        return $(StoreHandler.class).getStore().box(Group.class).query()
+                .equal(Group_.id, groupId)
                 .build()
                 .findFirst();
     }
@@ -287,12 +333,13 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         return this;
     }
 
-    class GroupMessageViewHolder extends RecyclerView.ViewHolder {
+    protected class GroupMessageViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
         TextView message;
         TextView action;
         TextView time;
+        TextView group;
         ImageView photo;
 
         public GroupMessageViewHolder(View itemView) {
@@ -301,6 +348,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             message = itemView.findViewById(R.id.message);
             action = itemView.findViewById(R.id.action);
             time = itemView.findViewById(R.id.time);
+            group = itemView.findViewById(R.id.group);
             photo = itemView.findViewById(R.id.photo);
         }
     }

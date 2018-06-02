@@ -1,19 +1,16 @@
 package closer.vlllage.com.closer.handler.map;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
-import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 
-public class FeedAdapter extends PoolRecyclerAdapter<FeedAdapter.ViewHolder> {
+public class FeedAdapter extends GroupMessagesAdapter {
 
-    private ViewHolder headerViewHolder;
+    private GroupMessagesAdapter.GroupMessageViewHolder headerViewHolder;
     private HeaderHeightCallback headerHeightCallback;
 
     public FeedAdapter(PoolMember poolMember) {
@@ -22,13 +19,14 @@ public class FeedAdapter extends PoolRecyclerAdapter<FeedAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new FeedAdapter.ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.feed_item, parent, false));
+    public GroupMessagesAdapter.GroupMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        GroupMessageViewHolder viewHolder = super.onCreateViewHolder(parent, viewType);
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull GroupMessagesAdapter.GroupMessageViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
         if (position == 0) {
             headerViewHolder = holder;
             setHeaderMargin();
@@ -46,7 +44,8 @@ public class FeedAdapter extends PoolRecyclerAdapter<FeedAdapter.ViewHolder> {
     }
 
     @Override
-    public void onViewRecycled(@NonNull ViewHolder holder) {
+    public void onViewRecycled(@NonNull GroupMessagesAdapter.GroupMessageViewHolder holder) {
+        super.onViewRecycled(holder);
         if (holder == headerViewHolder) {
             headerViewHolder = null;
             ViewGroup.MarginLayoutParams params = ((ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams());
@@ -55,23 +54,12 @@ public class FeedAdapter extends PoolRecyclerAdapter<FeedAdapter.ViewHolder> {
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return 25;
-    }
-
     public void notifyHeaderHeightChanged() {
         setHeaderMargin();
     }
 
     public void setHeaderHeightCallback(HeaderHeightCallback headerHeightCallback) {
         this.headerHeightCallback = headerHeightCallback;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 
     public interface HeaderHeightCallback {

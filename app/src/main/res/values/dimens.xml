@@ -10,4 +10,5 @@
     <dimen name="physicalGroupPhoto">36dp</dimen>
     <dimen name="physicalGroupIcon">24dp</dimen>
     <dimen name="feedPeakHeight">84dp</dimen>
+    <dimen name="elevation">4dp</dimen>
 </resources>

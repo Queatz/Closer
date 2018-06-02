@@ -149,4 +149,6 @@
     <string name="notifications_on">Notifications on</string>
     <string name="more_options">More options</string>
     <string name="random_suggestion">Get random suggestions</string>
+    <string name="on_map">On the map</string>
+    <string name="near_here">In your area</string>
 </resources>

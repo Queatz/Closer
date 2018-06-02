@@ -1,10 +1,10 @@
 package closer.vlllage.com.closer.handler.helpers;
 
-import com.google.android.gms.common.util.Strings;
-
 import java.util.Random;
 
 import closer.vlllage.com.closer.pool.PoolMember;
+
+import static com.google.android.gms.common.util.Strings.isEmptyOrWhitespace;
 
 public class Val extends PoolMember {
     public String rndId() {
@@ -19,6 +19,10 @@ public class Val extends PoolMember {
     }
 
     public String of(String string, String stringWhenEmpty) {
-        return Strings.isEmptyOrWhitespace(string) ? stringWhenEmpty : string;
+        return isEmpty(string) ? stringWhenEmpty : string;
+    }
+
+    public boolean isEmpty(String string) {
+        return isEmptyOrWhitespace(string);
     }
 }
