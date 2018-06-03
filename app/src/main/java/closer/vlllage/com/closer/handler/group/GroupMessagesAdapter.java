@@ -46,6 +46,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     private OnSuggestionClickListener onSuggestionClickListener;
     private OnEventClickListener onEventClickListener;
     private boolean noPadding;
+    private boolean isReversed;
 
     public GroupMessagesAdapter(PoolMember poolMember) {
         super(poolMember);
@@ -232,18 +233,21 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             }
         }
 
-        boolean previousMessageIsSameContact = position + 1 < getItemCount() &&
-                groupMessages.get(position + 1).getAttachment() == null &&
-                groupMessages.get(position + 1).getFrom() != null &&
-                groupMessages.get(position + 1).getFrom().equals(groupMessage.getFrom());
+        int pairIndex = position + (isReversed ? -1 : 1);
+        boolean validIndex = pairIndex >= 0 && pairIndex < getItemCount();
 
-        boolean previousMessageIsSameGroup = position + 1 < getItemCount() &&
-                groupMessages.get(position + 1).getTo() != null &&
-                groupMessages.get(position + 1).getTo().equals(groupMessage.getTo());
+        boolean previousMessageIsSameContact = validIndex &&
+                groupMessages.get(pairIndex).getAttachment() == null &&
+                groupMessages.get(pairIndex).getFrom() != null &&
+                groupMessages.get(pairIndex).getFrom().equals(groupMessage.getFrom());
 
-        boolean previousMessageIsSameTime = position + 1 < getItemCount() &&
-                groupMessages.get(position + 1).getAttachment() == null &&
-                getTimeString(groupMessages.get(position + 1).getTime()).equals(getTimeString(groupMessage.getTime()));
+        boolean previousMessageIsSameGroup = validIndex &&
+                groupMessages.get(pairIndex).getTo() != null &&
+                groupMessages.get(pairIndex).getTo().equals(groupMessage.getTo());
+
+        boolean previousMessageIsSameTime = validIndex &&
+                groupMessages.get(pairIndex).getAttachment() == null &&
+                getTimeString(groupMessages.get(pairIndex).getTime()).equals(getTimeString(groupMessage.getTime()));
 
         holder.action.setVisibility(View.GONE);
         holder.name.setVisibility(previousMessageIsSameContact && previousMessageIsSameGroup ? View.GONE : View.VISIBLE);
@@ -330,6 +334,11 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
     public GroupMessagesAdapter setNoPadding(boolean noPadding) {
         this.noPadding = noPadding;
+        return this;
+    }
+
+    public GroupMessagesAdapter setReversed(boolean reversed) {
+        isReversed = reversed;
         return this;
     }
 

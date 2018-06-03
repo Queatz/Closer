@@ -31,6 +31,7 @@ public class FeedHandler extends PoolMember {
         recyclerView.setLayoutManager(layoutManager);
 
         feedAdapter = new FeedAdapter(this);
+        feedAdapter.setReversed(true);
         feedAdapter.setHeaderHeightCallback(recyclerView::getHeight);
         feedAdapter.setOnSuggestionClickListener(suggestion -> {
             $(MapActivityHandler.class).showSuggestionOnMap(suggestion);

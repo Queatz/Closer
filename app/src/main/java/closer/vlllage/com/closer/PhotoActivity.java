@@ -3,8 +3,8 @@ package closer.vlllage.com.closer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ImageView;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -14,13 +14,14 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class PhotoActivity extends PoolActivity {
     public static final String EXTRA_PHOTO = "photo";
+    private PhotoView photo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-        ImageView photo = findViewById(R.id.photo);
+        photo = findViewById(R.id.photo);
         String photoUrl = getIntent().getStringExtra(EXTRA_PHOTO);
 
         if (getIntent() != null) {
@@ -43,8 +44,6 @@ public class PhotoActivity extends PoolActivity {
     }
 
     private void loadFullRes(String photoUrl) {
-        ImageView photo = findViewById(R.id.photo);
-
         Picasso.get().load(photoUrl.split("\\?")[0] + "?s=1600")
                 .noPlaceholder()
                 .transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.imageCorners), 0))

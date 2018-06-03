@@ -1,11 +1,22 @@
 
+Tap on name -> Opens private messages with person
+
+        DARRAN
+  + Add to group   + Show on map  + Save
+  |
+  |
+  |
+  Send Darran a message...
+
+
+( Recent Messages ) bubble
+
 # Overview
 
  * Profiles
  * Post videos, audio, files
  * See recent messages
  * Public group cards
- * STOP the doubling
 
 ---
 
@@ -62,6 +73,10 @@ Make a Closer Profile
 ## Itty-bitty **
  [ ] (SM) Icons in map tap minimenu [ directions | share ]
  [ ] (SM) Set event map icon (phone-number-verified users)
+ [ ] Search for places
+    [ ] Google Places API
+    [ ] Open location on map
+    [ ] Suggestions
 
 ## Infrastructure *****
  [ ] (MD) HTTPS x2
@@ -84,26 +99,30 @@ Make a Closer Profile
 # Bugs ***********************
  [ ] (XS) Change: Tap on my bubble to edit what I say, not name
 
- [ ] (SM) Area Talk: Preserve talk box location on screen
  [ ] (SM) Area Talk: Chat max width
 
  [ ] (SM) Don't ask for location right away
  [ ] (SM) Show Use my location button when location permission not granted
 
- [ ] (SM) Fix contacts not showing up on Android 7.0
  [ ] (SM) Fix event not syncing when created offline
  [ ] (SM) Don't reactivate people's bubbles when they receive a push notification
+ [ ] (SM) Fix contacts not showing up on Android 7.0
 
  [ ] (MD) Local Area Talk Notifications (People are talking nearby -> opens Closer with area chat centered)
  [ ] (MD) Offline First Doubles
     [ ] expose luid until client requests removal of luid on server
+
  [ ] (MD) Use aspect/placeholder (save it on photo group message attachment)
+
  [ ] (MD) Auto update group when setting group name background upon success
+
  [ ] (MD) Re-add to groups of old account when verifying number with other accounts with that number
+
  [ ] (MD) Stop event bubble from burbbling upon creation!
 
  [ ] (MD) Pay button in events that cost $ -> Opens Google Pay Intent
-    [ ] Enter your email to get paied
+    [ ] Enter your email to get payed
+
  [ ] (MD) Dowload actions on photos and videos
 
 
@@ -141,9 +160,6 @@ Join Closer, Austin's Adventure & Social Club
             [ ] Set areas where I am visible to my RL Friends
 
     ## Physical Place Discovery
-
-     [ ] Search for places
-        [ ] Google Places API
 
      [ ] Add drop in video mode to closer
 

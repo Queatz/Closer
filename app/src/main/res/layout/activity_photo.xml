@@ -6,7 +6,7 @@
     android:id="@+id/activityLayout"
     android:background="@color/black_75">
 
-    <com.github.chrisbanes.photoview.PhotoView
+    <closer.vlllage.com.closer.ui.StablePhotoView
         android:id="@+id/photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

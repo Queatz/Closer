@@ -255,7 +255,9 @@ public class MapsActivity extends PoolActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         $(IntentHandler.class).onNewIntent(intent);
-        $(FeedHandler.class).hide();
+        if (intent != null && intent.getAction() == Intent.ACTION_VIEW) {
+            $(FeedHandler.class).hide();
+        }
     }
 
     @Override
