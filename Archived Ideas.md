@@ -1,4 +1,38 @@
 
+
+ [ ] (LG) Public Groups
+    [ ] Cover Photos
+    [ ] Join Group
+    [ ] Join -> Joined
+    [ ] See group members button
+    [ ] Members list
+[ ] (LG) @mentions in group messages
+    [ ] Popup of people (top left above edittext)
+    [ ] Sends that person a notification no matter what (pull someone directly into a conversation)
+
+##
+
+ [ ] (LG) View Direct Messages History (recent people + DMs)
+
+ [ ] (LG) Profiles
+     [ ] Add closer members into private groups from in closer not phone number
+     [ ] Profile Feed
+        [ ] Public Groups they're in
+        [ ] Public posts
+     [ ] Photo
+     [ ] Groups for each post where people can chat about them
+        [ ] Mini comment-like chat box
+    [ ] Notifications on/off for person
+
+## Feed & Profile **********
+
+ [ ] (SM) Set your name ongoing bubble
+    [ ] Make TemporaryBubbleHandler
+        [ ] Animate bubble changes
+
+
+##
+
 Game: Supported locations, a new location is launching on Saturday
 Closer new types of places to go, new reasons YES / place dedicated to talking about life problems
 
