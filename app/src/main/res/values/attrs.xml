@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="MaxHeightFrameLayout">
+    <declare-styleable name="MaxSizeFrameLayout">
         <attr name="maxHeight" format="dimension" />
+        <attr name="maxWidth" format="dimension" />
     </declare-styleable>
 </resources>
