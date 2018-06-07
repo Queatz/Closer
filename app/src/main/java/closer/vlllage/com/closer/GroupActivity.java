@@ -160,8 +160,6 @@ public class GroupActivity extends CircularRevealActivity {
                 }
 
                 setGroupBackground(group);
-
-                peopleInGroup.setVisibility(View.GONE);
             } else {
                 $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts);
                 peopleInGroup.setSelected(true);

@@ -78,3 +78,7 @@ Join Closer, Austin's Adventure & Social Club
 
      [ ] (MD) Pay button in events that cost $ -> Opens Google Pay Intent
         [ ] Enter your email to get payed
+
+     [ ] Web page with events near austin sourced from Closer API
+        [ ] austinsocial.club
+        [ ] Heart it button on events

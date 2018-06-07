@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.TextView;
 
 import org.greenrobot.essentials.StringUtils;
@@ -134,18 +135,31 @@ public class GroupHandler extends PoolMember {
     }
 
     private void redrawContacts() {
-        List<String> names = new ArrayList<>();
+        if (group != null && group.isPublic()) {
+            if ($(Val.class).isEmpty(group.getAbout())) {
+                peopleInGroup.setVisibility(View.GONE);
+            } else {
+                peopleInGroup.setText(group.getAbout());
+                peopleInGroup.setVisibility(View.VISIBLE);
+            }
 
-        names.addAll(contactNames);
-        names.addAll(contactInvites);
-
-        if (names.isEmpty()) {
-            peopleInGroup.setText(R.string.add_contact);
             return;
+        } else {
+            peopleInGroup.setVisibility(View.VISIBLE);
+
+            List<String> names = new ArrayList<>();
+
+            names.addAll(contactNames);
+            names.addAll(contactInvites);
+
+            if (names.isEmpty()) {
+                peopleInGroup.setText(R.string.add_contact);
+                return;
+            }
+
+
+            peopleInGroup.setText(StringUtils.join(names, ", "));
         }
-
-
-        peopleInGroup.setText(StringUtils.join(names, ", "));
     }
 
     private void setGroup(Group group) {
