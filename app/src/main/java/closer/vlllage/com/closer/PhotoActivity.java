@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -8,7 +9,9 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.SystemShareHandler;
 import closer.vlllage.com.closer.pool.PoolActivity;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -40,7 +43,15 @@ public class PhotoActivity extends PoolActivity {
                     });
         }
 
-        findViewById(R.id.photo).setOnClickListener(view -> finishAfterTransition());
+        photo.setOnClickListener(view -> finishAfterTransition());
+
+        findViewById(R.id.actionShare).setOnClickListener(view -> {
+            if (photo.getDrawable() instanceof BitmapDrawable) {
+                $(SystemShareHandler.class).share(((BitmapDrawable) photo.getDrawable()).getBitmap());
+            } else {
+                $(DefaultAlerts.class).thatDidntWork();
+            }
+        });
     }
 
     private void loadFullRes(String photoUrl) {

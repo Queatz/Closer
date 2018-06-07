@@ -29,6 +29,6 @@
     <color name="purple200">#ce93d8</color>
     <color name="offwhite">#f8f8f8</color>
     <color name="offwhite_transparent">#00f8f8f8</color>
-    <color name="white">#fff</color>
+    <color name="white">#ffffff</color>
     <color name="white_transparent">#00ffffff</color>
 </resources>

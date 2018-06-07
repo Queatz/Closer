@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -29,8 +30,7 @@ public class MediaHandler extends PoolMember {
     }
 
     @Nullable
-    public File createTemporaryFile(@NonNull String part, @NonNull String ext) throws Exception
-    {
+    public File createTemporaryFile(@NonNull String part, @NonNull String ext) throws IOException {
         File tempDir = $(ActivityHandler.class).getActivity().getCacheDir();
         tempDir = new File(tempDir.getAbsolutePath() + "/shared/");
         if (!tempDir.exists()) {
