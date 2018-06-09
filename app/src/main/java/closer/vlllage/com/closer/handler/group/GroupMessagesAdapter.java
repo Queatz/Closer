@@ -24,6 +24,7 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -137,13 +138,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
                     Phone phone = getPhone(groupMessage.getFrom());
 
-                    String contactName;
-
-                    if (phone == null || phone.getName() == null) {
-                        contactName = $(ResourcesHandler.class).getResources().getString(R.string.no_name);
-                    } else {
-                        contactName = phone.getName();
-                    }
+                    String contactName = $(NameHandler.class).getName(phone);
 
                     holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.phone_shared_an_event, contactName));
 
@@ -171,13 +166,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
                     Phone phone = getPhone(groupMessage.getFrom());
 
-                    String contactName;
-
-                    if (phone == null || phone.getName() == null) {
-                        contactName = $(ResourcesHandler.class).getResources().getString(R.string.no_name);
-                    } else {
-                        contactName = phone.getName();
-                    }
+                    String contactName = $(NameHandler.class).getName(phone);
 
                     if (suggestionHasNoName) {
                         holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.phone_shared_a_location, contactName));
@@ -201,13 +190,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     });
                 } else if (jsonObject.has("photo")) {
                     Phone phone = getPhone(groupMessage.getFrom());
-                    String contactName;
-
-                    if (phone == null || phone.getName() == null) {
-                        contactName = $(ResourcesHandler.class).getResources().getString(R.string.no_name);
-                    } else {
-                        contactName = phone.getName();
-                    }
+                    String contactName = $(NameHandler.class).getName(phone);
 
                     final String photo = jsonObject.get("photo").getAsString() + "?s=500";
                     holder.name.setVisibility(View.VISIBLE);
@@ -267,14 +250,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             phone = getPhone(groupMessage.getFrom());
         }
 
-        if (phone == null || phone.getName() == null) {
-            holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.no_name));
-        } else {
-            holder.name.setText(phone.getName());
-        }
-
+        holder.name.setText($(NameHandler.class).getName(phone));
         holder.message.setText(groupMessage.getText());
-
         holder.message.setAlpha(groupMessage.isLocalOnly() ? .5f : 1f);
     }
 

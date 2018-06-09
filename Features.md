@@ -3,6 +3,10 @@
 
 Explain how I would use Closer for 25 different scenarios - then make videos
 
+ [ ] Web page with events near austin sourced from Closer API
+    [ ] austinsocial.club
+    [ ] Heart it button on events
+
 ---------------------------------------------
 
 ## Infrastructure *****
@@ -79,6 +83,3 @@ Join Closer, Austin's Adventure & Social Club
      [ ] (MD) Pay button in events that cost $ -> Opens Google Pay Intent
         [ ] Enter your email to get payed
 
-     [ ] Web page with events near austin sourced from Closer API
-        [ ] austinsocial.club
-        [ ] Heart it button on events

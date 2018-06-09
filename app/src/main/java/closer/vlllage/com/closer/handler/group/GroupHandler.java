@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
@@ -80,9 +81,9 @@ public class GroupHandler extends PoolMember {
                     contactNames = new ArrayList<>();
                     for (GroupContact groupContact : groupContacts) {
                         if (isInactive(groupContact)) {
-                            contactNames.add($(ResourcesHandler.class).getResources().getString(R.string.contact_inactive_inline, getContactName(groupContact)));
+                            contactNames.add($(ResourcesHandler.class).getResources().getString(R.string.contact_inactive_inline, $(NameHandler.class).getName(groupContact)));
                         } else {
-                            contactNames.add(getContactName(groupContact));
+                            contactNames.add($(NameHandler.class).getName(groupContact));
                         }
                     }
 
@@ -95,7 +96,7 @@ public class GroupHandler extends PoolMember {
                 .observer(groupInvites -> {
                     contactInvites = new ArrayList<>();
                     for (GroupInvite groupInvite : groupInvites) {
-                        contactInvites.add($(ResourcesHandler.class).getResources().getString(R.string.contact_invited_inline, getInviteName(groupInvite)));
+                        contactInvites.add($(ResourcesHandler.class).getResources().getString(R.string.contact_invited_inline, $(NameHandler.class).getName(groupInvite)));
                     }
                     redrawContacts();
                 }));
@@ -112,26 +113,10 @@ public class GroupHandler extends PoolMember {
                 .build().findFirst();
     }
 
-    private String getContactName(GroupContact groupContact) {
-        if (groupContact.getContactName() == null || groupContact.getContactName().trim().isEmpty()) {
-            return $(ResourcesHandler.class).getResources().getString(R.string.no_name);
-        }
-
-        return groupContact.getContactName();
-    }
-
     private boolean isInactive(GroupContact groupContact) {
         Date fifteenDaysAgo = new Date();
         fifteenDaysAgo.setTime(fifteenDaysAgo.getTime() - 15 * DAY_IN_MILLIS);
         return groupContact.getContactActive().before(fifteenDaysAgo);
-    }
-
-    private String getInviteName(GroupInvite groupInvite) {
-        if (groupInvite.getName() == null || groupInvite.getName().trim().isEmpty()) {
-            return $(ResourcesHandler.class).getResources().getString(R.string.no_name);
-        }
-
-        return groupInvite.getName();
     }
 
     private void redrawContacts() {
