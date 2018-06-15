@@ -36,6 +36,7 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler;
 import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.map.FeedHandler;
 import closer.vlllage.com.closer.handler.map.IntentHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
@@ -243,6 +244,7 @@ public class MapsActivity extends PoolActivity {
 
         boolean isNotificationsPaused = $(PersistenceHandler.class).getIsNotifcationsPaused();
         $(MyGroupsLayoutHandler.class).showUnmuteNotifications(isNotificationsPaused);
+        $(MyGroupsLayoutHandler.class).showSetMyName($(Val.class).isEmpty($(AccountHandler.class).getName()));
 
         if (locationPermissionGranted && locationPermissionWasDenied) {
             $(MapHandler.class).updateMyLocationEnabled();

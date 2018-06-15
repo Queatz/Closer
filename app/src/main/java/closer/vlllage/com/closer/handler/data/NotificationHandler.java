@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
@@ -26,7 +25,6 @@ import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Event;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_LAT_LNG;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_NAME;
@@ -218,20 +216,9 @@ public class NotificationHandler extends PoolMember {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationTag, NOTIFICATION_ID, newMessageNotification);
-
-        ensureScreenIsOn(context);
     }
 
     private String notificationChannel() {
         return $(ResourcesHandler.class).getResources().getString(R.string.notification_channel);
-    }
-
-    private void ensureScreenIsOn(Context context) {
-        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-
-        if(pm != null && !pm.isInteractive()) {
-            PowerManager.WakeLock wl = pm.newWakeLock(FLAG_KEEP_SCREEN_ON | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE,"closer:notification");
-            wl.acquire(5000);
-        }
     }
 }

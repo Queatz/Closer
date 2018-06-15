@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
 import closer.vlllage.com.closer.handler.helpers.ToastHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -37,6 +38,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
     private GroupActionBarButton allowPermissionsButton;
     private GroupActionBarButton unmuteNotificationsButton;
     private GroupActionBarButton showHelpButton;
+    private GroupActionBarButton setMyName;
     private RecyclerView myGroupsRecyclerView;
 
     public void attach(ViewGroup myGroupsLayout) {
@@ -197,6 +199,32 @@ public class MyGroupsLayoutHandler extends PoolMember {
             }
 
             actions.remove(showHelpButton);
+        }
+
+        myGroupsAdapter.setActions(actions);
+    }
+
+    public void showSetMyName(boolean show) {
+        if (show) {
+            if (setMyName != null) {
+                return;
+            }
+
+            String action = $(ResourcesHandler.class).getResources().getString(R.string.set_my_name);
+            setMyName = new GroupActionBarButton(action, view -> {
+                $(SetNameHandler.class).modifyName(name -> {
+                    if (!$(Val.class).isEmpty(name)) {
+                        showSetMyName(false);
+                    }
+                }, false);
+            });
+            actions.add(0, setMyName);
+        } else {
+            if (setMyName == null) {
+                return;
+            }
+
+            actions.remove(setMyName);
         }
 
         myGroupsAdapter.setActions(actions);
