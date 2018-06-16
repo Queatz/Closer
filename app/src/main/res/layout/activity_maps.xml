@@ -3,14 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="8dp"
     android:background="@color/dark">
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.MapFragment"
+    <closer.vlllage.com.closer.ui.ScrollStopper
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="closer.vlllage.com.closer.MapsActivity" />
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="closer.vlllage.com.closer.MapsActivity" />
+
+    </closer.vlllage.com.closer.ui.ScrollStopper>
 
     <RelativeLayout
         android:id="@+id/bubbleMapLayer"
@@ -86,7 +93,13 @@
 
             </LinearLayout>
 
-            <include layout="@layout/my_groups_layout"/>
+            <closer.vlllage.com.closer.ui.ScrollStopper
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include layout="@layout/my_groups_layout"/>
+
+            </closer.vlllage.com.closer.ui.ScrollStopper>
 
         </LinearLayout>
     </RelativeLayout>

@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import closer.vlllage.com.closer.R;
@@ -78,6 +79,15 @@ public class MaxSizeFrameLayout extends FrameLayout {
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(@NonNull MotionEvent event) {
+        if (getParent() != null) {
+            getParent().requestDisallowInterceptTouchEvent(true);
+        }
+
+        return false;
     }
 
     private int calculate(int measureSpec, int max) {
