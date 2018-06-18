@@ -41,7 +41,7 @@
             android:theme="@style/AppTheme.Translucent"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTop">
+            android:launchMode="standard">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.APP_MESSAGING" />

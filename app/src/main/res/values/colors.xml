@@ -8,6 +8,7 @@
     <color name="colorAccent">#FFC107</color>
     <color name="colorAccentLight">#FFD54F</color>
     <color name="green">#8BC34A</color>
+    <color name="green_transparent">#008BC34A</color>
     <color name="greenLight">#AED581</color>
     <color name="green200">#C5E1A5</color>
     <color name="red">#f44336</color>

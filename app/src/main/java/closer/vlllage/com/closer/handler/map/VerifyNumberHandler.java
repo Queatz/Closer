@@ -61,7 +61,7 @@ public class VerifyNumberHandler extends PoolMember {
 
     private void codeConfirmed() {
         $(PersistenceHandler.class).setIsVerified(true);
-        $(MyGroupsLayoutHandler.class).showVerifyMyNumber(false);
+        $(MyGroupsLayoutActionsHandler.class).showVerifyMyNumber(false);
 
         $(AlertHandler.class).make()
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.welcome_to_closer))

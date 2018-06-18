@@ -184,11 +184,11 @@ public class MapSlideFragment extends PoolFragment {
                 .subscribe(isVisible -> $(MyGroupsLayoutHandler.class).showBottomPadding(!isVisible), Throwable::printStackTrace));
 
         boolean verifiedNumber = $(PersistenceHandler.class).getIsVerified();
-        $(MyGroupsLayoutHandler.class).showVerifyMyNumber(!verifiedNumber);
+        $(MyGroupsLayoutActionsHandler.class).showVerifyMyNumber(!verifiedNumber);
         if (!verifiedNumber) {
             $(DisposableHandler.class).add($(ApiHandler.class).isVerified().subscribe(verified -> {
                 $(PersistenceHandler.class).setIsVerified(verified);
-                $(MyGroupsLayoutHandler.class).showVerifyMyNumber(!verified);
+                $(MyGroupsLayoutActionsHandler.class).showVerifyMyNumber(!verified);
             }, this::networkError));
         }
 
@@ -204,7 +204,7 @@ public class MapSlideFragment extends PoolFragment {
 
         view.findViewById(R.id.actionButton).setOnClickListener(actionButton -> {});
 
-        $(MyGroupsLayoutHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
+        $(MyGroupsLayoutActionsHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
 
         $(EventBubbleHandler.class).attach();
         $(PhysicalGroupBubbleHandler.class).attach();
@@ -229,11 +229,11 @@ public class MapSlideFragment extends PoolFragment {
         }
 
         boolean locationPermissionDenied = $(PermissionHandler.class).denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
-        $(MyGroupsLayoutHandler.class).showAllowLocationPermissionsInSettings(locationPermissionDenied);
+        $(MyGroupsLayoutActionsHandler.class).showAllowLocationPermissionsInSettings(locationPermissionDenied);
 
         boolean isNotificationsPaused = $(PersistenceHandler.class).getIsNotifcationsPaused();
-        $(MyGroupsLayoutHandler.class).showUnmuteNotifications(isNotificationsPaused);
-        $(MyGroupsLayoutHandler.class).showSetMyName($(Val.class).isEmpty($(AccountHandler.class).getName()));
+        $(MyGroupsLayoutActionsHandler.class).showUnmuteNotifications(isNotificationsPaused);
+        $(MyGroupsLayoutActionsHandler.class).showSetMyName($(Val.class).isEmpty($(AccountHandler.class).getName()));
 
         if (locationPermissionGranted && locationPermissionWasDenied) {
             $(MapHandler.class).updateMyLocationEnabled();

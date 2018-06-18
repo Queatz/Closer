@@ -40,12 +40,12 @@ public class FloatingRecyclerView extends RecyclerView {
                 if (((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition() > 0) {
                     if (!isSolidBackground) {
                         isSolidBackground = true;
-                        animateBackground(recyclerView, R.color.offwhite);
+                        animateBackground(recyclerView, R.color.green);
                     }
                 } else {
                     if (isSolidBackground) {
                         isSolidBackground = false;
-                        animateBackground(recyclerView, R.color.offwhite_transparent);
+                        animateBackground(recyclerView, R.color.green_transparent);
                     }
                 }
             }
