@@ -120,7 +120,26 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         if (groupMessage.getAttachment() != null) {
             try {
                 JsonObject jsonObject = $(JsonHandler.class).from(groupMessage.getAttachment(), JsonObject.class);
-                if (jsonObject.has("message")) {
+                if (jsonObject.has("action")) {
+                    Phone phone = getPhone(groupMessage.getFrom());
+                    String contactName = $(NameHandler.class).getName(phone);
+
+                    JsonObject action = jsonObject.get("action").getAsJsonObject();
+                    holder.name.setVisibility(View.VISIBLE);
+                    holder.name.setText(contactName + " " + action.get("intent").getAsString());
+                    holder.time.setVisibility(View.VISIBLE);
+                    holder.time.setText(getTimeString(groupMessage.getTime()));
+                    holder.message.setVisibility(View.VISIBLE);
+                    holder.message.setText(action.get("comment").getAsString());
+                    holder.itemView.setOnClickListener(null);
+                    holder.action.setVisibility(View.GONE);
+
+                    holder.action.setVisibility(View.VISIBLE);
+                    holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.reply));
+                    holder.action.setOnClickListener(view -> {
+                        // todo
+                    });
+                } else if (jsonObject.has("message")) {
                     holder.name.setVisibility(View.GONE);
                     holder.time.setVisibility(View.GONE);
                     holder.message.setVisibility(View.VISIBLE);

@@ -12,6 +12,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.FeatureHandler;
+import closer.vlllage.com.closer.handler.FeatureType;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
@@ -48,17 +50,29 @@ public class GroupActionHandler extends PoolMember {
         ));
 
         groupActionAdapter = new GroupActionAdapter(this, groupAction -> {
-            $(DefaultAlerts.class).message(groupAction.getName());
-        }, groupAction -> {
             $(AlertHandler.class).make()
-                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.remove_action_message, groupAction.getName()))
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.remove_action))
-                    .setPositiveButtonCallback(alertResult -> {
-//   todo         $(ApiHandler.class).removeGroupAction(groupAction);
-                        // todo on success ->
-                        $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction);
+                    .setLayoutResId(R.layout.comments_modal)
+                    .setTextView(R.id.input, comment -> {
+                        boolean success = $(GroupMessageAttachmentHandler.class).groupActionReply(groupAction.getGroup(), groupAction, comment);
+                        if (!success) {
+                            $(DefaultAlerts.class).thatDidntWork();
+                        }
                     })
-            .show();
+                    .setTitle(groupAction.getName())
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.go))
+                    .show();
+        }, groupAction -> {
+            if ($(FeatureHandler.class).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
+                $(AlertHandler.class).make()
+                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.remove_action_message, groupAction.getName()))
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.remove_action))
+                        .setPositiveButtonCallback(alertResult -> {
+    //   todo         $(ApiHandler.class).removeGroupAction(groupAction);
+                            // todo on success ->
+                            $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction);
+                        })
+                .show();
+            }
         });
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {

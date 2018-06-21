@@ -9,13 +9,14 @@ import com.google.gson.JsonPrimitive;
 
 import java.util.Date;
 
-import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
+import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupMessage;
@@ -59,6 +60,16 @@ public class GroupMessageAttachmentHandler extends PoolMember {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("photo", new JsonPrimitive(photoUrl));
         saveMessageWithAttachment(null, latLng, jsonObject);
+        return true;
+    }
+
+    public boolean groupActionReply(String groupId, GroupAction groupAction, String comment) {
+        JsonObject jsonObject = new JsonObject();
+        JsonObject action = new JsonObject();
+        action.add("intent", new JsonPrimitive(groupAction.getIntent()));
+        action.add("comment", new JsonPrimitive(comment));
+        jsonObject.add("action", action);
+        saveMessageWithAttachment(groupId, null, jsonObject);
         return true;
     }
 
