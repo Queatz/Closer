@@ -11,6 +11,9 @@ import android.widget.FrameLayout;
 import closer.vlllage.com.closer.R;
 
 public class MaxSizeFrameLayout extends FrameLayout {
+
+    public static final int UNSPECIFIED = -1;
+
     private int maxHeight;
     private int maxWidth;
 
@@ -91,16 +94,16 @@ public class MaxSizeFrameLayout extends FrameLayout {
     }
 
     private int calculate(int measureSpec, int max) {
-        int hSize = MeasureSpec.getSize(measureSpec);
-        int hMode = MeasureSpec.getMode(measureSpec);
+        int size = MeasureSpec.getSize(measureSpec);
+        int mode = MeasureSpec.getMode(measureSpec);
 
-        switch (hMode) {
+        switch (mode) {
             case MeasureSpec.AT_MOST:
-                return MeasureSpec.makeMeasureSpec(Math.min(hSize, max), MeasureSpec.AT_MOST);
+                return MeasureSpec.makeMeasureSpec(Math.min(size, max), MeasureSpec.AT_MOST);
             case MeasureSpec.UNSPECIFIED:
                 return MeasureSpec.makeMeasureSpec(max, MeasureSpec.AT_MOST);
             case MeasureSpec.EXACTLY:
-                return MeasureSpec.makeMeasureSpec(Math.min(hSize, max), MeasureSpec.EXACTLY);
+                return MeasureSpec.makeMeasureSpec(Math.min(size, max), MeasureSpec.EXACTLY);
             default:
                 return measureSpec;
         }

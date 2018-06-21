@@ -13,6 +13,8 @@ import java.util.List;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
+import closer.vlllage.com.closer.handler.FeatureHandler;
+import closer.vlllage.com.closer.handler.FeatureType;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
@@ -39,6 +41,7 @@ public class GroupHandler extends PoolMember {
 
     private TextView groupName;
     private TextView peopleInGroup;
+    private View settingsButton;
     private Group group;
     private GroupContact groupContact;
     private BehaviorSubject<Group> groupChanged = BehaviorSubject.create();
@@ -46,9 +49,10 @@ public class GroupHandler extends PoolMember {
     private List<String> contactNames = new ArrayList<>();
     private List<String> contactInvites = new ArrayList<>();
 
-    public void attach(TextView groupName, TextView peopleInGroup) {
+    public void attach(TextView groupName, TextView peopleInGroup, View settingsButton) {
         this.groupName = groupName;
         this.peopleInGroup = peopleInGroup;
+        this.settingsButton = settingsButton;
     }
 
     public void setGroupById(String groupId) {
@@ -100,6 +104,10 @@ public class GroupHandler extends PoolMember {
                     }
                     redrawContacts();
                 }));
+
+        if ($(FeatureHandler.class).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
+            settingsButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setGroupContact() {

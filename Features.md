@@ -9,6 +9,40 @@ Explain how I would use Closer for 25 different scenarios - then make videos
 
 ---------------------------------------------
 
+
+## Interactions
+
+ [.] Right screen
+    [.] (TOP) full history of direct messages
+    [.] (TOP) open direct messages with that person
+
+ [ ] View actions
+    [X] (TOP) RecyclerView across top of group
+    [.] Last item is + Add an action (if phone number is verified / FeatureHandler)
+        [ ] Action name
+        [ ] Action hint
+        [ ] Action message
+    [.] Long-press to delete (if phone number is verified / FeatureHandler)
+
+ [.] (TOP) Backend
+    [ ] Create GroupAction datamodel
+    [ ] Return in group response
+    [ ] POST /group-action
+    [ ] GET /messages (my messages)
+
+ [.] Store phone messages locally
+ [.] Store group actions locally
+
+ [ ] Tap on Group Action
+    [ ] Write a message
+    [ ] Post
+
+ [ ] Group action group message attachment
+    [ ] Reply to Daisy button
+        [ ] Opens direct message to Daisy
+    [ ] For poster: X to end
+
+
 ## Infrastructure *****
  [ ] (MD) HTTPS x2
     [ ] closer.vlllage.com

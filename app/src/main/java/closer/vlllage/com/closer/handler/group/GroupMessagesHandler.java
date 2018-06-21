@@ -178,11 +178,13 @@ public class GroupMessagesHandler extends PoolMember {
         if (replyMessage.getText().toString().trim().isEmpty()) {
             sendButton.setImageResource(R.drawable.ic_camera_black_24dp);
             sendMoreButton.setVisibility(View.VISIBLE);
+            $(GroupActionHandler.class).show(true);
         } else {
             sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp);
             sendMoreButton.setVisibility(View.GONE);
             sendMoreLayout.setVisibility(View.GONE);
             sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp);
+            $(GroupActionHandler.class).show(false);
         }
     }
 

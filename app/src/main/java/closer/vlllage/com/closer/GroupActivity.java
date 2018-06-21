@@ -25,6 +25,7 @@ import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.group.GroupActionHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
@@ -110,7 +111,7 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
 
-        $(GroupHandler.class).attach(groupName, peopleInGroup);
+        $(GroupHandler.class).attach(groupName, peopleInGroup, findViewById(R.id.settingsButton));
         if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
             groupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
             $(GroupHandler.class).setGroupById(groupId);
@@ -124,9 +125,13 @@ public class GroupActivity extends CircularRevealActivity {
         }
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
+        $(GroupActionHandler.class).attach(findViewById(R.id.actionFrameLayout), findViewById(R.id.actionRecyclerView));
         $(MiniWindowHandler.class).attach(groupName, findViewById(R.id.backgroundColor));
 
-        replyMessage.setOnClickListener(view -> cancelShare());
+        replyMessage.setOnClickListener(view -> {
+            $(GroupActionHandler.class).show(false);
+            cancelShare();
+        });
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (group.isPublic()) {
