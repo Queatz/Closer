@@ -25,6 +25,7 @@ import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.phone.NameHandler;
+import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -129,15 +130,21 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     holder.name.setText(contactName + " " + action.get("intent").getAsString());
                     holder.time.setVisibility(View.VISIBLE);
                     holder.time.setText(getTimeString(groupMessage.getTime()));
-                    holder.message.setVisibility(View.VISIBLE);
-                    holder.message.setText(action.get("comment").getAsString());
+
+                    String comment = action.get("comment").getAsString();
+                    if ($(Val.class).isEmpty(comment)) {
+                        holder.message.setVisibility(View.GONE);
+                    } else {
+                        holder.message.setVisibility(View.VISIBLE);
+                        holder.message.setText(action.get("comment").getAsString());
+                    }
                     holder.itemView.setOnClickListener(null);
                     holder.action.setVisibility(View.GONE);
 
                     holder.action.setVisibility(View.VISIBLE);
                     holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.reply));
                     holder.action.setOnClickListener(view -> {
-                        // todo
+                        $(PhoneMessagesHandler.class).openMessagesWithPhone(phone.getId());
                     });
                 } else if (jsonObject.has("message")) {
                     holder.name.setVisibility(View.GONE);

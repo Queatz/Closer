@@ -161,7 +161,7 @@
     <string name="action_name_hint">Book a room</string>
     <string name="enter_a_name_and_intent">Enter a name and intent</string>
     <string name="remove_action">Remove this action</string>
-    <string name="remove_action_message">Remove "%1$s" from this group?</string>
+    <string name="remove_action_message">Remove \"%1$s\" from this group?</string>
     <string name="add_a_comment">Add a comment...</string>
     <string name="go">Go</string>
 </resources>

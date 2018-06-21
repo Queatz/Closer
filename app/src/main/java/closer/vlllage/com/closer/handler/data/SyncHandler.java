@@ -14,6 +14,7 @@ import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.BaseObject;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Group_;
@@ -60,9 +61,31 @@ public class SyncHandler extends PoolMember {
             sendCreateGroupMessage((GroupMessage) obj, onSyncResult);
         } else if (obj instanceof Event) {
             sendCreateEvent((Event) obj, onSyncResult);
+        } else if (obj instanceof Event) {
+            sendCreateGroupAction((GroupAction) obj, onSyncResult);
         } else {
             throw new RuntimeException("Unknown object type for sync: " + obj);
         }
+    }
+
+    private void sendCreateGroupAction(GroupAction groupAction, OnSyncResult onSyncResult) {
+        groupAction.setLocalOnly(true);
+        $(StoreHandler.class).getStore().box(GroupAction.class).put(groupAction);
+
+        $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).createGroupAction(
+                groupAction.getGroup(),
+                groupAction.getName(),
+                groupAction.getIntent()
+        ).subscribe(createResult -> {
+            if (createResult.success) {
+                groupAction.setId(createResult.id);
+                groupAction.setLocalOnly(false);
+                $(StoreHandler.class).getStore().box(GroupAction.class).put(groupAction);
+                if (onSyncResult != null) {
+                    onSyncResult.onSync(createResult.id);
+                }
+            }
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
     private void sendCreateEvent(Event event, OnSyncResult onSyncResult) {

@@ -11,6 +11,7 @@ import java.util.Date;
 
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -64,6 +65,11 @@ public class GroupMessageAttachmentHandler extends PoolMember {
     }
 
     public boolean groupActionReply(String groupId, GroupAction groupAction, String comment) {
+        if (groupAction.getIntent() == null) {
+            $(DefaultAlerts.class).thatDidntWork();
+            return false;
+        }
+
         JsonObject jsonObject = new JsonObject();
         JsonObject action = new JsonObject();
         action.add("intent", new JsonPrimitive(groupAction.getIntent()));

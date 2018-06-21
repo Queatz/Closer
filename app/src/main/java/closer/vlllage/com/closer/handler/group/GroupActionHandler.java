@@ -14,6 +14,8 @@ import android.widget.TextView;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.FeatureType;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
@@ -67,10 +69,11 @@ public class GroupActionHandler extends PoolMember {
                         .setMessage($(ResourcesHandler.class).getResources().getString(R.string.remove_action_message, groupAction.getName()))
                         .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.remove_action))
                         .setPositiveButtonCallback(alertResult -> {
-    //   todo         $(ApiHandler.class).removeGroupAction(groupAction);
-                            // todo on success ->
-                            $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction);
-                        })
+                    $(ApiHandler.class).removeGroupAction(groupAction.getId()).subscribe(
+                            successResult -> $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction),
+                            error -> $(DefaultAlerts.class).thatDidntWork()
+                    );
+                    })
                 .show();
             }
         });
@@ -249,9 +252,7 @@ public class GroupActionHandler extends PoolMember {
         groupAction.setIntent(intent);
 
         $(StoreHandler.class).getStore().box(GroupAction.class).put(groupAction);
-
-        // TODO sync
-        // $(SyncHandler.class).sync(groupAction);
+        $(SyncHandler.class).sync(groupAction);
     }
 
     private static class AddToGroupModalModel {
