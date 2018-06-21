@@ -47,7 +47,19 @@ public class GroupActionHandler extends PoolMember {
                 false
         ));
 
-        groupActionAdapter = new GroupActionAdapter(this);
+        groupActionAdapter = new GroupActionAdapter(this, groupAction -> {
+            $(DefaultAlerts.class).message(groupAction.getName());
+        }, groupAction -> {
+            $(AlertHandler.class).make()
+                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.remove_action_message, groupAction.getName()))
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.remove_action))
+                    .setPositiveButtonCallback(alertResult -> {
+//   todo         $(ApiHandler.class).removeGroupAction(groupAction);
+                        // todo on success ->
+                        $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction);
+                    })
+            .show();
+        });
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (groupActionsDisposable != null) {
@@ -61,7 +73,7 @@ public class GroupActionHandler extends PoolMember {
                     .on(AndroidScheduler.mainThread())
                     .observer(groupActions -> {
                         boolean wasEmpty = groupActionAdapter.getItemCount() == 0;
-                        groupActionAdapter.setActions(groupActions);
+                        groupActionAdapter.setGroupActions(groupActions);
                         boolean isEmpty = groupActionAdapter.getItemCount() == 0;
                         if (isEmpty != wasEmpty) {
                             show(!isEmpty, true);

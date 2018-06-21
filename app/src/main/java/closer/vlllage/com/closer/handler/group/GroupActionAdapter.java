@@ -18,10 +18,17 @@ import closer.vlllage.com.closer.store.models.GroupAction;
 
 public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder> {
 
-    private List<GroupAction> actions = new ArrayList<>();
+    private List<GroupAction> groupActions = new ArrayList<>();
 
-    public GroupActionAdapter(PoolMember poolMember) {
+    private OnGroupActionClickListener onGroupActionClickListener;
+    private OnGroupActionLongClickListener onGroupActionLongClickListener;
+
+    public GroupActionAdapter(PoolMember poolMember,
+                              OnGroupActionClickListener onGroupActionClickListener,
+                              OnGroupActionLongClickListener onGroupActionLongClickListener) {
         super(poolMember);
+        this.onGroupActionClickListener = onGroupActionClickListener;
+        this.onGroupActionLongClickListener = onGroupActionLongClickListener;
     }
 
     @NonNull
@@ -33,16 +40,32 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
 
     @Override
     public void onBindViewHolder(@NonNull GroupActionViewHolder holder, int position) {
-        holder.actionName.setText(actions.get(position).getName());
+        GroupAction groupAction = groupActions.get(position);
+        holder.actionName.setText(groupActions.get(position).getName());
+        holder.actionName.setOnClickListener(view -> {
+            if (onGroupActionClickListener != null) {
+                onGroupActionClickListener.onGroupActionClick(groupAction);
+            }
+        });
+
+        holder.actionName.setOnLongClickListener(view -> {
+            if (onGroupActionLongClickListener != null) {
+                onGroupActionLongClickListener.onGroupActionLongClick(groupAction);
+                return true;
+            }
+
+            return false;
+        });
     }
 
     @Override
     public int getItemCount() {
-        return actions.size();
+        return groupActions.size();
     }
 
-    public void setActions(List<GroupAction> actions) {
-        this.actions = actions;
+    public void setGroupActions(List<GroupAction> groupActions) {
+        this.groupActions = groupActions;
+        notifyDataSetChanged();
     }
 
     class GroupActionViewHolder extends RecyclerView.ViewHolder {
@@ -53,5 +76,13 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
             super(itemView);
             actionName = itemView.findViewById(R.id.actionName);
         }
+    }
+
+    public interface OnGroupActionClickListener {
+        void onGroupActionClick(GroupAction groupAction);
+    }
+
+    public interface OnGroupActionLongClickListener {
+        void onGroupActionLongClick(GroupAction groupAction);
     }
 }
