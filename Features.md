@@ -17,7 +17,6 @@ Explain how I would use Closer for 25 different scenarios - then make videos
     [.] (TOP) open direct messages with that person
 
  [ ] View actions
-    [X] (TOP) RecyclerView across top of group
     [.] Last item is + Add an action (if phone number is verified / FeatureHandler)
         [ ] Action name
         [ ] Action hint

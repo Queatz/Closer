@@ -11,4 +11,5 @@
     <dimen name="physicalGroupIcon">24dp</dimen>
     <dimen name="feedPeakHeight">84dp</dimen>
     <dimen name="elevation">4dp</dimen>
+    <dimen name="groupActionHeight">28dp</dimen>
 </resources>

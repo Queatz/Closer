@@ -6,6 +6,7 @@ import io.objectbox.annotation.Entity;
 public class GroupAction extends BaseObject {
     private String group;
     private String name;
+    private String intent;
 
     public String getGroup() {
         return group;
@@ -22,6 +23,15 @@ public class GroupAction extends BaseObject {
 
     public GroupAction setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getIntent() {
+        return intent;
+    }
+
+    public GroupAction setIntent(String intent) {
+        this.intent = intent;
         return this;
     }
 }

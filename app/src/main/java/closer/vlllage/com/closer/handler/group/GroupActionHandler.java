@@ -4,14 +4,23 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 
+import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
+import closer.vlllage.com.closer.handler.helpers.AlertHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
@@ -55,7 +64,7 @@ public class GroupActionHandler extends PoolMember {
                         groupActionAdapter.setActions(groupActions);
                         boolean isEmpty = groupActionAdapter.getItemCount() == 0;
                         if (isEmpty != wasEmpty) {
-                            show(!isEmpty);
+                            show(!isEmpty, true);
                         }
                     });
 
@@ -66,6 +75,10 @@ public class GroupActionHandler extends PoolMember {
     }
 
     public void show(boolean show) {
+        show(show, false);
+    }
+
+    private void show(boolean show, boolean immediate) {
         if (container == null) {
             return;
         }
@@ -75,14 +88,13 @@ public class GroupActionHandler extends PoolMember {
         }
 
         if (animator != null) {
-            animator.pause();
             animator.cancel();
         }
 
         if (show) {
-            animator = ValueAnimator.ofInt(0, initialHeight);
+            animator = ValueAnimator.ofInt(0, initialHeight == 0 ? (int) ($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionHeight) * 1.5f) : initialHeight);
             animator.setDuration(500);
-            animator.setStartDelay(1700);
+            animator.setStartDelay(immediate ? 0 : 1700);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.addUpdateListener(animation -> {
                 container.setMaxHeight((int) animation.getAnimatedValue());
@@ -145,5 +157,79 @@ public class GroupActionHandler extends PoolMember {
             });
             animator.start();
         }
+    }
+
+    public void addActionToGroup(Group group) {
+        $(AlertHandler.class).make()
+                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_an_action))
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_action))
+                .setLayoutResId(R.layout.add_action_modal)
+                .setOnAfterViewCreated((alertConfig, view) -> {
+                    TextView name = view.findViewById(R.id.name);
+                    TextView intent = view.findViewById(R.id.intent);
+                    AddToGroupModalModel model = new AddToGroupModalModel();
+                    alertConfig.setAlertResult(model);
+
+                    name.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            model.name = name.getText().toString();
+                        }
+                    });
+                    intent.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            model.intent = intent.getText().toString();
+                        }
+                    });
+                })
+                .setPositiveButtonCallback(alertResult -> {
+                    AddToGroupModalModel model = ((AddToGroupModalModel) alertResult);
+
+                    if ($(Val.class).isEmpty(model.name) || $(Val.class).isEmpty(model.name)) {
+                        $(DefaultAlerts.class).message(R.string.enter_a_name_and_intent);
+                        return;
+                    }
+
+                    createGroupAction(group, model.name, model.intent);
+                })
+                .show();
+    }
+
+    private void createGroupAction(Group group, String name, String intent) {
+        GroupAction groupAction = new GroupAction();
+        groupAction.setGroup(group.getId());
+        groupAction.setName(name);
+        groupAction.setIntent(intent);
+
+        $(StoreHandler.class).getStore().box(GroupAction.class).put(groupAction);
+
+        // TODO sync
+        // $(SyncHandler.class).sync(groupAction);
+    }
+
+    private static class AddToGroupModalModel {
+        String name;
+        String intent;
     }
 }

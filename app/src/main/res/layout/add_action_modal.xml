@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="@dimen/padDouble">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/action_name"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textColor="@color/black_50"
+        android:textAppearance="?android:textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/action_name_hint"
+        android:focusedByDefault="true"
+        android:imeOptions="actionNext"
+        android:paddingTop="16dp"
+        android:padding="8dp"
+        android:maxLength="48"
+        android:background="@null"
+        android:inputType="textShortMessage|textCapSentences"
+        android:maxLines="1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/action_intent"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textColor="@color/black_50"
+        android:textAppearance="?android:textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/intent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/action_intent_hint"
+        android:imeOptions="actionDone"
+        android:paddingTop="16dp"
+        android:padding="8dp"
+        android:maxLength="48"
+        android:background="@null"
+        android:inputType="textShortMessage"
+        android:maxLines="1" />
+
+</LinearLayout>
