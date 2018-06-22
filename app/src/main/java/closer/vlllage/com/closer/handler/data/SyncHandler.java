@@ -61,7 +61,7 @@ public class SyncHandler extends PoolMember {
             sendCreateGroupMessage((GroupMessage) obj, onSyncResult);
         } else if (obj instanceof Event) {
             sendCreateEvent((Event) obj, onSyncResult);
-        } else if (obj instanceof Event) {
+        } else if (obj instanceof GroupAction) {
             sendCreateGroupAction((GroupAction) obj, onSyncResult);
         } else {
             throw new RuntimeException("Unknown object type for sync: " + obj);

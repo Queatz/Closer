@@ -144,7 +144,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     holder.action.setVisibility(View.VISIBLE);
                     holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.reply));
                     holder.action.setOnClickListener(view -> {
-                        $(PhoneMessagesHandler.class).openMessagesWithPhone(phone.getId());
+                        $(PhoneMessagesHandler.class).openMessagesWithPhone(phone.getId(), contactName, comment);
                     });
                 } else if (jsonObject.has("message")) {
                     holder.name.setVisibility(View.GONE);

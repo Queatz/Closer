@@ -51,6 +51,12 @@ import closer.vlllage.com.closer.store.models.Suggestion;
 public class MapSlideFragment extends PoolFragment {
 
     private boolean locationPermissionWasDenied;
+    private Runnable pendingRunnable;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -215,8 +221,11 @@ public class MapSlideFragment extends PoolFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if (pendingRunnable != null) {
+            pendingRunnable.run();
+            pendingRunnable = null;
+        }
     }
 
     @Override
@@ -280,6 +289,14 @@ public class MapSlideFragment extends PoolFragment {
         $(IntentHandler.class).onNewIntent(intent);
         if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction())) {
             $(FeedHandler.class).hide();
+        }
+    }
+
+    public void post(Runnable runnable) {
+        if (isAdded()) {
+            runnable.run();
+        } else {
+            pendingRunnable = runnable;
         }
     }
 }

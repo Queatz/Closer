@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.FeatureType;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
@@ -98,6 +99,8 @@ public class GroupActionHandler extends PoolMember {
                     });
 
             $(DisposableHandler.class).add(groupActionsDisposable);
+
+            $(RefreshHandler.class).refreshGroupActions(group.getId());
         }));
 
         actionRecyclerView.setAdapter(groupActionAdapter);

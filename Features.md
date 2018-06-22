@@ -27,6 +27,9 @@ Explain how I would use Closer for 25 different scenarios - then make videos
     [ ] Write a message
     [ ] Post
 
+ [ ] Hide Group Actions when selecting contacts
+    [ ] Create HideGroup obj .showAll() .hideAll()
+
  [ ] Order group actions by use
         Store hits on backend, respond with them in priority order
         Save position on frontend, order by position

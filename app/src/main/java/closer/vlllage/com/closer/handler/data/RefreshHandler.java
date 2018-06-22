@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import closer.vlllage.com.closer.api.models.EventResult;
+import closer.vlllage.com.closer.api.models.GroupActionResult;
 import closer.vlllage.com.closer.api.models.GroupContactResult;
 import closer.vlllage.com.closer.api.models.GroupInviteResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
@@ -24,6 +25,8 @@ import closer.vlllage.com.closer.store.models.BaseObject;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupAction;
+import closer.vlllage.com.closer.store.models.GroupAction_;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupInvite;
@@ -80,6 +83,22 @@ public class RefreshHandler extends PoolMember {
 
         $(DisposableHandler.class).add($(ApiHandler.class).myMessages(latLng)
                 .subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
+    public void refreshGroupActions(String groupId) {
+        $(DisposableHandler.class).add($(ApiHandler.class).getGroupActions(groupId).subscribe(groupActionResults -> {
+            QueryBuilder<GroupAction> removeQuery = $(StoreHandler.class).getStore().box(GroupAction.class).query()
+                    .equal(GroupAction_.group, groupId);
+
+            for (GroupActionResult groupActionResult : groupActionResults) {
+                removeQuery.notEqual(GroupAction_.id, groupActionResult.id);
+            }
+
+            long[] removeIds = removeQuery.build().findIds();
+            $(StoreHandler.class).getStore().box(GroupAction.class).remove(removeIds);
+
+            handleFullListResult(groupActionResults, GroupAction.class, GroupAction_.id, false, GroupActionResult::from, GroupActionResult::updateFrom);
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
     private void handleMessages(final List<GroupMessageResult> messages) {

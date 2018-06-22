@@ -4,6 +4,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.EventResult;
+import closer.vlllage.com.closer.api.models.GroupActionResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
@@ -112,7 +113,10 @@ public interface Backend {
     Observable<SuccessResult> removeGroupAction(@Path("id") String groupActionId);
 
     @POST("action")
-    Observable<CreateResult> createGroupAction(@Path("group") String groupId, @Path("name") String groupActionName, @Path("intent") String groupActionIntent);
+    Observable<CreateResult> createGroupAction(@Query("group") String groupId, @Query("name") String groupActionName, @Query("intent") String groupActionIntent);
+
+    @GET("group/{id}/actions")
+    Observable<List<GroupActionResult>> getGroupActions(@Path("id") String groupId);
 
     // Event
 

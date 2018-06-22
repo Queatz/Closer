@@ -1,6 +1,9 @@
 package closer.vlllage.com.closer.handler.map;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
@@ -14,6 +17,9 @@ import closer.vlllage.com.closer.store.models.Suggestion;
 import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_EVENT_ID;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_LAT_LNG;
+import static closer.vlllage.com.closer.MapsActivity.EXTRA_NAME;
+import static closer.vlllage.com.closer.MapsActivity.EXTRA_PHONE;
+import static closer.vlllage.com.closer.MapsActivity.EXTRA_STATUS;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_SUGGESTION;
 
 public class MapActivityHandler extends PoolMember {
@@ -50,6 +56,28 @@ public class MapActivityHandler extends PoolMember {
                 group.getLongitude().floatValue()
         });
         intent.putExtra(EXTRA_GROUP_ID, group.getId());
+
+        $(ActivityHandler.class).getActivity().startActivity(intent);
+    }
+
+    public void replyToPhone(String phoneId, String name, String status, @Nullable LatLng latLng) {
+        Intent intent = new Intent($(ActivityHandler.class).getActivity(), MapsActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+
+        if (latLng != null) {
+            intent.putExtra(EXTRA_LAT_LNG, new float[]{
+                    (float) latLng.latitude,
+                    (float) latLng.longitude
+            });
+        }
+
+        name = name.isEmpty() ?
+                $(ResourcesHandler.class).getResources().getString(R.string.app_name) :
+                name;
+
+        intent.putExtra(EXTRA_NAME, name);
+        intent.putExtra(EXTRA_STATUS, status);
+        intent.putExtra(EXTRA_PHONE, phoneId);
 
         $(ActivityHandler.class).getActivity().startActivity(intent);
     }

@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 import closer.vlllage.com.closer.api.ApiService;
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.EventResult;
+import closer.vlllage.com.closer.api.models.GroupActionResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
@@ -132,6 +133,10 @@ public class ApiHandler extends PoolMember {
 
     public Observable<CreateResult> createGroupAction(String groupId, String name, String intent) {
         return uiThread(api.getBackend().createGroupAction(groupId, name, intent));
+    }
+
+    public Observable<List<GroupActionResult>> getGroupActions(String groupId) {
+        return uiThread(api.getBackend().getGroupActions(groupId));
     }
 
     public Observable<SuccessResult> cancelInvite(String groupId, String groupInviteId) {

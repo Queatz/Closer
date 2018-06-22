@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.OutboundHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.ui.AnimationDuration;
 
@@ -88,8 +89,7 @@ public class ReplyLayoutHandler extends PoolMember {
     public void replyTo(MapBubble mapBubble) {
         replyingToMapBubble = mapBubble;
 
-        replyLayoutName.setText(replyingToMapBubble.getName().isEmpty() ?
-            $(ResourcesHandler.class).getResources().getString(R.string.app_name) : replyingToMapBubble.getName());
+        replyLayoutName.setText($(Val.class).of(replyingToMapBubble.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
 
         replyLayoutStatus.setText(replyingToMapBubble.getStatus());
 

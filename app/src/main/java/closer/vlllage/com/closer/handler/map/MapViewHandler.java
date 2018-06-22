@@ -17,10 +17,11 @@ public class MapViewHandler extends PoolMember {
     }
 
     public boolean onBackPressed() {
-        return mapSlideFragment.onBackPressed();
+        mapSlideFragment.post(() -> mapSlideFragment.onBackPressed());
+        return true;
     }
 
     public void handleIntent(Intent intent) {
-        mapSlideFragment.handleIntent(intent);
+        mapSlideFragment.post(() -> mapSlideFragment.handleIntent(intent));
     }
 }
