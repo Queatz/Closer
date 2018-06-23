@@ -49,10 +49,10 @@ public class MyGroupsLayoutHandler extends PoolMember {
 
         List<GroupActionBarButton> endActions = new ArrayList<>();
         endActions.add(new GroupActionBarButton(
-                $(ResourcesHandler.class).getResources().getString(R.string.add_new_group),
+                $(ResourcesHandler.class).getResources().getString(R.string.add_new_private_group),
                 view -> $(AlertHandler.class).make()
                                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_group))
-                                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.create_a_new_group))
+                                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_new_private_group))
                                 .setLayoutResId(R.layout.create_group_modal)
                                 .setTextView(R.id.input, this::createGroup)
                                 .show(),

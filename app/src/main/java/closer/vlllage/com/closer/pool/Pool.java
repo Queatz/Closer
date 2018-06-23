@@ -8,6 +8,12 @@ public class Pool {
 
     private final Map<Class, PoolMember> members = new HashMap<>();
 
+    Pool() {}
+
+    public static TempPool tempPool() {
+        return new TempPool();
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends PoolMember> T $(Class<T> member) {
         if (!members.containsKey(member)) {

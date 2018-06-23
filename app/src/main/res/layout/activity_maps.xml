@@ -87,9 +87,9 @@
                     android:layout_marginBottom="16dp"
                     android:padding="16dp"
                     android:elevation="8dp"
-                    android:src="@drawable/ic_edit_black_24dp"
+                    android:src="@drawable/ic_search_black_24dp"
                     android:tint="@android:color/white"
-                    android:background="@drawable/clickable_red" />
+                    android:background="@drawable/clickable_green_light" />
 
             </LinearLayout>
 
@@ -103,24 +103,6 @@
 
         </LinearLayout>
     </RelativeLayout>
-
-    <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
-        android:id="@+id/areaChat"
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/padDouble"
-        app:maxWidth="360dp"
-        android:paddingLeft="@dimen/padDouble"
-        android:paddingTop="@dimen/pad"
-        android:paddingRight="@dimen/padDouble"
-        android:paddingBottom="@dimen/padDouble"
-        android:elevation="8dp"
-        android:background="@drawable/clickable_blue_light_8dp">
-
-        <include layout="@layout/chat_area" />
-
-    </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
 
     <closer.vlllage.com.closer.ui.FloatingRecyclerView
         android:id="@+id/feed"

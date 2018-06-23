@@ -15,7 +15,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.ArrayList;
 import java.util.List;
 
-import closer.vlllage.com.closer.ChatAreaHandler;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
@@ -43,6 +42,7 @@ import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler;
 import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
@@ -208,13 +208,12 @@ public class MapSlideFragment extends PoolFragment {
             $(AccountHandler.class).updateStatus($(AccountHandler.class).getStatus());
         }
 
-        view.findViewById(R.id.actionButton).setOnClickListener(actionButton -> {});
+        view.findViewById(R.id.actionButton).setOnClickListener(actionButton -> $(SearchActivityHandler.class).show(actionButton));
 
         $(MyGroupsLayoutActionsHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
 
         $(EventBubbleHandler.class).attach();
         $(PhysicalGroupBubbleHandler.class).attach();
-        $(ChatAreaHandler.class).attach(view.findViewById(R.id.areaChat), view.findViewById(R.id.contentView));
         $(FeedHandler.class).attach(view.findViewById(R.id.feed));
 
         return view;

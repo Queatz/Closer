@@ -57,15 +57,17 @@ public class MapsActivity extends PoolActivity {
 
     @Override
     public void onBackPressed() {
-        if ($(MapViewHandler.class).onBackPressed()) {
-            return;
-        }
+        $(MapViewHandler.class).onBackPressed(result -> {
+            if (result) {
+                return;
+            }
 
-        if (!slideScreen.isExpose()) {
-            slideScreen.expose(true);
-            return;
-        }
+            if (!slideScreen.isExpose()) {
+                slideScreen.expose(true);
+                return;
+            }
 
-        super.onBackPressed();
+            super.onBackPressed();
+        });
     }
 }

@@ -17,8 +17,10 @@ public class DisposableHandler extends PoolMember {
     protected void onPoolEnd() {
         disposables.dispose();
         for(DataSubscription dataSubscription : dataSubscriptions) {
-            if (!dataSubscription.isCanceled()) {
+            if (!dataSubscription.isCanceled()) try {
                 dataSubscription.cancel();
+            } catch (NullPointerException ignored) {
+                // Objectbox NPE
             }
         }
         dataSubscriptions.clear();

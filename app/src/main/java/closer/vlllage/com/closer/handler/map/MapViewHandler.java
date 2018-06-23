@@ -16,12 +16,15 @@ public class MapViewHandler extends PoolMember {
         return mapSlideFragment;
     }
 
-    public boolean onBackPressed() {
-        mapSlideFragment.post(() -> mapSlideFragment.onBackPressed());
-        return true;
+    public void onBackPressed(OnBackPressedCallback callback) {
+        mapSlideFragment.post(() -> callback.onBackPressedResult(mapSlideFragment.onBackPressed()));
     }
 
     public void handleIntent(Intent intent) {
         mapSlideFragment.post(() -> mapSlideFragment.handleIntent(intent));
+    }
+
+    public interface OnBackPressedCallback {
+        void onBackPressedResult(boolean result);
     }
 }

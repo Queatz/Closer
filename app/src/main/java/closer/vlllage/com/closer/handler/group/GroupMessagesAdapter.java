@@ -91,19 +91,6 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         if (onMessageClickListener != null) {
             holder.itemView.setBackgroundResource(R.drawable.clickable_green_flat);
-//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-//            int pad = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad);
-//            params.bottomMargin = pad;
-//            params.leftMargin = pad;
-//            params.rightMargin = pad;
-//            holder.itemView.setPadding(
-//                    holder.itemView.getPaddingLeft(),
-//                    holder.itemView.getPaddingTop(),
-//                    holder.itemView.getPaddingRight(),
-//                    holder.itemView.getPaddingTop()
-//            );
-//            holder.itemView.setElevation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.elevation));
-
             holder.group.setVisibility(View.VISIBLE);
             Group group = getGroup(groupMessage.getTo());
 
@@ -138,7 +125,6 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                         holder.message.setVisibility(View.VISIBLE);
                         holder.message.setText(action.get("comment").getAsString());
                     }
-                    holder.itemView.setOnClickListener(null);
                     holder.action.setVisibility(View.GONE);
 
                     holder.action.setVisibility(View.VISIBLE);

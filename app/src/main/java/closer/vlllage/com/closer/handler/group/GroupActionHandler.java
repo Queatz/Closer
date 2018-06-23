@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,17 +11,14 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.FeatureHandler;
-import closer.vlllage.com.closer.handler.FeatureType;
-import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
-import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.search.GroupActionRecylerViewHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -36,8 +32,6 @@ import static java.lang.Math.max;
 
 public class GroupActionHandler extends PoolMember {
 
-    private GroupActionAdapter groupActionAdapter;
-    private RecyclerView actionRecyclerView;
     private MaxSizeFrameLayout container;
     private ValueAnimator animator;
     private int initialHeight;
@@ -45,39 +39,8 @@ public class GroupActionHandler extends PoolMember {
 
     public void attach(MaxSizeFrameLayout container, RecyclerView actionRecyclerView) {
         this.container = container;
-        this.actionRecyclerView = actionRecyclerView;
-        actionRecyclerView.setLayoutManager(new LinearLayoutManager(
-                $(ActivityHandler.class).getActivity(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-        ));
 
-        groupActionAdapter = new GroupActionAdapter(this, groupAction -> {
-            $(AlertHandler.class).make()
-                    .setLayoutResId(R.layout.comments_modal)
-                    .setTextView(R.id.input, comment -> {
-                        boolean success = $(GroupMessageAttachmentHandler.class).groupActionReply(groupAction.getGroup(), groupAction, comment);
-                        if (!success) {
-                            $(DefaultAlerts.class).thatDidntWork();
-                        }
-                    })
-                    .setTitle(groupAction.getName())
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.go))
-                    .show();
-        }, groupAction -> {
-            if ($(FeatureHandler.class).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
-                $(AlertHandler.class).make()
-                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.remove_action_message, groupAction.getName()))
-                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.remove_action))
-                        .setPositiveButtonCallback(alertResult -> {
-                    $(ApiHandler.class).removeGroupAction(groupAction.getId()).subscribe(
-                            successResult -> $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction),
-                            error -> $(DefaultAlerts.class).thatDidntWork()
-                    );
-                    })
-                .show();
-            }
-        });
+        $(GroupActionRecylerViewHandler.class).attach(actionRecyclerView);
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (groupActionsDisposable != null) {
@@ -90,9 +53,9 @@ public class GroupActionHandler extends PoolMember {
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .observer(groupActions -> {
-                        boolean wasEmpty = groupActionAdapter.getItemCount() == 0;
-                        groupActionAdapter.setGroupActions(groupActions);
-                        boolean isEmpty = groupActionAdapter.getItemCount() == 0;
+                        boolean wasEmpty = $(GroupActionRecylerViewHandler.class).getAdapter().getItemCount() == 0;
+                        $(GroupActionRecylerViewHandler.class).getAdapter().setGroupActions(groupActions);
+                        boolean isEmpty = $(GroupActionRecylerViewHandler.class).getAdapter().getItemCount() == 0;
                         if (isEmpty != wasEmpty) {
                             show(!isEmpty, true);
                         }
@@ -103,7 +66,6 @@ public class GroupActionHandler extends PoolMember {
             $(RefreshHandler.class).refreshGroupActions(group.getId());
         }));
 
-        actionRecyclerView.setAdapter(groupActionAdapter);
     }
 
     public void show(boolean show) {
@@ -115,7 +77,7 @@ public class GroupActionHandler extends PoolMember {
             return;
         }
 
-        if (groupActionAdapter != null && groupActionAdapter.getItemCount() == 0) {
+        if ($(GroupActionRecylerViewHandler.class).getAdapter() != null && $(GroupActionRecylerViewHandler.class).getAdapter().getItemCount() == 0) {
             show = false;
         }
 

@@ -25,8 +25,7 @@
     <string name="cancel">Cancel</string>
     <string name="enter_code">Enter the code…</string>
     <string name="verify_number">Verify number</string>
-    <string name="create_a_new_group">Add new group</string>
-    <string name="create_group">Add group</string>
+    <string name="create_group">Create group</string>
     <string name="create_public_group">Add public group</string>
     <string name="enter_group_name">Enter group name…</string>
     <string name="wait_for_it">Wait for it…</string>
@@ -46,7 +45,8 @@
     <string name="add_suggestion">Add suggestion</string>
     <string name="make_a_suggestion">Map a suggestion…</string>
     <string name="share_with">Share with…</string>
-    <string name="add_new_group">Create a new group</string>
+    <string name="add_new_private_group">Create a private group</string>
+    <string name="add_new_public_group">Create a public group</string>
     <string name="verify_your_number">Verify your number</string>
     <string name="not_found">Not found</string>
     <string name="invite">Invite</string>
