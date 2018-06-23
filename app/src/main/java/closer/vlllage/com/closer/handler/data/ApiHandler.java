@@ -139,6 +139,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().getGroupActions(groupId));
     }
 
+    public Observable<List<GroupActionResult>> getGroupActions(LatLng latLng) {
+        return uiThread(api.getBackend().getGroupActionsNearGeo($(LatLngStr.class).from(latLng)));
+    }
+
     public Observable<SuccessResult> cancelInvite(String groupId, String groupInviteId) {
         return uiThread(api.getBackend().cancelInvite(groupId, groupInviteId));
     }

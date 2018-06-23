@@ -118,6 +118,9 @@ public interface Backend {
     @GET("group/{id}/actions")
     Observable<List<GroupActionResult>> getGroupActions(@Path("id") String groupId);
 
+    @GET("action/{latLng}")
+    Observable<List<GroupActionResult>> getGroupActionsNearGeo(@Path("latLng") String latLng);
+
     // Event
 
     @GET("event")

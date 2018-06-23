@@ -6,24 +6,27 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.data.LocationHandler;
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.data.SyncHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
-import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
-import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Group_;
+import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
@@ -73,6 +76,10 @@ public class SearchHandler extends PoolMember {
                 .observer(this::setGroups));
 
         showGroupsForQuery("");
+
+        $(LocationHandler.class).getCurrentLocation(location -> {
+            $(RefreshHandler.class).refreshGroupActions(new LatLng(location.getLatitude(), location.getLongitude()));
+        });
     }
 
     public void openGroup(String groupId) {

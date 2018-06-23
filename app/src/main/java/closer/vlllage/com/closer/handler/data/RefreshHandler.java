@@ -101,6 +101,12 @@ public class RefreshHandler extends PoolMember {
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
+    public void refreshGroupActions(LatLng latLng) {
+        $(DisposableHandler.class).add($(ApiHandler.class).getGroupActions(latLng).subscribe(groupActionResults -> {
+            handleFullListResult(groupActionResults, GroupAction.class, GroupAction_.id, false, GroupActionResult::from, GroupActionResult::updateFrom);
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
     private void handleMessages(final List<GroupMessageResult> messages) {
         List<PhoneResult> phoneResults = new ArrayList<>();
         for (GroupMessageResult groupMessageResult : messages) {
