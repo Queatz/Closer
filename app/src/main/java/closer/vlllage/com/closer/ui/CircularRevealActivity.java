@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.pool.PoolActivity;
 public abstract class CircularRevealActivity extends PoolActivity {
     private Rect sourceBounds;
     private Runnable finishCallback;
+    private Animator finishAnimator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,15 +72,19 @@ public abstract class CircularRevealActivity extends PoolActivity {
             return;
         }
 
-        Animator animator = ViewAnimationUtils.createCircularReveal(findViewById(R.id.background),
+        if (finishAnimator != null && finishAnimator.isRunning()) {
+            return;
+        }
+
+        finishAnimator = ViewAnimationUtils.createCircularReveal(findViewById(R.id.background),
                 sourceBounds.centerX(),
                 sourceBounds.centerY(),
                 (float) Math.hypot(getWindow().getDecorView().getWidth(), getWindow().getDecorView().getHeight()),
                 0
         );
-        animator.setDuration(225);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.addListener(new Animator.AnimatorListener() {
+        finishAnimator.setDuration(225);
+        finishAnimator.setInterpolator(new DecelerateInterpolator());
+        finishAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
 
@@ -106,7 +111,7 @@ public abstract class CircularRevealActivity extends PoolActivity {
 
             }
         });
-        animator.start();
+        finishAnimator.start();
     }
 
     public void finish(Runnable callback) {

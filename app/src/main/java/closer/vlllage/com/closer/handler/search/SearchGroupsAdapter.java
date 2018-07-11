@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.search;
 
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     private OnGroupClickListener onGroupClickListener;
     private OnCreateGroupClickListener onCreateGroupClickListener;
     private String actionText;
+    private @LayoutRes int layoutResId = R.layout.search_groups_item;
 
     public SearchGroupsAdapter(PoolMember poolMember, OnGroupClickListener onGroupClickListener, OnCreateGroupClickListener onCreateGroupClickListener) {
         super(poolMember);
@@ -46,11 +48,16 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
         this.onCreateGroupClickListener = onCreateGroupClickListener;
     }
 
+    public SearchGroupsAdapter setLayoutResId(int layoutResId) {
+        this.layoutResId = layoutResId;
+        return this;
+    }
+
     @NonNull
     @Override
     public SearchGroupsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new SearchGroupsViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.search_groups_item, parent, false));
+                .inflate(layoutResId, parent, false));
     }
 
     @Override
@@ -78,7 +85,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             holder.about.setText(event != null ? $(EventDetailsHandler.class).formatEventDetails(event) :
                 $(ResourcesHandler.class).getResources().getString(R.string.event));
         } else {
-            holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open));
+            holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_group));
             holder.about.setText($(Val.class).of(group.getAbout()));
         }
         holder.itemView.setOnClickListener(view -> {

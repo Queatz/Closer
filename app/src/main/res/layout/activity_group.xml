@@ -42,7 +42,7 @@
             android:paddingBottom="4dp"
             tools:text="888 Friends"
             android:textAllCaps="true"
-            android:textColor="@color/white_75"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"

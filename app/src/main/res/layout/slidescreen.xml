@@ -4,4 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/slideScreen"
-    android:background="#10413d" />
+    android:background="@color/nothingness" />

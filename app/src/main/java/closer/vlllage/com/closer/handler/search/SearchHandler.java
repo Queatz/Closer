@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.handler.search;
 
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,13 +40,16 @@ public class SearchHandler extends PoolMember {
     public void attach(EditText searchGroups, RecyclerView groupsRecyclerView) {
         this.searchGroups = searchGroups;
         searchGroupsAdapter = new SearchGroupsAdapter(this, group -> this.openGroup(group.getId()), this::createGroup);
+        searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item);
 
         groupsRecyclerView.setAdapter(searchGroupsAdapter);
-        groupsRecyclerView.setLayoutManager(new LinearLayoutManager(
+        groupsRecyclerView.setLayoutManager(new GridLayoutManager(
                 groupsRecyclerView.getContext(),
-                LinearLayoutManager.VERTICAL,
-                false
+                2
         ));
+//        groupsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(
+//                2, StaggeredGridLayoutManager.VERTICAL
+//        ));
 
         searchGroups.addTextChangedListener(new TextWatcher() {
             @Override
