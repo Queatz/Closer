@@ -66,6 +66,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.create_group));
             holder.name.setText(createPublicGroupName);
             holder.about.setText($(ResourcesHandler.class).getResources().getString(R.string.add_new_public_group));
+            holder.actionRecyclerView.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(view -> {
                 if (onCreateGroupClickListener != null) {
                     onCreateGroupClickListener.onCreateGroupClicked(createPublicGroupName);
@@ -95,6 +96,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
         });
 
 
+        holder.actionRecyclerView.setVisibility(View.VISIBLE);
         holder.pool = tempPool();
         holder.pool.$(ApplicationHandler.class).setApp($(ApplicationHandler.class).getApp());
         holder.pool.$(ActivityHandler.class).setActivity($(ActivityHandler.class).getActivity());

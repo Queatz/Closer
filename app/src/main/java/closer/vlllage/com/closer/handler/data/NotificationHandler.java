@@ -177,6 +177,8 @@ public class NotificationHandler extends PoolMember {
 
         if (sound) {
             builder.setDefaults(Notification.DEFAULT_ALL);
+        } else {
+            builder.setDefaults(Notification.DEFAULT_LIGHTS);
         }
 
         if (remoteInput != null) {
