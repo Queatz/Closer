@@ -36,6 +36,7 @@ public class NotificationHandler extends PoolMember {
     public static final String KEY_TEXT_REPLY = "key_text_reply";
     public static final int NOTIFICATION_ID = 0;
     private static final int REQUEST_CODE_NOTIFICATION = 101;
+    private static final int REQUEST_CODE_NOTIFICATION_MUTE = 102;
     public static final String EXTRA_NOTIFICATION = "notification";
     public static final String EXTRA_MUTE = "mute";
 
@@ -203,7 +204,7 @@ public class NotificationHandler extends PoolMember {
 
         PendingIntent mutePendingIntent =
                 PendingIntent.getBroadcast(context,
-                        REQUEST_CODE_NOTIFICATION,
+                        REQUEST_CODE_NOTIFICATION_MUTE,
                         muteBackgroundIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
