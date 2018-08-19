@@ -18,7 +18,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
-import closer.vlllage.com.closer.handler.search.GroupActionRecylerViewHandler;
+import closer.vlllage.com.closer.handler.search.GroupActionRecyclerViewHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -40,7 +40,7 @@ public class GroupActionHandler extends PoolMember {
     public void attach(MaxSizeFrameLayout container, RecyclerView actionRecyclerView) {
         this.container = container;
 
-        $(GroupActionRecylerViewHandler.class).attach(actionRecyclerView);
+        $(GroupActionRecyclerViewHandler.class).attach(actionRecyclerView);
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (groupActionsDisposable != null) {
@@ -53,9 +53,9 @@ public class GroupActionHandler extends PoolMember {
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .observer(groupActions -> {
-                        boolean wasEmpty = $(GroupActionRecylerViewHandler.class).getAdapter().getItemCount() == 0;
-                        $(GroupActionRecylerViewHandler.class).getAdapter().setGroupActions(groupActions);
-                        boolean isEmpty = $(GroupActionRecylerViewHandler.class).getAdapter().getItemCount() == 0;
+                        boolean wasEmpty = $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0;
+                        $(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions);
+                        boolean isEmpty = $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0;
                         if (isEmpty != wasEmpty) {
                             show(!isEmpty, true);
                         }
@@ -77,7 +77,7 @@ public class GroupActionHandler extends PoolMember {
             return;
         }
 
-        if ($(GroupActionRecylerViewHandler.class).getAdapter() != null && $(GroupActionRecylerViewHandler.class).getAdapter().getItemCount() == 0) {
+        if ($(GroupActionRecyclerViewHandler.class).getAdapter() != null && $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0) {
             show = false;
         }
 

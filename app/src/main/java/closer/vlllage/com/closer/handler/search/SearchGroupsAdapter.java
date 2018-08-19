@@ -101,15 +101,15 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
         holder.pool.$(ApplicationHandler.class).setApp($(ApplicationHandler.class).getApp());
         holder.pool.$(ActivityHandler.class).setActivity($(ActivityHandler.class).getActivity());
         holder.pool.$(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
-        holder.pool.$(GroupActionRecylerViewHandler.class).attach(holder.actionRecyclerView);
-        holder.pool.$(GroupActionRecylerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(SearchHandler.class).openGroup(groupAction.getGroup()));
+        holder.pool.$(GroupActionRecyclerViewHandler.class).attach(holder.actionRecyclerView);
+        holder.pool.$(GroupActionRecyclerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(SearchHandler.class).openGroup(groupAction.getGroup()));
         holder.pool.$(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupAction.class).query()
                 .equal(GroupAction_.group, group.getId())
                 .build().subscribe().single()
                 .on(AndroidScheduler.mainThread())
                 .observer(groupActions -> {
-                    holder.pool.$(GroupActionRecylerViewHandler.class).getRecyclerView().setVisibility(groupActions.isEmpty() ? View.GONE : View.VISIBLE);
-                    holder.pool.$(GroupActionRecylerViewHandler.class).getAdapter().setGroupActions(groupActions);
+                    holder.pool.$(GroupActionRecyclerViewHandler.class).getRecyclerView().setVisibility(groupActions.isEmpty() ? View.GONE : View.VISIBLE);
+                    holder.pool.$(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions);
                 }));
     }
 

@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.map;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
     private ViewGroup myGroupsLayout;
     private MyGroupsAdapter myGroupsAdapter;
     private RecyclerView myGroupsRecyclerView;
+    private View containerView;
 
     public void attach(ViewGroup myGroupsLayout) {
         this.myGroupsLayout = myGroupsLayout;
@@ -97,11 +99,19 @@ public class MyGroupsLayoutHandler extends PoolMember {
     }
 
     public void showBottomPadding(boolean showBottomPadding) {
-        myGroupsRecyclerView.setPadding(
-                myGroupsRecyclerView.getPaddingLeft(),
-                myGroupsRecyclerView.getPaddingTop(),
-                myGroupsRecyclerView.getPaddingRight(),
-                $(ResourcesHandler.class).getResources().getDimensionPixelSize(showBottomPadding ? R.dimen.feedPeakHeight : R.dimen.pad)
+        containerView.setPadding(
+                containerView.getPaddingLeft(),
+                containerView.getPaddingTop(),
+                containerView.getPaddingRight(),
+                showBottomPadding ? $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight) : 0
         );
+    }
+
+    public void setContainerView(View containerView) {
+        this.containerView = containerView;
+    }
+
+    public View getContainer() {
+        return containerView;
     }
 }

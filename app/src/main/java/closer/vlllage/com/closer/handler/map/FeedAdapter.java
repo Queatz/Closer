@@ -17,13 +17,6 @@ public class FeedAdapter extends GroupMessagesAdapter {
         super(poolMember);
     }
 
-    @NonNull
-    @Override
-    public GroupMessagesAdapter.GroupMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        GroupMessageViewHolder viewHolder = super.onCreateViewHolder(parent, viewType);
-        return viewHolder;
-    }
-
     @Override
     public void onBindViewHolder(@NonNull GroupMessagesAdapter.GroupMessageViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
@@ -37,6 +30,7 @@ public class FeedAdapter extends GroupMessagesAdapter {
         if (headerViewHolder == null) {
             return;
         }
+
         int pad = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight);
         ViewGroup.MarginLayoutParams params = ((ViewGroup.MarginLayoutParams) headerViewHolder.itemView.getLayoutParams());
         params.topMargin = (headerHeightCallback == null ? 0 : headerHeightCallback.getHeaderHeight() - pad);

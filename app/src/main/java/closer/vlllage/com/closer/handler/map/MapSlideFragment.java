@@ -48,6 +48,7 @@ import closer.vlllage.com.closer.pool.PoolFragment;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Suggestion;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class MapSlideFragment extends PoolFragment {
 
@@ -185,11 +186,14 @@ public class MapSlideFragment extends PoolFragment {
         $(ReplyLayoutHandler.class).attach(view.findViewById(R.id.replyLayout));
         $(StatusLayoutHandler.class).attach(view.findViewById(R.id.myStatusLayout));
         $(MyGroupsLayoutHandler.class).attach(view.findViewById(R.id.myGroupsLayout));
+        $(MyGroupsLayoutHandler.class).setContainerView(view.findViewById(R.id.bottomContainer));
+        $(GroupActionsHandler.class).attach(view.findViewById(R.id.groupActionsRecyclerView));
 
         $(ViewAttributeHandler.class).linkPadding(view.findViewById(R.id.contentAboveView), view.findViewById(R.id.contentView));
 
         $(KeyboardVisibilityHandler.class).attach(view.findViewById(R.id.contentView));
         $(DisposableHandler.class).add($(KeyboardVisibilityHandler.class).isKeyboardVisible()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isVisible -> $(MyGroupsLayoutHandler.class).showBottomPadding(!isVisible), Throwable::printStackTrace));
 
         boolean verifiedNumber = $(PersistenceHandler.class).getIsVerified();
