@@ -145,9 +145,9 @@ public class GroupActivity extends CircularRevealActivity {
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (group.isPublic()) {
                 if (group.hasEvent()) {
-                    findViewById(R.id.backgroundColor).setBackgroundResource(R.color.red);
+                    findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_red_rounded);
                 } else if (group.isPhysical()) {
-                    findViewById(R.id.backgroundColor).setBackgroundResource(R.color.purple);
+                    findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_purple_rounded);
                     eventToolbar.setVisibility(View.VISIBLE);
                     actionShare.setVisibility(View.GONE);
                     actionCancel.setVisibility(View.GONE);
@@ -170,7 +170,7 @@ public class GroupActivity extends CircularRevealActivity {
                         }
                     }
                 } else {
-                    findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
+                    findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_green_rounded);
                 }
 
                 setGroupBackground(group);

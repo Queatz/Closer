@@ -20,6 +20,7 @@ public class MiniWindowHandler extends PoolMember {
             if (abs(miniWindowHeight - params.matchConstraintMaxHeight) < 10) {
                 int startMaxHeight = params.matchConstraintMaxHeight;
                 int startTopMargin = params.topMargin;
+                int maxHeight = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad);
 
                 Animation animation = new Animation() {
                     @Override
@@ -30,7 +31,7 @@ public class MiniWindowHandler extends PoolMember {
                     @Override
                     protected void applyTransformation(float interpolatedTime, Transformation t) {
                         params.matchConstraintMaxHeight = (int) mix(startMaxHeight, miniWindowHeight * 3, interpolatedTime);
-                        params.topMargin = (int) mix(startTopMargin, 0, interpolatedTime);
+                        params.topMargin = (int) mix(startTopMargin, maxHeight, interpolatedTime);
                         windowView.setLayoutParams(params);
                     }
                 };
