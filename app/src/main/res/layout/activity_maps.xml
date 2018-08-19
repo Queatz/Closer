@@ -117,10 +117,12 @@
                         android:id="@+id/groupActionsRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:elevation="2dp"
+                        android:elevation="8dp"
                         android:clipChildren="false"
                         android:clipToPadding="false"
-                        android:padding="@dimen/pad"
+                        android:paddingRight="@dimen/pad"
+                        android:paddingTop="@dimen/pad"
+                        android:paddingBottom="@dimen/pad"
                         android:background="@color/green" />
 
                 </LinearLayout>
@@ -153,6 +155,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -91,6 +91,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         if (onMessageClickListener != null) {
             holder.itemView.setBackgroundResource(R.drawable.clickable_green_flat);
+            holder.itemView.setElevation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.padDouble));
             holder.group.setVisibility(View.VISIBLE);
             Group group = getGroup(groupMessage.getTo());
 
