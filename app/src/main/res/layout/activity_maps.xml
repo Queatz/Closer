@@ -1,14 +1,18 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="8dp"
     android:background="@color/dark">
 
     <closer.vlllage.com.closer.ui.ScrollStopper
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
 
         <fragment
             android:id="@+id/map"
@@ -23,18 +27,20 @@
         android:id="@+id/bubbleMapLayer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:isScrollContainer="true" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:scaleType="fitXY"
-        android:elevation="4dp" />
 
     <RelativeLayout
         android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:fitsSystemWindows="true">
 
         <TextView
@@ -58,8 +64,6 @@
             android:drawablePadding="@dimen/pad"
             android:drawableTint="@color/red"
             android:text="@string/network_down" />
-
-        <include layout="@layout/reply_layout" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,11 +108,29 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <closer.vlllage.com.closer.ui.FloatingRecyclerView
-        android:id="@+id/feed"
-        android:elevation="16dp"
+    <RelativeLayout
+        android:id="@+id/contentAboveView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="16dp">
+
+        <include layout="@layout/reply_layout" />
+
+    </RelativeLayout>
+
+    <closer.vlllage.com.closer.ui.FloatingRecyclerView
+        android:id="@+id/feed"
+        android:elevation="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:background="@android:color/transparent"/>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

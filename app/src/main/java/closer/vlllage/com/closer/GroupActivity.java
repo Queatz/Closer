@@ -52,6 +52,7 @@ import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
+import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
 import io.objectbox.query.QueryBuilder;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
 
@@ -73,6 +74,7 @@ public class GroupActivity extends CircularRevealActivity {
     private Button actionCancel;
     private Button actionSettingsSetName;
     private Button actionSettingsSetBackground;
+    private MaxSizeFrameLayout actionFrameLayout;
     private EditText replyMessage;
     private RecyclerView messagesRecyclerView;
     private RecyclerView shareWithRecyclerView;
@@ -104,6 +106,7 @@ public class GroupActivity extends CircularRevealActivity {
         actionCancel = findViewById(R.id.actionCancel);
         actionSettingsSetName = findViewById(R.id.actionSettingsSetName);
         actionSettingsSetBackground = findViewById(R.id.actionSettingsSetBackground);
+        actionFrameLayout = findViewById(R.id.actionFrameLayout);
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
@@ -125,7 +128,7 @@ public class GroupActivity extends CircularRevealActivity {
         }
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
-        $(GroupActionHandler.class).attach(findViewById(R.id.actionFrameLayout), findViewById(R.id.actionRecyclerView));
+        $(GroupActionHandler.class).attach(actionFrameLayout, findViewById(R.id.actionRecyclerView));
         $(MiniWindowHandler.class).attach(groupName, findViewById(R.id.backgroundColor));
 
         findViewById(R.id.settingsButton).setOnClickListener(view -> {
@@ -333,6 +336,7 @@ public class GroupActivity extends CircularRevealActivity {
             searchContacts.setVisibility(View.GONE);
             contactsRecyclerView.setVisibility(View.GONE);
             showPhoneContactsButton.setVisibility(View.GONE);
+            actionFrameLayout.setVisibility(View.VISIBLE);
         } else {
             replyMessage.setVisibility(View.GONE);
             sendButton.setVisibility(View.GONE);
@@ -340,6 +344,7 @@ public class GroupActivity extends CircularRevealActivity {
             messagesRecyclerView.setVisibility(View.GONE);
             searchContacts.setVisibility(View.VISIBLE);
             contactsRecyclerView.setVisibility(View.VISIBLE);
+            actionFrameLayout.setVisibility(View.GONE);
 
             if(!$(PermissionHandler.class).has(READ_CONTACTS) && $(GroupContactsHandler.class).isEmpty()) {
                 showPhoneContactsButton.setVisibility(View.VISIBLE);

@@ -42,6 +42,7 @@ import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler;
 import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.helpers.ViewAttributeHandler;
 import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
 import closer.vlllage.com.closer.store.models.Event;
@@ -129,6 +130,17 @@ public class MapSlideFragment extends PoolFragment {
                                 $(PhysicalGroupHandler.class).createPhysicalGroup(menuBubble.getLatLng());
                                 break;
                             case 1:
+                                $(ShareHandler.class).shareTo(menuBubble.getLatLng(), group -> {
+                                    boolean success = $(GroupMessageAttachmentHandler.class).shareLocation(menuBubble.getLatLng(), group);
+
+                                    if (!success) {
+                                        $(DefaultAlerts.class).thatDidntWork();
+                                    } else {
+                                        $(GroupActivityTransitionHandler.class).showGroupMessages(menuBubble.getView(), group.getId());
+                                    }
+                                });
+                                break;
+                            case 2:
                                 $(EventHandler.class).createNewEvent(menuBubble.getLatLng());
                                 break;
                         }
@@ -137,6 +149,7 @@ public class MapSlideFragment extends PoolFragment {
                     $(MapBubbleMenuView.class)
                             .getMenuAdapter(menuBubble)
                             .setMenuItems(getString(R.string.talk_here),
+                                    getString(R.string.share_this_location),
                                     getString(R.string.add_event_here));
                 }
             }
@@ -148,17 +161,6 @@ public class MapSlideFragment extends PoolFragment {
             menuBubble.setOnItemClickListener(position -> {
                 switch (position) {
                     case 0:
-                        $(ShareHandler.class).shareTo(menuBubble.getLatLng(), group -> {
-                            boolean success = $(GroupMessageAttachmentHandler.class).shareLocation(menuBubble.getLatLng(), group);
-
-                            if (!success) {
-                                $(DefaultAlerts.class).thatDidntWork();
-                            } else {
-                                $(GroupActivityTransitionHandler.class).showGroupMessages(menuBubble.getView(), group.getId());
-                            }
-                        });
-                        break;
-                    case 1:
                         $(SuggestionHandler.class).createNewSuggestion(menuBubble.getLatLng());
                         break;
                 }
@@ -166,8 +168,7 @@ public class MapSlideFragment extends PoolFragment {
             $(BubbleHandler.class).add(menuBubble);
             $(MapBubbleMenuView.class)
                     .getMenuAdapter(menuBubble)
-                    .setMenuItems(getString(R.string.share_this_location),
-                            getString(R.string.add_suggestion_here));
+                    .setMenuItems(getString(R.string.add_suggestion_here));
         });
         $(MapHandler.class).setOnMapIdleListener(latLng -> {
             $(DisposableHandler.class).add($(ApiHandler.class).getPhonesNear(latLng).map(this::mapBubbleFrom).subscribe(mapBubbles ->
@@ -184,6 +185,8 @@ public class MapSlideFragment extends PoolFragment {
         $(ReplyLayoutHandler.class).attach(view.findViewById(R.id.replyLayout));
         $(StatusLayoutHandler.class).attach(view.findViewById(R.id.myStatusLayout));
         $(MyGroupsLayoutHandler.class).attach(view.findViewById(R.id.myGroupsLayout));
+
+        $(ViewAttributeHandler.class).linkPadding(view.findViewById(R.id.contentAboveView), view.findViewById(R.id.contentView));
 
         $(KeyboardVisibilityHandler.class).attach(view.findViewById(R.id.contentView));
         $(DisposableHandler.class).add($(KeyboardVisibilityHandler.class).isKeyboardVisible()
