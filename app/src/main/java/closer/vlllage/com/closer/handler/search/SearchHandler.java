@@ -22,9 +22,12 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupAction;
+import closer.vlllage.com.closer.store.models.GroupAction_;
 import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
@@ -115,7 +118,7 @@ public class SearchHandler extends PoolMember {
     }
 
     private void showGroupsForQuery(String searchQuery) {
-        this.searchQuery = searchQuery;
+        this.searchQuery = searchQuery.toLowerCase();
         searchGroupsAdapter.setCreatePublicGroupName(searchQuery.trim().isEmpty() ? null : searchQuery);
 
         if (this.groupsCache != null) {
@@ -129,12 +132,27 @@ public class SearchHandler extends PoolMember {
         List<Group> groups = new ArrayList<>();
         for(Group group : allGroups) {
             if (group.getName() != null) {
-                if (group.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
+                if (group.getName().toLowerCase().contains(searchQuery) ||
+                    $(Val.class).of(group.getAbout(), "").toLowerCase().contains(searchQuery) ||
+                        groupActionNamesContains(group, searchQuery)) {
                     groups.add(group);
                 }
             }
         }
 
         searchGroupsAdapter.setGroups(groups);
+    }
+
+    private boolean groupActionNamesContains(Group group, String searchQuery) {
+        List<GroupAction> groupActions = $(StoreHandler.class).getStore().box(GroupAction.class).query()
+                .equal(GroupAction_.group, group.getId()).build().find();
+
+        for (GroupAction groupAction : groupActions) {
+            if (groupAction.getName().toLowerCase().contains(searchQuery)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
