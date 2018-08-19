@@ -1,0 +1,44 @@
+
+Closer - Privacy Policy
+
+Your information shared with Closer
+===================================
+
+The following information is shared with Closer:
+
+1. Your phone's physical location (if you allow)
+2. Any information you enter into Closer, such as creating Suggestions,
+    Events, Groups, or updating your status
+3. Your phone number (if you enter it into Closer)
+4. Your presence in Closer (when you open the app)
+
+How Closer uses this information:
+
+Closer uses the above information to support the various features the app
+    provides.  This information remains on Closer servers, and various
+    information you enter into Closer is shared with other Closer users.
+
+
+Your information shared with other Closer users
+===============================================
+
+The following information is shared with all users of Closer:
+
+1. Suggestions you set
+2. Public groups you set
+3. Public group messages you send
+4. Public events you set
+5. The status you set for yourself (if you enable it)
+6. Your phone's physical location (if you enable it)
+
+The following information is shared with select Closer users:
+
+1. Private groups you set
+2. Private group messages you send
+3. Private direct messages you send
+4. Private group invites you send
+
+A copy of most information is stored on your phone.
+
+
+Effective May 11th, 2018.
