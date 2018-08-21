@@ -13,6 +13,7 @@ import static java.lang.Math.abs;
 
 public class MiniWindowHandler extends PoolMember {
     public void attach(View toggleView, View windowView) {
+        windowView.setClipToOutline(true);
         toggleView.setOnClickListener(view -> {
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) windowView.getLayoutParams();
             int miniWindowHeight = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.miniWindowHeight);

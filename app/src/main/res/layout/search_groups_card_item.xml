@@ -50,6 +50,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/about"
         app:layout_constraintBottom_toTopOf="@+id/actionRecyclerView"
+        app:layout_constraintVertical_bias="1.0"
         android:textSize="12sp"
         android:textColor="@color/white_75"
         android:textAllCaps="true"
@@ -65,13 +66,11 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/action"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         android:paddingRight="8dp"
         android:clipToPadding="false"
         android:visibility="gone"
         tools:visibility="visible"/>
-
-
 
 </android.support.constraint.ConstraintLayout>
