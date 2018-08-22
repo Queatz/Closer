@@ -13,8 +13,10 @@ import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.BaseObject;
 import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
+import closer.vlllage.com.closer.store.models.GroupAction_;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Group_;
@@ -29,6 +31,8 @@ public class SyncHandler extends PoolMember {
         syncAll(Suggestion.class, Suggestion_.localOnly);
         syncAll(Group.class, Group_.localOnly);
         syncAll(GroupMessage.class, GroupMessage_.localOnly);
+        syncAll(Event.class, Event_.localOnly);
+        syncAll(GroupAction.class, GroupAction_.localOnly);
     }
 
     public <T extends BaseObject> void sync(T obj) {

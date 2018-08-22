@@ -20,7 +20,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:padding="8dp"
         android:gravity="center_horizontal"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         tools:text="Mai Pham" />
