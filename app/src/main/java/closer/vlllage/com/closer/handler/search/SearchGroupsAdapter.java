@@ -62,7 +62,8 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
     @Override
     public void onBindViewHolder(@NonNull SearchGroupsViewHolder holder, int position) {
-        if (position < getCreateGroupCount()) {
+        if (position >= getItemCount() - getCreateGroupCount()) {
+            holder.pool = tempPool();
             holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.create_group));
             holder.name.setText(createPublicGroupName);
             holder.about.setText($(ResourcesHandler.class).getResources().getString(R.string.add_new_public_group));
@@ -75,7 +76,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             return;
         }
 
-        Group group = groups.get(position - getCreateGroupCount());
+        Group group = groups.get(position);
 
         holder.name.setText(group.getName());
         if (group.hasEvent()) {
