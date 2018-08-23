@@ -164,4 +164,5 @@
     <string name="remove_action_message">Remove \"%1$s\" from this group?</string>
     <string name="add_a_comment">Add a comment…</string>
     <string name="go">Go</string>
+    <string name="search_for_groups">View nearby groups</string>
 </resources>

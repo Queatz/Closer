@@ -15,7 +15,7 @@
         android:layout_marginLeft="@dimen/pad"
         android:layout_marginRight="@dimen/pad"
         android:layout_marginBottom="@dimen/pad"
-        android:background="@drawable/color_nothingness_rounded"
+        android:background="@drawable/color_green_rounded"
         android:clickable="true"
         android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"

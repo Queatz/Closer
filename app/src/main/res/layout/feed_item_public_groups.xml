@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="16dp"
+    android:paddingTop="@dimen/padHalf"
+    android:paddingBottom="@dimen/padHalf"
+    android:background="@color/green">
+
+    <closer.vlllage.com.closer.ui.SoftScrollStopper
+        android:id="@+id/publicGroupsRecyclerViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/publicGroupsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padHalf"
+            android:paddingRight="@dimen/padHalf"
+            android:clipToPadding="false" />
+
+    </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
+    <ImageButton
+        android:id="@+id/action"
+        style="@style/Widget.AppCompat.Light.ActionButton"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@drawable/clickable_green_flat"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/publicGroupsRecyclerViewContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/search_for_groups"
+        android:src="@drawable/ic_expand_more_black_24dp"
+        android:tint="@color/white" />
+
+</android.support.constraint.ConstraintLayout>

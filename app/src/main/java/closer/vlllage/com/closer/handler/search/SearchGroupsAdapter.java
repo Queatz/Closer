@@ -68,11 +68,12 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             holder.name.setText(createPublicGroupName);
             holder.about.setText($(ResourcesHandler.class).getResources().getString(R.string.add_new_public_group));
             holder.actionRecyclerView.setVisibility(View.GONE);
-            holder.itemView.setOnClickListener(view -> {
+            holder.cardView.setOnClickListener(view -> {
                 if (onCreateGroupClickListener != null) {
                     onCreateGroupClickListener.onCreateGroupClicked(createPublicGroupName);
                 }
             });
+            holder.cardView.setBackgroundResource(R.drawable.clickable_green_4dp);
             return;
         }
 
@@ -80,6 +81,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
         holder.name.setText(group.getName());
         if (group.hasEvent()) {
+            holder.cardView.setBackgroundResource(R.drawable.clickable_red_4dp);
             holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_event));
             Event event = $(StoreHandler.class).getStore().box(Event.class).query()
                     .equal(Event_.id, group.getEventId())
@@ -87,12 +89,13 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             holder.about.setText(event != null ? $(EventDetailsHandler.class).formatEventDetails(event) :
                 $(ResourcesHandler.class).getResources().getString(R.string.event));
         } else {
+            holder.cardView.setBackgroundResource(R.drawable.clickable_green_4dp);
             holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_group));
             holder.about.setText($(Val.class).of(group.getAbout()));
         }
-        holder.itemView.setOnClickListener(view -> {
+        holder.cardView.setOnClickListener(view -> {
             if (onGroupClickListener != null) {
-                onGroupClickListener.onGroupClicked(group);
+                onGroupClickListener.onGroupClicked(group, holder.itemView);
             }
         });
 
@@ -103,7 +106,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
         holder.pool.$(ActivityHandler.class).setActivity($(ActivityHandler.class).getActivity());
         holder.pool.$(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
         holder.pool.$(GroupActionRecyclerViewHandler.class).attach(holder.actionRecyclerView);
-        holder.pool.$(GroupActionRecyclerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(SearchHandler.class).openGroup(groupAction.getGroup()));
+        holder.pool.$(GroupActionRecyclerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(SearchHandler.class).openGroup(groupAction.getGroup(), holder.itemView));
         holder.pool.$(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupAction.class).query()
                 .equal(GroupAction_.group, group.getId())
                 .build().subscribe().single()
@@ -144,6 +147,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     }
 
     class SearchGroupsViewHolder extends RecyclerView.ViewHolder {
+        View cardView;
         TextView name;
         TextView about;
         TextView action;
@@ -152,6 +156,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
         public SearchGroupsViewHolder(View itemView) {
             super(itemView);
+            cardView = itemView.findViewById(R.id.rootView);
             name = itemView.findViewById(R.id.name);
             about = itemView.findViewById(R.id.about);
             action = itemView.findViewById(R.id.action);
@@ -160,7 +165,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     }
 
     public interface OnGroupClickListener {
-        void onGroupClicked(Group group);
+        void onGroupClicked(Group group, View view);
     }
 
     public interface OnCreateGroupClickListener {

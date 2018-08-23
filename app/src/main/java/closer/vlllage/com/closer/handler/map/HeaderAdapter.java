@@ -1,24 +1,25 @@
 package closer.vlllage.com.closer.handler.map;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.ui.CombinedRecyclerAdapter;
 
-public class FeedAdapter extends GroupMessagesAdapter {
+public class HeaderAdapter extends CombinedRecyclerAdapter {
 
-    private GroupMessagesAdapter.GroupMessageViewHolder headerViewHolder;
+    private RecyclerView.ViewHolder headerViewHolder;
     private HeaderHeightCallback headerHeightCallback;
 
-    public FeedAdapter(PoolMember poolMember) {
+    public HeaderAdapter(PoolMember poolMember) {
         super(poolMember);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GroupMessagesAdapter.GroupMessageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         if (position == 0) {
             headerViewHolder = holder;
@@ -38,7 +39,7 @@ public class FeedAdapter extends GroupMessagesAdapter {
     }
 
     @Override
-    public void onViewRecycled(@NonNull GroupMessagesAdapter.GroupMessageViewHolder holder) {
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewRecycled(holder);
         if (holder == headerViewHolder) {
             headerViewHolder = null;

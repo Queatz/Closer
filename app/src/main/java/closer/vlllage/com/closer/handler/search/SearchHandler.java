@@ -4,6 +4,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -16,7 +17,6 @@ import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
-import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -29,7 +29,6 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
 import closer.vlllage.com.closer.store.models.Group_;
-import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
@@ -42,17 +41,14 @@ public class SearchHandler extends PoolMember {
 
     public void attach(EditText searchGroups, RecyclerView groupsRecyclerView) {
         this.searchGroups = searchGroups;
-        searchGroupsAdapter = new SearchGroupsAdapter(this, group -> this.openGroup(group.getId()), this::createGroup);
-        searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item);
+        searchGroupsAdapter = new SearchGroupsAdapter(this, (group, view) -> this.openGroup(group.getId(), view), this::createGroup);
+        searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item_centered);
 
         groupsRecyclerView.setAdapter(searchGroupsAdapter);
         groupsRecyclerView.setLayoutManager(new GridLayoutManager(
                 groupsRecyclerView.getContext(),
                 2
         ));
-//        groupsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(
-//                2, StaggeredGridLayoutManager.VERTICAL
-//        ));
 
         searchGroups.addTextChangedListener(new TextWatcher() {
             @Override
@@ -88,8 +84,8 @@ public class SearchHandler extends PoolMember {
         });
     }
 
-    public void openGroup(String groupId) {
-        ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupId));
+    public void openGroup(String groupId, View view) {
+        $(GroupActivityTransitionHandler.class).showGroupMessages(view, groupId);
     }
 
     private void createGroup(String groupName) {
@@ -110,7 +106,7 @@ public class SearchHandler extends PoolMember {
                         group.setLatitude(location.getLatitude());
                         group.setLongitude(location.getLongitude());
                         $(StoreHandler.class).getStore().box(Group.class).put(group);
-                        $(SyncHandler.class).sync(group, this::openGroup);
+                        $(SyncHandler.class).sync(group, groupId -> openGroup(groupId, null));
                     })
                     .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.create_public_group))
                     .show();

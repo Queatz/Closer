@@ -4,8 +4,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.List;
+
 import closer.vlllage.com.closer.ChatAreaHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -13,13 +16,15 @@ import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.Group_;
+import closer.vlllage.com.closer.ui.FeedInjectionsAdapter;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
 public class FeedHandler extends PoolMember {
-    private FeedAdapter feedAdapter;
+    private GroupMessagesAdapter feedAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
+    private HeaderAdapter headerAdapter;
 
     public void attach(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -30,9 +35,8 @@ public class FeedHandler extends PoolMember {
         );
         recyclerView.setLayoutManager(layoutManager);
 
-        feedAdapter = new FeedAdapter(this);
+        feedAdapter = new GroupMessagesAdapter(this);
         feedAdapter.setReversed(true);
-        feedAdapter.setHeaderHeightCallback(recyclerView::getHeight);
         feedAdapter.setOnSuggestionClickListener(suggestion -> {
             $(MapActivityHandler.class).showSuggestionOnMap(suggestion);
             hide();
@@ -43,7 +47,7 @@ public class FeedHandler extends PoolMember {
         });
         feedAdapter.setOnMessageClickListener(message -> {
             if (message.getTo() != null) {
-                $(GroupActivityTransitionHandler.class).showGroupMessages(recyclerView, message.getTo());
+                $(GroupActivityTransitionHandler.class).showGroupMessages(null, message.getTo());
             } else {
                 $(ChatAreaHandler.class).center();
                 hide();
@@ -51,8 +55,13 @@ public class FeedHandler extends PoolMember {
         });
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
-                feedAdapter.notifyHeaderHeightChanged());
-        recyclerView.setAdapter(feedAdapter);
+                headerAdapter.notifyHeaderHeightChanged());
+
+        headerAdapter = new HeaderAdapter(this);
+        setupFeedInjections();
+        headerAdapter.addAdapter(feedAdapter);
+        recyclerView.setAdapter(headerAdapter);
+        headerAdapter.setHeaderHeightCallback(recyclerView::getHeight);
 
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query();
 
@@ -68,7 +77,17 @@ public class FeedHandler extends PoolMember {
                 })
                 .build()
                 .subscribe().on(AndroidScheduler.mainThread())
-                .observer(feedAdapter::setGroupMessages));
+                .observer(this::setGroupMessages));
+    }
+
+    private void setupFeedInjections() {
+        FeedInjectionsAdapter feedInjectionsAdapter = new FeedInjectionsAdapter(this);
+        headerAdapter.addAdapter(feedInjectionsAdapter);
+    }
+
+    private void setGroupMessages(List<GroupMessage> groupMessages) {
+        feedAdapter.setGroupMessages(groupMessages);
+        headerAdapter.notifyAdapterChanged(feedAdapter);
     }
 
     public void hide() {

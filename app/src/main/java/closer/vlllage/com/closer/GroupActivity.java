@@ -294,12 +294,12 @@ public class GroupActivity extends CircularRevealActivity {
         QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
         List<Group> groups = queryBuilder.sort($(SortHandler.class).sortGroups()).notEqual(Group_.physical, true).build().find();
 
-        SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(GroupHandler.class), group -> {
+        SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(GroupHandler.class), (group, view) -> {
             boolean success = $(GroupMessageAttachmentHandler.class).shareEvent(event, group);
 
             if (success) {
                 ((CircularRevealActivity) $(ActivityHandler.class).getActivity())
-                        .finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
+                        .finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(view, group.getId()));
             } else {
                 $(DefaultAlerts.class).thatDidntWork();
             }
