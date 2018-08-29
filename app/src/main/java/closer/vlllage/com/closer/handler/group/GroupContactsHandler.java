@@ -4,6 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -32,12 +33,14 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class GroupContactsHandler extends PoolMember {
 
     private RecyclerView contactsRecyclerView;
+    private View showPhoneContactsButton;
     private EditText searchContacts;
     private PhoneContactAdapter phoneContactAdapter;
 
     @SuppressWarnings("MissingPermission")
-    public void attach(Group group, RecyclerView contactsRecyclerView, EditText searchContacts) {
+    public void attach(Group group, RecyclerView contactsRecyclerView, EditText searchContacts, View showPhoneContactsButton) {
         this.contactsRecyclerView = contactsRecyclerView;
+        this.showPhoneContactsButton = showPhoneContactsButton;
         this.searchContacts = searchContacts;
         phoneContactAdapter = new PhoneContactAdapter(this, phoneContact -> {
             if (phoneContact.getName() == null) {
@@ -157,6 +160,10 @@ public class GroupContactsHandler extends PoolMember {
         String phoneNumber = $(PhoneNumberHandler.class).normalize(originalQuery);
 
         phoneContactAdapter.setPhoneNumber(phoneNumber);
+
+        if (phoneNumber != null) {
+            showPhoneContactsButton.setVisibility(View.VISIBLE);
+        }
 
         if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
             return;

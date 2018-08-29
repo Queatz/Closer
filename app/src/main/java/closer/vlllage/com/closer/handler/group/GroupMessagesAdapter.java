@@ -124,6 +124,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                         holder.message.setVisibility(View.GONE);
                     } else {
                         holder.message.setVisibility(View.VISIBLE);
+                        holder.message.setGravity(Gravity.START);
+                        holder.message.setAlpha(1f);
                         holder.message.setText(action.get("comment").getAsString());
                     }
                     holder.action.setVisibility(View.GONE);
@@ -156,6 +158,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.phone_shared_an_event, contactName));
 
                     holder.message.setVisibility(View.VISIBLE);
+                    holder.message.setGravity(Gravity.START);
+                    holder.message.setAlpha(1f);
                     holder.message.setText(
                             (event.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : event.getName()) +
                                     "\n" +
@@ -191,6 +195,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                         holder.message.setVisibility(View.GONE);
                     } else {
                         holder.message.setVisibility(View.VISIBLE);
+                        holder.message.setGravity(Gravity.START);
+                        holder.message.setAlpha(1f);
                         holder.message.setText(suggestion.getName());
                     }
 

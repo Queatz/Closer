@@ -175,7 +175,7 @@ public class GroupActivity extends CircularRevealActivity {
 
                 setGroupBackground(group);
             } else {
-                $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts);
+                $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton);
                 peopleInGroup.setSelected(true);
                 peopleInGroup.setOnClickListener(view -> toggleContactsView());
 

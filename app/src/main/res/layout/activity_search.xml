@@ -37,7 +37,7 @@
             android:paddingBottom="4dp"
             android:text="@string/public_groups"
             android:textAllCaps="true"
-            android:textColor="@color/white"
+            android:textColor="@color/text"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -80,9 +80,8 @@
             android:paddingRight="16dp"
             android:paddingBottom="8dp"
             android:selectAllOnFocus="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/highlight"
-            android:textColorHighlight="@color/white_75"
+            android:textColor="@color/text"
+            android:textColorHint="@color/black_50"
             android:textSize="12sp" />
 
         <android.support.v7.widget.RecyclerView

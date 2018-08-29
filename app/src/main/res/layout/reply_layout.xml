@@ -39,7 +39,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:textSize="18sp"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text"
         android:textIsSelectable="true"
         tools:text="👊 fist bump" />
 

@@ -6,7 +6,6 @@ import android.view.View;
 
 import java.util.List;
 
-import closer.vlllage.com.closer.ChatAreaHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -47,10 +46,7 @@ public class FeedHandler extends PoolMember {
         });
         feedAdapter.setOnMessageClickListener(message -> {
             if (message.getTo() != null) {
-                $(GroupActivityTransitionHandler.class).showGroupMessages(null, message.getTo());
-            } else {
-                $(ChatAreaHandler.class).center();
-                hide();
+                $(GroupActivityTransitionHandler.class).showGroupMessages(recyclerView, message.getTo());
             }
         });
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);

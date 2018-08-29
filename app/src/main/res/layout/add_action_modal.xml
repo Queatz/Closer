@@ -13,7 +13,7 @@
         android:text="@string/action_name"
         android:textAllCaps="true"
         android:textStyle="bold"
-        android:textColor="@color/black_50"
+        android:textColor="@color/text"
         android:textAppearance="?android:textAppearanceSmall" />
 
     <EditText
@@ -37,7 +37,7 @@
         android:text="@string/action_intent"
         android:textAllCaps="true"
         android:textStyle="bold"
-        android:textColor="@color/black_50"
+        android:textColor="@color/text"
         android:textAppearance="?android:textAppearanceSmall" />
 
     <EditText

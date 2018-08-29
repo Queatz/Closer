@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textSize="14sp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/text"
         android:textStyle="bold"
         tools:text="Mai Pham" />
 
@@ -33,8 +33,7 @@
         app:layout_constraintRight_toLeftOf="@+id/action"
         app:layout_constraintTop_toBottomOf="@+id/name"
         android:textSize="12sp"
-        android:textColor="@color/white_75"
-        tools:textColor="@color/selectable"
+        android:textColor="@color/text"
         tools:text="For all fans of 1 hour workouts" />
 
     <TextView
@@ -48,10 +47,9 @@
         app:layout_constraintBottom_toTopOf="@+id/actionRecyclerView"
         app:layout_constraintHorizontal_bias="1"
         android:textSize="12sp"
-        android:textColor="@color/white_75"
+        android:textColor="@color/text"
         android:textAllCaps="true"
         android:textStyle="bold"
-        tools:textColor="@color/selectable"
         android:text="@string/open_group" />
 
     <android.support.v7.widget.RecyclerView
