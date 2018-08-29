@@ -16,7 +16,7 @@
         android:paddingTop="6dp"
         android:paddingRight="12dp"
         android:paddingBottom="6dp"
-        android:textColor="@color/white"
+        android:textColor="@color/text"
         android:textSize="12sp"
         android:textStyle="bold"
         tools:text="Book a room"

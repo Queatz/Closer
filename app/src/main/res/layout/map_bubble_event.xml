@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textSize="14sp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/textInverse"
                 android:textStyle="bold"
                 android:maxWidth="196dp"
                 tools:text="Skinny dipping at the beach" />
@@ -46,7 +46,7 @@
                 android:paddingTop="4dp"
                 android:textStyle="bold"
                 android:textSize="12sp"
-                android:textColor="@color/white_75"
+                android:textColor="@color/textInverse"
                 android:textAllCaps="true"
                 android:text="@string/view"
                 tools:text="8:15pm - 11:45pm Today"/>
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:minWidth="0dp"
             android:src="@drawable/ic_directions_black_24dp"
-            android:tint="@android:color/white" />
+            android:tint="@color/textInverse" />
 
     </LinearLayout>
 

@@ -15,7 +15,6 @@
     <color name="red">#f44336</color>
     <color name="redLight">#E57373</color>
     <color name="red200">#EF9A9A</color>
-    <color name="name">#66000000</color>
     <color name="selectable">#BDBDBD</color>
     <color name="dark">#222222</color>
     <color name="disabled">@color/selectable</color>
@@ -26,12 +25,16 @@
     <color name="black_15">#33000000</color>
     <color name="black_50">#88000000</color>
     <color name="black_75">#d8000000</color>
-    <color name="purple">#9c27b0</color>
-    <color name="purpleLight">#ba68c8</color>
-    <color name="purple200">#ce93d8</color>
+    <color name="purple">@color/white</color>
+    <color name="purpleLight">@color/white</color>
+    <color name="purple200">@color/white</color>
     <color name="offwhite">#f8f8f8</color>
     <color name="offwhite_transparent">#00f8f8f8</color>
     <color name="white">#ffffff</color>
     <color name="white_transparent">#00ffffff</color>
     <color name="nothingness">#10413d</color>
+
+    <color name="name">@color/dark</color>
+    <color name="text">@color/dark</color>
+    <color name="textInverse">@color/white</color>
 </resources>

@@ -4,7 +4,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import closer.vlllage.com.closer.ChatAreaHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
@@ -44,9 +43,6 @@ public class FeedHandler extends PoolMember {
         feedAdapter.setOnMessageClickListener(message -> {
             if (message.getTo() != null) {
                 $(GroupActivityTransitionHandler.class).showGroupMessages(recyclerView, message.getTo());
-            } else {
-                $(ChatAreaHandler.class).center();
-                hide();
             }
         });
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);

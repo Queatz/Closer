@@ -59,7 +59,7 @@
             android:paddingStart="@dimen/padDouble"
             android:paddingEnd="@dimen/padDouble"
             android:elevation="8dp"
-            android:textColor="@color/black_50"
+            android:textColor="@color/text"
             android:drawableStart="@drawable/ic_signal_cellular_connected_no_internet_0_bar_black_24dp"
             android:drawablePadding="@dimen/pad"
             android:drawableTint="@color/red"

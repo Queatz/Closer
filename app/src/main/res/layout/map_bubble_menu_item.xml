@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:textSize="12sp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/textInverse"
         android:textStyle="bold"
         android:textAllCaps="true"
         android:padding="12dp"

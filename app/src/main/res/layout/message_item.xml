@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/white_75"
+            android:textColor="@color/text"
             android:textStyle="bold"
             tools:text="Stella" />
 
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textIsSelectable="true"
             android:linksClickable="true"
             android:autoLink="all"
@@ -58,7 +58,7 @@
             android:elevation="2dp"
             android:textAllCaps="true"
             android:background="@drawable/clickable_accent"
-            android:textColor="@android:color/white"
+            android:textColor="@color/textInverse"
             android:textStyle="bold"
             android:textSize="10sp"
             android:visibility="gone"
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:textSize="12sp"
-            android:textColor="@color/white_50"
+            android:textColor="@color/text"
             tools:text="8:45pm" />
 
         <TextView
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:textSize="12sp"
-            android:textColor="@color/white_50"
+            android:textColor="@color/text"
             android:visibility="gone"
             tools:visibility="visible"
             tools:text="8:45pm" />

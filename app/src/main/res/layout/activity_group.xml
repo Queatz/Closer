@@ -40,14 +40,11 @@
             android:paddingTop="8dp"
             android:paddingRight="16dp"
             android:paddingBottom="4dp"
-            tools:text="888 Friends"
             android:textAllCaps="true"
-            android:textColor="@color/white"
+            android:textColor="@color/text"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:text="888 Friends" />
 
         <ImageButton
             android:id="@+id/settingsButton"
@@ -75,7 +72,7 @@
             android:paddingRight="16dp"
             android:paddingBottom="4dp"
             android:textAllCaps="true"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="gone"
@@ -103,12 +100,12 @@
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:textSize="12sp"
-                android:drawableTint="@android:color/white"
+                android:drawableTint="@color/text"
                 android:drawableTop="@drawable/ic_share_black_24dp"
                 android:drawablePadding="4dp"
                 android:background="@drawable/clickable_light"
                 android:text="@string/share"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/text" />
             <Button
                 android:id="@+id/actionShowOnMap"
                 android:layout_width="wrap_content"
@@ -116,12 +113,12 @@
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:textSize="12sp"
-                android:drawableTint="@android:color/white"
+                android:drawableTint="@color/text"
                 android:drawableTop="@drawable/ic_my_location_black_24dp"
                 android:drawablePadding="4dp"
                 android:background="@drawable/clickable_light"
                 android:text="@string/show_on_map"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/text" />
             <Button
                 android:id="@+id/actionCancel"
                 android:layout_width="wrap_content"
@@ -129,12 +126,12 @@
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:textSize="12sp"
-                android:drawableTint="@android:color/white"
+                android:drawableTint="@color/text"
                 android:drawableTop="@drawable/ic_close_black_24dp"
                 android:drawablePadding="4dp"
                 android:background="@drawable/clickable_light"
                 android:text="@string/cancel"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/text" />
             <Button
                 android:id="@+id/actionSettingsSetName"
                 android:layout_width="wrap_content"
@@ -142,12 +139,12 @@
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:textSize="12sp"
-                android:drawableTint="@color/white"
+                android:drawableTint="@color/text"
                 android:drawableTop="@drawable/ic_edit_location_black_24dp"
                 android:drawablePadding="4dp"
                 android:background="@drawable/clickable_light"
                 android:text="@string/set_name"
-                android:textColor="@color/white"
+                android:textColor="@color/text"
                 android:visibility="gone"
                 tools:visibility="visible" />
             <Button
@@ -157,12 +154,12 @@
                 android:layout_weight="1"
                 android:padding="8dp"
                 android:textSize="12sp"
-                android:drawableTint="@color/white"
+                android:drawableTint="@color/text"
                 android:drawableTop="@drawable/ic_camera_black_24dp"
                 android:drawablePadding="4dp"
                 android:background="@drawable/clickable_light"
                 android:text="@string/set_background"
-                android:textColor="@color/white"
+                android:textColor="@color/text"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>
@@ -184,7 +181,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             tools:text="Jacob, Bun, Mai, Phoung (invited), Le My, Stella"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintVertical_chainStyle="packed"
@@ -199,7 +196,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/close_messages"
             android:src="@drawable/ic_expand_more_black_24dp"
-            android:tint="@android:color/white"
+            android:tint="@color/text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
@@ -214,7 +211,7 @@
             android:minWidth="0dp"
             android:background="@drawable/clickable_light_flat"
             android:padding="8dp"
-            android:tint="@android:color/white"
+            android:tint="@color/text"
             android:src="@drawable/ic_chevron_right_black_24dp"
             android:contentDescription="@string/send_message" />
 
@@ -239,9 +236,8 @@
             android:paddingRight="16dp"
             android:paddingBottom="8dp"
             android:selectAllOnFocus="true"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textColorHint="@color/highlight"
-            android:textColorHighlight="@color/white_75"
             android:textSize="12sp"
             tools:text="Hey guys let's go out" />
 
@@ -275,7 +271,7 @@
             android:minWidth="0dp"
             android:background="@drawable/clickable_light_rounded"
             android:padding="8dp"
-            android:tint="@android:color/white"
+            android:tint="@color/text"
             android:src="@drawable/ic_more_horiz_black_24dp"
             android:contentDescription="@string/more_options" />
 
@@ -301,7 +297,7 @@
                 android:minWidth="0dp"
                 android:background="@drawable/clickable_light"
                 android:padding="8dp"
-                android:tint="@android:color/white"
+                android:tint="@color/text"
                 android:src="@drawable/ic_photo_black_24dp"
                 android:contentDescription="@string/send_message" />
 
@@ -315,7 +311,7 @@
                 android:minWidth="0dp"
                 android:background="@drawable/clickable_light"
                 android:padding="8dp"
-                android:tint="@android:color/white"
+                android:tint="@color/text"
                 android:src="@drawable/ic_videocam_black_24dp"
                 android:contentDescription="@string/send_message" />
 
@@ -329,7 +325,7 @@
                 android:minWidth="0dp"
                 android:background="@drawable/clickable_light"
                 android:padding="8dp"
-                android:tint="@android:color/white"
+                android:tint="@color/text"
                 android:src="@drawable/ic_audiotrack_black_24dp"
                 android:contentDescription="@string/send_message" />
 
@@ -343,7 +339,7 @@
                 android:minWidth="0dp"
                 android:background="@drawable/clickable_light"
                 android:padding="8dp"
-                android:tint="@android:color/white"
+                android:tint="@color/text"
                 android:src="@drawable/ic_file_upload_black_24dp"
                 android:contentDescription="@string/send_message" />
 
@@ -394,9 +390,8 @@
             android:paddingRight="16dp"
             android:paddingBottom="8dp"
             android:selectAllOnFocus="true"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textColorHint="@color/highlight"
-            android:textColorHighlight="@color/white_75"
             android:textSize="12sp" />
 
         <android.support.v7.widget.RecyclerView
@@ -423,7 +418,7 @@
             android:visibility="gone"
             tools:visibility="visible"
             android:background="@drawable/clickable_light"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:text="@string/show_contacts"/>
 
     </android.support.constraint.ConstraintLayout>
