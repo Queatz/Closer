@@ -35,6 +35,6 @@
     <color name="nothingness">#10413d</color>
 
     <color name="name">@color/dark</color>
-    <color name="text">@color/dark</color>
-    <color name="textInverse">@color/white</color>
+    <color name="text">@color/white</color>
+    <color name="textInverse">@color/dark</color>
 </resources>

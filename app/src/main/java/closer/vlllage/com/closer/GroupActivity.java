@@ -173,8 +173,6 @@ public class GroupActivity extends CircularRevealActivity {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.color.green);
                 }
 
-                findViewById(R.id.backgroundColor).setBackgroundResource(R.color.offwhite);
-
                 setGroupBackground(group);
             } else {
                 $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton);
