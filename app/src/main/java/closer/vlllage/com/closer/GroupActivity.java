@@ -307,6 +307,7 @@ public class GroupActivity extends CircularRevealActivity {
 
         searchGroupsAdapter.setGroups(groups);
         searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.share));
+        searchGroupsAdapter.setIsSmall(true);
 
         shareWithRecyclerView.setAdapter(searchGroupsAdapter);
         shareWithRecyclerView.setLayoutManager(new LinearLayoutManager(

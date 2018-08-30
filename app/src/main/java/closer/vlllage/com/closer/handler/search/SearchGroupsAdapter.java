@@ -41,6 +41,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     private OnCreateGroupClickListener onCreateGroupClickListener;
     private String actionText;
     private @LayoutRes int layoutResId = R.layout.search_groups_item;
+    private boolean isSmall;
 
     public SearchGroupsAdapter(PoolMember poolMember, OnGroupClickListener onGroupClickListener, OnCreateGroupClickListener onCreateGroupClickListener) {
         super(poolMember);
@@ -73,7 +74,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
                     onCreateGroupClickListener.onCreateGroupClicked(createPublicGroupName);
                 }
             });
-            holder.cardView.setBackgroundResource(R.drawable.clickable_green_4dp);
+            holder.cardView.setBackgroundResource(isSmall ? R.drawable.clickable_light : R.drawable.clickable_green_4dp);
             return;
         }
 
@@ -81,7 +82,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
         holder.name.setText(group.getName());
         if (group.hasEvent()) {
-            holder.cardView.setBackgroundResource(R.drawable.clickable_red_4dp);
+            holder.cardView.setBackgroundResource(isSmall ? R.drawable.clickable_light : R.drawable.clickable_red_4dp);
             holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_event));
             Event event = $(StoreHandler.class).getStore().box(Event.class).query()
                     .equal(Event_.id, group.getEventId())
@@ -89,7 +90,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             holder.about.setText(event != null ? $(EventDetailsHandler.class).formatEventDetails(event) :
                 $(ResourcesHandler.class).getResources().getString(R.string.event));
         } else {
-            holder.cardView.setBackgroundResource(R.drawable.clickable_green_4dp);
+            holder.cardView.setBackgroundResource(isSmall ? R.drawable.clickable_light : R.drawable.clickable_green_4dp);
             holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_group));
             holder.about.setText($(Val.class).of(group.getAbout()));
         }
@@ -99,22 +100,27 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             }
         });
 
-
-        holder.actionRecyclerView.setVisibility(View.VISIBLE);
         holder.pool = tempPool();
-        holder.pool.$(ApplicationHandler.class).setApp($(ApplicationHandler.class).getApp());
-        holder.pool.$(ActivityHandler.class).setActivity($(ActivityHandler.class).getActivity());
-        holder.pool.$(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
-        holder.pool.$(GroupActionRecyclerViewHandler.class).attach(holder.actionRecyclerView);
-        holder.pool.$(GroupActionRecyclerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(SearchHandler.class).openGroup(groupAction.getGroup(), holder.itemView));
-        holder.pool.$(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupAction.class).query()
-                .equal(GroupAction_.group, group.getId())
-                .build().subscribe().single()
-                .on(AndroidScheduler.mainThread())
-                .observer(groupActions -> {
-                    holder.pool.$(GroupActionRecyclerViewHandler.class).getRecyclerView().setVisibility(groupActions.isEmpty() ? View.GONE : View.VISIBLE);
-                    holder.pool.$(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions);
-                }));
+
+        if (isSmall) {
+            holder.actionRecyclerView.setVisibility(View.GONE);
+        } else {
+            holder.actionRecyclerView.setVisibility(View.VISIBLE);
+            holder.pool.$(ApplicationHandler.class).setApp($(ApplicationHandler.class).getApp());
+            holder.pool.$(ActivityHandler.class).setActivity($(ActivityHandler.class).getActivity());
+            holder.pool.$(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
+            holder.pool.$(GroupActionRecyclerViewHandler.class).attach(holder.actionRecyclerView);
+            holder.pool.$(GroupActionRecyclerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(SearchHandler.class).openGroup(groupAction.getGroup(), holder.itemView));
+            holder.pool.$(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupAction.class).query()
+                    .equal(GroupAction_.group, group.getId())
+                    .build().subscribe().single()
+                    .on(AndroidScheduler.mainThread())
+                    .observer(groupActions -> {
+                        holder.pool.$(GroupActionRecyclerViewHandler.class).getRecyclerView().setVisibility(groupActions.isEmpty() ? View.GONE : View.VISIBLE);
+                        holder.pool.$(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions);
+                    }));
+        }
+
     }
 
     @Override
@@ -144,6 +150,10 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
     public void setActionText(String actionText) {
         this.actionText = actionText;
+    }
+
+    public void setIsSmall(boolean isSmall) {
+        this.isSmall = isSmall;
     }
 
     class SearchGroupsViewHolder extends RecyclerView.ViewHolder {

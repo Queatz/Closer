@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAllCaps="true"
-            android:textColor="@color/textInverse"
+            android:textColor="@color/text"
             android:textSize="12sp"
             android:textStyle="bold"
             tools:text="Jacob" />
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textSize="12sp"
-            android:textColor="@color/textInverse"
+            android:textColor="@color/text"
             tools:text="👊 fist bump" />
 
         <TextView
@@ -48,7 +48,7 @@
             android:padding="4dp"
             android:textStyle="bold"
             android:textSize="12sp"
-            android:textColor="@color/textInverse"
+            android:textColor="@color/text"
             android:textAllCaps="true"
             android:text="@string/reply" />
     </LinearLayout>

@@ -24,7 +24,7 @@
         app:layout_constraintBottom_toTopOf="@+id/replyLayoutStatus"
         app:layout_constraintLeft_toLeftOf="@+id/replyLayoutStatus"
         android:textSize="14sp"
-        android:textColor="@color/name"
+        android:textColor="@color/textInverse"
         android:textAllCaps="true"
         android:textStyle="bold"
         tools:text="Jacob" />

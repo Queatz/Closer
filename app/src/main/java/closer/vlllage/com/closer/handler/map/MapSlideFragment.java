@@ -43,7 +43,6 @@ import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.helpers.ViewAttributeHandler;
-import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
@@ -214,8 +213,6 @@ public class MapSlideFragment extends PoolFragment {
         if ($(AccountHandler.class).getActive()) {
             $(AccountHandler.class).updateStatus($(AccountHandler.class).getStatus());
         }
-
-        view.findViewById(R.id.actionButton).setOnClickListener(actionButton -> $(SearchActivityHandler.class).show(actionButton));
 
         $(MyGroupsLayoutActionsHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
 

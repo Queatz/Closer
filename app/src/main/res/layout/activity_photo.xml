@@ -34,12 +34,12 @@
             android:layout_weight="1"
             android:padding="8dp"
             android:textSize="12sp"
-            android:drawableTint="@color/textInverse"
+            android:drawableTint="@color/text"
             android:drawableTop="@drawable/ic_share_black_24dp"
             android:drawablePadding="4dp"
             android:background="@drawable/clickable_light"
             android:text="@string/share"
-            android:textColor="@color/textInverse" />
+            android:textColor="@color/text" />
     </LinearLayout>
 
 
