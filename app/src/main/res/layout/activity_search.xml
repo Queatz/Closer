@@ -81,7 +81,8 @@
             android:paddingBottom="8dp"
             android:selectAllOnFocus="true"
             android:textColor="@color/text"
-            android:textColorHint="@color/black_50"
+            android:textColorHint="@color/highlight"
+            android:textColorHighlight="@color/white_75"
             android:textSize="12sp" />
 
         <android.support.v7.widget.RecyclerView

@@ -156,9 +156,9 @@
     <string name="add_an_action">Add an action</string>
     <string name="add_action">Add action</string>
     <string name="action_name">Action name</string>
-    <string name="action_intent">Action intent</string>
-    <string name="action_intent_hint">needs a room tonight</string>
-    <string name="action_name_hint">Get a room</string>
+    <string name="action_intent">Notify people that someone…</string>
+    <string name="action_intent_hint">i.e. needs a room tonight</string>
+    <string name="action_name_hint">i.e. Get a room</string>
     <string name="enter_a_name_and_intent">Enter a name and intent</string>
     <string name="remove_action">Remove this action</string>
     <string name="remove_action_message">Remove \"%1$s\" from this group?</string>

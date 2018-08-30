@@ -68,6 +68,10 @@ public class GroupActionHandler extends PoolMember {
 
     }
 
+    public void cancelPendingAnimation() {
+        animator.cancel();
+    }
+
     public void show(boolean show) {
         show(show, false);
     }

@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="@+id/phoneIcon"
         app:layout_constraintLeft_toRightOf="@+id/phoneIcon"
         android:textSize="14sp"
-        android:textColor="@color/dark"
+        android:textColor="@color/text"
         android:textStyle="bold"
         tools:text="Mai Pham" />
 
@@ -43,7 +43,7 @@
         app:layout_constraintLeft_toRightOf="@+id/phoneIcon"
         app:layout_constraintTop_toBottomOf="@+id/name"
         android:textSize="12sp"
-        android:textColor="@color/dark"
+        android:textColor="@color/text"
         tools:text="(408) 893-4193" />
 
     <TextView
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:textSize="12sp"
-        android:textColor="@color/dark"
+        android:textColor="@color/text"
         android:textAllCaps="true"
         android:textStyle="bold"
         android:text="@string/invite" />

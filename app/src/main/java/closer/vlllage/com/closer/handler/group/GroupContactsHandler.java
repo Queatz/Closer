@@ -162,7 +162,7 @@ public class GroupContactsHandler extends PoolMember {
         phoneContactAdapter.setPhoneNumber(phoneNumber);
 
         if (phoneNumber != null) {
-            showPhoneContactsButton.setVisibility(View.VISIBLE);
+            showPhoneContactsButton.setVisibility(View.GONE);
         }
 
         if(!$(PermissionHandler.class).has(READ_CONTACTS)) {

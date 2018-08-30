@@ -6,16 +6,6 @@
     android:gravity="center_vertical"
     android:padding="@dimen/padDouble">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/action_name"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:textColor="@color/text"
-        android:textAppearance="?android:textAppearanceSmall" />
-
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
@@ -35,10 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/action_intent"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:textColor="@color/text"
-        android:textAppearance="?android:textAppearanceSmall" />
+        android:textAppearance="?android:textAppearanceSearchResultTitle" />
 
     <EditText
         android:id="@+id/intent"

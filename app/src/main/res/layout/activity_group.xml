@@ -246,6 +246,7 @@
             android:selectAllOnFocus="true"
             android:textColor="@color/text"
             android:textColorHint="@color/highlight"
+            android:textColorHighlight="@color/white_75"
             android:textSize="12sp"
             tools:text="Hey guys let's go out" />
 
@@ -400,6 +401,7 @@
             android:selectAllOnFocus="true"
             android:textColor="@color/text"
             android:textColorHint="@color/highlight"
+            android:textColorHighlight="@color/white_75"
             android:textSize="12sp" />
 
         <android.support.v7.widget.RecyclerView
