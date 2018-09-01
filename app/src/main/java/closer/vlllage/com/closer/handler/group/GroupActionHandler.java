@@ -165,6 +165,7 @@ public class GroupActionHandler extends PoolMember {
     public void addActionToGroup(Group group) {
         $(AlertHandler.class).make()
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.add_an_action))
+                .setNegativeButton($(ResourcesHandler.class).getResources().getString(R.string.nope))
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.add_action))
                 .setLayoutResId(R.layout.add_action_modal)
                 .setOnAfterViewCreated((alertConfig, view) -> {

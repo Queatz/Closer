@@ -13,8 +13,8 @@
     <color name="colorPrimaryLight">#64B5F6</color>
     <color name="blue200">#90CAF9</color>
     <color name="blue200_transparent">#0090CAF9</color>
-    <color name="colorAccent">#FFC107</color>
-    <color name="colorAccentLight">#FFD54F</color>
+    <color name="colorAccent">#FFB300</color>
+    <color name="colorAccentLight">#FFC107</color>
     <color name="green">#8BC34A</color>
     <color name="green700">#388E3C</color>
     <color name="green_transparent">#008BC34A</color>

@@ -134,10 +134,10 @@ public class GroupHandler extends PoolMember {
             } else {
                 peopleInGroup.setText(group.getAbout());
                 peopleInGroup.setVisibility(View.VISIBLE);
+                peopleInGroup.setBackground(null);
             }
-
-            return;
         } else {
+            peopleInGroup.setBackgroundResource(R.drawable.clickable_light);
             peopleInGroup.setVisibility(View.VISIBLE);
 
             List<String> names = new ArrayList<>();
