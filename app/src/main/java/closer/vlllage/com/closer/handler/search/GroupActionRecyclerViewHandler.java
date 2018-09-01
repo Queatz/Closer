@@ -25,7 +25,7 @@ public class GroupActionRecyclerViewHandler extends PoolMember {
     private RecyclerView actionRecyclerView;
     private OnGroupActionRepliedListener onGroupActionRepliedListener;
 
-    public void attach(RecyclerView actionRecyclerView) {
+    public void attach(RecyclerView actionRecyclerView, GroupActionAdapter.Layout layout) {
         this.actionRecyclerView = actionRecyclerView;
         actionRecyclerView.setLayoutManager(new LinearLayoutManager(
                 $(ActivityHandler.class).getActivity(),
@@ -33,7 +33,7 @@ public class GroupActionRecyclerViewHandler extends PoolMember {
                 false
         ));
 
-        groupActionAdapter = new GroupActionAdapter(this, groupAction -> {
+        groupActionAdapter = new GroupActionAdapter(this, layout, groupAction -> {
             Group group = $(StoreHandler.class).getStore().box(Group.class).query()
                     .equal(Group_.id, groupAction.getGroup()).build().findFirst();
 

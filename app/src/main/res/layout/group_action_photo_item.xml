@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/groupActionCombinedWidth"
+    android:layout_height="@dimen/groupActionCombinedHeight"
+    android:layout_marginLeft="8dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/clickable_red_8dp"
+    android:foreground="@drawable/clickable_light_rounded_8dp"
+    android:clipChildren="true"
+    android:elevation="@dimen/elevationSmall">
+
+    <ImageView
+        android:id="@+id/photo"
+        android:importantForAccessibility="no"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/actionName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/black_50"
+        android:gravity="center"
+        android:padding="@dimen/pad"
+        android:textColor="@color/text"
+        android:maxLines="3"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        tools:text="Book a room or hotel tonight"
+        android:focusable="true" />
+
+</FrameLayout>

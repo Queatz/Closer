@@ -10,8 +10,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import java.util.List;
-
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
@@ -28,7 +26,6 @@ import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
 import io.objectbox.android.AndroidScheduler;
-import io.objectbox.reactive.DataObserver;
 import io.objectbox.reactive.DataSubscription;
 
 import static java.lang.Math.max;
@@ -43,7 +40,7 @@ public class GroupActionHandler extends PoolMember {
     public void attach(MaxSizeFrameLayout container, RecyclerView actionRecyclerView) {
         this.container = container;
 
-        $(GroupActionRecyclerViewHandler.class).attach(actionRecyclerView);
+        $(GroupActionRecyclerViewHandler.class).attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO);
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (groupActionsDisposable != null) {
@@ -55,7 +52,7 @@ public class GroupActionHandler extends PoolMember {
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
-                    .observer((DataObserver<List<GroupAction>>) groupActions -> {
+                    .observer(groupActions -> {
                         boolean wasEmpty = $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0;
                         $(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions);
                         boolean isEmpty = $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0;
@@ -95,7 +92,7 @@ public class GroupActionHandler extends PoolMember {
         }
 
         if (show) {
-            animator = ValueAnimator.ofInt(0, initialHeight == 0 ? (int) ($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionHeight) * 1.5f) : initialHeight);
+            animator = ValueAnimator.ofInt(0, initialHeight == 0 ? (int) ($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f) : initialHeight);
             animator.setDuration(500);
             animator.setStartDelay(immediate ? 0 : 1700);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());

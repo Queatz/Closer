@@ -43,11 +43,24 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:fitsSystemWindows="true">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padDouble"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <include layout="@layout/my_status_layout"/>
+
+        </FrameLayout>
+
         <TextView
             android:id="@+id/connectionError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
+            android:layout_marginTop="84dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:visibility="gone"
@@ -59,7 +72,7 @@
             android:paddingStart="@dimen/padDouble"
             android:paddingEnd="@dimen/padDouble"
             android:elevation="8dp"
-            android:textColor="@color/text"
+            android:textColor="@color/textInverse"
             android:drawableStart="@drawable/ic_signal_cellular_connected_no_internet_0_bar_black_24dp"
             android:drawablePadding="@dimen/pad"
             android:drawableTint="@color/red"
@@ -73,16 +86,6 @@
             android:gravity="end"
             android:clipToPadding="false"
             android:fitsSystemWindows="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="bottom|end">
-
-                <include layout="@layout/my_status_layout"/>
-
-            </LinearLayout>
 
             <closer.vlllage.com.closer.ui.ScrollStopper
                 android:id="@+id/bottomContainer"
@@ -108,9 +111,9 @@
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:paddingRight="@dimen/pad"
+                        android:background="@drawable/gradient_white"
                         android:paddingTop="@dimen/pad"
-                        android:paddingBottom="@dimen/pad"
-                        android:background="@color/green" />
+                        android:paddingBottom="@dimen/pad" />
 
                 </LinearLayout>
 

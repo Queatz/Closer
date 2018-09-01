@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.group.GroupActionAdapter;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -109,7 +110,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             holder.pool.$(ApplicationHandler.class).setApp($(ApplicationHandler.class).getApp());
             holder.pool.$(ActivityHandler.class).setActivity($(ActivityHandler.class).getActivity());
             holder.pool.$(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
-            holder.pool.$(GroupActionRecyclerViewHandler.class).attach(holder.actionRecyclerView);
+            holder.pool.$(GroupActionRecyclerViewHandler.class).attach(holder.actionRecyclerView, GroupActionAdapter.Layout.TEXT);
             holder.pool.$(GroupActionRecyclerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(SearchHandler.class).openGroup(groupAction.getGroup(), holder.itemView));
             holder.pool.$(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupAction.class).query()
                     .equal(GroupAction_.group, group.getId())

@@ -7,7 +7,7 @@ android {
         applicationId 'closer.vlllage.com.closer'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 94
+        versionCode 95
         versionName '1.0'
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
@@ -41,11 +41,17 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.google.android.gms:play-services-maps:15.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation ('com.android.support.constraint:constraint-layout:2.0.0-alpha2') {
+        exclude group: 'com.android.support'
+    }
+    implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
+    implementation 'com.android.support:design:28.0.0-rc01'
+    implementation ('com.google.android.gms:play-services-maps:15.0.1') {
+        exclude group: 'com.android.support'
+    }
+    implementation ('com.google.android.gms:play-services-location:15.0.1') {
+        exclude group: 'com.android.support'
+    }
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
@@ -53,9 +59,13 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-messaging:17.3.0'
-    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
+    implementation ('com.github.chrisbanes:PhotoView:2.1.3') {
+        exclude group: 'com.android.support'
+    }
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.2'
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation ('com.squareup.picasso:picasso:2.71828') {
+        exclude group: 'com.android.support'
+    }
     implementation 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
     implementation 'com.github.Queatz:Android-UX-Extras-Slide-Screen:0.1'
