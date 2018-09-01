@@ -25,6 +25,7 @@ import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupDraftHandler;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
@@ -97,6 +98,12 @@ public class GroupMessagesHandler extends PoolMember {
         });
 
         updateSendButton();
+        $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
+            if (replyMessage.getText().toString().isEmpty()) {
+                replyMessage.setText($(GroupDraftHandler.class).getDraft(group));
+            }
+        }, error -> $(DefaultAlerts.class).thatDidntWork()));
+
         this.replyMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -109,8 +116,9 @@ public class GroupMessagesHandler extends PoolMember {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable text) {
                 updateSendButton();
+                $(GroupDraftHandler.class).saveDraft($(GroupHandler.class).getGroup(), text.toString());
             }
         });
 

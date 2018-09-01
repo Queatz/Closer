@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.store;
 
 import android.app.Application;
 
-import closer.vlllage.com.closer.store.models.BaseObject;
 import closer.vlllage.com.closer.store.models.MyObjectBox;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -19,7 +18,7 @@ public class Store {
         boxStore.close();
     }
 
-    public <T extends BaseObject> Box<T> box(Class<T> clazz) {
+    public <T> Box<T> box(Class<T> clazz) {
         return boxStore.boxFor(clazz);
     }
 }
