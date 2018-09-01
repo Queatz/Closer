@@ -24,6 +24,7 @@ import closer.vlllage.com.closer.store.models.Suggestion;
 import closer.vlllage.com.closer.store.models.Suggestion_;
 import io.objectbox.Property;
 import io.objectbox.android.AndroidScheduler;
+import io.objectbox.reactive.DataObserver;
 import io.reactivex.Observable;
 
 public class SyncHandler extends PoolMember {
@@ -47,7 +48,7 @@ public class SyncHandler extends PoolMember {
         $(StoreHandler.class).getStore().box(clazz).query()
                 .equal(localOnlyProperty, true)
                 .build().subscribe().single().on(AndroidScheduler.mainThread())
-                .observer(this::syncAll);
+                .observer((DataObserver<List<? extends BaseObject>>) this::syncAll);
     }
 
     private void syncAll(List<? extends BaseObject> objs) {

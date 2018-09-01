@@ -10,6 +10,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import java.util.List;
+
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
@@ -26,6 +28,7 @@ import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
 import io.objectbox.android.AndroidScheduler;
+import io.objectbox.reactive.DataObserver;
 import io.objectbox.reactive.DataSubscription;
 
 import static java.lang.Math.max;
@@ -52,7 +55,7 @@ public class GroupActionHandler extends PoolMember {
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
-                    .observer(groupActions -> {
+                    .observer((DataObserver<List<GroupAction>>) groupActions -> {
                         boolean wasEmpty = $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0;
                         $(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions);
                         boolean isEmpty = $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0;
@@ -69,7 +72,9 @@ public class GroupActionHandler extends PoolMember {
     }
 
     public void cancelPendingAnimation() {
-        animator.cancel();
+        if (animator != null) {
+            animator.cancel();
+        }
     }
 
     public void show(boolean show) {
