@@ -200,7 +200,7 @@
         <ImageButton
             android:id="@+id/closeButton"
             style="@style/Widget.AppCompat.Light.ActionButton"
-            android:layout_width="match_parent"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:contentDescription="@string/close_messages"
             android:src="@drawable/ic_expand_more_black_24dp"
