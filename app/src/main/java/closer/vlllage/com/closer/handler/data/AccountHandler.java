@@ -31,6 +31,7 @@ public class AccountHandler extends PoolMember {
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_NAME, name));
         $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, name, null, null, null)
             .subscribe(success -> {}, this::onError));
+
     }
 
     public void updateStatus(String status) {
