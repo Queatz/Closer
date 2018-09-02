@@ -121,6 +121,9 @@ public interface Backend {
     @GET("action/{latLng}")
     Observable<List<GroupActionResult>> getGroupActionsNearGeo(@Path("latLng") String latLng);
 
+    @POST("action/{id}")
+    Observable<SuccessResult> setGroupActionPhoto(@Path("id") String groupActionId, @Query("photo") String photo);
+
     // Event
 
     @GET("event")

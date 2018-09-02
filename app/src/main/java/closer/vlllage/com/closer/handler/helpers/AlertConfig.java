@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.helpers;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StyleRes;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import closer.vlllage.com.closer.R;
@@ -22,6 +23,7 @@ public class AlertConfig {
     private ButtonClickCallback buttonClickCallback;
     private Object alertResult;
     private @StyleRes int theme = R.style.AppTheme_AlertDialog;
+    private AlertDialog dialog;
 
     public AlertConfig(ShowCallback showCallback) {
         this.showCallback = showCallback;
@@ -143,6 +145,14 @@ public class AlertConfig {
     public AlertConfig setTheme(int theme) {
         this.theme = theme;
         return this;
+    }
+
+    public void setDialog(AlertDialog dialog) {
+        this.dialog = dialog;
+    }
+
+    public AlertDialog getDialog() {
+        return dialog;
     }
 
     public interface ShowCallback {

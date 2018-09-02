@@ -8,6 +8,7 @@ import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.FeatureType;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter;
+import closer.vlllage.com.closer.handler.group.GroupActionUpgradeHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
@@ -61,19 +62,48 @@ public class GroupActionRecyclerViewHandler extends PoolMember {
         }, groupAction -> {
             if ($(FeatureHandler.class).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
                 $(AlertHandler.class).make()
-                        .setMessage($(ResourcesHandler.class).getResources().getString(R.string.remove_action_message, groupAction.getName()))
-                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.remove_action))
-                        .setPositiveButtonCallback(alertResult -> {
-                            $(ApiHandler.class).removeGroupAction(groupAction.getId()).subscribe(
-                                    successResult -> $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction),
-                                    error -> $(DefaultAlerts.class).thatDidntWork()
-                            );
+                        .setLayoutResId(R.layout.edit_action_modal)
+                        .setOnAfterViewCreated((alertConfig, view) -> {
+                            view.findViewById(R.id.takePhotoButton).setOnClickListener(v -> {
+                                takeGroupActionPhoto(groupAction);
+                                alertConfig.getDialog().dismiss();
+                            });
+                            view.findViewById(R.id.uploadPhotoButton).setOnClickListener(v -> {
+                                uploadGroupActionPhoto(groupAction);
+                                alertConfig.getDialog().dismiss();
+                            });
+                            view.findViewById(R.id.removeButton).setOnClickListener(v -> {
+                                removeGroupAction(groupAction);
+                                alertConfig.getDialog().dismiss();
+                            });
                         })
+                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.close))
                         .show();
             }
         });
 
         actionRecyclerView.setAdapter(groupActionAdapter);
+    }
+
+    private void uploadGroupActionPhoto(GroupAction groupAction) {
+        $(GroupActionUpgradeHandler.class).setPhotoFromMedia(groupAction);
+    }
+
+    private void takeGroupActionPhoto(GroupAction groupAction) {
+        $(GroupActionUpgradeHandler.class).setPhotoFromCamera(groupAction);
+    }
+
+    private void removeGroupAction(GroupAction groupAction) {
+        $(AlertHandler.class).make()
+                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.remove_action_message, groupAction.getName()))
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.remove_action))
+                .setPositiveButtonCallback(alertResult -> {
+                    $(ApiHandler.class).removeGroupAction(groupAction.getId()).subscribe(
+                            successResult -> $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction),
+                            error -> $(DefaultAlerts.class).thatDidntWork()
+                    );
+                })
+                .show();
     }
 
     public GroupActionAdapter getAdapter() {

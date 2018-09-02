@@ -12,14 +12,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.models.GroupAction;
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 
 public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder> {
@@ -84,15 +81,13 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
         });
 
         if (layout == Layout.PHOTO) {
-            String photoUrl = new String[]{
-                    "http://closer-files.vlllage.com/-7089523882354415894087138496463966086-8036632908012253855?s=500",
-                    "http://closer-files.vlllage.com/-796028576968279690120195844113056218564147041864003206309?s=500",
-                    "http://closer-files.vlllage.com/-6017237096331884528-35284271276821013372831657250643073785?s=500"
-            }[new Random().nextInt(2)];
-            Picasso.get().load(photoUrl.split("\\?")[0] + "?s=1600")
-                    .noPlaceholder()
-                    .transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.imageCorners), 0))
-                    .into(holder.photo);
+            if (groupAction.getPhoto() != null) {
+                Picasso.get().load(groupAction.getPhoto().split("\\?")[0] + "?s=256")
+                        .noPlaceholder()
+                        .into(holder.photo);
+            } else {
+                holder.photo.setImageDrawable(null);
+            }
         }
     }
 
