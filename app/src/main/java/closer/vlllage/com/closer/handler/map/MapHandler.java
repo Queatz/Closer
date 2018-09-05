@@ -23,6 +23,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
@@ -155,6 +156,8 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         if ($(NightDayHandler.class).isNight(new Date(), location)) {
             map.setMapStyle(MapStyleOptions.loadRawResourceStyle($(ApplicationHandler.class).getApp(), R.raw.google_maps_night_mode));
         }
+
+        $(RefreshHandler.class).refreshGroupActions(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     public LatLng getCenter() {
