@@ -35,35 +35,57 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.View
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int layoutResId;
+
+        switch (viewType) {
+            case 0:
+                layoutResId = R.layout.feed_item_public_groups;
+                break;
+            case 1:
+                layoutResId = R.layout.feed_item_card;
+                break;
+            default:
+                throw new IllegalStateException("Unimplemented feed injection item type");
+        }
+
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.feed_item_public_groups, parent, false));
+                .inflate(layoutResId, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        RecyclerView groupsRecyclerView = holder.itemView.findViewById(R.id.publicGroupsRecyclerView);
+        switch (getItemViewType(position)) {
+            case 0:
+                RecyclerView groupsRecyclerView = holder.itemView.findViewById(R.id.publicGroupsRecyclerView);
 
-        SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($pool(), (group, view) -> this.openGroup(group.getId(), view), this::createGroup);
-        searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item);
+                SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($pool(), (group, view) -> this.openGroup(group.getId(), view), this::createGroup);
+                searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item);
 
-        groupsRecyclerView.setAdapter(searchGroupsAdapter);
-        groupsRecyclerView.setLayoutManager(new LinearLayoutManager(
-                groupsRecyclerView.getContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-        ));
+                groupsRecyclerView.setAdapter(searchGroupsAdapter);
+                groupsRecyclerView.setLayoutManager(new LinearLayoutManager(
+                        groupsRecyclerView.getContext(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                ));
 
-        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
-                .equal(Group_.isPublic, true)
-                .notEqual(Group_.physical, true);
+                QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
+                        .equal(Group_.isPublic, true)
+                        .notEqual(Group_.physical, true);
 
-        $(DisposableHandler.class).add(queryBuilder
-                .sort($(SortHandler.class).sortGroups())
-                .build()
-                .subscribe().on(AndroidScheduler.mainThread())
-                .observer(searchGroupsAdapter::setGroups));
+                $(DisposableHandler.class).add(queryBuilder
+                        .sort($(SortHandler.class).sortGroups())
+                        .build()
+                        .subscribe().on(AndroidScheduler.mainThread())
+                        .observer(searchGroupsAdapter::setGroups));
 
-        holder.itemView.findViewById(R.id.action).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
+                holder.itemView.findViewById(R.id.action).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
+                break;
+            case 1:
+
+                break;
+            default:
+                throw new IllegalStateException("Unimplemented feed injection item type");
+        }
     }
 
     private void createGroup(String groupName) {
@@ -95,13 +117,18 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.View
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
-        return 1;
+        return 2;
     }
 
     @Override
     public int getItemPriority(int position) {
-        return 0;
+        return position * 10;
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {

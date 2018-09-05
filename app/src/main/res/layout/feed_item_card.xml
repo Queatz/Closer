@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/green"
+    android:elevation="16dp"
+    android:clickable="true">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padDouble"
+        android:elevation="@dimen/elevation"
+        android:background="@drawable/clickable_green_4dp">
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="250dp" />
+
+        <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="@dimen/pad"
+            android:minWidth="0dp"
+            android:src="@drawable/ic_close_black_24dp"
+            android:tint="@color/text"
+            android:contentDescription="@string/close" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/text"
+            android:textSize="44sp"
+            android:text="Hey!"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
