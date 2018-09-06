@@ -123,7 +123,7 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 1;
     }
 
     @Override
