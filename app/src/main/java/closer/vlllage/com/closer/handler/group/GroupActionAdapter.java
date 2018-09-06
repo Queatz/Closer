@@ -1,7 +1,9 @@
 package closer.vlllage.com.closer.handler.group;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.models.GroupAction;
@@ -81,12 +85,24 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
         });
 
         if (layout == Layout.PHOTO) {
+            switch (new Random(groupAction.getId().hashCode()).nextInt(4)) {
+                case 0: holder.itemView.setBackgroundResource(R.drawable.clickable_red_8dp); break;
+                case 1: holder.itemView.setBackgroundResource(R.drawable.clickable_blue_8dp); break;
+                case 2: holder.itemView.setBackgroundResource(R.drawable.clickable_accent_8dp); break;
+                case 3: holder.itemView.setBackgroundResource(R.drawable.clickable_green_8dp); break;
+            }
+
             if (groupAction.getPhoto() != null) {
+                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, $(ResourcesHandler.class).getResources().getDimension(R.dimen.groupActionSmallTextSize));
+                holder.actionName.setBackgroundResource(R.color.black_25);
+                holder.photo.setImageDrawable(null);
                 Picasso.get().load(groupAction.getPhoto().split("\\?")[0] + "?s=256")
                         .noPlaceholder()
                         .into(holder.photo);
             } else {
-                holder.photo.setImageDrawable(null);
+                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, $(ResourcesHandler.class).getResources().getDimension(R.dimen.groupActionLargeTextSize));
+                holder.actionName.setBackground(null);
+                holder.photo.setImageResource(getRandomBubbleBackgroundResource(groupAction));
             }
         }
     }
@@ -99,6 +115,14 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
     public void setGroupActions(List<GroupAction> groupActions) {
         this.groupActions = groupActions;
         notifyDataSetChanged();
+    }
+
+    private @DrawableRes int getRandomBubbleBackgroundResource(GroupAction groupAction) {
+        switch (new Random(groupAction.getId().hashCode()).nextInt(3)) {
+            case 0: return R.drawable.bkg_bubbles;
+            case 1: return R.drawable.bkg_bubbles_2;
+            default: return R.drawable.bkg_bubbles_3;
+        }
     }
 
     class GroupActionViewHolder extends RecyclerView.ViewHolder {

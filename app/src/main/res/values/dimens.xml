@@ -15,5 +15,7 @@
     <dimen name="groupActionHeight">28dp</dimen>
     <dimen name="miniWindowCornerRadius">12dp</dimen>
     <dimen name="groupActionCombinedWidth">138dp</dimen>
-    <dimen name="groupActionCombinedHeight">92dp</dimen>
+    <dimen name="groupActionCombinedHeight">84dp</dimen>
+    <dimen name="groupActionSmallTextSize">14sp</dimen>
+    <dimen name="groupActionLargeTextSize">16sp</dimen>
 </resources>

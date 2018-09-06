@@ -5,7 +5,6 @@
     android:layout_marginLeft="8dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/clickable_red_8dp"
-    android:foreground="@drawable/clickable_light_rounded_8dp"
     android:clipChildren="true"
     android:elevation="@dimen/elevationSmall">
 
@@ -14,19 +13,20 @@
         android:importantForAccessibility="no"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:foreground="@drawable/clickable_light_rounded_8dp"
         android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/actionName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/black_50"
+        android:layout_gravity="center"
+        android:background="@color/black_25"
         android:gravity="center"
         android:padding="@dimen/pad"
         android:textColor="@color/text"
         android:maxLines="3"
-        android:textSize="12sp"
+        android:textSize="@dimen/groupActionSmallTextSize"
         android:textStyle="bold"
         tools:text="Book a room or hotel tonight"
         android:focusable="true" />

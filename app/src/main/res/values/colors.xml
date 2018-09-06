@@ -33,6 +33,7 @@
     <color name="white_75">#aaffffff</color>
     <color name="white_50">#88ffffff</color>
     <color name="black_15">#33000000</color>
+    <color name="black_25">#3f000000</color>
     <color name="black_50">#88000000</color>
     <color name="black_75">#d8000000</color>
     <color name="purple">#9c27b0</color>
