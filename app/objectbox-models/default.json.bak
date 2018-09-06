@@ -1,0 +1,483 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:3092013763985517168",
+      "lastPropertyId": "15:3344685741257910284",
+      "name": "GroupMessage",
+      "properties": [
+        {
+          "id": "3:3595521062235222189",
+          "name": "time"
+        },
+        {
+          "id": "4:1896005039431435770",
+          "name": "text"
+        },
+        {
+          "id": "7:3655797912122207190",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "8:7776811488768909515",
+          "name": "id"
+        },
+        {
+          "id": "9:4182381206695047391",
+          "name": "localOnly"
+        },
+        {
+          "id": "10:486508502355356654",
+          "name": "attachment"
+        },
+        {
+          "id": "11:2776501893499085328",
+          "name": "updated"
+        },
+        {
+          "id": "12:2464010924768596038",
+          "name": "to"
+        },
+        {
+          "id": "13:7306602022075845658",
+          "name": "from"
+        },
+        {
+          "id": "14:5305071757799735661",
+          "name": "latitude"
+        },
+        {
+          "id": "15:3344685741257910284",
+          "name": "longitude"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:9013209487586608073",
+      "lastPropertyId": "14:5874880209139703098",
+      "name": "Group",
+      "properties": [
+        {
+          "id": "1:904254479800810429",
+          "name": "name"
+        },
+        {
+          "id": "3:6726187093257757356",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "4:5637223626517494076",
+          "name": "id"
+        },
+        {
+          "id": "5:7389603896197131179",
+          "name": "localOnly"
+        },
+        {
+          "id": "6:6578776315379750746",
+          "name": "updated"
+        },
+        {
+          "id": "7:2655491425991978749",
+          "name": "about"
+        },
+        {
+          "id": "8:3008301545500938716",
+          "name": "isPublic"
+        },
+        {
+          "id": "9:9205502877491979019",
+          "name": "latitude"
+        },
+        {
+          "id": "10:7227962715156371239",
+          "name": "longitude"
+        },
+        {
+          "id": "11:8738297389917448441",
+          "name": "eventId"
+        },
+        {
+          "id": "12:353422392712796456",
+          "name": "hub"
+        },
+        {
+          "id": "13:6317544904558044070",
+          "name": "physical"
+        },
+        {
+          "id": "14:5874880209139703098",
+          "name": "photo"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:2668914613475328225",
+      "lastPropertyId": "8:8490833227022112421",
+      "name": "Suggestion",
+      "properties": [
+        {
+          "id": "1:1069851688853331387",
+          "name": "name"
+        },
+        {
+          "id": "2:1788379476995231392",
+          "name": "latitude"
+        },
+        {
+          "id": "3:9120036182801980332",
+          "name": "longitude"
+        },
+        {
+          "id": "5:7318322582116322369",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "6:3964784458362016148",
+          "name": "id"
+        },
+        {
+          "id": "7:6199066423179121563",
+          "name": "localOnly"
+        },
+        {
+          "id": "8:8490833227022112421",
+          "name": "updated"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:5817218640394675404",
+      "lastPropertyId": "9:6571211007072002545",
+      "name": "GroupContact",
+      "properties": [
+        {
+          "id": "1:2791506153500429407",
+          "name": "groupId"
+        },
+        {
+          "id": "2:6860108171416127750",
+          "name": "contactId"
+        },
+        {
+          "id": "4:1295533425304545414",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "5:3557947604739910027",
+          "name": "id"
+        },
+        {
+          "id": "6:4399834040128071714",
+          "name": "localOnly"
+        },
+        {
+          "id": "7:7547445153607656916",
+          "name": "contactName"
+        },
+        {
+          "id": "8:306021590229246880",
+          "name": "updated"
+        },
+        {
+          "id": "9:6571211007072002545",
+          "name": "contactActive"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:1712141393189559501",
+      "lastPropertyId": "8:9046269815947926696",
+      "name": "Contact",
+      "properties": [
+        {
+          "id": "1:5651612129817543896",
+          "name": "name"
+        },
+        {
+          "id": "2:1632332049364133490",
+          "name": "phoneNumber"
+        },
+        {
+          "id": "3:3072182119841680568",
+          "name": "closerAccountId"
+        },
+        {
+          "id": "5:5932839561335499487",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "6:49645757794084877",
+          "name": "id"
+        },
+        {
+          "id": "7:2398325554330231513",
+          "name": "localOnly"
+        },
+        {
+          "id": "8:9046269815947926696",
+          "name": "updated"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:9078707568114682844",
+      "lastPropertyId": "6:1600915316436762377",
+      "name": "GroupInvite",
+      "properties": [
+        {
+          "id": "1:1706929602206316537",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "2:1139485389758016689",
+          "name": "id"
+        },
+        {
+          "id": "3:538121515642378582",
+          "name": "localOnly"
+        },
+        {
+          "id": "4:1936664011992188602",
+          "name": "name"
+        },
+        {
+          "id": "5:1641083327746043588",
+          "name": "group"
+        },
+        {
+          "id": "6:1600915316436762377",
+          "name": "updated"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:1991292620081453937",
+      "lastPropertyId": "8:3487533255093902133",
+      "name": "Phone",
+      "properties": [
+        {
+          "id": "1:8308814560718815814",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "2:452528679596616997",
+          "name": "id"
+        },
+        {
+          "id": "3:7837480250896411074",
+          "name": "localOnly"
+        },
+        {
+          "id": "4:6544364355998792389",
+          "name": "updated"
+        },
+        {
+          "id": "5:544901903205733329",
+          "name": "name"
+        },
+        {
+          "id": "6:1233109524815350569",
+          "name": "status"
+        },
+        {
+          "id": "7:597369513148796936",
+          "name": "latitude"
+        },
+        {
+          "id": "8:3487533255093902133",
+          "name": "longitude"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:3055293152274442269",
+      "lastPropertyId": "13:452654410564139046",
+      "name": "Event",
+      "properties": [
+        {
+          "id": "1:5892680779549446967",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "2:6190040867488687592",
+          "name": "id"
+        },
+        {
+          "id": "3:7170770939143389581",
+          "name": "localOnly"
+        },
+        {
+          "id": "4:8237041348143512375",
+          "name": "updated"
+        },
+        {
+          "id": "5:7100558274697301392",
+          "name": "name"
+        },
+        {
+          "id": "6:987231340432328519",
+          "name": "about"
+        },
+        {
+          "id": "7:4967474955728746139",
+          "name": "latitude"
+        },
+        {
+          "id": "8:2249103873761431570",
+          "name": "longitude"
+        },
+        {
+          "id": "9:3882982762926609760",
+          "name": "startsAt"
+        },
+        {
+          "id": "10:3960888418770153941",
+          "name": "endsAt"
+        },
+        {
+          "id": "11:1439718590964151186",
+          "name": "cancelled"
+        },
+        {
+          "id": "12:4393702245697350462",
+          "name": "groupId"
+        },
+        {
+          "id": "13:452654410564139046",
+          "name": "creator"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:8704126334861607536",
+      "lastPropertyId": "9:4098664039663887995",
+      "name": "PhoneMessage",
+      "properties": [
+        {
+          "id": "1:4513534797676694478",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "2:6708405770228040027",
+          "name": "id"
+        },
+        {
+          "id": "3:5912689381383815728",
+          "name": "localOnly"
+        },
+        {
+          "id": "4:1836465188834328029",
+          "name": "updated"
+        },
+        {
+          "id": "5:876460382624348847",
+          "name": "to"
+        },
+        {
+          "id": "6:1834546887895431343",
+          "name": "from"
+        },
+        {
+          "id": "7:686126217269167643",
+          "name": "time"
+        },
+        {
+          "id": "8:3031788487232641614",
+          "name": "text"
+        },
+        {
+          "id": "9:4098664039663887995",
+          "name": "attachment"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:8266148462873018362",
+      "lastPropertyId": "7:6541339924132281834",
+      "name": "GroupAction",
+      "properties": [
+        {
+          "id": "1:5345404817526890848",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "2:3040337129778287847",
+          "name": "id"
+        },
+        {
+          "id": "3:7239665359743033401",
+          "name": "localOnly"
+        },
+        {
+          "id": "4:2015954601952183328",
+          "name": "updated"
+        },
+        {
+          "id": "5:1060345514906892481",
+          "name": "group"
+        },
+        {
+          "id": "6:1902452573543998731",
+          "name": "name"
+        },
+        {
+          "id": "7:6541339924132281834",
+          "name": "intent"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "11:2633172420932662258",
+      "lastPropertyId": "3:4726369524231746969",
+      "name": "GroupDraft",
+      "properties": [
+        {
+          "id": "1:5772179217959066458",
+          "name": "objectBoxId"
+        },
+        {
+          "id": "2:7424659624618863751",
+          "name": "groupId"
+        },
+        {
+          "id": "3:4726369524231746969",
+          "name": "message"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "11:2633172420932662258",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    2469906030455349510,
+    7456027271271344508,
+    1526644454543713759,
+    5021317181277012514,
+    6262733670368575193,
+    1221236734714419392,
+    2933758913697396378,
+    8639075503090225360
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
