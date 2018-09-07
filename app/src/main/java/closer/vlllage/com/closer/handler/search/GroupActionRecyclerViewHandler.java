@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -61,24 +62,11 @@ public class GroupActionRecyclerViewHandler extends PoolMember {
                     .show();
         }, groupAction -> {
             if ($(FeatureHandler.class).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
-                $(AlertHandler.class).make()
-                        .setLayoutResId(R.layout.edit_action_modal)
-                        .setOnAfterViewCreated((alertConfig, view) -> {
-                            view.findViewById(R.id.takePhotoButton).setOnClickListener(v -> {
-                                takeGroupActionPhoto(groupAction);
-                                alertConfig.getDialog().dismiss();
-                            });
-                            view.findViewById(R.id.uploadPhotoButton).setOnClickListener(v -> {
-                                uploadGroupActionPhoto(groupAction);
-                                alertConfig.getDialog().dismiss();
-                            });
-                            view.findViewById(R.id.removeButton).setOnClickListener(v -> {
-                                removeGroupAction(groupAction);
-                                alertConfig.getDialog().dismiss();
-                            });
-                        })
-                        .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.close))
-                        .show();
+                $(MenuHandler.class).show(
+                        new MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo, () -> takeGroupActionPhoto(groupAction)),
+                        new MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo, () -> uploadGroupActionPhoto(groupAction)),
+                        new MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_action_menu_item, () -> removeGroupAction(groupAction))
+                );
             }
         });
 
