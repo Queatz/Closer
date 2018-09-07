@@ -1,4 +1,21 @@
 
+
+mapBubble -> proxyBubble | null
+updateInfo -> updateMapBubble | updateProxyBubble
+
+
+Bubbles can be added to and removed from a ProxyBubble
+ - when added / removed / moved
+ - at any other time, i.e. map zoom
+
+When bubbles enter/exit proxy bubbles, they are removed/added to BubbleMapLayer
+
+
+When not in a proxy, all updates go directly to BubbleMapLayer
+When in a proxy, all updates go to BubbleMapLayer via the proxyBubble
+
+
+
 # MKTG
 
  [ | | ] Do some f*** stunts
