@@ -8,7 +8,7 @@ android {
         applicationId 'closer.vlllage.com.closer'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 97
+        versionCode readVersionCode()
         versionName '1.0'
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
@@ -83,6 +83,41 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+def readVersionCode() {
+    def versionPropsFile = file('../version.properties')
+    if (versionPropsFile.canRead()) {
+        Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        return versionProps['versionCode'].toInteger()
+    }
+
+    throw new GradleException("Could not read version.properties!")
+}
+
+def incrementVersionCode() {
+    def versionPropsFile = file('../version.properties')
+    if (versionPropsFile.canRead()) {
+        Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def code = versionProps['versionCode'].toInteger() + 1
+        versionProps['versionCode'] = code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+        return code
+    }
+
+    throw new GradleException("Could not read version.properties!")
+}
+
+task prepareVersionCode << {
+    print 'Version code updated to ' + incrementVersionCode()
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'publishReleaseBundle') {
+        task.dependsOn prepareVersionCode
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
