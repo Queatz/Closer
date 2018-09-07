@@ -85,11 +85,11 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
         });
 
         if (layout == Layout.PHOTO) {
-            switch (new Random(groupAction.getId().hashCode()).nextInt(4)) {
-                case 0: holder.itemView.setBackgroundResource(R.drawable.clickable_red_8dp); break;
+            switch (getRandom(groupAction).nextInt(4)) {
                 case 1: holder.itemView.setBackgroundResource(R.drawable.clickable_blue_8dp); break;
                 case 2: holder.itemView.setBackgroundResource(R.drawable.clickable_accent_8dp); break;
                 case 3: holder.itemView.setBackgroundResource(R.drawable.clickable_green_8dp); break;
+                default: holder.itemView.setBackgroundResource(R.drawable.clickable_red_8dp); break;
             }
 
             if (groupAction.getPhoto() != null) {
@@ -107,6 +107,12 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
         }
     }
 
+    private Random getRandom(GroupAction groupAction) {
+        return new Random(groupAction.getId() == null ?
+                groupAction.getObjectBoxId() :
+                groupAction.getId().hashCode());
+    }
+
     @Override
     public int getItemCount() {
         return groupActions.size();
@@ -118,7 +124,7 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
     }
 
     private @DrawableRes int getRandomBubbleBackgroundResource(GroupAction groupAction) {
-        switch (new Random(groupAction.getId().hashCode()).nextInt(3)) {
+        switch (getRandom(groupAction).nextInt(3)) {
             case 0: return R.drawable.bkg_bubbles;
             case 1: return R.drawable.bkg_bubbles_2;
             default: return R.drawable.bkg_bubbles_3;
