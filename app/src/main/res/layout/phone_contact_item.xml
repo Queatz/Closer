@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:tint="@android:color/white"
+        android:tint="@color/text"
         android:alpha=".75"
         android:src="@drawable/ic_person_add_black_24dp"/>
 

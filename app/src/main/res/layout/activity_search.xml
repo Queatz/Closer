@@ -51,7 +51,7 @@
             android:layout_height="48dp"
             android:contentDescription="@string/close_messages"
             android:src="@drawable/ic_expand_more_black_24dp"
-            android:tint="@android:color/white"
+            android:tint="@color/text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
@@ -78,8 +78,8 @@
             android:paddingBottom="8dp"
             android:selectAllOnFocus="true"
             android:textColor="@color/text"
-            android:textColorHint="@color/highlight"
-            android:textColorHighlight="@color/white_75"
+            android:textColorHint="@color/textHint"
+            android:textColorHighlight="@color/colorAccent_50"
             android:textSize="12sp" />
 
         <android.support.v7.widget.RecyclerView

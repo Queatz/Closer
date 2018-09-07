@@ -6,6 +6,7 @@
     <color name="text">@color/white</color>
     <color name="textInverse">@color/dark</color>
     <color name="highlightInverse">@color/black_15</color>
+    <color name="textHint">@color/white_75</color>
 
     <!-- Values -->
 

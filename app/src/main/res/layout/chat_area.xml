@@ -31,7 +31,7 @@
         android:minWidth="0dp"
         android:background="@drawable/clickable_light_flat"
         android:padding="8dp"
-        android:tint="@android:color/white"
+        android:tint="@color/white"
         android:src="@drawable/ic_chevron_right_black_24dp"
         android:contentDescription="@string/send_message" />
 
@@ -55,9 +55,9 @@
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
         android:selectAllOnFocus="true"
-        android:textColor="@android:color/white"
-        android:textColorHint="@color/highlight"
-        android:textColorHighlight="@color/white_75"
+        android:textColor="@color/text"
+        android:textColorHint="@color/textHint"
+        android:textColorHighlight="@color/colorAccent_50"
         android:textSize="12sp"
         tools:text="Hey guys let's go out" />
 
