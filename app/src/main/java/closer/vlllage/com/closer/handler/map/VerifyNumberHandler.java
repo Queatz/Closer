@@ -28,34 +28,34 @@ public class VerifyNumberHandler extends PoolMember {
             }
         }, error -> $(DefaultAlerts.class).thatDidntWork()));
 
-        getCode();
+        getCodeFromUser(phoneNumber);
     }
 
-    private void getCode() {
+    private void getCodeFromUser(String phoneNumber) {
         $(AlertHandler.class).make()
                 .setLayoutResId(R.layout.verify_number_layout)
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.verify_number))
-                .setTextView(R.id.input, this::sendVerificationCode)
+                .setTextView(R.id.input, verificationCode -> sendVerificationCode(phoneNumber, verificationCode))
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.wait_for_it))
                 .show();
     }
 
-    private void sendVerificationCode(String verificationCode) {
+    private void sendVerificationCode(String phoneNumber, String verificationCode) {
         $(DisposableHandler.class).add($(ApiHandler.class).sendVerificationCode(verificationCode).subscribe(result -> {
             if (result.success) {
                 codeConfirmed();
             } else {
-                codeNotConfirmed();
+                codeNotConfirmed(phoneNumber);
             }
-        }, error -> codeNotConfirmed()));
+        }, error -> codeNotConfirmed(phoneNumber)));
     }
 
-    private void codeNotConfirmed() {
+    private void codeNotConfirmed(String phoneNumber) {
         $(AlertHandler.class).make()
                 .setMessage($(ResourcesHandler.class).getResources().getString(R.string.number_not_verified))
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.oh_no))
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.resend_code))
-                .setPositiveButtonCallback(result -> getCode())
+                .setPositiveButtonCallback(result -> sendPhoneNumber(phoneNumber))
                 .show();
     }
 
