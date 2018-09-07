@@ -52,9 +52,6 @@
             android:contentDescription="@string/close_messages"
             android:src="@drawable/ic_expand_more_black_24dp"
             android:tint="@android:color/white"
-            android:focusedByDefault="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
@@ -70,7 +67,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:background="@drawable/clickable_light_flat"
-            android:focusedByDefault="false"
+            android:focusedByDefault="true"
             android:hint="@string/search_public_groups_hint"
             android:imeOptions="actionGo"
             android:inputType="text|textCapWords"

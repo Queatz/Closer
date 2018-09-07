@@ -23,6 +23,8 @@ public class SearchActivity extends CircularRevealActivity {
 
         EditText searchGroups = findViewById(R.id.searchGroups);
 
+        searchGroups.requestFocus();
+
         $(SearchHandler.class).attach(
                 searchGroups,
                 findViewById(R.id.groupsRecyclerView)
