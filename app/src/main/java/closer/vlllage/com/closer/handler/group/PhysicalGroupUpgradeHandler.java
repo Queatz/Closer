@@ -7,7 +7,9 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Group;
 
@@ -26,20 +28,26 @@ public class PhysicalGroupUpgradeHandler extends PoolMember {
     }
 
     public void setBackground(Group group) {
-        $(CameraHandler.class).showCamera((photoUri -> {
-            $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> {
-                String photo = $(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId);
-                $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).setGroupPhoto(group.getId(), photo).subscribe(
-                        successResult -> {
-                            if (successResult.success) {
-                                group.setPhoto(photo);
-                            } else {
-                                $(DefaultAlerts.class).thatDidntWork();
-                            }
-                        },
-                        error -> $(DefaultAlerts.class).thatDidntWork()
-                ));
-            });
-        }));
+        $(MenuHandler.class).show(
+                new MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo, () -> {
+                    $(CameraHandler.class).showCamera((photoUri -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> handlePhoto(group, photoId))));
+                }),
+                new MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo, () -> {
+                    $(MediaHandler.class).getPhoto((photoUri -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> handlePhoto(group, photoId))));
+                }));
+    }
+
+    private void handlePhoto(Group group, String photoId) {
+        String photo = $(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId);
+        $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).setGroupPhoto(group.getId(), photo).subscribe(
+                successResult -> {
+                    if (successResult.success) {
+                        group.setPhoto(photo);
+                    } else {
+                        $(DefaultAlerts.class).thatDidntWork();
+                    }
+                },
+                error -> $(DefaultAlerts.class).thatDidntWork()
+        ));
     }
 }
