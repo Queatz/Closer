@@ -21,6 +21,11 @@ public class TimedValue<T> {
         return trackedValues.isEmpty() ? null : trackedValues.getFirst().value;
     }
 
+    public T now() {
+        cleanup();
+        return trackedValues.isEmpty() ? null : trackedValues.getLast().value;
+    }
+
     private void cleanup() {
         Date now = new Date();
         now.setTime(now.getTime() - trackMsInPast);
