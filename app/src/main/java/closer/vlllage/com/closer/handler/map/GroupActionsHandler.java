@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.search.GroupActionRecyclerViewHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -34,7 +35,7 @@ public class GroupActionsHandler extends PoolMember {
 
     public void recenter(LatLng center) {
         if (dataSubscription != null) {
-            dataSubscription.cancel();
+            $(DisposableHandler.class).dispose(dataSubscription);
         }
 
         float distance = .12f;
@@ -61,5 +62,7 @@ public class GroupActionsHandler extends PoolMember {
                             .on(AndroidScheduler.mainThread())
                             .observer(groupActions -> $(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions));
                 });
+
+        $(DisposableHandler.class).add(dataSubscription);
     }
 }

@@ -16,17 +16,22 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.map.MapHandler;
 import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
+import closer.vlllage.com.closer.pool.TempPool;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.ViewHolder> implements CombinedRecyclerAdapter.PrioritizedAdapter {
+import static closer.vlllage.com.closer.pool.Pool.tempPool;
+
+public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAdapter.ViewHolder> implements CombinedRecyclerAdapter.PrioritizedAdapter {
 
     public FeedInjectionsAdapter(PoolMember poolMember) {
         super(poolMember);
@@ -34,7 +39,7 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.View
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutResId;
 
         switch (viewType) {
@@ -53,7 +58,9 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.pool = tempPool();
+
         switch (getItemViewType(position)) {
             case 0:
                 RecyclerView groupsRecyclerView = holder.itemView.findViewById(R.id.publicGroupsRecyclerView);
@@ -68,15 +75,25 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.View
                         false
                 ));
 
-                QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
-                        .equal(Group_.isPublic, true)
-                        .notEqual(Group_.physical, true);
+                float distance = .12f;
 
-                $(DisposableHandler.class).add(queryBuilder
-                        .sort($(SortHandler.class).sortGroups())
-                        .build()
-                        .subscribe().on(AndroidScheduler.mainThread())
-                        .observer(searchGroupsAdapter::setGroups));
+                holder.pool.$(DisposableHandler.class).add($(MapHandler.class).onMapIdleObservable()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(cameraPosition -> {
+                    QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
+                            .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
+                            .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
+                            .equal(Group_.isPublic, true)
+                            .notEqual(Group_.physical, true);
+
+                    holder.pool.$(DisposableHandler.class).add(queryBuilder
+                            .sort($(SortHandler.class).sortGroups())
+                            .build()
+                            .subscribe()
+                            .single()
+                            .on(AndroidScheduler.mainThread())
+                            .observer(searchGroupsAdapter::setGroups));
+                }));
 
                 holder.itemView.findViewById(R.id.action).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
                 break;
@@ -86,6 +103,11 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.View
             default:
                 throw new IllegalStateException("Unimplemented feed injection item type");
         }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        holder.pool.end();
     }
 
     private void createGroup(String groupName) {
@@ -131,7 +153,9 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<RecyclerView.View
         return position * 10;
     }
 
-    private static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TempPool pool;
+
         public ViewHolder(View itemView) {
             super(itemView);
         }

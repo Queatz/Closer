@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.search;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,9 +141,30 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     }
 
     public void setGroups(List<Group> groups) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return SearchGroupsAdapter.this.groups.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return groups.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldPosition, int newPosition) {
+                return SearchGroupsAdapter.this.groups.get(oldPosition).getId().equals(groups.get(newPosition).getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldPosition, int newPosition) {
+                return SearchGroupsAdapter.this.groups.get(oldPosition).getName().equals(groups.get(newPosition).getName());
+            }
+        });
         this.groups.clear();
         this.groups.addAll(groups);
-        notifyDataSetChanged();
+        diffResult.dispatchUpdatesTo(this);
     }
 
     private int getCreateGroupCount() {

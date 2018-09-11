@@ -28,6 +28,8 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
@@ -42,6 +44,8 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     private OnMapLongClickedListener onMapLongClickedListener;
     private OnMapReadyListener onMapReadyListener;
     private OnMapIdleListener onMapIdleListener;
+
+    private BehaviorSubject<CameraPosition> onMapIdleObservable = BehaviorSubject.create();
 
     public void attach(MapFragment mapFragment) {
         mapFragment.getMapAsync(this);
@@ -89,10 +93,12 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
         onMapReadyListener.onMapReady(map);
         map.setOnCameraMoveListener(this::mapChanged);
-        map.setOnCameraIdleListener(onMapChangedListener::onMapChanged);
         map.setOnMapClickListener(onMapClickedListener::onMapClicked);
         map.setOnMapLongClickListener(onMapLongClickedListener::onMapLongClicked);
-        map.setOnCameraIdleListener(() -> onMapIdleListener.onMapIdle(map.getCameraPosition().target));
+        map.setOnCameraIdleListener(() -> {
+            onMapIdleListener.onMapIdle(map.getCameraPosition().target);
+            onMapIdleObservable.onNext(map.getCameraPosition());
+        });
         mapView.addOnLayoutChangeListener((v, i1, i2, i3, i4, i5, i6, i7, i8) -> onMapChangedListener.onMapChanged());
         onMapChangedListener.onMapChanged();
         int statusBarHeightResId = $(ResourcesHandler.class).getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -205,6 +211,10 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
             // Error using newLatLngBounds(LatLngBounds, int):
             // View size is too small after padding is applied.
         }
+    }
+
+    public Observable<CameraPosition> onMapIdleObservable() {
+        return onMapIdleObservable;
     }
 
     public interface OnMapChangedListener {
