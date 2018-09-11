@@ -20,7 +20,10 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
+import closer.vlllage.com.closer.store.models.Group_;
 
 
 public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder> {
@@ -85,6 +88,12 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
         });
 
         if (layout == Layout.PHOTO) {
+            Group group = $(StoreHandler.class).getStore().box(Group.class).query()
+                    .equal(Group_.id, groupActions.get(position).getGroup())
+                    .build()
+                    .findFirst();
+            holder.groupName.setText(group == null ? "" : group.getName());
+
             switch (getRandom(groupAction).nextInt(4)) {
                 case 1: holder.itemView.setBackgroundResource(R.drawable.clickable_blue_8dp); break;
                 case 2: holder.itemView.setBackgroundResource(R.drawable.clickable_accent_8dp); break;
@@ -135,11 +144,13 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
 
         ImageView photo;
         TextView actionName;
+        TextView groupName;
 
         public GroupActionViewHolder(View itemView) {
             super(itemView);
             itemView.setClipToOutline(true);
             actionName = itemView.findViewById(R.id.actionName);
+            groupName = itemView.findViewById(R.id.groupName);
             photo = itemView.findViewById(R.id.photo);
         }
     }
