@@ -179,6 +179,7 @@ public class MapSlideFragment extends PoolFragment {
 
             $(RefreshHandler.class).refreshEvents(latLng);
             $(RefreshHandler.class).refreshPhysicalGroups(latLng);
+            $(GroupActionsHandler.class).recenter($(MapHandler.class).getCenter());
         });
         $(MapHandler.class).attach((MapFragment) getChildFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();

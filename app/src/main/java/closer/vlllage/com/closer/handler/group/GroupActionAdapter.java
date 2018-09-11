@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -33,7 +34,7 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
         PHOTO
     }
 
-    private List<GroupAction> groupActions = new ArrayList<>();
+    private final List<GroupAction> groupActions = new ArrayList<>();
     private OnGroupActionClickListener onGroupActionClickListener;
     private OnGroupActionLongClickListener onGroupActionLongClickListener;
     private final Layout layout;
@@ -128,8 +129,32 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
     }
 
     public void setGroupActions(List<GroupAction> groupActions) {
-        this.groupActions = groupActions;
-        notifyDataSetChanged();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return GroupActionAdapter.this.groupActions.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return groupActions.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldPosition, int newPosition) {
+                return GroupActionAdapter.this.groupActions.get(oldPosition).getId()
+                        .equals(groupActions.get(newPosition).getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldPosition, int newPosition) {
+                return GroupActionAdapter.this.groupActions.get(oldPosition).getName()
+                        .equals(groupActions.get(newPosition).getName());
+            }
+        }, true);
+        this.groupActions.clear();
+        this.groupActions.addAll(groupActions);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     private @DrawableRes int getRandomBubbleBackgroundResource(GroupAction groupAction) {
