@@ -84,7 +84,7 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
                             .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                             .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
                             .equal(Group_.isPublic, true)
-                            .notEqual(Group_.physical, true);
+                            .notEqual(Group_.name, "");
 
                     holder.pool.$(DisposableHandler.class).add(queryBuilder
                             .sort($(SortHandler.class).sortGroups())
@@ -92,7 +92,10 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
                             .subscribe()
                             .single()
                             .on(AndroidScheduler.mainThread())
-                            .observer(searchGroupsAdapter::setGroups));
+                            .observer(groups -> {
+                                searchGroupsAdapter.setGroups(groups);
+                                groupsRecyclerView.forceLayout();
+                            }));
                 }));
 
                 holder.itemView.findViewById(R.id.action).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));

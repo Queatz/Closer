@@ -68,8 +68,7 @@ public class SearchHandler extends PoolMember {
         });
 
         QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
-                .equal(Group_.isPublic, true)
-                .notEqual(Group_.physical, true);
+                .equal(Group_.isPublic, true);
 
         $(DisposableHandler.class).add(queryBuilder
                 .sort($(SortHandler.class).sortGroups())
