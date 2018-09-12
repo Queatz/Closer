@@ -142,13 +142,17 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
 
             @Override
             public boolean areItemsTheSame(int oldPosition, int newPosition) {
-                return GroupActionAdapter.this.groupActions.get(oldPosition).getId()
+                return GroupActionAdapter.this.groupActions.get(oldPosition).getId() != null &&
+                        groupActions.get(newPosition).getId() != null &&
+                        GroupActionAdapter.this.groupActions.get(oldPosition).getId()
                         .equals(groupActions.get(newPosition).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldPosition, int newPosition) {
-                return GroupActionAdapter.this.groupActions.get(oldPosition).getName()
+                return GroupActionAdapter.this.groupActions.get(oldPosition).getName() != null &&
+                        groupActions.get(newPosition).getName() != null &&
+                        GroupActionAdapter.this.groupActions.get(oldPosition).getName()
                         .equals(groupActions.get(newPosition).getName());
             }
         }, true);

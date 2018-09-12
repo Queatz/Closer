@@ -58,7 +58,7 @@ public class GroupActionRecyclerViewHandler extends PoolMember {
                     })
                     .setTitle(groupAction.getName())
                     .setMessage(group.getName())
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.go))
+                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.post))
                     .show();
         }, groupAction -> {
             if ($(FeatureHandler.class).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {

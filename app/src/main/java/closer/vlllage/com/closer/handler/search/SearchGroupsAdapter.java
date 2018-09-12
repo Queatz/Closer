@@ -158,12 +158,16 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
             @Override
             public boolean areItemsTheSame(int oldPosition, int newPosition) {
-                return SearchGroupsAdapter.this.groups.get(oldPosition).getId().equals(groups.get(newPosition).getId());
+                return SearchGroupsAdapter.this.groups.get(oldPosition).getId() != null &&
+                        groups.get(oldPosition).getId() != null &&
+                        SearchGroupsAdapter.this.groups.get(newPosition).getId().equals(groups.get(newPosition).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldPosition, int newPosition) {
-                return SearchGroupsAdapter.this.groups.get(oldPosition).getName().equals(groups.get(newPosition).getName());
+                return SearchGroupsAdapter.this.groups.get(oldPosition).getName() != null &&
+                        groups.get(newPosition).getName() != null &&
+                        SearchGroupsAdapter.this.groups.get(oldPosition).getName().equals(groups.get(newPosition).getName());
             }
         });
         this.groups.clear();
