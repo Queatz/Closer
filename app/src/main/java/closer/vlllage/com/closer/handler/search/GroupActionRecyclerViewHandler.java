@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -86,10 +87,10 @@ public class GroupActionRecyclerViewHandler extends PoolMember {
                 .setMessage($(ResourcesHandler.class).getResources().getString(R.string.remove_action_message, groupAction.getName()))
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.remove_action))
                 .setPositiveButtonCallback(alertResult -> {
-                    $(ApiHandler.class).removeGroupAction(groupAction.getId()).subscribe(
+                    $(DisposableHandler.class).add($(ApiHandler.class).removeGroupAction(groupAction.getId()).subscribe(
                             successResult -> $(StoreHandler.class).getStore().box(GroupAction.class).remove(groupAction),
                             error -> $(DefaultAlerts.class).thatDidntWork()
-                    );
+                    ));
                 })
                 .show();
     }

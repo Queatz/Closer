@@ -11,6 +11,7 @@ import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 
 public class PhysicalGroupUpgradeHandler extends PoolMember {
@@ -21,6 +22,7 @@ public class PhysicalGroupUpgradeHandler extends PoolMember {
                 .setTextView(R.id.input, result -> {
                     $(DisposableHandler.class).add($(ApiHandler.class).convertToHub(group.getId(), result).subscribe(successResult -> {
                         group.setName(result);
+                        $(StoreHandler.class).getStore().box(Group.class).put(group);
                     }, error -> $(DefaultAlerts.class).thatDidntWork()));
                 })
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.set_name))
@@ -43,6 +45,7 @@ public class PhysicalGroupUpgradeHandler extends PoolMember {
                 successResult -> {
                     if (successResult.success) {
                         group.setPhoto(photo);
+                        $(StoreHandler.class).getStore().box(Group.class).put(group);
                     } else {
                         $(DefaultAlerts.class).thatDidntWork();
                     }

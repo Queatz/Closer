@@ -7,6 +7,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.GroupAction;
 
 public class GroupActionUpgradeHandler extends PoolMember {
@@ -19,6 +20,7 @@ public class GroupActionUpgradeHandler extends PoolMember {
                             successResult -> {
                                 if (successResult.success) {
                                     groupAction.setPhoto(photo);
+                                    $(StoreHandler.class).getStore().box(GroupAction.class).put(groupAction);
                                 } else {
                                     $(DefaultAlerts.class).thatDidntWork();
                                 }
@@ -37,6 +39,7 @@ public class GroupActionUpgradeHandler extends PoolMember {
                         successResult -> {
                             if (successResult.success) {
                                 groupAction.setPhoto(photo);
+                                $(StoreHandler.class).getStore().box(GroupAction.class).put(groupAction);
                             } else {
                                 $(DefaultAlerts.class).thatDidntWork();
                             }
