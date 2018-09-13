@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.helpers;
 
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -15,7 +16,10 @@ import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 public class MiniWindowHandler extends PoolMember {
-    public void attach(View toggleView, View windowView) {
+
+    private static final int CLOSE_TUG_SLOP = 32;
+
+    public void attach(View toggleView, View windowView, @Nullable MiniWindowEventListener miniWindowEventListener) {
         windowView.setClipToOutline(true);
 
         toggleView.setClickable(true);
@@ -73,7 +77,13 @@ public class MiniWindowHandler extends PoolMember {
 
             @Override
             public void onDragUpdate(TimedValue<Float> x, TimedValue<Float> y) {
-                params.matchConstraintMaxHeight = max(miniWindowHeight, (int) (startMaxHeight + (startY - y.get())));
+                int currentMiniWindowHeight = (int) (startMaxHeight + (startY - y.get()));
+
+                if (currentMiniWindowHeight - miniWindowHeight < -CLOSE_TUG_SLOP && miniWindowEventListener != null) {
+                    miniWindowEventListener.onMiniWindowShouldClose();
+                }
+
+                params.matchConstraintMaxHeight = max(miniWindowHeight, currentMiniWindowHeight);
                 windowView.setLayoutParams(params);
             }
         });
@@ -81,5 +91,9 @@ public class MiniWindowHandler extends PoolMember {
 
     private float mix(float a, float b, float v) {
         return (a * (1 - v)) + b * v;
+    }
+
+    public interface MiniWindowEventListener {
+        void onMiniWindowShouldClose();
     }
 }

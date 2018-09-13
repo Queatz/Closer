@@ -30,7 +30,7 @@ public class SearchActivity extends CircularRevealActivity {
                 findViewById(R.id.groupsRecyclerView)
         );
 
-        $(MiniWindowHandler.class).attach(findViewById(R.id.titleText), findViewById(R.id.backgroundColor));
+        $(MiniWindowHandler.class).attach(findViewById(R.id.titleText), findViewById(R.id.backgroundColor), this::finish);
 
         findViewById(R.id.closeButton).requestFocus();
     }
