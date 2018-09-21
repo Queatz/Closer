@@ -32,8 +32,11 @@ public class FeedHandler extends PoolMember {
         );
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
-                headerAdapter.notifyHeaderHeightChanged());
+        recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (top != oldTop || bottom != oldBottom) {
+                headerAdapter.notifyHeaderHeightChanged();
+            }
+        });
 
         setupFeedInjections();
 
