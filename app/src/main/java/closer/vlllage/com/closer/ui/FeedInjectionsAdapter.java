@@ -92,10 +92,7 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
                             .subscribe()
                             .single()
                             .on(AndroidScheduler.mainThread())
-                            .observer(groups -> {
-                                searchGroupsAdapter.setGroups(groups);
-                                groupsRecyclerView.forceLayout();
-                            }));
+                            .observer(searchGroupsAdapter::setGroups));
                 }));
 
                 holder.itemView.findViewById(R.id.action).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
