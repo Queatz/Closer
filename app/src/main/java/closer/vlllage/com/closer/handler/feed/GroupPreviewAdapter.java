@@ -6,17 +6,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
+import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
@@ -31,6 +36,7 @@ import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
 import static closer.vlllage.com.closer.pool.Pool.tempPool;
+import static java.lang.Math.min;
 
 public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter.ViewHolder> {
 
@@ -64,14 +70,43 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
+                .transform(groupMessages -> groupMessages.subList(0, min(groupMessages.size() - 1, 5)))
                 .observer(groupMessagesAdapter::setGroupMessages));
 
         viewHolder.messagesRecyclerView.setAdapter(groupMessagesAdapter);
-        viewHolder.messagesRecyclerView.setLayoutManager(new LinearLayoutManager(viewHolder.messagesRecyclerView.getContext(), LinearLayoutManager.VERTICAL, true) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
+        viewHolder.messagesRecyclerView.setLayoutManager(new LinearLayoutManager(viewHolder.messagesRecyclerView.getContext(), LinearLayoutManager.VERTICAL, true));
+
+        viewHolder.replyMessage.setOnFocusChangeListener((view, focused) -> {
+            if (focused) {
+                $(KeyboardHandler.class).showViewAboveKeyboard(view);
             }
+        });
+
+        viewHolder.replyMessage.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                viewHolder.sendButton.callOnClick();
+            }
+
+            return false;
+        });
+
+        viewHolder.sendButton.setOnClickListener(view -> {
+            String message = viewHolder.replyMessage.getText().toString();
+
+            if (message.trim().isEmpty()) {
+                return;
+            }
+
+            GroupMessage groupMessage = new GroupMessage();
+            groupMessage.setText(message);
+            groupMessage.setFrom($(PersistenceHandler.class).getPhoneId());
+            groupMessage.setTo(group.getId());
+            groupMessage.setTime(new Date());
+            $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
+            $(SyncHandler.class).sync(groupMessage);
+
+            viewHolder.replyMessage.setText("");
+            $(KeyboardHandler.class).showKeyboard(view, false);
         });
     }
 

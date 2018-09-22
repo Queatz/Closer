@@ -17,7 +17,6 @@ import io.objectbox.query.QueryBuilder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class FeedHandler extends PoolMember {
-//    private GroupMessagesAdapter feedAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private HeaderAdapter headerAdapter;
@@ -39,38 +38,6 @@ public class FeedHandler extends PoolMember {
         });
 
         setupFeedInjections();
-
-//        feedAdapter = new GroupMessagesAdapter(this);
-//        feedAdapter.setReversed(true);
-//        feedAdapter.setOnSuggestionClickListener(suggestion -> {
-//            $(MapActivityHandler.class).showSuggestionOnMap(suggestion);
-//            hide();
-//            });
-//        feedAdapter.setOnEventClickListener(event -> {
-//            $(MapActivityHandler.class).showEventOnMap(event);
-//            hide();
-//        });
-//        feedAdapter.setOnMessageClickListener(message -> {
-//            if (message.getTo() != null) {
-//                $(GroupActivityTransitionHandler.class).showGroupMessages(recyclerView, message.getTo());
-//            }
-//        });
-//        headerAdapter.addAdapter(feedAdapter);
-//        QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query();
-//
-//        $(DisposableHandler.class).add(queryBuilder
-//                .sort($(SortHandler.class).sortGroupMessages())
-//                .filter(groupMessage -> {
-//                    if (groupMessage.getTo() == null) {
-//                        return true;
-//                    }
-//
-//                    Group group = $(StoreHandler.class).getStore().box(Group.class).query().equal(Group_.id,groupMessage.getTo()).build().findFirst();
-//                    return group == null || group.isPublic();
-//                })
-//                .build()
-//                .subscribe().on(AndroidScheduler.mainThread())
-//                .observer(this::setGroupMessages));
 
         float distance = .12f;
 
@@ -103,11 +70,6 @@ public class FeedHandler extends PoolMember {
         recyclerView.setAdapter(headerAdapter);
         headerAdapter.setHeaderHeightCallback(recyclerView::getHeight);
     }
-
-//    private void setGroupMessages(List<GroupMessage> groupMessages) {
-//        feedAdapter.setGroupMessages(groupMessages);
-//        headerAdapter.notifyAdapterChanged(feedAdapter);
-//    }
 
     public void hide() {
         if (layoutManager.findFirstVisibleItemPosition() > 2) {
