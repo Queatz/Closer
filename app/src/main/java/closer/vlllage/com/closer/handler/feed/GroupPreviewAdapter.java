@@ -70,7 +70,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
-                .transform(groupMessages -> groupMessages.subList(0, min(groupMessages.size() - 1, 5)))
+                .transform(groupMessages -> groupMessages.subList(0, min(groupMessages.size(), 5)))
                 .observer(groupMessagesAdapter::setGroupMessages));
 
         viewHolder.messagesRecyclerView.setAdapter(groupMessagesAdapter);
@@ -108,6 +108,15 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             viewHolder.replyMessage.setText("");
             $(KeyboardHandler.class).showKeyboard(view, false);
         });
+
+        if (group.hasEvent()) {
+            viewHolder.itemView.setBackgroundResource(R.drawable.color_red_rounded);
+        } else if (group.isPhysical()) {
+            viewHolder.itemView.setBackgroundResource(R.drawable.color_purple_rounded);
+        } else {
+            viewHolder.itemView.setBackgroundResource(R.drawable.color_green_rounded);
+        }
+
     }
 
     @Override
