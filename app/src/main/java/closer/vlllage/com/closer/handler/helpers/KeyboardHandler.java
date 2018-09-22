@@ -32,7 +32,7 @@ public class KeyboardHandler extends PoolMember {
             Rect rect = new Rect();
             view.getLocalVisibleRect(rect);
             rect.bottom += $(KeyboardVisibilityHandler.class).getLastKeyboardHeight();
-            rect.bottom += $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad);
+            rect.bottom += $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.padDouble);
             view.requestRectangleOnScreen(rect);
         }, KEYBOARD_DELAY_MS);
     }
