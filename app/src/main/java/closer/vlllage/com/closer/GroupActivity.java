@@ -108,8 +108,6 @@ public class GroupActivity extends CircularRevealActivity {
         actionSettingsSetBackground = findViewById(R.id.actionSettingsSetBackground);
         actionFrameLayout = findViewById(R.id.actionFrameLayout);
 
-//        new DraggableView(findViewById(R.id.backgroundColor), findViewById(R.id.background));
-
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
         $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());

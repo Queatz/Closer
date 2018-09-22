@@ -2,6 +2,8 @@ package closer.vlllage.com.closer.handler.map;
 
 import android.Manifest;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.api.models.PhoneResult;
@@ -47,7 +50,9 @@ import closer.vlllage.com.closer.pool.PoolFragment;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Suggestion;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MapSlideFragment extends PoolFragment {
 
@@ -291,9 +296,35 @@ public class MapSlideFragment extends PoolFragment {
 
     public void handleIntent(Intent intent) {
         $(IntentHandler.class).onNewIntent(intent);
-        if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction())) {
-            $(FeedHandler.class).hide();
+        if (intent != null) {
+            if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+                $(FeedHandler.class).hide();
+            } else if (Intent.ACTION_SEND.equals(intent.getAction())) {
+                String name = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+                String address = intent.getStringExtra(Intent.EXTRA_TEXT);
+
+                if (address != null) {
+                    $(DisposableHandler.class).add(Single.fromCallable(() -> new Geocoder(getActivity(), Locale.getDefault()).getFromLocationName(address, 1)).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(addresses -> {
+                        if (addresses.isEmpty()) {
+                            $(DefaultAlerts.class).thatDidntWork();
+                        } else {
+                            showAddressOnMap(name, addresses.get(0));
+                        }
+                    }, this::networkError));
+
+                }
+            }
         }
+    }
+
+    private void showAddressOnMap(String name, Address address) {
+        Suggestion suggestion = new Suggestion();
+        suggestion.setName(name);
+        suggestion.setLatitude(address.getLatitude());
+        suggestion.setLongitude(address.getLongitude());
+        $(MapActivityHandler.class).showSuggestionOnMap(suggestion);
     }
 
     public void post(Runnable runnable) {
