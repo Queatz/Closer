@@ -25,6 +25,8 @@ public class MiniWindowHandler extends PoolMember {
         toggleView.setClickable(true);
         new DragTriggerView(toggleView, new DragTriggerView.OnDragEventListener() {
 
+            private boolean dead;
+
             private int startMaxHeight = 0;
             private double startY = 0;
             private int miniWindowHeight = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.miniWindowHeight);
@@ -34,6 +36,8 @@ public class MiniWindowHandler extends PoolMember {
 
             @Override
             public void onDragStart(TimedValue<Float> x, TimedValue<Float> y) {
+                if (dead) return;
+
                 startMaxHeight = windowView.getMeasuredHeight();
                 params.topMargin = miniWindowMinTopMargin;
                 windowView.setLayoutParams(params);
@@ -42,6 +46,8 @@ public class MiniWindowHandler extends PoolMember {
 
             @Override
             public void onDragRelease(TimedValue<Float> x, TimedValue<Float> y) {
+                if (dead) return;
+
                 int startMaxHeight = params.matchConstraintMaxHeight;
                 int startTopMargin = params.topMargin;
 
@@ -77,9 +83,12 @@ public class MiniWindowHandler extends PoolMember {
 
             @Override
             public void onDragUpdate(TimedValue<Float> x, TimedValue<Float> y) {
+                if (dead) return;
+
                 int currentMiniWindowHeight = (int) (startMaxHeight + (startY - y.get()));
 
-                if (currentMiniWindowHeight - miniWindowHeight < -CLOSE_TUG_SLOP && miniWindowEventListener != null) {
+                if (startY < y.get() && currentMiniWindowHeight - miniWindowHeight < -CLOSE_TUG_SLOP && miniWindowEventListener != null) {
+                    dead = true;
                     miniWindowEventListener.onMiniWindowShouldClose();
                 }
 

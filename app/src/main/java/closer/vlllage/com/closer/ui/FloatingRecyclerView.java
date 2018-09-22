@@ -76,6 +76,8 @@ public class FloatingRecyclerView extends RecyclerView {
     }
 
     private void animateBackground(RecyclerView recyclerView, @ColorRes int color) {
+        if (true) return;
+
         if (colorAnimation != null) {
             colorAnimation.end();
         }

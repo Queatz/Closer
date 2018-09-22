@@ -4,17 +4,17 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/green"
-    android:elevation="16dp"
-    android:paddingTop="@dimen/padDouble"
+    android:background="@drawable/color_green_rounded"
+    android:layout_margin="@dimen/pad"
+    android:elevation="@dimen/elevation"
     android:clickable="true">
 
     <TextView
         android:id="@+id/groupName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:background="@drawable/clickable_light"
+        android:background="@drawable/clickable_light_rounded_8dp"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
