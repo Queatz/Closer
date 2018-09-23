@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.DistanceHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
@@ -32,13 +33,15 @@ import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
+import closer.vlllage.com.closer.ui.CombinedRecyclerAdapter;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
 import static closer.vlllage.com.closer.pool.Pool.tempPool;
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter.ViewHolder> {
+public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter.ViewHolder> implements CombinedRecyclerAdapter.PrioritizedAdapter {
 
     private final List<Group> groups = new ArrayList<>();
 
@@ -133,6 +136,11 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
         this.groups.clear();
         this.groups.addAll(groups);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPriority(int position) {
+        return max(0, position - ($(DistanceHandler.class).isUserNearGroup(groups.get(position)) ? 100 : 0));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

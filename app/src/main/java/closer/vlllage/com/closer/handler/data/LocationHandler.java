@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.pool.PoolMember;
 public class LocationHandler extends PoolMember {
 
     private FusedLocationProviderClient fusedLocationProvider;
+    private Location lastKnownLocation = null;
 
     @Override
     protected void onPoolInit() {
@@ -46,12 +47,18 @@ public class LocationHandler extends PoolMember {
                                 return;
                             }
 
+                            lastKnownLocation = task.getResult();
+
                             callback.onLocationFound(task.getResult());
                         });
                     } else if (locationUnavailableCallback != null) {
                         locationUnavailableCallback.onLocationUnavailable();
                     }
                 });
+    }
+
+    public Location getLastKnownLocation() {
+        return lastKnownLocation;
     }
 
     @SuppressLint("MissingPermission")
@@ -77,6 +84,7 @@ public class LocationHandler extends PoolMember {
                             return;
                         }
 
+                        lastKnownLocation = locationResult.getLastLocation();
                         callback.onLocationFound(locationResult.getLastLocation());
                     }
                 }, $(ActivityHandler.class).getActivity().getMainLooper());

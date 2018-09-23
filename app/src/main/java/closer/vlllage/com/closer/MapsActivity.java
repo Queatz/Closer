@@ -9,6 +9,7 @@ import com.github.queatz.slidescreen.SlideScreen;
 import com.github.queatz.slidescreen.SlideScreenAdapter;
 
 import closer.vlllage.com.closer.handler.map.MapViewHandler;
+import closer.vlllage.com.closer.handler.settings.SettingsSlideFragment;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
 public class MapsActivity extends PoolActivity {
@@ -36,7 +37,7 @@ public class MapsActivity extends PoolActivity {
 
             @Override
             public Fragment getSlide(int position) {
-                return position == 0 ? $(MapViewHandler.class).getMapFragment() : new Fragment();
+                return position == 0 ? $(MapViewHandler.class).getMapFragment() : new SettingsSlideFragment();
             }
 
             @Override

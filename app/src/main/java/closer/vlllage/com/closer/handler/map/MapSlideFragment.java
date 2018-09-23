@@ -59,11 +59,6 @@ public class MapSlideFragment extends PoolFragment {
     private boolean locationPermissionWasDenied;
     private Runnable pendingRunnable;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
