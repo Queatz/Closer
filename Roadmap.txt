@@ -1,4 +1,38 @@
 
+=============
+Group notifications
+=============
+
+MODEL
+
+tweak {
+    phone: <id>
+    thing: <id>
+
+    notifications: on|off|auto
+    favorite: true|false
+    reminder: null|date
+}
+
+
+@Index on state
+
+API
+
+POST /tweak/on/:group_id { notifications: 'on|off|auto' }
+POST /tweak/on/:group_id { favorite: true|false }
+POST /tweak/on/:group_id { reminder: null|date }
+GET /tweak/on/:group_id { ... }
+
+QUERY
+
+WHERE tweak.group == @group AND tweak.notifications == 'on'
+
+WHERE NOT tweak.phone == @me AND tweak.group == @group AND tweak.notifications == 'off'
+
+=============
+BUBBLE MERGER
+=============
 
 mapBubble -> proxyBubble | null
 updateInfo -> updateMapBubble | updateProxyBubble
@@ -14,6 +48,10 @@ When bubbles enter/exit proxy bubbles, they are removed/added to BubbleMapLayer
 When not in a proxy, all updates go directly to BubbleMapLayer
 When in a proxy, all updates go to BubbleMapLayer via the proxyBubble
 
+
+=============
+=============
+=============
 
 
 # MKTG
