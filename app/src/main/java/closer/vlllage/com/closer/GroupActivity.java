@@ -39,6 +39,7 @@ import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
+import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
@@ -132,10 +133,18 @@ public class GroupActivity extends CircularRevealActivity {
         $(MiniWindowHandler.class).attach(groupName, findViewById(R.id.backgroundColor), this::finish);
 
         findViewById(R.id.settingsButton).setOnClickListener(view -> {
-            if ($(GroupHandler.class).getGroup() != null) {
-                $(GroupActionHandler.class).addActionToGroup($(GroupHandler.class).getGroup());
-            }
+            $(MenuHandler.class).show(
+                    new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
+                        if ($(GroupHandler.class).getGroup() != null) {
+                            $(GroupActionHandler.class).addActionToGroup($(GroupHandler.class).getGroup());
+                        }
+                    }),
+                    new MenuHandler.MenuOption(R.drawable.ic_notifications_black_24dp, R.string.notifications_auto, this::changeNotificationSettings)
+            );
         });
+
+        findViewById(R.id.notificationSettingsButton).setOnClickListener(view -> changeNotificationSettings());
+        findViewById(R.id.notificationSettingsButton).setVisibility(View.VISIBLE);
 
         replyMessage.setOnClickListener(view -> {
             $(GroupActionHandler.class).show(false);
@@ -226,6 +235,14 @@ public class GroupActivity extends CircularRevealActivity {
                 actionCancel.setVisibility(View.GONE);
             }
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
+    private void changeNotificationSettings() {
+        $(MenuHandler.class).show(
+                new MenuHandler.MenuOption(R.drawable.ic_notifications_black_24dp, R.string.notifications_on, () -> {}),
+                new MenuHandler.MenuOption(R.drawable.ic_notifications_none_black_24dp, R.string.notifications_auto, () -> {}),
+                new MenuHandler.MenuOption(R.drawable.ic_notifications_paused_white_24dp, R.string.notifications_off, () -> {})
+        );
     }
 
     private void refreshPhysicalGroupActions(Group group) {
