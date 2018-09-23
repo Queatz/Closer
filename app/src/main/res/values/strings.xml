@@ -166,8 +166,8 @@
     <string name="go">Go</string>
     <string name="search_for_groups">View nearby groups</string>
     <string name="nope">Nope</string>
-    <string name="take_photo">Take photo…</string>
-    <string name="upload_photo">Upload photo…</string>
+    <string name="take_photo">Take photo</string>
+    <string name="upload_photo">Upload photo</string>
     <string name="remove_action_menu_item">Remove from group…</string>
     <string name="post">Post</string>
 </resources>

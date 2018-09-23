@@ -9,6 +9,7 @@ import closer.vlllage.com.closer.handler.FeatureType;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter;
 import closer.vlllage.com.closer.handler.group.GroupActionUpgradeHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
@@ -64,6 +65,7 @@ public class GroupActionRecyclerViewHandler extends PoolMember {
         }, groupAction -> {
             if ($(FeatureHandler.class).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
                 $(MenuHandler.class).show(
+                        new MenuHandler.MenuOption(R.drawable.ic_open_in_new_black_24dp, R.string.open_group, () -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, groupAction.getGroup())),
                         new MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo, () -> takeGroupActionPhoto(groupAction)),
                         new MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo, () -> uploadGroupActionPhoto(groupAction)),
                         new MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_action_menu_item, () -> removeGroupAction(groupAction))

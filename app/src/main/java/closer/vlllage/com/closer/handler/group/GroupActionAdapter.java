@@ -19,6 +19,7 @@ import java.util.Random;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.StringHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -117,12 +118,6 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
         }
     }
 
-    private Random getRandom(GroupAction groupAction) {
-        return new Random(groupAction.getId() == null ?
-                groupAction.getObjectBoxId() :
-                groupAction.getId().hashCode());
-    }
-
     @Override
     public int getItemCount() {
         return groupActions.size();
@@ -142,18 +137,13 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
 
             @Override
             public boolean areItemsTheSame(int oldPosition, int newPosition) {
-                return GroupActionAdapter.this.groupActions.get(oldPosition).getId() != null &&
-                        groupActions.get(newPosition).getId() != null &&
-                        GroupActionAdapter.this.groupActions.get(oldPosition).getId()
-                        .equals(groupActions.get(newPosition).getId());
+                return $(StringHandler.class).equals(GroupActionAdapter.this.groupActions.get(oldPosition).getId(), groupActions.get(newPosition).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldPosition, int newPosition) {
-                return GroupActionAdapter.this.groupActions.get(oldPosition).getName() != null &&
-                        groupActions.get(newPosition).getName() != null &&
-                        GroupActionAdapter.this.groupActions.get(oldPosition).getName()
-                        .equals(groupActions.get(newPosition).getName());
+                return $(StringHandler.class).equals(GroupActionAdapter.this.groupActions.get(oldPosition).getName(), groupActions.get(newPosition).getName()) &&
+                        $(StringHandler.class).equals(GroupActionAdapter.this.groupActions.get(oldPosition).getPhoto(), groupActions.get(newPosition).getPhoto());
             }
         }, true);
         this.groupActions.clear();
@@ -167,6 +157,12 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
             case 1: return R.drawable.bkg_bubbles_2;
             default: return R.drawable.bkg_bubbles_3;
         }
+    }
+
+    private Random getRandom(GroupAction groupAction) {
+        return new Random(groupAction.getId() == null ?
+                groupAction.getObjectBoxId() :
+                groupAction.getId().hashCode());
     }
 
     class GroupActionViewHolder extends RecyclerView.ViewHolder {
