@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.store.models.GroupInvite;
 public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter.PhoneContactViewHolder> {
 
     private String phoneNumber = null;
+    private boolean isFiltered;
     private final List<GroupInvite> invites = new ArrayList<>();
     private final List<PhoneContact> contacts = new ArrayList<>();
     private OnPhoneContactClickListener onPhoneContactClickListener;
@@ -42,10 +43,10 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
         PhoneContact contact;
 
         if (position < getSuggestionCount()) {
-            if (phoneNumber != null && position == 0) {
+            if (phoneNumber != null) {
                 contact = new PhoneContact(null, phoneNumber);
             } else {
-                GroupInvite invite = invites.get(position - (phoneNumber == null ? 0 : 1));
+                GroupInvite invite = invites.get(position);
 
                 holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.cancel_invite));
                 holder.name.setText(invite.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.invite) : invite.getName());
@@ -95,7 +96,11 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
     }
 
     private int getSuggestionCount() {
-        return phoneNumber == null ? invites.size() : 1;
+        return isFiltered ? (phoneNumber == null ? 0 : invites.size()) : invites.size();
+    }
+
+    public void setIsFiltered(boolean isFiltered) {
+        this.isFiltered = isFiltered;
     }
 
     class PhoneContactViewHolder extends RecyclerView.ViewHolder {

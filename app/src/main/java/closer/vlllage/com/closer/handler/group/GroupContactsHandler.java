@@ -160,6 +160,7 @@ public class GroupContactsHandler extends PoolMember {
         String phoneNumber = $(PhoneNumberHandler.class).normalize(originalQuery);
 
         phoneContactAdapter.setPhoneNumber(phoneNumber);
+        phoneContactAdapter.setIsFiltered(!originalQuery.isEmpty());
 
         if (phoneNumber != null) {
             showPhoneContactsButton.setVisibility(View.GONE);

@@ -4,6 +4,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.List;
+
 import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
@@ -54,9 +56,14 @@ public class FeedHandler extends PoolMember {
                             .subscribe()
                             .single()
                             .on(AndroidScheduler.mainThread())
-                            .observer(groupPreviewAdapter::setGroups));
+                            .observer(this::setGroups));
                 }));
 
+    }
+
+    private void setGroups(List<Group> groups) {
+        groupPreviewAdapter.setGroups(groups);
+        headerAdapter.notifyAdapterChanged(groupPreviewAdapter);
     }
 
     private void setupFeedInjections() {
