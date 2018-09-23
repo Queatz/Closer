@@ -26,7 +26,7 @@ import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.WindowHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
@@ -101,11 +101,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         });
         mapView.addOnLayoutChangeListener((v, i1, i2, i3, i4, i5, i6, i7, i8) -> onMapChangedListener.onMapChanged());
         onMapChangedListener.onMapChanged();
-        int statusBarHeightResId = $(ResourcesHandler.class).getResources().getIdentifier("status_bar_height", "dimen", "android");
-
-        if (statusBarHeightResId != 0) {
-            map.setPadding(0, $(ResourcesHandler.class).getResources().getDimensionPixelSize(statusBarHeightResId), 0, 0);
-        }
+        map.setPadding(0, $(WindowHandler.class).getStatusBarHeight(), 0, 0);
 
         if (centerOnMapLoad != null) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOnMapLoad, DEFAULT_ZOOM));

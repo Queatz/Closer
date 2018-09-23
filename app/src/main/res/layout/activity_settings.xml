@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/padDouble"
-    android:paddingBottom="@dimen/padDouble"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/padDouble"
-        android:background="@drawable/clickable_light"
-        android:clickable="true">
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:clipToPadding="false">
 
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="@dimen/padDouble"
-            android:textColor="@color/text"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="Open groups expanded" />
+            android:orientation="vertical">
 
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padDouble"/>
+            <Switch
+                android:id="@+id/openGroupsExpandedSettingsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/settings_open_groups_expanded" />
 
-    </LinearLayout>
+        </LinearLayout>
 
-</LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

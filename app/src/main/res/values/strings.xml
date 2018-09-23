@@ -170,4 +170,5 @@
     <string name="upload_photo">Upload photo</string>
     <string name="remove_action_menu_item">Remove from group…</string>
     <string name="post">Post</string>
+    <string name="settings_open_groups_expanded">Open groups expanded</string>
 </resources>
