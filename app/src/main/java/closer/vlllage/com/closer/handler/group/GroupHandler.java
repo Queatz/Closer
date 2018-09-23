@@ -159,13 +159,21 @@ public class GroupHandler extends PoolMember {
         this.group = group;
 
         if (group != null) {
-            groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
             onGroupSet(group);
             groupChanged.onNext(group);
             setEventById(group.getEventId());
-        } else {
-            groupName.setText(R.string.not_found);
         }
+
+        showGroupName(group);
+    }
+
+    public void showGroupName(Group group) {
+        if (group == null) {
+            groupName.setText(R.string.not_found);
+            return;
+        }
+
+        groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
     }
 
     private void setEventById(String eventId) {

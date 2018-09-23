@@ -155,19 +155,15 @@ public class GroupActivity extends CircularRevealActivity {
                     actionShowOnMap.setOnClickListener(view -> showGroupOnMap(group));
 
                     if ($(FeatureHandler.class).has(FEATURE_UPGRADE_PHYSICAL_GROUPS)) {
-                        if (isEmptyOrWhitespace(group.getName())) {
-                            actionSettingsSetName.setVisibility(View.VISIBLE);
-                            actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group));
-                        } else {
-                            actionSettingsSetName.setVisibility(View.GONE);
-                        }
-
-                        if (isEmptyOrWhitespace(group.getPhoto())) {
-                            actionSettingsSetBackground.setVisibility(View.VISIBLE);
-                            actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group));
-                        } else {
-                            actionSettingsSetBackground.setVisibility(View.GONE);
-                        }
+                        refreshPhysicalGroupActions(group);
+                        actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group, updatedGroup -> {
+                            $(GroupHandler.class).showGroupName(updatedGroup);
+                            refreshPhysicalGroupActions(updatedGroup);
+                        }));
+                        actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
+                            setGroupBackground(updateGroup);
+                            refreshPhysicalGroupActions(updateGroup);
+                        }));
                     }
                 } else {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_green_rounded);
@@ -230,6 +226,20 @@ public class GroupActivity extends CircularRevealActivity {
                 actionCancel.setVisibility(View.GONE);
             }
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
+    private void refreshPhysicalGroupActions(Group group) {
+        if (isEmptyOrWhitespace(group.getName())) {
+            actionSettingsSetName.setVisibility(View.VISIBLE);
+        } else {
+            actionSettingsSetName.setVisibility(View.GONE);
+        }
+
+        if (isEmptyOrWhitespace(group.getPhoto())) {
+            actionSettingsSetBackground.setVisibility(View.VISIBLE);
+        } else {
+            actionSettingsSetBackground.setVisibility(View.GONE);
+        }
     }
 
     public void setGroupBackground(Group group) {
