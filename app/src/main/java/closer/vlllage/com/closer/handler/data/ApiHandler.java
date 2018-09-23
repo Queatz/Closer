@@ -29,6 +29,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okhttp3.internal.Util;
 import okio.BufferedSink;
 import okio.Okio;
@@ -205,6 +206,10 @@ public class ApiHandler extends PoolMember {
         String id = $(Val.class).rndId();
         return uiThread(api.getPhotoUploadBackend().uploadPhoto(id, part))
                 .map(responseBody -> id);
+    }
+
+    public Observable<String> privacy() {
+        return uiThread(api.getContentBackend().privacy()).map(ResponseBody::string);
     }
 
     private <T> Observable<T> uiThread(Observable<T> observable) {

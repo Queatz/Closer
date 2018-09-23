@@ -18,6 +18,7 @@ public class ApiService {
     private static final String AUTHORIZATION = "Authorization";
     private final Backend backend;
     private final PhotoUploadBackend photoUploadBackend;
+    private final ContentBackend contentBackend;
     private String authorization;
 
     public ApiService() {
@@ -65,6 +66,12 @@ public class ApiService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(PhotoUploadBackend.class);
+
+        contentBackend = new Retrofit.Builder()
+                .baseUrl(ContentBackend.BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build()
+                .create(ContentBackend.class);
     }
 
     public Backend getBackend() {
@@ -77,6 +84,10 @@ public class ApiService {
 
     public PhotoUploadBackend getPhotoUploadBackend() {
         return photoUploadBackend;
+    }
+
+    public ContentBackend getContentBackend() {
+        return contentBackend;
     }
 
     public void setAuthorization(String authorization) {

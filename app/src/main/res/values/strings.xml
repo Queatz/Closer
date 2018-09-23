@@ -171,4 +171,6 @@
     <string name="remove_action_menu_item">Remove from group…</string>
     <string name="post">Post</string>
     <string name="settings_open_groups_expanded">Open groups expanded</string>
+    <string name="send_feedback">Send us feedback</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>

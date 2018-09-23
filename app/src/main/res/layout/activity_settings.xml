@@ -33,6 +33,34 @@
                 android:textAppearance="?android:textAppearanceMedium"
                 android:text="@string/settings_open_groups_expanded" />
 
+            <Button style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/sendFeedbackButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/send_feedback"
+                android:drawableStart="@drawable/ic_open_in_new_black_24dp"
+                android:drawablePadding="@dimen/pad"
+                android:drawableTint="@color/text" />
+
+            <Button style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/viewPrivacyPolicyButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/privacy_policy"
+                android:drawableStart="@drawable/ic_open_in_new_black_24dp"
+                android:drawablePadding="@dimen/pad"
+                android:drawableTint="@color/text" />
+
         </LinearLayout>
 
     </ScrollView>

@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.WindowHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
 
@@ -23,6 +27,13 @@ public class SettingsSlideFragment extends PoolFragment {
         Switch openGroupsExpandedSettingsSwitch = view.findViewById(R.id.openGroupsExpandedSettingsSwitch);
         openGroupsExpandedSettingsSwitch.setChecked($(SettingsHandler.class).get(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED));
         openGroupsExpandedSettingsSwitch.setOnCheckedChangeListener((v, checked) -> $(SettingsHandler.class).set(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED, checked));
+
+        view.findViewById(R.id.sendFeedbackButton).setOnClickListener(v -> $(GroupActivityTransitionHandler.class).showGroupMessages(v, "12370162"));
+        view.findViewById(R.id.viewPrivacyPolicyButton).setOnClickListener(v -> {
+            $(DisposableHandler.class).add($(ApiHandler.class).privacy().subscribe(privacyPolicy -> {
+                $(DefaultAlerts.class).message(privacyPolicy);
+            }, e -> $(DefaultAlerts.class).thatDidntWork()));
+        });
 
         return view;
     }
