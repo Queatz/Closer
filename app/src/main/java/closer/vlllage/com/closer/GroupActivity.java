@@ -139,7 +139,7 @@ public class GroupActivity extends CircularRevealActivity {
                             $(GroupActionHandler.class).addActionToGroup($(GroupHandler.class).getGroup());
                         }
                     }),
-                    new MenuHandler.MenuOption(R.drawable.ic_notifications_black_24dp, R.string.notifications_auto, this::changeNotificationSettings)
+                    new MenuHandler.MenuOption(R.drawable.ic_notifications_none_black_24dp, R.string.notifications_auto, this::changeNotificationSettings)
             );
         });
 
@@ -241,7 +241,7 @@ public class GroupActivity extends CircularRevealActivity {
         $(MenuHandler.class).show(
                 new MenuHandler.MenuOption(R.drawable.ic_notifications_black_24dp, R.string.notifications_on, () -> {}),
                 new MenuHandler.MenuOption(R.drawable.ic_notifications_none_black_24dp, R.string.notifications_auto, () -> {}),
-                new MenuHandler.MenuOption(R.drawable.ic_notifications_paused_white_24dp, R.string.notifications_off, () -> {})
+                new MenuHandler.MenuOption(R.drawable.ic_notifications_off_black_24dp, R.string.notifications_off, () -> {})
         );
     }
 
