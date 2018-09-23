@@ -111,7 +111,6 @@
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:paddingRight="@dimen/pad"
-                        android:background="@drawable/gradient_white"
                         android:paddingTop="@dimen/pad"
                         android:paddingBottom="@dimen/pad" />
 
