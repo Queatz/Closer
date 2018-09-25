@@ -145,10 +145,11 @@
     <string name="event_must_not_end_before_it_starts">Event must not end before it starts</string>
     <string name="set_background">Set background</string>
     <string name="mute">Mute</string>
+    <string name="mute_notifications">Mute notifications</string>
     <string name="unmute_notifications">Unmute notifications</string>
     <string name="notifications_on">Notifications on</string>
-    <string name="notifications_off">Notifications off</string>
-    <string name="notifications_auto">Notifications auto</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="unsubscribe">Unsubscribe</string>
     <string name="more_options">More options</string>
     <string name="random_suggestion">Get random suggestions</string>
     <string name="on_map">On the map</string>

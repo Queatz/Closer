@@ -14,7 +14,7 @@
         android:textColor="@color/textInverse"
         android:drawablePadding="@dimen/pad"
         android:drawableStart="@drawable/ic_camera_black_24dp"
-        android:drawableTint="@color/textInverse"
+        android:drawableTint="@color/colorPrimary"
         android:background="@drawable/clickable_accent_flat" />
 
 </android.support.constraint.ConstraintLayout>

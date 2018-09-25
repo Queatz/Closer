@@ -17,6 +17,8 @@ import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
+import closer.vlllage.com.closer.store.models.GroupMember;
+import closer.vlllage.com.closer.store.models.GroupMember_;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Group_;
@@ -34,6 +36,7 @@ public class SyncHandler extends PoolMember {
         syncAll(GroupMessage.class, GroupMessage_.localOnly);
         syncAll(Event.class, Event_.localOnly);
         syncAll(GroupAction.class, GroupAction_.localOnly);
+        syncAll(GroupMember.class, GroupMember_.localOnly);
     }
 
     public <T extends BaseObject> void sync(T obj) {
@@ -68,6 +71,8 @@ public class SyncHandler extends PoolMember {
             sendCreateEvent((Event) obj, onSyncResult);
         } else if (obj instanceof GroupAction) {
             sendCreateGroupAction((GroupAction) obj, onSyncResult);
+        } else if (obj instanceof GroupMember) {
+            sendUpdateGroupMember((GroupMember) obj, onSyncResult);
         } else {
             throw new RuntimeException("Unknown object type for sync: " + obj);
         }
@@ -86,6 +91,26 @@ public class SyncHandler extends PoolMember {
                 groupAction.setId(createResult.id);
                 groupAction.setLocalOnly(false);
                 $(StoreHandler.class).getStore().box(GroupAction.class).put(groupAction);
+                if (onSyncResult != null) {
+                    onSyncResult.onSync(createResult.id);
+                }
+            }
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
+    private void sendUpdateGroupMember(GroupMember groupMember, OnSyncResult onSyncResult) {
+        groupMember.setLocalOnly(true);
+        $(StoreHandler.class).getStore().box(GroupMember.class).put(groupMember);
+
+        $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).updateGroupMember(
+                groupMember.getGroup(),
+                groupMember.isMuted(),
+                groupMember.isSubscribed()
+        ).subscribe(createResult -> {
+            if (createResult.success) {
+                groupMember.setId(createResult.id);
+                groupMember.setLocalOnly(false);
+                $(StoreHandler.class).getStore().box(GroupMember.class).put(groupMember);
                 if (onSyncResult != null) {
                     onSyncResult.onSync(createResult.id);
                 }

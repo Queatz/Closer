@@ -1,7 +1,9 @@
 package closer.vlllage.com.closer;
 
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,6 +26,7 @@ import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.group.GroupActionHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
@@ -51,9 +54,12 @@ import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupMember;
+import closer.vlllage.com.closer.store.models.GroupMember_;
 import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
+import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
 
@@ -133,18 +139,27 @@ public class GroupActivity extends CircularRevealActivity {
         $(MiniWindowHandler.class).attach(groupName, findViewById(R.id.backgroundColor), this::finish);
 
         findViewById(R.id.settingsButton).setOnClickListener(view -> {
-            $(MenuHandler.class).show(
-                    new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
-                        if ($(GroupHandler.class).getGroup() != null) {
-                            $(GroupActionHandler.class).addActionToGroup($(GroupHandler.class).getGroup());
-                        }
-                    }),
-                    new MenuHandler.MenuOption(R.drawable.ic_notifications_none_black_24dp, R.string.notifications_auto, this::changeNotificationSettings)
-            );
+            changeGroupSettings();
         });
 
-        findViewById(R.id.notificationSettingsButton).setOnClickListener(view -> changeNotificationSettings());
-        findViewById(R.id.notificationSettingsButton).setVisibility(View.VISIBLE);
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
+                .equal(GroupMember_.group, groupId)
+                .equal(GroupMember_.phone, $(AccountHandler.class).getPhone())
+                .build().subscribe().on(AndroidScheduler.mainThread()).observer(groupMembers -> {
+                    GroupMember groupMember = groupMembers.isEmpty() ? null : groupMembers.get(0);
+
+                    if (groupMember == null) {
+                        groupMember = new GroupMember();
+                    }
+
+                    if (groupMember.isMuted()) {
+                        findViewById(R.id.notificationSettingsButton).setOnClickListener(view -> changeGroupSettings());
+                        findViewById(R.id.notificationSettingsButton).setVisibility(View.VISIBLE);
+                    } else {
+                        findViewById(R.id.notificationSettingsButton).setVisibility(View.GONE);
+                    }
+                }));
+
 
         replyMessage.setOnClickListener(view -> {
             $(GroupActionHandler.class).show(false);
@@ -237,12 +252,41 @@ public class GroupActivity extends CircularRevealActivity {
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
-    private void changeNotificationSettings() {
-        $(MenuHandler.class).show(
-                new MenuHandler.MenuOption(R.drawable.ic_notifications_black_24dp, R.string.notifications_on, () -> {}),
-                new MenuHandler.MenuOption(R.drawable.ic_notifications_none_black_24dp, R.string.notifications_auto, () -> {}),
-                new MenuHandler.MenuOption(R.drawable.ic_notifications_off_black_24dp, R.string.notifications_off, () -> {})
-        );
+    private void changeGroupSettings() {
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
+                .equal(GroupMember_.group, groupId)
+                .equal(GroupMember_.phone, $(AccountHandler.class).getPhone())
+                .build().subscribe().single().on(AndroidScheduler.mainThread()).observer(groupMembers -> {
+                    GroupMember groupMember = groupMembers.isEmpty() ? null : groupMembers.get(0);
+
+                    if (groupMember == null) {
+                        groupMember = new GroupMember();
+                        groupMember.setGroup(groupId);
+                        groupMember.setPhone($(AccountHandler.class).getPhone());
+                    }
+
+                    @StringRes int subscribeText = groupMember.isSubscribed() ? R.string.unsubscribe : R.string.subscribe;
+                    @DrawableRes int subscribeIcon = groupMember.isSubscribed() ? R.drawable.ic_baseline_check_circle_24px : R.drawable.ic_baseline_check_circle_outline_24px;
+                    @StringRes int muteText = groupMember.isMuted() ? R.string.unmute_notifications : R.string.mute_notifications;
+                    @DrawableRes int muteIcon = groupMember.isMuted() ? R.drawable.ic_notifications_off_black_24dp : R.drawable.ic_notifications_none_black_24dp;
+
+                    final GroupMember updatedGroupMember = groupMember;
+                    $(MenuHandler.class).show(
+                            new MenuHandler.MenuOption(subscribeIcon, subscribeText, () -> {
+                                updatedGroupMember.setSubscribed(!updatedGroupMember.isSubscribed());
+                                $(SyncHandler.class).sync(updatedGroupMember);
+                            }),
+                            new MenuHandler.MenuOption(muteIcon, muteText, () -> {
+                                updatedGroupMember.setMuted(!updatedGroupMember.isMuted());
+                                $(SyncHandler.class).sync(updatedGroupMember);
+                            }),
+                            new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
+                                if ($(GroupHandler.class).getGroup() != null) {
+                                    $(GroupActionHandler.class).addActionToGroup($(GroupHandler.class).getGroup());
+                                }
+                            })
+                    );
+                }));
     }
 
     private void refreshPhysicalGroupActions(Group group) {

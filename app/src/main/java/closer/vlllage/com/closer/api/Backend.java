@@ -137,4 +137,7 @@ public interface Backend {
 
     @POST("event/{id}")
     Observable<SuccessResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);
+
+    @POST("member/of/{phone}/{group}")
+    Observable<CreateResult> updateGroupMember(@Path("group") String groupId, @Query("muted") boolean muted, @Query("subscribed") boolean subscribed);
 }

@@ -1,34 +1,47 @@
 
+
+
+
+Follow on/off
+Notifications on/off
+
+
+Notifications
+=============
+Subscribe to group [off/on]
+Mute notifications [off/on]
+
 =============
 Group notifications
 =============
 
 MODEL
 
-tweak {
+groupmember {
     phone: <id>
     thing: <id>
-
-    notifications: on|off|auto
+    muted: true|false
+    subscribed: true|false
     favorite: true|false
     reminder: null|date
 }
 
+sync group SyncHandler
 
-@Index on state
+@Index on muted, subscribed, favorite, reminder
 
 API
 
-POST /tweak/on/:group_id { notifications: 'on|off|auto' }
-POST /tweak/on/:group_id { favorite: true|false }
-POST /tweak/on/:group_id { reminder: null|date }
-GET /tweak/on/:group_id { ... }
+POST /member/on/:group_id { notifications: 'on|off|auto' }
+POST /member/on/:group_id { favorite: true|false }
+POST /member/on/:group_id { reminder: null|date }
+GET /member/on/:group_id { ... }
 
 QUERY
 
-WHERE tweak.group == @group AND tweak.notifications == 'on'
+WHERE member.group == @group AND member.notifications == 'on'
 
-WHERE NOT tweak.phone == @me AND tweak.group == @group AND tweak.notifications == 'off'
+WHERE NOT member.phone == @me AND member.group == @group AND member.notifications == 'off'
 
 =============
 BUBBLE MERGER
