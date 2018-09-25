@@ -19,6 +19,7 @@ public class BubbleHandler extends PoolMember {
     private MapBubblePhysicalGroupView.MapBubblePhysicalGroupClickListener onMapBubblePhysicalGroupClickListener;
 
     private final BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
+    private final BubbleProxyLayer bubbleProxyLayer = new BubbleProxyLayer(bubbleMapLayer);
 
     public void attach(ViewGroup bubbleMapLayerLayout,
                        MapBubbleView.OnMapBubbleClickListener onClickListener,
@@ -43,6 +44,8 @@ public class BubbleHandler extends PoolMember {
             @Override
             public View createView(ViewGroup view, MapBubble mapBubble) {
                 switch (mapBubble.getType()) {
+                    case PROXY:
+                        return $(MapBubbleProxyView.class).from(view, mapBubble, null);
                     case MENU:
                         return $(MapBubbleMenuView.class).from(view, mapBubble, onMenuItemClickListener);
                     case SUGGESTION:
@@ -68,34 +71,34 @@ public class BubbleHandler extends PoolMember {
     }
 
     public void add(final MapBubble mapBubble) {
-        bubbleMapLayer.add(mapBubble);
+        bubbleProxyLayer.add(mapBubble);
     }
 
     public void replace(List<MapBubble> mapBubbles) {
-        bubbleMapLayer.replace(mapBubbles);
+        bubbleProxyLayer.replace(mapBubbles);
     }
 
     public void update() {
-        bubbleMapLayer.update();
+        bubbleProxyLayer.update();
     }
 
     public void update(MapBubble mapBubble) {
-        bubbleMapLayer.update(mapBubble);
+        bubbleProxyLayer.update(mapBubble);
     }
 
     public void move(MapBubble mapBubble, LatLng latLng) {
-        bubbleMapLayer.move(mapBubble, latLng);
+        bubbleProxyLayer.move(mapBubble, latLng);
     }
 
     public void updateDetails(MapBubble mapBubble) {
-        bubbleMapLayer.updateDetails(mapBubble);
+        bubbleProxyLayer.updateDetails(mapBubble);
     }
 
     public void remove(MapBubble mapBubble) {
-        bubbleMapLayer.remove(mapBubble);
+        bubbleProxyLayer.remove(mapBubble);
     }
 
     public boolean remove(BubbleMapLayer.RemoveCallback callback) {
-        return bubbleMapLayer.remove(callback);
+        return bubbleProxyLayer.remove(callback);
     }
 }

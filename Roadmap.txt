@@ -1,51 +1,11 @@
 
 
-
-
-Follow on/off
-Notifications on/off
-
-
-Notifications
-=============
-Subscribe to group [off/on]
-Mute notifications [off/on]
-
-=============
-Group notifications
-=============
-
-MODEL
-
-groupmember {
-    phone: <id>
-    thing: <id>
-    muted: true|false
-    subscribed: true|false
-    favorite: true|false
-    reminder: null|date
-}
-
-sync group SyncHandler
-
-@Index on muted, subscribed, favorite, reminder
-
-API
-
-POST /member/of/:group_id { notifications: 'on|off|auto' }
-POST /member/of/:group_id { favorite: true|false }
-POST /member/of/:group_id { reminder: null|date }
-GET /member/of/:group_id { ... }
-
-QUERY
-
-WHERE member.group == @group AND member.notifications == 'on'
-
-WHERE NOT member.phone == @me AND member.group == @group AND member.notifications == 'off'
-
 =============
 BUBBLE MERGER
 =============
+
+MILESTONE 1: Create & show proxy bubbles on the map
+MILESTONE 2: Remove bubbles that should be in proxy bubbles
 
 mapBubble -> proxyBubble | null
 updateInfo -> updateMapBubble | updateProxyBubble

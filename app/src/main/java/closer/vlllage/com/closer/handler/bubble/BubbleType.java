@@ -6,4 +6,5 @@ public enum BubbleType {
     SUGGESTION,
     EVENT,
     PHYSICAL_GROUP,
+    PROXY,
 }

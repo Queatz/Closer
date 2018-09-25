@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapBubble {
     private String phone;
     private LatLng latLng;
+    private LatLng rawLatLng;
     private String name;
     private String status;
     private View view;
@@ -129,6 +130,18 @@ public class MapBubble {
 
     public Object getTag() {
         return tag;
+    }
+
+    public void setRawLatLng(LatLng latLng) {
+        this.rawLatLng = latLng;
+    }
+
+    public LatLng getRawLatLng() {
+        if (rawLatLng != null) {
+            return rawLatLng;
+        }
+
+        return latLng;
     }
 
     public interface OnItemClickListener {
