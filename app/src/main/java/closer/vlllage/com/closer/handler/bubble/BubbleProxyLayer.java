@@ -15,10 +15,14 @@ public class BubbleProxyLayer {
         this.bubbleMapLayer = bubbleMapLayer;
     }
 
+    public void recalculate() {
+        // Move bubbles in and out of proxies
+        // Add remove proxy bubbles
+    }
+
     public void add(final MapBubble mapBubble) {
         mapBubbles.add(mapBubble);
         recalculate();
-        bubbleMapLayer.add(mapBubble);
     }
 
     public void replace(List<MapBubble> mapBubbles) {
@@ -30,53 +34,30 @@ public class BubbleProxyLayer {
     public void remove(MapBubble mapBubble) {
         mapBubbles.remove(mapBubble);
         recalculate();
-        bubbleMapLayer.remove(mapBubble);
     }
 
     public boolean remove(BubbleMapLayer.RemoveCallback callback) {
-        mapBubbles.size();
-        recalculate();
-        boolean success = bubbleMapLayer.remove(mapBubble -> {
-            boolean remove = callback.apply(mapBubble);
-
-            if (remove) {
-                mapBubbles.remove(mapBubble);
+        Set<MapBubble> toRemove = new HashSet<>();
+        for (MapBubble mapBubble : mapBubbles) {
+            if (callback.apply(mapBubble)) {
+                toRemove.add(mapBubble);
             }
+        }
 
-            return remove;
-        });
+        if (toRemove.isEmpty()) {
+            return false;
+        }
+
+        for (MapBubble mapBubble : toRemove) {
+            remove(mapBubble);
+        }
+
         recalculate();
-        return success;
+        return true;
     }
 
     public void move(MapBubble mapBubble, LatLng latLng) {
         mapBubble.setRawLatLng(latLng);
         recalculate();
-        if (isInProxy(mapBubble)) {
-            bubbleMapLayer.remove(mapBubble);
-        } else {
-            bubbleMapLayer.move(mapBubble, latLng);
-        }
-    }
-
-    public void update() {
-        recalculate();
-        bubbleMapLayer.update();
-    }
-
-    public void update(MapBubble mapBubble) {
-        bubbleMapLayer.update(mapBubble);
-    }
-
-    public void updateDetails(MapBubble mapBubble) {
-        bubbleMapLayer.updateDetails(mapBubble);
-    }
-
-    private boolean isInProxy(MapBubble mapBubble) {
-        return false;
-    }
-
-    private void recalculate() {
-
     }
 }

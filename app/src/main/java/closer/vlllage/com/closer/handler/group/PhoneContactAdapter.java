@@ -96,7 +96,7 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
     }
 
     private int getSuggestionCount() {
-        return isFiltered ? (phoneNumber == null ? 0 : invites.size()) : invites.size();
+        return isFiltered ? (phoneNumber == null ? 0 : 1) : invites.size();
     }
 
     public void setIsFiltered(boolean isFiltered) {

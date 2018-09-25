@@ -78,20 +78,8 @@ public class BubbleHandler extends PoolMember {
         bubbleProxyLayer.replace(mapBubbles);
     }
 
-    public void update() {
-        bubbleProxyLayer.update();
-    }
-
-    public void update(MapBubble mapBubble) {
-        bubbleProxyLayer.update(mapBubble);
-    }
-
     public void move(MapBubble mapBubble, LatLng latLng) {
         bubbleProxyLayer.move(mapBubble, latLng);
-    }
-
-    public void updateDetails(MapBubble mapBubble) {
-        bubbleProxyLayer.updateDetails(mapBubble);
     }
 
     public void remove(MapBubble mapBubble) {
@@ -100,5 +88,17 @@ public class BubbleHandler extends PoolMember {
 
     public boolean remove(BubbleMapLayer.RemoveCallback callback) {
         return bubbleProxyLayer.remove(callback);
+    }
+
+    public void update() {
+        bubbleMapLayer.update();
+    }
+
+    public void update(MapBubble mapBubble) {
+        bubbleMapLayer.update(mapBubble);
+    }
+
+    public void updateDetails(MapBubble mapBubble) {
+        bubbleMapLayer.updateDetails(mapBubble);
     }
 }
