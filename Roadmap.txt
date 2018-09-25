@@ -32,10 +32,10 @@ sync group SyncHandler
 
 API
 
-POST /member/on/:group_id { notifications: 'on|off|auto' }
-POST /member/on/:group_id { favorite: true|false }
-POST /member/on/:group_id { reminder: null|date }
-GET /member/on/:group_id { ... }
+POST /member/of/:group_id { notifications: 'on|off|auto' }
+POST /member/of/:group_id { favorite: true|false }
+POST /member/of/:group_id { reminder: null|date }
+GET /member/of/:group_id { ... }
 
 QUERY
 

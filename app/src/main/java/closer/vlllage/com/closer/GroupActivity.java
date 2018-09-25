@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
 
+import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
@@ -257,36 +258,44 @@ public class GroupActivity extends CircularRevealActivity {
                 .equal(GroupMember_.group, groupId)
                 .equal(GroupMember_.phone, $(AccountHandler.class).getPhone())
                 .build().subscribe().single().on(AndroidScheduler.mainThread()).observer(groupMembers -> {
-                    GroupMember groupMember = groupMembers.isEmpty() ? null : groupMembers.get(0);
-
-                    if (groupMember == null) {
-                        groupMember = new GroupMember();
-                        groupMember.setGroup(groupId);
-                        groupMember.setPhone($(AccountHandler.class).getPhone());
+                    if (groupMembers.isEmpty()) {
+                        $(DisposableHandler.class).add($(ApiHandler.class).getGroupMember(groupId)
+                                .map(GroupMemberResult::from)
+                                .subscribe(this::setupGroupMember, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+                    } else {
+                        setupGroupMember(groupMembers.get(0));
                     }
-
-                    @StringRes int subscribeText = groupMember.isSubscribed() ? R.string.unsubscribe : R.string.subscribe;
-                    @DrawableRes int subscribeIcon = groupMember.isSubscribed() ? R.drawable.ic_baseline_check_circle_24px : R.drawable.ic_baseline_check_circle_outline_24px;
-                    @StringRes int muteText = groupMember.isMuted() ? R.string.unmute_notifications : R.string.mute_notifications;
-                    @DrawableRes int muteIcon = groupMember.isMuted() ? R.drawable.ic_notifications_off_black_24dp : R.drawable.ic_notifications_none_black_24dp;
-
-                    final GroupMember updatedGroupMember = groupMember;
-                    $(MenuHandler.class).show(
-                            new MenuHandler.MenuOption(subscribeIcon, subscribeText, () -> {
-                                updatedGroupMember.setSubscribed(!updatedGroupMember.isSubscribed());
-                                $(SyncHandler.class).sync(updatedGroupMember);
-                            }),
-                            new MenuHandler.MenuOption(muteIcon, muteText, () -> {
-                                updatedGroupMember.setMuted(!updatedGroupMember.isMuted());
-                                $(SyncHandler.class).sync(updatedGroupMember);
-                            }),
-                            new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
-                                if ($(GroupHandler.class).getGroup() != null) {
-                                    $(GroupActionHandler.class).addActionToGroup($(GroupHandler.class).getGroup());
-                                }
-                            })
-                    );
                 }));
+    }
+
+    private void setupGroupMember(GroupMember groupMember) {
+        if (groupMember == null) {
+            groupMember = new GroupMember();
+            groupMember.setGroup(groupId);
+            groupMember.setPhone($(AccountHandler.class).getPhone());
+        }
+
+        @StringRes int subscribeText = groupMember.isSubscribed() ? R.string.unsubscribe : R.string.subscribe;
+        @DrawableRes int subscribeIcon = groupMember.isSubscribed() ? R.drawable.ic_baseline_check_circle_24px : R.drawable.ic_baseline_check_circle_outline_24px;
+        @StringRes int muteText = groupMember.isMuted() ? R.string.unmute_notifications : R.string.mute_notifications;
+        @DrawableRes int muteIcon = groupMember.isMuted() ? R.drawable.ic_notifications_off_black_24dp : R.drawable.ic_notifications_none_black_24dp;
+
+        final GroupMember updatedGroupMember = groupMember;
+        $(MenuHandler.class).show(
+                new MenuHandler.MenuOption(subscribeIcon, subscribeText, () -> {
+                    updatedGroupMember.setSubscribed(!updatedGroupMember.isSubscribed());
+                    $(SyncHandler.class).sync(updatedGroupMember);
+                }),
+                new MenuHandler.MenuOption(muteIcon, muteText, () -> {
+                    updatedGroupMember.setMuted(!updatedGroupMember.isMuted());
+                    $(SyncHandler.class).sync(updatedGroupMember);
+                }),
+                new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
+                    if ($(GroupHandler.class).getGroup() != null) {
+                        $(GroupActionHandler.class).addActionToGroup($(GroupHandler.class).getGroup());
+                    }
+                })
+        );
     }
 
     private void refreshPhysicalGroupActions(Group group) {

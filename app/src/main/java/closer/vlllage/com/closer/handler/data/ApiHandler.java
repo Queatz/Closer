@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.api.ApiService;
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupActionResult;
+import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
@@ -146,6 +147,10 @@ public class ApiHandler extends PoolMember {
 
     public Observable<SuccessResult> setGroupActionPhoto(String groupActionId, String photo) {
         return uiThread(api.getBackend().setGroupActionPhoto(groupActionId, photo));
+    }
+
+    public Observable<GroupMemberResult> getGroupMember(String groupId) {
+        return uiThread(api.getBackend().getGroupMember(groupId));
     }
 
     public Observable<CreateResult> updateGroupMember(String groupId, boolean muted, boolean subscribed) {
