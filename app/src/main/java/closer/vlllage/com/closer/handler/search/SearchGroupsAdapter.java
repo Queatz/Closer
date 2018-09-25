@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter;
+import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -104,6 +105,10 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             if (onGroupClickListener != null) {
                 onGroupClickListener.onGroupClicked(group, holder.itemView);
             }
+        });
+        holder.cardView.setOnLongClickListener(view -> {
+            $(GroupMemberHandler.class).changeGroupSettings(group);
+            return true;
         });
 
         holder.pool = tempPool();
