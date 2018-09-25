@@ -267,6 +267,7 @@ public class GroupActivity extends CircularRevealActivity {
                         if (groupMembers.isEmpty()) {
                             $(DisposableHandler.class).add($(ApiHandler.class).getGroupMember(groupId)
                                     .map(GroupMemberResult::from)
+                                    .doOnNext($(StoreHandler.class).getStore().box(GroupMember.class)::put)
                                     .subscribe(this::setupGroupMember, error -> this.setupGroupMember(null)));
                         } else {
                             setupGroupMember(groupMembers.get(0));
