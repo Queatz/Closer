@@ -145,7 +145,7 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
                 .equal(GroupMember_.group, groupId)
-                .equal(GroupMember_.phone, $(AccountHandler.class).getPhone())
+                .equal(GroupMember_.phone, $(PersistenceHandler.class).getPhoneId())
                 .build().subscribe().on(AndroidScheduler.mainThread()).observer(groupMembers -> {
                     GroupMember groupMember = groupMembers.isEmpty() ? null : groupMembers.get(0);
 
@@ -254,25 +254,39 @@ public class GroupActivity extends CircularRevealActivity {
     }
 
     private void changeGroupSettings() {
-        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
-                .equal(GroupMember_.group, groupId)
-                .equal(GroupMember_.phone, $(AccountHandler.class).getPhone())
-                .build().subscribe().single().on(AndroidScheduler.mainThread()).observer(groupMembers -> {
-                    if (groupMembers.isEmpty()) {
-                        $(DisposableHandler.class).add($(ApiHandler.class).getGroupMember(groupId)
-                                .map(GroupMemberResult::from)
-                                .subscribe(this::setupGroupMember, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
-                    } else {
-                        setupGroupMember(groupMembers.get(0));
-                    }
-                }));
+        if ($(GroupHandler.class).getGroup() == null) {
+            $(DefaultAlerts.class).thatDidntWork();
+            return;
+        }
+
+        if ($(GroupHandler.class).getGroup().isPublic()) {
+            $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
+                    .equal(GroupMember_.group, groupId)
+                    .equal(GroupMember_.phone, $(PersistenceHandler.class).getPhoneId())
+                    .build().subscribe().single().on(AndroidScheduler.mainThread()).observer(groupMembers -> {
+                        if (groupMembers.isEmpty()) {
+                            $(DisposableHandler.class).add($(ApiHandler.class).getGroupMember(groupId)
+                                    .map(GroupMemberResult::from)
+                                    .subscribe(this::setupGroupMember, error -> this.setupGroupMember(null)));
+                        } else {
+                            setupGroupMember(groupMembers.get(0));
+                        }
+                    }));
+        } else {
+            $(MenuHandler.class).show(
+                    new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
+                        if ($(GroupHandler.class).getGroup() != null) {
+                            $(GroupActionHandler.class).addActionToGroup($(GroupHandler.class).getGroup());
+                        }
+                    }));
+        }
     }
 
     private void setupGroupMember(GroupMember groupMember) {
         if (groupMember == null) {
             groupMember = new GroupMember();
             groupMember.setGroup(groupId);
-            groupMember.setPhone($(AccountHandler.class).getPhone());
+            groupMember.setPhone($(PersistenceHandler.class).getPhoneId());
         }
 
         @StringRes int subscribeText = groupMember.isSubscribed() ? R.string.unsubscribe : R.string.subscribe;
