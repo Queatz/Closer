@@ -244,40 +244,6 @@ public class BubbleMapLayer {
         return true;
     }
 
-    public void replace(List<MapBubble> mapBubbles) {
-        Map<String, MapBubble> byPhone = new HashMap<>();
-
-        for (MapBubble mapBubble : mapBubbles) {
-            if (mapBubble.getPhone() != null) {
-                byPhone.put(mapBubble.getPhone(), mapBubble);
-            }
-        }
-
-        Set<String> updatedBubbles = new HashSet<>();
-
-        for (MapBubble mapBubble : this.mapBubbles) {
-            if (mapBubble.isPinned()) {
-                continue;
-            }
-
-            if (mapBubble.getPhone() == null || !byPhone.containsKey(mapBubble.getPhone())) {
-                remove(mapBubble);
-            } else {
-
-                mapBubble.updateFrom(byPhone.get(mapBubble.getPhone()));
-                move(mapBubble, byPhone.get(mapBubble.getPhone()).getLatLng());
-                updateDetails(mapBubble);
-                updatedBubbles.add(mapBubble.getPhone());
-            }
-        }
-
-        for (MapBubble mapBubble : mapBubbles) {
-            if (mapBubble.getPhone() != null && !updatedBubbles.contains(mapBubble.getPhone())) {
-                add(mapBubble);
-            }
-        }
-    }
-
     private float zoomScale(MapBubble mapBubble) {
         if (mapBubble.getType() == BubbleType.PHYSICAL_GROUP) {
             return (float) Math.pow(map.getCameraPosition().zoom / 15f, 2f);
@@ -288,6 +254,10 @@ public class BubbleMapLayer {
         }
 
         return 1;
+    }
+
+    Set<MapBubble> getMapBubbles() {
+        return mapBubbles;
     }
 
     public interface BubbleView {

@@ -12,6 +12,7 @@ public class MapBubble {
     private String phone;
     private LatLng latLng;
     private LatLng rawLatLng;
+    private boolean inProxy;
     private String name;
     private String status;
     private View view;
@@ -142,6 +143,15 @@ public class MapBubble {
         }
 
         return latLng;
+    }
+
+    public boolean isInProxy() {
+        return inProxy;
+    }
+
+    public MapBubble setInProxy(boolean inProxy) {
+        this.inProxy = inProxy;
+        return this;
     }
 
     public interface OnItemClickListener {
