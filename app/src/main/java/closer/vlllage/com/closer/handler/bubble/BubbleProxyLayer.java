@@ -18,6 +18,10 @@ public class BubbleProxyLayer {
     }
 
     public void recalculate() {
+        // Update proxies
+
+
+
         // Add bubbles
         for (MapBubble mapBubble : mapBubbles) {
             if (!bubbleMapLayer.getMapBubbles().contains(mapBubble)) {
