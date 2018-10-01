@@ -26,6 +26,7 @@ import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.pool.TempPool;
@@ -65,6 +66,8 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
         viewHolder.groupName.setOnClickListener(view -> $(GroupActivityTransitionHandler.class).showGroupMessages(viewHolder.groupName, group.getId()));
 
         GroupMessagesAdapter groupMessagesAdapter = new GroupMessagesAdapter($pool());
+        groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
+        groupMessagesAdapter.setOnEventClickListener(event -> $(MapActivityHandler.class).showEventOnMap(event));
 
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query();
         viewHolder.pool.$(DisposableHandler.class).add(queryBuilder
