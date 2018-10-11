@@ -18,9 +18,38 @@ public class BubbleProxyLayer {
     }
 
     public void recalculate() {
-        // Update proxies
+        // Remove old proxies
 
+        Set<MapBubble> toRemove = new HashSet<>();
+        for (MapBubble mapBubble : mapBubbles) {
+            if (BubbleType.PROXY.equals(mapBubble.getType())) {
+                toRemove.add(mapBubble);
+            }
+        }
 
+        for (MapBubble mapBubble : toRemove) {
+            mapBubbles.remove(mapBubble);
+        }
+
+        // Add new proxies
+
+        MapBubble proxyMapBubble = new MapBubble(new LatLng(0, 0), BubbleType.PROXY);
+        proxyMapBubble.setPinned(false);
+        proxyMapBubble.setOnTop(false);
+        float lat = 0, lng = 0;
+        int num = 0;
+        for (MapBubble mapBubble : mapBubbles) {
+            if (BubbleType.STATUS.equals(mapBubble.getType())) {
+                lat += mapBubble.getLatLng().latitude;
+                lng += mapBubble.getLatLng().longitude;
+                num++;
+            }
+        }
+        proxyMapBubble.setLatLng(new LatLng(
+                lat / num,
+                lng / num
+        ));
+        mapBubbles.add(proxyMapBubble);
 
         // Add bubbles
         for (MapBubble mapBubble : mapBubbles) {
@@ -30,7 +59,7 @@ public class BubbleProxyLayer {
         }
 
         // Remove bubbles
-        Set<MapBubble> toRemove = new HashSet<>();
+        toRemove = new HashSet<>();
 
         for (MapBubble mapBubble : bubbleMapLayer.getMapBubbles()) {
             if (!mapBubbles.contains(mapBubble)) {

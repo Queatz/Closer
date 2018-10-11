@@ -61,6 +61,34 @@
                 android:drawablePadding="@dimen/pad"
                 android:drawableTint="@color/text" />
 
+            <Button style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/showHelpButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/show_help"
+                android:drawableStart="@drawable/ic_help_outline_black_24dp"
+                android:drawablePadding="@dimen/pad"
+                android:drawableTint="@color/text" />
+
+            <Button style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/returnToMapButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/return_to_map"
+                android:drawableStart="@drawable/ic_arrow_back_black_24dp"
+                android:drawablePadding="@dimen/pad"
+                android:drawableTint="@color/text" />
+
         </LinearLayout>
 
     </ScrollView>

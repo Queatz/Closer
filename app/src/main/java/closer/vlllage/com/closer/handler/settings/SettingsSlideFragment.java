@@ -13,8 +13,10 @@ import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.WindowHandler;
+import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
 
+import static closer.vlllage.com.closer.MapsActivity.EXTRA_SCREEN_MAP;
 import static closer.vlllage.com.closer.handler.settings.UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED;
 
 public class SettingsSlideFragment extends PoolFragment {
@@ -34,6 +36,8 @@ public class SettingsSlideFragment extends PoolFragment {
                 $(DefaultAlerts.class).message(privacyPolicy);
             }, e -> $(DefaultAlerts.class).thatDidntWork()));
         });
+        view.findViewById(R.id.showHelpButton).setOnClickListener(v -> $(HelpHandler.class).showHelp());
+        view.findViewById(R.id.returnToMapButton).setOnClickListener(v -> $(MapActivityHandler.class).goToScreen(EXTRA_SCREEN_MAP));
 
         return view;
     }

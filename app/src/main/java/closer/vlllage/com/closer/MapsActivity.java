@@ -21,6 +21,9 @@ public class MapsActivity extends PoolActivity {
     public static final String EXTRA_STATUS = "status";
     public static final String EXTRA_PHONE = "phone";
     public static final String EXTRA_MESSAGE = "message";
+    public static final String EXTRA_SCREEN = "screen";
+    public static final String EXTRA_SCREEN_MAP = "screen.map";
+    public static final String EXTRA_SCREEN_SETTINGS = "screen.settings";
 
     private SlideScreen slideScreen;
 
@@ -53,6 +56,17 @@ public class MapsActivity extends PoolActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        if (intent.hasExtra(EXTRA_SCREEN)) {
+            switch (intent.getStringExtra(EXTRA_SCREEN)) {
+                case EXTRA_SCREEN_MAP:
+                    slideScreen.setSlide(0);
+                    return;
+                case EXTRA_SCREEN_SETTINGS:
+                    slideScreen.setSlide(1);
+                    return;
+            }
+        }
+
         $(MapViewHandler.class).handleIntent(intent);
     }
 

@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
 import closer.vlllage.com.closer.handler.helpers.ToastHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.settings.HelpHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class MyGroupsLayoutActionsHandler extends PoolMember {
@@ -80,7 +81,7 @@ public class MyGroupsLayoutActionsHandler extends PoolMember {
         @Override
         public void set() {
             String action = $(ResourcesHandler.class).getResources().getString(R.string.show_help);
-            showHelpButton = new GroupActionBarButton(action, view -> $(DefaultAlerts.class).longMessage(null, R.string.help_message), view -> {
+            showHelpButton = new GroupActionBarButton(action, view -> $(HelpHandler.class).showHelp(), view -> {
                 $(PersistenceHandler.class).setIsHelpHidden(true);
                 $(AlertHandler.class).make()
                         .setMessage($(ResourcesHandler.class).getResources().getString(R.string.you_hid_the_help_bubble))

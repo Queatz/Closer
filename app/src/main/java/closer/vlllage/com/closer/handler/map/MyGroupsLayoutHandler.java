@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.AppShortcutsHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
@@ -74,6 +75,13 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 R.drawable.clickable_blue_light
 
         ).setIcon(R.drawable.ic_shuffle_black_24dp));
+        endActions.add(new GroupActionBarButton(
+                $(ResourcesHandler.class).getResources().getString(R.string.settings),
+                view -> $(MapActivityHandler.class).goToScreen(MapsActivity.EXTRA_SCREEN_SETTINGS),
+                null,
+                R.drawable.clickable_accent
+
+        ).setIcon(R.drawable.ic_settings_black_24dp));
         myGroupsAdapter.setEndActions(endActions);
     }
 

@@ -19,6 +19,7 @@ import static closer.vlllage.com.closer.MapsActivity.EXTRA_EVENT_ID;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_LAT_LNG;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_NAME;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_PHONE;
+import static closer.vlllage.com.closer.MapsActivity.EXTRA_SCREEN;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_STATUS;
 import static closer.vlllage.com.closer.MapsActivity.EXTRA_SUGGESTION;
 
@@ -80,5 +81,12 @@ public class MapActivityHandler extends PoolMember {
         intent.putExtra(EXTRA_PHONE, phoneId);
 
         $(ActivityHandler.class).getActivity().startActivity(intent);
+    }
+
+    public void goToScreen(String screenName) { Intent intent = new Intent($(ActivityHandler.class).getActivity(), MapsActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.putExtra(EXTRA_SCREEN, screenName);
+        $(ActivityHandler.class).getActivity().startActivity(intent);
+
     }
 }
