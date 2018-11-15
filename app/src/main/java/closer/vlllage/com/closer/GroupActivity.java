@@ -200,7 +200,7 @@ public class GroupActivity extends CircularRevealActivity {
                 setGroupBackground(group);
             } else {
                 scopeIndicatorButton.setVisibility(View.VISIBLE);
-                scopeIndicatorButton.setImageResource(R.drawable.ic_lock_black_24dp);
+                scopeIndicatorButton.setImageResource(R.drawable.ic_lock_black_18dp);
                 scopeIndicatorButton.setOnClickListener(view -> {
                     $(DefaultAlerts.class).message(R.string.private_group_title, R.string.private_group_message);
                 });

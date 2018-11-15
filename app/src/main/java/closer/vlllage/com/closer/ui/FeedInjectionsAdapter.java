@@ -3,17 +3,23 @@ package closer.vlllage.com.closer.ui;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.SearchGroupHandler;
 import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
@@ -64,6 +70,7 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
         switch (getItemViewType(position)) {
             case 0:
                 RecyclerView groupsRecyclerView = holder.itemView.findViewById(R.id.publicGroupsRecyclerView);
+                EditText searchGroups = holder.itemView.findViewById(R.id.searchGroups);
 
                 SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($pool(), (group, view) -> this.openGroup(group.getId(), view), this::createGroup);
                 searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item);
@@ -74,6 +81,35 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
                         LinearLayoutManager.HORIZONTAL,
                         false
                 ));
+
+                searchGroups.setOnFocusChangeListener((view, focused) -> {
+                    if (focused) {
+                        $(KeyboardHandler.class).showViewAboveKeyboard(view);
+                    }
+                });
+
+                searchGroups.setOnClickListener(view -> $(KeyboardHandler.class).showViewAboveKeyboard(view));
+
+                holder.pool.$(ApplicationHandler.class).setApp($(ApplicationHandler.class).getApp());
+
+                searchGroups.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        holder.pool.$(SearchGroupHandler.class).showGroupsForQuery(searchGroupsAdapter, searchGroups.getText().toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                holder.pool.$(SearchGroupHandler.class).showGroupsForQuery(searchGroupsAdapter, searchGroups.getText().toString());
 
                 float distance = .12f;
 
@@ -92,7 +128,7 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
                             .subscribe()
                             .single()
                             .on(AndroidScheduler.mainThread())
-                            .observer(searchGroupsAdapter::setGroups));
+                            .observer(holder.pool.$(SearchGroupHandler.class)::setGroups));
                 }));
 
                 holder.itemView.findViewById(R.id.action).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
