@@ -45,6 +45,19 @@ public class DefaultAlerts extends PoolMember {
                 .show();
     }
 
+    public void message(String title, String message) {
+        $(AlertHandler.class).make()
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
+                .show();
+    }
+
+    public void message(@StringRes int titleRes, @StringRes int messageRes) {
+        message($(ResourcesHandler.class).getResources().getString(titleRes),
+                $(ResourcesHandler.class).getResources().getString(messageRes));
+    }
+
     public void message(@StringRes int stringRes) {
         message($(ResourcesHandler.class).getResources().getString(stringRes));
     }

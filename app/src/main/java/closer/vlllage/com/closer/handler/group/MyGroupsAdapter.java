@@ -96,7 +96,13 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
 
         Group group = groups.get(position);
         groupName.setBackgroundResource(R.drawable.clickable_blue);
-        groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+        groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0);
+        groupName.setCompoundDrawablePadding($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            groupName.setCompoundDrawableTintList(ColorStateList.valueOf(
+                    $(ResourcesHandler.class).getResources().getColor(android.R.color.white, $(ActivityHandler.class).getActivity().getTheme())
+            ));
+        }
         groupName.setText(group.getName());
 
         groupName.setOnClickListener(view ->

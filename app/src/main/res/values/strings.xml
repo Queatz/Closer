@@ -178,4 +178,9 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="group_settings">Group settings</string>
     <string name="return_to_map">Return to map</string>
+    <string name="public_group">Public group</string>
+    <string name="private_group_message">Only members of this group can send and see messages in this group, and anyone in the group can add additional people to the group.</string>
+    <string name="public_group_message">Anyone can send and see messages in this group.</string>
+    <string name="public_group_title">This is a public group</string>
+    <string name="private_group_title">This group is private</string>
 </resources>

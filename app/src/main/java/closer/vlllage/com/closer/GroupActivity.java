@@ -87,6 +87,7 @@ public class GroupActivity extends CircularRevealActivity {
     private Button showPhoneContactsButton;
     private ImageButton sendButton;
     private ImageButton sendMoreButton;
+    private ImageButton scopeIndicatorButton;
     private String groupId;
 
     @Override
@@ -111,6 +112,7 @@ public class GroupActivity extends CircularRevealActivity {
         actionSettingsSetName = findViewById(R.id.actionSettingsSetName);
         actionSettingsSetBackground = findViewById(R.id.actionSettingsSetBackground);
         actionFrameLayout = findViewById(R.id.actionFrameLayout);
+        scopeIndicatorButton = findViewById(R.id.scopeIndicatorButton);
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
@@ -165,6 +167,11 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (group.isPublic()) {
+                scopeIndicatorButton.setVisibility(View.VISIBLE);
+                scopeIndicatorButton.setImageResource(R.drawable.ic_public_black_24dp);
+                scopeIndicatorButton.setOnClickListener(view -> {
+                    $(DefaultAlerts.class).message(R.string.public_group_title, R.string.public_group_message);
+                });
                 if (group.hasEvent()) {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_red_rounded);
                 } else if (group.isPhysical()) {
@@ -192,6 +199,11 @@ public class GroupActivity extends CircularRevealActivity {
 
                 setGroupBackground(group);
             } else {
+                scopeIndicatorButton.setVisibility(View.VISIBLE);
+                scopeIndicatorButton.setImageResource(R.drawable.ic_lock_black_24dp);
+                scopeIndicatorButton.setOnClickListener(view -> {
+                    $(DefaultAlerts.class).message(R.string.private_group_title, R.string.private_group_message);
+                });
                 $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton);
                 peopleInGroup.setSelected(true);
                 peopleInGroup.setOnClickListener(view -> toggleContactsView());

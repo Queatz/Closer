@@ -20,4 +20,5 @@
     <dimen name="groupActionSmallTextSize">14sp</dimen>
     <dimen name="groupActionLargeTextSize">16sp</dimen>
     <dimen name="padQuadruple">32dp</dimen>
+    <dimen name="iconSizeSm">18dp</dimen>
 </resources>
