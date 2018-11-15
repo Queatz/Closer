@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +23,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
+import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.DistanceHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
@@ -37,6 +41,7 @@ import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.ui.CombinedRecyclerAdapter;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 import static closer.vlllage.com.closer.pool.Pool.tempPool;
 import static java.lang.Math.max;
@@ -59,18 +64,18 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.pool = tempPool();
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.pool = tempPool();
         Group group = groups.get(position);
-        viewHolder.groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
-        viewHolder.groupName.setOnClickListener(view -> $(GroupActivityTransitionHandler.class).showGroupMessages(viewHolder.groupName, group.getId()));
+        holder.groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
+        holder.groupName.setOnClickListener(view -> $(GroupActivityTransitionHandler.class).showGroupMessages(holder.groupName, group.getId()));
 
         GroupMessagesAdapter groupMessagesAdapter = new GroupMessagesAdapter($pool());
         groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
         groupMessagesAdapter.setOnEventClickListener(event -> $(MapActivityHandler.class).showEventOnMap(event));
 
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query();
-        viewHolder.pool.$(DisposableHandler.class).add(queryBuilder
+        holder.pool.$(DisposableHandler.class).add(queryBuilder
                 .sort($(SortHandler.class).sortGroupMessages())
                 .equal(GroupMessage_.to, group.getId())
                 .build()
@@ -79,25 +84,25 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
                 .transform(groupMessages -> groupMessages.subList(0, min(groupMessages.size(), 5)))
                 .observer(groupMessagesAdapter::setGroupMessages));
 
-        viewHolder.messagesRecyclerView.setAdapter(groupMessagesAdapter);
-        viewHolder.messagesRecyclerView.setLayoutManager(new LinearLayoutManager(viewHolder.messagesRecyclerView.getContext(), LinearLayoutManager.VERTICAL, true));
+        holder.messagesRecyclerView.setAdapter(groupMessagesAdapter);
+        holder.messagesRecyclerView.setLayoutManager(new LinearLayoutManager(holder.messagesRecyclerView.getContext(), LinearLayoutManager.VERTICAL, true));
 
-        viewHolder.replyMessage.setOnFocusChangeListener((view, focused) -> {
+        holder.replyMessage.setOnFocusChangeListener((view, focused) -> {
             if (focused) {
                 $(KeyboardHandler.class).showViewAboveKeyboard(view);
             }
         });
 
-        viewHolder.replyMessage.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+        holder.replyMessage.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                viewHolder.sendButton.callOnClick();
+                holder.sendButton.callOnClick();
             }
 
             return false;
         });
 
-        viewHolder.sendButton.setOnClickListener(view -> {
-            String message = viewHolder.replyMessage.getText().toString();
+        holder.sendButton.setOnClickListener(view -> {
+            String message = holder.replyMessage.getText().toString();
 
             if (message.trim().isEmpty()) {
                 return;
@@ -111,18 +116,29 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
             $(SyncHandler.class).sync(groupMessage);
 
-            viewHolder.replyMessage.setText("");
+            holder.replyMessage.setText("");
             $(KeyboardHandler.class).showKeyboard(view, false);
         });
 
         if (group.hasEvent()) {
-            viewHolder.itemView.setBackgroundResource(R.drawable.color_red_rounded);
+            holder.itemView.setBackgroundResource(R.drawable.color_red_rounded);
         } else if (group.isPhysical()) {
-            viewHolder.itemView.setBackgroundResource(R.drawable.color_purple_rounded);
+            holder.itemView.setBackgroundResource(R.drawable.color_purple_rounded);
         } else {
-            viewHolder.itemView.setBackgroundResource(R.drawable.color_green_rounded);
+            holder.itemView.setBackgroundResource(R.drawable.color_green_rounded);
         }
 
+        Picasso.get().cancelRequest(holder.backgroundPhoto);
+        if (group.getPhoto() != null) {
+            holder.backgroundPhoto.setVisibility(View.VISIBLE);
+            holder.backgroundPhoto.setImageDrawable(null);
+            Picasso.get().load(group.getPhoto() + "?s=32")
+                    .noPlaceholder()
+                    .transform(new BlurTransformation($(ActivityHandler.class).getActivity(), 2))
+                    .into(holder.backgroundPhoto);
+        } else {
+            holder.backgroundPhoto.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -154,6 +170,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
         RecyclerView messagesRecyclerView;
         ImageButton sendButton;
         EditText replyMessage;
+        ImageView backgroundPhoto;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -161,6 +178,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             messagesRecyclerView = itemView.findViewById(R.id.messagesRecyclerView);
             sendButton = itemView.findViewById(R.id.sendButton);
             replyMessage = itemView.findViewById(R.id.replyMessage);
+            backgroundPhoto = itemView.findViewById(R.id.backgroundPhoto);
         }
     }
 }

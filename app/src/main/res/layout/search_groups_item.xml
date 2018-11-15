@@ -8,15 +8,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@drawable/clickable_light"
-    android:clickable="true"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:clickable="true">
+
+    <android.support.design.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="0dp"
+        android:clipChildren="true"
+        android:background="@color/black_transparent"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/black_transparent"
+        app:cardCornerRadius="@dimen/imageCorners">
+
+        <ImageView
+            android:id="@+id/backgroundPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
+    </android.support.design.card.MaterialCardView>
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="@dimen/pad"
+        android:layout_marginTop="@dimen/pad"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textSize="14sp"
@@ -28,7 +46,7 @@
         android:id="@+id/about"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="@dimen/pad"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/action"
         app:layout_constraintTop_toBottomOf="@+id/name"
@@ -40,12 +58,13 @@
         android:id="@+id/action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="@dimen/pad"
+        android:layout_marginRight="@dimen/pad"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/actionRecyclerView"
         app:layout_constraintHorizontal_bias="1"
+        app:layout_goneMarginBottom="@dimen/pad"
         android:textSize="12sp"
         android:textColor="@color/text"
         android:textAllCaps="true"
@@ -56,10 +75,11 @@
         android:id="@+id/actionRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/pad"
         app:layout_constraintTop_toBottomOf="@+id/about"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingRight="8dp"
+        android:paddingRight="@dimen/pad"
+        android:paddingBottom="@dimen/pad"
         android:clipToPadding="false"
         android:visibility="gone"
         tools:visibility="visible"/>

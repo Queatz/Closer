@@ -11,6 +11,29 @@
     android:elevation="@dimen/elevation"
     android:clickable="true">
 
+    <android.support.design.card.MaterialCardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="0dp"
+        android:clipChildren="true"
+        android:background="@color/black_transparent"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/black_transparent"
+        app:cardCornerRadius="@dimen/miniWindowCornerRadius">
+
+    <ImageView
+            android:id="@+id/backgroundPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
+    </android.support.design.card.MaterialCardView>
+
     <TextView
         android:id="@+id/groupName"
         android:layout_width="match_parent"
@@ -21,6 +44,7 @@
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="4dp"
+        app:layout_constraintTop_toTopOf="parent"
         android:textAllCaps="true"
         android:textColor="@color/text"
         android:textSize="12sp"

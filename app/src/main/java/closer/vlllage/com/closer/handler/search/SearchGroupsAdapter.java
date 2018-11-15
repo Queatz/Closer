@@ -7,7 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,7 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
 import io.objectbox.android.AndroidScheduler;
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 import static closer.vlllage.com.closer.pool.Pool.tempPool;
 
@@ -130,6 +134,18 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
                         holder.pool.$(GroupActionRecyclerViewHandler.class).getRecyclerView().setVisibility(groupActions.isEmpty() ? View.GONE : View.VISIBLE);
                         holder.pool.$(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions);
                     }));
+
+            Picasso.get().cancelRequest(holder.backgroundPhoto);
+            if (group.getPhoto() != null) {
+                holder.backgroundPhoto.setVisibility(View.VISIBLE);
+                holder.backgroundPhoto.setImageDrawable(null);
+                Picasso.get().load(group.getPhoto() + "?s=32")
+                        .noPlaceholder()
+                        .transform(new BlurTransformation($(ActivityHandler.class).getActivity(), 2))
+                        .into(holder.backgroundPhoto);
+            } else {
+                holder.backgroundPhoto.setVisibility(View.GONE);
+            }
         }
 
     }
@@ -199,6 +215,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
         TextView action;
         RecyclerView actionRecyclerView;
         TempPool pool;
+        ImageView backgroundPhoto;
 
         public SearchGroupsViewHolder(View itemView) {
             super(itemView);
@@ -207,6 +224,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             about = itemView.findViewById(R.id.about);
             action = itemView.findViewById(R.id.action);
             actionRecyclerView = itemView.findViewById(R.id.actionRecyclerView);
+            backgroundPhoto = itemView.findViewById(R.id.backgroundPhoto);
         }
     }
 
