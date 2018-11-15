@@ -8,7 +8,10 @@
     android:paddingTop="@dimen/padHalf"
     android:paddingBottom="@dimen/padHalf"
     android:background="@drawable/color_green_rounded"
-    android:layout_margin="@dimen/pad"
+    android:layout_marginTop="@dimen/pad"
+    android:layout_marginStart="@dimen/pad"
+    android:layout_marginEnd="@dimen/pad"
+    android:layout_marginBottom="@dimen/padQuadruple"
     android:clickable="true">
 
     <TextView

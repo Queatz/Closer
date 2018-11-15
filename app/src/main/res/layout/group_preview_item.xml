@@ -7,7 +7,7 @@
     android:background="@drawable/color_green_rounded"
     android:layout_marginStart="@dimen/pad"
     android:layout_marginEnd="@dimen/pad"
-    android:layout_marginBottom="@dimen/pad"
+    android:layout_marginBottom="@dimen/padQuadruple"
     android:elevation="@dimen/elevation"
     android:clickable="true">
 
