@@ -19,7 +19,6 @@ import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
-import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -62,17 +61,10 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 null,
                 R.drawable.clickable_blue_light).setIcon(R.drawable.ic_group_add_black_24dp));
         endActions.add(new GroupActionBarButton(
-                $(ResourcesHandler.class).getResources().getString(R.string.search_public_groups),
-                view -> $(SearchActivityHandler.class).show(view),
-                null,
-                R.drawable.clickable_green_light
-
-        ).setIcon(R.drawable.ic_search_black_24dp));
-        endActions.add(new GroupActionBarButton(
                 $(ResourcesHandler.class).getResources().getString(R.string.random_suggestion),
                 view -> $(SuggestionHandler.class).shuffle(),
                 null,
-                R.drawable.clickable_blue_light
+                R.drawable.clickable_green_light
 
         ).setIcon(R.drawable.ic_shuffle_black_24dp));
         endActions.add(new GroupActionBarButton(
