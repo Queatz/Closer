@@ -49,7 +49,7 @@ public class BubbleProxyLayer {
                 lat / num,
                 lng / num
         ));
-        mapBubbles.add(proxyMapBubble);
+// TODO       mapBubbles.add(proxyMapBubble);
 
         // Add bubbles
         for (MapBubble mapBubble : mapBubbles) {
@@ -95,6 +95,7 @@ public class BubbleProxyLayer {
         }
 
         Set<String> updatedBubbles = new HashSet<>();
+        Set<MapBubble> toRemoveBubbles = new HashSet<>();
 
         for (MapBubble mapBubble : this.mapBubbles) {
             if (mapBubble.isPinned()) {
@@ -102,13 +103,17 @@ public class BubbleProxyLayer {
             }
 
             if (mapBubble.getPhone() == null || !byPhone.containsKey(mapBubble.getPhone())) {
-                this.mapBubbles.remove(mapBubble);
+                toRemoveBubbles.add(mapBubble);
             } else {
                 mapBubble.updateFrom(byPhone.get(mapBubble.getPhone()));
                 mapBubble.setRawLatLng(byPhone.get(mapBubble.getPhone()).getLatLng());
                 bubbleMapLayer.updateDetails(mapBubble);
                 updatedBubbles.add(mapBubble.getPhone());
             }
+        }
+
+        for (MapBubble mapBubble : toRemoveBubbles) {
+            this.mapBubbles.remove(mapBubble);
         }
 
         for (MapBubble mapBubble : mapBubbles) {

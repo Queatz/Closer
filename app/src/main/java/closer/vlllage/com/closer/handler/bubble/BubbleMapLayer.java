@@ -125,7 +125,9 @@ public class BubbleMapLayer {
             mapBubble.getView().setScaleY(zoomScale(mapBubble));
         }
 
-        view.setElevation(Math.min((mapBubble.isOnTop() ? 2 : 1) + (float) point.y / (float) this.view.getHeight(), 64));
+        if (this.view.getHeight() > 0) {
+            view.setElevation(Math.min((mapBubble.isOnTop() ? 2 : 1) + (float) point.y / (float) this.view.getHeight(), 64));
+        }
     }
 
     public void updateDetails(MapBubble mapBubble) {
