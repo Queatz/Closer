@@ -10,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.model.CameraPosition;
+
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.SearchGroupHandler;
 import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
@@ -34,6 +37,7 @@ import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 import static closer.vlllage.com.closer.pool.Pool.tempPool;
 
@@ -66,13 +70,15 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.pool = tempPool();
+        holder.pool.$(ApplicationHandler.class).setApp($(ApplicationHandler.class).getApp());
+        holder.pool.$(ActivityHandler.class).setActivity($(ActivityHandler.class).getActivity());
 
         switch (getItemViewType(position)) {
             case 0:
                 RecyclerView groupsRecyclerView = holder.itemView.findViewById(R.id.publicGroupsRecyclerView);
                 EditText searchGroups = holder.itemView.findViewById(R.id.searchGroups);
 
-                SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($pool(), (group, view) -> this.openGroup(group.getId(), view), this::createGroup);
+                SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter(holder.pool.$(PoolMember.class), (group, view) -> this.openGroup(group.getId(), view), this::createGroup);
                 searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item);
 
                 groupsRecyclerView.setAdapter(searchGroupsAdapter);
@@ -89,8 +95,6 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
                 });
 
                 searchGroups.setOnClickListener(view -> $(KeyboardHandler.class).showViewAboveKeyboard(view));
-
-                holder.pool.$(ApplicationHandler.class).setApp($(ApplicationHandler.class).getApp());
 
                 searchGroups.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -113,9 +117,7 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
 
                 float distance = .12f;
 
-                holder.pool.$(DisposableHandler.class).add($(MapHandler.class).onMapIdleObservable()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(cameraPosition -> {
+                Consumer<CameraPosition> cameraPositionCallback = cameraPosition -> {
                     QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
                             .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                             .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
@@ -126,10 +128,22 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
                             .sort($(SortHandler.class).sortGroups())
                             .build()
                             .subscribe()
-                            .single()
                             .on(AndroidScheduler.mainThread())
-                            .observer(holder.pool.$(SearchGroupHandler.class)::setGroups));
-                }));
+                            .single()
+                            .observer(groups -> {
+                                    holder.pool.$(SearchGroupHandler.class).setGroups(groups);
+                            }));
+                };
+
+                try {
+                    cameraPositionCallback.accept(CameraPosition.fromLatLngZoom($(MapHandler.class).getCenter(), $(MapHandler.class).getZoom()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                holder.pool.$(DisposableHandler.class).add($(MapHandler.class).onMapIdleObservable()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(cameraPositionCallback));
 
                 holder.itemView.findViewById(R.id.action).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
                 break;
