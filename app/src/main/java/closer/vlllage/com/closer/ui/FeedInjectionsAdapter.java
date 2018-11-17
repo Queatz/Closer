@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.feed.PublicGroupFeedItemHandler;
+import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
@@ -60,6 +61,7 @@ public class FeedInjectionsAdapter extends PoolRecyclerAdapter<FeedInjectionsAda
                 holder.pool.$set($(ActivityHandler.class));
                 holder.pool.$set($(SortHandler.class));
                 holder.pool.$set($(KeyboardHandler.class));
+                holder.pool.$set($(GroupMemberHandler.class));
                 holder.pool.$(PublicGroupFeedItemHandler.class).attach(holder.itemView);
                 break;
             case 1:

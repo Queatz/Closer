@@ -23,6 +23,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
@@ -83,6 +84,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             holder.pool.$set($(ActivityHandler.class));
             holder.pool.$set($(SortHandler.class));
             holder.pool.$set($(KeyboardHandler.class));
+            holder.pool.$set($(GroupMemberHandler.class));
             holder.pool.$(PublicGroupFeedItemHandler.class).attach(holder.itemView);
             return;
         } else {
