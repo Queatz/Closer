@@ -17,6 +17,7 @@ public abstract class CircularRevealActivity extends PoolActivity {
     private Rect sourceBounds;
     private Runnable finishCallback;
     private Animator finishAnimator;
+    private View background;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public abstract class CircularRevealActivity extends PoolActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        View background = findViewById(getBackgroundId());
+        background = findViewById(getBackgroundId());
 
         sourceBounds = getIntent().getSourceBounds();
 
@@ -36,23 +37,7 @@ public abstract class CircularRevealActivity extends PoolActivity {
             @Override
             public void onGlobalLayout() {
                 background.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                if (sourceBounds == null) {
-                    Rect rect = new Rect();
-                    getWindow().getDecorView().getGlobalVisibleRect(rect);
-                    rect.top = rect.bottom;
-                    sourceBounds = rect;
-                }
-
-                Animator animator = ViewAnimationUtils.createCircularReveal(background,
-                        sourceBounds.centerX(),
-                        sourceBounds.centerY(),
-                        0,
-                        (float) Math.hypot(CircularRevealActivity.this.getWindow().getDecorView().getWidth(), CircularRevealActivity.this.getWindow().getDecorView().getHeight())
-                );
-                animator.setDuration(195);
-                animator.setInterpolator(new AccelerateInterpolator());
-                animator.start();
+                reveal();
             }
         });
 
@@ -61,6 +46,29 @@ public abstract class CircularRevealActivity extends PoolActivity {
             finish();
             return true;
         });
+    }
+
+    protected void reveal() {
+        if (sourceBounds == null) {
+            Rect rect = new Rect();
+            getWindow().getDecorView().getGlobalVisibleRect(rect);
+            rect.top = rect.bottom;
+            sourceBounds = rect;
+        }
+
+        Animator animator = ViewAnimationUtils.createCircularReveal(background,
+                sourceBounds.centerX(),
+                sourceBounds.centerY(),
+                0,
+                (float) Math.hypot(CircularRevealActivity.this.getWindow().getDecorView().getWidth(), CircularRevealActivity.this.getWindow().getDecorView().getHeight())
+        );
+        animator.setDuration(195);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.start();
+    }
+
+    protected void setSourceBounds(Rect sourceBounds) {
+        this.sourceBounds = sourceBounds;
     }
 
     protected abstract int getBackgroundId();

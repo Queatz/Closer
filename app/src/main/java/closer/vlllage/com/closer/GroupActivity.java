@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -121,17 +122,7 @@ public class GroupActivity extends CircularRevealActivity {
         $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
 
         $(GroupHandler.class).attach(groupName, peopleInGroup, findViewById(R.id.settingsButton));
-        if (getIntent() != null && getIntent().hasExtra(EXTRA_GROUP_ID)) {
-            groupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
-            $(GroupHandler.class).setGroupById(groupId);
-
-            if (getIntent().hasExtra(EXTRA_RESPOND)) {
-                replyMessage.postDelayed(() -> {
-                    replyMessage.requestFocus();
-                    $(KeyboardHandler.class).showKeyboard(replyMessage, true);
-                }, 500);
-            }
-        }
+        handleIntent(getIntent());
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
         $(GroupActionHandler.class).attach(actionFrameLayout, findViewById(R.id.actionRecyclerView));
@@ -199,6 +190,7 @@ public class GroupActivity extends CircularRevealActivity {
 
                 setGroupBackground(group);
             } else {
+                findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_primary_rounded);
                 scopeIndicatorButton.setVisibility(View.VISIBLE);
                 scopeIndicatorButton.setImageResource(R.drawable.ic_lock_black_18dp);
                 scopeIndicatorButton.setOnClickListener(view -> {
@@ -259,6 +251,28 @@ public class GroupActivity extends CircularRevealActivity {
                 actionCancel.setVisibility(View.GONE);
             }
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+        setSourceBounds(intent.getSourceBounds());
+        reveal();
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent != null && intent.hasExtra(EXTRA_GROUP_ID)) {
+            groupId = intent.getStringExtra(EXTRA_GROUP_ID);
+            $(GroupHandler.class).setGroupById(groupId);
+
+            if (intent.hasExtra(EXTRA_RESPOND)) {
+                replyMessage.postDelayed(() -> {
+                    replyMessage.requestFocus();
+                    $(KeyboardHandler.class).showKeyboard(replyMessage, true);
+                }, 500);
+            }
+        }
     }
 
     private void refreshPhysicalGroupActions(Group group) {
