@@ -27,6 +27,16 @@ public class Pool {
         return (T) members.get(member);
     }
 
+    public <T extends PoolMember> T $set(T member) {
+        if (members.containsKey(member.getClass())) {
+            throw new IllegalStateException("Cannot $set member that already exists");
+        }
+
+        members.put(member.getClass(), member);
+
+        return (T) members.get(member);
+    }
+
     protected void end() {
         for (PoolMember member : members.values()) {
             member.onPoolEnd();

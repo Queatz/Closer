@@ -6,14 +6,12 @@ import android.view.View;
 
 import java.util.List;
 
-import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.Group_;
-import closer.vlllage.com.closer.ui.FeedInjectionsAdapter;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -21,8 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public class FeedHandler extends PoolMember {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private HeaderAdapter headerAdapter;
-    private GroupPreviewAdapter groupPreviewAdapter;
+    private HeaderAdapter groupPreviewAdapter;
 
     public void attach(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -35,7 +32,7 @@ public class FeedHandler extends PoolMember {
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (top != oldTop || bottom != oldBottom) {
-                headerAdapter.notifyHeaderHeightChanged();
+                groupPreviewAdapter.notifyHeaderHeightChanged();
             }
         });
 
@@ -63,19 +60,13 @@ public class FeedHandler extends PoolMember {
 
     private void setGroups(List<Group> groups) {
         groupPreviewAdapter.setGroups(groups);
-        headerAdapter.notifyAdapterChanged(groupPreviewAdapter);
     }
 
     private void setupFeedInjections() {
-        headerAdapter = new HeaderAdapter(this);
+        groupPreviewAdapter = new HeaderAdapter(this);
 
-        FeedInjectionsAdapter feedInjectionsAdapter = new FeedInjectionsAdapter(this);
-        headerAdapter.addAdapter(feedInjectionsAdapter);
-        groupPreviewAdapter = new GroupPreviewAdapter(this);
-        headerAdapter.addAdapter(groupPreviewAdapter);
-
-        recyclerView.setAdapter(headerAdapter);
-        headerAdapter.setHeaderHeightCallback(recyclerView::getHeight);
+        recyclerView.setAdapter(groupPreviewAdapter);
+        groupPreviewAdapter.setHeaderHeightCallback(recyclerView::getHeight);
     }
 
     public void hide() {

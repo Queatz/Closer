@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
-import closer.vlllage.com.closer.ui.CombinedRecyclerAdapter;
 
-public class HeaderAdapter extends CombinedRecyclerAdapter {
+public class HeaderAdapter extends GroupPreviewAdapter {
 
     private RecyclerView.ViewHolder headerViewHolder;
     private HeaderHeightCallback headerHeightCallback;
@@ -19,7 +19,7 @@ public class HeaderAdapter extends CombinedRecyclerAdapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull GroupPreviewAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         if (position == 0) {
             headerViewHolder = holder;
@@ -39,7 +39,7 @@ public class HeaderAdapter extends CombinedRecyclerAdapter {
     }
 
     @Override
-    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+    public void onViewRecycled(@NonNull GroupPreviewAdapter.ViewHolder holder) {
         super.onViewRecycled(holder);
         if (holder == headerViewHolder) {
             headerViewHolder = null;

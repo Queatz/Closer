@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.feed;
 
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.DistanceHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
@@ -31,6 +33,7 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
+import closer.vlllage.com.closer.handler.map.MapHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.pool.TempPool;
@@ -49,8 +52,8 @@ import static java.lang.Math.min;
 
 public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter.ViewHolder> implements CombinedRecyclerAdapter.PrioritizedAdapter {
 
+    private static final int HEADER_COUNT = 1;
     private final List<Group> groups = new ArrayList<>();
-
 
     public GroupPreviewAdapter(PoolMember poolMember) {
         super(poolMember);
@@ -58,14 +61,34 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int layoutResId;
+        switch (viewType) {
+            case 1: layoutResId = R.layout.feed_item_public_groups; break;
+            default: layoutResId = R.layout.group_preview_item; break;
+        }
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.group_preview_item, parent, false));
+                .inflate(layoutResId, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.pool = tempPool();
+
+        if (position < HEADER_COUNT) {
+            holder.pool.$set($(StoreHandler.class));
+            holder.pool.$set($(SyncHandler.class));
+            holder.pool.$set($(MapHandler.class));
+            holder.pool.$set($(ApplicationHandler.class));
+            holder.pool.$set($(ActivityHandler.class));
+            holder.pool.$set($(SortHandler.class));
+            holder.pool.$set($(KeyboardHandler.class));
+            holder.pool.$(PublicGroupFeedItemHandler.class).attach(holder.itemView);
+            return;
+        } else {
+            position--;
+        }
+
         Group group = groups.get(position);
         holder.groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
         holder.groupName.setOnClickListener(view -> $(GroupActivityTransitionHandler.class).showGroupMessages(holder.groupName, group.getId()));
@@ -142,24 +165,66 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
     }
 
     @Override
+    public int getItemViewType(int position) {
+        switch (position) {
+            case 0: return 1;
+            default: return 0;
+        }
+    }
+
+    @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
         holder.pool.end();
     }
 
     @Override
     public int getItemCount() {
-        return groups.size();
+        return groups.size() + HEADER_COUNT;
     }
 
     public void setGroups(List<Group> groups) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return GroupPreviewAdapter.this.groups.size() + HEADER_COUNT;
+            }
+
+            @Override
+            public int getNewListSize() {
+                return groups.size() + HEADER_COUNT;
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldPosition, int newPosition) {
+                if ((newPosition < HEADER_COUNT) != (oldPosition < HEADER_COUNT)) {
+                    return false;
+                } else if (newPosition < HEADER_COUNT) {
+                    return true;
+                }
+
+                return GroupPreviewAdapter.this.groups.get(oldPosition - 1).getObjectBoxId() ==
+                        groups.get(newPosition - 1).getObjectBoxId();
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldPosition, int newPosition) {
+                if ((newPosition < HEADER_COUNT) != (oldPosition < HEADER_COUNT)) {
+                    return false;
+                } else if (newPosition < HEADER_COUNT) {
+                    return true;
+                }
+
+                return false;
+            }
+        });
         this.groups.clear();
         this.groups.addAll(groups);
-        notifyDataSetChanged();
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override
     public int getItemPriority(int position) {
-        return max(0, position - ($(DistanceHandler.class).isUserNearGroup(groups.get(position)) ? 100 : 0));
+        return max(0, position - ($(DistanceHandler.class).isUserNearGroup(groups.get(position - 1)) ? 100 : 0));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

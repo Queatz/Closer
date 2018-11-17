@@ -191,7 +191,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
                         groups.get(newPosition).getName() != null &&
                         SearchGroupsAdapter.this.groups.get(oldPosition).getName().equals(groups.get(newPosition).getName());
             }
-        }, true);
+        });
         this.groups.clear();
         this.groups.addAll(groups);
         diffResult.dispatchUpdatesTo(this);
