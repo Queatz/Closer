@@ -187,8 +187,6 @@ public class GroupActivity extends CircularRevealActivity {
                 } else {
                     findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_green_rounded);
                 }
-
-                setGroupBackground(group);
             } else {
                 findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_primary_rounded);
                 scopeIndicatorButton.setVisibility(View.VISIBLE);
@@ -219,6 +217,7 @@ public class GroupActivity extends CircularRevealActivity {
                     });
                 });
             }
+            setGroupBackground(group);
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(event -> {
