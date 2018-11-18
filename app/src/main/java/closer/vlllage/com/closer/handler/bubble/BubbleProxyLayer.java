@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import closer.vlllage.com.closer.handler.map.ClusterMap;
+
 public class BubbleProxyLayer {
 
     private final Set<MapBubble> mapBubbles = new HashSet<>();
@@ -18,38 +20,16 @@ public class BubbleProxyLayer {
     }
 
     public void recalculate() {
-        // Remove old proxies
+        // Proxies
 
-        Set<MapBubble> toRemove = new HashSet<>();
-        for (MapBubble mapBubble : mapBubbles) {
-            if (BubbleType.PROXY.equals(mapBubble.getType())) {
-                toRemove.add(mapBubble);
-            }
-        }
+        Set<MapBubble> preCalculationProxyBubbles = new HashSet<>();
 
-        for (MapBubble mapBubble : toRemove) {
-            mapBubbles.remove(mapBubble);
-        }
+        Set<MapBubble> postCalculationProxyBubbles = new HashSet<>();
 
-        // Add new proxies
+        mergeBubbles(mapBubbles, preCalculationProxyBubbles, postCalculationProxyBubbles);
 
-        MapBubble proxyMapBubble = new MapBubble(new LatLng(0, 0), BubbleType.PROXY);
-        proxyMapBubble.setPinned(false);
-        proxyMapBubble.setOnTop(false);
-        float lat = 0, lng = 0;
-        int num = 0;
-        for (MapBubble mapBubble : mapBubbles) {
-            if (BubbleType.STATUS.equals(mapBubble.getType())) {
-                lat += mapBubble.getLatLng().latitude;
-                lng += mapBubble.getLatLng().longitude;
-                num++;
-            }
-        }
-        proxyMapBubble.setLatLng(new LatLng(
-                lat / num,
-                lng / num
-        ));
-// TODO       mapBubbles.add(proxyMapBubble);
+        mapBubbles.removeAll(preCalculationProxyBubbles);
+        mapBubbles.addAll(postCalculationProxyBubbles);
 
         // Add bubbles
         for (MapBubble mapBubble : mapBubbles) {
@@ -59,15 +39,15 @@ public class BubbleProxyLayer {
         }
 
         // Remove bubbles
-        toRemove = new HashSet<>();
+        preCalculationProxyBubbles = new HashSet<>();
 
         for (MapBubble mapBubble : bubbleMapLayer.getMapBubbles()) {
             if (!mapBubbles.contains(mapBubble)) {
-                toRemove.add(mapBubble);
+                preCalculationProxyBubbles.add(mapBubble);
             }
         }
 
-        for (MapBubble mapBubble : toRemove) {
+        for (MapBubble mapBubble : preCalculationProxyBubbles) {
             bubbleMapLayer.remove(mapBubble);
         }
 
@@ -77,6 +57,40 @@ public class BubbleProxyLayer {
                 bubbleMapLayer.move(mapBubble, mapBubble.getRawLatLng());
                 mapBubble.setRawLatLng(null);
             }
+        }
+    }
+
+    private void mergeBubbles(Set<MapBubble> mapBubbles, Set<MapBubble> preProxyBubbles, Set<MapBubble> postProxyBubbles) {
+        ClusterMap clusterMap = new ClusterMap(.05);
+
+        for (MapBubble mapBubble : mapBubbles) {
+            if (mapBubble.getType() == BubbleType.PROXY) {
+                preProxyBubbles.add(mapBubble);
+            } else if (mapBubble.getType() == BubbleType.STATUS || mapBubble.getType() == BubbleType.EVENT || mapBubble.getType() == BubbleType.PHYSICAL_GROUP) {
+                clusterMap.add(mapBubble);
+            }
+        }
+
+        List<Set<MapBubble>> clusters = clusterMap.generateClusters();
+
+        for (Set<MapBubble> cluster : clusters) {
+            MapBubble proxyMapBubble = new MapBubble(new LatLng(0, 0), BubbleType.PROXY);
+            proxyMapBubble.setPinned(false);
+            proxyMapBubble.setOnTop(false);
+            proxyMapBubble.proxies(cluster);
+            float lat = 0, lng = 0;
+            int num = 0;
+            for (MapBubble mapBubble : cluster) {
+                lat += mapBubble.getLatLng().latitude;
+                lng += mapBubble.getLatLng().longitude;
+                num++;
+            }
+            proxyMapBubble.setLatLng(new LatLng(
+                    lat / num,
+                    lng / num
+            ));
+
+            postProxyBubbles.add(proxyMapBubble);
         }
     }
 
