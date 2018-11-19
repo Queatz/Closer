@@ -36,8 +36,7 @@ public class MapBubbleMenuItemAdapter extends PoolRecyclerAdapter<MapBubbleMenuI
 
     @Override
     public void onBindViewHolder(@NonNull MapBubbleMenuItemAdapter.MenuItemViewHolder holder, int position) {
-            holder.menuItemTitle.setText(menuItems.get(position));
-
+        holder.menuItemTitle.setText(menuItems.get(position));
         holder.itemView.setOnClickListener(view -> onClickListener.onMenuItemClick(mapBubble, position));
     }
 

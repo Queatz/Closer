@@ -30,6 +30,12 @@ public class ClusterMap {
     }
 
     public List<Set<MapBubble>> generateClusters() {
+        List<Set<MapBubble>> result = new ArrayList<>();
+
+        if (mapBubbles.isEmpty() || maxDistance == 0.0) {
+            return result;
+        }
+
         List<double[]> keys = new ArrayList<>();
         for (MapBubble mapBubble : mapBubbles) { keys.add(ll(mapBubble)); }
         double[][] keysAsArray = new double[keys.size()][];
@@ -37,21 +43,25 @@ public class ClusterMap {
         MapBubble[] mapBubblesAsArray = new MapBubble[mapBubbles.size()];
         mapBubbles.toArray(mapBubblesAsArray);
         KDTree<MapBubble> kdTree = new KDTree<>(keysAsArray, mapBubblesAsArray);
-        List<Set<MapBubble>> result = new ArrayList<>();
 
         while (!mapBubbles.isEmpty()) {
             MapBubble mapBubble = mapBubbles.remove(0);
             Set<MapBubble> cluster = new HashSet<>();
+            cluster.add(mapBubble);
             double[] clusterCenter = ll(mapBubble);
             List<Neighbor<double[], MapBubble>> nearbyMapBubbles = new ArrayList<>();
             kdTree.range(clusterCenter, maxDistance, nearbyMapBubbles);
 
             for (Neighbor<double[], MapBubble> neighbor : nearbyMapBubbles) {
-                mapBubbles.remove(neighbor.value);
-                cluster.add(neighbor.value);
+                if (mapBubbles.contains(neighbor.value)) {
+                    mapBubbles.remove(neighbor.value);
+                    cluster.add(neighbor.value);
+                }
             }
 
-            result.add(cluster);
+            if (cluster.size() > 1) {
+                result.add(cluster);
+            }
         }
 
         return result;

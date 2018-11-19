@@ -1,0 +1,75 @@
+package closer.vlllage.com.closer.handler.bubble;
+
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
+import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Group;
+
+public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder> {
+    private final List<MapBubble> items = new ArrayList<>();
+    private MapBubbleView.OnMapBubbleClickListener onClickListener;
+    private MapBubble proxyMapBubble;
+
+    public MapBubbleProxyAdapter(PoolMember poolMember, MapBubble proxyMapBubble, MapBubbleView.OnMapBubbleClickListener onClickListener) {
+        super(poolMember);
+        this.onClickListener = onClickListener;
+        this.proxyMapBubble = proxyMapBubble;
+    }
+
+    public MapBubbleProxyAdapter setItems(List<MapBubble> items) {
+        this.items.clear();
+        this.items.addAll(items);
+        return this;
+    }
+
+    @NonNull
+    @Override
+    public ProxyMapBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ProxyMapBubbleViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.map_bubble_proxy_item, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ProxyMapBubbleViewHolder holder, int position) {
+        MapBubble mapBubble = items.get(position);
+        switch (mapBubble.getType()) {
+            case STATUS:
+                holder.name.setText(mapBubble.getName() + " " + mapBubble.getStatus());
+                break;
+            case PHYSICAL_GROUP:
+                holder.name.setText(((Group) mapBubble.getTag()).getName());
+                break;
+            case EVENT:
+                holder.name.setText(((Event) mapBubble.getTag()).getName());
+                break;
+        }
+
+        holder.itemView.setOnClickListener(view -> onClickListener.onMapBubbleClick(mapBubble));
+    }
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    class ProxyMapBubbleViewHolder extends RecyclerView.ViewHolder {
+
+        TextView name;
+
+        public ProxyMapBubbleViewHolder(View itemView) {
+            super(itemView);
+            name = itemView.findViewById(R.id.name);
+        }
+    }
+}

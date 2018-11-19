@@ -5,8 +5,8 @@ import android.view.View;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by jacob on 2/18/18.
@@ -17,6 +17,7 @@ public class MapBubble {
     private LatLng latLng;
     private LatLng rawLatLng;
     private boolean inProxy;
+    private boolean canProxy = true;
     private String name;
     private String status;
     private View view;
@@ -159,8 +160,21 @@ public class MapBubble {
         return this;
     }
 
-    public void proxies(Set<MapBubble> proxiedBubbles) {
+    public void proxies(Collection<MapBubble> proxiedBubbles) {
         this.proxies.addAll(proxiedBubbles);
+    }
+
+    public List<MapBubble> proxies() {
+        return this.proxies;
+    }
+
+    public boolean isCanProxy() {
+        return canProxy;
+    }
+
+    public MapBubble setCanProxy(boolean canProxy) {
+        this.canProxy = canProxy;
+        return this;
     }
 
     public interface OnItemClickListener {

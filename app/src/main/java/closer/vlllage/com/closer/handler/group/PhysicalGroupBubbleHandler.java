@@ -24,7 +24,7 @@ public class PhysicalGroupBubbleHandler extends PoolMember {
     private DataSubscription physicalGroupSubscription;
 
     public void attach() {
-        $(DisposableHandler.class).add($(MapZoomHandler.class).onZoomGreaterThanChanged(15).subscribe(
+        $(DisposableHandler.class).add($(MapZoomHandler.class).onZoomGreaterThanChanged(12).subscribe(
                 zoomIsGreaterThan15 -> {
                     if (zoomIsGreaterThan15) {
                         $(DisposableHandler.class).add(getNewPhysicalGroupObservable());

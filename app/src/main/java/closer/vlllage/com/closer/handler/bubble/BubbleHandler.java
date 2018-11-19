@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
+import closer.vlllage.com.closer.handler.map.MapHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class BubbleHandler extends PoolMember {
@@ -19,7 +20,7 @@ public class BubbleHandler extends PoolMember {
     private MapBubblePhysicalGroupView.MapBubblePhysicalGroupClickListener onMapBubblePhysicalGroupClickListener;
 
     private final BubbleMapLayer bubbleMapLayer = new BubbleMapLayer();
-    private final BubbleProxyLayer bubbleProxyLayer = new BubbleProxyLayer(bubbleMapLayer);
+    private final BubbleProxyLayer bubbleProxyLayer = new BubbleProxyLayer(bubbleMapLayer, () -> $(MapHandler.class).getVisibleRegion());
 
     public void attach(ViewGroup bubbleMapLayerLayout,
                        MapBubbleView.OnMapBubbleClickListener onClickListener,
@@ -45,7 +46,13 @@ public class BubbleHandler extends PoolMember {
             public View createView(ViewGroup view, MapBubble mapBubble) {
                 switch (mapBubble.getType()) {
                     case PROXY:
-                        return $(MapBubbleProxyView.class).from(view, mapBubble, null);
+                        return $(MapBubbleProxyView.class).from(view, mapBubble, proxiedMapBubble -> {
+                            switch (mapBubble.getType()) {
+                                case STATUS:
+                                case EVENT:
+                                case PHYSICAL_GROUP:
+                            }
+                        });
                     case MENU:
                         return $(MapBubbleMenuView.class).from(view, mapBubble, onMenuItemClickListener);
                     case SUGGESTION:
