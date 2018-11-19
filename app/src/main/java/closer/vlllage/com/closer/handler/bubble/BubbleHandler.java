@@ -47,10 +47,16 @@ public class BubbleHandler extends PoolMember {
                 switch (mapBubble.getType()) {
                     case PROXY:
                         return $(MapBubbleProxyView.class).from(view, mapBubble, proxiedMapBubble -> {
-                            switch (mapBubble.getType()) {
+                            switch (proxiedMapBubble.getType()) {
                                 case STATUS:
+                                    onClickListener.onMapBubbleClick(proxiedMapBubble);
+                                    break;
                                 case EVENT:
+                                    onMapBubbleEventClickListener.onEventClick(proxiedMapBubble);
+                                    break;
                                 case PHYSICAL_GROUP:
+                                    onMapBubblePhysicalGroupClickListener.onPhysicalGroupClick(proxiedMapBubble);
+                                    break;
                             }
                         });
                     case MENU:
