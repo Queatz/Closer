@@ -45,8 +45,6 @@ public class AppShortcutsHandler extends PoolMember {
             shortcuts.add(0, shortcut);
         }
 
-
-
         shortcutManager.setDynamicShortcuts(shortcuts);
     }
 }

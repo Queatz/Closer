@@ -183,4 +183,5 @@
     <string name="public_group_message">Anyone can send and see messages in this group.</string>
     <string name="public_group_title">This is a public group</string>
     <string name="private_group_title">This group is private</string>
+    <string name="add_a_shortcut">Add a shortcut</string>
 </resources>

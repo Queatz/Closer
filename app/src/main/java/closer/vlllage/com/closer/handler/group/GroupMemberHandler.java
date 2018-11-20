@@ -10,6 +10,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.InstallShortcutHandler;
 import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -46,6 +47,9 @@ public class GroupMemberHandler extends PoolMember {
             $(MenuHandler.class).show(
                     new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
                         $(GroupActionHandler.class).addActionToGroup(group);
+                    }),
+                    new MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut, () -> {
+                        $(InstallShortcutHandler.class).installShortcut(group);
                     }));
         }
     }
@@ -75,6 +79,11 @@ public class GroupMemberHandler extends PoolMember {
                 new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
                     if (group != null) {
                         $(GroupActionHandler.class).addActionToGroup(group);
+                    }
+                }),
+                new MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut, () -> {
+                    if (group != null) {
+                        $(InstallShortcutHandler.class).installShortcut(group);
                     }
                 })
         );
