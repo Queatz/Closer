@@ -11,6 +11,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
+import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuItem;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
@@ -28,9 +29,9 @@ public class ShareHandler extends PoolMember {
                 .notEqual(Group_.physical, true)
                 .sort($(SortHandler.class).sortGroups())
                 .build().subscribe().single().on(AndroidScheduler.mainThread()).observer(groups -> {
-            List<String> groupNames = new ArrayList<>();
+            List<MapBubbleMenuItem> groupNames = new ArrayList<>();
             for(Group group : groups) {
-                groupNames.add(group.getName());
+                groupNames.add(new MapBubbleMenuItem().setTitle(group.getName()));
             }
 
             MapBubble menuBubble = new MapBubble(latLng, BubbleType.MENU);

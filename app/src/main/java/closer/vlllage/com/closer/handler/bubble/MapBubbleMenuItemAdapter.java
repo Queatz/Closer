@@ -17,7 +17,7 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 
 public class MapBubbleMenuItemAdapter extends PoolRecyclerAdapter<MapBubbleMenuItemAdapter.MenuItemViewHolder> {
 
-    private List<String> menuItems = new ArrayList<>();
+    private List<MapBubbleMenuItem> menuItems = new ArrayList<>();
     private MapBubbleMenuView.OnMapBubbleMenuItemClickListener onClickListener;
     private MapBubble mapBubble;
 
@@ -36,7 +36,11 @@ public class MapBubbleMenuItemAdapter extends PoolRecyclerAdapter<MapBubbleMenuI
 
     @Override
     public void onBindViewHolder(@NonNull MapBubbleMenuItemAdapter.MenuItemViewHolder holder, int position) {
-        holder.menuItemTitle.setText(menuItems.get(position));
+        MapBubbleMenuItem menuItem = menuItems.get(position);
+        holder.menuItemTitle.setText(menuItem.getTitle());
+
+        holder.menuItemTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(menuItem.getIconRes(), 0, 0, 0);
+
         holder.itemView.setOnClickListener(view -> onClickListener.onMenuItemClick(mapBubble, position));
     }
 
@@ -45,13 +49,13 @@ public class MapBubbleMenuItemAdapter extends PoolRecyclerAdapter<MapBubbleMenuI
         return menuItems.size();
     }
 
-    public void setMenuItems(List<String> menuItems) {
+    public void setMenuItems(List<MapBubbleMenuItem> menuItems) {
         this.menuItems.clear();
         this.menuItems.addAll(menuItems);
         notifyDataSetChanged();
     }
 
-    public void setMenuItems(String... menuItems) {
+    public void setMenuItems(MapBubbleMenuItem... menuItems) {
         this.menuItems.clear();
         this.menuItems.addAll(Arrays.asList(menuItems));
         notifyDataSetChanged();

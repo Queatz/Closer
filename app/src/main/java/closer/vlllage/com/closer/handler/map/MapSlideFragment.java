@@ -24,6 +24,7 @@ import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
+import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuItem;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
@@ -148,9 +149,10 @@ public class MapSlideFragment extends PoolFragment {
                     $(BubbleHandler.class).add(menuBubble);
                     $(MapBubbleMenuView.class)
                             .getMenuAdapter(menuBubble)
-                            .setMenuItems(getString(R.string.talk_here),
-                                    getString(R.string.share_this_location),
-                                    getString(R.string.add_event_here));
+                            .setMenuItems(
+                                    new MapBubbleMenuItem().setTitle(getString(R.string.talk_here)).setIconRes(R.drawable.ic_wifi_black_18dp),
+                                    new MapBubbleMenuItem().setTitle(getString(R.string.share_this_location)).setIconRes(R.drawable.ic_share_black_18dp),
+                                    new MapBubbleMenuItem().setTitle(getString(R.string.add_event_here)).setIconRes(R.drawable.ic_add_black_18dp));
                 }
             }
         });
@@ -168,7 +170,7 @@ public class MapSlideFragment extends PoolFragment {
             $(BubbleHandler.class).add(menuBubble);
             $(MapBubbleMenuView.class)
                     .getMenuAdapter(menuBubble)
-                    .setMenuItems(getString(R.string.add_suggestion_here));
+                    .setMenuItems(new MapBubbleMenuItem().setTitle(getString(R.string.add_suggestion_here)));
         });
         $(MapHandler.class).setOnMapIdleListener(latLng -> {
             $(DisposableHandler.class).add($(ApiHandler.class).getPhonesNear(latLng).map(this::mapBubbleFrom).subscribe(mapBubbles ->

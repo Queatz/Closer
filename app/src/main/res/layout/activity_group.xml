@@ -65,7 +65,9 @@
             android:src="@drawable/ic_public_black_24dp"
             android:background="@drawable/clickable_light"
             android:visibility="gone"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            android:focusable="true"
+            android:focusedByDefault="true"/>
 
         <ImageButton
             android:id="@+id/settingsButton"

@@ -10,12 +10,13 @@
         android:id="@+id/menuItemTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:textSize="12sp"
         android:textColor="@color/text"
         android:textStyle="bold"
         android:textAllCaps="true"
         android:padding="12dp"
+        android:drawablePadding="@dimen/padDouble"
+        android:drawableTint="@color/text"
         tools:text="Add a suggestion..." />
 
 </FrameLayout>
