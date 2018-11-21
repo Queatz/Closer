@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
+import closer.vlllage.com.closer.handler.map.GroupActionsHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
 import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
@@ -35,8 +36,11 @@ import io.reactivex.functions.Consumer;
 
 public class PublicGroupFeedItemHandler extends PoolMember {
     public void attach(View itemView) {
+        RecyclerView groupActionsRecyclerView = itemView.findViewById(R.id.groupActionsRecyclerView);
         RecyclerView groupsRecyclerView = itemView.findViewById(R.id.publicGroupsRecyclerView);
         EditText searchGroups = itemView.findViewById(R.id.searchGroups);
+
+        $(GroupActionsHandler.class).attach(groupActionsRecyclerView);
 
         SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(PoolMember.class), (group, view) -> openGroup(group.getId(), view), this::createGroup);
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item);
@@ -78,6 +82,8 @@ public class PublicGroupFeedItemHandler extends PoolMember {
         float distance = .12f;
 
         Consumer<CameraPosition> cameraPositionCallback = cameraPosition -> {
+            $(GroupActionsHandler.class).recenter($(MapHandler.class).getCenter());
+
             QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
                     .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                     .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)

@@ -104,17 +104,6 @@
 
                     <include layout="@layout/my_groups_layout" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/groupActionsRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:elevation="8dp"
-                        android:clipChildren="false"
-                        android:clipToPadding="false"
-                        android:paddingRight="@dimen/pad"
-                        android:paddingTop="@dimen/pad"
-                        android:paddingBottom="@dimen/pad" />
-
                 </LinearLayout>
 
             </closer.vlllage.com.closer.ui.ScrollStopper>

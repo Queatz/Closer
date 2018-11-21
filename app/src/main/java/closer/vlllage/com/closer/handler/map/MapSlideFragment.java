@@ -181,7 +181,6 @@ public class MapSlideFragment extends PoolFragment {
 
             $(RefreshHandler.class).refreshEvents(latLng);
             $(RefreshHandler.class).refreshPhysicalGroups(latLng);
-            $(GroupActionsHandler.class).recenter($(MapHandler.class).getCenter());
         });
         $(MapHandler.class).attach((MapFragment) getChildFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();
@@ -189,7 +188,6 @@ public class MapSlideFragment extends PoolFragment {
         $(StatusLayoutHandler.class).attach(view.findViewById(R.id.myStatusLayout));
         $(MyGroupsLayoutHandler.class).attach(view.findViewById(R.id.myGroupsLayout));
         $(MyGroupsLayoutHandler.class).setContainerView(view.findViewById(R.id.bottomContainer));
-        $(GroupActionsHandler.class).attach(view.findViewById(R.id.groupActionsRecyclerView));
 
         $(ViewAttributeHandler.class).linkPadding(view.findViewById(R.id.contentAboveView), view.findViewById(R.id.contentView));
 
