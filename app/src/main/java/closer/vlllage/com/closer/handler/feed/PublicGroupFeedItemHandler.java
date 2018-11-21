@@ -23,7 +23,6 @@ import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.map.GroupActionsHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
-import closer.vlllage.com.closer.handler.search.SearchActivityHandler;
 import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -105,8 +104,6 @@ public class PublicGroupFeedItemHandler extends PoolMember {
         $(DisposableHandler.class).add($(MapHandler.class).onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(cameraPositionCallback));
-
-        itemView.findViewById(R.id.action).setOnClickListener(view -> $(SearchActivityHandler.class).show(view));
     }
 
     private void createGroup(String groupName) {
