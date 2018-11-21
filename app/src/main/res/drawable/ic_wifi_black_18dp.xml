@@ -6,4 +6,4 @@
         android:width="@dimen/iconSizeSm"
         android:height="@dimen/iconSizeSm" />
 
-</layer-list >
+</layer-list>
