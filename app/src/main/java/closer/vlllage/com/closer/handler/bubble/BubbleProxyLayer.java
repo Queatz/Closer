@@ -15,6 +15,8 @@ import static java.lang.Math.abs;
 
 public class BubbleProxyLayer {
 
+    private static final double MERGE_RESOLUTION = 4f;
+
     private final Set<MapBubble> mapBubbles = new HashSet<>();
     private BubbleMapLayer bubbleMapLayer;
     private MapViewportCallback mapViewportCallback;
@@ -43,7 +45,6 @@ public class BubbleProxyLayer {
         }
 
         // Remove bubbles
-
         for (MapBubble mapBubble : bubbleMapLayer.getMapBubbles()) {
             if (!mapBubbles.contains(mapBubble)) {
                 preCalculationProxyBubbles.add(mapBubble);
@@ -104,7 +105,7 @@ public class BubbleProxyLayer {
     }
 
     private double getClusterSize() {
-        return abs(mapViewportCallback.getMapViewport().latLngBounds.southwest.longitude - mapViewportCallback.getMapViewport().latLngBounds.northeast.longitude) / 3f;
+        return abs(mapViewportCallback.getMapViewport().latLngBounds.southwest.longitude - mapViewportCallback.getMapViewport().latLngBounds.northeast.longitude) / MERGE_RESOLUTION;
     }
 
     public void add(final MapBubble mapBubble) {

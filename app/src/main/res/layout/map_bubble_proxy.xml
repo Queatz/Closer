@@ -13,13 +13,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/clickable_green_8dp"
+        android:background="@drawable/rounded_map_ambient_8dp"
         android:elevation="4dp">
 
         <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:maxHeight="125dp">
+            app:maxHeight="192dp">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/bubbleRecyclerView"
@@ -39,6 +39,6 @@
         android:layout_weight="1"
         android:elevation="4dp"
         android:rotation="45"
-        android:background="@drawable/map_bubble_knob_green_fuzzy"/>
+        android:background="@drawable/map_bubble_knob_map_ambient_fuzzy"/>
 
 </LinearLayout>

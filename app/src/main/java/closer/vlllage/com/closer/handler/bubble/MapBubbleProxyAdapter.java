@@ -1,20 +1,26 @@
 package closer.vlllage.com.closer.handler.bubble;
 
+import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder> {
     private final List<MapBubble> items = new ArrayList<>();
@@ -45,12 +51,35 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
         MapBubble mapBubble = items.get(position);
         switch (mapBubble.getType()) {
             case STATUS:
+                holder.click.setBackgroundResource(R.drawable.clickable_blue_4dp);
+                holder.photo.setVisibility(View.GONE);
                 holder.name.setText(mapBubble.getName() + " " + mapBubble.getStatus());
                 break;
             case PHYSICAL_GROUP:
+                holder.click.setBackgroundResource(R.drawable.clickable_purple_4dp);
+                holder.photo.setVisibility(View.VISIBLE);
+
+                if (mapBubble.getTag() != null & mapBubble.getTag() instanceof Group) {
+                    Group group = (Group) mapBubble.getTag();
+                    if (group.getPhoto() != null) {
+                        holder.photo.setColorFilter(null);
+                        holder.photo.setImageTintList(ColorStateList.valueOf($(ResourcesHandler.class).getResources().getColor(android.R.color.transparent)));
+                        Picasso.get()
+                                .load(group.getPhoto() + "?s=32")
+                                .fit()
+                                .transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
+                                .into(holder.photo);
+                    } else {
+                        holder.photo.setImageResource(R.drawable.ic_wifi_black_24dp);
+                        holder.photo.setImageTintList(ColorStateList.valueOf($(ResourcesHandler.class).getResources().getColor(android.R.color.white)));
+                    }
+                }
+
                 holder.name.setText(((Group) mapBubble.getTag()).getName());
                 break;
             case EVENT:
+                holder.click.setBackgroundResource(R.drawable.clickable_red_4dp);
+                holder.photo.setVisibility(View.GONE);
                 holder.name.setText(((Event) mapBubble.getTag()).getName());
                 break;
         }
@@ -65,10 +94,14 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
 
     class ProxyMapBubbleViewHolder extends RecyclerView.ViewHolder {
 
+        View click;
+        ImageView photo;
         TextView name;
 
         public ProxyMapBubbleViewHolder(View itemView) {
             super(itemView);
+            click = itemView.findViewById(R.id.click);
+            photo = itemView.findViewById(R.id.photo);
             name = itemView.findViewById(R.id.name);
         }
     }
