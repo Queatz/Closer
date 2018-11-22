@@ -24,7 +24,10 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/bubbleRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padHalf"
+                android:paddingEnd="@dimen/padHalf"
+                android:paddingBottom="@dimen/padHalf"/>
 
         </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
 
