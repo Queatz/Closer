@@ -17,4 +17,16 @@ public class GroupColorHandler extends PoolMember {
             return $(ResourcesHandler.class).getResources().getColor(R.color.colorPrimary);
         }
     }
+
+    public int getLightColor(Group group) {
+        if (group.hasEvent()) {
+            return $(ResourcesHandler.class).getResources().getColor(R.color.redLight);
+        } else if (group.isPhysical()) {
+            return $(ResourcesHandler.class).getResources().getColor(R.color.purpleLight);
+        } else if (group.isPublic()) {
+            return $(ResourcesHandler.class).getResources().getColor(R.color.greenLight);
+        } else {
+            return $(ResourcesHandler.class).getResources().getColor(R.color.colorPrimaryLight);
+        }
+    }
 }

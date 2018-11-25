@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.helpers;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -11,11 +12,11 @@ import android.text.TextPaint;
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class ShortcutIconGenerator extends PoolMember {
-    public Bitmap generate(String text, float textSize, int textColor, int bkgColor) {
+    public Bitmap generate(String text, float textSize, int textColor, int bkgColor, int bkgLightColor) {
         TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextSize(textSize);
         paint.setColor(textColor);
-        paint.setShadowLayer(4, 0, 0, Color.BLACK);
+        paint.setShadowLayer(4, 0, 0, Color.parseColor("#66000000"));
         paint.setTextAlign(Paint.Align.LEFT);
 
         int width = (int) (paint.measureText(text) + 0.5f);
@@ -30,9 +31,14 @@ public class ShortcutIconGenerator extends PoolMember {
         Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(image);
 
+        LinearGradient gradient = new LinearGradient(0, 0, 0, height, bkgLightColor,
+                bkgColor, android.graphics.Shader.TileMode.CLAMP);
+
         Paint bkgPaint = new Paint();
         bkgPaint.setStyle(Paint.Style.FILL);
         bkgPaint.setColor(bkgColor);
+        bkgPaint.setDither(true);
+        bkgPaint.setShader(gradient);
         canvas.drawCircle(canvas.getWidth() / 2f, canvas.getHeight() / 2f, canvas.getWidth() / 2f, bkgPaint);
 
         paint.setTextSize(textSize * 0.75f);

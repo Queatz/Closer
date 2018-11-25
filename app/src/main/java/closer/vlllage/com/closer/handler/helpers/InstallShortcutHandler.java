@@ -20,7 +20,8 @@ public class InstallShortcutHandler extends PoolMember {
                             $(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)).substring(0, 2),
                             128,
                             Color.WHITE,
-                            $(GroupColorHandler.class).getColor(group)
+                            $(GroupColorHandler.class).getColor(group),
+                            $(GroupColorHandler.class).getLightColor(group)
                     )))
                     .build();
             ShortcutManagerCompat.requestPinShortcut($(ApplicationHandler.class).getApp(), shortcutInfo, null);
