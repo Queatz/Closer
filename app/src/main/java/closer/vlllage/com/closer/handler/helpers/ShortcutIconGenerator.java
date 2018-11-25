@@ -9,10 +9,22 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import com.vdurmont.emoji.EmojiParser;
+
+import java.util.List;
+
 import closer.vlllage.com.closer.pool.PoolMember;
 
 public class ShortcutIconGenerator extends PoolMember {
     public Bitmap generate(String text, float textSize, int textColor, int bkgColor, int bkgLightColor) {
+
+        List<String> emojis = EmojiParser.extractEmojis(text);
+        if (!emojis.isEmpty()) {
+            text = emojis.get(0);
+        } else if (text.length() > 2) {
+            text = text.substring(0, 2);
+        }
+
         TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextSize(textSize);
         paint.setColor(textColor);

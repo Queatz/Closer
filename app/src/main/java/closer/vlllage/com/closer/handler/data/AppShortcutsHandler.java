@@ -45,7 +45,7 @@ public class AppShortcutsHandler extends PoolMember {
                     .setShortLabel(group.getName())
                     .setIntent($(GroupActivityTransitionHandler.class).getIntent(group.getId(), false))
                     .setIcon(Icon.createWithBitmap($(ShortcutIconGenerator.class).generate(
-                            $(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)).substring(0, 2),
+                            $(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)),
                             128,
                             Color.WHITE,
                             $(GroupColorHandler.class).getColor(group),

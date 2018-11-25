@@ -17,7 +17,7 @@ public class InstallShortcutHandler extends PoolMember {
                     .setIntent($(GroupActivityTransitionHandler.class).getIntent(group.getId(), false))
                     .setShortLabel($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)))
                     .setIcon(IconCompat.createWithBitmap($(ShortcutIconGenerator.class).generate(
-                            $(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)).substring(0, 2),
+                            $(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)),
                             128,
                             Color.WHITE,
                             $(GroupColorHandler.class).getColor(group),

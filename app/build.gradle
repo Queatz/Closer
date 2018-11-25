@@ -77,6 +77,7 @@ dependencies {
     implementation ('com.squareup.picasso:picasso:2.71828') {
         exclude group: 'com.android.support'
     }
+    implementation 'com.vdurmont:emoji-java:4.0.0'
     implementation 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
     implementation 'com.github.Queatz:Android-UX-Extras-Slide-Screen:0.1.2'
