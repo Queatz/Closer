@@ -150,7 +150,6 @@ public class GroupActivity extends CircularRevealActivity {
                     }
                 }));
 
-
         replyMessage.setOnClickListener(view -> {
             $(GroupActionHandler.class).show(false);
             cancelShare();

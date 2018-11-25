@@ -150,7 +150,6 @@ public class GroupHandler extends PoolMember {
                 return;
             }
 
-
             peopleInGroup.setText(StringUtils.join(names, ", "));
         }
     }

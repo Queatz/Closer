@@ -12,18 +12,21 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
-import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PhoneContactsHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.helpers.AlertHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
+import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupContact;
+import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupInvite;
 import closer.vlllage.com.closer.store.models.GroupInvite_;
 import io.objectbox.android.AndroidScheduler;
@@ -69,6 +72,8 @@ public class GroupContactsHandler extends PoolMember {
                         cancelInvite(groupInvite);
                     })
                     .show();
+        }, groupContact -> {
+            $(PhoneMessagesHandler.class).openMessagesWithPhone(groupContact.getContactId(), groupContact.getContactName(), "");
         });
 
         if($(PermissionHandler.class).has(READ_CONTACTS)) {
@@ -105,6 +110,12 @@ public class GroupContactsHandler extends PoolMember {
                 .equal(GroupInvite_.group, group.getId())
                 .build().subscribe().on(AndroidScheduler.mainThread()).observer(groupInvites -> {
                     phoneContactAdapter.setInvites(groupInvites);
+                }));
+
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupContact.class).query()
+                .equal(GroupContact_.groupId, group.getId())
+                .build().subscribe().on(AndroidScheduler.mainThread()).observer(groupContacts -> {
+                    phoneContactAdapter.setGroupContacts(groupContacts);
                 }));
     }
 
