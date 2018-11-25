@@ -16,22 +16,15 @@ public class ShortcutIconGenerator extends PoolMember {
         TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextSize(textSize);
         paint.setColor(textColor);
-        paint.setShadowLayer(4, 0, 0, Color.parseColor("#66000000"));
+        paint.setShadowLayer(8, 0, 0, Color.parseColor("#66000000"));
         paint.setTextAlign(Paint.Align.LEFT);
 
-        int width = (int) (paint.measureText(text) + 0.5f);
-        int height = (int) (-paint.ascent() + paint.descent() + 0.5f);
+        int size = Math.max((int) (paint.measureText(text) + 0.5f), (int) (-paint.ascent() + paint.descent() + 0.5f));
 
-        if (height > width) {
-            width = height;
-        } else {
-            height = width;
-        }
-
-        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap image = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(image);
 
-        LinearGradient gradient = new LinearGradient(0, 0, 0, height, bkgLightColor,
+        LinearGradient gradient = new LinearGradient(0, 0, 0, size, bkgLightColor,
                 bkgColor, android.graphics.Shader.TileMode.CLAMP);
 
         Paint bkgPaint = new Paint();
@@ -42,7 +35,7 @@ public class ShortcutIconGenerator extends PoolMember {
         canvas.drawCircle(canvas.getWidth() / 2f, canvas.getHeight() / 2f, canvas.getWidth() / 2f, bkgPaint);
 
         paint.setTextSize(textSize * 0.75f);
-        StaticLayout lsLayout = new StaticLayout(text, paint, width * 2, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+        StaticLayout lsLayout = new StaticLayout(text, paint, size, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
         canvas.translate(canvas.getWidth() * 0.125f, canvas.getWidth() * 0.125f);
         lsLayout.draw(canvas);
         canvas.save();
