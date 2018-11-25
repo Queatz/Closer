@@ -34,10 +34,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
 public class PublicGroupFeedItemHandler extends PoolMember {
+
+    private EditText searchGroups;
+
     public void attach(View itemView) {
         RecyclerView groupActionsRecyclerView = itemView.findViewById(R.id.groupActionsRecyclerView);
         RecyclerView groupsRecyclerView = itemView.findViewById(R.id.publicGroupsRecyclerView);
-        EditText searchGroups = itemView.findViewById(R.id.searchGroups);
+        searchGroups = itemView.findViewById(R.id.searchGroups);
 
         $(GroupActionsHandler.class).attach(groupActionsRecyclerView);
 
@@ -110,6 +113,8 @@ public class PublicGroupFeedItemHandler extends PoolMember {
         if (groupName == null || groupName.isEmpty()) {
             return;
         }
+
+        searchGroups.setText("");
 
         $(LocationHandler.class).getCurrentLocation(location -> {
             $(AlertHandler.class).make()

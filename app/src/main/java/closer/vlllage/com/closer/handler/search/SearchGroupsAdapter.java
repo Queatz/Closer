@@ -82,6 +82,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
                     onCreateGroupClickListener.onCreateGroupClicked(createPublicGroupName);
                 }
             });
+            holder.cardView.setOnLongClickListener(null);
             holder.cardView.setBackgroundResource(isSmall ? R.drawable.clickable_light : R.drawable.clickable_green_4dp);
             return;
         }

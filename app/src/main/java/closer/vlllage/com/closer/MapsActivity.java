@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.github.queatz.slidescreen.SlideScreen;
 import com.github.queatz.slidescreen.SlideScreenAdapter;
 
+import closer.vlllage.com.closer.handler.PersonalSlideFragment;
 import closer.vlllage.com.closer.handler.map.MapViewHandler;
 import closer.vlllage.com.closer.handler.settings.SettingsSlideFragment;
 import closer.vlllage.com.closer.pool.PoolActivity;
@@ -35,12 +36,17 @@ public class MapsActivity extends PoolActivity {
         slideScreen.setAdapter(new SlideScreenAdapter() {
             @Override
             public int getCount() {
-                return 2;
+                return 3;
             }
 
             @Override
             public Fragment getSlide(int position) {
-                return position == 0 ? $(MapViewHandler.class).getMapFragment() : new SettingsSlideFragment();
+                switch (position) {
+                    case 0: return new PersonalSlideFragment();
+                    case 1: return $(MapViewHandler.class).getMapFragment();
+                    case 2: return new SettingsSlideFragment();
+                    default: throw new IndexOutOfBoundsException();
+                }
             }
 
             @Override
@@ -52,6 +58,8 @@ public class MapsActivity extends PoolActivity {
         if (getIntent() != null) {
             onNewIntent(getIntent());
         }
+
+        slideScreen.setSlide(1);
     }
 
     @Override
@@ -59,10 +67,10 @@ public class MapsActivity extends PoolActivity {
         if (intent.hasExtra(EXTRA_SCREEN)) {
             switch (intent.getStringExtra(EXTRA_SCREEN)) {
                 case EXTRA_SCREEN_MAP:
-                    slideScreen.setSlide(0);
+                    slideScreen.setSlide(1);
                     return;
                 case EXTRA_SCREEN_SETTINGS:
-                    slideScreen.setSlide(1);
+                    slideScreen.setSlide(2);
                     return;
             }
         }
