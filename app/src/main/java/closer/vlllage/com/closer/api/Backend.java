@@ -139,6 +139,11 @@ public interface Backend {
     @POST("event/{id}")
     Observable<SuccessResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);
 
+    // Member
+
+    @GET("member")
+    Observable<List<GroupMemberResult>> getAllGroupMembers();
+
     @GET("member/of/{group}")
     Observable<GroupMemberResult> getGroupMember(@Path("group") String groupId);
 
