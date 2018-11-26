@@ -15,6 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="@dimen/padDouble"
         android:textColor="@color/text"
+        android:textStyle="bold"
         android:gravity="start"
         android:textAppearance="?android:textAppearanceMedium"
         android:text="@string/youve_subscribed" />

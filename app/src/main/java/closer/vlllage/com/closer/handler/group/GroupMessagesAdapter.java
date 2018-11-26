@@ -17,7 +17,6 @@ import java.util.List;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
-import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -26,6 +25,8 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.store.models.Suggestion;
+import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
+import closer.vlllage.com.closer.ui.RevealAnimator;
 
 public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapter.GroupMessageViewHolder> {
 
@@ -72,25 +73,25 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         holder.itemView.setOnClickListener(view -> {
             if (onMessageClickListener != null) {
                 onMessageClickListener.onMessageClick(groupMessages.get(position));
+            } else {
+                toggleMessageActionLayout(holder);
             }
         });
 
-        if (onMessageClickListener != null) {
-            holder.itemView.setBackgroundResource(R.drawable.clickable_green_flat);
-            holder.itemView.setElevation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.padDouble));
-            holder.group.setVisibility(View.VISIBLE);
-            Group group = getGroup(groupMessage.getTo());
+        holder.itemView.setOnLongClickListener(view -> {
+            toggleMessageActionLayout(holder);
+            return true;
+        });
 
-            if (group == null) {
-                holder.group.setText(R.string.near_here);
-            } else {
-                if ($(Val.class).isEmpty(group.getName())) {
-                    holder.group.setText(R.string.on_map);
-                } else {
-                    holder.group.setText(group.getName());
-                }
-            }
-        }
+        holder.photo.setOnLongClickListener(view -> {
+            toggleMessageActionLayout(holder);
+            return true;
+        });
+
+        holder.messageActionShare.setOnClickListener(view -> toggleMessageActionLayout(holder));
+        holder.messageActionRemind.setOnClickListener(view -> toggleMessageActionLayout(holder));
+        holder.messageActionPin.setOnClickListener(view -> toggleMessageActionLayout(holder));
+        holder.messageActionVote.setOnClickListener(view -> toggleMessageActionLayout(holder));
 
         if (groupMessage.getAttachment() != null) {
             try {
@@ -114,6 +115,25 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             }
         } else {
             $(MessageDisplay.class).displayGroupMessage(holder, isReversed, groupMessage, groupMessages, position, getItemCount());
+        }
+    }
+
+    private void toggleMessageActionLayout(GroupMessageViewHolder holder) {
+        if (holder.messageActionLayoutRevealAnimator == null) {
+            holder.messageActionLayoutRevealAnimator = new RevealAnimator(holder.messageActionLayout, $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionCombinedHeight));
+        }
+
+        if (holder.messageActionLayout.getVisibility() == View.VISIBLE) {
+            holder.messageActionLayoutRevealAnimator.show(false);
+        } else {
+            holder.messageActionLayoutRevealAnimator.show(true);
+        }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull GroupMessageViewHolder holder) {
+        if (holder.messageActionLayoutRevealAnimator != null) {
+            holder.messageActionLayoutRevealAnimator.cancel();
         }
     }
 
@@ -145,6 +165,12 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         TextView time;
         TextView group;
         ImageView photo;
+        MaxSizeFrameLayout messageActionLayout;
+        View messageActionShare;
+        View messageActionRemind;
+        View messageActionPin;
+        View messageActionVote;
+        RevealAnimator messageActionLayoutRevealAnimator;
 
         public GroupMessageViewHolder(View itemView) {
             super(itemView);
@@ -154,6 +180,11 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             time = itemView.findViewById(R.id.time);
             group = itemView.findViewById(R.id.group);
             photo = itemView.findViewById(R.id.photo);
+            messageActionLayout = itemView.findViewById(R.id.messageActionLayout);
+            messageActionShare = itemView.findViewById(R.id.messageActionShare);
+            messageActionRemind = itemView.findViewById(R.id.messageActionRemind);
+            messageActionPin = itemView.findViewById(R.id.messageActionPin);
+            messageActionVote = itemView.findViewById(R.id.messageActionVote);
         }
     }
 

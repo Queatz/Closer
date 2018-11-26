@@ -29,6 +29,7 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMember;
 import closer.vlllage.com.closer.store.models.GroupMember_;
 import closer.vlllage.com.closer.store.models.Group_;
+import io.objectbox.android.AndroidScheduler;
 
 public class PersonalSlideFragment extends PoolFragment {
     @Nullable
@@ -57,6 +58,7 @@ public class PersonalSlideFragment extends PoolFragment {
                 .equal(GroupMember_.subscribed, true)
                 .build()
                 .subscribe()
+                .on(AndroidScheduler.mainThread())
                 .observer(groupMembers -> {
                     if (groupMembers.isEmpty()) {
                         youveSubscribedEmpty.setVisibility(View.VISIBLE);

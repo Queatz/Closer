@@ -1,13 +1,8 @@
 package closer.vlllage.com.closer.handler.group;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
@@ -25,20 +20,17 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
+import closer.vlllage.com.closer.ui.RevealAnimator;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.reactive.DataSubscription;
 
-import static java.lang.Math.max;
-
 public class GroupActionHandler extends PoolMember {
 
-    private MaxSizeFrameLayout container;
-    private ValueAnimator animator;
-    private int initialHeight;
+    private RevealAnimator animator;
     private DataSubscription groupActionsDisposable;
 
     public void attach(MaxSizeFrameLayout container, RecyclerView actionRecyclerView) {
-        this.container = container;
+        animator = new RevealAnimator(container, (int) ($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f));
 
         $(GroupActionRecyclerViewHandler.class).attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO);
 
@@ -65,13 +57,10 @@ public class GroupActionHandler extends PoolMember {
 
             $(RefreshHandler.class).refreshGroupActions(group.getId());
         }));
-
     }
 
     public void cancelPendingAnimation() {
-        if (animator != null) {
-            animator.cancel();
-        }
+        animator.cancel();
     }
 
     public void show(boolean show) {
@@ -79,7 +68,7 @@ public class GroupActionHandler extends PoolMember {
     }
 
     private void show(boolean show, boolean immediate) {
-        if (container == null) {
+        if (animator == null) {
             return;
         }
 
@@ -87,76 +76,7 @@ public class GroupActionHandler extends PoolMember {
             show = false;
         }
 
-        if (animator != null) {
-            animator.cancel();
-        }
-
-        if (show) {
-            animator = ValueAnimator.ofInt(0, initialHeight == 0 ? (int) ($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f) : initialHeight);
-            animator.setDuration(500);
-            animator.setStartDelay(immediate ? 0 : 1700);
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.addUpdateListener(animation -> {
-                container.setMaxHeight((int) animation.getAnimatedValue());
-                container.setAlpha(animation.getAnimatedFraction());
-            });
-            animator.addListener(new Animator.AnimatorListener() {
-
-                private boolean cancelled;
-
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    container.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    if (cancelled) {
-                        return;
-                    }
-                    container.setMaxHeight(MaxSizeFrameLayout.UNSPECIFIED);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    cancelled = true;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-                }
-            });
-            animator.start();
-        } else if (container.getVisibility() != View.GONE) {
-            initialHeight = max(initialHeight, container.getMeasuredHeight());
-            animator = ValueAnimator.ofInt(container.getMeasuredHeight(), 0);
-            animator.setDuration(195);
-            animator.setInterpolator(new DecelerateInterpolator());
-            animator.addUpdateListener(animation -> {
-                container.setMaxHeight((int) animation.getAnimatedValue());
-                container.setAlpha(1 - animation.getAnimatedFraction());
-            });
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    container.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    container.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-                }
-            });
-            animator.start();
-        }
+        animator.show(show, immediate);
     }
 
     public void addActionToGroup(Group group) {
