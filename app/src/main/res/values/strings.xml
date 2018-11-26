@@ -187,4 +187,6 @@
     <string name="activities">Activities</string>
     <string name="member">Member</string>
     <string name="member_you">Member (You)</string>
+    <string name="youve_subscribed">You\'ve subscribed</string>
+    <string name="you_havent_subscribed">You haven\'t subscribed to any groups yet.</string>
 </resources>

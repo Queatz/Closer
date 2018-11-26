@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.store;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
@@ -59,10 +60,16 @@ public class StoreHandler extends PoolMember {
     }
 
     public <T extends BaseObject> SubscriptionBuilder<List<T>> findAll(Class<T> clazz, Property idProperty, Collection<String> ids) {
+        return findAll(clazz, idProperty, ids, null);
+    }
+
+    public <T extends BaseObject> SubscriptionBuilder<List<T>> findAll(Class<T> clazz, Property idProperty, Collection<String> ids, Comparator<T> sort) {
         QueryBuilder<T> query = store.box(clazz).query();
 
         boolean isNotFirst = false;
-        for (String id : ids) {
+        if (ids.isEmpty()) {
+            query.in(idProperty, new String[] {});
+        } else for (String id : ids) {
             if (isNotFirst) {
                 query.or();
             } else {
@@ -70,6 +77,10 @@ public class StoreHandler extends PoolMember {
             }
 
             query.equal(idProperty, id);
+        }
+
+        if (sort != null) {
+            query.sort(sort);
         }
 
         return query.build().subscribe().single().on(AndroidScheduler.mainThread());

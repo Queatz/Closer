@@ -2,44 +2,76 @@ package closer.vlllage.com.closer.handler;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
-import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
+import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.helpers.WindowHandler;
-import closer.vlllage.com.closer.handler.map.MapActivityHandler;
-import closer.vlllage.com.closer.handler.settings.HelpHandler;
-import closer.vlllage.com.closer.handler.settings.SettingsHandler;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
+import closer.vlllage.com.closer.handler.search.SearchHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
-
-import static closer.vlllage.com.closer.MapsActivity.EXTRA_SCREEN_MAP;
-import static closer.vlllage.com.closer.handler.settings.UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupMember;
+import closer.vlllage.com.closer.store.models.GroupMember_;
+import closer.vlllage.com.closer.store.models.Group_;
 
 public class PersonalSlideFragment extends PoolFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_settings, container, false);
-        view.findViewById(R.id.scrollView).setPadding(0, $(WindowHandler.class).getStatusBarHeight(), 0, 0);
+        $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
 
-        Switch openGroupsExpandedSettingsSwitch = view.findViewById(R.id.openGroupsExpandedSettingsSwitch);
-        openGroupsExpandedSettingsSwitch.setChecked($(SettingsHandler.class).get(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED));
-        openGroupsExpandedSettingsSwitch.setOnCheckedChangeListener((v, checked) -> $(SettingsHandler.class).set(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED, checked));
+        View view = inflater.inflate(R.layout.activity_personal, container, false);
 
-        view.findViewById(R.id.sendFeedbackButton).setOnClickListener(v -> $(GroupActivityTransitionHandler.class).showGroupMessages(v, "12370162"));
-        view.findViewById(R.id.viewPrivacyPolicyButton).setOnClickListener(v -> {
-            $(DisposableHandler.class).add($(ApiHandler.class).privacy().subscribe(privacyPolicy -> {
-                $(DefaultAlerts.class).message(privacyPolicy);
-            }, e -> $(DefaultAlerts.class).thatDidntWork()));
-        });
-        view.findViewById(R.id.showHelpButton).setOnClickListener(v -> $(HelpHandler.class).showHelp());
-        view.findViewById(R.id.returnToMapButton).setOnClickListener(v -> $(MapActivityHandler.class).goToScreen(EXTRA_SCREEN_MAP));
+        RecyclerView subscribedGroupsRecyclerView = view.findViewById(R.id.subscribedGroupsRecyclerView);
+        TextView youveSubscribedEmpty = view.findViewById(R.id.youveSubscribedEmpty);
+
+        SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(GroupHandler.class), (group, v) -> {
+            $(SearchHandler.class).openGroup(group.getId(), v);
+        }, null);
+
+        searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.open_group));
+        searchGroupsAdapter.setIsSmall(true);
+        searchGroupsAdapter.setLayoutResId(R.layout.search_groups_item_large_padding);
+
+        subscribedGroupsRecyclerView.setAdapter(searchGroupsAdapter);
+        subscribedGroupsRecyclerView.setLayoutManager(new LinearLayoutManager(subscribedGroupsRecyclerView.getContext()));
+
+        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
+                .equal(GroupMember_.phone, $(PersistenceHandler.class).getPhoneId())
+                .equal(GroupMember_.subscribed, true)
+                .build()
+                .subscribe()
+                .observer(groupMembers -> {
+                    if (groupMembers.isEmpty()) {
+                        youveSubscribedEmpty.setVisibility(View.VISIBLE);
+                        searchGroupsAdapter.setGroups(new ArrayList<>());
+                    } else {
+                        youveSubscribedEmpty.setVisibility(View.GONE);
+
+                        Set<String> ids = new HashSet<>();
+                        for (GroupMember groupMember : groupMembers) {
+                            ids.add(groupMember.getGroup());
+                        }
+
+                        $(StoreHandler.class).findAll(Group.class, Group_.id, ids, $(SortHandler.class).sortGroups()).observer(searchGroupsAdapter::setGroups);
+                    }
+                }));
 
         return view;
     }

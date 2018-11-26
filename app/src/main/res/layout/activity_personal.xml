@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true">
+
+    <TextView
+        android:id="@+id/youveSubscribedHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/padDouble"
+        android:textColor="@color/text"
+        android:gravity="start"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="@string/youve_subscribed" />
+
+    <TextView
+        android:id="@+id/youveSubscribedEmpty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/youveSubscribedHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/padDouble"
+        android:textColor="@color/textHint"
+        android:gravity="start"
+        android:text="@string/you_havent_subscribed" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/subscribedGroupsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/youveSubscribedHeader" />
+
+</android.support.constraint.ConstraintLayout>
