@@ -27,7 +27,7 @@ public class RevealAnimator {
     }
 
     public void show(boolean show) {
-        show(show, false);
+        show(show, true);
     }
 
     public void show(boolean show, boolean immediate) {
