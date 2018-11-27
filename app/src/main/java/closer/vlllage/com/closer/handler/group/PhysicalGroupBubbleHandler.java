@@ -20,11 +20,13 @@ import static android.text.format.DateUtils.DAY_IN_MILLIS;
 import static android.text.format.DateUtils.HOUR_IN_MILLIS;
 
 public class PhysicalGroupBubbleHandler extends PoolMember {
+    private static final float GEO_GROUPS_ZOOM = 15F;
+
     private final Set<String> visiblePublicGroups = new HashSet<>();
     private DataSubscription physicalGroupSubscription;
 
     public void attach() {
-        $(DisposableHandler.class).add($(MapZoomHandler.class).onZoomGreaterThanChanged(12).subscribe(
+        $(DisposableHandler.class).add($(MapZoomHandler.class).onZoomGreaterThanChanged(GEO_GROUPS_ZOOM).subscribe(
                 zoomIsGreaterThan15 -> {
                     if (zoomIsGreaterThan15) {
                         $(DisposableHandler.class).add(getNewPhysicalGroupObservable());

@@ -120,7 +120,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
     private void toggleMessageActionLayout(GroupMessageViewHolder holder) {
         if (holder.messageActionLayoutRevealAnimator == null) {
-            holder.messageActionLayoutRevealAnimator = new RevealAnimator(holder.messageActionLayout, $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionCombinedHeight));
+            holder.messageActionLayoutRevealAnimator = new RevealAnimator(holder.messageActionLayout, (int) ($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f));
         }
 
         if (holder.messageActionLayout.getVisibility() == View.VISIBLE) {
@@ -166,6 +166,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         TextView group;
         ImageView photo;
         MaxSizeFrameLayout messageActionLayout;
+        View messageActionReply;
         View messageActionShare;
         View messageActionRemind;
         View messageActionPin;
@@ -181,8 +182,9 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             group = itemView.findViewById(R.id.group);
             photo = itemView.findViewById(R.id.photo);
             messageActionLayout = itemView.findViewById(R.id.messageActionLayout);
+            messageActionReply = itemView.findViewById(R.id.messageActionReply);
             messageActionShare = itemView.findViewById(R.id.messageActionShare);
-            messageActionRemind = itemView.findViewById(R.id.messageActionRemind);
+            messageActionRemind = itemView.findViewById(R.id.messageActionReminder);
             messageActionPin = itemView.findViewById(R.id.messageActionPin);
             messageActionVote = itemView.findViewById(R.id.messageActionVote);
         }

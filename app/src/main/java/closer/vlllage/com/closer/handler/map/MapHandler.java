@@ -33,7 +33,6 @@ import io.reactivex.subjects.BehaviorSubject;
 
 public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
-    private static final float GEO_GROUPS_ZOOM = 13F;
     private static final float DEFAULT_ZOOM = 15F;
 
     private GoogleMap map;

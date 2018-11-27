@@ -20,7 +20,7 @@ import static closer.vlllage.com.closer.MapsActivity.EXTRA_SUGGESTION;
 
 public class IntentHandler extends PoolMember {
 
-    public void onNewIntent(Intent intent) {
+    public void onNewIntent(Intent intent, MapViewHandler.OnRequestMapOnScreenListener onRequestMapOnScreenListener) {
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             if (intent.hasExtra(EXTRA_STATUS)) {
                 float[] latLng = intent.getFloatArrayExtra(EXTRA_LAT_LNG);
@@ -29,10 +29,12 @@ public class IntentHandler extends PoolMember {
                         intent.hasExtra(EXTRA_NAME) ? intent.getStringExtra(EXTRA_NAME) : "",
                         intent.getStringExtra(EXTRA_STATUS)
                 ).setPhone(intent.getStringExtra(EXTRA_PHONE)));
+                onRequestMapOnScreenListener.onRequestMapOnScreen();
             } else if (intent.hasExtra(EXTRA_EVENT_ID) || intent.hasExtra(EXTRA_GROUP_ID)) {
                 float[] latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG);
                 LatLng latLng = new LatLng(latLngFloats[0], latLngFloats[1]);
                 $(MapHandler.class).centerMap(latLng);
+                onRequestMapOnScreenListener.onRequestMapOnScreen();
             } else if (intent.hasExtra(EXTRA_SUGGESTION)) {
                 float[] latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG);
                 LatLng latLng = new LatLng(latLngFloats[0], latLngFloats[1]);
@@ -47,6 +49,7 @@ public class IntentHandler extends PoolMember {
 
                 $(BubbleHandler.class).add($(SuggestionHandler.class).suggestionBubbleFrom(suggestion));
                 $(MapHandler.class).centerMap(latLng);
+                onRequestMapOnScreenListener.onRequestMapOnScreen();
             }
         }
     }

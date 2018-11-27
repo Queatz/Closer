@@ -289,8 +289,8 @@ public class MapSlideFragment extends PoolFragment {
         return false;
     }
 
-    public void handleIntent(Intent intent) {
-        $(IntentHandler.class).onNewIntent(intent);
+    public void handleIntent(Intent intent, MapViewHandler.OnRequestMapOnScreenListener onRequestMapOnScreenListener) {
+        $(IntentHandler.class).onNewIntent(intent, onRequestMapOnScreenListener);
         if (intent != null) {
             if (Intent.ACTION_VIEW.equals(intent.getAction())) {
                 $(FeedHandler.class).hide();

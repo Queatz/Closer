@@ -94,6 +94,10 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
         Group group = groups.get(position);
         holder.groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
         holder.groupName.setOnClickListener(view -> $(GroupActivityTransitionHandler.class).showGroupMessages(holder.groupName, group.getId()));
+        holder.groupName.setOnLongClickListener(view -> {
+            $(GroupMemberHandler.class).changeGroupSettings(group);
+            return true;
+        });
 
         GroupMessagesAdapter groupMessagesAdapter = new GroupMessagesAdapter($pool());
         groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
