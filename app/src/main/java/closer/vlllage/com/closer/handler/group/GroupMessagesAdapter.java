@@ -88,6 +88,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             return true;
         });
 
+        holder.messageActionReply.setOnClickListener(view -> toggleMessageActionLayout(holder));
         holder.messageActionShare.setOnClickListener(view -> toggleMessageActionLayout(holder));
         holder.messageActionRemind.setOnClickListener(view -> toggleMessageActionLayout(holder));
         holder.messageActionPin.setOnClickListener(view -> toggleMessageActionLayout(holder));

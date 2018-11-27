@@ -108,7 +108,7 @@
         android:id="@+id/messageActionLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/pad"
+        android:paddingTop="@dimen/pad"
         app:layout_constraintTop_toBottomOf="@+id/messageLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
