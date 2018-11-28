@@ -34,19 +34,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:isScrollContainer="true" />
 
-    <RelativeLayout
+    <closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout
         android:id="@+id/contentView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:fitsSystemWindows="true">
+        app:layout_constraintLeft_toLeftOf="parent">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             android:paddingTop="@dimen/padDouble"
             android:paddingStart="64dp"
             android:paddingEnd="64dp"
@@ -62,8 +62,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="84dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:visibility="gone"
             tools:visibility="visible"
             android:gravity="center"
@@ -79,24 +80,26 @@
             android:drawableTint="@color/red"
             android:text="@string/network_down" />
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_alignParentBottom="true"
-            android:gravity="end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:clipToPadding="false">
 
             <closer.vlllage.com.closer.ui.ScrollStopper
                 android:id="@+id/bottomContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:clipChildren="false"
                 android:clipToPadding="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:clipChildren="false"
                     android:clipToPadding="false">
@@ -107,8 +110,8 @@
 
             </closer.vlllage.com.closer.ui.ScrollStopper>
 
-        </LinearLayout>
-    </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
+    </closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout>
 
     <RelativeLayout
         android:id="@+id/contentAboveView"

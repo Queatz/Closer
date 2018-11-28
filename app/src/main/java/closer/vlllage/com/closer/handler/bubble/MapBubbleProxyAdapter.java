@@ -16,6 +16,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.models.Event;
@@ -75,7 +76,7 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
                     }
                 }
 
-                holder.name.setText(((Group) mapBubble.getTag()).getName());
+                holder.name.setText($(Val.class).of(((Group) mapBubble.getTag()).getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
                 break;
             case EVENT:
                 holder.click.setBackgroundResource(R.drawable.clickable_red_4dp);
