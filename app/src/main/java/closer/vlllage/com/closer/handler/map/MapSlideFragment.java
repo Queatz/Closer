@@ -185,7 +185,6 @@ public class MapSlideFragment extends PoolFragment {
         $(MapHandler.class).attach((MapFragment) getChildFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();
         $(ReplyLayoutHandler.class).attach(view.findViewById(R.id.replyLayout));
-        $(StatusLayoutHandler.class).attach(view.findViewById(R.id.myStatusLayout));
         $(MyGroupsLayoutHandler.class).attach(view.findViewById(R.id.myGroupsLayout));
         $(MyGroupsLayoutHandler.class).setContainerView(view.findViewById(R.id.bottomContainer));
 
