@@ -38,7 +38,9 @@ import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
 import io.objectbox.Box;
 import io.objectbox.Property;
+import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
+import io.objectbox.reactive.SubscriptionBuilder;
 
 public class RefreshHandler extends PoolMember {
 
@@ -77,7 +79,6 @@ public class RefreshHandler extends PoolMember {
         }));
     }
 
-
     public void refreshPhysicalGroups(LatLng latLng) {
         $(DisposableHandler.class).add($(ApiHandler.class).getPhysicalGroups(latLng).subscribe(groupResults -> {
             handleFullListResult(groupResults, Group.class, Group_.id, false, GroupResult::from, GroupResult::updateFrom);
@@ -111,6 +112,29 @@ public class RefreshHandler extends PoolMember {
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
+    public void refresh(Event event) {
+        refreshObject(event, Event.class, Event_.id);
+    }
+
+    public void refresh(Group group) {
+        refreshObject(group, Group.class, Group_.id);
+    }
+
+    public <T extends BaseObject> void refreshObject(T object, Class<T> clazz, Property idProperty) {
+        ((SubscriptionBuilder<List<T>>) $(StoreHandler.class).getStore().box(clazz)
+                .query()
+                .equal(idProperty, object.getId())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread()))
+                .observer(results -> {
+                    if (!results.isEmpty()) {
+                        object.setObjectBoxId(results.get(0).getObjectBoxId());
+                    }
+                    $(StoreHandler.class).getStore().box(clazz).put(object);
+                });
+    }
+
     private void handleMessages(final List<GroupMessageResult> messages) {
         List<PhoneResult> phoneResults = new ArrayList<>();
         for (GroupMessageResult groupMessageResult : messages) {
@@ -140,7 +164,6 @@ public class RefreshHandler extends PoolMember {
                     for (GroupMessage existingObj : groupMessages) {
                         existingObjsMap.put(existingObj.getId(), existingObj);
                     }
-
 
                     Box<GroupMessage> groupMessageBox = $(StoreHandler.class).getStore().box(GroupMessage.class);
                     for (GroupMessageResult message : messages) {

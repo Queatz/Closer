@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.FeatureType;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
@@ -188,6 +189,7 @@ public class GroupHandler extends PoolMember {
             eventChanged.onNext(event);
         } else {
             $(DisposableHandler.class).add($(ApiHandler.class).getEvent(eventId).map(EventResult::from).subscribe(eventFromServer -> {
+                $(RefreshHandler.class).refresh(eventFromServer);
                 eventChanged.onNext(eventFromServer);
             }, error -> $(DefaultAlerts.class).thatDidntWork()));
         }
