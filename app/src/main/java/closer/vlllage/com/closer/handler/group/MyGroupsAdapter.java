@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
@@ -95,7 +96,8 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
         }
 
         Group group = groups.get(position);
-        groupName.setBackgroundResource(R.drawable.clickable_blue);
+
+        groupName.setBackgroundResource($(GroupColorHandler.class).getColorClickable(group));
         groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0);
         groupName.setCompoundDrawablePadding($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

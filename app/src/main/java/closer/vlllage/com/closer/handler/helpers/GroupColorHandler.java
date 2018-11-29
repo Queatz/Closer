@@ -44,4 +44,16 @@ public class GroupColorHandler extends PoolMember {
             return R.drawable.color_primary_rounded;
         }
     }
+
+    public @DrawableRes int getColorClickable(Group group) {
+        if (group.hasEvent()) {
+            return R.drawable.clickable_red;
+        } else if (group.isPhysical()) {
+            return R.drawable.clickable_purple;
+        } else if (group.isPublic()) {
+            return R.drawable.clickable_green;
+        } else {
+            return R.drawable.clickable_blue;
+        }
+    }
 }
