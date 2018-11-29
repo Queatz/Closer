@@ -39,10 +39,12 @@ public class ShareHandler extends PoolMember {
             menuBubble.setOnTop(true);
             $(TimerHandler.class).postDisposable(() -> {
                 $(BubbleHandler.class).add(menuBubble);
-                $(MapBubbleMenuView.class).setMenuTitle(menuBubble, $(ResourcesHandler.class).getResources().getString(R.string.share_with));
-                $(MapBubbleMenuView.class).getMenuAdapter(menuBubble).setMenuItems(groupNames);
-                menuBubble.setOnItemClickListener(position -> {
-                    onGroupSelectedListener.onGroupSelected(groups.get(position));
+                menuBubble.setOnViewReadyListener(menuBubbleView -> {
+                    $(MapBubbleMenuView.class).setMenuTitle(menuBubble, $(ResourcesHandler.class).getResources().getString(R.string.share_with));
+                    $(MapBubbleMenuView.class).getMenuAdapter(menuBubble).setMenuItems(groupNames);
+                    menuBubble.setOnItemClickListener(position -> {
+                        onGroupSelectedListener.onGroupSelected(groups.get(position));
+                    });
                 });
             }, 225);
         });

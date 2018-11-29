@@ -147,12 +147,14 @@ public class MapSlideFragment extends PoolFragment {
                         }
                     });
                     $(BubbleHandler.class).add(menuBubble);
-                    $(MapBubbleMenuView.class)
-                            .getMenuAdapter(menuBubble)
-                            .setMenuItems(
-                                    new MapBubbleMenuItem().setTitle(getString(R.string.talk_here)).setIconRes(R.drawable.ic_wifi_black_18dp),
-                                    new MapBubbleMenuItem().setTitle(getString(R.string.share_this_location)).setIconRes(R.drawable.ic_share_black_18dp),
-                                    new MapBubbleMenuItem().setTitle(getString(R.string.add_event_here)).setIconRes(R.drawable.ic_add_black_18dp));
+                    menuBubble.setOnViewReadyListener(menuBubbleView -> {
+                        $(MapBubbleMenuView.class)
+                                .getMenuAdapter(menuBubble)
+                                .setMenuItems(
+                                        new MapBubbleMenuItem().setTitle(getString(R.string.talk_here)).setIconRes(R.drawable.ic_wifi_black_18dp),
+                                        new MapBubbleMenuItem().setTitle(getString(R.string.share_this_location)).setIconRes(R.drawable.ic_share_black_18dp),
+                                        new MapBubbleMenuItem().setTitle(getString(R.string.add_event_here)).setIconRes(R.drawable.ic_add_black_18dp));
+                    });
                 }
             }
         });
@@ -168,9 +170,11 @@ public class MapSlideFragment extends PoolFragment {
                 }
             });
             $(BubbleHandler.class).add(menuBubble);
-            $(MapBubbleMenuView.class)
-                    .getMenuAdapter(menuBubble)
-                    .setMenuItems(new MapBubbleMenuItem().setTitle(getString(R.string.add_suggestion_here)));
+            menuBubble.setOnViewReadyListener(menuBubbleView -> {
+                $(MapBubbleMenuView.class)
+                        .getMenuAdapter(menuBubble)
+                        .setMenuItems(new MapBubbleMenuItem().setTitle(getString(R.string.add_suggestion_here)));
+            });
         });
         $(MapHandler.class).setOnMapIdleListener(latLng -> {
             $(DisposableHandler.class).add($(ApiHandler.class).getPhonesNear(latLng).map(this::mapBubbleFrom).subscribe(mapBubbles ->

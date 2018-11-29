@@ -151,7 +151,6 @@ public class BubbleProxyLayer {
 
     public void add(final MapBubble mapBubble) {
         mapBubbles.add(mapBubble);
-        bubbleMapLayer.ensureBubbleView(mapBubble);
         recalculate();
     }
 

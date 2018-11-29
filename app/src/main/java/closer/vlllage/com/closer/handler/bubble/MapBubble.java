@@ -26,6 +26,7 @@ public class MapBubble {
     private boolean onTop;
     private BubbleType type = BubbleType.STATUS;
     private OnItemClickListener onItemClickListener;
+    private OnViewReadyListener onViewReadyListener;
     private Object tag;
     private List<MapBubble> proxies = new ArrayList<>();
 
@@ -177,7 +178,20 @@ public class MapBubble {
         return this;
     }
 
+    public MapBubble setOnViewReadyListener(OnViewReadyListener onViewReadyListener) {
+        this.onViewReadyListener = onViewReadyListener;
+        return this;
+    }
+
+    public OnViewReadyListener getOnViewReadyListener() {
+        return onViewReadyListener;
+    }
+
     public interface OnItemClickListener {
         void onItemClick(int position);
+    }
+
+    public interface OnViewReadyListener {
+        void onViewReady(View view);
     }
 }

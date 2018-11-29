@@ -49,9 +49,10 @@ public class BubbleMapLayer {
         }
 
         mapBubbles.add(mapBubble);
-
-        ensureBubbleView(mapBubble);
-
+        mapBubble.setView(bubbleView.createView(view, mapBubble));
+        if (mapBubble.getOnViewReadyListener() != null) {
+            mapBubble.getOnViewReadyListener().onViewReady(mapBubble.getView());
+        }
         view.addView(mapBubble.getView());
 
         if (map == null) {
@@ -95,12 +96,6 @@ public class BubbleMapLayer {
             animator.start();
             update(mapBubble);
         });
-    }
-
-    public void ensureBubbleView(MapBubble mapBubble) {
-        if (mapBubble.getView() == null) {
-            mapBubble.setView(bubbleView.createView(view, mapBubble));
-        }
     }
 
     public void update() {
