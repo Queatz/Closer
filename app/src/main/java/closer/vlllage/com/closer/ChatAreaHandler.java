@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 import closer.vlllage.com.closer.handler.data.LocationHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler;
@@ -32,6 +33,7 @@ import closer.vlllage.com.closer.ui.DraggableView;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
+@Deprecated
 public class ChatAreaHandler extends PoolMember {
 
     private GroupMessagesAdapter groupMessagesAdapter;
@@ -60,7 +62,7 @@ public class ChatAreaHandler extends PoolMember {
         recyclerView.setAdapter(groupMessagesAdapter);
 
         groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
-        groupMessagesAdapter.setOnEventClickListener(event -> $(MapActivityHandler.class).showEventOnMap(event));
+        groupMessagesAdapter.setOnEventClickListener(event -> $(GroupActivityTransitionHandler.class).showGroupForEvent(areaChat, event));
         replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {
             if (EditorInfo.IME_ACTION_GO == action) {
                 if (replyMessage.getText().toString().trim().isEmpty()) {

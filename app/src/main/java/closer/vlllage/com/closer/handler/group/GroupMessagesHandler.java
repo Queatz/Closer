@@ -62,7 +62,7 @@ public class GroupMessagesHandler extends PoolMember {
         });
 
         groupMessagesAdapter.setOnEventClickListener(event -> {
-            ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(MapActivityHandler.class).showEventOnMap(event));
+            ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(GroupActivityTransitionHandler.class).showGroupForEvent(null, event));
         });
 
         this.replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {

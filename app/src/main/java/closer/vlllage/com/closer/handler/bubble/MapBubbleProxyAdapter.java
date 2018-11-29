@@ -85,7 +85,10 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
                 break;
         }
 
-        holder.itemView.setOnClickListener(view -> onClickListener.onMapBubbleClick(mapBubble));
+        holder.itemView.setOnClickListener(view -> {
+            mapBubble.setView(view);
+            onClickListener.onMapBubbleClick(mapBubble);
+        });
     }
 
     @Override

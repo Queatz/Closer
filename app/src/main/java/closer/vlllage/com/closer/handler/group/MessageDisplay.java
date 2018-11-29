@@ -131,7 +131,7 @@ public class MessageDisplay extends PoolMember {
                         $(EventDetailsHandler.class).formatEventDetails(event));
 
         holder.action.setVisibility(View.VISIBLE);
-        holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.show_on_map));
+        holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.open_event));
         holder.action.setOnClickListener(view -> {
             if (onEventClickListener != null) {
                 onEventClickListener.onEventClick(event);

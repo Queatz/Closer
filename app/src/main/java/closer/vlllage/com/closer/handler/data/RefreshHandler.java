@@ -1,7 +1,5 @@
 package closer.vlllage.com.closer.handler.data;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -75,7 +73,6 @@ public class RefreshHandler extends PoolMember {
         $(DisposableHandler.class).add($(ApiHandler.class).getEvents(latLng).subscribe(eventResults -> {
             handleFullListResult(eventResults, Event.class, Event_.id, false, EventResult::from, EventResult::updateFrom);
         }, error -> {
-            Log.e("NETWORK: RRRRR", error.toString());
             $(ConnectionErrorHandler.class).notifyConnectionError();
         }));
     }
@@ -104,7 +101,6 @@ public class RefreshHandler extends PoolMember {
 
             handleFullListResult(groupActionResults, GroupAction.class, GroupAction_.id, false, GroupActionResult::from, GroupActionResult::updateFrom);
         }, error -> {
-            Log.e("NETWORK: RRRRR", error.toString());
             $(ConnectionErrorHandler.class).notifyConnectionError();
         }));
     }

@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.api.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class EventResult extends ModelResult {
     public List<Double> geo;
     public String name;
     public String about;
+    @SerializedName("public") private boolean isPublic;
     public Date startsAt;
     public Date endsAt;
     public boolean cancelled;
@@ -25,6 +28,7 @@ public class EventResult extends ModelResult {
     public static Event updateFrom(Event event, EventResult eventResult) {
         event.setName(eventResult.name);
         event.setAbout(eventResult.about);
+        event.setPublic(eventResult.isPublic);
         event.setLatitude(eventResult.geo.get(0));
         event.setLongitude(eventResult.geo.get(1));
         event.setEndsAt(eventResult.endsAt);

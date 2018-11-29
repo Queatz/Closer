@@ -157,8 +157,6 @@ public class ReplyLayoutHandler extends PoolMember {
         }
 
         replyLayout.startAnimation(animation);
-
-        $(StatusLayoutHandler.class).visible(!show);
     }
 
     public int getHeight() {

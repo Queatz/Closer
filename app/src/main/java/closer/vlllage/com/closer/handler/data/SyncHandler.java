@@ -125,6 +125,7 @@ public class SyncHandler extends PoolMember {
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).createEvent(
                 event.getName(),
                 event.getAbout(),
+                event.isPublic(),
                 new LatLng(event.getLatitude(), event.getLongitude()),
                 event.getStartsAt(),
                 event.getEndsAt()

@@ -40,6 +40,7 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
@@ -156,16 +157,16 @@ public class GroupActivity extends CircularRevealActivity {
         });
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
+            findViewById(R.id.backgroundColor).setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
+
             if (group.isPublic()) {
                 scopeIndicatorButton.setVisibility(View.VISIBLE);
                 scopeIndicatorButton.setImageResource(R.drawable.ic_public_black_24dp);
                 scopeIndicatorButton.setOnClickListener(view -> {
                     $(DefaultAlerts.class).message(R.string.public_group_title, R.string.public_group_message);
                 });
-                if (group.hasEvent()) {
-                    findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_red_rounded);
-                } else if (group.isPhysical()) {
-                    findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_purple_rounded);
+
+                if (group.isPhysical()) {
                     eventToolbar.setVisibility(View.VISIBLE);
                     actionShare.setVisibility(View.GONE);
                     actionCancel.setVisibility(View.GONE);
@@ -183,11 +184,8 @@ public class GroupActivity extends CircularRevealActivity {
                             refreshPhysicalGroupActions(updateGroup);
                         }));
                     }
-                } else {
-                    findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_green_rounded);
                 }
             } else {
-                findViewById(R.id.backgroundColor).setBackgroundResource(R.drawable.color_primary_rounded);
                 scopeIndicatorButton.setVisibility(View.VISIBLE);
                 scopeIndicatorButton.setImageResource(R.drawable.ic_lock_black_18dp);
                 scopeIndicatorButton.setOnClickListener(view -> {

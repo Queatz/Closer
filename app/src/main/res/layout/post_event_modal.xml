@@ -9,15 +9,23 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
+        <Switch
+            android:id="@+id/isPublicSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="24dp"
+            android:paddingLeft="24dp"
+            android:padding="@dimen/padDouble"
+            android:text="@string/is_public"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
         <EditText
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_event_details"
             android:imeOptions="actionGo"
-            android:paddingTop="24dp"
-            android:paddingRight="24dp"
-            android:paddingLeft="24dp"
+            android:padding="24dp"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:background="@null"
             android:maxLength="128"

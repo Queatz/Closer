@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -118,7 +119,8 @@ public class EventHandler extends PoolMember {
 
                     CreateEventViewState event = getViewState(viewHolder);
 
-                    createNewEvent(latLng,
+                    createNewEvent(viewHolder.isPublicSwitch.isChecked(),
+                            latLng,
                             viewHolder.eventName.getText().toString(),
                             viewHolder.eventPrice.getText().toString(),
                             event.startsAt.getTime(),
@@ -140,10 +142,11 @@ public class EventHandler extends PoolMember {
         return new CreateEventViewState(startsAt, endsAt);
     }
 
-    private void createNewEvent(LatLng latLng, String name, String price, Date startsAt, Date endsAt) {
+    private void createNewEvent(boolean isPublic, LatLng latLng, String name, String price, Date startsAt, Date endsAt) {
         Event event = $(StoreHandler.class).create(Event.class);
         event.setName(name.trim());
         event.setAbout(price.trim());
+        event.setPublic(isPublic);
         event.setLatitude(latLng.latitude);
         event.setLongitude(latLng.longitude);
         event.setStartsAt(startsAt);
@@ -164,6 +167,7 @@ public class EventHandler extends PoolMember {
     }
 
     private static class CreateEventViewHolder {
+        Switch isPublicSwitch;
         TimePicker startsAtTimePicker;
         TimePicker endsAtTimePicker;
         DatePicker datePicker;
@@ -174,6 +178,7 @@ public class EventHandler extends PoolMember {
         InterceptableScrollView scrollView;
 
         CreateEventViewHolder(View view) {
+            this.isPublicSwitch = view.findViewById(R.id.isPublicSwitch);
             this.startsAtTimePicker = view.findViewById(R.id.startsAt);
             this.endsAtTimePicker = view.findViewById(R.id.endsAt);
             this.datePicker = view.findViewById(R.id.datePicker);

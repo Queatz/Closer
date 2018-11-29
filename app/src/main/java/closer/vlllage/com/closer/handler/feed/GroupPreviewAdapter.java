@@ -101,7 +101,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
 
         GroupMessagesAdapter groupMessagesAdapter = new GroupMessagesAdapter($pool());
         groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
-        groupMessagesAdapter.setOnEventClickListener(event -> $(MapActivityHandler.class).showEventOnMap(event));
+        groupMessagesAdapter.setOnEventClickListener(event -> $(GroupActivityTransitionHandler.class).showGroupForEvent(holder.itemView, event));
 
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query();
         holder.pool.$(DisposableHandler.class).add(queryBuilder

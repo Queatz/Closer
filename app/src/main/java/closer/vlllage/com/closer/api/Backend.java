@@ -134,7 +134,7 @@ public interface Backend {
     Observable<EventResult> getEvent(@Path("id") String eventId);
 
     @POST("event")
-    Observable<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("geo") String geo, @Query(value = "starts-at", encoded = true) String startsAt, @Query(value = "ends-at", encoded = true) String endsAt);
+    Observable<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("public") boolean isPublic, @Query("geo") String geo, @Query(value = "starts-at", encoded = true) String startsAt, @Query(value = "ends-at", encoded = true) String endsAt);
 
     @POST("event/{id}")
     Observable<SuccessResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);

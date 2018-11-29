@@ -8,6 +8,7 @@ import io.objectbox.annotation.Entity;
 public class Event extends BaseObject {
     private String name;
     private String about;
+    private boolean isPublic;
     private String groupId;
     private String creator;
     private Double latitude;
@@ -98,6 +99,15 @@ public class Event extends BaseObject {
 
     public Event setCreator(String creator) {
         this.creator = creator;
+        return this;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public Event setPublic(boolean aPublic) {
+        isPublic = aPublic;
         return this;
     }
 }

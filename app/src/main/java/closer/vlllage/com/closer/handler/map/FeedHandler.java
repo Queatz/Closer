@@ -55,7 +55,6 @@ public class FeedHandler extends PoolMember {
                             .on(AndroidScheduler.mainThread())
                             .observer(this::setGroups));
                 }));
-
     }
 
     private void setGroups(List<Group> groups) {

@@ -8,7 +8,9 @@ import android.view.View;
 import closer.vlllage.com.closer.GroupActivity;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.models.Event;
 
 import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
 import static closer.vlllage.com.closer.GroupActivity.EXTRA_RESPOND;
@@ -42,5 +44,13 @@ public class GroupActivityTransitionHandler extends PoolMember {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         return intent;
+    }
+
+    public void showGroupForEvent(@Nullable View view, Event event) {
+        if (event.getGroupId() != null) {
+            $(GroupActivityTransitionHandler.class).showGroupMessages(view, event.getGroupId());
+        } else {
+            $(DefaultAlerts.class).thatDidntWork();
+        }
     }
 }

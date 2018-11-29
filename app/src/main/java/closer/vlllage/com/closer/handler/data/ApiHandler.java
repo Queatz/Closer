@@ -165,8 +165,8 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().cancelInvite(groupId, groupInviteId));
     }
 
-    public Observable<CreateResult> createEvent(String name, String about, LatLng latLng, Date startsAt, Date endsAt) {
-        return uiThread(api.getBackend().createEvent(name, about, $(LatLngStr.class).from(latLng), $(HttpEncode.class).encode($(DateFormatter.class).format(startsAt)), $(HttpEncode.class).encode($(DateFormatter.class).format(endsAt))));
+    public Observable<CreateResult> createEvent(String name, String about, boolean isPublic, LatLng latLng, Date startsAt, Date endsAt) {
+        return uiThread(api.getBackend().createEvent(name, about, isPublic, $(LatLngStr.class).from(latLng), $(HttpEncode.class).encode($(DateFormatter.class).format(startsAt)), $(HttpEncode.class).encode($(DateFormatter.class).format(endsAt))));
     }
 
     public Observable<List<EventResult>> getEvents(LatLng latLng) {
