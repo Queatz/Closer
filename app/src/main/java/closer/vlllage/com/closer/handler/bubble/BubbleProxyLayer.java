@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 import closer.vlllage.com.closer.handler.map.ClusterMap;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static java.lang.Math.abs;
 
@@ -21,6 +25,7 @@ public class BubbleProxyLayer {
     private BubbleMapLayer bubbleMapLayer;
     private MapViewportCallback mapViewportCallback;
     private double lastClusterSize;
+    private Disposable mergeBubblesDisposable;
 
     public BubbleProxyLayer(BubbleMapLayer bubbleMapLayer, MapViewportCallback mapViewportCallback) {
         this.bubbleMapLayer = bubbleMapLayer;
@@ -28,80 +33,90 @@ public class BubbleProxyLayer {
     }
 
     public void recalculate() {
-        // Proxies
+        lastClusterSize = getClusterSize();
 
-        Set<MapBubble> preCalculationProxyBubbles = new HashSet<>();
-        Set<MapBubble> postCalculationProxyBubbles = new HashSet<>();
-        mergeBubbles(mapBubbles, preCalculationProxyBubbles, postCalculationProxyBubbles);
-
-        mapBubbles.removeAll(preCalculationProxyBubbles);
-        mapBubbles.addAll(postCalculationProxyBubbles);
-
-        // Add bubbles
-        for (MapBubble mapBubble : mapBubbles) {
-            if (!mapBubble.isInProxy() && !bubbleMapLayer.getMapBubbles().contains(mapBubble)) {
-                bubbleMapLayer.add(mapBubble);
-            }
+        if (mergeBubblesDisposable != null) {
+            mergeBubblesDisposable.dispose();
         }
 
-        // Remove bubbles
-        for (MapBubble mapBubble : bubbleMapLayer.getMapBubbles()) {
-            if (!mapBubbles.contains(mapBubble)) {
-                preCalculationProxyBubbles.add(mapBubble);
-            } else if (mapBubble.isInProxy()) {
-                preCalculationProxyBubbles.add(mapBubble);
-            }
-        }
+        mergeBubblesDisposable = mergeBubbles(new HashSet<>(mapBubbles), lastClusterSize)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    // TODO check if proxies are the same and don't replace
+                    mapBubbles.removeAll(result.preCalculationProxyBubbles);
+                    mapBubbles.addAll(result.postCalculationProxyBubbles);
 
-        for (MapBubble mapBubble : preCalculationProxyBubbles) {
-            bubbleMapLayer.remove(mapBubble);
-        }
+                    // Add bubbles
+                    for (MapBubble mapBubble : mapBubbles) {
+                        if (!mapBubble.isInProxy() && !bubbleMapLayer.getMapBubbles().contains(mapBubble)) {
+                            bubbleMapLayer.add(mapBubble);
+                        }
+                    }
 
-        // Move bubbles
-        for (MapBubble mapBubble : bubbleMapLayer.getMapBubbles()) {
-            if (mapBubble.getRawLatLng() != null) {
-                bubbleMapLayer.move(mapBubble, mapBubble.getRawLatLng());
-                mapBubble.setRawLatLng(null);
-            }
-        }
+                    // Remove bubbles
+                    for (MapBubble mapBubble : bubbleMapLayer.getMapBubbles()) {
+                        if (!mapBubbles.contains(mapBubble)) {
+                            result.preCalculationProxyBubbles.add(mapBubble);
+                        } else if (mapBubble.isInProxy()) {
+                            result.preCalculationProxyBubbles.add(mapBubble);
+                        }
+                    }
+
+                    for (MapBubble mapBubble : result.preCalculationProxyBubbles) {
+                        bubbleMapLayer.remove(mapBubble);
+                    }
+
+                    // Move bubbles
+                    for (MapBubble mapBubble : bubbleMapLayer.getMapBubbles()) {
+                        if (mapBubble.getRawLatLng() != null) {
+                            bubbleMapLayer.move(mapBubble, mapBubble.getRawLatLng());
+                            mapBubble.setRawLatLng(null);
+                        }
+                    }
+                }, Throwable::printStackTrace);
     }
 
-    private void mergeBubbles(Set<MapBubble> mapBubbles, Set<MapBubble> preProxyBubbles, Set<MapBubble> postProxyBubbles) {
-        lastClusterSize = getClusterSize();
-        ClusterMap clusterMap = new ClusterMap(lastClusterSize);
+    private Single<MergeBubblesResult> mergeBubbles(final Set<MapBubble> mapBubbles, final double clusterSize) {
+        return Single.fromCallable(() -> {
+            MergeBubblesResult result = new MergeBubblesResult();
+            ClusterMap clusterMap = new ClusterMap(clusterSize);
 
-        for (MapBubble mapBubble : mapBubbles) {
-            mapBubble.setInProxy(false);
-            if (mapBubble.getType() == BubbleType.PROXY) {
-                preProxyBubbles.add(mapBubble);
-            } else if (mapBubble.getType() == BubbleType.STATUS || mapBubble.getType() == BubbleType.EVENT || mapBubble.getType() == BubbleType.PHYSICAL_GROUP) {
-                if (mapBubble.isCanProxy()) {
-                    clusterMap.add(mapBubble);
+            for (MapBubble mapBubble : mapBubbles) {
+                mapBubble.setInProxy(false);
+                if (mapBubble.getType() == BubbleType.PROXY) {
+                    result.preCalculationProxyBubbles.add(mapBubble);
+                } else if (mapBubble.getType() == BubbleType.STATUS || mapBubble.getType() == BubbleType.EVENT || mapBubble.getType() == BubbleType.PHYSICAL_GROUP) {
+                    if (mapBubble.isCanProxy()) {
+                        clusterMap.add(mapBubble);
+                    }
                 }
             }
-        }
 
-        List<Set<MapBubble>> clusters = clusterMap.generateClusters();
+            List<Set<MapBubble>> clusters = clusterMap.generateClusters();
 
-        for (Set<MapBubble> cluster : clusters) {
-            MapBubble proxyMapBubble = new MapBubble(new LatLng(0, 0), BubbleType.PROXY);
-            proxyMapBubble.setPinned(true);
-            proxyMapBubble.proxies(cluster);
-            float lat = 0, lng = 0;
-            int num = 0;
-            for (MapBubble mapBubble : cluster) {
-                mapBubble.setInProxy(true);
-                lat += mapBubble.getLatLng().latitude;
-                lng += mapBubble.getLatLng().longitude;
-                num++;
+            for (Set<MapBubble> cluster : clusters) {
+                MapBubble proxyMapBubble = new MapBubble(new LatLng(0, 0), BubbleType.PROXY);
+                proxyMapBubble.setPinned(true);
+                proxyMapBubble.proxies(cluster);
+                float lat = 0, lng = 0;
+                int num = 0;
+                for (MapBubble mapBubble : cluster) {
+                    mapBubble.setInProxy(true);
+                    lat += mapBubble.getLatLng().latitude;
+                    lng += mapBubble.getLatLng().longitude;
+                    num++;
+                }
+                proxyMapBubble.setLatLng(new LatLng(
+                        lat / num,
+                        lng / num
+                ));
+
+                result.postCalculationProxyBubbles.add(proxyMapBubble);
             }
-            proxyMapBubble.setLatLng(new LatLng(
-                    lat / num,
-                    lng / num
-            ));
 
-            postProxyBubbles.add(proxyMapBubble);
-        }
+            return result;
+        });
     }
 
     private double getClusterSize() {
@@ -110,6 +125,7 @@ public class BubbleProxyLayer {
 
     public void add(final MapBubble mapBubble) {
         mapBubbles.add(mapBubble);
+        bubbleMapLayer.ensureBubbleView(mapBubble);
         recalculate();
     }
 
@@ -191,5 +207,10 @@ public class BubbleProxyLayer {
 
     public interface MapViewportCallback {
         VisibleRegion getMapViewport();
+    }
+
+    private static class MergeBubblesResult {
+        Set<MapBubble> preCalculationProxyBubbles = new HashSet<>();
+        Set<MapBubble> postCalculationProxyBubbles = new HashSet<>();
     }
 }
