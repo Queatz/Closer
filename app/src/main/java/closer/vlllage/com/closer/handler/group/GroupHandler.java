@@ -69,7 +69,10 @@ public class GroupHandler extends PoolMember {
         if (group == null) {
             $(DisposableHandler.class).add($(ApiHandler.class).getGroup(groupId)
                     .map(GroupResult::from)
-                    .subscribe(this::setGroup));
+                    .subscribe(group -> {
+                        $(RefreshHandler.class).refresh(group);
+                        setGroup(group);
+                    }));
         }
     }
 
