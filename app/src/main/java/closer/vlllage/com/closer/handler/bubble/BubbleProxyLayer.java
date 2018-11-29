@@ -115,8 +115,34 @@ public class BubbleProxyLayer {
                 result.postCalculationProxyBubbles.add(proxyMapBubble);
             }
 
+            Map<Long, MapBubble> preHashes = new HashMap<>();
+            Map<Long, MapBubble> postHashes = new HashMap<>();
+
+            for (MapBubble mapBubble : result.preCalculationProxyBubbles) {
+                preHashes.put(proxyHash(mapBubble), mapBubble);
+            }
+
+            for (MapBubble mapBubble : result.postCalculationProxyBubbles) {
+                postHashes.put(proxyHash(mapBubble), mapBubble);
+            }
+
+            for (Long hash : preHashes.keySet()) {
+                if (postHashes.containsKey(hash)) {
+                    result.preCalculationProxyBubbles.remove(preHashes.get(hash));
+                    result.postCalculationProxyBubbles.remove(postHashes.get(hash));
+                }
+            }
+
             return result;
         });
+    }
+
+    private long proxyHash(MapBubble proxyMapBubble) {
+        long hash = 0;
+        for (MapBubble mapBubble : proxyMapBubble.proxies()) {
+            hash += mapBubble.hashCode();
+        }
+        return hash;
     }
 
     private double getClusterSize() {
