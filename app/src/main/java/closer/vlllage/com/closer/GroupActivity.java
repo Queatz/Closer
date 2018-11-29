@@ -340,6 +340,8 @@ public class GroupActivity extends CircularRevealActivity {
             return;
         }
 
+        showMessagesView(true);
+
         shareWithRecyclerView.setVisibility(View.VISIBLE);
         messagesRecyclerView.setVisibility(View.GONE);
         actionShare.setText(R.string.cancel);
@@ -382,7 +384,13 @@ public class GroupActivity extends CircularRevealActivity {
     }
 
     private void toggleContactsView() {
-        if (replyMessage.getVisibility() == View.GONE) {
+        showMessagesView(replyMessage.getVisibility() == View.GONE);
+    }
+
+    private void showMessagesView(boolean show) {
+        cancelShare();
+
+        if (show) {
             replyMessage.setVisibility(View.VISIBLE);
             sendButton.setVisibility(View.VISIBLE);
             sendMoreButton.setVisibility(View.VISIBLE);

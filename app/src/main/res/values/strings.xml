@@ -69,7 +69,7 @@
     <string name="great">Great!</string>
     <string name="sync_didnt_work">Sync didn\'t work</string>
     <string name="boo">Boo</string>
-    <string name="add_contact">+ Add Contact</string>
+    <string name="add_contact">+ Invite</string>
     <string name="contact_inactive_inline">%1$s (inactive)</string>
     <string name="contact_invited_inline">%1$s (invited)</string>
     <string name="invite_by_phone">Invite by phone</string>
