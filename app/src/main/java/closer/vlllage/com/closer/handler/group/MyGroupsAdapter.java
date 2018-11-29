@@ -14,11 +14,6 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
-import closer.vlllage.com.closer.handler.helpers.AlertHandler;
-import closer.vlllage.com.closer.handler.data.ApiHandler;
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -111,26 +106,10 @@ public class MyGroupsAdapter extends PoolRecyclerAdapter<MyGroupsAdapter.MyGroup
                 $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, group.getId()));
 
         groupName.setOnLongClickListener(view -> {
-            $(AlertHandler.class).make()
-                    .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.leave_group, group.getName()))
-                    .setPositiveButtonCallback(result -> leaveGroup(group))
-                    .setTitle($(ResourcesHandler.class).getResources().getString(R.string.leave_group_title, group.getName()))
-                    .setMessage($(ResourcesHandler.class).getResources().getString(R.string.leave_group_message))
-                    .show();
+            $(GroupMemberHandler.class).changeGroupSettings(group);
 
             return true;
         });
-    }
-
-    private void leaveGroup(Group group) {
-        $(DisposableHandler.class).add($(ApiHandler.class).leaveGroup(group.getId()).subscribe(successResult -> {
-            if (successResult.success) {
-                $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()));
-                $(RefreshHandler.class).refreshMyGroups();
-            } else {
-                $(DefaultAlerts.class).thatDidntWork();
-            }
-        }, error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
     @Override

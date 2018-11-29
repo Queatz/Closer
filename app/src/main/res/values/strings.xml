@@ -57,6 +57,7 @@
     <string name="resend_code">Re-send code</string>
     <string name="oh_no">Oh no!</string>
     <string name="number_not_verified">Your number could not be verified.</string>
+    <string name="leave_group_action">Leave this group…</string>
     <string name="leave_group">Yes, leave %1$s</string>
     <string name="leave_group_message">After leaving this group, you will need to be invited again to re-join.</string>
     <string name="leave_group_title">Leave %1$s?</string>
@@ -190,4 +191,5 @@
     <string name="youve_subscribed">You\'ve subscribed</string>
     <string name="you_havent_subscribed">You haven\'t subscribed to any groups yet.</string>
     <string name="is_public">Public</string>
+    <string name="options">Options</string>
 </resources>

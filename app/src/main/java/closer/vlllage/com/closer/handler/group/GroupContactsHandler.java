@@ -14,11 +14,13 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.PhoneContactsHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
@@ -73,7 +75,18 @@ public class GroupContactsHandler extends PoolMember {
                     })
                     .show();
         }, groupContact -> {
-            $(PhoneMessagesHandler.class).openMessagesWithPhone(groupContact.getContactId(), groupContact.getContactName(), "");
+            if ($(PersistenceHandler.class).getPhoneId().equals(groupContact.getContactId())) {
+                $(MenuHandler.class).show(new MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.leave_group_action, () -> {
+                    $(AlertHandler.class).make()
+                            .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.leave_group, group.getName()))
+                            .setPositiveButtonCallback(result -> leaveGroup(group))
+                            .setTitle($(ResourcesHandler.class).getResources().getString(R.string.leave_group_title, group.getName()))
+                            .setMessage($(ResourcesHandler.class).getResources().getString(R.string.leave_group_message))
+                            .show();
+                }));
+            } else {
+                $(PhoneMessagesHandler.class).openMessagesWithPhone(groupContact.getContactId(), groupContact.getContactName(), "");
+            }
         });
 
         if($(PermissionHandler.class).has(READ_CONTACTS)) {
@@ -117,6 +130,17 @@ public class GroupContactsHandler extends PoolMember {
                 .build().subscribe().on(AndroidScheduler.mainThread()).observer(groupContacts -> {
                     phoneContactAdapter.setGroupContacts(groupContacts);
                 }));
+    }
+
+    private void leaveGroup(Group group) {
+        $(DisposableHandler.class).add($(ApiHandler.class).leaveGroup(group.getId()).subscribe(successResult -> {
+            if (successResult.success) {
+                $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()));
+                $(RefreshHandler.class).refreshMyGroups();
+            } else {
+                $(DefaultAlerts.class).thatDidntWork();
+            }
+        }, error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
     private void cancelInvite(GroupInvite groupInvite) {

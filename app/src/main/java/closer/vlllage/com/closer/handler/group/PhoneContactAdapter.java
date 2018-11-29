@@ -61,7 +61,7 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
                     holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp);
                     boolean isMe = $(PersistenceHandler.class).getPhoneId().equals(groupContact.getContactId());
                     holder.name.setText(groupContact.getContactName());
-                    holder.action.setText(isMe ? "" : $(ResourcesHandler.class).getResources().getString(R.string.send_message));
+                    holder.action.setText($(ResourcesHandler.class).getResources().getString(isMe ? R.string.options : R.string.send_message));
                     holder.number.setText($(ResourcesHandler.class).getResources().getString(isMe ? R.string.member_you : R.string.member));
                     holder.itemView.setOnClickListener(view -> {
                         if (onGroupContactClickListener != null) {
