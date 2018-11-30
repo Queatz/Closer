@@ -106,12 +106,20 @@ public abstract class CircularRevealActivity extends PoolActivity {
 
                 if (finishCallback != null) {
                     finishCallback.run();
+                    finishCallback = null;
                 }
             }
 
             @Override
             public void onAnimationCancel(Animator animator) {
+                CircularRevealActivity.super.finish();
+                getWindow().getDecorView().setVisibility(View.GONE);
+                overridePendingTransition(0, 0);
 
+                if (finishCallback != null) {
+                    finishCallback.run();
+                    finishCallback = null;
+                }
             }
 
             @Override
