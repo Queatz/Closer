@@ -28,7 +28,7 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme"
-            android:launchMode="standard">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -50,7 +50,7 @@
             android:theme="@style/AppTheme.Translucent"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:launchMode="standard"
+            android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
