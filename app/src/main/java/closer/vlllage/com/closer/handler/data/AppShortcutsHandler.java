@@ -2,11 +2,14 @@ package closer.vlllage.com.closer.handler.data;
 
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
@@ -35,27 +38,39 @@ public class AppShortcutsHandler extends PoolMember {
         }
 
         List<ShortcutInfo> shortcuts = new ArrayList<>();
+        Set<Bitmap> bitmaps = new HashSet<>();
 
         for (Group group : groups) {
+            if (shortcuts.size() >= 3) {
+                break;
+            }
+
             if (group.getName() == null || group.getName().isEmpty()) {
                 continue;
             }
 
+            Bitmap icon = $(ShortcutIconGenerator.class).generate(
+                    $(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)),
+                    128,
+                    Color.WHITE,
+                    $(GroupColorHandler.class).getColor(group),
+                    $(GroupColorHandler.class).getLightColor(group)
+            );
+
             ShortcutInfo shortcut = new ShortcutInfo.Builder($(ApplicationHandler.class).getApp(), "group:" + group.getId())
                     .setShortLabel(group.getName())
                     .setIntent($(GroupActivityTransitionHandler.class).getIntent(group.getId(), false))
-                    .setIcon(Icon.createWithBitmap($(ShortcutIconGenerator.class).generate(
-                            $(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)),
-                            128,
-                            Color.WHITE,
-                            $(GroupColorHandler.class).getColor(group),
-                            $(GroupColorHandler.class).getLightColor(group)
-                    )))
+                    .setIcon(Icon.createWithBitmap(icon))
                     .build();
 
             shortcuts.add(0, shortcut);
+            bitmaps.add(icon);
         }
 
         shortcutManager.setDynamicShortcuts(shortcuts);
+
+        for (Bitmap bitmap : bitmaps) {
+            bitmap.recycle();
+        }
     }
 }
