@@ -115,101 +115,109 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <LinearLayout
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:overScrollMode="never">
 
-            <TextView
-                android:id="@+id/messageActionReply"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
-                android:layout_marginEnd="@dimen/pad"
-                android:background="@drawable/clickable_light_flat"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="12dp"
-                android:paddingTop="6dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="6dp"
-                android:textColor="@color/text"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:text="Reply"
-                android:focusable="true" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/messageActionShare"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
-                android:layout_marginEnd="@dimen/pad"
-                android:background="@drawable/clickable_light_flat"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="12dp"
-                android:paddingTop="6dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="6dp"
-                android:textColor="@color/text"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:text="Share"
-                android:focusable="true" />
+                <TextView
+                    android:id="@+id/messageActionReply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Reply"
+                    android:focusable="true" />
 
-            <TextView
-                android:id="@+id/messageActionReminder"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
-                android:layout_marginEnd="@dimen/pad"
-                android:background="@drawable/clickable_light_flat"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="12dp"
-                android:paddingTop="6dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="6dp"
-                android:textColor="@color/text"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:text="Reminder"
-                android:focusable="true" />
+                <TextView
+                    android:id="@+id/messageActionShare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Share"
+                    android:focusable="true" />
 
-            <TextView
-                android:id="@+id/messageActionPin"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
-                android:layout_marginEnd="@dimen/pad"
-                android:background="@drawable/clickable_light_flat"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="12dp"
-                android:paddingTop="6dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="6dp"
-                android:textColor="@color/text"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:text="Pin"
-                android:focusable="true" />
+                <TextView
+                    android:id="@+id/messageActionReminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Reminder"
+                    android:focusable="true" />
 
-            <TextView
-                android:id="@+id/messageActionVote"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
-                android:layout_marginEnd="@dimen/pad"
-                android:background="@drawable/clickable_light_flat"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="12dp"
-                android:paddingTop="6dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="6dp"
-                android:textColor="@color/text"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:text="Vote"
-                android:focusable="true" />
+                <TextView
+                    android:id="@+id/messageActionPin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Pin"
+                    android:focusable="true" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/messageActionVote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Vote"
+                    android:focusable="true" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
     </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
 

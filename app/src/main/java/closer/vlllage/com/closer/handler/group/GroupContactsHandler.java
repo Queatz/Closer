@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.PhoneContactsHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
+import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -137,6 +138,7 @@ public class GroupContactsHandler extends PoolMember {
             if (successResult.success) {
                 $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()));
                 $(RefreshHandler.class).refreshMyGroups();
+                $(ActivityHandler.class).getActivity().finish();
             } else {
                 $(DefaultAlerts.class).thatDidntWork();
             }

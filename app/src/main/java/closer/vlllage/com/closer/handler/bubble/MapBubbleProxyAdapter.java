@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -54,7 +55,7 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
             case STATUS:
                 holder.click.setBackgroundResource(R.drawable.clickable_blue_4dp);
                 holder.photo.setVisibility(View.GONE);
-                holder.name.setText(mapBubble.getName() + " " + mapBubble.getStatus());
+                holder.name.setText(mapBubble.getName() + "\n" + mapBubble.getStatus());
                 break;
             case PHYSICAL_GROUP:
                 holder.click.setBackgroundResource(R.drawable.clickable_purple_4dp);
@@ -81,7 +82,10 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
             case EVENT:
                 holder.click.setBackgroundResource(R.drawable.clickable_red_4dp);
                 holder.photo.setVisibility(View.GONE);
-                holder.name.setText(((Event) mapBubble.getTag()).getName());
+
+                Event event = ((Event) mapBubble.getTag());
+
+                holder.name.setText(event.getName() + "\n" + $(EventDetailsHandler.class).formatEventDetails(event));
                 break;
         }
 
