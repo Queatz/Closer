@@ -31,6 +31,8 @@ public class MyGroupsLayoutHandler extends PoolMember {
     private RecyclerView myGroupsRecyclerView;
     private View containerView;
 
+    private boolean hasSetGroupShortcuts;
+
     public void attach(ViewGroup myGroupsLayout) {
         this.myGroupsLayout = myGroupsLayout;
         myGroupsRecyclerView = myGroupsLayout.findViewById(R.id.myGroupsRecyclerView);
@@ -90,7 +92,10 @@ public class MyGroupsLayoutHandler extends PoolMember {
     }
 
     private void setGroups(List<Group> groups) {
-        $(AppShortcutsHandler.class).setGroupShortcuts(groups);
+        if (!hasSetGroupShortcuts) {
+            $(AppShortcutsHandler.class).setGroupShortcuts(groups);
+            hasSetGroupShortcuts = true;
+        }
         myGroupsAdapter.setGroups(groups);
     }
 

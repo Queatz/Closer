@@ -84,6 +84,8 @@ public class PhysicalGroupBubbleHandler extends PoolMember {
                     }
                 });
 
+        $(DisposableHandler.class).add(physicalGroupSubscription);
+
         return physicalGroupSubscription;
     }
 

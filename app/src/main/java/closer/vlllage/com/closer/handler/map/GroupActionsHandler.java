@@ -53,14 +53,14 @@ public class GroupActionsHandler extends PoolMember {
                         groupIds[i] = groups.get(i).getId();
                     }
 
-                    $(StoreHandler.class).getStore().box(GroupAction.class).query()
+                    $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupAction.class).query()
                             .in(GroupAction_.group, groupIds)
                             .sort(this::sort)
                             .build()
                             .subscribe()
                             .single()
                             .on(AndroidScheduler.mainThread())
-                            .observer(groupActions -> $(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions));
+                            .observer(groupActions -> $(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions)));
                 });
 
         $(DisposableHandler.class).add(dataSubscription);

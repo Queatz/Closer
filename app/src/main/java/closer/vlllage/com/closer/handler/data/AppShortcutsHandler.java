@@ -41,10 +41,6 @@ public class AppShortcutsHandler extends PoolMember {
         Set<Bitmap> bitmaps = new HashSet<>();
 
         for (Group group : groups) {
-            if (shortcuts.size() >= 3) {
-                break;
-            }
-
             if (group.getName() == null || group.getName().isEmpty()) {
                 continue;
             }
