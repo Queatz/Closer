@@ -34,6 +34,10 @@ import static android.text.format.DateUtils.DAY_IN_MILLIS;
 
 public class EventHandler extends PoolMember {
     public void createNewEvent(final LatLng latLng) {
+        createNewEvent(latLng, true);
+    }
+
+    public void createNewEvent(final LatLng latLng, final boolean isPublic) {
         $(AlertHandler.class).make()
                 .setTheme(R.style.AppTheme_AlertDialog_Red)
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.post_event))
@@ -49,6 +53,7 @@ public class EventHandler extends PoolMember {
                     viewHolder.datePicker.setVisibility(View.GONE);
 
                     viewHolder.datePicker.setMinDate(now.getTimeInMillis());
+                    viewHolder.isPublicSwitch.setChecked(isPublic);
 
                     viewHolder.datePicker.init(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), (datePicker1, year, month, dayOfMonth) -> {
                         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());

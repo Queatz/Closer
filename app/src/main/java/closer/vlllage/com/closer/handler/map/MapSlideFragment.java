@@ -153,7 +153,7 @@ public class MapSlideFragment extends PoolFragment {
                                 .setMenuItems(
                                         new MapBubbleMenuItem().setTitle(getString(R.string.talk_here)).setIconRes(R.drawable.ic_wifi_black_18dp),
                                         new MapBubbleMenuItem().setTitle(getString(R.string.share_this_location)).setIconRes(R.drawable.ic_share_black_18dp),
-                                        new MapBubbleMenuItem().setTitle(getString(R.string.add_event_here)).setIconRes(R.drawable.ic_add_black_18dp));
+                                        new MapBubbleMenuItem().setTitle(getString(R.string.add_event_here)).setIconRes(R.drawable.ic_event_note_black_24dp));
                     });
                 }
             }

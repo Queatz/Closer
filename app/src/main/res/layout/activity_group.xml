@@ -206,6 +206,36 @@
                 android:textColor="@color/text"
                 android:visibility="gone"
                 tools:visibility="visible" />
+            <Button
+                android:id="@+id/actionSettingsGetDirections"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textSize="12sp"
+                android:drawableTint="@color/text"
+                android:drawableTop="@drawable/ic_directions_black_24dp"
+                android:drawablePadding="4dp"
+                android:background="@drawable/clickable_light"
+                android:text="@string/get_directions"
+                android:textColor="@color/text"
+                android:visibility="gone"
+                tools:visibility="visible" />
+            <Button
+                android:id="@+id/actionSettingsHostEvent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:textSize="12sp"
+                android:drawableTint="@color/text"
+                android:drawableTop="@drawable/ic_event_note_black_24dp"
+                android:drawablePadding="4dp"
+                android:background="@drawable/clickable_light"
+                android:text="@string/host_event"
+                android:textColor="@color/text"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <TextView

@@ -26,6 +26,7 @@ import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.event.EventHandler;
 import closer.vlllage.com.closer.handler.group.GroupActionHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
@@ -43,6 +44,7 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
+import closer.vlllage.com.closer.handler.helpers.OutboundHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
@@ -80,6 +82,8 @@ public class GroupActivity extends CircularRevealActivity {
     private Button actionCancel;
     private Button actionSettingsSetName;
     private Button actionSettingsSetBackground;
+    private Button actionSettingsGetDirections;
+    private Button actionSettingsHostEvent;
     private MaxSizeFrameLayout actionFrameLayout;
     private EditText replyMessage;
     private RecyclerView messagesRecyclerView;
@@ -113,6 +117,8 @@ public class GroupActivity extends CircularRevealActivity {
         actionCancel = findViewById(R.id.actionCancel);
         actionSettingsSetName = findViewById(R.id.actionSettingsSetName);
         actionSettingsSetBackground = findViewById(R.id.actionSettingsSetBackground);
+        actionSettingsGetDirections = findViewById(R.id.actionSettingsGetDirections);
+        actionSettingsHostEvent = findViewById(R.id.actionSettingsHostEvent);
         actionFrameLayout = findViewById(R.id.actionFrameLayout);
         scopeIndicatorButton = findViewById(R.id.scopeIndicatorButton);
 
@@ -183,6 +189,18 @@ public class GroupActivity extends CircularRevealActivity {
                             setGroupBackground(updateGroup);
                             refreshPhysicalGroupActions(updateGroup);
                         }));
+                        actionSettingsGetDirections.setOnClickListener(view -> {
+                            $(OutboundHandler.class).openDirections(new LatLng(
+                                    group.getLatitude(),
+                                    group.getLongitude()
+                            ));
+                        });
+                        actionSettingsHostEvent.setOnClickListener(view -> {
+                            $(EventHandler.class).createNewEvent(new LatLng(
+                                    group.getLatitude(),
+                                    group.getLongitude()
+                            ));
+                        });
                     }
                 }
             } else {
@@ -272,16 +290,29 @@ public class GroupActivity extends CircularRevealActivity {
     }
 
     private void refreshPhysicalGroupActions(Group group) {
+        int buttonCount = 1;
+
         if (isEmptyOrWhitespace(group.getName())) {
             actionSettingsSetName.setVisibility(View.VISIBLE);
+            buttonCount++;
         } else {
             actionSettingsSetName.setVisibility(View.GONE);
         }
 
         if (isEmptyOrWhitespace(group.getPhoto())) {
             actionSettingsSetBackground.setVisibility(View.VISIBLE);
+            buttonCount++;
         } else {
             actionSettingsSetBackground.setVisibility(View.GONE);
+        }
+
+        if (buttonCount < 3) {
+            actionSettingsGetDirections.setVisibility(View.VISIBLE);
+            buttonCount++;
+        }
+
+        if (buttonCount < 3) {
+            actionSettingsHostEvent.setVisibility(View.VISIBLE);
         }
     }
 
