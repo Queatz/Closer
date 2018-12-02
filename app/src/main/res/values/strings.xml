@@ -6,7 +6,7 @@
     <string name="update">Update</string>
     <string name="update_name">Update name</string>
     <string name="closer_notifications">Closer notifications</string>
-    <string name="what_s_up">Tell everyone…</string>
+    <string name="what_s_up">Your public status</string>
     <string name="off">Off</string>
     <string name="update_your_name">Update your name</string>
     <string name="your_name_here">Your name here</string>
@@ -188,9 +188,11 @@
     <string name="activities">Activities</string>
     <string name="member">Member</string>
     <string name="member_you">Member (You)</string>
-    <string name="youve_subscribed">You\'ve subscribed</string>
-    <string name="you_havent_subscribed">You haven\'t subscribed to any groups yet.</string>
+    <string name="youve_subscribed">You\'re subscribed</string>
+    <string name="you_havent_subscribed">You aren\'t subscribed to any groups yet.</string>
     <string name="is_public">Public</string>
     <string name="options">Options</string>
     <string name="host_event">Host event</string>
+    <string name="share_your_location">Share your location</string>
+    <string name="about_you">About you</string>
 </resources>

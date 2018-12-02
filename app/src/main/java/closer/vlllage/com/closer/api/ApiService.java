@@ -16,6 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiService {
 
     private static final String AUTHORIZATION = "Authorization";
+    private static final String X_CLOSER_APP_ID = "X-CLOSER-APP-ID";
+    private static final String X_CLOSER_APP_ID_VALUE = "closer-app-v1-5109";
     private final Backend backend;
     private final PhotoUploadBackend photoUploadBackend;
     private final ContentBackend contentBackend;
@@ -25,7 +27,10 @@ public class ApiService {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         httpClient.addInterceptor(chain -> {
-            Request request = chain.request().newBuilder().addHeader(AUTHORIZATION, authorization).build();
+            Request request = chain.request().newBuilder()
+                    .addHeader(AUTHORIZATION, authorization)
+                    .addHeader(X_CLOSER_APP_ID, X_CLOSER_APP_ID_VALUE)
+                    .build();
             return chain.proceed(request);
         });
 

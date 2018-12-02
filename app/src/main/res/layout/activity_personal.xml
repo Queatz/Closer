@@ -1,15 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/yourContactInfoHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/padDouble"
+        android:textColor="@color/text"
+        android:textStyle="bold"
+        android:gravity="start"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="@string/about_you" />
+
+    <TextView
+        android:id="@+id/yourName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/yourContactInfoHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/padDouble"
+        android:background="@drawable/clickable_light"
+        android:textColor="@color/text"
+        android:gravity="start"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:drawableStart="@drawable/ic_person_black_24dp"
+        android:drawableTint="@color/text"
+        android:drawablePadding="@dimen/pad" />
+
+
+    <Switch
+        android:id="@+id/shareYourLocationSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/yourName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingRight="24dp"
+        android:paddingLeft="24dp"
+        android:padding="@dimen/padDouble"
+        android:text="@string/share_your_location"
+        android:textColor="@color/text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:drawableStart="@drawable/ic_wifi_black_24dp"
+        android:drawableTint="@color/text"
+        android:drawablePadding="@dimen/pad" />
+
+    <EditText
+        android:id="@+id/currentStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/shareYourLocationSwitch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/padDouble"
+        android:imeOptions="actionGo"
+        android:background="@null"
+        android:selectAllOnFocus="true"
+        android:inputType="textShortMessage|textCapSentences"
+        android:hint="@string/what_s_up"
+        android:textColor="@color/text"
+        android:textColorHint="@color/textHint"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:drawableStart="@drawable/ic_edit_black_24dp"
+        android:drawableTint="@color/text"
+        android:drawablePadding="@dimen/pad"
+        android:maxLength="24"
+        android:maxLines="1"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/youveSubscribedHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="@dimen/padDouble"

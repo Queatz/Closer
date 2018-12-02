@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,9 +20,12 @@ import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.map.SetNameHandler;
 import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
 import closer.vlllage.com.closer.handler.search.SearchHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
@@ -32,6 +37,12 @@ import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 
 public class PersonalSlideFragment extends PoolFragment {
+
+    private EditText yourCurrentStatus;
+    private TextView yourName;
+    private Switch shareYourLocationSwitch;
+    private String previousStatus;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +86,52 @@ public class PersonalSlideFragment extends PoolFragment {
                     }
                 }));
 
+        yourCurrentStatus = view.findViewById(R.id.currentStatus);
+        shareYourLocationSwitch = view.findViewById(R.id.shareYourLocationSwitch);
+        yourName = view.findViewById(R.id.yourName);
+
+        updateLocationInfo();
+
+        shareYourLocationSwitch.setOnCheckedChangeListener((switchView, isChecked) -> {
+            $(AccountHandler.class).updateActive(isChecked);
+            updateLocationInfo();
+        });
+
+        shareYourLocationSwitch.setChecked($(AccountHandler.class).getActive());
+        previousStatus = $(AccountHandler.class).getStatus();
+        yourCurrentStatus.setText(previousStatus);
+
+        yourCurrentStatus.setOnFocusChangeListener((editTextView, isFocused) -> {
+            if (yourCurrentStatus.getText().toString().equals(previousStatus)) {
+                return;
+            }
+
+            $(AccountHandler.class).updateStatus(yourCurrentStatus.getText().toString());
+            $(KeyboardHandler.class).showKeyboard(yourCurrentStatus, false);
+        });
+
+        yourName.setText($(AccountHandler.class).getName());
+
+        $(DisposableHandler.class).add($(AccountHandler.class).changes().subscribe(
+                accountChange -> {
+                    if (accountChange.prop.equals(AccountHandler.ACCOUNT_FIELD_NAME)) {
+                        yourName.setText($(AccountHandler.class).getName());
+                    }
+                },
+                throwable -> $(DefaultAlerts.class).thatDidntWork()
+        ));
+
+        yourName.setOnClickListener(v -> $(SetNameHandler.class).modifyName());
+
         return view;
+    }
+
+    private void updateLocationInfo() {
+        if (shareYourLocationSwitch.isChecked()) {
+            yourCurrentStatus.setVisibility(View.VISIBLE);
+        } else {
+            yourCurrentStatus.setVisibility(View.GONE);
+        }
     }
 
 }
