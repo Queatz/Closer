@@ -34,6 +34,7 @@ import io.reactivex.subjects.BehaviorSubject;
 public class MapHandler extends PoolMember implements OnMapReadyCallback {
 
     private static final float DEFAULT_ZOOM = 15F;
+    private static final float DEFAULT_TILT = 15F;
 
     private GoogleMap map;
     private View mapView;
@@ -150,7 +151,7 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         CameraPosition cameraPosition = CameraPosition.builder()
                 .target(latLng)
                 .zoom(DEFAULT_ZOOM)
-                .tilt(60)
+                .tilt(DEFAULT_TILT)
                 .build();
         map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
