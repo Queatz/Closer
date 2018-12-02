@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
@@ -72,7 +73,7 @@ public class MapSlideFragment extends PoolFragment {
 
         $(BubbleHandler.class).attach(view.findViewById(R.id.bubbleMapLayer), mapBubble -> {
             if ($(MyBubbleHandler.class).isMyBubble(mapBubble)) {
-                $(SetNameHandler.class).modifyName();
+                $(MapActivityHandler.class).goToScreen(MapsActivity.EXTRA_SCREEN_PERSONAL);
             } else {
                 $(ReplyLayoutHandler.class).replyTo(mapBubble);
             }

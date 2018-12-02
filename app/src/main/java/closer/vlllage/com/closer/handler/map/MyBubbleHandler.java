@@ -1,11 +1,14 @@
 package closer.vlllage.com.closer.handler.map;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
+import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
@@ -21,6 +24,10 @@ public class MyBubbleHandler extends PoolMember {
                 updateLocation((LatLng) accountChange.value);
                 break;
             case AccountHandler.ACCOUNT_FIELD_ACTIVE:
+                Location location = $(LocationHandler.class).getLastKnownLocation();
+                if (location != null) {
+                    updateLocation(new LatLng(location.getLatitude(), location.getLatitude()));
+                }
                 updateActive((boolean) accountChange.value);
                 break;
             default:
@@ -45,7 +52,7 @@ public class MyBubbleHandler extends PoolMember {
             myBubble = new MapBubble(latLng, $(AccountHandler.class).getName(), $(AccountHandler.class).getStatus());
             myBubble.setPinned(true);
             myBubble.setCanProxy(false);
-            myBubble.setAction($(ResourcesHandler.class).getResources().getString(R.string.update_name));
+            myBubble.setAction($(ResourcesHandler.class).getResources().getString(R.string.update_status));
             updateActive($(AccountHandler.class).getActive());
         } else {
             $(BubbleHandler.class).move(myBubble, latLng);
