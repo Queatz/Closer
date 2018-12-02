@@ -52,7 +52,7 @@ public class PhysicalGroupBubbleHandler extends PoolMember {
         oneHourAgo.setTime(oneHourAgo.getTime() - HOUR_IN_MILLIS);
 
         Date oneMonthAgo = new Date();
-        oneMonthAgo.setTime(oneMonthAgo.getTime() - 30 * DAY_IN_MILLIS);
+        oneMonthAgo.setTime(oneMonthAgo.getTime() - 90 * DAY_IN_MILLIS);
 
         physicalGroupSubscription = $(StoreHandler.class).getStore().box(Group.class).query()
                 .equal(Group_.physical, true)

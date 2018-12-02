@@ -160,8 +160,8 @@ public class GroupMessagesHandler extends PoolMember {
             }));
         });
 
-        Date twelveHoursAgo = new Date();
-        twelveHoursAgo.setTime(twelveHoursAgo.getTime() - 12 * HOUR_IN_MILLIS);
+        Date thirySixHoursAgo = new Date();
+        thirySixHoursAgo.setTime(thirySixHoursAgo.getTime() - 36 * HOUR_IN_MILLIS);
 
         Group group = $(GroupHandler.class).getGroup();
 
@@ -173,7 +173,7 @@ public class GroupMessagesHandler extends PoolMember {
                 .equal(GroupMessage_.to, group.getId());
 
         if (!group.isPublic()) {
-            queryBuilder.greater(GroupMessage_.time, twelveHoursAgo);
+            queryBuilder.greater(GroupMessage_.time, thirySixHoursAgo);
         }
 
         $(DisposableHandler.class).add(queryBuilder

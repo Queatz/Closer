@@ -26,11 +26,11 @@
         app:cardCornerRadius="@dimen/miniWindowCornerRadius">
 
     <ImageView
-            android:id="@+id/backgroundPhoto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:visibility="gone"/>
+        android:id="@+id/backgroundPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
 
     </android.support.design.card.MaterialCardView>
 
@@ -50,6 +50,18 @@
         android:textSize="12sp"
         android:textStyle="bold"
         tools:text="Closer Bash #1" />
+
+    <ImageView
+        android:id="@+id/goToGroup"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_margin="6dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_launch_black_24dp"
+        android:tint="@color/text"
+        android:importantForAccessibility="no"
+        android:scaleType="centerInside"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesRecyclerView"

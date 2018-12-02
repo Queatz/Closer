@@ -29,6 +29,7 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.DistanceHandler;
+import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
@@ -149,13 +150,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             $(KeyboardHandler.class).showKeyboard(view, false);
         });
 
-        if (group.hasEvent()) {
-            holder.itemView.setBackgroundResource(R.drawable.color_red_rounded);
-        } else if (group.isPhysical()) {
-            holder.itemView.setBackgroundResource(R.drawable.color_purple_rounded);
-        } else {
-            holder.itemView.setBackgroundResource(R.drawable.color_green_rounded);
-        }
+        holder.itemView.setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
 
         Picasso.get().cancelRequest(holder.backgroundPhoto);
         if (group.getPhoto() != null) {

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -88,11 +89,26 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             return true;
         });
 
-        holder.messageActionReply.setOnClickListener(view -> toggleMessageActionLayout(holder));
-        holder.messageActionShare.setOnClickListener(view -> toggleMessageActionLayout(holder));
-        holder.messageActionRemind.setOnClickListener(view -> toggleMessageActionLayout(holder));
-        holder.messageActionPin.setOnClickListener(view -> toggleMessageActionLayout(holder));
-        holder.messageActionVote.setOnClickListener(view -> toggleMessageActionLayout(holder));
+        holder.messageActionReply.setOnClickListener(view -> {
+            $(DefaultAlerts.class).message("That doesn't work yet!");
+            toggleMessageActionLayout(holder);
+        });
+        holder.messageActionShare.setOnClickListener(view -> {
+            $(DefaultAlerts.class).message("That doesn't work yet!");
+            toggleMessageActionLayout(holder);
+        });
+        holder.messageActionRemind.setOnClickListener(view -> {
+            $(DefaultAlerts.class).message("That doesn't work yet!");
+            toggleMessageActionLayout(holder);
+        });
+        holder.messageActionPin.setOnClickListener(view -> {
+            $(DefaultAlerts.class).message("That doesn't work yet!");
+            toggleMessageActionLayout(holder);
+        });
+        holder.messageActionVote.setOnClickListener(view -> {
+            $(DefaultAlerts.class).message("That doesn't work yet!");
+            toggleMessageActionLayout(holder);
+        });
 
         if (groupMessage.getAttachment() != null) {
             try {
