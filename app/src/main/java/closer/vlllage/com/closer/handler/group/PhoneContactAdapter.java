@@ -14,6 +14,7 @@ import java.util.List;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.models.GroupContact;
@@ -60,7 +61,7 @@ public class PhoneContactAdapter extends PoolRecyclerAdapter<PhoneContactAdapter
 
                     holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp);
                     boolean isMe = $(PersistenceHandler.class).getPhoneId().equals(groupContact.getContactId());
-                    holder.name.setText(groupContact.getContactName());
+                    holder.name.setText($(NameHandler.class).getName(groupContact));
                     holder.action.setText($(ResourcesHandler.class).getResources().getString(isMe ? R.string.options : R.string.send_message));
                     holder.number.setText($(ResourcesHandler.class).getResources().getString(isMe ? R.string.member_you : R.string.member));
                     holder.itemView.setOnClickListener(view -> {

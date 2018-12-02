@@ -7,7 +7,6 @@ import android.widget.TextView;
 import org.greenrobot.essentials.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
@@ -35,8 +34,6 @@ import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 import io.reactivex.subjects.BehaviorSubject;
-
-import static android.text.format.DateUtils.DAY_IN_MILLIS;
 
 public class GroupHandler extends PoolMember {
 
@@ -88,11 +85,7 @@ public class GroupHandler extends PoolMember {
                 .observer(groupContacts -> {
                     contactNames = new ArrayList<>();
                     for (GroupContact groupContact : groupContacts) {
-                        if (isInactive(groupContact)) {
-                            contactNames.add($(ResourcesHandler.class).getResources().getString(R.string.contact_inactive_inline, $(NameHandler.class).getName(groupContact)));
-                        } else {
-                            contactNames.add($(NameHandler.class).getName(groupContact));
-                        }
+                        contactNames.add($(NameHandler.class).getName(groupContact));
                     }
 
                     redrawContacts();
@@ -123,12 +116,6 @@ public class GroupHandler extends PoolMember {
                 .equal(GroupContact_.groupId, group.getId())
                 .equal(GroupContact_.contactId, $(PersistenceHandler.class).getPhoneId())
                 .build().findFirst();
-    }
-
-    private boolean isInactive(GroupContact groupContact) {
-        Date fifteenDaysAgo = new Date();
-        fifteenDaysAgo.setTime(fifteenDaysAgo.getTime() - 15 * DAY_IN_MILLIS);
-        return groupContact.getContactActive().before(fifteenDaysAgo);
     }
 
     private void redrawContacts() {
