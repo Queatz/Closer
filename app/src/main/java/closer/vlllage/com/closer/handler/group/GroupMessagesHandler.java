@@ -3,7 +3,9 @@ package closer.vlllage.com.closer.handler.group;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.TextAppearanceSpan;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -28,6 +30,8 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupDraftHandler;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
+import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
@@ -107,19 +111,18 @@ public class GroupMessagesHandler extends PoolMember {
 
         this.replyMessage.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public void beforeTextChanged(CharSequence text, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
             }
 
             @Override
             public void afterTextChanged(Editable text) {
                 updateSendButton();
                 $(GroupDraftHandler.class).saveDraft($(GroupHandler.class).getGroup(), text.toString());
+                showSuggestionsForName(extractName(text, replyMessage.getSelectionStart()));
             }
         });
 
@@ -181,6 +184,52 @@ public class GroupMessagesHandler extends PoolMember {
                 .build()
                 .subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroupMessages));
+    }
+
+    public void insertMention(Phone mention) {
+        CharSequence replaceString = extractName(replyMessage.getText(), replyMessage.getSelectionStart());
+
+        if (replaceString == null) {
+            replaceString = "";
+        }
+
+        replyMessage.getText().replace(replyMessage.getSelectionStart() - replaceString.length(), replyMessage.getSelectionStart(), mention.getName());
+        replyMessage.getText().setSpan(new TextAppearanceSpan(replyMessage.getContext(), R.style.TextAppearance_AppCompat_Button),
+                replyMessage.getSelectionStart() - mention.getName().length(), replyMessage.getSelectionStart(),
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        replyMessage.getText().insert(replyMessage.getSelectionStart(), " ");
+    }
+
+    private void showSuggestionsForName(CharSequence name) {
+        if (name == null) {
+            $(GroupMessageMentionHandler.class).show(false);
+        } else {
+            List<Phone> phones = $(StoreHandler.class).getStore().box(Phone.class).query().
+                    contains(Phone_.name, name.toString(), QueryBuilder.StringOrder.CASE_INSENSITIVE)
+                    .build().find();
+
+            if (phones.isEmpty()) {
+                $(GroupMessageMentionHandler.class).show(false);
+            } else {
+                $(GroupMessageMentionHandler.class).show(true);
+                $(GroupMessageMentionHandler.class).setItems(phones);
+            }
+        }
+    }
+
+    private CharSequence extractName(Editable text, int position) {
+        if (position > 0 && position <= text.length()) {
+            for (int i = position - 1; i >= 0; i--) {
+                if (text.charAt(i) == '@') {
+                    return text.subSequence(i + 1, position);
+                } else if (Character.isWhitespace(text.charAt(i))) {
+                    return null;
+                }
+            }
+        }
+
+        return null;
     }
 
     private void updateSendButton() {

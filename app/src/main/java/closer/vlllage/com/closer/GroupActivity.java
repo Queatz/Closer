@@ -33,6 +33,7 @@ import closer.vlllage.com.closer.handler.group.GroupContactsHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessageMentionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
 import closer.vlllage.com.closer.handler.group.PhysicalGroupUpgradeHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
@@ -85,6 +86,7 @@ public class GroupActivity extends CircularRevealActivity {
     private Button actionSettingsGetDirections;
     private Button actionSettingsHostEvent;
     private MaxSizeFrameLayout actionFrameLayout;
+    private MaxSizeFrameLayout mentionSuggestionsLayout;
     private EditText replyMessage;
     private RecyclerView messagesRecyclerView;
     private RecyclerView shareWithRecyclerView;
@@ -120,6 +122,7 @@ public class GroupActivity extends CircularRevealActivity {
         actionSettingsGetDirections = findViewById(R.id.actionSettingsGetDirections);
         actionSettingsHostEvent = findViewById(R.id.actionSettingsHostEvent);
         actionFrameLayout = findViewById(R.id.actionFrameLayout);
+        mentionSuggestionsLayout = findViewById(R.id.mentionSuggestionsLayout);
         scopeIndicatorButton = findViewById(R.id.scopeIndicatorButton);
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
@@ -133,6 +136,9 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
         $(GroupActionHandler.class).attach(actionFrameLayout, findViewById(R.id.actionRecyclerView));
+        $(GroupMessageMentionHandler.class).attach(mentionSuggestionsLayout, findViewById(R.id.mentionSuggestionRecyclerView), mention -> {
+            $(GroupMessagesHandler.class).insertMention(mention);
+        });
         $(MiniWindowHandler.class).attach(groupName, findViewById(R.id.backgroundColor), this::finish);
 
         findViewById(R.id.settingsButton).setOnClickListener(view -> {
