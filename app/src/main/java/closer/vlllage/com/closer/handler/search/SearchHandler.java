@@ -84,6 +84,10 @@ public class SearchHandler extends PoolMember {
     }
 
     public void openGroup(String groupId, View view) {
+        if (groupId == null) {
+            $(DefaultAlerts.class).thatDidntWork();
+            return;
+        }
         $(GroupActivityTransitionHandler.class).showGroupMessages(view, groupId);
     }
 

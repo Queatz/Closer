@@ -146,6 +146,10 @@ public class BubbleProxyLayer {
     }
 
     private double getClusterSize() {
+        if (mapViewportCallback == null || mapViewportCallback.getMapViewport() == null) {
+            return 1;
+        }
+
         return abs(mapViewportCallback.getMapViewport().latLngBounds.southwest.longitude - mapViewportCallback.getMapViewport().latLngBounds.northeast.longitude) / MERGE_RESOLUTION;
     }
 

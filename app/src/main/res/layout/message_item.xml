@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/timeLayout"
         app:layout_constraintHorizontal_weight="1"
+        android:layout_marginEnd="@dimen/pad"
         android:orientation="vertical">
 
         <TextView

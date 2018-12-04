@@ -1,15 +1,21 @@
 package closer.vlllage.com.closer.handler.group;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.style.TextAppearanceSpan;
+import android.text.style.ImageSpan;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +27,7 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.handler.media.MediaHandler;
@@ -193,18 +200,19 @@ public class GroupMessagesHandler extends PoolMember {
             replaceString = "";
         }
 
-        replyMessage.getText().replace(replyMessage.getSelectionStart() - replaceString.length(), replyMessage.getSelectionStart(), mention.getName());
-        replyMessage.getText().setSpan(new TextAppearanceSpan(replyMessage.getContext(), R.style.TextAppearance_AppCompat_Button),
-                replyMessage.getSelectionStart() - mention.getName().length(), replyMessage.getSelectionStart(),
+        replyMessage.getText().replace(replyMessage.getSelectionStart() - replaceString.length(), replyMessage.getSelectionStart(), "@" + mention.getId());
+        replyMessage.getText().setSpan(getImageSpan(mention.getName()),
+                replyMessage.getSelectionStart() - mention.getId().length() - 1, replyMessage.getSelectionStart(),
                 SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        replyMessage.getText().insert(replyMessage.getSelectionStart(), " ");
     }
 
     private void showSuggestionsForName(CharSequence name) {
         if (name == null) {
             $(GroupMessageMentionHandler.class).show(false);
         } else {
+            if (name.charAt(0) == '@') {
+                name = name.subSequence(1, name.length());
+            }
             List<Phone> phones = $(StoreHandler.class).getStore().box(Phone.class).query().
                     contains(Phone_.name, name.toString(), QueryBuilder.StringOrder.CASE_INSENSITIVE)
                     .build().find();
@@ -218,11 +226,43 @@ public class GroupMessagesHandler extends PoolMember {
         }
     }
 
+    private ImageSpan getImageSpan(String name) {
+        TextView textView = createContactTextView(name);
+        BitmapDrawable bitmapDrawable = convertViewToDrawable(textView);
+        bitmapDrawable.setBounds(0, 0, bitmapDrawable.getIntrinsicWidth(),bitmapDrawable.getIntrinsicHeight());
+        return new ImageSpan(bitmapDrawable);
+    }
+
+    private TextView createContactTextView(String text) {
+        TextView textView = new TextView($(ActivityHandler.class).getActivity());
+        textView.setText("@" + text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, $(ResourcesHandler.class).getResources().getDimension(R.dimen.groupMessageMentionTextSize));
+        textView.setTextColor($(ResourcesHandler.class).getResources().getColor(R.color.colorAccentLight));
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        return textView;
+    }
+
+    private BitmapDrawable convertViewToDrawable(View view) {
+        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        view.measure(spec, spec);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        Bitmap b = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        c.translate(-view.getScrollX(), -view.getScrollY());
+        view.draw(c);
+        view.setDrawingCacheEnabled(true);
+        Bitmap cacheBmp = view.getDrawingCache();
+        Bitmap viewBmp = cacheBmp.copy(Bitmap.Config.ARGB_8888, true);
+        view.destroyDrawingCache();
+        return new BitmapDrawable($(ResourcesHandler.class).getResources(), viewBmp);
+    }
+
     private CharSequence extractName(Editable text, int position) {
         if (position > 0 && position <= text.length()) {
             for (int i = position - 1; i >= 0; i--) {
                 if (text.charAt(i) == '@') {
-                    return text.subSequence(i + 1, position);
+                    return text.subSequence(i, position);
                 } else if (Character.isWhitespace(text.charAt(i))) {
                     return null;
                 }

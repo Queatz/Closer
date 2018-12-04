@@ -64,6 +64,7 @@
         android:imeOptions="actionGo"
         android:background="@null"
         android:selectAllOnFocus="true"
+        android:focusedByDefault="false"
         android:inputType="textShortMessage|textCapSentences"
         android:hint="@string/what_s_up"
         android:textColor="@color/text"

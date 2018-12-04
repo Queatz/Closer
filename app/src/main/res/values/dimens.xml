@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="padQuarter">2dp</dimen>
     <dimen name="padHalf">4dp</dimen>
     <dimen name="pad">8dp</dimen>
     <dimen name="padDouble">16dp</dimen>
+    <dimen name="padQuadruple">32dp</dimen>
     <dimen name="miniWindowHeight">350dp</dimen>
     <dimen name="miniWindowTopMargin">84dp</dimen>
     <dimen name="imageCorners">4dp</dimen>
@@ -19,6 +21,6 @@
     <dimen name="groupActionVerySmallTextSize">10sp</dimen>
     <dimen name="groupActionSmallTextSize">14sp</dimen>
     <dimen name="groupActionLargeTextSize">16sp</dimen>
-    <dimen name="padQuadruple">32dp</dimen>
+    <dimen name="groupMessageMentionTextSize">12sp</dimen>
     <dimen name="iconSizeSm">18dp</dimen>
 </resources>
