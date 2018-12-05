@@ -16,28 +16,24 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import closer.vlllage.com.closer.ui.InterceptableScrollView;
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.bubble.BubbleType;
+import closer.vlllage.com.closer.handler.bubble.MapBubble;
+import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
-import closer.vlllage.com.closer.handler.map.MapHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
-import closer.vlllage.com.closer.handler.data.SyncHandler;
-import closer.vlllage.com.closer.handler.bubble.BubbleType;
-import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.ui.InterceptableScrollView;
 
 import static android.text.format.DateUtils.DAY_IN_MILLIS;
 
 public class EventHandler extends PoolMember {
-    public void createNewEvent(final LatLng latLng) {
-        createNewEvent(latLng, true);
-    }
 
-    public void createNewEvent(final LatLng latLng, final boolean isPublic) {
+    public void createNewEvent(final LatLng latLng, final boolean isPublic, final OnEventCreatedListener onEventCreatedListener) {
         $(AlertHandler.class).make()
                 .setTheme(R.style.AppTheme_AlertDialog_Red)
                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.post_event))
@@ -129,7 +125,8 @@ public class EventHandler extends PoolMember {
                             viewHolder.eventName.getText().toString(),
                             viewHolder.eventPrice.getText().toString(),
                             event.startsAt.getTime(),
-                            event.endsAt.getTime());
+                            event.endsAt.getTime(),
+                            onEventCreatedListener);
                 })
                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.post_event))
                 .show();
@@ -147,7 +144,7 @@ public class EventHandler extends PoolMember {
         return new CreateEventViewState(startsAt, endsAt);
     }
 
-    private void createNewEvent(boolean isPublic, LatLng latLng, String name, String price, Date startsAt, Date endsAt) {
+    private void createNewEvent(boolean isPublic, LatLng latLng, String name, String price, Date startsAt, Date endsAt, OnEventCreatedListener onEventCreatedListener) {
         Event event = $(StoreHandler.class).create(Event.class);
         event.setName(name.trim());
         event.setAbout(price.trim());
@@ -158,9 +155,7 @@ public class EventHandler extends PoolMember {
         event.setEndsAt(endsAt);
         $(StoreHandler.class).getStore().box(Event.class).put(event);
         $(SyncHandler.class).sync(event);
-
-        MapBubble mapBubble = eventBubbleFrom(event);
-        $(MapHandler.class).centerMap(mapBubble.getLatLng());
+        onEventCreatedListener.onEventCreated(event);
     }
 
     public MapBubble eventBubbleFrom(Event event) {
@@ -203,5 +198,9 @@ public class EventHandler extends PoolMember {
             this.startsAt = startsAt;
             this.endsAt = endsAt;
         }
+    }
+
+    public interface OnEventCreatedListener {
+        void onEventCreated(Event event);
     }
 }

@@ -205,7 +205,7 @@ public class GroupActivity extends CircularRevealActivity {
                             $(EventHandler.class).createNewEvent(new LatLng(
                                     group.getLatitude(),
                                     group.getLongitude()
-                            ));
+                            ), group.isPublic(), this::showEventOnMap);
                         });
                     }
                 }

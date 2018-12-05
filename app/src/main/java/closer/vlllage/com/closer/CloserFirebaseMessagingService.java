@@ -34,7 +34,7 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
                                 data.get("groupId"));
 
                         app.$(RefreshHandler.class).refreshMyGroups();
-                        app.$(RefreshHandler.class).refreshMyMessages();
+                        app.$(RefreshHandler.class).refreshGroupMessages(data.get("groupId"));
                         break;
                     case "group.message":
                         if (!app.$(TopHandler.class).isGroupActive(data.get("groupId"))) {
@@ -46,7 +46,7 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
                                     data.get("passive"));
                         }
 
-                        app.$(RefreshHandler.class).refreshMyMessages();
+                        app.$(RefreshHandler.class).refreshGroupMessages(data.get("groupId"));
                         break;
                     case "refresh":
                         if (data.containsKey("what")) {

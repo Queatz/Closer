@@ -143,7 +143,10 @@ public class MapSlideFragment extends PoolFragment {
                                 });
                                 break;
                             case 2:
-                                $(EventHandler.class).createNewEvent(menuBubble.getLatLng());
+                                $(EventHandler.class).createNewEvent(menuBubble.getLatLng(), true, event -> $(MapHandler.class).centerMap(new LatLng(
+                                        event.getLatitude(),
+                                        event.getLongitude()
+                                )));
                                 break;
                         }
                     });
