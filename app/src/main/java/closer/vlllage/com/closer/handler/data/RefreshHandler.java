@@ -112,6 +112,11 @@ public class RefreshHandler extends PoolMember {
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
+    public void refreshGroupMessages(String groupId) {
+        $(DisposableHandler.class).add($(ApiHandler.class).getGroupMessages(groupId)
+                .subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
     public void refresh(Event event) {
         refreshObject(event, Event.class, Event_.id);
     }

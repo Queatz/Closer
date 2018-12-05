@@ -152,6 +152,7 @@ public class GroupHandler extends PoolMember {
             onGroupSet(group);
             groupChanged.onNext(group);
             setEventById(group.getEventId());
+            $(RefreshHandler.class).refreshGroupMessages(group.getId());
         }
 
         showGroupName(group);

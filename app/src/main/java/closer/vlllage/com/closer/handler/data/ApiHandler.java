@@ -145,6 +145,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().getGroupActionsNearGeo($(LatLngStr.class).from(latLng)));
     }
 
+    public Observable<List<GroupMessageResult>> getGroupMessages(String groupId) {
+        return uiThread(api.getBackend().getGroupMessages(groupId));
+    }
+
     public Observable<SuccessResult> setGroupActionPhoto(String groupActionId, String photo) {
         return uiThread(api.getBackend().setGroupActionPhoto(groupActionId, photo));
     }

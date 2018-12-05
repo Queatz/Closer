@@ -45,7 +45,7 @@ public class FloatingRecyclerView extends RecyclerView {
                 } else {
                     if (isSolidBackground) {
                         isSolidBackground = false;
-                        animateBackground(recyclerView, R.color.green_transparent);
+                        animateBackground(recyclerView, R.color.dark_transparent);
                     }
                 }
             }

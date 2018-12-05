@@ -73,6 +73,9 @@ public interface Backend {
     @POST("message")
     Observable<CreateResult> sendAreaMessage(@Query("geo") String latLng, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
 
+    @GET("group/{id}/messages")
+    Observable<List<GroupMessageResult>> getGroupMessages(String groupId);
+
     // Group
 
     @GET("group")

@@ -29,6 +29,7 @@
     <color name="red200">#EF9A9A</color>
     <color name="selectable">#BDBDBD</color>
     <color name="dark">#222222</color>
+    <color name="dark_transparent">#00222222</color>
     <color name="disabled">@color/selectable</color>
     <color name="highlight">#66ffffff</color>
     <color name="white_15">#33ffffff</color>
