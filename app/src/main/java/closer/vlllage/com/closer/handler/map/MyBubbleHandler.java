@@ -51,7 +51,6 @@ public class MyBubbleHandler extends PoolMember {
         if (myBubble == null) {
             myBubble = new MapBubble(latLng, $(AccountHandler.class).getName(), $(AccountHandler.class).getStatus());
             myBubble.setPinned(true);
-            myBubble.setCanProxy(false);
             myBubble.setAction($(ResourcesHandler.class).getResources().getString(R.string.update_status));
             updateActive($(AccountHandler.class).getActive());
         } else {
