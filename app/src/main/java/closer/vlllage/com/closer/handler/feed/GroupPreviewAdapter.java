@@ -130,7 +130,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             holder.replyMessage.removeTextChangedListener(holder.textWatcher);
         }
 
-        holder.replyMessage.setText($(GroupDraftHandler.class).getDraft(group));
+        holder.replyMessage.setText($(GroupMessageParseHandler.class).parseText($(GroupDraftHandler.class).getDraft(group)));
 
         holder.textWatcher = new TextWatcher() {
 

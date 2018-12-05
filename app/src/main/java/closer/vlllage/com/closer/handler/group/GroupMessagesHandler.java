@@ -102,7 +102,7 @@ public class GroupMessagesHandler extends PoolMember {
         updateSendButton();
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             if (replyMessage.getText().toString().isEmpty()) {
-                replyMessage.setText($(GroupDraftHandler.class).getDraft(group));
+                replyMessage.setText($(GroupMessageParseHandler.class).parseText($(GroupDraftHandler.class).getDraft(group)));
                 updateSendButton();
             }
         }, error -> $(DefaultAlerts.class).thatDidntWork()));
