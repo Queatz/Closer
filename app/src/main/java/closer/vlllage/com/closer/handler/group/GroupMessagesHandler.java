@@ -20,6 +20,7 @@ import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.helpers.TimeAgo;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -32,8 +33,6 @@ import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
-
-import static android.text.format.DateUtils.HOUR_IN_MILLIS;
 
 public class GroupMessagesHandler extends PoolMember {
 
@@ -172,9 +171,6 @@ public class GroupMessagesHandler extends PoolMember {
             }));
         });
 
-        Date thirySixHoursAgo = new Date();
-        thirySixHoursAgo.setTime(thirySixHoursAgo.getTime() - 36 * HOUR_IN_MILLIS);
-
         Group group = $(GroupHandler.class).getGroup();
 
         if (group == null) {
@@ -185,7 +181,7 @@ public class GroupMessagesHandler extends PoolMember {
                 .equal(GroupMessage_.to, group.getId());
 
         if (!group.isPublic()) {
-            queryBuilder.greater(GroupMessage_.time, thirySixHoursAgo);
+            queryBuilder.greater(GroupMessage_.time, $(TimeAgo.class).thirtySixHoursAgo());
         }
 
         $(DisposableHandler.class).add(queryBuilder

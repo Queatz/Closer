@@ -8,6 +8,8 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.helpers.TimeAgo;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Phone;
@@ -37,21 +39,20 @@ public class GroupMessageMentionHandler extends PoolMember {
             if (name.charAt(0) == '@') {
                 name = name.subSequence(1, name.length());
             }
-            List<Phone> phones = $(StoreHandler.class).getStore().box(Phone.class).query().
-                    contains(Phone_.name, name.toString(), QueryBuilder.StringOrder.CASE_INSENSITIVE)
-                    .build().find();
+            List<Phone> phones = $(StoreHandler.class).getStore().box(Phone.class).query()
+                    .contains(Phone_.name, name.toString(), QueryBuilder.StringOrder.CASE_INSENSITIVE)
+                    .greater(Phone_.updated, $(TimeAgo.class).oneMonthAgo())
+                    .sort($(SortHandler.class).sortPhones())
+                    .build()
+                    .find();
 
             if (phones.isEmpty()) {
                 show(false);
             } else {
                 show(true);
-                setItems(phones);
+                adapter.setItems(phones);
             }
         }
-    }
-
-    public void setItems(List<Phone> phones) {
-        adapter.setItems(phones);
     }
 
     public void show(boolean show) {
