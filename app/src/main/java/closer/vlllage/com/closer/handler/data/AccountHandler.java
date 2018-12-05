@@ -17,7 +17,7 @@ public class AccountHandler extends PoolMember {
     public static final String ACCOUNT_FIELD_GEO = "geo";
     public static final String ACCOUNT_FIELD_ACTIVE = "active";
 
-    private final PublishSubject<AccountChange> accountChanges = PublishSubject.create();
+    private final static PublishSubject<AccountChange> accountChanges = PublishSubject.create();
 
     public void updateGeo(LatLng latLng) {
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_GEO, latLng));
