@@ -132,10 +132,15 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
 
         holder.replyMessage.setText($(GroupDraftHandler.class).getDraft(group));
 
-
         holder.textWatcher = new TextWatcher() {
+
+            private boolean isDeleteMention;
+            private boolean shouldDeleteMention;
+
             @Override
             public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+                shouldDeleteMention = !isDeleteMention && after == 0 && holder.pool.$(GroupMessageParseHandler.class).isMentionSelected(holder.replyMessage);
+                isDeleteMention = false;
             }
 
             @Override
@@ -145,7 +150,12 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             @Override
             public void afterTextChanged(Editable text) {
                 $(GroupDraftHandler.class).saveDraft(group, text.toString());
-                holder.pool.$(GroupMessageMentionHandler.class).showSuggestionsForName($(GroupMessageParseHandler.class).extractName(text, holder.replyMessage.getSelectionStart()));
+                holder.pool.$(GroupMessageMentionHandler.class).showSuggestionsForName(holder.pool.$(GroupMessageParseHandler.class).extractName(text, holder.replyMessage.getSelectionStart()));
+
+                if (shouldDeleteMention) {
+                    isDeleteMention = true;
+                    holder.pool.$(GroupMessageParseHandler.class).deleteMention(holder.replyMessage);
+                }
             }
         };
 
