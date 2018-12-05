@@ -94,7 +94,23 @@ public class MessageDisplay extends PoolMember {
         }
 
         holder.name.setText($(NameHandler.class).getName(phone));
-        holder.message.setText(groupMessage.getText());
+        holder.message.setText($(GroupMessageParseHandler.class).parse(groupMessage.getText(), mention -> {
+            List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).find(Phone_.id, mention);
+            if (phoneList.isEmpty()) {
+                return $(ResourcesHandler.class).getResources().getString(R.string.unknown);
+            }
+            return $(NameHandler.class).getName(phoneList.get(0));
+        }, mention -> {
+            List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).find(Phone_.id, mention);
+            String name;
+            if (phoneList.isEmpty()) {
+                name = $(ResourcesHandler.class).getResources().getString(R.string.unknown);
+            } else {
+                name = $(NameHandler.class).getName(phoneList.get(0));
+            }
+
+            $(PhoneMessagesHandler.class).openMessagesWithPhone(mention, name, "");
+        }));
         holder.message.setAlpha(groupMessage.isLocalOnly() ? .5f : 1f);
     }
 

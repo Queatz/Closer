@@ -1,0 +1,105 @@
+package closer.vlllage.com.closer.handler.group;
+
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.TextView;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.pool.PoolMember;
+
+public class GroupMessageParseHandler extends PoolMember {
+
+    private Pattern mentionPattern = Pattern.compile("@[0-9]+");
+
+    public CharSequence parse(String groupMessage, MentionConverter mentionConverter, OnMentionClickListener onMentionClickListener) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(groupMessage);
+
+        Matcher matcher = mentionPattern.matcher(groupMessage);
+
+        while (matcher.find()) {
+            String match = matcher.group();
+            final String mention = match.substring(1);
+            ImageSpan span = makeImageSpan(mentionConverter.convert(mention));
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    onMentionClickListener.onMentionClick(mention);
+                }
+            };
+            builder.setSpan(span, matcher.start(), matcher.end(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(clickableSpan, matcher.start(), matcher.end(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return builder;
+    }
+
+    public ImageSpan makeImageSpan(String name) {
+        TextView textView = createContactTextView(name);
+        BitmapDrawable bitmapDrawable = convertViewToDrawable(textView);
+        bitmapDrawable.setBounds(0, 0, bitmapDrawable.getIntrinsicWidth(),bitmapDrawable.getIntrinsicHeight());
+        return new ImageSpan(bitmapDrawable);
+    }
+
+    public CharSequence extractName(Editable text, int position) {
+        if (position > 0 && position <= text.length()) {
+            for (int i = position - 1; i >= 0; i--) {
+                if (text.charAt(i) == '@') {
+                    return text.subSequence(i, position);
+                } else if (Character.isWhitespace(text.charAt(i))) {
+                    return null;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private TextView createContactTextView(String text) {
+        TextView textView = new TextView($(ActivityHandler.class).getActivity());
+        textView.setText("@" + text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, $(ResourcesHandler.class).getResources().getDimension(R.dimen.groupMessageMentionTextSize));
+        textView.setTextColor($(ResourcesHandler.class).getResources().getColor(R.color.colorAccentLight));
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        return textView;
+    }
+
+    private BitmapDrawable convertViewToDrawable(View view) {
+        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        view.measure(spec, spec);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        Bitmap b = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        c.translate(-view.getScrollX(), -view.getScrollY());
+        view.draw(c);
+        view.setDrawingCacheEnabled(true);
+        Bitmap cacheBmp = view.getDrawingCache();
+        Bitmap viewBmp = cacheBmp.copy(Bitmap.Config.ARGB_8888, true);
+        view.destroyDrawingCache();
+        return new BitmapDrawable($(ResourcesHandler.class).getResources(), viewBmp);
+    }
+
+    public interface MentionConverter {
+        String convert(String mention);
+    }
+
+    public interface OnMentionClickListener {
+        void onMentionClick(String mention);
+    }
+}
