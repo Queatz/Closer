@@ -14,19 +14,48 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.phone.NameHandler;
+import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 
 public class GroupMessageParseHandler extends PoolMember {
 
     private Pattern mentionPattern = Pattern.compile("@[0-9]+");
 
-    public CharSequence parse(String groupMessage, MentionConverter mentionConverter, OnMentionClickListener onMentionClickListener) {
+    public String parseString(String groupMessage) {
+        return parseString(groupMessage, getDefaultMentionConverter());
+    }
+
+    public String parseString(String groupMessage, MentionConverter mentionConverter) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(groupMessage);
+
+        Matcher matcher = mentionPattern.matcher(groupMessage);
+
+        while (matcher.find()) {
+            String match = matcher.group();
+            final String mention = match.substring(1);
+            builder.replace(matcher.start(), matcher.end(), "@" + mentionConverter.convert(mention));
+        }
+
+        return builder.toString();
+    }
+
+    public CharSequence parseText(String groupMessage) {
+        return parseText(groupMessage, getDefaultMentionConverter(), getDefaultMentionClickListener());
+    }
+
+    public CharSequence parseText(String groupMessage, MentionConverter mentionConverter, OnMentionClickListener onMentionClickListener) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append(groupMessage);
 
@@ -68,6 +97,30 @@ public class GroupMessageParseHandler extends PoolMember {
         }
 
         return null;
+    }
+
+    private MentionConverter getDefaultMentionConverter() {
+        return mention -> {
+            List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).find(Phone_.id, mention);
+            if (phoneList.isEmpty()) {
+                return $(ResourcesHandler.class).getResources().getString(R.string.unknown);
+            }
+            return $(NameHandler.class).getName(phoneList.get(0));
+        };
+    }
+
+    private OnMentionClickListener getDefaultMentionClickListener() {
+        return mention -> {
+            List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).find(Phone_.id, mention);
+            String name;
+            if (phoneList.isEmpty()) {
+                name = $(ResourcesHandler.class).getResources().getString(R.string.unknown);
+            } else {
+                name = $(NameHandler.class).getName(phoneList.get(0));
+            }
+
+            $(PhoneMessagesHandler.class).openMessagesWithPhone(mention, name, "");
+        };
     }
 
     private TextView createContactTextView(String text) {

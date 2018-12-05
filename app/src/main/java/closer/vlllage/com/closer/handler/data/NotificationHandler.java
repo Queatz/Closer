@@ -18,6 +18,7 @@ import closer.vlllage.com.closer.GroupActivity;
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
@@ -118,7 +119,7 @@ public class NotificationHandler extends PoolMember {
 
         show(contentIntent, null, null,
                 $(ResourcesHandler.class).getResources().getString(R.string.group_message_notification, messageFrom, groupName),
-                text,
+                $(GroupMessageParseHandler.class).parseString(text),
                 groupId + "/message", !Boolean.valueOf(isPassive));
     }
 
