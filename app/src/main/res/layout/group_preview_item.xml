@@ -79,6 +79,29 @@
         android:scrollbars="none"
         android:overScrollMode="never"/>
 
+    <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
+        android:id="@+id/mentionSuggestionsLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/pad"
+        android:paddingBottom="@dimen/pad"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintBottom_toTopOf="@+id/replyMessage"
+        app:layout_constraintTop_toBottomOf="@+id/messagesRecyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/mentionSuggestionRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/pad"
+            android:clipToPadding="false" />
+
+    </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
+
     <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/sendButton"
         android:layout_width="34dp"

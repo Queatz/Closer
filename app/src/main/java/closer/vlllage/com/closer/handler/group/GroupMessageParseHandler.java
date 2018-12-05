@@ -12,6 +12,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
@@ -76,6 +77,40 @@ public class GroupMessageParseHandler extends PoolMember {
         }
 
         return builder;
+    }
+
+    public void insertMention(EditText editText, Phone mention) {
+        CharSequence replaceString = extractName(editText.getText(), editText.getSelectionStart());
+
+        if (replaceString == null) {
+            replaceString = "";
+        }
+
+        editText.getText().replace(editText.getSelectionStart() - replaceString.length(), editText.getSelectionStart(), "@" + mention.getId());
+        editText.getText().setSpan(makeImageSpan(mention.getName()),
+                editText.getSelectionStart() - mention.getId().length() - 1, editText.getSelectionStart(),
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    public boolean isMentionSelected(EditText editText) {
+        Editable text = editText.getText();
+        ImageSpan[] styleSpans = text.getSpans(editText.getSelectionStart(), editText.getSelectionEnd(), ImageSpan.class);
+        return styleSpans.length > 0;
+    }
+
+    public boolean deleteMention(EditText editText) {
+        Editable text = editText.getText();
+        ImageSpan[] styleSpans = text.getSpans(editText.getSelectionStart(), editText.getSelectionEnd(), ImageSpan.class);
+
+        for(ImageSpan span : styleSpans) {
+            int start = text.getSpanStart(span);
+            int end = text.getSpanEnd(span);
+
+            editText.getText().replace(start, end, "");
+            return false;
+        }
+
+        return true;
     }
 
     public ImageSpan makeImageSpan(String name) {

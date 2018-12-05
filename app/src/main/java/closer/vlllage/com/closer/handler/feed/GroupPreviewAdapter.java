@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,8 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessageMentionHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
@@ -41,9 +45,11 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.pool.TempPool;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupDraftHandler;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.ui.CombinedRecyclerAdapter;
+import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
@@ -89,6 +95,9 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             holder.pool.$(PublicGroupFeedItemHandler.class).attach(holder.itemView);
             return;
         } else {
+            holder.pool.$set($(ApplicationHandler.class));
+            holder.pool.$set($(ActivityHandler.class));
+            holder.pool.$set($(ResourcesHandler.class));
             position--;
         }
 
@@ -116,6 +125,35 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
 
         holder.messagesRecyclerView.setAdapter(groupMessagesAdapter);
         holder.messagesRecyclerView.setLayoutManager(new LinearLayoutManager(holder.messagesRecyclerView.getContext(), LinearLayoutManager.VERTICAL, true));
+
+        if (holder.textWatcher != null) {
+            holder.replyMessage.removeTextChangedListener(holder.textWatcher);
+        }
+
+        holder.replyMessage.setText($(GroupDraftHandler.class).getDraft(group));
+
+
+        holder.textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                $(GroupDraftHandler.class).saveDraft(group, text.toString());
+                holder.pool.$(GroupMessageMentionHandler.class).showSuggestionsForName($(GroupMessageParseHandler.class).extractName(text, holder.replyMessage.getSelectionStart()));
+            }
+        };
+
+        holder.replyMessage.addTextChangedListener(holder.textWatcher);
+
+        holder.pool.$(GroupMessageMentionHandler.class).attach(holder.mentionSuggestionsLayout, holder.mentionSuggestionRecyclerView, mention -> {
+            holder.pool.$(GroupMessageParseHandler.class).insertMention(holder.replyMessage, mention);
+        });
 
         holder.replyMessage.setOnFocusChangeListener((view, focused) -> {
             if (focused) {
@@ -237,6 +275,10 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
         ImageButton sendButton;
         EditText replyMessage;
         ImageView backgroundPhoto;
+        MaxSizeFrameLayout mentionSuggestionsLayout;
+        RecyclerView mentionSuggestionRecyclerView;
+
+        TextWatcher textWatcher;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -245,6 +287,8 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
             sendButton = itemView.findViewById(R.id.sendButton);
             replyMessage = itemView.findViewById(R.id.replyMessage);
             backgroundPhoto = itemView.findViewById(R.id.backgroundPhoto);
+            mentionSuggestionsLayout = itemView.findViewById(R.id.mentionSuggestionsLayout);
+            mentionSuggestionRecyclerView = itemView.findViewById(R.id.mentionSuggestionRecyclerView);
         }
     }
 }

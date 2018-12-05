@@ -3,7 +3,6 @@ package closer.vlllage.com.closer.handler.group;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -30,7 +29,6 @@ import closer.vlllage.com.closer.store.models.GroupDraftHandler;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Phone;
-import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
@@ -67,6 +65,7 @@ public class GroupMessagesHandler extends PoolMember {
         groupMessagesAdapter.setOnEventClickListener(event -> {
             ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(GroupActivityTransitionHandler.class).showGroupForEvent(null, event));
         });
+
 
         this.replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {
             if (EditorInfo.IME_ACTION_GO == action) {
@@ -109,8 +108,14 @@ public class GroupMessagesHandler extends PoolMember {
         }, error -> $(DefaultAlerts.class).thatDidntWork()));
 
         this.replyMessage.addTextChangedListener(new TextWatcher() {
+
+            private boolean isDeleteMention;
+            private boolean shouldDeleteMention;
+
             @Override
             public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+                shouldDeleteMention = !isDeleteMention && after == 0 && $(GroupMessageParseHandler.class).isMentionSelected(GroupMessagesHandler.this.replyMessage);
+                isDeleteMention = false;
             }
 
             @Override
@@ -121,7 +126,12 @@ public class GroupMessagesHandler extends PoolMember {
             public void afterTextChanged(Editable text) {
                 updateSendButton();
                 $(GroupDraftHandler.class).saveDraft($(GroupHandler.class).getGroup(), text.toString());
-                showSuggestionsForName($(GroupMessageParseHandler.class).extractName(text, replyMessage.getSelectionStart()));
+                $(GroupMessageMentionHandler.class).showSuggestionsForName($(GroupMessageParseHandler.class).extractName(text, replyMessage.getSelectionStart()));
+
+                if (shouldDeleteMention) {
+                    isDeleteMention = true;
+                    $(GroupMessageParseHandler.class).deleteMention(GroupMessagesHandler.this.replyMessage);
+                }
             }
         });
 
@@ -186,36 +196,7 @@ public class GroupMessagesHandler extends PoolMember {
     }
 
     public void insertMention(Phone mention) {
-        CharSequence replaceString = $(GroupMessageParseHandler.class).extractName(replyMessage.getText(), replyMessage.getSelectionStart());
-
-        if (replaceString == null) {
-            replaceString = "";
-        }
-
-        replyMessage.getText().replace(replyMessage.getSelectionStart() - replaceString.length(), replyMessage.getSelectionStart(), "@" + mention.getId());
-        replyMessage.getText().setSpan($(GroupMessageParseHandler.class).makeImageSpan(mention.getName()),
-                replyMessage.getSelectionStart() - mention.getId().length() - 1, replyMessage.getSelectionStart(),
-                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
-
-    private void showSuggestionsForName(CharSequence name) {
-        if (name == null) {
-            $(GroupMessageMentionHandler.class).show(false);
-        } else {
-            if (name.charAt(0) == '@') {
-                name = name.subSequence(1, name.length());
-            }
-            List<Phone> phones = $(StoreHandler.class).getStore().box(Phone.class).query().
-                    contains(Phone_.name, name.toString(), QueryBuilder.StringOrder.CASE_INSENSITIVE)
-                    .build().find();
-
-            if (phones.isEmpty()) {
-                $(GroupMessageMentionHandler.class).show(false);
-            } else {
-                $(GroupMessageMentionHandler.class).show(true);
-                $(GroupMessageMentionHandler.class).setItems(phones);
-            }
-        }
+        $(GroupMessageParseHandler.class).insertMention(replyMessage, mention);
     }
 
     private void updateSendButton() {
