@@ -45,6 +45,14 @@ public class DefaultAlerts extends PoolMember {
                 .show();
     }
 
+    public void message(String message, AlertConfig.ButtonCallback buttonCallback) {
+        $(AlertHandler.class).make()
+                .setMessage(message)
+                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.ok))
+                .setPositiveButtonCallback(buttonCallback)
+                .show();
+    }
+
     public void message(String title, String message) {
         $(AlertHandler.class).make()
                 .setTitle(title)

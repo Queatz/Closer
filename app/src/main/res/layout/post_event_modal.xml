@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:paddingRight="24dp"
             android:paddingLeft="24dp"
-            android:padding="@dimen/padDouble"
+            android:paddingTop="@dimen/padDouble"
+            android:paddingBottom="@dimen/padDouble"
             android:text="@string/is_public"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -55,7 +56,7 @@
                 android:padding="24dp"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/red"
-                android:text="Today"/>
+                android:text="@string/today"/>
 
         </RelativeLayout>
 
@@ -94,6 +95,17 @@
             android:layout_height="wrap_content"
             android:headerBackground="@color/red"
             android:numbersSelectorColor="@color/red" />
+
+        <Switch
+            android:id="@+id/isNextDaySwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="24dp"
+            android:paddingLeft="24dp"
+            android:paddingTop="@dimen/padDouble"
+            android:paddingBottom="@dimen/padDouble"
+            android:text="@string/is_next_day"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
             android:id="@+id/price"

@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
-import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
@@ -58,34 +57,14 @@ public class MessageDisplay extends PoolMember {
         holder.action.setOnClickListener(view -> $(PhoneMessagesHandler.class).openMessagesWithPhone(phone.getId(), contactName, comment));
     }
 
-    public void displayGroupMessage(GroupMessagesAdapter.GroupMessageViewHolder holder, boolean isReversed, GroupMessage groupMessage, List<GroupMessage> groupMessages, int position, int itemCount) {
-        int pairIndex = position + (isReversed ? -1 : 1);
-        boolean validIndex = pairIndex >= 0 && pairIndex < itemCount;
-
-        boolean previousMessageIsSameContact = validIndex &&
-                groupMessages.get(pairIndex).getAttachment() == null &&
-                groupMessages.get(pairIndex).getFrom() != null &&
-                groupMessages.get(pairIndex).getFrom().equals(groupMessage.getFrom());
-
-        boolean previousMessageIsSameGroup = validIndex &&
-                groupMessages.get(pairIndex).getTo() != null &&
-                groupMessages.get(pairIndex).getTo().equals(groupMessage.getTo());
-
-        boolean previousMessageIsSameTime = validIndex &&
-                groupMessages.get(pairIndex).getAttachment() == null &&
-                getTimeString(groupMessages.get(pairIndex).getTime()).equals(getTimeString(groupMessage.getTime()));
-
+    public void displayGroupMessage(GroupMessagesAdapter.GroupMessageViewHolder holder, GroupMessage groupMessage) {
         holder.action.setVisibility(View.GONE);
-        holder.name.setVisibility(previousMessageIsSameContact && previousMessageIsSameGroup ? View.GONE : View.VISIBLE);
+        holder.name.setVisibility(View.VISIBLE);
         holder.message.setVisibility(View.VISIBLE);
         holder.message.setGravity(Gravity.START);
 
-        if (previousMessageIsSameTime) {
-            holder.time.setVisibility(View.GONE);
-        } else {
-            holder.time.setVisibility(View.VISIBLE);
-            holder.time.setText(getTimeString(groupMessage.getTime()));
-        }
+        holder.time.setVisibility(View.VISIBLE);
+        holder.time.setText(getTimeString(groupMessage.getTime()));
 
         Phone phone = null;
 
@@ -213,11 +192,11 @@ public class MessageDisplay extends PoolMember {
 
     private String getTimeString(Date date) {
         if (date == null) {
-            return "";
+            return "-";
         }
 
         if (new Date().getTime() - date.getTime() < 5 * MINUTE_IN_MILLIS) {
-            return "";
+            return $(ResourcesHandler.class).getResources().getString(R.string.just_now);
         }
 
         if (DateUtils.isToday(date.getTime())) {

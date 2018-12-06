@@ -47,5 +47,6 @@
     <color name="white">#ffffff</color>
     <color name="white_transparent">#00ffffff</color>
     <color name="nothingness">#10413d</color>
+    <color name="dim">#40DFDFDF</color>
     <color name="black_transparent">#00000000</color>
 </resources>

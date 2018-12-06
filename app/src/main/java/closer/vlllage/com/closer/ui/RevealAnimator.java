@@ -35,6 +35,10 @@ public class RevealAnimator {
             animator.cancel();
         }
 
+        if (!container.isAttachedToWindow()) {
+            return;
+        }
+
         if (show) {
             animator = ValueAnimator.ofInt(0, initialHeight);
             animator.setDuration(500);

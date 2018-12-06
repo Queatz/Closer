@@ -195,4 +195,6 @@
     <string name="host_event">Host event</string>
     <string name="share_your_location">Share your location</string>
     <string name="about_you">About you</string>
+    <string name="is_next_day">Next day</string>
+    <string name="today">Today</string>
 </resources>

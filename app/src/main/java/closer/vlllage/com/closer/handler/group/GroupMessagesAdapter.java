@@ -131,7 +131,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                 e.printStackTrace();
             }
         } else {
-            $(MessageDisplay.class).displayGroupMessage(holder, isReversed, groupMessage, groupMessages, position, getItemCount());
+            $(MessageDisplay.class).displayGroupMessage(holder, groupMessage);
         }
     }
 

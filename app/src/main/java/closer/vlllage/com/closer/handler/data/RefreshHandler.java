@@ -131,6 +131,7 @@ public class RefreshHandler extends PoolMember {
                 .equal(idProperty, object.getId())
                 .build()
                 .subscribe()
+                .single()
                 .on(AndroidScheduler.mainThread()))
                 .observer(results -> {
                     if (!results.isEmpty()) {

@@ -136,9 +136,10 @@ public class GroupContactsHandler extends PoolMember {
     private void leaveGroup(Group group) {
         $(DisposableHandler.class).add($(ApiHandler.class).leaveGroup(group.getId()).subscribe(successResult -> {
             if (successResult.success) {
-                $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()));
+                $(DefaultAlerts.class).message(
+                        $(ResourcesHandler.class).getResources().getString(R.string.group_no_more, group.getName()),
+                        ignored -> $(ActivityHandler.class).getActivity().finish());
                 $(RefreshHandler.class).refreshMyGroups();
-                $(ActivityHandler.class).getActivity().finish();
             } else {
                 $(DefaultAlerts.class).thatDidntWork();
             }

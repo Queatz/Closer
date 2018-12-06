@@ -141,6 +141,10 @@ public class EventHandler extends PoolMember {
         endsAt.set(viewHolder.datePicker.getYear(), viewHolder.datePicker.getMonth(), viewHolder.datePicker.getDayOfMonth(),
                 viewHolder.endsAtTimePicker.getCurrentHour(), viewHolder.endsAtTimePicker.getCurrentMinute(), 0);
 
+        if (viewHolder.isNextDaySwitch.isChecked()) {
+            endsAt.add(Calendar.DATE, 1);
+        }
+
         return new CreateEventViewState(startsAt, endsAt);
     }
 
@@ -168,6 +172,7 @@ public class EventHandler extends PoolMember {
 
     private static class CreateEventViewHolder {
         Switch isPublicSwitch;
+        Switch isNextDaySwitch;
         TimePicker startsAtTimePicker;
         TimePicker endsAtTimePicker;
         DatePicker datePicker;
@@ -179,6 +184,7 @@ public class EventHandler extends PoolMember {
 
         CreateEventViewHolder(View view) {
             this.isPublicSwitch = view.findViewById(R.id.isPublicSwitch);
+            this.isNextDaySwitch = view.findViewById(R.id.isNextDaySwitch);
             this.startsAtTimePicker = view.findViewById(R.id.startsAt);
             this.endsAtTimePicker = view.findViewById(R.id.endsAt);
             this.datePicker = view.findViewById(R.id.datePicker);
@@ -186,7 +192,7 @@ public class EventHandler extends PoolMember {
             this.changeDateButton = view.findViewById(R.id.changeDate);
             this.eventName = view.findViewById(R.id.name);
             this.eventPrice = view.findViewById(R.id.price);
-            scrollView = (InterceptableScrollView) view;
+            this.scrollView = (InterceptableScrollView) view;
         }
     }
 
