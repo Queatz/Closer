@@ -53,25 +53,6 @@
             android:autoLink="all"
             tools:text="Where are we going this weekend?" />
 
-        <TextView
-            android:id="@+id/action"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:paddingLeft="@dimen/padDouble"
-            android:paddingRight="@dimen/padDouble"
-            android:gravity="center_vertical"
-            android:elevation="2dp"
-            android:textAllCaps="true"
-            android:background="@drawable/clickable_accent"
-            android:textColor="@color/text"
-            android:textStyle="bold"
-            android:textSize="10sp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="Show Location" />
-
     </LinearLayout>
 
     <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
@@ -220,5 +201,27 @@
             tools:text="8:45pm" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/action"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="@dimen/pad"
+        android:layout_marginBottom="@dimen/padHalf"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingEnd="@dimen/padDouble"
+        android:gravity="center_vertical"
+        android:elevation="2dp"
+        android:textAllCaps="true"
+        android:background="@drawable/clickable_accent"
+        android:textColor="@color/text"
+        android:textStyle="bold"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@+id/timeLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Show Location" />
 
 </android.support.constraint.ConstraintLayout>
