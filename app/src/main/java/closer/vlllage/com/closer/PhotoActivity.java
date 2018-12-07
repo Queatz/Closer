@@ -62,6 +62,7 @@ public class PhotoActivity extends PoolActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
         photo = findViewById(R.id.photo);
+        photo.setMaximumScale(8f);
 
         if (getIntent() != null) {
             String photoUrl = getIntent().getStringExtra(EXTRA_PHOTO);
