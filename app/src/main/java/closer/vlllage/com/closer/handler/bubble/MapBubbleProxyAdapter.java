@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -66,7 +65,7 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
                     if (group.getPhoto() != null) {
                         holder.photo.setColorFilter(null);
                         holder.photo.setImageTintList(ColorStateList.valueOf($(ResourcesHandler.class).getResources().getColor(android.R.color.transparent)));
-                        Picasso.get()
+                        $(ImageHandler.class).get()
                                 .load(group.getPhoto() + "?s=32")
                                 .fit()
                                 .transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))

@@ -6,9 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Group;
@@ -35,7 +34,7 @@ public class MapBubblePhysicalGroupView extends PoolMember {
                 size = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.physicalGroupPhoto);
                 photo.setColorFilter(null);
                 photo.setImageTintList(ColorStateList.valueOf($(ResourcesHandler.class).getResources().getColor(android.R.color.transparent)));
-                Picasso.get()
+                $(ImageHandler.class).get()
                         .load(group.getPhoto() + "?s=32")
                         .fit()
                         .transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))

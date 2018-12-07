@@ -5,13 +5,13 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.google.gson.JsonObject;
-import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
@@ -168,8 +168,8 @@ public class MessageDisplay extends PoolMember {
         holder.action.setVisibility(View.GONE);// or Share / save photo?
         holder.photo.setVisibility(View.VISIBLE);
         holder.photo.setOnClickListener(view -> $(PhotoActivityTransitionHandler.class).show(view, photo));
-        Picasso.get().cancelRequest(holder.photo);
-        Picasso.get().load(photo).transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.imageCorners), 0)).into(holder.photo);
+        $(ImageHandler.class).get().cancelRequest(holder.photo);
+        $(ImageHandler.class).get().load(photo).transform(new RoundedCornersTransformation($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.imageCorners), 0)).into(holder.photo);
     }
 
     public void displayFallback(GroupMessagesAdapter.GroupMessageViewHolder holder, GroupMessage groupMessage) {

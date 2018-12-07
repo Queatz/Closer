@@ -15,8 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +32,7 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.DistanceHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
@@ -200,11 +199,11 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
 
         holder.itemView.setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
 
-        Picasso.get().cancelRequest(holder.backgroundPhoto);
+        $(ImageHandler.class).get().cancelRequest(holder.backgroundPhoto);
         if (group.getPhoto() != null) {
             holder.backgroundPhoto.setVisibility(View.VISIBLE);
             holder.backgroundPhoto.setImageDrawable(null);
-            Picasso.get().load(group.getPhoto() + "?s=32")
+            $(ImageHandler.class).get().load(group.getPhoto() + "?s=32")
                     .noPlaceholder()
                     .transform(new BlurTransformation($(ActivityHandler.class).getActivity(), 2))
                     .into(holder.backgroundPhoto);

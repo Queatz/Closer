@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.List;
@@ -43,6 +42,7 @@ import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.helpers.OutboundHandler;
@@ -327,10 +327,10 @@ public class GroupActivity extends CircularRevealActivity {
         if (group.getPhoto() != null) {
             backgroundPhoto.setVisibility(View.VISIBLE);
             backgroundPhoto.setImageDrawable(null);
-            Picasso.get().load(group.getPhoto() + "?s=32").transform(new BlurTransformation(this, 2)).into(backgroundPhoto, new Callback() {
+            $(ImageHandler.class).get().load(group.getPhoto() + "?s=32").transform(new BlurTransformation(this, 2)).into(backgroundPhoto, new Callback() {
                 @Override
                 public void onSuccess() {
-                    Picasso.get().load(group.getPhoto() + "?s=512").noPlaceholder().into(backgroundPhoto);
+                    $(ImageHandler.class).get().load(group.getPhoto() + "?s=512").noPlaceholder().into(backgroundPhoto);
                 }
 
                 @Override

@@ -11,13 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.StringHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -107,7 +106,7 @@ public class GroupActionAdapter extends PoolRecyclerAdapter<GroupActionAdapter.G
                 holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, $(ResourcesHandler.class).getResources().getDimension(R.dimen.groupActionSmallTextSize));
                 holder.actionName.setBackgroundResource(R.color.black_25);
                 holder.photo.setImageDrawable(null);
-                Picasso.get().load(groupAction.getPhoto().split("\\?")[0] + "?s=256")
+                $(ImageHandler.class).get().load(groupAction.getPhoto().split("\\?")[0] + "?s=256")
                         .noPlaceholder()
                         .into(holder.photo);
             } else {
