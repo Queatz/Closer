@@ -28,6 +28,10 @@ public class DefaultAlerts extends PoolMember {
     }
 
     public void longMessage(@StringRes Integer title, @StringRes int message) {
+        longMessage(title, message);
+    }
+
+    public void longMessage(@StringRes Integer title, CharSequence message) {
         $(AlertHandler.class).make()
                 .setTitle(title == null ? null : $(ResourcesHandler.class).getResources().getString(title))
                 .setLayoutResId(R.layout.long_message_modal)

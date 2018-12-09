@@ -99,14 +99,17 @@ public class GroupMessageParseHandler extends PoolMember {
     }
 
     public boolean deleteMention(EditText editText) {
+        if (editText.getSelectionStart() <= 0) return true;
+
         Editable text = editText.getText();
-        ImageSpan[] styleSpans = text.getSpans(editText.getSelectionStart(), editText.getSelectionEnd(), ImageSpan.class);
+        ImageSpan[] styleSpans = text.getSpans(editText.getSelectionStart() - 1, editText.getSelectionEnd() - 1, ImageSpan.class);
 
         for(ImageSpan span : styleSpans) {
             int start = text.getSpanStart(span);
             int end = text.getSpanEnd(span);
 
-            editText.getText().replace(start, end, "");
+            editText.getText().delete(start, end);
+            editText.setSelection(start);
             return false;
         }
 

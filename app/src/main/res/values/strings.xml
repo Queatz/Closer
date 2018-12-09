@@ -103,13 +103,13 @@
     <string name="enable_contacts_permission_rationale">Open your system settings for Closer, tap on Permissions, and then turn on Contacts.</string>
     <string name="show_help">Show help</string>
     <string name="help">Help</string>
-    <string name="help_message">Thanks for using Closer!\n\n
-        Most importantly, Closer is all about getting even closer to your current friends.\n\n
-        <b>Verify your number</b> to be automatically added to any groups you\'ve already been invited to.\n\n
-        <b>Add your own groups,</b> invite your friends, and make stuff happen.\n\n
-        <b>Blue groups</b> are just for you and your friends.  Feel free to search for public groups as well, which appear in green.\n\n
-        <b>To leave a group,</b> simply press and hold on the group\'s name. You can do the same with this help bubble.
-    </string>
+    <string name="help_message_html"><![CDATA[Thanks for using Closer!<br /><br />
+        Closer is all about getting even closer and closer to your friends.<br /><br />
+        <b>Verify your number</b> to be automatically added to any groups you\'ve already been invited to.<br /><br />
+        <b>Add your own groups,</b> invite your friends, and make stuff happen.<br /><br />
+        <span style="color:#2196F3"><b>Blue</b></span> groups are private.<br /><br /><span style="color:#8BC34A"><b>Green</b></span> groups are public.<br /><br /><span style="color:#9c27b0"><b>Purple</b></span> groups are physical hangouts.<br /><br /><span style="color:#f44336"><b>Red</b></span> groups are events.<br /><br />
+        Enjoy!
+    ]]></string>
     <string name="you_hid_the_help_bubble">Congrats, you hid the help bubble!</string>
     <string name="search_public_groups">Public groups</string>
     <string name="public_groups">Public groups</string>

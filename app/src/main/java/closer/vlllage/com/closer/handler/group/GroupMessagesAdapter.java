@@ -110,6 +110,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             toggleMessageActionLayout(holder);
         });
 
+        holder.messageActionLayout.setVisibility(View.GONE);
+
         if (groupMessage.getAttachment() != null) {
             try {
                 JsonObject jsonObject = $(JsonHandler.class).from(groupMessage.getAttachment(), JsonObject.class);
