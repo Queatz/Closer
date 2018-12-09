@@ -25,7 +25,7 @@
     </closer.vlllage.com.closer.ui.ScrollStopper>
 
     <View
-        android:layout_width="@dimen/pad"
+        android:layout_width="@dimen/padDouble"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -33,7 +33,7 @@
         android:clickable="true"/>
 
     <View
-        android:layout_width="@dimen/pad"
+        android:layout_width="@dimen/padDouble"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

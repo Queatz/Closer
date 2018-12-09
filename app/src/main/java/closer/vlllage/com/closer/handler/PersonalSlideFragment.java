@@ -123,6 +123,8 @@ public class PersonalSlideFragment extends PoolFragment {
 
         yourName.setOnClickListener(v -> $(SetNameHandler.class).modifyName());
 
+        yourName.requestFocus();
+
         return view;
     }
 

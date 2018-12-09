@@ -109,7 +109,6 @@ public class AlertConfig {
         return textView;
     }
 
-
     public AlertConfig setTextView(Integer textView, OnTextViewSubmitCallback onTextViewSubmitCallback) {
         this.textView = textView;
         this.onTextViewSubmitCallback = onTextViewSubmitCallback;

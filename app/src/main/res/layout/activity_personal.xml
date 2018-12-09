@@ -30,6 +30,7 @@
         android:background="@drawable/clickable_light"
         android:textColor="@color/text"
         android:gravity="start"
+        android:focusedByDefault="true"
         android:textAppearance="?android:textAppearanceMedium"
         android:drawableStart="@drawable/ic_person_black_24dp"
         android:drawableTint="@color/text"

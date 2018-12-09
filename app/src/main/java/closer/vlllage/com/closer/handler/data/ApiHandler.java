@@ -129,6 +129,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().setGroupPhoto(groupId, photo));
     }
 
+    public Observable<SuccessResult> setGroupAbout(String groupId, String about) {
+        return uiThread(api.getBackend().setGroupAbout(groupId, about));
+    }
+
     public Observable<SuccessResult> removeGroupAction(String groupActionId) {
         return uiThread(api.getBackend().removeGroupAction(groupActionId));
     }

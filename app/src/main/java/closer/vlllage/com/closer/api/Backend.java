@@ -111,6 +111,9 @@ public interface Backend {
     @POST("group/{id}")
     Observable<SuccessResult> setGroupPhoto(@Path("id") String groupId, @Query("photo") String photo);
 
+    @POST("group/{id}")
+    Observable<SuccessResult> setGroupAbout(@Path("id") String groupId, @Query("about") String about);
+
     // Group Action
 
     @POST("action/{id}/delete")

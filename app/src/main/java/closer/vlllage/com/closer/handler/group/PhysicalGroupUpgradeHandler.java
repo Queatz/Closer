@@ -58,6 +58,21 @@ public class PhysicalGroupUpgradeHandler extends PoolMember {
         ));
     }
 
+    public void setAbout(Group group, String about, @NonNull OnGroupUpdateListener onGroupUpdateListener) {
+        $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class).setGroupAbout(group.getId(), about).subscribe(
+                successResult -> {
+                    if (successResult.success) {
+                        group.setAbout(about);
+                        $(StoreHandler.class).getStore().box(Group.class).put(group);
+                        onGroupUpdateListener.onGroupUpdate(group);
+                    } else {
+                        $(DefaultAlerts.class).thatDidntWork();
+                    }
+                },
+                error -> $(DefaultAlerts.class).thatDidntWork()
+        ));
+    }
+
     public interface OnGroupUpdateListener {
         void onGroupUpdate(Group group);
     }

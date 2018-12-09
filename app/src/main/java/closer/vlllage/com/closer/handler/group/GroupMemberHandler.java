@@ -2,16 +2,20 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
+import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
+import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.InstallShortcutHandler;
 import closer.vlllage.com.closer.handler.helpers.MenuHandler;
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -84,6 +88,25 @@ public class GroupMemberHandler extends PoolMember {
                 new MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut, () -> {
                     if (group != null) {
                         $(InstallShortcutHandler.class).installShortcut(group);
+                    }
+                }),
+                new MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background, () -> {
+                    if (group != null) {
+                        $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
+                        });
+                    }
+                }),
+                new MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.edit_about_group, () -> {
+                    if (group != null) {
+                        $(AlertHandler.class).make()
+                                .setTitle($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)))
+                                .setLayoutResId(R.layout.create_public_group_modal)
+                                .setTextView(R.id.input, about -> {
+                                    $(PhysicalGroupUpgradeHandler.class).setAbout(group, about, updateGroup -> {});
+                                })
+                                .setOnAfterViewCreated((alert, view) -> ((TextView) view.findViewById(alert.getTextViewId())).setText(group.getAbout()))
+                                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.edit_about_group))
+                                .show();
                     }
                 })
         );

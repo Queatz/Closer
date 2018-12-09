@@ -197,4 +197,6 @@
     <string name="about_you">About you</string>
     <string name="is_next_day">Next day</string>
     <string name="today">Today</string>
+    <string name="edit_about_group">Update about group</string>
+    <string name="update_background">Update background</string>
 </resources>

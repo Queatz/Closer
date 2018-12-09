@@ -125,6 +125,31 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/groupName" />
 
+        <TextView
+            android:id="@+id/peopleInGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/clickable_light"
+            android:clickable="true"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingLeft="@dimen/padDouble"
+            android:paddingRight="@dimen/padDouble"
+            android:paddingBottom="@dimen/pad"
+            android:paddingTop="@dimen/padHalf"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            tools:text="Jacob, Bun, Mai, Phoung (invited), Le My, Stella"
+            android:textColor="@color/text"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupDetails" />
+
         <LinearLayout
             android:id="@+id/eventToolbar"
             android:layout_width="match_parent"
@@ -136,7 +161,7 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupDetails">
+            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup">
             <Button
                 android:id="@+id/actionShare"
                 android:layout_width="wrap_content"
@@ -237,31 +262,6 @@
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/peopleInGroup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/clickable_light"
-            android:clickable="true"
-            android:ellipsize="marquee"
-            android:gravity="center_horizontal"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingLeft="@dimen/padDouble"
-            android:paddingRight="@dimen/padDouble"
-            android:paddingBottom="@dimen/pad"
-            android:paddingTop="@dimen/padHalf"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            tools:text="Jacob, Bun, Mai, Phoung (invited), Le My, Stella"
-            android:textColor="@color/text"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventToolbar" />
 
         <ImageButton
             android:id="@+id/closeButton"
@@ -451,7 +451,7 @@
             app:layout_constraintBottom_toTopOf="@+id/actionFrameLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup" />
+            app:layout_constraintTop_toBottomOf="@+id/eventToolbar" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/shareWithRecyclerView"
@@ -463,7 +463,7 @@
             app:layout_constraintBottom_toTopOf="@+id/actionFrameLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup" />
+            app:layout_constraintTop_toBottomOf="@+id/eventToolbar" />
 
         <EditText
             android:id="@+id/searchContacts"
@@ -500,7 +500,7 @@
             app:layout_constraintBottom_toTopOf="@+id/searchContacts"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup"
+            app:layout_constraintTop_toBottomOf="@+id/eventToolbar"
             android:visibility="gone" />
 
         <Button style="@style/Widget.AppCompat.Button.Borderless"
@@ -510,7 +510,7 @@
             app:layout_constraintBottom_toTopOf="@+id/searchContacts"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup"
+            app:layout_constraintTop_toBottomOf="@+id/eventToolbar"
             android:paddingLeft="@dimen/padDouble"
             android:paddingRight="@dimen/padDouble"
             android:visibility="gone"
