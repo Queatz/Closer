@@ -13,6 +13,7 @@ public class RevealAnimator {
     private ValueAnimator animator;
     private int initialHeight;
     private MaxSizeFrameLayout container;
+    private View.OnAttachStateChangeListener attachListener;
 
     public RevealAnimator(@NonNull MaxSizeFrameLayout container, int initialHeight) {
         this.initialHeight = initialHeight;
@@ -36,6 +37,23 @@ public class RevealAnimator {
         }
 
         if (!container.isAttachedToWindow()) {
+            if (attachListener == null) {
+                attachListener = new View.OnAttachStateChangeListener() {
+                    @Override
+                    public void onViewAttachedToWindow(View view) {
+                        show(show, immediate);
+                        container.removeOnAttachStateChangeListener(attachListener);
+                    }
+
+                    @Override
+                    public void onViewDetachedFromWindow(View v) {
+
+                    }
+                };
+            }
+
+            container.addOnAttachStateChangeListener(attachListener);
+
             return;
         }
 

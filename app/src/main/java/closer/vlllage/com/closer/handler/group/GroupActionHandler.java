@@ -28,6 +28,7 @@ public class GroupActionHandler extends PoolMember {
 
     private RevealAnimator animator;
     private DataSubscription groupActionsDisposable;
+    private boolean isShowing;
 
     public void attach(MaxSizeFrameLayout container, RecyclerView actionRecyclerView) {
         animator = new RevealAnimator(container, (int) ($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f));
@@ -45,12 +46,8 @@ public class GroupActionHandler extends PoolMember {
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .observer(groupActions -> {
-                        boolean wasEmpty = $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0;
                         $(GroupActionRecyclerViewHandler.class).getAdapter().setGroupActions(groupActions);
-                        boolean isEmpty = $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0;
-                        if (isEmpty != wasEmpty) {
-                            show(!isEmpty, true);
-                        }
+                        show(!groupActions.isEmpty(), true);
                     });
 
             $(DisposableHandler.class).add(groupActionsDisposable);
@@ -75,6 +72,12 @@ public class GroupActionHandler extends PoolMember {
         if ($(GroupActionRecyclerViewHandler.class).getAdapter() != null && $(GroupActionRecyclerViewHandler.class).getAdapter().getItemCount() == 0) {
             show = false;
         }
+
+        if (isShowing == show) {
+            return;
+        }
+
+        isShowing = show;
 
         animator.show(show, immediate);
     }
