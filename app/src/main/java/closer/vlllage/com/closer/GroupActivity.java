@@ -168,6 +168,11 @@ public class GroupActivity extends CircularRevealActivity {
             cancelShare();
         });
 
+        $(DisposableHandler.class).add($(GroupHandler.class).onGroupUpdated().subscribe(group -> {
+            setGroupBackground(group);
+            refreshPhysicalGroupActions(group);
+        }));
+
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             findViewById(R.id.backgroundColor).setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
 

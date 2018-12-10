@@ -33,7 +33,9 @@ import closer.vlllage.com.closer.store.models.GroupInvite;
 import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
+import io.objectbox.reactive.DataSubscription;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 public class GroupHandler extends PoolMember {
 
@@ -43,9 +45,11 @@ public class GroupHandler extends PoolMember {
     private Group group;
     private GroupContact groupContact;
     private BehaviorSubject<Group> groupChanged = BehaviorSubject.create();
+    private PublishSubject<Group> groupUpdated = PublishSubject.create();
     private BehaviorSubject<Event> eventChanged = BehaviorSubject.create();
     private List<String> contactNames = new ArrayList<>();
     private List<String> contactInvites = new ArrayList<>();
+    private DataSubscription groupDataSubscription;
 
     public void attach(TextView groupName, TextView peopleInGroup, View settingsButton) {
         this.groupName = groupName;
@@ -132,7 +136,6 @@ public class GroupHandler extends PoolMember {
             peopleInGroup.setVisibility(View.VISIBLE);
 
             List<String> names = new ArrayList<>();
-
             names.addAll(contactNames);
             names.addAll(contactInvites);
 
@@ -148,11 +151,29 @@ public class GroupHandler extends PoolMember {
     private void setGroup(Group group) {
         this.group = group;
 
+        if (groupDataSubscription != null) {
+            $(DisposableHandler.class).dispose(groupDataSubscription);
+        }
+
         if (group != null) {
             onGroupSet(group);
             groupChanged.onNext(group);
             setEventById(group.getEventId());
             $(RefreshHandler.class).refreshGroupMessages(group.getId());
+
+            groupDataSubscription = $(StoreHandler.class).getStore().box(Group.class).query()
+                    .equal(Group_.id, group.getId())
+                    .build()
+                    .subscribe()
+                    .onlyChanges()
+                    .on(AndroidScheduler.mainThread())
+                    .observer(groups -> {
+                        if (groups.isEmpty()) return;
+                        redrawContacts();
+                        groupUpdated.onNext(groups.get(0));
+                    });
+
+            $(DisposableHandler.class).add(groupDataSubscription);
         }
 
         showGroupName(group);
@@ -196,6 +217,10 @@ public class GroupHandler extends PoolMember {
 
     public BehaviorSubject<Group> onGroupChanged() {
         return groupChanged;
+    }
+
+    public PublishSubject<Group> onGroupUpdated() {
+        return groupUpdated;
     }
 
     public BehaviorSubject<Event> onEventChanged() {
