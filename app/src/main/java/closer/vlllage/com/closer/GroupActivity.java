@@ -134,8 +134,8 @@ public class GroupActivity extends CircularRevealActivity {
         $(GroupHandler.class).attach(groupName, peopleInGroup, findViewById(R.id.settingsButton));
         handleIntent(getIntent());
 
-        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
         $(GroupActionHandler.class).attach(actionFrameLayout, findViewById(R.id.actionRecyclerView));
+        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
         $(GroupMessageMentionHandler.class).attach(mentionSuggestionsLayout, findViewById(R.id.mentionSuggestionRecyclerView), mention -> {
             $(GroupMessagesHandler.class).insertMention(mention);
         });
