@@ -141,7 +141,7 @@
     <string name="enable_contacts_permission">Enable contacts permission</string>
     <string name="photo">Photo</string>
     <string name="talk">Talk</string>
-    <string name="talk_here">Chat at this location…</string>
+    <string name="talk_here">Chat here…</string>
     <string name="settings">Settings</string>
     <string name="event_must_not_end_before_it_starts">Event must not end before it starts</string>
     <string name="set_background">Set background</string>

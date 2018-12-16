@@ -73,12 +73,11 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     }
 
     public void centerMap(LatLng latLng) {
-        if (map == null) {
-            centerOnMapLoad = latLng;
-            return;
-        }
+        centerOnMapLoad = latLng;
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+        if (map != null) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+        }
     }
 
     @Override
@@ -145,6 +144,11 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     }
 
     private void onLocationFound(Location location) {
+        if (centerOnMapLoad != null) {
+            centerOnMapLoad = null;
+            return;
+        }
+
         final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraPosition cameraPosition = CameraPosition.builder()
                 .target(latLng)

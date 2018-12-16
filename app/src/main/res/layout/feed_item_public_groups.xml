@@ -15,7 +15,7 @@
     android:clickable="true">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/groupsTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,42 +28,7 @@
         android:textColor="@color/text"
         android:textSize="12sp"
         android:textStyle="bold"
-        android:text="@string/activities" />
-
-    <closer.vlllage.com.closer.ui.SoftScrollStopper
-        android:id="@+id/groupActionsRecyclerViewContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/title">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/groupActionsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="8dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:paddingRight="@dimen/pad"
-        android:paddingTop="@dimen/pad"
-        android:paddingBottom="@dimen/pad" />
-
-    </closer.vlllage.com.closer.ui.SoftScrollStopper>
-
-    <TextView
-        android:id="@+id/groupsTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/groupActionsRecyclerViewContainer"
-        android:paddingLeft="16dp"
-        android:paddingTop="8dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="4dp"
-        android:gravity="center_horizontal"
-        android:textAllCaps="true"
-        android:textColor="@color/text"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:text="@string/public_groups" />
+        android:text="@string/app_name" />
 
     <closer.vlllage.com.closer.ui.SoftScrollStopper
         android:id="@+id/publicGroupsRecyclerViewContainer"

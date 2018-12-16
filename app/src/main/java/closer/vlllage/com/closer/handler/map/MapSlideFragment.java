@@ -129,40 +129,7 @@ public class MapSlideFragment extends PoolFragment {
                 anyActionTaken = anyActionTaken || $(BubbleHandler.class).remove(mapBubble -> BubbleType.MENU.equals(mapBubble.getType()));
 
                 if (!anyActionTaken) {
-                    MapBubble menuBubble = new MapBubble(latLng, BubbleType.MENU);
-                    menuBubble.setOnItemClickListener(position -> {
-                        switch (position) {
-                            case 0:
-                                $(PhysicalGroupHandler.class).createPhysicalGroup(menuBubble.getLatLng());
-                                break;
-                            case 1:
-                                $(ShareHandler.class).shareTo(menuBubble.getLatLng(), group -> {
-                                    boolean success = $(GroupMessageAttachmentHandler.class).shareLocation(menuBubble.getLatLng(), group);
-
-                                    if (!success) {
-                                        $(DefaultAlerts.class).thatDidntWork();
-                                    } else {
-                                        $(GroupActivityTransitionHandler.class).showGroupMessages(menuBubble.getView(), group.getId());
-                                    }
-                                });
-                                break;
-                            case 2:
-                                $(EventHandler.class).createNewEvent(menuBubble.getLatLng(), true, event -> $(MapHandler.class).centerMap(new LatLng(
-                                        event.getLatitude(),
-                                        event.getLongitude()
-                                )));
-                                break;
-                        }
-                    });
-                    $(BubbleHandler.class).add(menuBubble);
-                    menuBubble.setOnViewReadyListener(menuBubbleView -> {
-                        $(MapBubbleMenuView.class)
-                                .getMenuAdapter(menuBubble)
-                                .setMenuItems(
-                                        new MapBubbleMenuItem().setTitle(getString(R.string.talk_here)).setIconRes(R.drawable.ic_wifi_black_18dp),
-                                        new MapBubbleMenuItem().setTitle(getString(R.string.share_this_location)).setIconRes(R.drawable.ic_share_black_18dp),
-                                        new MapBubbleMenuItem().setTitle(getString(R.string.add_event_here)).setIconRes(R.drawable.ic_event_note_black_24dp));
-                    });
+                    showMapMenu(latLng, null);
                 }
             }
         });
@@ -236,6 +203,46 @@ public class MapSlideFragment extends PoolFragment {
         return view;
     }
 
+    private void showMapMenu(LatLng latLng, String title) {
+        MapBubble menuBubble = new MapBubble(latLng, BubbleType.MENU);
+        menuBubble.setOnItemClickListener(position -> {
+            switch (position) {
+                case 0:
+                    $(PhysicalGroupHandler.class).createPhysicalGroup(menuBubble.getLatLng());
+                    break;
+                case 1:
+                    $(ShareHandler.class).shareTo(menuBubble.getLatLng(), group -> {
+                        boolean success = $(GroupMessageAttachmentHandler.class).shareLocation(menuBubble.getLatLng(), group);
+
+                        if (!success) {
+                            $(DefaultAlerts.class).thatDidntWork();
+                        } else {
+                            $(GroupActivityTransitionHandler.class).showGroupMessages(menuBubble.getView(), group.getId());
+                        }
+                    });
+                    break;
+                case 2:
+                    $(EventHandler.class).createNewEvent(menuBubble.getLatLng(), true, event -> $(MapHandler.class).centerMap(new LatLng(
+                            event.getLatitude(),
+                            event.getLongitude()
+                    )));
+                    break;
+            }
+        });
+        $(BubbleHandler.class).add(menuBubble);
+        menuBubble.setStatus(title);
+        menuBubble.setOnViewReadyListener(menuBubbleView -> {
+            $(MapBubbleMenuView.class)
+                    .getMenuAdapter(menuBubble)
+                    .setMenuItems(
+                            new MapBubbleMenuItem().setTitle(getString(R.string.talk_here)).setIconRes(R.drawable.ic_wifi_black_18dp),
+                            new MapBubbleMenuItem().setTitle(getString(R.string.share_this_location)).setIconRes(R.drawable.ic_share_black_18dp),
+                            new MapBubbleMenuItem().setTitle(getString(R.string.add_event_here)).setIconRes(R.drawable.ic_event_note_black_24dp));
+
+            $(MapBubbleMenuView.class).setMenuTitle(menuBubble, title);
+        });
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         if (pendingRunnable != null) {
@@ -267,7 +274,6 @@ public class MapSlideFragment extends PoolFragment {
 
         locationPermissionWasDenied = locationPermissionDenied;
     }
-
 
     public List<MapBubble> mapBubbleFrom(List<PhoneResult> phoneResults) {
         List<MapBubble> mapBubbles = new ArrayList<>();
@@ -327,11 +333,9 @@ public class MapSlideFragment extends PoolFragment {
     }
 
     private void showAddressOnMap(String name, Address address) {
-        Suggestion suggestion = new Suggestion();
-        suggestion.setName(name);
-        suggestion.setLatitude(address.getLatitude());
-        suggestion.setLongitude(address.getLongitude());
-        $(MapActivityHandler.class).showSuggestionOnMap(suggestion);
+        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+        showMapMenu(latLng, name);
+        $(MapHandler.class).centerMap(latLng);
     }
 
     public void post(Runnable runnable) {
