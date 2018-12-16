@@ -111,7 +111,11 @@ public class MapSlideFragment extends PoolFragment {
             $(GroupActivityTransitionHandler.class).showGroupMessages(mapBubble.getView(), groupId);
         });
 
-        $(MapHandler.class).setOnMapReadyListener(map -> $(BubbleHandler.class).attach(map));
+
+        $(MapHandler.class).setOnMapReadyListener(map -> {
+            $(PhysicalGroupBubbleHandler.class).attach();
+            $(BubbleHandler.class).attach(map);
+        });
         $(MapHandler.class).setOnMapChangedListener(() -> {
             $(BubbleHandler.class).update();
             $(MapZoomHandler.class).update($(MapHandler.class).getZoom());
@@ -189,6 +193,8 @@ public class MapSlideFragment extends PoolFragment {
 
             $(RefreshHandler.class).refreshEvents(latLng);
             $(RefreshHandler.class).refreshPhysicalGroups(latLng);
+
+            $(MapZoomHandler.class).update($(MapHandler.class).getZoom());
         });
         $(MapHandler.class).attach((MapFragment) getChildFragmentManager().findFragmentById(R.id.map));
         $(MyBubbleHandler.class).start();
@@ -225,7 +231,6 @@ public class MapSlideFragment extends PoolFragment {
         $(MyGroupsLayoutActionsHandler.class).showHelpButton(!$(PersistenceHandler.class).getIsHelpHidden());
 
         $(EventBubbleHandler.class).attach();
-        $(PhysicalGroupBubbleHandler.class).attach();
         $(FeedHandler.class).attach(view.findViewById(R.id.feed));
 
         return view;

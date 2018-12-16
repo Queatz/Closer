@@ -80,12 +80,11 @@ public class GroupHandler extends PoolMember {
     private void onGroupSet(@NonNull Group group) {
         setGroupContact();
         peopleInGroup.setText("");
-        String phoneId = $(PersistenceHandler.class).getPhoneId();
-        if (phoneId == null) phoneId = "";
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupContact.class).query()
                 .equal(GroupContact_.groupId, group.getId())
-                .notEqual(GroupContact_.contactId, phoneId)
-                .build().subscribe().on(AndroidScheduler.mainThread())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
                 .observer(groupContacts -> {
                     contactNames = new ArrayList<>();
                     for (GroupContact groupContact : groupContacts) {

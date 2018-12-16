@@ -9,13 +9,28 @@
     android:paddingLeft="@dimen/padDouble"
     android:paddingRight="@dimen/padDouble">
 
+    <TextView
+        android:id="@+id/eventMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padDouble"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="12sp"
+        android:textColor="@color/text"
+        android:gravity="center_horizontal"
+        android:visibility="visible"
+        tools:visibility="visible"
+        android:alpha=".5"
+        tools:text="Where are we going this weekend?" />
+
     <LinearLayout
         android:id="@+id/messageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintTop_toBottomOf="@+id/eventMessage"
         android:layout_marginTop="@dimen/padDouble"
         android:background="@drawable/rounded_dim_8dp"
         android:padding="@dimen/pad"

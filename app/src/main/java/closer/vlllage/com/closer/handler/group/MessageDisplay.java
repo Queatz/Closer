@@ -32,6 +32,9 @@ import static android.text.format.DateUtils.WEEK_IN_MILLIS;
 public class MessageDisplay extends PoolMember {
 
     public void displayAction(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage) {
+        holder.eventMessage.setVisibility(View.GONE);
+        holder.messageLayout.setVisibility(View.VISIBLE);
+
         Phone phone = getPhone(groupMessage.getFrom());
         String contactName = $(NameHandler.class).getName(phone);
 
@@ -47,7 +50,6 @@ public class MessageDisplay extends PoolMember {
         } else {
             holder.message.setVisibility(View.VISIBLE);
             holder.message.setGravity(Gravity.START);
-            holder.message.setAlpha(1f);
             holder.message.setText(action.get("comment").getAsString());
         }
         holder.action.setVisibility(View.GONE);
@@ -58,6 +60,9 @@ public class MessageDisplay extends PoolMember {
     }
 
     public void displayGroupMessage(GroupMessagesAdapter.GroupMessageViewHolder holder, GroupMessage groupMessage) {
+        holder.eventMessage.setVisibility(View.GONE);
+        holder.messageLayout.setVisibility(View.VISIBLE);
+
         holder.action.setVisibility(View.GONE);
         holder.name.setVisibility(View.VISIBLE);
         holder.message.setVisibility(View.VISIBLE);
@@ -74,21 +79,22 @@ public class MessageDisplay extends PoolMember {
 
         holder.name.setText($(NameHandler.class).getName(phone));
         holder.message.setText($(GroupMessageParseHandler.class).parseText(groupMessage.getText()));
-        holder.message.setAlpha(groupMessage.isLocalOnly() ? .5f : 1f);
     }
 
     public void displayMessage(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage) {
         holder.name.setVisibility(View.GONE);
         holder.time.setVisibility(View.GONE);
-        holder.message.setVisibility(View.VISIBLE);
-        holder.message.setGravity(Gravity.CENTER_HORIZONTAL);
-        holder.message.setText(jsonObject.get("message").getAsString());
-        holder.message.setAlpha(.5f);
+        holder.messageLayout.setVisibility(View.GONE);
+        holder.eventMessage.setVisibility(View.VISIBLE);
+        holder.eventMessage.setText(jsonObject.get("message").getAsString());
         holder.itemView.setOnClickListener(null);
         holder.action.setVisibility(View.GONE);
     }
 
     public void displayEvent(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnEventClickListener onEventClickListener) {
+        holder.eventMessage.setVisibility(View.GONE);
+        holder.messageLayout.setVisibility(View.VISIBLE);
+
         final Event event = $(JsonHandler.class).from(jsonObject.get("event"), Event.class);
 
         holder.name.setVisibility(View.VISIBLE);
@@ -103,7 +109,6 @@ public class MessageDisplay extends PoolMember {
 
         holder.message.setVisibility(View.VISIBLE);
         holder.message.setGravity(Gravity.START);
-        holder.message.setAlpha(1f);
         holder.message.setText(
                 (event.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : event.getName()) +
                         "\n" +
@@ -119,6 +124,9 @@ public class MessageDisplay extends PoolMember {
     }
 
     public void displaySuggestion(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
+        holder.eventMessage.setVisibility(View.GONE);
+        holder.messageLayout.setVisibility(View.VISIBLE);
+
         final Suggestion suggestion = $(JsonHandler.class).from(jsonObject.get("suggestion"), Suggestion.class);
 
         boolean suggestionHasNoName = suggestion == null || suggestion.getName() == null || suggestion.getName().isEmpty();
@@ -142,7 +150,6 @@ public class MessageDisplay extends PoolMember {
         } else {
             holder.message.setVisibility(View.VISIBLE);
             holder.message.setGravity(Gravity.START);
-            holder.message.setAlpha(1f);
             holder.message.setText(suggestion.getName());
         }
 
@@ -156,6 +163,9 @@ public class MessageDisplay extends PoolMember {
     }
 
     public void displayPhoto(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage) {
+        holder.eventMessage.setVisibility(View.GONE);
+        holder.messageLayout.setVisibility(View.VISIBLE);
+
         Phone phone = getPhone(groupMessage.getFrom());
         String contactName = $(NameHandler.class).getName(phone);
 
@@ -173,6 +183,9 @@ public class MessageDisplay extends PoolMember {
     }
 
     public void displayFallback(GroupMessagesAdapter.GroupMessageViewHolder holder, GroupMessage groupMessage) {
+        holder.eventMessage.setVisibility(View.GONE);
+        holder.messageLayout.setVisibility(View.VISIBLE);
+
         holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
         holder.message.setText("");
         holder.time.setVisibility(View.VISIBLE);

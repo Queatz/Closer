@@ -179,6 +179,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     protected class GroupMessageViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
+        TextView eventMessage;
+        View messageLayout;
         TextView message;
         TextView action;
         TextView time;
@@ -195,6 +197,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         public GroupMessageViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
+            eventMessage = itemView.findViewById(R.id.eventMessage);
+            messageLayout = itemView.findViewById(R.id.messageLayout);
             message = itemView.findViewById(R.id.message);
             action = itemView.findViewById(R.id.action);
             time = itemView.findViewById(R.id.time);

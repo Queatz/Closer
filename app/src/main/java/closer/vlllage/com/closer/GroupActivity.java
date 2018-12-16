@@ -18,7 +18,6 @@ import com.squareup.picasso.Callback;
 import java.util.Date;
 import java.util.List;
 
-import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
@@ -66,7 +65,6 @@ import io.objectbox.query.QueryBuilder;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static closer.vlllage.com.closer.handler.FeatureType.FEATURE_UPGRADE_PHYSICAL_GROUPS;
 import static com.google.android.gms.common.util.Strings.isEmptyOrWhitespace;
 
 public class GroupActivity extends CircularRevealActivity {
@@ -176,6 +174,15 @@ public class GroupActivity extends CircularRevealActivity {
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             findViewById(R.id.backgroundColor).setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
 
+            refreshPhysicalGroupActions(group);
+
+            actionSettingsGetDirections.setOnClickListener(view -> {
+                $(OutboundHandler.class).openDirections(new LatLng(
+                        group.getLatitude(),
+                        group.getLongitude()
+                ));
+            });
+
             if (group.isPublic()) {
                 scopeIndicatorButton.setVisibility(View.VISIBLE);
                 scopeIndicatorButton.setImageResource(R.drawable.ic_public_black_24dp);
@@ -190,29 +197,20 @@ public class GroupActivity extends CircularRevealActivity {
                     actionShowOnMap.setVisibility(View.VISIBLE);
                     actionShowOnMap.setOnClickListener(view -> showGroupOnMap(group));
 
-                    if ($(FeatureHandler.class).has(FEATURE_UPGRADE_PHYSICAL_GROUPS)) {
-                        refreshPhysicalGroupActions(group);
-                        actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group, updatedGroup -> {
-                            $(GroupHandler.class).showGroupName(updatedGroup);
-                            refreshPhysicalGroupActions(updatedGroup);
-                        }));
-                        actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
-                            setGroupBackground(updateGroup);
-                            refreshPhysicalGroupActions(updateGroup);
-                        }));
-                        actionSettingsGetDirections.setOnClickListener(view -> {
-                            $(OutboundHandler.class).openDirections(new LatLng(
-                                    group.getLatitude(),
-                                    group.getLongitude()
-                            ));
-                        });
-                        actionSettingsHostEvent.setOnClickListener(view -> {
-                            $(EventHandler.class).createNewEvent(new LatLng(
-                                    group.getLatitude(),
-                                    group.getLongitude()
-                            ), group.isPublic(), this::showEventOnMap);
-                        });
-                    }
+                    actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group, updatedGroup -> {
+                        $(GroupHandler.class).showGroupName(updatedGroup);
+                        refreshPhysicalGroupActions(updatedGroup);
+                    }));
+                    actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
+                        setGroupBackground(updateGroup);
+                        refreshPhysicalGroupActions(updateGroup);
+                    }));
+                    actionSettingsHostEvent.setOnClickListener(view -> {
+                        $(EventHandler.class).createNewEvent(new LatLng(
+                                group.getLatitude(),
+                                group.getLongitude()
+                        ), group.isPublic(), this::showEventOnMap);
+                    });
                 }
             } else {
                 scopeIndicatorButton.setVisibility(View.VISIBLE);
@@ -303,27 +301,35 @@ public class GroupActivity extends CircularRevealActivity {
     private void refreshPhysicalGroupActions(Group group) {
         int buttonCount = 1;
 
-        if (isEmptyOrWhitespace(group.getName())) {
-            actionSettingsSetName.setVisibility(View.VISIBLE);
-            buttonCount++;
-        } else {
-            actionSettingsSetName.setVisibility(View.GONE);
-        }
+        if (group.isPhysical()) {
+            if (isEmptyOrWhitespace(group.getName())) {
+                actionSettingsSetName.setVisibility(View.VISIBLE);
+                buttonCount++;
+            } else {
+                actionSettingsSetName.setVisibility(View.GONE);
+            }
 
-        if (isEmptyOrWhitespace(group.getPhoto())) {
-            actionSettingsSetBackground.setVisibility(View.VISIBLE);
-            buttonCount++;
-        } else {
-            actionSettingsSetBackground.setVisibility(View.GONE);
+            if (isEmptyOrWhitespace(group.getPhoto())) {
+                actionSettingsSetBackground.setVisibility(View.VISIBLE);
+                buttonCount++;
+            } else {
+                actionSettingsSetBackground.setVisibility(View.GONE);
+            }
         }
 
         if (buttonCount < 3) {
             actionSettingsGetDirections.setVisibility(View.VISIBLE);
             buttonCount++;
+        } else {
+            actionSettingsGetDirections.setVisibility(View.GONE);
         }
 
-        if (buttonCount < 3) {
-            actionSettingsHostEvent.setVisibility(View.VISIBLE);
+        if (group.isPhysical()) {
+            if (buttonCount < 3) {
+                actionSettingsHostEvent.setVisibility(View.VISIBLE);
+            } else {
+                actionSettingsHostEvent.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -431,6 +437,8 @@ public class GroupActivity extends CircularRevealActivity {
 
     private void showMessagesView(boolean show) {
         cancelShare();
+
+        $(GroupMessagesHandler.class).showSendMoreOptions(false);
 
         if (show) {
             replyMessage.setVisibility(View.VISIBLE);

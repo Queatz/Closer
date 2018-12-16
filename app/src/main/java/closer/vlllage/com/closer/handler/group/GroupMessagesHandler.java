@@ -134,15 +134,7 @@ public class GroupMessagesHandler extends PoolMember {
             }
         });
 
-        this.sendMoreButton.setOnClickListener(view -> {
-            if (sendMoreLayout.getVisibility() == View.VISIBLE) {
-                sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp);
-                sendMoreLayout.setVisibility(View.GONE);
-            } else {
-                sendMoreButton.setImageResource(R.drawable.ic_close_black_24dp);
-                sendMoreLayout.setVisibility(View.VISIBLE);
-            }
-        });
+        this.sendMoreButton.setOnClickListener(view -> showSendMoreOptions(sendMoreLayout.getVisibility() != View.VISIBLE));
 
         View sendMoreActionAudio = this.sendMoreLayout.findViewById(R.id.sendMoreActionAudio);
         View sendMoreActionVideo = this.sendMoreLayout.findViewById(R.id.sendMoreActionVideo);
@@ -189,6 +181,16 @@ public class GroupMessagesHandler extends PoolMember {
                 .build()
                 .subscribe().on(AndroidScheduler.mainThread())
                 .observer(this::setGroupMessages));
+    }
+
+    public void showSendMoreOptions(boolean show) {
+        if (show) {
+            sendMoreButton.setImageResource(R.drawable.ic_close_black_24dp);
+            sendMoreLayout.setVisibility(View.VISIBLE);
+        } else {
+            sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp);
+            sendMoreLayout.setVisibility(View.GONE);
+        }
     }
 
     public void insertMention(Phone mention) {

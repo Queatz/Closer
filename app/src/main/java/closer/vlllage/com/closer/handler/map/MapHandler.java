@@ -85,12 +85,6 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        if (centerOnMapLoad == null) {
-            locateMe();
-        }
-
-        updateMyLocationEnabled();
-
         onMapReadyListener.onMapReady(map);
         map.setOnCameraMoveListener(this::mapChanged);
         map.setOnMapClickListener(onMapClickedListener::onMapClicked);
@@ -103,10 +97,14 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
         onMapChangedListener.onMapChanged();
         map.setPadding(0, $(WindowHandler.class).getStatusBarHeight(), 0, 0);
 
-        if (centerOnMapLoad != null) {
+        if (centerOnMapLoad == null) {
+            locateMe();
+        } else {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOnMapLoad, DEFAULT_ZOOM));
             centerOnMapLoad = null;
         }
+
+        updateMyLocationEnabled();
     }
 
     public void locateMe() {
