@@ -157,7 +157,7 @@ public class NotificationHandler extends PoolMember {
                       boolean sound) {
         Context context = $(ApplicationHandler.class).getApp();
 
-        if ($(PersistenceHandler.class).getIsNotifcationsPaused()) {
+        if ($(PersistenceHandler.class).getIsNotificationsPaused()) {
             return;
         }
 

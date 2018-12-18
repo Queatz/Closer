@@ -263,7 +263,7 @@ public class MapSlideFragment extends PoolFragment {
         boolean locationPermissionDenied = $(PermissionHandler.class).denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
         $(MyGroupsLayoutActionsHandler.class).showAllowLocationPermissionsInSettings(locationPermissionDenied);
 
-        boolean isNotificationsPaused = $(PersistenceHandler.class).getIsNotifcationsPaused();
+        boolean isNotificationsPaused = $(PersistenceHandler.class).getIsNotificationsPaused();
         $(MyGroupsLayoutActionsHandler.class).showUnmuteNotifications(isNotificationsPaused);
         $(MyGroupsLayoutActionsHandler.class).showSetMyName($(Val.class).isEmpty($(AccountHandler.class).getName()));
 

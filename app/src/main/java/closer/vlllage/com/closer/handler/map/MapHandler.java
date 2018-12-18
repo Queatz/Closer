@@ -23,6 +23,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
@@ -84,11 +85,19 @@ public class MapHandler extends PoolMember implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
+        if ($(PersistenceHandler.class).getLastMapCenter() != null) {
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(
+                    $(PersistenceHandler.class).getLastMapCenter(),
+                    DEFAULT_ZOOM
+            )));
+        }
+
         onMapReadyListener.onMapReady(map);
         map.setOnCameraMoveListener(this::mapChanged);
         map.setOnMapClickListener(onMapClickedListener::onMapClicked);
         map.setOnMapLongClickListener(onMapLongClickedListener::onMapLongClicked);
         map.setOnCameraIdleListener(() -> {
+            $(PersistenceHandler.class).setLastMapCenter(map.getCameraPosition().target);
             onMapIdleListener.onMapIdle(map.getCameraPosition().target);
             onMapIdleObservable.onNext(map.getCameraPosition());
         });

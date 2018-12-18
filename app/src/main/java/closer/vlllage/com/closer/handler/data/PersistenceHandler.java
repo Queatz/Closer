@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
@@ -19,6 +21,7 @@ public class PersistenceHandler extends PoolMember {
     private static final String PREFERENCE_PHONE_ID = "closer.phone.id";
     private static final String PREFERENCE_HELP_IS_HIDDEN = "closer.state.help-is-hidden";
     private static final String PREFERENCE_NOTIFICATIONS_PAUSED = "closer.notifications.paused";
+    private static final String PREFERENCE_LAST_MAP_CENTER = "closer.map.center";
 
     private SharedPreferences sharedPreferences;
 
@@ -61,8 +64,24 @@ public class PersistenceHandler extends PoolMember {
         return sharedPreferences.getBoolean(PREFERENCE_HELP_IS_HIDDEN, false);
     }
 
-    public boolean getIsNotifcationsPaused() {
+    public boolean getIsNotificationsPaused() {
         return sharedPreferences.getBoolean(PREFERENCE_NOTIFICATIONS_PAUSED, false);
+    }
+
+    public LatLng getLastMapCenter() {
+        String result = sharedPreferences.getString(PREFERENCE_LAST_MAP_CENTER, null);
+
+        if (result == null) {
+            return null;
+        }
+
+
+        String[] latLng = result.split(",");
+
+        return new LatLng(
+                Double.valueOf(latLng[0]),
+                Double.valueOf(latLng[1])
+        );
     }
 
     @SuppressLint("ApplySharedPref")
@@ -108,5 +127,10 @@ public class PersistenceHandler extends PoolMember {
     @SuppressLint("ApplySharedPref")
     public void setIsNotificationsPaused(boolean isNotificationsPaused) {
         sharedPreferences.edit().putBoolean(PREFERENCE_NOTIFICATIONS_PAUSED, isNotificationsPaused).commit();
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public void setLastMapCenter(LatLng latLng) {
+        sharedPreferences.edit().putString(PREFERENCE_LAST_MAP_CENTER, latLng.latitude + "," + latLng.longitude).commit();
     }
 }
