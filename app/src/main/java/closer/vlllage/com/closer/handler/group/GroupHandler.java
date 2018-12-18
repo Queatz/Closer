@@ -86,6 +86,7 @@ public class GroupHandler extends PoolMember {
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer(groupContacts -> {
+                    $(GroupContactsHandler.class).setCurrentGroupContacts(groupContacts);
                     contactNames = new ArrayList<>();
                     for (GroupContact groupContact : groupContacts) {
                         contactNames.add($(NameHandler.class).getName(groupContact));

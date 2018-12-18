@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.api.models.SuccessResult;
@@ -47,6 +49,7 @@ public class GroupContactsHandler extends PoolMember {
     private View showPhoneContactsButton;
     private EditText searchContacts;
     private PhoneContactAdapter phoneContactAdapter;
+    private final Set<String> currentGroupContacts = new HashSet<>();
 
     @SuppressWarnings("MissingPermission")
     public void attach(Group group, RecyclerView contactsRecyclerView, EditText searchContacts, View showPhoneContactsButton) {
@@ -231,6 +234,10 @@ public class GroupContactsHandler extends PoolMember {
                 }
 
                 for (Phone phone : closerContacts) {
+                    if (currentGroupContacts.contains(phone.getId())) {
+                        continue;
+                    }
+
                     allContacts.add(0, new PhoneContact(phone.getName(), phone.getStatus()).setPhoneId(phone.getId()));
                 }
 
@@ -264,5 +271,12 @@ public class GroupContactsHandler extends PoolMember {
 
     public void showContactsForQuery() {
         showContactsForQuery(searchContacts.getText().toString());
+    }
+
+    public void setCurrentGroupContacts(List<GroupContact> groupContacts) {
+        currentGroupContacts.clear();
+        for (GroupContact groupContact : groupContacts) {
+            currentGroupContacts.add(groupContact.getContactId());
+        }
     }
 }
