@@ -64,6 +64,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().phone());
     }
 
+    public Observable<List<PhoneResult>> searchPhonesNear(LatLng latLng, String query) {
+        return uiThread(api.getBackend().searchPhonesNear($(LatLngStr.class).from(latLng), query));
+    }
+
     public Observable<SuccessResult> sendMessage(String phone, String message) {
         return uiThread(api.getBackend().sendMessage(phone, message));
     }

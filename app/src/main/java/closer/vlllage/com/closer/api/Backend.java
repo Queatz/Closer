@@ -43,6 +43,9 @@ public interface Backend {
             @Query("deviceToken") String pushDeviceToken
     );
 
+    @GET("phone")
+    Observable<List<PhoneResult>> searchPhonesNear(@Query("geo") String latLng, @Query("query") String query);
+
     // Verify Number
 
     @GET("verify")

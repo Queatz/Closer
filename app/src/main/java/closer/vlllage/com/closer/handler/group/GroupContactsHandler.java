@@ -7,15 +7,19 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.PhoneContactsHandler;
@@ -204,6 +208,19 @@ public class GroupContactsHandler extends PoolMember {
 
     @SuppressWarnings("MissingPermission")
     public void showContactsForQuery(String originalQuery) {
+        String query = originalQuery.trim().toLowerCase();
+
+        if ($(LocationHandler.class).getLastKnownLocation() != null) {
+            $(DisposableHandler.class).add($(ApiHandler.class).searchPhonesNear(new LatLng(
+                    $(LocationHandler.class).getLastKnownLocation().getLatitude(),
+                    $(LocationHandler.class).getLastKnownLocation().getLongitude()
+            ), query).subscribe(phoneResults -> {
+                    for (PhoneResult phoneResult : phoneResults) {
+                        $(RefreshHandler.class).refresh(PhoneResult.from(phoneResult));
+                    }
+            }, error -> $(DefaultAlerts.class).thatDidntWork()));
+        }
+
         String phoneNumber = $(PhoneNumberHandler.class).normalize(originalQuery);
 
         phoneContactAdapter.setPhoneNumber(phoneNumber);
@@ -219,13 +236,12 @@ public class GroupContactsHandler extends PoolMember {
 
         $(DisposableHandler.class).add($(PhoneContactsHandler.class).getAllContacts().subscribe(phoneContacts -> {
             $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Phone.class).query()
-                    .contains(Phone_.name, $(Val.class).of(originalQuery))
+                    .contains(Phone_.name, $(Val.class).of(query))
                     .notNull(Phone_.id)
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .observer(closerContacts -> {
-                String query = originalQuery.trim().toLowerCase();
 
                 List<PhoneContact> allContacts = new ArrayList<>();
 

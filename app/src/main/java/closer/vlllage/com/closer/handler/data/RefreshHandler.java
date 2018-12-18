@@ -125,6 +125,10 @@ public class RefreshHandler extends PoolMember {
         refreshObject(group, Group.class, Group_.id);
     }
 
+    public void refresh(Phone phone) {
+        refreshObject(phone, Phone.class, Phone_.id);
+    }
+
     public <T extends BaseObject> void refreshObject(T object, Class<T> clazz, Property idProperty) {
         ((SubscriptionBuilder<List<T>>) $(StoreHandler.class).getStore().box(clazz)
                 .query()
@@ -255,26 +259,7 @@ public class RefreshHandler extends PoolMember {
     }
 
     private void handlePhones(List<PhoneResult> phoneResults) {
-        handleFullListResult(phoneResults, Phone.class, Phone_.id, false, this::createPhoneFromResult, this::updatePhoneFromResult);
-    }
-
-    private Phone createPhoneFromResult(PhoneResult phoneResult) {
-        return updatePhoneFromResult(new Phone(), phoneResult);
-    }
-
-    private Phone updatePhoneFromResult(Phone phone, PhoneResult phoneResult) {
-        phone.setId(phoneResult.id);
-        phone.setUpdated(phoneResult.updated);
-
-        if (phoneResult.geo != null && phoneResult.geo.size() == 2) {
-            phone.setLatitude(phoneResult.geo.get(0));
-            phone.setLongitude(phoneResult.geo.get(1));
-        }
-
-        phone.setName(phoneResult.name);
-        phone.setStatus(phoneResult.status);
-
-        return phone;
+        handleFullListResult(phoneResults, Phone.class, Phone_.id, false, PhoneResult::from, PhoneResult::updateFrom);
     }
 
     private GroupContact createGroupContactFromGroupContactResult(GroupContactResult groupContactResult) {
