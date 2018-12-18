@@ -100,6 +100,9 @@ public interface Backend {
     Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("name") String name, @Query("invite") String phoneNumber);
 
     @POST("group/{id}")
+    Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("invite-phone") String phoneId);
+
+    @POST("group/{id}")
     Observable<SuccessResult> leaveGroup(@Path("id") String groupId, @Query("leave") boolean leaveGroup);
 
     @POST("group/{id}")

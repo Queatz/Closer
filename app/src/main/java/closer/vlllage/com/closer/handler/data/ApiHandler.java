@@ -121,6 +121,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().inviteToGroup(groupId, name, phoneNumber));
     }
 
+    public Observable<SuccessResult> inviteToGroup(String groupId, String phoneId) {
+        return uiThread(api.getBackend().inviteToGroup(groupId, phoneId));
+    }
+
     public Observable<SuccessResult> leaveGroup(String groupId) {
         return uiThread(api.getBackend().leaveGroup(groupId, true));
     }

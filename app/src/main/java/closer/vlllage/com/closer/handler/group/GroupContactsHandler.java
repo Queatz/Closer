@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
@@ -23,6 +24,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -32,7 +34,10 @@ import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupInvite;
 import closer.vlllage.com.closer.store.models.GroupInvite_;
+import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 import io.objectbox.android.AndroidScheduler;
+import io.reactivex.Observable;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -170,10 +175,11 @@ public class GroupContactsHandler extends PoolMember {
     }
 
     private void sendInviteToGroup(Group group, PhoneContact phoneContact) {
-        $(DisposableHandler.class).add($(ApiHandler.class).inviteToGroup(group.getId(),
-                phoneContact.getName(),
-                phoneContact.getPhoneNumber()
-        ).subscribe(successResult -> {
+        Observable<SuccessResult> inviteToGroup = phoneContact.getPhoneId() == null ?
+                $(ApiHandler.class).inviteToGroup(group.getId(), phoneContact.getName(), phoneContact.getPhoneNumber()) :
+                $(ApiHandler.class).inviteToGroup(group.getId(), phoneContact.getPhoneId());
+
+        $(DisposableHandler.class).add(inviteToGroup.subscribe(successResult -> {
                     if (successResult.success) {
                         String message = phoneContact.getName() == null || phoneContact.getName().trim().isEmpty() ?
                                 $(ResourcesHandler.class).getResources().getString(R.string.phone_invited, phoneContact.getPhoneNumber(), group.getName()) :
@@ -208,37 +214,51 @@ public class GroupContactsHandler extends PoolMember {
             return;
         }
 
-        $(DisposableHandler.class).add($(PhoneContactsHandler.class).getAllContacts().subscribe(allContacts -> {
-            String query = originalQuery.trim().toLowerCase();
+        $(DisposableHandler.class).add($(PhoneContactsHandler.class).getAllContacts().subscribe(phoneContacts -> {
+            $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Phone.class).query()
+                    .contains(Phone_.name, $(Val.class).of(originalQuery))
+                    .notNull(Phone_.id)
+                    .build()
+                    .subscribe()
+                    .on(AndroidScheduler.mainThread())
+                    .observer(closerContacts -> {
+                String query = originalQuery.trim().toLowerCase();
 
-            if (allContacts == null) {
-                return;
-            }
+                List<PhoneContact> allContacts = new ArrayList<>();
 
-            if (query.isEmpty()) {
-                phoneContactAdapter.setContacts(allContacts);
-                return;
-            }
+                if (phoneContacts != null) {
+                    allContacts.addAll(phoneContacts);
+                }
 
-            String queryPhone = query.replaceAll("[^0-9]", "");
+                for (Phone phone : closerContacts) {
+                    allContacts.add(0, new PhoneContact(phone.getName(), phone.getStatus()).setPhoneId(phone.getId()));
+                }
 
-            List<PhoneContact> contacts = new ArrayList<>();
-            for(PhoneContact contact : allContacts) {
-                if (contact.getName() != null) {
-                    if (contact.getName().toLowerCase().contains(query)) {
-                        contacts.add(contact);
-                        continue;
+                if (query.isEmpty()) {
+                    phoneContactAdapter.setContacts(allContacts);
+                    return;
+                }
+
+                String queryPhone = query.replaceAll("[^0-9]", "");
+
+                List<PhoneContact> contacts = new ArrayList<>();
+                for(PhoneContact contact : allContacts) {
+                    if (contact.getName() != null) {
+                        if (contact.getName().toLowerCase().contains(query)) {
+                            contacts.add(contact);
+                            continue;
+                        }
+                    }
+
+                    if (!queryPhone.isEmpty() && contact.getPhoneNumber() != null) {
+                        if (contact.getPhoneNumber().replaceAll("[^0-9]", "").contains(queryPhone)) {
+                            contacts.add(contact);
+                        }
                     }
                 }
 
-                if (!queryPhone.isEmpty() && contact.getPhoneNumber() != null) {
-                    if (contact.getPhoneNumber().replaceAll("[^0-9]", "").contains(queryPhone)) {
-                        contacts.add(contact);
-                    }
-                }
-            }
-
-            phoneContactAdapter.setContacts(contacts);
+                phoneContactAdapter.setContacts(contacts);
+            }));
         }, error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
