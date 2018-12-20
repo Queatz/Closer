@@ -18,6 +18,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -36,7 +37,6 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     private OnSuggestionClickListener onSuggestionClickListener;
     private OnEventClickListener onEventClickListener;
     private boolean noPadding;
-    private boolean isReversed;
 
     public GroupMessagesAdapter(PoolMember poolMember) {
         super(poolMember);
@@ -94,7 +94,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             toggleMessageActionLayout(holder);
         });
         holder.messageActionShare.setOnClickListener(view -> {
-            $(DefaultAlerts.class).message("That doesn't work yet!");
+            $(ShareActivityTransitionHandler.class).share();
             toggleMessageActionLayout(holder);
         });
         holder.messageActionRemind.setOnClickListener(view -> {
@@ -168,11 +168,6 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
     public GroupMessagesAdapter setNoPadding(boolean noPadding) {
         this.noPadding = noPadding;
-        return this;
-    }
-
-    public GroupMessagesAdapter setReversed(boolean reversed) {
-        isReversed = reversed;
         return this;
     }
 

@@ -37,10 +37,10 @@ import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.map.HeaderAdapter;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
-import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.pool.TempPool;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -57,7 +57,7 @@ import static closer.vlllage.com.closer.pool.Pool.tempPool;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter.ViewHolder> implements CombinedRecyclerAdapter.PrioritizedAdapter {
+public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewHolder> implements CombinedRecyclerAdapter.PrioritizedAdapter {
 
     private static final int HEADER_COUNT = 1;
     private final List<Group> groups = new ArrayList<>();
@@ -80,6 +80,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
         holder.pool = tempPool();
 
         if (position < HEADER_COUNT) {
@@ -222,6 +223,7 @@ public class GroupPreviewAdapter extends PoolRecyclerAdapter<GroupPreviewAdapter
 
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
         holder.pool.end();
     }
 

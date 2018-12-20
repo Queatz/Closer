@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.search;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
@@ -47,6 +48,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     private OnCreateGroupClickListener onCreateGroupClickListener;
     private String actionText;
     private @LayoutRes int layoutResId = R.layout.search_groups_item;
+    private @DrawableRes int backgroundResId = R.drawable.clickable_light;
     private boolean isSmall;
 
     public SearchGroupsAdapter(PoolMember poolMember, OnGroupClickListener onGroupClickListener, OnCreateGroupClickListener onCreateGroupClickListener) {
@@ -57,6 +59,11 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
     public SearchGroupsAdapter setLayoutResId(int layoutResId) {
         this.layoutResId = layoutResId;
+        return this;
+    }
+
+    public SearchGroupsAdapter setBackgroundResId(int backgroundResId) {
+        this.backgroundResId = backgroundResId;
         return this;
     }
 
@@ -82,7 +89,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
                 }
             });
             holder.cardView.setOnLongClickListener(null);
-            holder.cardView.setBackgroundResource(isSmall ? R.drawable.clickable_light : R.drawable.clickable_green_4dp);
+            holder.cardView.setBackgroundResource(isSmall ? backgroundResId : R.drawable.clickable_green_4dp);
             return;
         }
 
@@ -90,11 +97,11 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
         holder.name.setText(group.getName());
         if (group.isPhysical()) {
-            holder.cardView.setBackgroundResource(isSmall ? R.drawable.clickable_light : R.drawable.clickable_purple_4dp);
+            holder.cardView.setBackgroundResource(isSmall ? backgroundResId : R.drawable.clickable_purple_4dp);
             holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_group));
             holder.about.setText($(Val.class).of(group.getAbout()));
         } else if (group.hasEvent()) {
-            holder.cardView.setBackgroundResource(isSmall ? R.drawable.clickable_light : R.drawable.clickable_red_4dp);
+            holder.cardView.setBackgroundResource(isSmall ? backgroundResId : R.drawable.clickable_red_4dp);
             holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_event));
             Event event = $(StoreHandler.class).getStore().box(Event.class).query()
                     .equal(Event_.id, group.getEventId())
@@ -102,7 +109,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             holder.about.setText(event != null ? $(EventDetailsHandler.class).formatEventDetails(event) :
                 $(ResourcesHandler.class).getResources().getString(R.string.event));
         } else {
-            holder.cardView.setBackgroundResource(isSmall ? R.drawable.clickable_light : R.drawable.clickable_green_4dp);
+            holder.cardView.setBackgroundResource(isSmall ? backgroundResId : R.drawable.clickable_green_4dp);
             holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_group));
             holder.about.setText($(Val.class).of(group.getAbout()));
         }
@@ -209,7 +216,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
         this.isSmall = isSmall;
     }
 
-    class SearchGroupsViewHolder extends RecyclerView.ViewHolder {
+    protected class SearchGroupsViewHolder extends RecyclerView.ViewHolder {
         View cardView;
         TextView name;
         TextView about;

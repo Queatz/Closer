@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:paddingStart="@dimen/padDouble"
+    android:paddingTop="@dimen/padDouble"
+    android:paddingEnd="@dimen/padDouble"
+    android:clipToPadding="false"
+    android:clickable="true">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/clickable_green_8dp"
+        android:clickable="true"
+        android:elevation="@dimen/elevationSmall">
+
+        <android.support.design.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:elevation="0dp"
+            android:clipChildren="true"
+            android:background="@color/black_transparent"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/black_transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:cardCornerRadius="@dimen/imageCorners">
+
+            <ImageView
+                android:id="@+id/backgroundPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone"/>
+
+        </android.support.design.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad"
+            android:layout_marginTop="@dimen/pad"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="14sp"
+            android:textColor="@color/text"
+            android:textStyle="bold"
+            tools:text="Mai Pham" />
+
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/action"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toTopOf="@id/actionRecyclerView"
+            app:layout_goneMarginBottom="@dimen/pad"
+            android:textSize="12sp"
+            android:textColor="@color/text"
+            tools:text="For all fans of 1 hour workouts" />
+
+        <TextView
+            android:id="@+id/action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad"
+            android:layout_marginRight="@dimen/pad"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/actionRecyclerView"
+            app:layout_constraintHorizontal_bias="1"
+            android:textSize="12sp"
+            android:textColor="@color/text"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:text="@string/open_group" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/actionRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad"
+            app:layout_constraintTop_toBottomOf="@+id/about"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingRight="@dimen/pad"
+            android:paddingBottom="@dimen/pad"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

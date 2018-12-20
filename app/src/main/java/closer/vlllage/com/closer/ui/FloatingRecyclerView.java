@@ -34,6 +34,7 @@ public class FloatingRecyclerView extends RecyclerView {
     }
 
     private void init() {
+        setBackgroundResource(android.R.color.transparent);
         addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

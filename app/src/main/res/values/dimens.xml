@@ -14,6 +14,8 @@
     <dimen name="feedPeakHeight">84dp</dimen>
     <dimen name="elevationSmall">2dp</dimen>
     <dimen name="elevation">4dp</dimen>
+    <dimen name="elevationHigh">8dp</dimen>
+    <dimen name="elevationSky">16dp</dimen>
     <dimen name="groupActionHeight">28dp</dimen>
     <dimen name="miniWindowCornerRadius">12dp</dimen>
     <dimen name="groupActionCombinedWidth">138dp</dimen>

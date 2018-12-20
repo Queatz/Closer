@@ -2,62 +2,33 @@ package closer.vlllage.com.closer.handler.map;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
+import closer.vlllage.com.closer.ui.RecyclerViewHeader;
 
-public class HeaderAdapter extends GroupPreviewAdapter {
+public abstract class HeaderAdapter<T extends RecyclerView.ViewHolder> extends PoolRecyclerAdapter<T> {
 
-    private RecyclerView.ViewHolder headerViewHolder;
-    private HeaderHeightCallback headerHeightCallback;
+    private RecyclerViewHeader header = new RecyclerViewHeader();
 
     public HeaderAdapter(PoolMember poolMember) {
         super(poolMember);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GroupPreviewAdapter.ViewHolder holder, int position) {
-        super.onBindViewHolder(holder, position);
-        if (position == 0) {
-            headerViewHolder = holder;
-            setHeaderMargin();
-        }
-    }
-
-    private void setHeaderMargin() {
-        if (headerViewHolder == null) {
-            return;
-        }
-
-        int pad = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight);
-        ViewGroup.MarginLayoutParams params = ((ViewGroup.MarginLayoutParams) headerViewHolder.itemView.getLayoutParams());
-        params.topMargin = (headerHeightCallback == null ? 0 : headerHeightCallback.getHeaderHeight() - pad);
-        headerViewHolder.itemView.setLayoutParams(params);
+    public void onBindViewHolder(@NonNull T holder, int position) {
+        header.onBind(holder, position);
     }
 
     @Override
-    public void onViewRecycled(@NonNull GroupPreviewAdapter.ViewHolder holder) {
-        super.onViewRecycled(holder);
-        if (holder == headerViewHolder) {
-            headerViewHolder = null;
-            ViewGroup.MarginLayoutParams params = ((ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams());
-            params.topMargin = 0;
-            holder.itemView.setLayoutParams(params);
-        }
+    public void onViewRecycled(@NonNull T holder) {
+        header.onRecycled(holder);
     }
 
-    public void notifyHeaderHeightChanged() {
-        setHeaderMargin();
-    }
-
-    public void setHeaderHeightCallback(HeaderHeightCallback headerHeightCallback) {
-        this.headerHeightCallback = headerHeightCallback;
-    }
-
-    public interface HeaderHeightCallback {
-        int getHeaderHeight();
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        header.attach(recyclerView, $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight));
     }
 }

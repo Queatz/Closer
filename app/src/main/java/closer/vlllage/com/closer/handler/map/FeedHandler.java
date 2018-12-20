@@ -2,10 +2,10 @@ package closer.vlllage.com.closer.handler.map;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import java.util.List;
 
+import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -19,7 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public class FeedHandler extends PoolMember {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private HeaderAdapter groupPreviewAdapter;
+    private GroupPreviewAdapter groupPreviewAdapter;
 
     public void attach(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -29,12 +29,6 @@ public class FeedHandler extends PoolMember {
                 false
         );
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            if (top != oldTop || bottom != oldBottom) {
-                groupPreviewAdapter.notifyHeaderHeightChanged();
-            }
-        });
 
         setupFeedInjections();
 
@@ -62,10 +56,9 @@ public class FeedHandler extends PoolMember {
     }
 
     private void setupFeedInjections() {
-        groupPreviewAdapter = new HeaderAdapter(this);
+        groupPreviewAdapter = new GroupPreviewAdapter(this);
 
         recyclerView.setAdapter(groupPreviewAdapter);
-        groupPreviewAdapter.setHeaderHeightCallback(recyclerView::getHeight);
     }
 
     public void hide() {
