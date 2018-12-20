@@ -25,6 +25,7 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
 import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
 import closer.vlllage.com.closer.handler.search.SearchHandler;
@@ -65,7 +66,7 @@ public class PersonalSlideFragment extends PoolFragment {
         subscribedGroupsRecyclerView.setLayoutManager(new LinearLayoutManager(subscribedGroupsRecyclerView.getContext()));
 
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
-                .equal(GroupMember_.phone, $(PersistenceHandler.class).getPhoneId())
+                .equal(GroupMember_.phone, $(Val.class).of($(PersistenceHandler.class).getPhoneId()))
                 .equal(GroupMember_.subscribed, true)
                 .build()
                 .subscribe()
