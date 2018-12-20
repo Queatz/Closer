@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,10 @@ import android.view.animation.TranslateAnimation;
 
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
+import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
+import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
@@ -27,9 +33,15 @@ import io.objectbox.query.QueryBuilder;
 
 public class ShareActivity extends PoolActivity {
 
+    public static final String EXTRA_GROUP_MESSAGE_ID = "groupMessageId";
+
     private RecyclerView shareRecyclerView;
     private SearchGroupsHeaderAdapter searchGroupsAdapter;
     private TranslateAnimation finishAnimator;
+    private Runnable finishCallback;
+
+    private String groupMessageId;
+    private Uri data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,9 +79,7 @@ public class ShareActivity extends PoolActivity {
 
         $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
 
-        searchGroupsAdapter = new SearchGroupsHeaderAdapter($(PoolMember.class), (group, view) -> {
-
-        }, null);
+        searchGroupsAdapter = new SearchGroupsHeaderAdapter($(PoolMember.class), (group, view) -> onGroupSelected(group), null);
 
         searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.share));
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_item_light);
@@ -88,6 +98,37 @@ public class ShareActivity extends PoolActivity {
                 .single()
                 .on(AndroidScheduler.mainThread())
                 .observer(searchGroupsAdapter::setGroups));
+
+        if (getIntent() != null) {
+            groupMessageId = getIntent().getStringExtra(EXTRA_GROUP_MESSAGE_ID);
+
+            if (getIntent().getAction() == Intent.ACTION_SEND) {
+                data = getIntent().getData();
+
+                if (data == null) {
+                    data = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
+                }
+            }
+        }
+    }
+
+    private void onGroupSelected(Group group) {
+        if (finishAnimator != null) {
+            return;
+        }
+
+        if (groupMessageId != null) {
+            finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
+        } else if (data != null) {
+            $(PhotoUploadGroupMessageHandler.class).upload(data, photoId -> {
+                boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), group.getId());
+                if (!success) {
+                    $(DefaultAlerts.class).thatDidntWork();
+                }
+
+                finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
+            });
+        }
     }
 
     @Override
@@ -113,6 +154,11 @@ public class ShareActivity extends PoolActivity {
                 getWindow().getDecorView().setVisibility(View.GONE);
                 overridePendingTransition(0, 0);
                 finishAnimator = null;
+
+                if (finishCallback != null) {
+                    finishCallback.run();
+                    finishCallback = null;
+                }
             }
 
             @Override
@@ -121,5 +167,10 @@ public class ShareActivity extends PoolActivity {
             }
         });
         shareRecyclerView.startAnimation(finishAnimator);
+    }
+
+    public void finish(Runnable callback) {
+        finishCallback = callback;
+        finish();
     }
 }

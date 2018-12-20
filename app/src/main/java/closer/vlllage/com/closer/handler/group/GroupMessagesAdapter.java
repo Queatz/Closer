@@ -94,7 +94,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             toggleMessageActionLayout(holder);
         });
         holder.messageActionShare.setOnClickListener(view -> {
-            $(ShareActivityTransitionHandler.class).share();
+            $(ShareActivityTransitionHandler.class).shareGroupMessage(groupMessage.getId());
             toggleMessageActionLayout(holder);
         });
         holder.messageActionRemind.setOnClickListener(view -> {

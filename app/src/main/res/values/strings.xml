@@ -199,4 +199,5 @@
     <string name="today">Today</string>
     <string name="edit_about_group">Update about group</string>
     <string name="update_background">Update background</string>
+    <string name="private_group">Private group</string>
 </resources>
