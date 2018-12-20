@@ -79,6 +79,18 @@ public class GroupMessageAttachmentHandler extends PoolMember {
         return true;
     }
 
+    public boolean shareGroupMessage(String groupId, String groupMessageId) {
+        if (groupMessageId == null) {
+            $(DefaultAlerts.class).thatDidntWork();
+            return false;
+        }
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("share", new JsonPrimitive(groupMessageId));
+        saveMessageWithAttachment(groupId, null, jsonObject);
+        return true;
+    }
+
     private void saveMessageWithAttachment(String groupId, LatLng latLng, JsonObject jsonObject) {
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setAttachment($(JsonHandler.class).to(jsonObject));

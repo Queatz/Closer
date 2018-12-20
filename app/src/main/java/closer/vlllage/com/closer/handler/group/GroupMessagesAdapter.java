@@ -8,15 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
-import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -112,29 +108,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         holder.messageActionLayout.setVisibility(View.GONE);
 
-        if (groupMessage.getAttachment() != null) {
-            try {
-                JsonObject jsonObject = $(JsonHandler.class).from(groupMessage.getAttachment(), JsonObject.class);
-                if (jsonObject.has("action")) {
-                    $(MessageDisplay.class).displayAction(holder, jsonObject, groupMessage);
-                } else if (jsonObject.has("message")) {
-                    $(MessageDisplay.class).displayMessage(holder, jsonObject, groupMessage);
-                } else if (jsonObject.has("event")) {
-                    $(MessageDisplay.class).displayEvent(holder, jsonObject, groupMessage, onEventClickListener);
-                } else if (jsonObject.has("suggestion")) {
-                    $(MessageDisplay.class).displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener);
-                } else if (jsonObject.has("photo")) {
-                    $(MessageDisplay.class).displayPhoto(holder, jsonObject, groupMessage);
-                } else {
-                    $(MessageDisplay.class).displayFallback(holder, groupMessage);
-                }
-            } catch (JsonSyntaxException e) {
-                $(MessageDisplay.class).displayFallback(holder, groupMessage);
-                e.printStackTrace();
-            }
-        } else {
-            $(MessageDisplay.class).displayGroupMessage(holder, groupMessage);
-        }
+        $(MessageDisplay.class).display(holder, groupMessage, onEventClickListener, onSuggestionClickListener);
     }
 
     private void toggleMessageActionLayout(GroupMessageViewHolder holder) {

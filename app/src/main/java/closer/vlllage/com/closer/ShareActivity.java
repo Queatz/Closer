@@ -118,6 +118,7 @@ public class ShareActivity extends PoolActivity {
         }
 
         if (groupMessageId != null) {
+            $(GroupMessageAttachmentHandler.class).shareGroupMessage(group.getId(), groupMessageId);
             finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
         } else if (data != null) {
             $(PhotoUploadGroupMessageHandler.class).upload(data, photoId -> {

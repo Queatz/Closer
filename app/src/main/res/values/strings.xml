@@ -88,7 +88,6 @@
     <string name="confirm_cancel_invite">Cancel %1$s\'s invite?</string>
     <string name="invite_cancelled">Invite cancelled</string>
     <string name="shared_location">Shared location</string>
-    <string name="shared_a_location">Shared a location</string>
     <string name="show_location">Show location</string>
     <string name="show_on_map">Show on map</string>
     <string name="phone_shared_a_suggestion">%1$s shared a suggestion</string>
@@ -200,4 +199,5 @@
     <string name="edit_about_group">Update about group</string>
     <string name="update_background">Update background</string>
     <string name="private_group">Private group</string>
+    <string name="shared_by">%1$s — shared by %2$s</string>
 </resources>

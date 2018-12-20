@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.Date;
 
@@ -21,6 +22,7 @@ import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.GroupMessage;
+import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.store.models.Suggestion;
@@ -30,6 +32,18 @@ import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
 import static android.text.format.DateUtils.WEEK_IN_MILLIS;
 
 public class MessageDisplay extends PoolMember {
+
+    public void displayShare(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnEventClickListener onEventClickListener, GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
+        GroupMessage sharedGroupMessage = $(StoreHandler.class).getStore().box(GroupMessage.class).query().equal(GroupMessage_.id, jsonObject.get("share").getAsString()).build().findFirst();
+
+        if (sharedGroupMessage != null) {
+            display(holder, sharedGroupMessage, onEventClickListener, onSuggestionClickListener);
+        } else {
+            displayFallback(holder, groupMessage);
+        }
+
+        holder.time.setText($(GroupMessageParseHandler.class).parseText($(ResourcesHandler.class).getResources().getString(R.string.shared_by, getTimeString(groupMessage.getTime()), "@" + groupMessage.getFrom())));
+    }
 
     public void displayAction(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage) {
         holder.eventMessage.setVisibility(View.GONE);
@@ -190,6 +204,36 @@ public class MessageDisplay extends PoolMember {
         holder.message.setText("");
         holder.time.setVisibility(View.VISIBLE);
         holder.time.setText(getTimeString(groupMessage.getTime()));
+    }
+
+    public void display(GroupMessagesAdapter.GroupMessageViewHolder holder, GroupMessage groupMessage,
+                        GroupMessagesAdapter.OnEventClickListener onEventClickListener,
+                        GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
+        if (groupMessage.getAttachment() != null) {
+            try {
+                JsonObject jsonObject = $(JsonHandler.class).from(groupMessage.getAttachment(), JsonObject.class);
+                if (jsonObject.has("action")) {
+                    displayAction(holder, jsonObject, groupMessage);
+                } else if (jsonObject.has("message")) {
+                    displayMessage(holder, jsonObject, groupMessage);
+                } else if (jsonObject.has("event")) {
+                    displayEvent(holder, jsonObject, groupMessage, onEventClickListener);
+                } else if (jsonObject.has("suggestion")) {
+                    displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener);
+                } else if (jsonObject.has("photo")) {
+                    displayPhoto(holder, jsonObject, groupMessage);
+                } else if (jsonObject.has("share")) {
+                    displayShare(holder, jsonObject, groupMessage, onEventClickListener, onSuggestionClickListener);
+                } else {
+                    displayFallback(holder, groupMessage);
+                }
+            } catch (JsonSyntaxException e) {
+                displayFallback(holder, groupMessage);
+                e.printStackTrace();
+            }
+        } else {
+            displayGroupMessage(holder, groupMessage);
+        }
     }
 
     private Phone getPhone(String phoneId) {
