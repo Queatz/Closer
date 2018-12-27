@@ -85,6 +85,12 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
                 Event event = ((Event) mapBubble.getTag());
 
                 holder.name.setText(event.getName() + "\n" + $(EventDetailsHandler.class).formatEventDetails(event));
+
+                if (event.isPublic()) {
+                    holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+                } else {
+                    holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0);
+                }
                 break;
         }
 

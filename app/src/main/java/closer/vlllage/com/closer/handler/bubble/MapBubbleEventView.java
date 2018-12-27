@@ -29,6 +29,12 @@ public class MapBubbleEventView extends PoolMember {
         TextView actionTextView = view.findViewById(R.id.action);
         bubbleTextView.setText(mapBubble.getStatus());
 
+        if (((Event) mapBubble.getTag()).isPublic()) {
+            bubbleTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+        } else {
+            bubbleTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0);
+        }
+
         actionTextView.setText($(EventDetailsHandler.class).formatEventDetails((Event) mapBubble.getTag()));
     }
 

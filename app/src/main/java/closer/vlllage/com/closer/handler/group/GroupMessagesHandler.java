@@ -172,7 +172,7 @@ public class GroupMessagesHandler extends PoolMember {
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
                 .equal(GroupMessage_.to, group.getId());
 
-        if (!group.isPublic()) {
+        if (!group.isPublic() && !group.hasEvent()) {
             queryBuilder.greater(GroupMessage_.time, $(TimeAgo.class).thirtySixHoursAgo());
         }
 
@@ -227,7 +227,7 @@ public class GroupMessagesHandler extends PoolMember {
         }
 
         if ($(GroupHandler.class).getGroupContact() == null) {
-            if (!$(GroupHandler.class).getGroup().isPublic()) {
+            if (!$(GroupHandler.class).getGroup().isPublic() && !$(GroupHandler.class).getGroup().hasEvent()) {
                 return false;
             }
         }

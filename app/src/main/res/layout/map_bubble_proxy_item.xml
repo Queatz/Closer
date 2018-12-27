@@ -27,6 +27,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/photo"
+        android:drawablePadding="@dimen/pad"
+        android:drawableTint="@color/white"
         android:textSize="12sp"
         android:textColor="@color/text"
         android:textStyle="bold"

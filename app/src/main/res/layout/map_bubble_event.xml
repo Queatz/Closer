@@ -31,11 +31,12 @@
                 android:id="@+id/bubbleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:textSize="14sp"
                 android:textColor="@color/text"
                 android:textStyle="bold"
                 android:maxWidth="196dp"
+                android:drawablePadding="@dimen/pad"
+                android:drawableTint="@color/white"
                 tools:text="Skinny dipping at the beach" />
 
             <TextView

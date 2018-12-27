@@ -41,6 +41,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 LinearLayoutManager.HORIZONTAL,
                 false
         ));
+
         myGroupsAdapter = new MyGroupsAdapter(this);
         $(MyGroupsLayoutActionsHandler.class).attach(myGroupsAdapter);
         myGroupsRecyclerView.setAdapter(myGroupsAdapter);

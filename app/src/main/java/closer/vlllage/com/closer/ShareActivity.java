@@ -88,8 +88,7 @@ public class ShareActivity extends PoolActivity {
         shareRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         shareRecyclerView.setAdapter(searchGroupsAdapter);
 
-        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
-                .notEqual(Group_.name, "");
+        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
 
         $(DisposableHandler.class).add(queryBuilder
                 .sort($(SortHandler.class).sortGroups())

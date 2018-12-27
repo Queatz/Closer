@@ -82,8 +82,7 @@ public class PublicGroupFeedItemHandler extends PoolMember {
         Consumer<CameraPosition> cameraPositionCallback = cameraPosition -> {
             QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
                     .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
-                    .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
-                    .notEqual(Group_.name, "");
+                    .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance);
 
             $(DisposableHandler.class).add(queryBuilder
                     .sort($(SortHandler.class).sortGroups())

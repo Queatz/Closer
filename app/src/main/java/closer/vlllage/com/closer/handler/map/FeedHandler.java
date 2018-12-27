@@ -39,8 +39,7 @@ public class FeedHandler extends PoolMember {
                 .subscribe(cameraPosition -> {
                     QueryBuilder<Group> groupPreviewQueryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
                             .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
-                            .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
-                            .equal(Group_.isPublic, true);
+                            .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance);
                     $(DisposableHandler.class).add(groupPreviewQueryBuilder
                             .sort($(SortHandler.class).sortGroups())
                             .build()

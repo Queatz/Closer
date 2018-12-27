@@ -95,7 +95,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
         Group group = groups.get(position);
 
-        holder.name.setText(group.getName());
+        holder.name.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
         if (!group.hasEvent() && !group.isPublic()) {
             holder.cardView.setBackgroundResource(isSmall ? backgroundResId : R.drawable.clickable_blue_4dp);
             holder.action.setText(actionText != null ? actionText : $(ResourcesHandler.class).getResources().getString(R.string.open_group));

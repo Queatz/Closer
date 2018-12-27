@@ -28,7 +28,6 @@ import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
-import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
@@ -67,8 +66,7 @@ public class SearchHandler extends PoolMember {
             }
         });
 
-        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query()
-                .equal(Group_.isPublic, true);
+        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
 
         $(DisposableHandler.class).add(queryBuilder
                 .sort($(SortHandler.class).sortGroups())
