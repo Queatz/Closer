@@ -299,9 +299,9 @@ public class GroupActivity extends CircularRevealActivity {
     }
 
     private void refreshPhysicalGroupActions(Group group) {
-        int buttonCount = 1;
-
         if (group.isPhysical()) {
+            int buttonCount = 1;
+
             if (isEmptyOrWhitespace(group.getName())) {
                 actionSettingsSetName.setVisibility(View.VISIBLE);
                 buttonCount++;
@@ -315,16 +315,14 @@ public class GroupActivity extends CircularRevealActivity {
             } else {
                 actionSettingsSetBackground.setVisibility(View.GONE);
             }
-        }
 
-        if (buttonCount < 3) {
-            actionSettingsGetDirections.setVisibility(View.VISIBLE);
-            buttonCount++;
-        } else {
-            actionSettingsGetDirections.setVisibility(View.GONE);
-        }
+            if (buttonCount < 3) {
+                actionSettingsGetDirections.setVisibility(View.VISIBLE);
+                buttonCount++;
+            } else {
+                actionSettingsGetDirections.setVisibility(View.GONE);
+            }
 
-        if (group.isPhysical()) {
             if (buttonCount < 3) {
                 actionSettingsHostEvent.setVisibility(View.VISIBLE);
             } else {

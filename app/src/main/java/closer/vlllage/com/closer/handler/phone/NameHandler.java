@@ -1,17 +1,15 @@
 package closer.vlllage.com.closer.handler.phone;
 
-import java.util.Date;
 import java.util.Random;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.TimeAgo;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupInvite;
 import closer.vlllage.com.closer.store.models.Phone;
-
-import static android.text.format.DateUtils.DAY_IN_MILLIS;
 
 public class NameHandler extends PoolMember {
 
@@ -39,8 +37,14 @@ public class NameHandler extends PoolMember {
             return noName();
         }
 
-        return $(Val.class).isEmpty(phone.getName()) ?
+        String name = $(Val.class).isEmpty(phone.getName()) ?
                 fallbackName(phone.getId()) : phone.getName();
+
+        if (isInactive(phone)) {
+            return $(ResourcesHandler.class).getResources().getString(R.string.contact_inactive_inline, name);
+        } else {
+            return name;
+        }
     }
 
     public String getName(GroupContact groupContact) {
@@ -80,8 +84,10 @@ public class NameHandler extends PoolMember {
     }
 
     private boolean isInactive(GroupContact groupContact) {
-        Date fifteenDaysAgo = new Date();
-        fifteenDaysAgo.setTime(fifteenDaysAgo.getTime() - 15 * DAY_IN_MILLIS);
-        return groupContact.getContactActive().before(fifteenDaysAgo);
+        return groupContact.getContactActive().before($(TimeAgo.class).fifteenDaysAgo());
+    }
+
+    private boolean isInactive(Phone phone) {
+        return phone.getUpdated().before($(TimeAgo.class).fifteenDaysAgo());
     }
 }

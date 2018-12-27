@@ -30,8 +30,10 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.TimeAgo;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
+import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -238,6 +240,7 @@ public class GroupContactsHandler extends PoolMember {
             $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Phone.class).query()
                     .contains(Phone_.name, $(Val.class).of(query))
                     .notNull(Phone_.id)
+                    .greater(Phone_.updated, $(TimeAgo.class).fifteenDaysAgo())
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
@@ -254,7 +257,7 @@ public class GroupContactsHandler extends PoolMember {
                         continue;
                     }
 
-                    allContacts.add(0, new PhoneContact(phone.getName(), phone.getStatus()).setPhoneId(phone.getId()));
+                    allContacts.add(0, new PhoneContact($(NameHandler.class).getName(phone), phone.getStatus()).setPhoneId(phone.getId()));
                 }
 
                 if (query.isEmpty()) {
