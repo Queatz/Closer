@@ -32,6 +32,7 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.DistanceHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
+import closer.vlllage.com.closer.handler.helpers.GroupScopeHandler;
 import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
@@ -211,6 +212,8 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
         } else {
             holder.backgroundPhoto.setVisibility(View.GONE);
         }
+
+        $(GroupScopeHandler.class).setup(group, holder.scopeIndicatorButton);
     }
 
     @Override
@@ -286,6 +289,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
         ImageButton sendButton;
         EditText replyMessage;
         ImageView backgroundPhoto;
+        ImageButton scopeIndicatorButton;
         MaxSizeFrameLayout mentionSuggestionsLayout;
         RecyclerView mentionSuggestionRecyclerView;
 
@@ -298,6 +302,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
             sendButton = itemView.findViewById(R.id.sendButton);
             replyMessage = itemView.findViewById(R.id.replyMessage);
             backgroundPhoto = itemView.findViewById(R.id.backgroundPhoto);
+            scopeIndicatorButton = itemView.findViewById(R.id.scopeIndicatorButton);
             mentionSuggestionsLayout = itemView.findViewById(R.id.mentionSuggestionsLayout);
             mentionSuggestionRecyclerView = itemView.findViewById(R.id.mentionSuggestionRecyclerView);
         }

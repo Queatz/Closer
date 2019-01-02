@@ -41,6 +41,7 @@ import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
+import closer.vlllage.com.closer.handler.helpers.GroupScopeHandler;
 import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
@@ -183,13 +184,9 @@ public class GroupActivity extends CircularRevealActivity {
                 ));
             });
 
-            if (group.isPublic()) {
-                scopeIndicatorButton.setVisibility(View.VISIBLE);
-                scopeIndicatorButton.setImageResource(R.drawable.ic_public_black_24dp);
-                scopeIndicatorButton.setOnClickListener(view -> {
-                    $(DefaultAlerts.class).message(R.string.public_group_title, R.string.public_group_message);
-                });
+            $(GroupScopeHandler.class).setup(group, scopeIndicatorButton);
 
+            if (group.isPublic()) {
                 if (group.isPhysical()) {
                     eventToolbar.setVisibility(View.VISIBLE);
                     actionShare.setVisibility(View.GONE);
@@ -213,11 +210,6 @@ public class GroupActivity extends CircularRevealActivity {
                     });
                 }
             } else {
-                scopeIndicatorButton.setVisibility(View.VISIBLE);
-                scopeIndicatorButton.setImageResource(R.drawable.ic_lock_black_18dp);
-                scopeIndicatorButton.setOnClickListener(view -> {
-                    $(DefaultAlerts.class).message(R.string.private_group_title, R.string.private_group_message);
-                });
                 $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton);
                 peopleInGroup.setSelected(true);
                 peopleInGroup.setOnClickListener(view -> toggleContactsView());
