@@ -26,19 +26,25 @@ public class MapBubbleView extends PoolMember {
     }
 
     public void update(View view, MapBubble mapBubble) {
-        if (mapBubble.getName().isEmpty()) {
-            view.findViewById(R.id.name).setVisibility(View.GONE);
-        } else {
+        if (mapBubble.isInProxy()) {
             view.findViewById(R.id.name).setVisibility(View.VISIBLE);
-            ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName());
-        }
+            ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName() + "\n" + mapBubble.getStatus());
+            ((TextView) view.findViewById(R.id.info)).setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
+        } else {
+            if (mapBubble.getName().isEmpty()) {
+                view.findViewById(R.id.name).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.name).setVisibility(View.VISIBLE);
+                ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName());
+            }
 
-        ((TextView) view.findViewById(R.id.status)).setText($(Val.class).of(mapBubble.getStatus()));
+            ((TextView) view.findViewById(R.id.status)).setText($(Val.class).of(mapBubble.getStatus()));
 
-        if (mapBubble.getAction() != null) {
-            ((TextView) view.findViewById(R.id.action)).setText(mapBubble.getAction());
-        } else if (mapBubble.getTag() instanceof Phone) {
-            ((TextView) view.findViewById(R.id.action)).setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
+            if (mapBubble.getAction() != null) {
+                ((TextView) view.findViewById(R.id.action)).setText(mapBubble.getAction());
+            } else if (mapBubble.getTag() instanceof Phone) {
+                ((TextView) view.findViewById(R.id.action)).setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
+            }
         }
     }
 
