@@ -10,11 +10,15 @@ import closer.vlllage.com.closer.store.models.Phone;
 public class SortHandler extends PoolMember {
 
     public Comparator<Group> sortGroups() {
+        return sortGroups(true);
+    }
+
+    public Comparator<Group> sortGroups(boolean privateFirst) {
         return (group, groupOther) ->
                 !$(DistanceHandler.class).isUserNearGroup(group) && $(DistanceHandler.class).isUserNearGroup(groupOther) ? 1 :
                 !$(DistanceHandler.class).isUserNearGroup(groupOther) && $(DistanceHandler.class).isUserNearGroup(group) ? -1 :
-                group.isPublic() && !groupOther.isPublic() ? 1 :
-                groupOther.isPublic() && !group.isPublic() ? -1 :
+                privateFirst && group.isPublic() && !groupOther.isPublic() ? 1 :
+                privateFirst && groupOther.isPublic() && !group.isPublic() ? -1 :
                 group.getUpdated() == null || groupOther.getUpdated() == null ? 0 :
                 groupOther.getUpdated().compareTo(group.getUpdated());
     }

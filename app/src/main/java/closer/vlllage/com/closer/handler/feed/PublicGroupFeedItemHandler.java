@@ -88,7 +88,7 @@ public class PublicGroupFeedItemHandler extends PoolMember {
                     .equal(Group_.isPublic, false);
 
             $(DisposableHandler.class).add(queryBuilder
-                    .sort($(SortHandler.class).sortGroups())
+                    .sort($(SortHandler.class).sortGroups(false))
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())

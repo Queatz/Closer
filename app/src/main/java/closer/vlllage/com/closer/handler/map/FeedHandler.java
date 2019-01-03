@@ -44,7 +44,7 @@ public class FeedHandler extends PoolMember {
                             .or()
                             .equal(Group_.isPublic, false);
                     $(DisposableHandler.class).add(groupPreviewQueryBuilder
-                            .sort($(SortHandler.class).sortGroups())
+                            .sort($(SortHandler.class).sortGroups(false))
                             .build()
                             .subscribe()
                             .single()
