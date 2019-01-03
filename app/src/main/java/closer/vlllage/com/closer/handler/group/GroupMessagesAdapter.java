@@ -14,6 +14,8 @@ import java.util.List;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.phone.NameHandler;
+import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
@@ -86,7 +88,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         });
 
         holder.messageActionReply.setOnClickListener(view -> {
-            $(DefaultAlerts.class).message("That doesn't work yet!");
+            $(PhoneMessagesHandler.class).openMessagesWithPhone(groupMessage.getFrom(), $(NameHandler.class).getName(groupMessage.getFrom()), "");
             toggleMessageActionLayout(holder);
         });
         holder.messageActionShare.setOnClickListener(view -> {

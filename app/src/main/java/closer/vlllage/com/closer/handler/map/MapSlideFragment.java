@@ -20,7 +20,6 @@ import java.util.Locale;
 
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
@@ -29,6 +28,7 @@ import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuItem;
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuView;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.DataHandler;
 import closer.vlllage.com.closer.handler.data.LocationHandler;
 import closer.vlllage.com.closer.handler.data.PermissionHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
@@ -48,9 +48,11 @@ import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.helpers.ViewAttributeHandler;
+import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Suggestion;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -152,8 +154,10 @@ public class MapSlideFragment extends PoolFragment {
             });
         });
         $(MapHandler.class).setOnMapIdleListener(latLng -> {
-            $(DisposableHandler.class).add($(ApiHandler.class).getPhonesNear(latLng).map(this::mapBubbleFrom).subscribe(mapBubbles ->
-                    $(BubbleHandler.class).replace(mapBubbles), this::networkError));
+            $(DisposableHandler.class).add($(DataHandler.class).getPhonesNear(latLng)
+                    .map(this::mapBubbleFrom).subscribe(mapBubbles -> {
+                        $(BubbleHandler.class).replace(mapBubbles);
+                    }, this::networkError));
 
             $(DisposableHandler.class).add($(ApiHandler.class).getSuggestionsNear(latLng).map(SuggestionResult::from).subscribe(suggestions ->
                     $(SuggestionHandler.class).loadAll(suggestions), this::networkError));
@@ -275,19 +279,19 @@ public class MapSlideFragment extends PoolFragment {
         locationPermissionWasDenied = locationPermissionDenied;
     }
 
-    public List<MapBubble> mapBubbleFrom(List<PhoneResult> phoneResults) {
+    public List<MapBubble> mapBubbleFrom(List<Phone> phoneList) {
         List<MapBubble> mapBubbles = new ArrayList<>();
 
-        for (PhoneResult phoneResult : phoneResults) {
-            if (phoneResult.geo == null) {
+        for (Phone phone : phoneList) {
+            if (phone.getLatitude() == null || phone.getLongitude() == null) {
                 continue;
             }
 
             mapBubbles.add(new MapBubble(
-                    $(LatLngStr.class).to(phoneResult.geo),
-                    phoneResult.name == null ? "" : phoneResult.name,
-                    phoneResult.status
-            ).setPhone(phoneResult.id));
+                    $(LatLngStr.class).to(phone.getLatitude(), phone.getLongitude()),
+                    $(NameHandler.class).getName(phone),
+                    phone.getStatus()
+            ).setTag(phone).setPhone(phone.getId()));
         }
 
         return mapBubbles;

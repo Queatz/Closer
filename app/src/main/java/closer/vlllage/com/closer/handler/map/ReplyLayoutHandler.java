@@ -33,6 +33,7 @@ public class ReplyLayoutHandler extends PoolMember {
     private View sendButton;
     private EditText replyMessage;
     private ImageButton getDirectionsButton;
+    private ImageButton showOnMapButton;
 
     private MapBubble replyingToMapBubble;
 
@@ -43,6 +44,7 @@ public class ReplyLayoutHandler extends PoolMember {
         this.replyLayoutName = replyLayout.findViewById(R.id.replyLayoutName);
         this.replyLayoutStatus = replyLayout.findViewById(R.id.replyLayoutStatus);
         this.getDirectionsButton = replyLayout.findViewById(R.id.getDirectionsButton);
+        this.showOnMapButton = replyLayout.findViewById(R.id.showOnMapButton);
 
         sendButton.setOnClickListener(view -> reply());
 
@@ -73,6 +75,10 @@ public class ReplyLayoutHandler extends PoolMember {
 
         getDirectionsButton.setOnClickListener(view -> {
             $(OutboundHandler.class).openDirections(replyingToMapBubble.getLatLng());
+        });
+
+        showOnMapButton.setOnClickListener(view -> {
+            $(MapActivityHandler.class).showPhoneOnMap(replyingToMapBubble.getPhone());
         });
     }
 

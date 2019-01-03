@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.phone;
 
+import java.util.List;
 import java.util.Random;
 
 import closer.vlllage.com.closer.R;
@@ -7,9 +8,11 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.TimeAgo;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupInvite;
 import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 
 public class NameHandler extends PoolMember {
 
@@ -31,6 +34,15 @@ public class NameHandler extends PoolMember {
         "Random Lemur",
         "Random Baboon"
     };
+
+    public String getName(String phoneId) {
+        List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).find(Phone_.id, phoneId);
+        if (phoneList.isEmpty()) {
+            return $(ResourcesHandler.class).getResources().getString(R.string.unknown);
+        }
+
+        return getName(phoneList.get(0));
+    }
 
     public String getName(Phone phone) {
         if (phone == null) {

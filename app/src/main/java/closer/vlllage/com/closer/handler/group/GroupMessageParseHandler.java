@@ -149,15 +149,7 @@ public class GroupMessageParseHandler extends PoolMember {
 
     private OnMentionClickListener getDefaultMentionClickListener() {
         return mention -> {
-            List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).find(Phone_.id, mention);
-            String name;
-            if (phoneList.isEmpty()) {
-                name = $(ResourcesHandler.class).getResources().getString(R.string.unknown);
-            } else {
-                name = $(NameHandler.class).getName(phoneList.get(0));
-            }
-
-            $(PhoneMessagesHandler.class).openMessagesWithPhone(mention, name, "");
+            $(PhoneMessagesHandler.class).openMessagesWithPhone(mention, $(NameHandler.class).getName(mention), "");
         };
     }
 

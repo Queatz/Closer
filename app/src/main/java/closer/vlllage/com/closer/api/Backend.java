@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.api.models.StateResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.api.models.VerifiedResult;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -26,16 +26,16 @@ public interface Backend {
     // Phone
 
     @GET("map/{geo}")
-    Observable<List<PhoneResult>> getPhonesNear(@Path("geo") String geo);
+    Single<List<PhoneResult>> getPhonesNear(@Path("geo") String geo);
 
     @POST("phone/{phone}")
-    Observable<SuccessResult> sendMessage(@Path("phone") String phone, @Query("message") String message);
+    Single<SuccessResult> sendMessage(@Path("phone") String phone, @Query("message") String message);
 
     @GET("phone")
-    Observable<PhoneResult> phone();
+    Single<PhoneResult> phone();
 
     @POST("phone")
-    Observable<CreateResult> phoneUpdate(
+    Single<CreateResult> phoneUpdate(
             @Query("geo") String latLng,
             @Query("name") String name,
             @Query("status") String status,
@@ -44,121 +44,121 @@ public interface Backend {
     );
 
     @GET("phone")
-    Observable<List<PhoneResult>> searchPhonesNear(@Query("geo") String latLng, @Query("query") String query);
+    Single<List<PhoneResult>> searchPhonesNear(@Query("geo") String latLng, @Query("query") String query);
 
     // Verify Number
 
     @GET("verify")
-    Observable<VerifiedResult> getIsVerified();
+    Single<VerifiedResult> getIsVerified();
 
     @POST("verify")
-    Observable<SuccessResult> setPhoneNumber(@Query("set-number") String phoneNumber);
+    Single<SuccessResult> setPhoneNumber(@Query("set-number") String phoneNumber);
 
     @POST("verify")
-    Observable<SuccessResult> sendVerificationCode(@Query("verify-code") String verificationCode);
+    Single<SuccessResult> sendVerificationCode(@Query("verify-code") String verificationCode);
 
     // Suggestion
 
     @GET("suggestion/{latLng}")
-    Observable<List<SuggestionResult>> getSuggestionsNear(@Path("latLng") String latLng);
+    Single<List<SuggestionResult>> getSuggestionsNear(@Path("latLng") String latLng);
 
     @POST("suggestion")
-    Observable<CreateResult> addSuggestion(@Query("name") String name, @Query("geo") String geo);
+    Single<CreateResult> addSuggestion(@Query("name") String name, @Query("geo") String geo);
 
     // Group Message
 
     @GET("message")
-    Observable<List<GroupMessageResult>> myMessages(@Query("geo") String latLng);
+    Single<List<GroupMessageResult>> myMessages(@Query("geo") String latLng);
 
     @POST("message")
-    Observable<CreateResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
+    Single<CreateResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
 
     @POST("message")
-    Observable<CreateResult> sendAreaMessage(@Query("geo") String latLng, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
+    Single<CreateResult> sendAreaMessage(@Query("geo") String latLng, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
 
     @GET("group/{id}/messages")
-    Observable<List<GroupMessageResult>> getGroupMessages(@Path("id") String groupId);
+    Single<List<GroupMessageResult>> getGroupMessages(@Path("id") String groupId);
 
     // Group
 
     @GET("group")
-    Observable<StateResult> myGroups(@Query("geo") String latLng);
+    Single<StateResult> myGroups(@Query("geo") String latLng);
 
     @POST("group")
-    Observable<CreateResult> createGroup(@Query("name") String groupName);
+    Single<CreateResult> createGroup(@Query("name") String groupName);
 
     @POST("group")
-    Observable<CreateResult> createPublicGroup(@Query("name") String groupName, @Query("about") String about, @Query("geo") String geo, @Query("public") boolean isPublic);
+    Single<CreateResult> createPublicGroup(@Query("name") String groupName, @Query("about") String about, @Query("geo") String geo, @Query("public") boolean isPublic);
 
     @POST("group")
-    Observable<CreateResult> createPhysicalGroup(@Query("geo") String geo, @Query("physical") boolean physical);
+    Single<CreateResult> createPhysicalGroup(@Query("geo") String geo, @Query("physical") boolean physical);
 
     @GET("group")
-    Observable<List<GroupResult>> getPhysicalGroups(@Query("geo") String latLng, @Query("kind") String kind);
+    Single<List<GroupResult>> getPhysicalGroups(@Query("geo") String latLng, @Query("kind") String kind);
 
     @GET("group/{id}")
-    Observable<GroupResult> getGroup(@Path("id") String groupId);
+    Single<GroupResult> getGroup(@Path("id") String groupId);
 
     @POST("group/{id}")
-    Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("name") String name, @Query("invite") String phoneNumber);
+    Single<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("name") String name, @Query("invite") String phoneNumber);
 
     @POST("group/{id}")
-    Observable<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("invite-phone") String phoneId);
+    Single<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("invite-phone") String phoneId);
 
     @POST("group/{id}")
-    Observable<SuccessResult> leaveGroup(@Path("id") String groupId, @Query("leave") boolean leaveGroup);
+    Single<SuccessResult> leaveGroup(@Path("id") String groupId, @Query("leave") boolean leaveGroup);
 
     @POST("group/{id}")
-    Observable<SuccessResult> cancelInvite(@Path("id") String groupId, @Query("cancel-invite") String groupInviteId);
+    Single<SuccessResult> cancelInvite(@Path("id") String groupId, @Query("cancel-invite") String groupInviteId);
 
     @POST("group/{id}")
-    Observable<SuccessResult> convertToHub(@Path("id") String groupId, @Query("name") String name, @Query("hub") boolean hub);
+    Single<SuccessResult> convertToHub(@Path("id") String groupId, @Query("name") String name, @Query("hub") boolean hub);
 
     @POST("group/{id}")
-    Observable<SuccessResult> setGroupPhoto(@Path("id") String groupId, @Query("photo") String photo);
+    Single<SuccessResult> setGroupPhoto(@Path("id") String groupId, @Query("photo") String photo);
 
     @POST("group/{id}")
-    Observable<SuccessResult> setGroupAbout(@Path("id") String groupId, @Query("about") String about);
+    Single<SuccessResult> setGroupAbout(@Path("id") String groupId, @Query("about") String about);
 
     // Group Action
 
     @POST("action/{id}/delete")
-    Observable<SuccessResult> removeGroupAction(@Path("id") String groupActionId);
+    Single<SuccessResult> removeGroupAction(@Path("id") String groupActionId);
 
     @POST("action")
-    Observable<CreateResult> createGroupAction(@Query("group") String groupId, @Query("name") String groupActionName, @Query("intent") String groupActionIntent);
+    Single<CreateResult> createGroupAction(@Query("group") String groupId, @Query("name") String groupActionName, @Query("intent") String groupActionIntent);
 
     @GET("group/{id}/actions")
-    Observable<List<GroupActionResult>> getGroupActions(@Path("id") String groupId);
+    Single<List<GroupActionResult>> getGroupActions(@Path("id") String groupId);
 
     @GET("action/{latLng}")
-    Observable<List<GroupActionResult>> getGroupActionsNearGeo(@Path("latLng") String latLng);
+    Single<List<GroupActionResult>> getGroupActionsNearGeo(@Path("latLng") String latLng);
 
     @POST("action/{id}")
-    Observable<SuccessResult> setGroupActionPhoto(@Path("id") String groupActionId, @Query("photo") String photo);
+    Single<SuccessResult> setGroupActionPhoto(@Path("id") String groupActionId, @Query("photo") String photo);
 
     // Event
 
     @GET("event")
-    Observable<List<EventResult>> getEvents(@Query("geo") String latLng);
+    Single<List<EventResult>> getEvents(@Query("geo") String latLng);
 
     @GET("event/{id}")
-    Observable<EventResult> getEvent(@Path("id") String eventId);
+    Single<EventResult> getEvent(@Path("id") String eventId);
 
     @POST("event")
-    Observable<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("public") boolean isPublic, @Query("geo") String geo, @Query(value = "starts-at", encoded = true) String startsAt, @Query(value = "ends-at", encoded = true) String endsAt);
+    Single<CreateResult> createEvent(@Query("name") String name, @Query("about") String about, @Query("public") boolean isPublic, @Query("geo") String geo, @Query(value = "starts-at", encoded = true) String startsAt, @Query(value = "ends-at", encoded = true) String endsAt);
 
     @POST("event/{id}")
-    Observable<SuccessResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);
+    Single<SuccessResult> cancelEvent(@Path("id") String eventId, @Query("cancel") boolean cancel);
 
     // Member
 
     @GET("member")
-    Observable<List<GroupMemberResult>> getAllGroupMembers();
+    Single<List<GroupMemberResult>> getAllGroupMembers();
 
     @GET("member/of/{group}")
-    Observable<GroupMemberResult> getGroupMember(@Path("group") String groupId);
+    Single<GroupMemberResult> getGroupMember(@Path("group") String groupId);
 
     @POST("member/of/{group}")
-    Observable<CreateResult> updateGroupMember(@Path("group") String groupId, @Query("muted") boolean muted, @Query("subscribed") boolean subscribed);
+    Single<CreateResult> updateGroupMember(@Path("group") String groupId, @Query("muted") boolean muted, @Query("subscribed") boolean subscribed);
 }

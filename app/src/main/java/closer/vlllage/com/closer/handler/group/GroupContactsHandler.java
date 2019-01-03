@@ -45,7 +45,7 @@ import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
 import io.objectbox.android.AndroidScheduler;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -184,7 +184,7 @@ public class GroupContactsHandler extends PoolMember {
     }
 
     private void sendInviteToGroup(Group group, PhoneContact phoneContact) {
-        Observable<SuccessResult> inviteToGroup = phoneContact.getPhoneId() == null ?
+        Single<SuccessResult> inviteToGroup = phoneContact.getPhoneId() == null ?
                 $(ApiHandler.class).inviteToGroup(group.getId(), phoneContact.getName(), phoneContact.getPhoneNumber()) :
                 $(ApiHandler.class).inviteToGroup(group.getId(), phoneContact.getPhoneId());
 

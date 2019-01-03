@@ -38,7 +38,7 @@ public class GroupMemberHandler extends PoolMember {
                         if (groupMembers.isEmpty()) {
                             $(DisposableHandler.class).add($(ApiHandler.class).getGroupMember(group.getId())
                                     .map(GroupMemberResult::from)
-                                    .doOnNext($(StoreHandler.class).getStore().box(GroupMember.class)::put)
+                                    .doOnSuccess($(StoreHandler.class).getStore().box(GroupMember.class)::put)
                                     .subscribe(
                                             groupMember -> setupGroupMember(group, groupMember),
                                             error -> setupGroupMember(group, null)
@@ -54,6 +54,9 @@ public class GroupMemberHandler extends PoolMember {
                     }),
                     new MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut, () -> {
                         $(InstallShortcutHandler.class).installShortcut(group);
+                    }),
+                    new MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background, () -> {
+                        $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> { });
                     }));
         }
     }
@@ -92,8 +95,7 @@ public class GroupMemberHandler extends PoolMember {
                 }),
                 new MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background, () -> {
                     if (group != null) {
-                        $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
-                        });
+                        $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> { });
                     }
                 }),
                 new MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.edit_about_group, () -> {

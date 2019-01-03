@@ -50,6 +50,11 @@ public class IntentHandler extends PoolMember {
                 $(BubbleHandler.class).add($(SuggestionHandler.class).suggestionBubbleFrom(suggestion));
                 $(MapHandler.class).centerMap(latLng);
                 onRequestMapOnScreenListener.onRequestMapOnScreen();
+            } else if (intent.hasExtra(EXTRA_LAT_LNG)) {
+                float[] latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG);
+                LatLng latLng = new LatLng(latLngFloats[0], latLngFloats[1]);
+                $(MapHandler.class).centerMap(latLng);
+                onRequestMapOnScreenListener.onRequestMapOnScreen();
             }
         }
     }

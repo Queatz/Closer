@@ -27,7 +27,7 @@ import closer.vlllage.com.closer.store.models.Suggestion_;
 import io.objectbox.Property;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.reactive.DataObserver;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public class SyncHandler extends PoolMember {
     public void syncAll() {
@@ -164,7 +164,7 @@ public class SyncHandler extends PoolMember {
         group.setLocalOnly(true);
         $(StoreHandler.class).getStore().box(Group.class).put(group);
 
-        Observable<CreateResult> createApiRequest;
+        Single<CreateResult> createApiRequest;
 
         if (group.isPhysical()) {
             createApiRequest = $(ApiHandler.class).createPhysicalGroup(new LatLng(
@@ -196,7 +196,7 @@ public class SyncHandler extends PoolMember {
         groupMessage.setLocalOnly(true);
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
 
-        Observable<CreateResult> apiCall;
+        Single<CreateResult> apiCall;
 
         if (groupMessage.getLatitude() != null && groupMessage.getLongitude() != null) {
             apiCall = $(ApiHandler.class).sendAreaMessage(

@@ -86,4 +86,16 @@
         android:tint="@color/colorPrimary"
         android:src="@drawable/ic_directions_black_24dp"/>
 
+    <ImageButton
+        android:id="@+id/showOnMapButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@+id/getDirectionsButton"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/get_directions"
+        android:minWidth="0dp"
+        android:tint="@color/colorPrimary"
+        android:src="@drawable/ic_my_location_black_24dp"/>
+
 </android.support.constraint.ConstraintLayout>

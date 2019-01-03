@@ -132,8 +132,9 @@ public class MapBubble {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setTag(Object tag) {
+    public MapBubble setTag(Object tag) {
         this.tag = tag;
+        return this;
     }
 
     public Object getTag() {

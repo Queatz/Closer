@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.api;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Multipart;
@@ -13,6 +13,6 @@ public interface PhotoUploadBackend {
 
     @Multipart
     @POST("{id}")
-    Observable<ResponseBody> uploadPhoto(@Path("id") String photoId,
-                                         @Part MultipartBody.Part photo);
+    Single<ResponseBody> uploadPhoto(@Path("id") String photoId,
+                                     @Part MultipartBody.Part photo);
 }

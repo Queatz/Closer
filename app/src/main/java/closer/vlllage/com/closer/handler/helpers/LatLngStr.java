@@ -24,4 +24,8 @@ public class LatLngStr extends PoolMember {
 
         return new LatLng(latLng.get(0), latLng.get(1));
     }
+
+    public LatLng to(Double latitude, Double longitude) {
+        return new LatLng(latitude, longitude);
+    }
 }

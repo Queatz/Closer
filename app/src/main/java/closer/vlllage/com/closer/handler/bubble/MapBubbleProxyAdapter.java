@@ -16,11 +16,13 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.TimeStr;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Phone;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder> {
@@ -50,15 +52,23 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
     @Override
     public void onBindViewHolder(@NonNull ProxyMapBubbleViewHolder holder, int position) {
         MapBubble mapBubble = items.get(position);
+
         switch (mapBubble.getType()) {
             case STATUS:
                 holder.click.setBackgroundResource(R.drawable.clickable_blue_4dp);
                 holder.photo.setVisibility(View.GONE);
                 holder.name.setText(mapBubble.getName() + "\n" + mapBubble.getStatus());
+                if (mapBubble.getTag() instanceof Phone) {
+                    holder.info.setVisibility(View.VISIBLE);
+                    holder.info.setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
+                } else {
+                    holder.info.setVisibility(View.GONE);
+                }
                 break;
             case PHYSICAL_GROUP:
                 holder.click.setBackgroundResource(R.drawable.clickable_purple_4dp);
                 holder.photo.setVisibility(View.VISIBLE);
+                holder.info.setVisibility(View.GONE);
 
                 if (mapBubble.getTag() != null & mapBubble.getTag() instanceof Group) {
                     Group group = (Group) mapBubble.getTag();
@@ -81,6 +91,7 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
             case EVENT:
                 holder.click.setBackgroundResource(R.drawable.clickable_red_4dp);
                 holder.photo.setVisibility(View.GONE);
+                holder.info.setVisibility(View.GONE);
 
                 Event event = ((Event) mapBubble.getTag());
 
@@ -110,12 +121,14 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
         View click;
         ImageView photo;
         TextView name;
+        TextView info;
 
         public ProxyMapBubbleViewHolder(View itemView) {
             super(itemView);
             click = itemView.findViewById(R.id.click);
             photo = itemView.findViewById(R.id.photo);
             name = itemView.findViewById(R.id.name);
+            info = itemView.findViewById(R.id.info);
         }
     }
 }

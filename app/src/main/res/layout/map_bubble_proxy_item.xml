@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/click"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -34,5 +34,23 @@
         android:textStyle="bold"
         android:textAllCaps="true"
         android:padding="12dp" />
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name"
+        app:layout_constraintHorizontal_bias="1.0"
+        android:drawablePadding="@dimen/pad"
+        android:textSize="12sp"
+        android:textColor="@color/text"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:padding="12dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="12 min ago"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -184,7 +184,7 @@ public class RefreshHandler extends PoolMember {
                 });
     }
 
-    private <T extends BaseObject, R extends ModelResult> void handleFullListResult(
+    <T extends BaseObject, R extends ModelResult> void handleFullListResult(
             List<R> results,
             Class<T> clazz,
             Property idProperty,

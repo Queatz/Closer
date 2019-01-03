@@ -8,10 +8,14 @@ import com.google.android.gms.maps.model.LatLng;
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.store.models.Suggestion;
 
 import static closer.vlllage.com.closer.GroupActivity.EXTRA_GROUP_ID;
@@ -57,6 +61,33 @@ public class MapActivityHandler extends PoolMember {
                 group.getLongitude().floatValue()
         });
         intent.putExtra(EXTRA_GROUP_ID, group.getId());
+
+        $(ActivityHandler.class).getActivity().startActivity(intent);
+    }
+
+    public void showPhoneOnMap(String phoneId) {
+        if (phoneId == null) {
+            $(DefaultAlerts.class).thatDidntWork();
+            return;
+        }
+        Phone phone = $(StoreHandler.class).getStore().box(Phone.class).query()
+                .equal(Phone_.id, phoneId)
+                .notNull(Phone_.latitude)
+                .notNull(Phone_.longitude)
+                .build()
+                .findFirst();
+
+        if (phone == null) {
+            $(DefaultAlerts.class).thatDidntWork();
+            return;
+        }
+
+        Intent intent = new Intent($(ActivityHandler.class).getActivity(), MapsActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.putExtra(EXTRA_LAT_LNG, new float[] {
+                phone.getLatitude().floatValue(),
+                phone.getLongitude().floatValue()
+        });
 
         $(ActivityHandler.class).getActivity().startActivity(intent);
     }

@@ -7,6 +7,7 @@ import closer.vlllage.com.closer.store.models.Phone;
 public class PhoneResult extends ModelResult {
     public List<Double> geo;
     public String name;
+    public String photo;
     public String status;
     public Boolean active;
 
@@ -25,6 +26,7 @@ public class PhoneResult extends ModelResult {
 
         phone.setName(phoneResult.name);
         phone.setStatus(phoneResult.status);
+        phone.setPhoto(phoneResult.photo);
 
         return phone;
     }

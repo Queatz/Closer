@@ -4,15 +4,18 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.LocationHandler;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.TimeStr;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 
 public class MyBubbleHandler extends PoolMember {
 
@@ -49,9 +52,14 @@ public class MyBubbleHandler extends PoolMember {
 
     private void updateLocation(LatLng latLng) {
         if (myBubble == null) {
+            Phone phone = $(StoreHandler.class).getStore().box(Phone.class).query().equal(Phone_.id, $(PersistenceHandler.class).getPhoneId()).build().findFirst();
             myBubble = new MapBubble(latLng, $(AccountHandler.class).getName(), $(AccountHandler.class).getStatus());
             myBubble.setPinned(true);
-            myBubble.setAction($(ResourcesHandler.class).getResources().getString(R.string.update_status));
+
+            if (phone != null) {
+                myBubble.setTag(phone);
+                myBubble.setAction($(TimeStr.class).pretty(phone.getUpdated()));
+            }
             updateActive($(AccountHandler.class).getActive());
         } else {
             $(BubbleHandler.class).move(myBubble, latLng);

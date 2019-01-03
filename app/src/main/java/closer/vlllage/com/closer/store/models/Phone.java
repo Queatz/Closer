@@ -6,6 +6,7 @@ import io.objectbox.annotation.Entity;
 public class Phone extends BaseObject {
     private String name;
     private String status;
+    private String photo;
     private Double latitude;
     private Double longitude;
 
@@ -42,6 +43,15 @@ public class Phone extends BaseObject {
 
     public Phone setLongitude(Double longitude) {
         this.longitude = longitude;
+        return this;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public Phone setPhoto(String photo) {
+        this.photo = photo;
         return this;
     }
 }

@@ -6,7 +6,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.TimeStr;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.models.Phone;
 
 /**
  * Created by jacob on 2/18/18.
@@ -30,10 +33,12 @@ public class MapBubbleView extends PoolMember {
             ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName());
         }
 
-        ((TextView) view.findViewById(R.id.status)).setText(mapBubble.getStatus());
+        ((TextView) view.findViewById(R.id.status)).setText($(Val.class).of(mapBubble.getStatus()));
 
         if (mapBubble.getAction() != null) {
             ((TextView) view.findViewById(R.id.action)).setText(mapBubble.getAction());
+        } else if (mapBubble.getTag() instanceof Phone) {
+            ((TextView) view.findViewById(R.id.action)).setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
         }
     }
 

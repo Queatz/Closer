@@ -1,20 +1,17 @@
 package closer.vlllage.com.closer.handler.group;
 
-import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.view.View;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import java.util.Date;
-
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
-import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.JsonHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.TimeStr;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
@@ -28,9 +25,6 @@ import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.store.models.Suggestion;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
-import static android.text.format.DateUtils.WEEK_IN_MILLIS;
-
 public class MessageDisplay extends PoolMember {
 
     public void displayShare(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnEventClickListener onEventClickListener, GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
@@ -42,7 +36,7 @@ public class MessageDisplay extends PoolMember {
             displayFallback(holder, groupMessage);
         }
 
-        holder.time.setText($(GroupMessageParseHandler.class).parseText($(ResourcesHandler.class).getResources().getString(R.string.shared_by, getTimeString(groupMessage.getTime()), "@" + groupMessage.getFrom())));
+        holder.time.setText($(GroupMessageParseHandler.class).parseText($(ResourcesHandler.class).getResources().getString(R.string.shared_by, $(TimeStr.class).pretty(groupMessage.getTime()), "@" + groupMessage.getFrom())));
     }
 
     public void displayAction(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage) {
@@ -56,7 +50,7 @@ public class MessageDisplay extends PoolMember {
         holder.name.setVisibility(View.VISIBLE);
         holder.name.setText(contactName + " " + action.get("intent").getAsString());
         holder.time.setVisibility(View.VISIBLE);
-        holder.time.setText(getTimeString(groupMessage.getTime()));
+        holder.time.setText($(TimeStr.class).pretty(groupMessage.getTime()));
 
         String comment = action.get("comment").getAsString();
         if ($(Val.class).isEmpty(comment)) {
@@ -83,7 +77,7 @@ public class MessageDisplay extends PoolMember {
         holder.message.setGravity(Gravity.START);
 
         holder.time.setVisibility(View.VISIBLE);
-        holder.time.setText(getTimeString(groupMessage.getTime()));
+        holder.time.setText($(TimeStr.class).pretty(groupMessage.getTime()));
 
         Phone phone = null;
 
@@ -113,7 +107,7 @@ public class MessageDisplay extends PoolMember {
 
         holder.name.setVisibility(View.VISIBLE);
         holder.time.setVisibility(View.VISIBLE);
-        holder.time.setText(getTimeString(groupMessage.getTime()));
+        holder.time.setText($(TimeStr.class).pretty(groupMessage.getTime()));
 
         Phone phone = getPhone(groupMessage.getFrom());
 
@@ -147,7 +141,7 @@ public class MessageDisplay extends PoolMember {
 
         holder.name.setVisibility(View.VISIBLE);
         holder.time.setVisibility(View.VISIBLE);
-        holder.time.setText(getTimeString(groupMessage.getTime()));
+        holder.time.setText($(TimeStr.class).pretty(groupMessage.getTime()));
 
         Phone phone = getPhone(groupMessage.getFrom());
 
@@ -187,7 +181,7 @@ public class MessageDisplay extends PoolMember {
         holder.name.setVisibility(View.VISIBLE);
         holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.phone_shared_a_photo, contactName));
         holder.time.setVisibility(View.VISIBLE);
-        holder.time.setText(getTimeString(groupMessage.getTime()));
+        holder.time.setText($(TimeStr.class).pretty(groupMessage.getTime()));
         holder.message.setVisibility(View.GONE);
         holder.action.setVisibility(View.GONE);// or Share / save photo?
         holder.photo.setVisibility(View.VISIBLE);
@@ -203,7 +197,7 @@ public class MessageDisplay extends PoolMember {
         holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.unknown));
         holder.message.setText("");
         holder.time.setVisibility(View.VISIBLE);
-        holder.time.setText(getTimeString(groupMessage.getTime()));
+        holder.time.setText($(TimeStr.class).pretty(groupMessage.getTime()));
     }
 
     public void display(GroupMessagesAdapter.GroupMessageViewHolder holder, GroupMessage groupMessage,
@@ -245,27 +239,5 @@ public class MessageDisplay extends PoolMember {
                 .equal(Phone_.id, phoneId)
                 .build()
                 .findFirst();
-    }
-
-    private String getTimeString(Date date) {
-        if (date == null) {
-            return "-";
-        }
-
-        if (new Date().getTime() - date.getTime() < 5 * MINUTE_IN_MILLIS) {
-            return $(ResourcesHandler.class).getResources().getString(R.string.just_now);
-        }
-
-        if (DateUtils.isToday(date.getTime())) {
-            return DateUtils.getRelativeTimeSpanString(date.getTime()).toString();
-        }
-
-        return DateUtils.getRelativeDateTimeString(
-                $(ApplicationHandler.class).getApp(),
-                date.getTime(),
-                MINUTE_IN_MILLIS,
-                WEEK_IN_MILLIS,
-                0
-        ).toString();
     }
 }

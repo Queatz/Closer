@@ -25,7 +25,7 @@ import closer.vlllage.com.closer.handler.helpers.HttpEncode;
 import closer.vlllage.com.closer.handler.helpers.LatLngStr;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -44,164 +44,164 @@ public class ApiHandler extends PoolMember {
         api.setAuthorization(auth);
     }
 
-    public Observable<List<PhoneResult>> getPhonesNear(LatLng latLng) {
+    public Single<List<PhoneResult>> getPhonesNear(LatLng latLng) {
         return uiThread(api.getBackend().getPhonesNear($(LatLngStr.class).from(latLng)));
     }
 
-    public Observable<List<SuggestionResult>> getSuggestionsNear(LatLng latLng) {
+    public Single<List<SuggestionResult>> getSuggestionsNear(LatLng latLng) {
         return uiThread(api.getBackend().getSuggestionsNear($(LatLngStr.class).from(latLng)));
     }
 
-    public Observable<CreateResult> addSuggestion(String name, LatLng latLng) {
+    public Single<CreateResult> addSuggestion(String name, LatLng latLng) {
         return uiThread(api.getBackend().addSuggestion(name, $(LatLngStr.class).from(latLng)));
     }
 
-    public Observable<CreateResult> updatePhone(String latLng, String name, String status, Boolean active, String deviceToken) {
+    public Single<CreateResult> updatePhone(String latLng, String name, String status, Boolean active, String deviceToken) {
         return uiThread(api.getBackend().phoneUpdate(latLng, name, status, active, deviceToken));
     }
 
-    public Observable<PhoneResult> phone() {
+    public Single<PhoneResult> phone() {
         return uiThread(api.getBackend().phone());
     }
 
-    public Observable<List<PhoneResult>> searchPhonesNear(LatLng latLng, String query) {
+    public Single<List<PhoneResult>> searchPhonesNear(LatLng latLng, String query) {
         return uiThread(api.getBackend().searchPhonesNear($(LatLngStr.class).from(latLng), query));
     }
 
-    public Observable<SuccessResult> sendMessage(String phone, String message) {
+    public Single<SuccessResult> sendMessage(String phone, String message) {
         return uiThread(api.getBackend().sendMessage(phone, message));
     }
 
-    public Observable<Boolean> isVerified() {
+    public Single<Boolean> isVerified() {
         return uiThread(api.getBackend().getIsVerified())
                 .map(verifiedResult -> verifiedResult.verified);
     }
 
-    public Observable<List<GroupMessageResult>> myMessages(LatLng latLng) {
+    public Single<List<GroupMessageResult>> myMessages(LatLng latLng) {
         return uiThread(api.getBackend().myMessages($(LatLngStr.class).from(latLng)));
     }
 
-    public Observable<StateResult> myGroups(LatLng latLng) {
+    public Single<StateResult> myGroups(LatLng latLng) {
         return uiThread(api.getBackend().myGroups($(LatLngStr.class).from(latLng)));
     }
 
-    public Observable<GroupResult> getGroup(String groupId) {
+    public Single<GroupResult> getGroup(String groupId) {
         return uiThread(api.getBackend().getGroup(groupId));
     }
 
-    public Observable<SuccessResult> setPhoneNumber(String phoneNumber) {
+    public Single<SuccessResult> setPhoneNumber(String phoneNumber) {
         return uiThread(api.getBackend().setPhoneNumber(phoneNumber));
     }
 
-    public Observable<SuccessResult> sendVerificationCode(String verificationCode) {
+    public Single<SuccessResult> sendVerificationCode(String verificationCode) {
         return uiThread(api.getBackend().sendVerificationCode(verificationCode));
     }
 
-    public Observable<CreateResult> sendGroupMessage(String groupId, String text, String attachment) {
+    public Single<CreateResult> sendGroupMessage(String groupId, String text, String attachment) {
         return uiThread(api.getBackend().sendGroupMessage(groupId, text, attachment));
     }
 
-    public Observable<CreateResult> sendAreaMessage(LatLng latLng, String text, String attachment) {
+    public Single<CreateResult> sendAreaMessage(LatLng latLng, String text, String attachment) {
         return uiThread(api.getBackend().sendAreaMessage($(LatLngStr.class).from(latLng), text, attachment));
     }
 
-    public Observable<CreateResult> createGroup(String groupName) {
+    public Single<CreateResult> createGroup(String groupName) {
         return uiThread(api.getBackend().createGroup(groupName));
     }
 
-    public Observable<CreateResult> createPublicGroup(String groupName, String about, LatLng latLng) {
+    public Single<CreateResult> createPublicGroup(String groupName, String about, LatLng latLng) {
         return uiThread(api.getBackend().createPublicGroup(groupName, about, $(LatLngStr.class).from(latLng), true));
     }
 
-    public Observable<CreateResult> createPhysicalGroup(LatLng latLng) {
+    public Single<CreateResult> createPhysicalGroup(LatLng latLng) {
         return uiThread(api.getBackend().createPhysicalGroup($(LatLngStr.class).from(latLng), true));
     }
 
-    public Observable<SuccessResult> convertToHub(String groupId, String name) {
+    public Single<SuccessResult> convertToHub(String groupId, String name) {
         return uiThread(api.getBackend().convertToHub(groupId, name, true));
     }
 
-    public Observable<SuccessResult> inviteToGroup(String groupId, String name, String phoneNumber) {
+    public Single<SuccessResult> inviteToGroup(String groupId, String name, String phoneNumber) {
         return uiThread(api.getBackend().inviteToGroup(groupId, name, phoneNumber));
     }
 
-    public Observable<SuccessResult> inviteToGroup(String groupId, String phoneId) {
+    public Single<SuccessResult> inviteToGroup(String groupId, String phoneId) {
         return uiThread(api.getBackend().inviteToGroup(groupId, phoneId));
     }
 
-    public Observable<SuccessResult> leaveGroup(String groupId) {
+    public Single<SuccessResult> leaveGroup(String groupId) {
         return uiThread(api.getBackend().leaveGroup(groupId, true));
     }
 
-    public Observable<SuccessResult> setGroupPhoto(String groupId, String photo) {
+    public Single<SuccessResult> setGroupPhoto(String groupId, String photo) {
         return uiThread(api.getBackend().setGroupPhoto(groupId, photo));
     }
 
-    public Observable<SuccessResult> setGroupAbout(String groupId, String about) {
+    public Single<SuccessResult> setGroupAbout(String groupId, String about) {
         return uiThread(api.getBackend().setGroupAbout(groupId, about));
     }
 
-    public Observable<SuccessResult> removeGroupAction(String groupActionId) {
+    public Single<SuccessResult> removeGroupAction(String groupActionId) {
         return uiThread(api.getBackend().removeGroupAction(groupActionId));
     }
 
-    public Observable<CreateResult> createGroupAction(String groupId, String name, String intent) {
+    public Single<CreateResult> createGroupAction(String groupId, String name, String intent) {
         return uiThread(api.getBackend().createGroupAction(groupId, name, intent));
     }
 
-    public Observable<List<GroupActionResult>> getGroupActions(String groupId) {
+    public Single<List<GroupActionResult>> getGroupActions(String groupId) {
         return uiThread(api.getBackend().getGroupActions(groupId));
     }
 
-    public Observable<List<GroupActionResult>> getGroupActions(LatLng latLng) {
+    public Single<List<GroupActionResult>> getGroupActions(LatLng latLng) {
         return uiThread(api.getBackend().getGroupActionsNearGeo($(LatLngStr.class).from(latLng)));
     }
 
-    public Observable<List<GroupMessageResult>> getGroupMessages(String groupId) {
+    public Single<List<GroupMessageResult>> getGroupMessages(String groupId) {
         return uiThread(api.getBackend().getGroupMessages(groupId));
     }
 
-    public Observable<SuccessResult> setGroupActionPhoto(String groupActionId, String photo) {
+    public Single<SuccessResult> setGroupActionPhoto(String groupActionId, String photo) {
         return uiThread(api.getBackend().setGroupActionPhoto(groupActionId, photo));
     }
 
-    public Observable<List<GroupMemberResult>> getAllGroupMember() {
+    public Single<List<GroupMemberResult>> getAllGroupMember() {
         return uiThread(api.getBackend().getAllGroupMembers());
     }
 
-    public Observable<GroupMemberResult> getGroupMember(String groupId) {
+    public Single<GroupMemberResult> getGroupMember(String groupId) {
         return uiThread(api.getBackend().getGroupMember(groupId));
     }
 
-    public Observable<CreateResult> updateGroupMember(String groupId, boolean muted, boolean subscribed) {
+    public Single<CreateResult> updateGroupMember(String groupId, boolean muted, boolean subscribed) {
         return uiThread(api.getBackend().updateGroupMember(groupId, muted, subscribed));
     }
 
-    public Observable<SuccessResult> cancelInvite(String groupId, String groupInviteId) {
+    public Single<SuccessResult> cancelInvite(String groupId, String groupInviteId) {
         return uiThread(api.getBackend().cancelInvite(groupId, groupInviteId));
     }
 
-    public Observable<CreateResult> createEvent(String name, String about, boolean isPublic, LatLng latLng, Date startsAt, Date endsAt) {
+    public Single<CreateResult> createEvent(String name, String about, boolean isPublic, LatLng latLng, Date startsAt, Date endsAt) {
         return uiThread(api.getBackend().createEvent(name, about, isPublic, $(LatLngStr.class).from(latLng), $(HttpEncode.class).encode($(DateFormatter.class).format(startsAt)), $(HttpEncode.class).encode($(DateFormatter.class).format(endsAt))));
     }
 
-    public Observable<List<EventResult>> getEvents(LatLng latLng) {
+    public Single<List<EventResult>> getEvents(LatLng latLng) {
         return uiThread(api.getBackend().getEvents($(LatLngStr.class).from(latLng)));
     }
 
-    public Observable<EventResult> getEvent(String eventId) {
+    public Single<EventResult> getEvent(String eventId) {
         return uiThread(api.getBackend().getEvent(eventId));
     }
 
-    public Observable<SuccessResult> cancelEvent(String eventId) {
+    public Single<SuccessResult> cancelEvent(String eventId) {
         return uiThread(api.getBackend().cancelEvent(eventId, true));
     }
 
-    public Observable<List<GroupResult>> getPhysicalGroups(LatLng latLng) {
+    public Single<List<GroupResult>> getPhysicalGroups(LatLng latLng) {
         return uiThread(api.getBackend().getPhysicalGroups($(LatLngStr.class).from(latLng), "physical"));
     }
 
-    public Observable<String> uploadPhoto(InputStream photo) {
+    public Single<String> uploadPhoto(InputStream photo) {
         RequestBody body = new RequestBody() {
             @Nullable
             @Override
@@ -237,11 +237,11 @@ public class ApiHandler extends PoolMember {
                 .map(responseBody -> id);
     }
 
-    public Observable<String> privacy() {
+    public Single<String> privacy() {
         return uiThread(api.getContentBackend().privacy()).map(ResponseBody::string);
     }
 
-    private <T> Observable<T> uiThread(Observable<T> observable) {
+    private <T> Single<T> uiThread(Single<T> observable) {
         return observable.observeOn(AndroidSchedulers.mainThread());
     }
 }
