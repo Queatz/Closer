@@ -43,4 +43,8 @@ public abstract class PoolActivity extends FragmentActivity {
         $(CameraHandler.class).onActivityResult(requestCode, resultCode, data);
         $(MediaHandler.class).onActivityResult(requestCode, resultCode, data);
     }
+
+    public Pool getPool() {
+        return pool;
+    }
 }

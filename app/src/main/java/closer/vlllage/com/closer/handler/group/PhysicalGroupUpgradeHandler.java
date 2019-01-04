@@ -6,12 +6,10 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
-import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DefaultMenus;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
-import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -33,13 +31,7 @@ public class PhysicalGroupUpgradeHandler extends PoolMember {
     }
 
     public void setBackground(Group group, @NonNull OnGroupUpdateListener onGroupUpdateListener) {
-        $(MenuHandler.class).show(
-                new MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo, () -> {
-                    $(CameraHandler.class).showCamera((photoUri -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> handlePhoto(group, photoId, onGroupUpdateListener))));
-                }),
-                new MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo, () -> {
-                    $(MediaHandler.class).getPhoto((photoUri -> $(PhotoUploadGroupMessageHandler.class).upload(photoUri, photoId -> handlePhoto(group, photoId, onGroupUpdateListener))));
-                }));
+        $(DefaultMenus.class).uploadPhoto(photoId -> handlePhoto(group, photoId, onGroupUpdateListener));
     }
 
     private void handlePhoto(Group group, String photoId, @NonNull OnGroupUpdateListener onGroupUpdateListener) {

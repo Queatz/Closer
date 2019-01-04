@@ -60,6 +60,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().phoneUpdate(latLng, name, status, active, deviceToken));
     }
 
+    public Single<CreateResult> updatePhonePhoto(String photoUrl) {
+        return uiThread(api.getBackend().phoneUpdatePhoto(photoUrl));
+    }
+
     public Single<PhoneResult> phone() {
         return uiThread(api.getBackend().phone());
     }

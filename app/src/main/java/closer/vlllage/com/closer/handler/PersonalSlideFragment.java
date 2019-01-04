@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -20,9 +21,13 @@ import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
+import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DefaultMenus;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
+import closer.vlllage.com.closer.handler.helpers.PhotoHelper;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
@@ -36,13 +41,20 @@ import closer.vlllage.com.closer.store.models.GroupMember;
 import closer.vlllage.com.closer.store.models.GroupMember_;
 import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class PersonalSlideFragment extends PoolFragment {
 
     private EditText yourCurrentStatus;
     private TextView yourName;
+    private ImageButton yourPhoto;
     private Switch shareYourLocationSwitch;
     private String previousStatus;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -90,6 +102,7 @@ public class PersonalSlideFragment extends PoolFragment {
         yourCurrentStatus = view.findViewById(R.id.currentStatus);
         shareYourLocationSwitch = view.findViewById(R.id.shareYourLocationSwitch);
         yourName = view.findViewById(R.id.yourName);
+        yourPhoto = view.findViewById(R.id.yourPhoto);
 
         updateLocationInfo();
 
@@ -113,10 +126,27 @@ public class PersonalSlideFragment extends PoolFragment {
 
         yourName.setText($(AccountHandler.class).getName());
 
+        yourPhoto.setOnClickListener(v -> {
+            $(DefaultMenus.class).uploadPhoto(photoId -> {
+                String photo = $(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId);
+                $(AccountHandler.class).updatePhoto(photo);
+            });
+        });
+
+        if (!$(Val.class).isEmpty($(PersistenceHandler.class).getMyPhoto())) {
+            $(ImageHandler.class).get().load($(PersistenceHandler.class).getMyPhoto() + "?s=128")
+                    .noPlaceholder()
+                    .transform(new CropCircleTransformation())
+                    .into(yourPhoto);
+        }
+
         $(DisposableHandler.class).add($(AccountHandler.class).changes().subscribe(
                 accountChange -> {
                     if (accountChange.prop.equals(AccountHandler.ACCOUNT_FIELD_NAME)) {
                         yourName.setText($(AccountHandler.class).getName());
+                    }
+                    if (accountChange.prop.equals(AccountHandler.ACCOUNT_FIELD_PHOTO)) {
+                        $(PhotoHelper.class).loadCircle(yourPhoto, $(PersistenceHandler.class).getMyPhoto() + "?s=128");
                     }
                 },
                 throwable -> $(DefaultAlerts.class).thatDidntWork()

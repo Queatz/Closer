@@ -11,24 +11,30 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.OutboundHandler;
+import closer.vlllage.com.closer.handler.helpers.PhotoHelper;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
+import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Phone;
+import closer.vlllage.com.closer.store.models.Phone_;
 import closer.vlllage.com.closer.ui.AnimationDuration;
 
 public class ReplyLayoutHandler extends PoolMember {
 
     private View replyLayout;
     private TextView replyLayoutName;
+    private ImageView replyLayoutPhoto;
     private TextView replyLayoutStatus;
     private View sendButton;
     private EditText replyMessage;
@@ -42,6 +48,7 @@ public class ReplyLayoutHandler extends PoolMember {
         this.sendButton = replyLayout.findViewById(R.id.sendButton);
         this.replyMessage = replyLayout.findViewById(R.id.message);
         this.replyLayoutName = replyLayout.findViewById(R.id.replyLayoutName);
+        this.replyLayoutPhoto = replyLayout.findViewById(R.id.replyLayoutPhoto);
         this.replyLayoutStatus = replyLayout.findViewById(R.id.replyLayoutStatus);
         this.getDirectionsButton = replyLayout.findViewById(R.id.getDirectionsButton);
         this.showOnMapButton = replyLayout.findViewById(R.id.showOnMapButton);
@@ -96,6 +103,19 @@ public class ReplyLayoutHandler extends PoolMember {
         replyingToMapBubble = mapBubble;
 
         replyLayoutName.setText($(Val.class).of(replyingToMapBubble.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
+
+        if (mapBubble.getPhone() != null) {
+            Phone phone = $(StoreHandler.class).getStore().box(Phone.class).query().equal(Phone_.id, mapBubble.getPhone()).build().findFirst();
+
+            if (phone != null && !$(Val.class).isEmpty(phone.getPhoto())) {
+                replyLayoutPhoto.setVisibility(View.VISIBLE);
+                $(PhotoHelper.class).loadCircle(replyLayoutPhoto, phone.getPhoto());
+            } else {
+                replyLayoutPhoto.setVisibility(View.GONE);
+            }
+        } else {
+            replyLayoutPhoto.setVisibility(View.GONE);
+        }
 
         replyLayoutStatus.setText(replyingToMapBubble.getStatus());
 

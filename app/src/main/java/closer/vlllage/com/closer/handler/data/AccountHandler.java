@@ -14,6 +14,7 @@ public class AccountHandler extends PoolMember {
 
     public static final String ACCOUNT_FIELD_STATUS = "status";
     public static final String ACCOUNT_FIELD_NAME = "name";
+    public static final String ACCOUNT_FIELD_PHOTO = "photo";
     public static final String ACCOUNT_FIELD_GEO = "geo";
     public static final String ACCOUNT_FIELD_ACTIVE = "active";
 
@@ -30,6 +31,14 @@ public class AccountHandler extends PoolMember {
         $(PersistenceHandler.class).setMyName(name);
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_NAME, name));
         $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, name, null, null, null)
+            .subscribe(success -> {}, this::onError));
+
+    }
+
+    public void updatePhoto(String photoUrl) {
+        $(PersistenceHandler.class).setMyPhoto(photoUrl);
+        accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_PHOTO, photoUrl));
+        $(DisposableHandler.class).add($(ApiHandler.class).updatePhonePhoto(photoUrl)
             .subscribe(success -> {}, this::onError));
 
     }

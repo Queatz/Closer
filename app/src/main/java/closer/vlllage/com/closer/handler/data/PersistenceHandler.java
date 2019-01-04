@@ -15,6 +15,7 @@ public class PersistenceHandler extends PoolMember {
     private static final String PREFERENCE_MY_STATUS = "closer.me.status";
     private static final String PREFERENCE_MY_NAME = "closer.me.name";
     private static final String PREFERENCE_MY_ACTIVE = "closer.me.active";
+    private static final String PREFERENCE_MY_PHOTO = "closer.me.photo";
     private static final String PREFERENCE_DEVICE_TOKEN = "closer.device-token";
     private static final String PREFERENCE_PHONE = "closer.phone";
     private static final String PREFERENCE_VERIFIED = "closer.verified";
@@ -38,6 +39,10 @@ public class PersistenceHandler extends PoolMember {
 
     public String getMyName() {
         return sharedPreferences.getString(PREFERENCE_MY_NAME, "");
+    }
+
+    public String getMyPhoto() {
+        return sharedPreferences.getString(PREFERENCE_MY_PHOTO, "");
     }
 
     public boolean getMyActive() {
@@ -92,6 +97,11 @@ public class PersistenceHandler extends PoolMember {
     @SuppressLint("ApplySharedPref")
     public void setMyName(String name) {
         sharedPreferences.edit().putString(PREFERENCE_MY_NAME, name).commit();
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public void setMyPhoto(String name) {
+        sharedPreferences.edit().putString(PREFERENCE_MY_PHOTO, name).commit();
     }
 
     @SuppressLint("ApplySharedPref")

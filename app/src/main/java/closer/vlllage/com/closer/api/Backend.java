@@ -43,6 +43,9 @@ public interface Backend {
             @Query("deviceToken") String pushDeviceToken
     );
 
+    @POST("phone")
+    Single<CreateResult> phoneUpdatePhoto(@Query("photo") String photo);
+
     @GET("phone")
     Single<List<PhoneResult>> searchPhonesNear(@Query("geo") String latLng, @Query("query") String query);
 
