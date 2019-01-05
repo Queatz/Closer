@@ -30,9 +30,7 @@
         android:drawablePadding="@dimen/pad"
         android:drawableTint="@color/white"
         android:textSize="12sp"
-        android:textColor="@color/text"
-        android:textStyle="bold"
-        android:textAllCaps="true"
+        android:textColor="@color/textHint"
         android:padding="12dp" />
 
     <TextView
@@ -46,8 +44,6 @@
         android:drawablePadding="@dimen/pad"
         android:textSize="12sp"
         android:textColor="@color/text"
-        android:textStyle="bold"
-        android:textAllCaps="true"
         android:padding="12dp"
         android:visibility="gone"
         tools:visibility="visible"

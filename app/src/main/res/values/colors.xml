@@ -7,6 +7,7 @@
     <color name="textInverse">@color/dark</color>
     <color name="highlightInverse">@color/black_15</color>
     <color name="textHint">@color/white_75</color>
+    <color name="textHintInverse">@color/black_50</color>
 
     <!-- Values -->
 
@@ -15,7 +16,7 @@
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorPrimaryLight">#64B5F6</color>
     <color name="colorAccent_50">#7FFFB300</color>
-    <color name="colorAccent">#FFB300</color>
+        <color name="colorAccent">#FFB300</color>
     <color name="colorAccentLight">#FFC107</color>
     <color name="blue200">#90CAF9</color>
     <color name="blue200_transparent">#0090CAF9</color>
@@ -32,9 +33,12 @@
     <color name="dark_transparent">#00222222</color>
     <color name="disabled">@color/selectable</color>
     <color name="highlight">#66ffffff</color>
+    <color name="highlight_50">#33ffffff</color>
     <color name="white_15">#33ffffff</color>
-    <color name="white_75">#aaffffff</color>
     <color name="white_50">#88ffffff</color>
+    <color name="white_75">#aaffffff</color>
+    <color name="white_95">#ddffffff</color>
+    <color name="black_5">#11000000</color>
     <color name="black_15">#33000000</color>
     <color name="black_25">#3f000000</color>
     <color name="black_50">#88000000</color>

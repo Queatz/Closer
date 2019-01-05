@@ -55,7 +55,17 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
 
         switch (mapBubble.getType()) {
             case STATUS:
-                holder.click.setBackgroundResource(R.drawable.clickable_blue_4dp);
+                holder.name.setTextColor($(ResourcesHandler.class).getResources().getColor(R.color.textInverse));
+                holder.info.setTextColor($(ResourcesHandler.class).getResources().getColor(R.color.textInverse));
+                break;
+            default:
+                holder.name.setTextColor($(ResourcesHandler.class).getResources().getColor(R.color.text));
+                holder.info.setTextColor($(ResourcesHandler.class).getResources().getColor(R.color.text));
+        }
+
+        switch (mapBubble.getType()) {
+            case STATUS:
+                holder.click.setBackgroundResource(R.drawable.clickable_white_4dp);
                 holder.photo.setVisibility(View.GONE);
                 holder.name.setText(mapBubble.getName() + "\n" + mapBubble.getStatus());
                 if (mapBubble.getTag() instanceof Phone) {

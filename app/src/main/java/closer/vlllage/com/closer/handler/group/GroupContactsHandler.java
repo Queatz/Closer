@@ -45,6 +45,7 @@ import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
 import io.objectbox.android.AndroidScheduler;
+import io.objectbox.reactive.DataSubscription;
 import io.reactivex.Single;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -56,6 +57,7 @@ public class GroupContactsHandler extends PoolMember {
     private EditText searchContacts;
     private PhoneContactAdapter phoneContactAdapter;
     private final Set<String> currentGroupContacts = new HashSet<>();
+    private DataSubscription dataSubscription;
 
     @SuppressWarnings("MissingPermission")
     public void attach(Group group, RecyclerView contactsRecyclerView, EditText searchContacts, View showPhoneContactsButton) {
@@ -228,64 +230,68 @@ public class GroupContactsHandler extends PoolMember {
         phoneContactAdapter.setPhoneNumber(phoneNumber);
         phoneContactAdapter.setIsFiltered(!originalQuery.isEmpty());
 
-        if (phoneNumber != null) {
-            showPhoneContactsButton.setVisibility(View.GONE);
-        }
-
         if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
+            showPhoneContacts(new ArrayList<>(), query);
             return;
         }
 
         $(DisposableHandler.class).add($(PhoneContactsHandler.class).getAllContacts().subscribe(phoneContacts -> {
-            $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(Phone.class).query()
-                    .contains(Phone_.name, $(Val.class).of(query))
-                    .notNull(Phone_.id)
-                    .greater(Phone_.updated, $(TimeAgo.class).fifteenDaysAgo())
-                    .build()
-                    .subscribe()
-                    .on(AndroidScheduler.mainThread())
-                    .observer(closerContacts -> {
+            showPhoneContacts(phoneContacts, query);
+        }, error -> $(DefaultAlerts.class).thatDidntWork()));
+    }
 
-                List<PhoneContact> allContacts = new ArrayList<>();
+    private void showPhoneContacts(List<PhoneContact> phoneContacts, String query) {
+        if (dataSubscription != null) {
+            $(DisposableHandler.class).dispose(dataSubscription);
+        }
+        dataSubscription = $(StoreHandler.class).getStore().box(Phone.class).query()
+                .contains(Phone_.name, $(Val.class).of(query))
+                .notNull(Phone_.id)
+                .greater(Phone_.updated, $(TimeAgo.class).fifteenDaysAgo())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .observer(closerContacts -> {
+                    List<PhoneContact> allContacts = new ArrayList<>();
 
-                if (phoneContacts != null) {
-                    allContacts.addAll(phoneContacts);
-                }
-
-                for (Phone phone : closerContacts) {
-                    if (currentGroupContacts.contains(phone.getId())) {
-                        continue;
+                    if (phoneContacts != null) {
+                        allContacts.addAll(phoneContacts);
                     }
 
-                    allContacts.add(0, new PhoneContact($(NameHandler.class).getName(phone), phone.getStatus()).setPhoneId(phone.getId()));
-                }
-
-                if (query.isEmpty()) {
-                    phoneContactAdapter.setContacts(allContacts);
-                    return;
-                }
-
-                String queryPhone = query.replaceAll("[^0-9]", "");
-
-                List<PhoneContact> contacts = new ArrayList<>();
-                for(PhoneContact contact : allContacts) {
-                    if (contact.getName() != null) {
-                        if (contact.getName().toLowerCase().contains(query)) {
-                            contacts.add(contact);
+                    for (Phone phone : closerContacts) {
+                        if (currentGroupContacts.contains(phone.getId())) {
                             continue;
                         }
+
+                        allContacts.add(0, new PhoneContact($(NameHandler.class).getName(phone), phone.getStatus()).setPhoneId(phone.getId()));
                     }
 
-                    if (!queryPhone.isEmpty() && contact.getPhoneNumber() != null) {
-                        if (contact.getPhoneNumber().replaceAll("[^0-9]", "").contains(queryPhone)) {
-                            contacts.add(contact);
+                    if (query.isEmpty()) {
+                        phoneContactAdapter.setContacts(allContacts);
+                        return;
+                    }
+
+                    String queryPhone = query.replaceAll("[^0-9]", "");
+
+                    List<PhoneContact> contacts = new ArrayList<>();
+                    for(PhoneContact contact : allContacts) {
+                        if (contact.getName() != null) {
+                            if (contact.getName().toLowerCase().contains(query)) {
+                                contacts.add(contact);
+                                continue;
+                            }
+                        }
+
+                        if (!queryPhone.isEmpty() && contact.getPhoneNumber() != null) {
+                            if (contact.getPhoneNumber().replaceAll("[^0-9]", "").contains(queryPhone)) {
+                                contacts.add(contact);
+                            }
                         }
                     }
-                }
 
-                phoneContactAdapter.setContacts(contacts);
-            }));
-        }, error -> $(DefaultAlerts.class).thatDidntWork()));
+                    phoneContactAdapter.setContacts(contacts);
+                });
+        $(DisposableHandler.class).add(dataSubscription);
     }
 
     public void showContactsForQuery() {

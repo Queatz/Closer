@@ -3,55 +3,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="4dp"
     android:clipToPadding="false"
     android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/click"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/clickable_blue"
+        android:background="@drawable/clickable_white_rounded"
         android:clickable="true"
         android:elevation="4dp"
+        android:paddingEnd="@dimen/padDouble"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp">
+        android:paddingBottom="8dp">
+
+        <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/photo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?selectableItemBackgroundBorderless"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/pad"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_person_black_24dp"/>
+
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textAllCaps="true"
-            android:textColor="@color/text"
-            android:textSize="12sp"
-            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/photo"
+            android:layout_marginStart="@dimen/pad"
+            android:layout_marginTop="@dimen/pad"
+            android:textColor="@color/textInverse"
+            android:textSize="16sp"
             tools:text="Jacob" />
 
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="12sp"
-            android:textColor="@color/text"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintStart_toStartOf="@+id/name"
+            android:layout_marginTop="@dimen/padHalf"
+            android:textSize="16sp"
+            android:textColor="@color/textInverse"
             tools:text="👊 fist bump" />
 
         <TextView
             android:id="@+id/action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="4dp"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:textColor="@color/text"
-            android:textAllCaps="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/name"
+            app:layout_constraintStart_toEndOf="@+id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/padDouble"
+            android:layout_marginTop="@dimen/pad"
+            android:textSize="14sp"
+            android:textColor="@color/textHintInverse"
             android:text="@string/reply" />
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <View
         android:layout_width="16dp"
@@ -61,6 +80,6 @@
         android:layout_marginBottom="4dp"
         android:elevation="4dp"
         android:rotation="45"
-        android:background="@drawable/map_bubble_knob_blue"/>
+        android:background="@drawable/map_bubble_knob_map_ambient_fuzzy"/>
 
 </LinearLayout>

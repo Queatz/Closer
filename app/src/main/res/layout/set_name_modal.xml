@@ -27,7 +27,7 @@
         android:textAlignment="center"
         android:paddingTop="16dp"
         android:padding="8dp"
-        android:maxLength="12"
+        android:maxLength="24"
         android:background="@null"
         android:inputType="textPersonName"
         android:maxLines="1" />

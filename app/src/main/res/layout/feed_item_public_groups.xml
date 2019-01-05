@@ -7,7 +7,7 @@
     android:elevation="@dimen/elevation"
     android:paddingTop="@dimen/padHalf"
     android:paddingBottom="@dimen/padHalf"
-    android:background="@drawable/color_green_rounded"
+    android:background="@drawable/color_white_rounded"
     android:layout_marginTop="@dimen/pad"
     android:layout_marginStart="@dimen/pad"
     android:layout_marginEnd="@dimen/pad"
@@ -25,8 +25,8 @@
         android:paddingBottom="4dp"
         android:gravity="center_horizontal"
         android:textAllCaps="true"
-        android:textColor="@color/text"
-        android:textSize="12sp"
+        android:textColor="@color/colorAccent"
+        android:textSize="13sp"
         android:textStyle="bold"
         android:text="@string/app_name" />
 
@@ -58,7 +58,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/clickable_light_flat"
+        android:background="@drawable/clickable_dark_flat"
         android:focusedByDefault="true"
         android:hint="@string/search_public_groups_hint"
         android:imeOptions="actionGo"
@@ -69,8 +69,8 @@
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
         android:selectAllOnFocus="true"
-        android:textColor="@color/text"
-        android:textColorHint="@color/textHint"
+        android:textColor="@color/textInverse"
+        android:textColorHint="@color/textHintInverse"
         android:textColorHighlight="@color/colorAccent_50"
         android:textSize="12sp" />
 

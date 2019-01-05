@@ -44,7 +44,7 @@
         android:paddingEnd="@dimen/pad"
         android:paddingTop="@dimen/padDouble"
         android:paddingBottom="@dimen/padDouble"
-        android:background="@drawable/clickable_light_rounded_8dp"
+        android:background="@drawable/clickable_light_50_rounded_512dp"
         android:textColor="@color/text"
         android:gravity="start"
         android:focusedByDefault="true"

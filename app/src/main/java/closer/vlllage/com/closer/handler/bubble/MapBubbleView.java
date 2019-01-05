@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.PhotoHelper;
 import closer.vlllage.com.closer.handler.helpers.TimeStr;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -43,7 +44,12 @@ public class MapBubbleView extends PoolMember {
             if (mapBubble.getAction() != null) {
                 ((TextView) view.findViewById(R.id.action)).setText(mapBubble.getAction());
             } else if (mapBubble.getTag() instanceof Phone) {
-                ((TextView) view.findViewById(R.id.action)).setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
+                Phone phone = (Phone) mapBubble.getTag();
+                ((TextView) view.findViewById(R.id.action)).setText($(TimeStr.class).pretty(phone.getUpdated()));
+
+                if (!$(Val.class).isEmpty(phone.getPhoto())) {
+                    $(PhotoHelper.class).loadCircle(view.findViewById(R.id.photo), phone.getPhoto());
+                }
             }
         }
     }

@@ -449,7 +449,7 @@ public class GroupActivity extends CircularRevealActivity {
             actionFrameLayout.setVisibility(View.GONE);
             $(GroupActionHandler.class).cancelPendingAnimation();
 
-            if(!$(PermissionHandler.class).has(READ_CONTACTS) && $(GroupContactsHandler.class).isEmpty()) {
+            if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
                 showPhoneContactsButton.setVisibility(View.VISIBLE);
             }
 
