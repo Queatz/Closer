@@ -76,6 +76,9 @@ public interface Backend {
     @POST("message")
     Single<CreateResult> sendGroupMessage(@Query("group") String groupId, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
 
+    @POST("message/{id}")
+    Single<SuccessResult> reactToMessage(@Path("id") String messageId, @Query("react") String text, @Query("remove") boolean remove);
+
     @POST("message")
     Single<CreateResult> sendAreaMessage(@Query("geo") String latLng, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
 

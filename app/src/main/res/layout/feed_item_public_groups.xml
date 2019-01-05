@@ -14,27 +14,25 @@
     android:layout_marginBottom="@dimen/padQuadruple"
     android:clickable="true">
 
-    <TextView
-        android:id="@+id/groupsTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/closerLogoText"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="4dp"
-        android:gravity="center_horizontal"
-        android:textAllCaps="true"
-        android:textColor="@color/colorAccent"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        android:text="@string/app_name" />
+        android:src="@drawable/closer_logo_text"
+        android:tint="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <closer.vlllage.com.closer.ui.SoftScrollStopper
         android:id="@+id/publicGroupsRecyclerViewContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/groupsTitle">
+        app:layout_constraintTop_toBottomOf="@+id/closerLogoText">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/publicGroupsRecyclerView"

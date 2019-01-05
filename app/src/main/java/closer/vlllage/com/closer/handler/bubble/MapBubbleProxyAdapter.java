@@ -15,6 +15,7 @@ import java.util.List;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.helpers.ImageHandler;
+import closer.vlllage.com.closer.handler.helpers.PhotoHelper;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.TimeStr;
 import closer.vlllage.com.closer.handler.helpers.Val;
@@ -66,11 +67,19 @@ public class MapBubbleProxyAdapter extends PoolRecyclerAdapter<MapBubbleProxyAda
         switch (mapBubble.getType()) {
             case STATUS:
                 holder.click.setBackgroundResource(R.drawable.clickable_white_4dp);
-                holder.photo.setVisibility(View.GONE);
+                holder.photo.setVisibility(View.VISIBLE);
+                holder.photo.setColorFilter(null);
+                holder.photo.setImageTintList(ColorStateList.valueOf($(ResourcesHandler.class).getResources().getColor(android.R.color.transparent)));
+                holder.photo.setImageResource(R.drawable.ic_person_black_24dp);
                 holder.name.setText(mapBubble.getName() + "\n" + mapBubble.getStatus());
                 if (mapBubble.getTag() instanceof Phone) {
                     holder.info.setVisibility(View.VISIBLE);
-                    holder.info.setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
+                    Phone phone = (Phone) mapBubble.getTag();
+                    holder.info.setText($(TimeStr.class).pretty(phone.getUpdated()));
+                    if (!$(Val.class).isEmpty(phone.getPhoto())) {
+                        $(PhotoHelper.class).loadCircle(holder.photo, phone.getPhoto());
+                    }
+
                 } else {
                     holder.info.setVisibility(View.GONE);
                 }

@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
@@ -104,7 +107,9 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             toggleMessageActionLayout(holder);
         });
         holder.messageActionVote.setOnClickListener(view -> {
-            $(DefaultAlerts.class).message("That doesn't work yet!");
+            $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class)
+                    .reactToMessage(groupMessage.getId(), "♥", true)
+                    .subscribe(successResult -> {}, error -> $(DefaultAlerts.class).thatDidntWork()));
             toggleMessageActionLayout(holder);
         });
 

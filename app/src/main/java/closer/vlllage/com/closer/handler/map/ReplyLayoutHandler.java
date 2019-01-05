@@ -17,6 +17,7 @@ import android.widget.TextView;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
@@ -110,6 +111,9 @@ public class ReplyLayoutHandler extends PoolMember {
             if (phone != null && !$(Val.class).isEmpty(phone.getPhoto())) {
                 replyLayoutPhoto.setVisibility(View.VISIBLE);
                 $(PhotoHelper.class).loadCircle(replyLayoutPhoto, phone.getPhoto());
+                replyLayoutPhoto.setOnClickListener(v -> {
+                    $(PhotoActivityTransitionHandler.class).show(replyLayoutPhoto, phone.getPhoto());
+                });
             } else {
                 replyLayoutPhoto.setVisibility(View.GONE);
             }

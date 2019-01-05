@@ -105,6 +105,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().sendGroupMessage(groupId, text, attachment));
     }
 
+    public Single<SuccessResult> reactToMessage(String messageId, String reaction, boolean removeReaction) {
+        return uiThread(api.getBackend().reactToMessage(messageId, reaction, removeReaction));
+    }
+
     public Single<CreateResult> sendAreaMessage(LatLng latLng, String text, String attachment) {
         return uiThread(api.getBackend().sendAreaMessage($(LatLngStr.class).from(latLng), text, attachment));
     }

@@ -3,9 +3,11 @@ package closer.vlllage.com.closer.handler.bubble;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper;
 import closer.vlllage.com.closer.handler.helpers.TimeStr;
 import closer.vlllage.com.closer.handler.helpers.Val;
@@ -27,28 +29,45 @@ public class MapBubbleView extends PoolMember {
     }
 
     public void update(View view, MapBubble mapBubble) {
+
+        TextView name = view.findViewById(R.id.name);
+        TextView info = view.findViewById(R.id.info);
+        TextView action = view.findViewById(R.id.action);
+        ImageView photo = view.findViewById(R.id.photo);
+
         if (mapBubble.isInProxy()) {
-            view.findViewById(R.id.name).setVisibility(View.VISIBLE);
-            ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName() + "\n" + mapBubble.getStatus());
-            ((TextView) view.findViewById(R.id.info)).setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
+            name.setVisibility(View.VISIBLE);
+            name.setText(mapBubble.getName() + "\n" + mapBubble.getStatus());
+
+            if (info != null) {
+                info.setText($(TimeStr.class).pretty(((Phone) mapBubble.getTag()).getUpdated()));
+            }
         } else {
             if (mapBubble.getName().isEmpty()) {
-                view.findViewById(R.id.name).setVisibility(View.GONE);
+                name.setVisibility(View.GONE);
             } else {
-                view.findViewById(R.id.name).setVisibility(View.VISIBLE);
-                ((TextView) view.findViewById(R.id.name)).setText(mapBubble.getName());
+                name.setVisibility(View.VISIBLE);
+                name.setText(mapBubble.getName());
             }
 
             ((TextView) view.findViewById(R.id.status)).setText($(Val.class).of(mapBubble.getStatus()));
 
-            if (mapBubble.getAction() != null) {
-                ((TextView) view.findViewById(R.id.action)).setText(mapBubble.getAction());
+            if (mapBubble.getAction() != null && action != null) {
+                action.setText(mapBubble.getAction());
             } else if (mapBubble.getTag() instanceof Phone) {
                 Phone phone = (Phone) mapBubble.getTag();
-                ((TextView) view.findViewById(R.id.action)).setText($(TimeStr.class).pretty(phone.getUpdated()));
 
-                if (!$(Val.class).isEmpty(phone.getPhoto())) {
-                    $(PhotoHelper.class).loadCircle(view.findViewById(R.id.photo), phone.getPhoto());
+                if (action != null) {
+                    action.setText($(TimeStr.class).pretty(phone.getUpdated()));
+                }
+
+                if (photo != null) {
+                    if (!$(Val.class).isEmpty(phone.getPhoto())) {
+                        $(PhotoHelper.class).loadCircle(photo, phone.getPhoto());
+                        photo.setOnClickListener(v -> {
+                            $(PhotoActivityTransitionHandler.class).show(photo, phone.getPhoto());
+                        });
+                    }
                 }
             }
         }
