@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,7 +109,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         });
         holder.messageActionVote.setOnClickListener(view -> {
             $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class)
-                    .reactToMessage(groupMessage.getId(), "♥", true)
+                    .reactToMessage(groupMessage.getId(), "♥", false)
                     .subscribe(successResult -> {}, error -> $(DefaultAlerts.class).thatDidntWork()));
             toggleMessageActionLayout(holder);
         });
@@ -116,6 +117,13 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         holder.messageActionLayout.setVisibility(View.GONE);
 
         $(MessageDisplay.class).display(holder, groupMessage, onEventClickListener, onSuggestionClickListener);
+
+        if (groupMessage.getReactions() == null || groupMessage.getReactions().isEmpty()) {
+            holder.reactionsRecyclerView.setVisibility(View.GONE);
+        } else {
+            holder.reactionsRecyclerView.setVisibility(View.VISIBLE);
+            holder.reactionAdapter.setItems(groupMessage.getReactions());
+        }
     }
 
     private void toggleMessageActionLayout(GroupMessageViewHolder holder) {
@@ -169,6 +177,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         View messageActionPin;
         View messageActionVote;
         RevealAnimator messageActionLayoutRevealAnimator;
+        RecyclerView reactionsRecyclerView;
+        ReactionAdapter reactionAdapter;
 
         public GroupMessageViewHolder(View itemView) {
             super(itemView);
@@ -180,12 +190,17 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             time = itemView.findViewById(R.id.time);
             group = itemView.findViewById(R.id.group);
             photo = itemView.findViewById(R.id.photo);
+            reactionsRecyclerView = itemView.findViewById(R.id.reactionsRecyclerView);
             messageActionLayout = itemView.findViewById(R.id.messageActionLayout);
             messageActionReply = itemView.findViewById(R.id.messageActionReply);
             messageActionShare = itemView.findViewById(R.id.messageActionShare);
             messageActionRemind = itemView.findViewById(R.id.messageActionReminder);
             messageActionPin = itemView.findViewById(R.id.messageActionPin);
             messageActionVote = itemView.findViewById(R.id.messageActionVote);
+
+            reactionsRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), RecyclerView.HORIZONTAL, false));
+            reactionAdapter = new ReactionAdapter($pool());
+            reactionsRecyclerView.setAdapter(reactionAdapter);
         }
     }
 

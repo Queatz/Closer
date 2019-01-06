@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.api.models.ModelResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.ListEqual;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.BaseObject;
@@ -179,6 +180,13 @@ public class RefreshHandler extends PoolMember {
                     for (GroupMessageResult message : messages) {
                         if (!existingObjsMap.containsKey(message.id)) {
                             groupMessageBox.put(transformGroupMessageResult(message));
+                        } else {
+                            GroupMessage existing = existingObjsMap.get(message.id);
+
+                            if (existing != null && !$(ListEqual.class).isEqual(message.reactions, existing.getReactions())) {
+                                existing.setReactions(message.reactions);
+                                groupMessageBox.put(existing);
+                            }
                         }
                     }
                 });
@@ -291,6 +299,7 @@ public class RefreshHandler extends PoolMember {
         groupMessage.setTime(result.created);
         groupMessage.setUpdated(result.updated);
         groupMessage.setAttachment(result.attachment);
+        groupMessage.setReactions(result.reactions);
         return groupMessage;
     }
 

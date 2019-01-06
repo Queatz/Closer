@@ -1,7 +1,11 @@
 package closer.vlllage.com.closer.store.models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import closer.vlllage.com.closer.store.ReactionCountListJsonConverter;
+import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 
 @Entity
@@ -13,6 +17,9 @@ public class GroupMessage extends BaseObject {
     private String attachment;
     private Double latitude;
     private Double longitude;
+
+    @Convert(converter = ReactionCountListJsonConverter.class, dbType = String.class)
+    private List<ReactionCount> reactions = new ArrayList<>();
 
     public String getTo() {
         return to;
@@ -74,6 +81,15 @@ public class GroupMessage extends BaseObject {
 
     public GroupMessage setLongitude(Double longitude) {
         this.longitude = longitude;
+        return this;
+    }
+
+    public List<ReactionCount> getReactions() {
+        return reactions;
+    }
+
+    public GroupMessage setReactions(List<ReactionCount> reactions) {
+        this.reactions = reactions;
         return this;
     }
 }

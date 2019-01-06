@@ -70,13 +70,23 @@
 
     </LinearLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/reactionsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/messageLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
         android:id="@+id/messageActionLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/pad"
         android:paddingBottom="@dimen/padHalf"
-        app:layout_constraintTop_toBottomOf="@+id/messageLayout"
+        app:layout_constraintTop_toBottomOf="@+id/reactionsRecyclerView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
@@ -91,6 +101,24 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/messageActionVote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="♥"
+                    android:textColor="@color/text"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/messageActionReply"
@@ -164,24 +192,6 @@
                     android:textStyle="bold"
                     android:text="Pin"
                     android:focusable="true" />
-
-                <TextView
-                    android:id="@+id/messageActionVote"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/groupActionHeight"
-                    android:layout_marginEnd="@dimen/pad"
-                    android:background="@drawable/clickable_light_flat"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingRight="12dp"
-                    android:paddingBottom="6dp"
-                    android:text="♥"
-                    android:textColor="@color/text"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
 
             </LinearLayout>
 
