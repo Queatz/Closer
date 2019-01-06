@@ -9,7 +9,8 @@
     android:orientation="vertical"
     android:background="@color/white"
     android:paddingStart="@dimen/padDouble"
-    android:paddingTop="@dimen/padDouble"
+    android:paddingTop="@dimen/pad"
+    android:paddingBottom="@dimen/pad"
     android:paddingEnd="@dimen/padDouble"
     android:clipToPadding="false"
     android:clickable="true">

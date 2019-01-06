@@ -9,6 +9,7 @@ import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.api.models.ReactionResult;
 import closer.vlllage.com.closer.api.models.StateResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
@@ -78,6 +79,9 @@ public interface Backend {
 
     @POST("message/{id}")
     Single<SuccessResult> reactToMessage(@Path("id") String messageId, @Query("react") String text, @Query("remove") boolean remove);
+
+    @GET("message/{id}/reactions")
+    Single<List<ReactionResult>> groupMessageReactions(@Path("id") String messageId);
 
     @POST("message")
     Single<CreateResult> sendAreaMessage(@Query("geo") String latLng, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);

@@ -11,13 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.helpers.PhoneListActivityTransitionHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter;
+import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.ReactionCount;
 
 public class ReactionAdapter extends PoolRecyclerAdapter<ReactionAdapter.ViewHolder> {
 
     private List<ReactionCount> items = new ArrayList<>();
+    private GroupMessage groupMessage;
 
     public ReactionAdapter(PoolMember poolMember) {
         super(poolMember);
@@ -32,7 +35,12 @@ public class ReactionAdapter extends PoolRecyclerAdapter<ReactionAdapter.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.reaction.setText(items.get(position).reaction + " " + items.get(position).count);
+        ReactionCount reaction = items.get(position);
+
+        viewHolder.reaction.setText(reaction.reaction + " " + reaction.count);
+        viewHolder.reaction.setOnClickListener(v -> {
+            $(PhoneListActivityTransitionHandler.class).showReactions(groupMessage.getId());
+        });
     }
 
     @Override
@@ -44,6 +52,10 @@ public class ReactionAdapter extends PoolRecyclerAdapter<ReactionAdapter.ViewHol
         this.items = items;
         notifyDataSetChanged();
         return this;
+    }
+
+    public void setGroupMessage(GroupMessage groupMessage) {
+        this.groupMessage = groupMessage;
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {

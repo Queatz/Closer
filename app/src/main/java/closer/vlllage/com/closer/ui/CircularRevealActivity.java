@@ -10,7 +10,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
-import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
 public abstract class CircularRevealActivity extends PoolActivity {
@@ -84,7 +83,7 @@ public abstract class CircularRevealActivity extends PoolActivity {
             return;
         }
 
-        finishAnimator = ViewAnimationUtils.createCircularReveal(findViewById(R.id.background),
+        finishAnimator = ViewAnimationUtils.createCircularReveal(findViewById(getBackgroundId()),
                 sourceBounds.centerX(),
                 sourceBounds.centerY(),
                 (float) Math.hypot(getWindow().getDecorView().getWidth(), getWindow().getDecorView().getHeight()),

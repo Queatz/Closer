@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.api.models.ReactionResult;
 import closer.vlllage.com.closer.api.models.StateResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
 import closer.vlllage.com.closer.api.models.SuggestionResult;
@@ -107,6 +108,10 @@ public class ApiHandler extends PoolMember {
 
     public Single<SuccessResult> reactToMessage(String messageId, String reaction, boolean removeReaction) {
         return uiThread(api.getBackend().reactToMessage(messageId, reaction, removeReaction));
+    }
+
+    public Single<List<ReactionResult>> groupMessageReactions(String messageId) {
+        return uiThread(api.getBackend().groupMessageReactions(messageId));
     }
 
     public Single<CreateResult> sendAreaMessage(LatLng latLng, String text, String attachment) {

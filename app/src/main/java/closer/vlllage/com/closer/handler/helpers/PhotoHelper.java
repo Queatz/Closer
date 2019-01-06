@@ -7,6 +7,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class PhotoHelper extends PoolMember {
     public void loadCircle(ImageView imageView, String url) {
+        $(ImageHandler.class).get().cancelRequest(imageView);
         $(ImageHandler.class).get().load(url)
                 .noPlaceholder()
                 .transform(new CropCircleTransformation())

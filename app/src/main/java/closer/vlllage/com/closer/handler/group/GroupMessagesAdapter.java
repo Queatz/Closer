@@ -123,6 +123,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         } else {
             holder.reactionsRecyclerView.setVisibility(View.VISIBLE);
             holder.reactionAdapter.setItems(groupMessage.getReactions());
+            holder.reactionAdapter.setGroupMessage(groupMessage);
         }
     }
 
