@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.ViewTreeObserver;
 
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
@@ -14,6 +15,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.handler.share.SearchGroupsHeaderAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -24,10 +26,12 @@ import io.objectbox.query.QueryBuilder;
 public class ShareActivity extends ListActivity {
 
     public static final String EXTRA_GROUP_MESSAGE_ID = "groupMessageId";
+    public static final String EXTRA_INVITE_TO_GROUP_PHONE_ID = "inviteToGroupPhoneId";
 
     private SearchGroupsHeaderAdapter searchGroupsAdapter;
 
     private String groupMessageId;
+    private String phoneId;
     private Uri data;
 
     @Override
@@ -42,8 +46,6 @@ public class ShareActivity extends ListActivity {
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_item_light);
         searchGroupsAdapter.setBackgroundResId(R.drawable.clickable_green_flat);
 
-        recyclerView.setAdapter(searchGroupsAdapter);
-
         QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
 
         $(DisposableHandler.class).add(queryBuilder
@@ -56,6 +58,9 @@ public class ShareActivity extends ListActivity {
 
         if (getIntent() != null) {
             groupMessageId = getIntent().getStringExtra(EXTRA_GROUP_MESSAGE_ID);
+            phoneId = getIntent().getStringExtra(EXTRA_INVITE_TO_GROUP_PHONE_ID);
+
+            searchGroupsAdapter.setHeaderText($(ResourcesHandler.class).getResources().getString(R.string.share_to));
 
             if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
                 data = getIntent().getData();
@@ -63,8 +68,21 @@ public class ShareActivity extends ListActivity {
                 if (data == null) {
                     data = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
                 }
+            } else if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
+                if (phoneId != null) {
+                    searchGroupsAdapter.setHeaderText($(ResourcesHandler.class).getResources().getString(R.string.add_person_to, $(NameHandler.class).getName(phoneId)));
+                    searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.add));
+                }
             }
         }
+
+        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                recyclerView.setAdapter(searchGroupsAdapter);
+            }
+        });
     }
 
     private void onGroupSelected(Group group) {
@@ -72,7 +90,16 @@ public class ShareActivity extends ListActivity {
             return;
         }
 
-        if (groupMessageId != null) {
+        if (phoneId != null) {
+            $(DisposableHandler.class).add($(ApiHandler.class).inviteToGroup(group.getId(), phoneId).subscribe(
+                    successResult -> {
+                        if (successResult.success) {
+                            finish();
+                        } else {
+                            $(DefaultAlerts.class).thatDidntWork();
+                        }
+                    }, error -> $(DefaultAlerts.class).thatDidntWork()));
+        } else if (groupMessageId != null) {
             $(GroupMessageAttachmentHandler.class).shareGroupMessage(group.getId(), groupMessageId);
             finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
         } else if (data != null) {

@@ -8,6 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/white"
+    android:elevation="@dimen/elevation"
     android:paddingStart="@dimen/padDouble"
     android:paddingTop="@dimen/pad"
     android:paddingBottom="@dimen/pad"

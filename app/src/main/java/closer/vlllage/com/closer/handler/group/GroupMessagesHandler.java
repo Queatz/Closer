@@ -20,7 +20,6 @@ import closer.vlllage.com.closer.handler.helpers.CameraHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
-import closer.vlllage.com.closer.handler.helpers.TimeAgo;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -171,10 +170,6 @@ public class GroupMessagesHandler extends PoolMember {
 
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
                 .equal(GroupMessage_.to, group.getId());
-
-        if (!group.isPublic() && !group.hasEvent()) {
-            queryBuilder.greater(GroupMessage_.time, $(TimeAgo.class).thirtySixHoursAgo());
-        }
 
         $(DisposableHandler.class).add(queryBuilder
                 .sort($(SortHandler.class).sortGroupMessages())

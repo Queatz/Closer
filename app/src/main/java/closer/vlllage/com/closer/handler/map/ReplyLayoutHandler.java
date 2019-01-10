@@ -25,6 +25,7 @@ import closer.vlllage.com.closer.handler.helpers.OutboundHandler;
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Phone;
@@ -41,6 +42,7 @@ public class ReplyLayoutHandler extends PoolMember {
     private EditText replyMessage;
     private ImageButton getDirectionsButton;
     private ImageButton showOnMapButton;
+    private ImageButton inviteToGroupButton;
 
     private MapBubble replyingToMapBubble;
 
@@ -53,6 +55,7 @@ public class ReplyLayoutHandler extends PoolMember {
         this.replyLayoutStatus = replyLayout.findViewById(R.id.replyLayoutStatus);
         this.getDirectionsButton = replyLayout.findViewById(R.id.getDirectionsButton);
         this.showOnMapButton = replyLayout.findViewById(R.id.showOnMapButton);
+        this.inviteToGroupButton = replyLayout.findViewById(R.id.inviteToGroupButton);
 
         sendButton.setOnClickListener(view -> reply());
 
@@ -87,6 +90,10 @@ public class ReplyLayoutHandler extends PoolMember {
 
         showOnMapButton.setOnClickListener(view -> {
             $(MapActivityHandler.class).showPhoneOnMap(replyingToMapBubble.getPhone());
+        });
+
+        inviteToGroupButton.setOnClickListener(view -> {
+            $(ShareActivityTransitionHandler.class).inviteToGroup(replyingToMapBubble.getPhone());
         });
     }
 

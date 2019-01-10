@@ -164,7 +164,9 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
     @Override
     public void onViewRecycled(@NonNull SearchGroupsViewHolder holder) {
-        holder.pool.end();
+        if (holder.pool != null) {
+            holder.pool.end();
+        }
     }
 
     @Override
@@ -220,14 +222,14 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
         this.isSmall = isSmall;
     }
 
-    protected class SearchGroupsViewHolder extends RecyclerView.ViewHolder {
-        View cardView;
-        TextView name;
-        TextView about;
-        TextView action;
-        RecyclerView actionRecyclerView;
-        TempPool pool;
-        ImageView backgroundPhoto;
+    protected static class SearchGroupsViewHolder extends RecyclerView.ViewHolder {
+        public View cardView;
+        public TextView name;
+        public TextView about;
+        public TextView action;
+        public RecyclerView actionRecyclerView;
+        public TempPool pool;
+        public ImageView backgroundPhoto;
 
         public SearchGroupsViewHolder(View itemView) {
             super(itemView);
