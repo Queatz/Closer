@@ -71,7 +71,7 @@
         android:layout_marginLeft="@dimen/padDouble"
         android:layout_marginBottom="8dp"
         android:imeOptions="actionGo"
-        android:hint="@string/write_a_reply"
+        android:hint="@string/say_something"
         android:padding="8dp"
         android:inputType="textShortMessage|textCapSentences"
         android:background="@null"
@@ -90,7 +90,7 @@
         android:textStyle="bold"
         android:minWidth="0dp"
         android:textColor="@color/button_text_color"
-        android:text="@string/reply" />
+        android:text="@string/send" />
 
     <ImageButton
         android:id="@+id/inviteToGroupButton"

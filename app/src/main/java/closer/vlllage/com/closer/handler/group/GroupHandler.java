@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.FeatureType;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.DataHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
@@ -25,7 +25,6 @@ import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
-import closer.vlllage.com.closer.store.models.Event_;
 import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupContact;
 import closer.vlllage.com.closer.store.models.GroupContact_;
@@ -193,18 +192,9 @@ public class GroupHandler extends PoolMember {
             return;
         }
 
-        Event event = $(StoreHandler.class).getStore().box(Event.class).query()
-                .equal(Event_.id, eventId)
-                .build().findFirst();
-
-        if (event != null) {
-            eventChanged.onNext(event);
-        } else {
-            $(DisposableHandler.class).add($(ApiHandler.class).getEvent(eventId).map(EventResult::from).subscribe(eventFromServer -> {
-                $(RefreshHandler.class).refresh(eventFromServer);
-                eventChanged.onNext(eventFromServer);
-            }, error -> $(DefaultAlerts.class).thatDidntWork()));
-        }
+        $(DisposableHandler.class).add($(DataHandler.class).getEventById(eventId)
+                .subscribe(event -> eventChanged.onNext(event),
+                        error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
     public Group getGroup() {

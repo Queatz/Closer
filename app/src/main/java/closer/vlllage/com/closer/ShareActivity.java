@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
+import closer.vlllage.com.closer.handler.helpers.ToastHandler;
 import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.handler.share.SearchGroupsHeaderAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -94,6 +95,7 @@ public class ShareActivity extends ListActivity {
             $(DisposableHandler.class).add($(ApiHandler.class).inviteToGroup(group.getId(), phoneId).subscribe(
                     successResult -> {
                         if (successResult.success) {
+                            $(ToastHandler.class).show($(ResourcesHandler.class).getResources().getString(R.string.added_phone, $(NameHandler.class).getName(phoneId)));
                             finish();
                         } else {
                             $(DefaultAlerts.class).thatDidntWork();

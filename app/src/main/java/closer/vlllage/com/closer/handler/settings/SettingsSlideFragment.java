@@ -30,7 +30,7 @@ public class SettingsSlideFragment extends PoolFragment {
         openGroupsExpandedSettingsSwitch.setChecked($(SettingsHandler.class).get(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED));
         openGroupsExpandedSettingsSwitch.setOnCheckedChangeListener((v, checked) -> $(SettingsHandler.class).set(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED, checked));
 
-        view.findViewById(R.id.sendFeedbackButton).setOnClickListener(v -> $(GroupActivityTransitionHandler.class).showGroupMessages(v, "12370162"));
+        view.findViewById(R.id.sendFeedbackButton).setOnClickListener(v -> $(GroupActivityTransitionHandler.class).showGroupMessages(v, $(ConfigHandler.class).feedbackGroupId()));
         view.findViewById(R.id.viewPrivacyPolicyButton).setOnClickListener(v -> {
             $(DisposableHandler.class).add($(ApiHandler.class).privacy().subscribe(privacyPolicy -> {
                 $(DefaultAlerts.class).message(privacyPolicy);
