@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
@@ -50,6 +51,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     private @LayoutRes int layoutResId = R.layout.search_groups_item;
     private @DrawableRes int backgroundResId = R.drawable.clickable_light;
     private boolean isSmall;
+    private boolean isNoAnimation;
 
     public SearchGroupsAdapter(PoolMember poolMember, OnGroupClickListener onGroupClickListener, OnCreateGroupClickListener onCreateGroupClickListener) {
         super(poolMember);
@@ -137,7 +139,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             holder.pool.$(ActivityHandler.class).setActivity($(ActivityHandler.class).getActivity());
             holder.pool.$(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
             holder.pool.$(GroupActionRecyclerViewHandler.class).attach(holder.actionRecyclerView, GroupActionAdapter.Layout.TEXT);
-            holder.pool.$(GroupActionRecyclerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(SearchHandler.class).openGroup(groupAction.getGroup(), holder.itemView));
+            holder.pool.$(GroupActionRecyclerViewHandler.class).setOnGroupActionRepliedListener(groupAction -> $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, groupAction.getGroup()));
             holder.pool.$(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupAction.class).query()
                     .equal(GroupAction_.group, group.getId())
                     .build().subscribe().single()
@@ -180,6 +182,12 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
     }
 
     public void setGroups(List<Group> groups) {
+        if (isNoAnimation) {
+            this.groups.clear();
+            this.groups.addAll(groups);
+            this.notifyDataSetChanged();
+        }
+
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -220,6 +228,11 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
 
     public void setIsSmall(boolean isSmall) {
         this.isSmall = isSmall;
+    }
+
+    public SearchGroupsAdapter setNoAnimation(boolean noAnimation) {
+        isNoAnimation = noAnimation;
+        return this;
     }
 
     protected static class SearchGroupsViewHolder extends RecyclerView.ViewHolder {

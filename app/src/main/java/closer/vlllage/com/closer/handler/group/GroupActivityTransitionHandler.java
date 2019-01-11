@@ -21,6 +21,11 @@ public class GroupActivityTransitionHandler extends PoolMember {
     }
 
     public void showGroupMessages(@Nullable View view, String groupId, boolean isRespond) {
+        if (groupId == null) {
+            $(DefaultAlerts.class).thatDidntWork();
+            return;
+        }
+
         Intent intent = getIntent(groupId, isRespond);
 
         if (view != null) {

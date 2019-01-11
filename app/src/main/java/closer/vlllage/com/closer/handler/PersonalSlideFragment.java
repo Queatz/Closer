@@ -20,6 +20,7 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.GroupHandler;
 import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
@@ -33,7 +34,6 @@ import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
 import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
-import closer.vlllage.com.closer.handler.search.SearchHandler;
 import closer.vlllage.com.closer.pool.PoolFragment;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -67,7 +67,7 @@ public class PersonalSlideFragment extends PoolFragment {
         TextView youveSubscribedEmpty = view.findViewById(R.id.youveSubscribedEmpty);
 
         SearchGroupsAdapter searchGroupsAdapter = new SearchGroupsAdapter($(GroupHandler.class), (group, v) -> {
-            $(SearchHandler.class).openGroup(group.getId(), v);
+            $(GroupActivityTransitionHandler.class).showGroupMessages(v, group.getId());
         }, null);
 
         searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.open_group));

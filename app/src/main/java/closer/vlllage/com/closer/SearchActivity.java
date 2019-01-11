@@ -10,6 +10,7 @@ import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.search.SearchHandler;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 
+@Deprecated
 public class SearchActivity extends CircularRevealActivity {
 
     @Override

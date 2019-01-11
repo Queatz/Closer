@@ -10,11 +10,14 @@ public class RecyclerViewHeader {
     private RecyclerView.ViewHolder footerViewHolder;
     private RecyclerView recyclerView;
     private int pad;
+    private int lastGoodExtend;
 
     private int originalHeaderPadding;
     private int originalFooterPadding;
 
     public void onBind(RecyclerView.ViewHolder holder, int position) {
+        boolean dirty = false;
+
         if (position == recyclerView.getAdapter().getItemCount() - 1) {
             originalFooterPadding = holder.itemView.getPaddingBottom();
 
@@ -26,7 +29,7 @@ public class RecyclerViewHeader {
             );
 
             footerViewHolder = holder;
-            recyclerView.post(this::setHeaderMargin);
+            dirty = true;
         }
 
         if (position == 0) {
@@ -40,6 +43,10 @@ public class RecyclerViewHeader {
             );
 
             headerViewHolder = holder;
+            dirty = true;
+        }
+
+        if (dirty) {
             setHeaderMargin();
         }
     }
@@ -94,13 +101,16 @@ public class RecyclerViewHeader {
 
     private int extend() {
         if (footerViewHolder == null) {
+            lastGoodExtend = 0;
             return 0;
         }
 
         if (footerViewHolder.itemView.getBottom() == 0) {
+            lastGoodExtend = 0;
             return 0;
         }
 
-        return Math.max(0, recyclerView.getHeight() - footerViewHolder.itemView.getBottom());
+        lastGoodExtend = Math.max(lastGoodExtend, recyclerView.getHeight() - footerViewHolder.itemView.getBottom());
+        return lastGoodExtend;
     }
 }

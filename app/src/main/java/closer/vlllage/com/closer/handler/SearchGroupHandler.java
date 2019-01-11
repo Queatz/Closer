@@ -16,11 +16,15 @@ public class SearchGroupHandler extends PoolMember {
     private String searchQuery = "";
     private SearchGroupsAdapter searchGroupsAdapter;
     private List<Group> groupsCache;
+    private boolean hideCreateGroupOption;
 
     public void showGroupsForQuery(SearchGroupsAdapter searchGroupsAdapter, String searchQuery) {
         this.searchQuery = searchQuery.toLowerCase();
         this.searchGroupsAdapter = searchGroupsAdapter;
-        searchGroupsAdapter.setCreatePublicGroupName(searchQuery.trim().isEmpty() ? null : searchQuery);
+
+        if (!hideCreateGroupOption) {
+            searchGroupsAdapter.setCreatePublicGroupName(searchQuery.trim().isEmpty() ? null : searchQuery);
+        }
 
         if (this.groupsCache != null) {
             setGroups(this.groupsCache);
@@ -55,5 +59,9 @@ public class SearchGroupHandler extends PoolMember {
         }
 
         return false;
+    }
+
+    public void hideCreateGroupOption() {
+        this.hideCreateGroupOption = true;
     }
 }

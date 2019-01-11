@@ -113,6 +113,7 @@
     <string name="search_public_groups">Public groups</string>
     <string name="public_groups">Public groups</string>
     <string name="search_public_groups_hint">Search for groups</string>
+    <string name="search_groups">Search groups</string>
     <string name="open_group">Open group</string>
     <string name="tell_more_about_group">This group is about…</string>
     <string name="group_as_public">%1$s (Public group)</string>

@@ -31,6 +31,7 @@ import closer.vlllage.com.closer.store.models.GroupAction_;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
+@Deprecated
 public class SearchHandler extends PoolMember {
 
     private SearchGroupsAdapter searchGroupsAdapter;

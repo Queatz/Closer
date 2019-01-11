@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.ViewTreeObserver;
 
+import closer.vlllage.com.closer.handler.SearchGroupHandler;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
@@ -41,21 +42,24 @@ public class ShareActivity extends ListActivity {
 
         $(ApiHandler.class).setAuthorization($(AccountHandler.class).getPhone());
 
-        searchGroupsAdapter = new SearchGroupsHeaderAdapter($(PoolMember.class), (group, view) -> onGroupSelected(group), null);
+        $(SearchGroupHandler.class).hideCreateGroupOption();
+
+        searchGroupsAdapter = new SearchGroupsHeaderAdapter($(PoolMember.class), (group, view) -> onGroupSelected(group), null, query -> $(SearchGroupHandler.class).showGroupsForQuery(searchGroupsAdapter, query));
 
         searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.share));
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_item_light);
         searchGroupsAdapter.setBackgroundResId(R.drawable.clickable_green_flat);
 
-        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
+        $(SearchGroupHandler.class).showGroupsForQuery(searchGroupsAdapter, "");
 
+        QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
         $(DisposableHandler.class).add(queryBuilder
                 .sort($(SortHandler.class).sortGroups())
                 .build()
                 .subscribe()
                 .single()
                 .on(AndroidScheduler.mainThread())
-                .observer(searchGroupsAdapter::setGroups));
+                .observer($(SearchGroupHandler.class)::setGroups));
 
         if (getIntent() != null) {
             groupMessageId = getIntent().getStringExtra(EXTRA_GROUP_MESSAGE_ID);

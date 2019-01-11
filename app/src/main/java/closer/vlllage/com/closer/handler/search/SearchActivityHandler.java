@@ -9,6 +9,7 @@ import closer.vlllage.com.closer.SearchActivity;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 
+@Deprecated
 public class SearchActivityHandler extends PoolMember {
     public void show(@Nullable View view) {
         Intent intent = new Intent($(ActivityHandler.class).getActivity(), SearchActivity.class);
