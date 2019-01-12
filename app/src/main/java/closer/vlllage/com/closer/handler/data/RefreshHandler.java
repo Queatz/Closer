@@ -66,7 +66,7 @@ public class RefreshHandler extends PoolMember {
                     location.getLongitude()
             )).subscribe(stateResult -> {
                 handleFullListResult(stateResult.groups, Group.class, Group_.id, true, GroupResult::from, GroupResult::updateFrom);
-                handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, true, this::transformGroupInviteResult, null);
+                handleFullListResult(stateResult.groupInvites, GroupInvite.class, GroupInvite_.id, true, GroupInviteResult::from, null);
                 handleGroupContacts(stateResult.groupContacts);
             }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
         });
@@ -118,6 +118,12 @@ public class RefreshHandler extends PoolMember {
                 .subscribe(this::handleMessages, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 
+    public void refreshGroupMessage(String groupMessageId) {
+        $(DisposableHandler.class).add($(ApiHandler.class).getGroupMessage(groupMessageId)
+                .subscribe(groupMessageResult -> refresh(GroupMessageResult.from(groupMessageResult)),
+                        error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
     public void refresh(Event event) {
         refreshObject(event, Event.class, Event_.id);
     }
@@ -128,6 +134,10 @@ public class RefreshHandler extends PoolMember {
 
     public void refresh(Phone phone) {
         refreshObject(phone, Phone.class, Phone_.id);
+    }
+
+    public void refresh(GroupMessage groupMessage) {
+        refreshObject(groupMessage, GroupMessage.class, GroupMessage_.id);
     }
 
     public <T extends BaseObject> void refreshObject(T object, Class<T> clazz, Property idProperty) {
@@ -179,7 +189,7 @@ public class RefreshHandler extends PoolMember {
                     Box<GroupMessage> groupMessageBox = $(StoreHandler.class).getStore().box(GroupMessage.class);
                     for (GroupMessageResult message : messages) {
                         if (!existingObjsMap.containsKey(message.id)) {
-                            groupMessageBox.put(transformGroupMessageResult(message));
+                            groupMessageBox.put(GroupMessageResult.from(message));
                         } else {
                             GroupMessage existing = existingObjsMap.get(message.id);
 
@@ -251,7 +261,7 @@ public class RefreshHandler extends PoolMember {
 
             for (GroupContactResult groupContactResult : groupContacts) {
                 if (!existingGroupContactsMap.containsKey(groupContactResult.id)) {
-                    groupsToAdd.add(createGroupContactFromGroupContactResult(groupContactResult));
+                    groupsToAdd.add(GroupContactResult.from(groupContactResult));
                 } else {
                     existingGroupContactsMap.get(groupContactResult.id).setContactName(groupContactResult.phone.name);
                     existingGroupContactsMap.get(groupContactResult.id).setContactActive(groupContactResult.phone.updated);
@@ -268,39 +278,6 @@ public class RefreshHandler extends PoolMember {
 
     private void handlePhones(List<PhoneResult> phoneResults) {
         handleFullListResult(phoneResults, Phone.class, Phone_.id, false, PhoneResult::from, PhoneResult::updateFrom);
-    }
-
-    private GroupContact createGroupContactFromGroupContactResult(GroupContactResult groupContactResult) {
-        GroupContact groupContact = new GroupContact();
-        groupContact.setId(groupContactResult.id);
-        groupContact.setContactId(groupContactResult.from);
-        groupContact.setGroupId(groupContactResult.to);
-        groupContact.setContactName(groupContactResult.phone.name);
-        groupContact.setContactActive(groupContactResult.phone.updated);
-        groupContact.setUpdated(groupContactResult.updated);
-        return groupContact;
-    }
-
-    private GroupInvite transformGroupInviteResult(GroupInviteResult result) {
-        GroupInvite groupInvite = new GroupInvite();
-        groupInvite.setId(result.id);
-        groupInvite.setGroup(result.group);
-        groupInvite.setName(result.name);
-        groupInvite.setUpdated(result.updated);
-        return groupInvite;
-    }
-
-    private GroupMessage transformGroupMessageResult(GroupMessageResult result) {
-        GroupMessage groupMessage = new GroupMessage();
-        groupMessage.setId(result.id);
-        groupMessage.setFrom(result.from);
-        groupMessage.setTo(result.to);
-        groupMessage.setText(result.text);
-        groupMessage.setTime(result.created);
-        groupMessage.setUpdated(result.updated);
-        groupMessage.setAttachment(result.attachment);
-        groupMessage.setReactions(result.reactions);
-        return groupMessage;
     }
 
     interface CreateTransformer<T, R> {

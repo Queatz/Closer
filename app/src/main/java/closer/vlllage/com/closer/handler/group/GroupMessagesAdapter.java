@@ -14,6 +14,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -110,7 +111,9 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         holder.messageActionVote.setOnClickListener(view -> {
             $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add($(ApiHandler.class)
                     .reactToMessage(groupMessage.getId(), "♥", false)
-                    .subscribe(successResult -> {}, error -> $(DefaultAlerts.class).thatDidntWork()));
+                    .subscribe(successResult -> {
+                        $(RefreshHandler.class).refreshGroupMessage(groupMessage.getId());
+                    }, error -> $(DefaultAlerts.class).thatDidntWork()));
             toggleMessageActionLayout(holder);
         });
 

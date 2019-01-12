@@ -86,6 +86,9 @@ public interface Backend {
     @POST("message")
     Single<CreateResult> sendAreaMessage(@Query("geo") String latLng, @Query("text") String text, @Query(value = "attachment", encoded = true) String attachment);
 
+    @GET("message/{id}")
+    Single<GroupMessageResult> getGroupMessage(@Path("id") String groupMessageId);
+
     @GET("group/{id}/messages")
     Single<List<GroupMessageResult>> getGroupMessages(@Path("id") String groupId);
 

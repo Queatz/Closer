@@ -174,6 +174,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().getGroupMessages(groupId));
     }
 
+    public Single<GroupMessageResult> getGroupMessage(String groupMessageId) {
+        return uiThread(api.getBackend().getGroupMessage(groupMessageId));
+    }
+
     public Single<SuccessResult> setGroupActionPhoto(String groupActionId, String photo) {
         return uiThread(api.getBackend().setGroupActionPhoto(groupActionId, photo));
     }

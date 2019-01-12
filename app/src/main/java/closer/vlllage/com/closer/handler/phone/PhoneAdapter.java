@@ -51,10 +51,11 @@ public class PhoneAdapter extends PoolRecyclerAdapter<PhoneAdapter.ViewHolder> {
             viewHolder.photo.setOnClickListener(v -> {
                 $(PhotoActivityTransitionHandler.class).show(viewHolder.photo, reaction.phone.photo);
             });
-            viewHolder.itemView.setOnClickListener(v -> {
-                onReactionClickListener.onReactionClick(reaction);
-            });
         }
+
+        viewHolder.itemView.setOnClickListener(v -> {
+            onReactionClickListener.onReactionClick(reaction);
+        });
     }
 
     @Override

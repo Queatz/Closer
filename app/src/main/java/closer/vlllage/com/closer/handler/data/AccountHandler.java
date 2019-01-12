@@ -17,6 +17,7 @@ public class AccountHandler extends PoolMember {
     public static final String ACCOUNT_FIELD_PHOTO = "photo";
     public static final String ACCOUNT_FIELD_GEO = "geo";
     public static final String ACCOUNT_FIELD_ACTIVE = "active";
+    public static final String ACCOUNT_FIELD_NOTIFICATIONS = "notifications";
 
     private final static PublishSubject<AccountChange> accountChanges = PublishSubject.create();
 
@@ -48,6 +49,13 @@ public class AccountHandler extends PoolMember {
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_STATUS, status));
         $(DisposableHandler.class).add($(ApiHandler.class).updatePhone(null, null, status, null, null)
             .subscribe(success -> {}, this::onError));
+    }
+
+    public void updateNotifications(boolean notifications) {
+//        $(PersistenceHandler.class).setPublicNotifications(notifications);
+//        accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_NOTIFICATIONS, notifications));
+//        $(DisposableHandler.class).add($(ApiHandler.class).updateNotifications(notifications)
+//            .subscribe(success -> {}, this::onError));
     }
 
     private void onError(Throwable throwable) {
@@ -101,6 +109,11 @@ public class AccountHandler extends PoolMember {
         }
 
         return phone;
+    }
+
+    public boolean getNotifications() {
+//        return $(PersistenceHandler.class).getPublicNotifications();
+        return true;
     }
 
     public static class AccountChange {
