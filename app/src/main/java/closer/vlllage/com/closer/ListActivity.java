@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.pool.PoolActivity;
 
 public abstract class ListActivity extends PoolActivity {
@@ -47,8 +48,9 @@ public abstract class ListActivity extends PoolActivity {
             }
 
             private void reveal() {
+                float yPercent = ($(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight) * 2) / (float) recyclerView.getMeasuredHeight();
                 TranslateAnimation animation = new TranslateAnimation(
-                        Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 1, Animation.RELATIVE_TO_PARENT, 0
+                        Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, yPercent, Animation.RELATIVE_TO_PARENT, 0
                 );
                 animation.setDuration(500);
                 animation.setInterpolator(new DecelerateInterpolator());

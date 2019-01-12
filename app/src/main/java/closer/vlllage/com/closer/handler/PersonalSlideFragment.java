@@ -124,7 +124,7 @@ public class PersonalSlideFragment extends PoolFragment {
             $(KeyboardHandler.class).showKeyboard(yourCurrentStatus, false);
         });
 
-        yourName.setText($(AccountHandler.class).getName());
+        yourName.setText($(Val.class).of($(AccountHandler.class).getName(), $(ResourcesHandler.class).getResources().getString(R.string.update_your_name)));
 
         yourPhoto.setOnClickListener(v -> {
             $(DefaultMenus.class).uploadPhoto(photoId -> {

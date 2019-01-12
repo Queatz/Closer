@@ -48,6 +48,7 @@ public class RecyclerViewHeader {
 
         if (dirty) {
             setHeaderMargin();
+            recyclerView.post(this::setHeaderMargin);
         }
     }
 

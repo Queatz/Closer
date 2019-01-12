@@ -109,6 +109,7 @@ public class ShareActivity extends ListActivity {
             $(GroupMessageAttachmentHandler.class).shareGroupMessage(group.getId(), groupMessageId);
             finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
         } else if (data != null) {
+            $(ToastHandler.class).show(R.string.sending_photo);
             $(PhotoUploadGroupMessageHandler.class).upload(data, photoId -> {
                 boolean success = $(GroupMessageAttachmentHandler.class).sharePhoto($(PhotoUploadGroupMessageHandler.class).getPhotoPathFromId(photoId), group.getId());
                 if (!success) {
