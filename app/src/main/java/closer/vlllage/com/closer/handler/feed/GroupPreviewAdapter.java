@@ -166,12 +166,6 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
             holder.pool.$(GroupMessageParseHandler.class).insertMention(holder.replyMessage, mention);
         });
 
-        holder.replyMessage.setOnFocusChangeListener((view, focused) -> {
-            if (focused) {
-                $(KeyboardHandler.class).showViewAboveKeyboard(view);
-            }
-        });
-
         holder.replyMessage.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 holder.sendButton.callOnClick();

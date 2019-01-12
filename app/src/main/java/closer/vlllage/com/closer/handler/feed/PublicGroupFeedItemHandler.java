@@ -17,7 +17,6 @@ import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
@@ -49,14 +48,6 @@ public class PublicGroupFeedItemHandler extends PoolMember {
                 LinearLayoutManager.HORIZONTAL,
                 false
         ));
-
-        searchGroups.setOnFocusChangeListener((view, focused) -> {
-            if (focused) {
-                $(KeyboardHandler.class).showViewAboveKeyboard(view);
-            }
-        });
-
-        searchGroups.setOnClickListener(view -> $(KeyboardHandler.class).showViewAboveKeyboard(view));
 
         searchGroups.addTextChangedListener(new TextWatcher() {
             @Override

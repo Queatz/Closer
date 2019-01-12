@@ -7,6 +7,7 @@ import java.util.List;
 
 import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
@@ -51,6 +52,14 @@ public class FeedHandler extends PoolMember {
                             .on(AndroidScheduler.mainThread())
                             .observer(this::setGroups));
                 }));
+
+        $(DisposableHandler.class).add($(KeyboardVisibilityHandler.class).isKeyboardVisible().subscribe(visible -> {
+            if (visible) {
+                recyclerView.setPadding(0, 0, 0, $(KeyboardVisibilityHandler.class).getLastKeyboardHeight());
+            } else {
+                recyclerView.setPadding(0, 0, 0, 0);
+            }
+        }));
     }
 
     private void setGroups(List<Group> groups) {
