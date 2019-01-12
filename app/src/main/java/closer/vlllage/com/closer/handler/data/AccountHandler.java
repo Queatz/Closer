@@ -41,7 +41,6 @@ public class AccountHandler extends PoolMember {
         accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_PHOTO, photoUrl));
         $(DisposableHandler.class).add($(ApiHandler.class).updatePhonePhoto(photoUrl)
             .subscribe(success -> {}, this::onError));
-
     }
 
     public void updateStatus(String status) {
@@ -51,11 +50,11 @@ public class AccountHandler extends PoolMember {
             .subscribe(success -> {}, this::onError));
     }
 
-    public void updateNotifications(boolean notifications) {
-//        $(PersistenceHandler.class).setPublicNotifications(notifications);
-//        accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_NOTIFICATIONS, notifications));
-//        $(DisposableHandler.class).add($(ApiHandler.class).updateNotifications(notifications)
-//            .subscribe(success -> {}, this::onError));
+    public void updatePrivateMode(boolean privateMode) {
+        $(PersistenceHandler.class).setPrivateMode(privateMode);
+        accountChanges.onNext(new AccountChange(ACCOUNT_FIELD_NOTIFICATIONS, privateMode));
+        $(DisposableHandler.class).add($(ApiHandler.class).updatePhonePrivateMode(privateMode)
+            .subscribe(success -> {}, this::onError));
     }
 
     private void onError(Throwable throwable) {
@@ -111,9 +110,8 @@ public class AccountHandler extends PoolMember {
         return phone;
     }
 
-    public boolean getNotifications() {
-//        return $(PersistenceHandler.class).getPublicNotifications();
-        return true;
+    public boolean getPrivateMode() {
+        return $(PersistenceHandler.class).getPrivateMode();
     }
 
     public static class AccountChange {

@@ -48,10 +48,10 @@ public class SettingsSlideFragment extends PoolFragment {
 
         publicNotificationsSettingsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             $(Animate.class).alpha(publicNotificationsSettingsSwitchDescription, !isChecked);
-            $(AccountHandler.class).updateNotifications(isChecked);
+            $(AccountHandler.class).updatePrivateMode(!isChecked);
         });
 
-        publicNotificationsSettingsSwitch.setChecked($(AccountHandler.class).getNotifications());
+        publicNotificationsSettingsSwitch.setChecked(!$(AccountHandler.class).getPrivateMode());
 
         return view;
     }

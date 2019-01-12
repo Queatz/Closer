@@ -65,6 +65,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().phoneUpdatePhoto(photoUrl));
     }
 
+    public Single<CreateResult> updatePhonePrivateMode(boolean privateMode) {
+        return uiThread(api.getBackend().updatePhonePrivateMode(privateMode));
+    }
+
     public Single<PhoneResult> phone() {
         return uiThread(api.getBackend().phone());
     }

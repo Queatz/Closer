@@ -47,6 +47,9 @@ public interface Backend {
     @POST("phone")
     Single<CreateResult> phoneUpdatePhoto(@Query("photo") String photo);
 
+    @POST("phone")
+    Single<CreateResult> updatePhonePrivateMode(@Query("privateMode") boolean privateMode);
+
     @GET("phone")
     Single<List<PhoneResult>> searchPhonesNear(@Query("geo") String latLng, @Query("query") String query);
 

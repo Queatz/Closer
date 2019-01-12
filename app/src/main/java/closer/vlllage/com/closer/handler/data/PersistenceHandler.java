@@ -16,6 +16,7 @@ public class PersistenceHandler extends PoolMember {
     private static final String PREFERENCE_MY_NAME = "closer.me.name";
     private static final String PREFERENCE_MY_ACTIVE = "closer.me.active";
     private static final String PREFERENCE_MY_PHOTO = "closer.me.photo";
+    private static final String PREFERENCE_MY_PRIVATE_MODE = "closer.me.private-mode";
     private static final String PREFERENCE_DEVICE_TOKEN = "closer.device-token";
     private static final String PREFERENCE_PHONE = "closer.phone";
     private static final String PREFERENCE_VERIFIED = "closer.verified";
@@ -71,6 +72,10 @@ public class PersistenceHandler extends PoolMember {
 
     public boolean getIsNotificationsPaused() {
         return sharedPreferences.getBoolean(PREFERENCE_NOTIFICATIONS_PAUSED, false);
+    }
+
+    public boolean getPrivateMode() {
+        return sharedPreferences.getBoolean(PREFERENCE_MY_PRIVATE_MODE, false);
     }
 
     public LatLng getLastMapCenter() {
@@ -137,6 +142,11 @@ public class PersistenceHandler extends PoolMember {
     @SuppressLint("ApplySharedPref")
     public void setIsNotificationsPaused(boolean isNotificationsPaused) {
         sharedPreferences.edit().putBoolean(PREFERENCE_NOTIFICATIONS_PAUSED, isNotificationsPaused).commit();
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public void setPrivateMode(boolean privateMode) {
+        sharedPreferences.edit().putBoolean(PREFERENCE_MY_PRIVATE_MODE, privateMode).commit();
     }
 
     @SuppressLint("ApplySharedPref")
