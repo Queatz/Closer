@@ -208,4 +208,6 @@
     <string name="sending_photo">Sending photo…</string>
     <string name="settings_public_notifications">Public notifications</string>
     <string name="public_notifications_switch_description">Public notifications are off. You\'ll only get public notifications from groups that you\'ve subscribed to.</string>
+    <string name="remove_heart">Remove heart?</string>
+    <string name="heart_removed">Heart removed</string>
 </resources>
