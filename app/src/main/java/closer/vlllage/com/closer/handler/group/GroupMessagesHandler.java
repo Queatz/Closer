@@ -24,14 +24,13 @@ import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
-import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupDraftHandler;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
-import io.objectbox.query.QueryBuilder;
+import io.objectbox.reactive.DataSubscription;
 
 public class GroupMessagesHandler extends PoolMember {
 
@@ -40,6 +39,7 @@ public class GroupMessagesHandler extends PoolMember {
     private ImageButton sendButton;
     private ImageButton sendMoreButton;
     private View sendMoreLayout;
+    private DataSubscription groupMessagesSubscription;
 
     public void attach(RecyclerView recyclerView, EditText replyMessage, ImageButton sendButton, ImageButton sendMoreButton, View sendMoreLayout) {
         this.replyMessage = replyMessage;
@@ -162,20 +162,20 @@ public class GroupMessagesHandler extends PoolMember {
             }));
         });
 
-        Group group = $(GroupHandler.class).getGroup();
+        $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
+            if (groupMessagesSubscription != null) {
+                $(DisposableHandler.class).dispose(groupMessagesSubscription);
+            }
 
-        if (group == null) {
-            return;
-        }
+            groupMessagesSubscription = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
+                    .equal(GroupMessage_.to, group.getId())
+                    .sort($(SortHandler.class).sortGroupMessages())
+                    .build()
+                    .subscribe().on(AndroidScheduler.mainThread())
+                    .observer(this::setGroupMessages);
 
-        QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
-                .equal(GroupMessage_.to, group.getId());
-
-        $(DisposableHandler.class).add(queryBuilder
-                .sort($(SortHandler.class).sortGroupMessages())
-                .build()
-                .subscribe().on(AndroidScheduler.mainThread())
-                .observer(this::setGroupMessages));
+            $(DisposableHandler.class).add(groupMessagesSubscription);
+        }));
     }
 
     public void showSendMoreOptions(boolean show) {

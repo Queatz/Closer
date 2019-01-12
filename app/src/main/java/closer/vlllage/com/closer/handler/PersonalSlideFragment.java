@@ -40,6 +40,7 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMember;
 import closer.vlllage.com.closer.store.models.GroupMember_;
 import closer.vlllage.com.closer.store.models.Group_;
+import closer.vlllage.com.closer.ui.Animate;
 import io.objectbox.android.AndroidScheduler;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -160,11 +161,7 @@ public class PersonalSlideFragment extends PoolFragment {
     }
 
     private void updateLocationInfo() {
-        if (shareYourLocationSwitch.isChecked()) {
-            yourCurrentStatus.setVisibility(View.VISIBLE);
-        } else {
-            yourCurrentStatus.setVisibility(View.GONE);
-        }
+        $(Animate.class).alpha(yourCurrentStatus, shareYourLocationSwitch.isChecked());
     }
 
 }
