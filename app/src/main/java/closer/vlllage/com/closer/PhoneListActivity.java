@@ -6,7 +6,11 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Collections;
+import java.util.List;
+
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.api.models.ReactionResult;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
@@ -70,9 +74,23 @@ public class PhoneListActivity extends ListActivity {
                 $(DefaultAlerts.class).thatDidntWork();
             } else {
                 $(DisposableHandler.class).add($(ApiHandler.class).groupMessageReactions(groupMessageId)
+                        .map(this::sortItems)
                         .subscribe(adapter::setItems, error -> $(DefaultAlerts.class).thatDidntWork()));
             }
         }
 
+    }
+
+    private List<ReactionResult> sortItems(List<ReactionResult> reactionResults) {
+        String phoneId = $(PersistenceHandler.class).getPhoneId();
+
+        Collections.sort(reactionResults, (o1, o2) -> {
+            if (o1.from.equals(phoneId) && !o2.from.equals(phoneId)) {
+                return -1;
+            }
+
+            return 0;
+        });
+        return reactionResults;
     }
 }
