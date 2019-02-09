@@ -29,8 +29,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_notification" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/wip/ic_notification.svg" />
+                            <entry key="outputName" value="ic_app" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/wip/drawing-1-2-3.svg" />
                           </map>
                         </option>
                       </PersistentState>
