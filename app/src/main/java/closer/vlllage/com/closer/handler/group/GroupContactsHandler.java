@@ -98,7 +98,8 @@ public class GroupContactsHandler extends PoolMember {
                             .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.leave_group, group.getName()))
                             .setPositiveButtonCallback(result -> leaveGroup(group))
                             .setTitle($(ResourcesHandler.class).getResources().getString(R.string.leave_group_title, group.getName()))
-                            .setMessage($(ResourcesHandler.class).getResources().getString(R.string.leave_group_message))
+                            .setMessage($(ResourcesHandler.class).getResources().getString(
+                                    group.isPublic() ? R.string.leave_public_group_message : R.string.leave_private_group_message))
                             .show();
                 }));
             } else {

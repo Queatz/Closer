@@ -19,6 +19,8 @@ import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupContact;
+import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupMember;
 import closer.vlllage.com.closer.store.models.GroupMember_;
 import io.objectbox.android.AndroidScheduler;
@@ -83,6 +85,17 @@ public class GroupMemberHandler extends PoolMember {
                     updatedGroupMember.setMuted(!updatedGroupMember.isMuted());
                     $(SyncHandler.class).sync(updatedGroupMember);
                 }),
+                new MenuHandler.MenuOption(R.drawable.ic_person_add_black_24dp, R.string.join, () -> {
+                    if (group != null) {
+                        $(AlertHandler.class).make()
+                                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.join_group))
+                                .setPositiveButtonCallback(result -> $(GroupActionHandler.class).joinGroup(group))
+                                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.join_group_title, group.getName()))
+                                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.join_group_message))
+                                .show();
+
+                    }
+                }).visible(!isCurrentUserMemberOf(group)),
                 new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
                     if (group != null) {
                         $(GroupActionHandler.class).addActionToGroup(group);
@@ -112,5 +125,15 @@ public class GroupMemberHandler extends PoolMember {
                     }
                 })
         );
+    }
+
+    private boolean isCurrentUserMemberOf(Group group) {
+        if (group == null) return false;
+
+        return $(StoreHandler.class).getStore().box(GroupContact.class).query()
+                .equal(GroupContact_.groupId, group.getId())
+                .equal(GroupContact_.contactId, $(PersistenceHandler.class).getPhoneId())
+                .build()
+                .count() > 0;
     }
 }

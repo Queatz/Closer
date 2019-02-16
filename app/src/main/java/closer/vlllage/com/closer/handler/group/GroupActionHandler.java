@@ -6,12 +6,15 @@ import android.text.TextWatcher;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.ToastHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.search.GroupActionRecyclerViewHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -138,6 +141,17 @@ public class GroupActionHandler extends PoolMember {
                     createGroupAction(group, model.name, model.intent);
                 })
                 .show();
+    }
+
+    public void joinGroup(Group group) {
+        $(DisposableHandler.class).add($(ApiHandler.class).inviteToGroup(group.getId(), $(PersistenceHandler.class).getPhoneId()).subscribe(
+                successResult -> {
+                    if (successResult.success) {
+                        $(ToastHandler.class).show($(ResourcesHandler.class).getResources().getString(R.string.you_joined_group, group.getName()));
+                    } else {
+                        $(DefaultAlerts.class).thatDidntWork();
+                    }
+                }, error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
     private void createGroupAction(Group group, String name, String intent) {

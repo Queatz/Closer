@@ -120,10 +120,13 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="5:00AM - 7:00AM"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupName" />
+            app:layout_constraintTop_toBottomOf="@+id/groupName"
+            app:layout_constraintBottom_toTopOf="@+id/peopleInGroup" />
 
         <TextView
             android:id="@+id/peopleInGroup"
@@ -148,7 +151,33 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupDetails" />
+            app:layout_constraintTop_toBottomOf="@+id/groupDetails"
+            app:layout_constraintBottom_toTopOf="@+id/groupAbout" />
+
+        <TextView
+            android:id="@+id/groupAbout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingLeft="@dimen/padDouble"
+            android:paddingRight="@dimen/padDouble"
+            android:paddingBottom="@dimen/pad"
+            android:paddingTop="@dimen/padHalf"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            tools:text="All of us bros &amp; sises"
+            android:textColor="@color/text"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupDetails"
+            app:layout_constraintBottom_toTopOf="@+id/eventToolbar"/>
 
         <LinearLayout
             android:id="@+id/eventToolbar"
@@ -161,7 +190,7 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup">
+            app:layout_constraintTop_toBottomOf="@+id/groupAbout">
             <Button
                 android:id="@+id/actionShare"
                 android:layout_width="wrap_content"

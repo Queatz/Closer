@@ -59,7 +59,8 @@
     <string name="number_not_verified">Your number could not be verified.</string>
     <string name="leave_group_action">Leave this group…</string>
     <string name="leave_group">Yes, leave %1$s</string>
-    <string name="leave_group_message">After leaving this group, you will need to be invited again to re-join.</string>
+    <string name="leave_private_group_message">After leaving this group, you will need to be invited again to re-join.</string>
+    <string name="leave_public_group_message">You can re-join at any time.</string>
     <string name="leave_group_title">Leave %1$s?</string>
     <string name="ok">Ok</string>
     <string name="group_no_more">%1$s no more</string>
@@ -103,7 +104,7 @@
     <string name="show_help">Show help</string>
     <string name="help">Help</string>
     <string name="help_message_html"><![CDATA[Thanks for using Closer!<br /><br />
-        Closer is all about getting even closer and closer to your friends.<br /><br />
+        Closer is all about getting closer to your friends.<br /><br />
         <b>Verify your number</b> to be automatically added to any groups you\'ve already been invited to.<br /><br />
         <b>Add your own groups,</b> invite your friends, and make stuff happen.<br /><br />
         <span style="color:#2196F3"><b>Blue</b></span> groups are private.<br /><br /><span style="color:#8BC34A"><b>Green</b></span> groups are public.<br /><br /><span style="color:#9c27b0"><b>Purple</b></span> groups are physical hangouts.<br /><br /><span style="color:#f44336"><b>Red</b></span> groups are events.<br /><br />
@@ -210,4 +211,9 @@
     <string name="public_notifications_switch_description">Public notifications are off. You\'ll only get notifications from private groups and direct messages.</string>
     <string name="remove_heart">Remove heart?</string>
     <string name="heart_removed">Heart removed</string>
+    <string name="join">Join this group…</string>
+    <string name="you_joined_group">You joined %1$s</string>
+    <string name="join_group">Yes, join!</string>
+    <string name="join_group_title">Join %1$s</string>
+    <string name="join_group_message">Join this group to let others know you\'re here.</string>
 </resources>

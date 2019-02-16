@@ -75,6 +75,7 @@ public class GroupActivity extends CircularRevealActivity {
 
     private TextView peopleInGroup;
     private TextView groupName;
+    private TextView groupAbout;
     private TextView groupDetails;
     private View eventToolbar;
     private Button actionShare;
@@ -108,6 +109,7 @@ public class GroupActivity extends CircularRevealActivity {
         contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
         shareWithRecyclerView = findViewById(R.id.shareWithRecyclerView);
         peopleInGroup = findViewById(R.id.peopleInGroup);
+        groupAbout = findViewById(R.id.groupAbout);
         groupDetails = findViewById(R.id.groupDetails);
         groupName = findViewById(R.id.groupName);
         eventToolbar = findViewById(R.id.eventToolbar);
@@ -130,7 +132,7 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
 
-        $(GroupHandler.class).attach(groupName, peopleInGroup, findViewById(R.id.settingsButton));
+        $(GroupHandler.class).attach(groupName, groupAbout, peopleInGroup, findViewById(R.id.settingsButton));
         handleIntent(getIntent());
 
         $(GroupActionHandler.class).attach(actionFrameLayout, findViewById(R.id.actionRecyclerView));
@@ -186,51 +188,50 @@ public class GroupActivity extends CircularRevealActivity {
 
             $(GroupScopeHandler.class).setup(group, scopeIndicatorButton);
 
-            if (group.isPublic()) {
-                if (group.isPhysical()) {
-                    eventToolbar.setVisibility(View.VISIBLE);
-                    actionShare.setVisibility(View.GONE);
-                    actionCancel.setVisibility(View.GONE);
-                    actionShowOnMap.setVisibility(View.VISIBLE);
-                    actionShowOnMap.setOnClickListener(view -> showGroupOnMap(group));
+            peopleInGroup.setSelected(true);
+            peopleInGroup.setOnClickListener(view -> toggleContactsView());
 
-                    actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group, updatedGroup -> {
-                        $(GroupHandler.class).showGroupName(updatedGroup);
-                        refreshPhysicalGroupActions(updatedGroup);
-                    }));
-                    actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
-                        setGroupBackground(updateGroup);
-                        refreshPhysicalGroupActions(updateGroup);
-                    }));
-                    actionSettingsHostEvent.setOnClickListener(view -> {
-                        $(EventHandler.class).createNewEvent(new LatLng(
-                                group.getLatitude(),
-                                group.getLongitude()
-                        ), group.isPublic(), this::showEventOnMap);
-                    });
+            $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton);
+
+            showPhoneContactsButton.setOnClickListener(view -> {
+                if ($(PermissionHandler.class).denied(READ_CONTACTS)) {
+                    $(AlertHandler.class).make()
+                            .setTitle($(ResourcesHandler.class).getResources().getString(R.string.enable_contacts_permission))
+                            .setMessage($(ResourcesHandler.class).getResources().getString(R.string.enable_contacts_permission_rationale))
+                            .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.open_settings))
+                            .setPositiveButtonCallback(alertResult -> $(SystemSettingsHandler.class).showSystemSettings())
+                            .show();
+                    return;
                 }
-            } else {
-                $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton);
-                peopleInGroup.setSelected(true);
-                peopleInGroup.setOnClickListener(view -> toggleContactsView());
 
-                showPhoneContactsButton.setOnClickListener(view -> {
-                    if ($(PermissionHandler.class).denied(READ_CONTACTS)) {
-                        $(AlertHandler.class).make()
-                                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.enable_contacts_permission))
-                                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.enable_contacts_permission_rationale))
-                                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.open_settings))
-                                .setPositiveButtonCallback(alertResult -> $(SystemSettingsHandler.class).showSystemSettings())
-                                .show();
-                        return;
+                $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
+                    if (granted) {
+                        $(GroupContactsHandler.class).showContactsForQuery();
+                        showPhoneContactsButton.setVisibility(View.GONE);
                     }
+                });
+            });
 
-                    $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
-                        if (granted) {
-                            $(GroupContactsHandler.class).showContactsForQuery();
-                            showPhoneContactsButton.setVisibility(View.GONE);
-                        }
-                    });
+            if (group.isPhysical()) {
+                eventToolbar.setVisibility(View.VISIBLE);
+                actionShare.setVisibility(View.GONE);
+                actionCancel.setVisibility(View.GONE);
+                actionShowOnMap.setVisibility(View.VISIBLE);
+                actionShowOnMap.setOnClickListener(view -> showGroupOnMap(group));
+
+                actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group, updatedGroup -> {
+                    $(GroupHandler.class).showGroupName(updatedGroup);
+                    refreshPhysicalGroupActions(updatedGroup);
+                }));
+                actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
+                    setGroupBackground(updateGroup);
+                    refreshPhysicalGroupActions(updateGroup);
+                }));
+                actionSettingsHostEvent.setOnClickListener(view -> {
+                    $(EventHandler.class).createNewEvent(new LatLng(
+                            group.getLatitude(),
+                            group.getLongitude()
+                    ), group.isPublic(), this::showEventOnMap);
                 });
             }
             setGroupBackground(group);

@@ -39,6 +39,7 @@ import io.reactivex.subjects.PublishSubject;
 public class GroupHandler extends PoolMember {
 
     private TextView groupName;
+    private TextView groupAbout;
     private TextView peopleInGroup;
     private View settingsButton;
     private Group group;
@@ -50,8 +51,9 @@ public class GroupHandler extends PoolMember {
     private List<String> contactInvites = new ArrayList<>();
     private DataSubscription groupDataSubscription;
 
-    public void attach(TextView groupName, TextView peopleInGroup, View settingsButton) {
+    public void attach(TextView groupName, TextView groupAbout, TextView peopleInGroup, View settingsButton) {
         this.groupName = groupName;
+        this.groupAbout = groupAbout;
         this.peopleInGroup = peopleInGroup;
         this.settingsButton = settingsButton;
     }
@@ -79,6 +81,14 @@ public class GroupHandler extends PoolMember {
     private void onGroupSet(@NonNull Group group) {
         setGroupContact();
         peopleInGroup.setText("");
+
+        if ($(Val.class).isEmpty(group.getAbout())) {
+            groupAbout.setVisibility(View.GONE);
+        } else {
+            groupAbout.setVisibility(View.VISIBLE);
+            groupAbout.setText(group.getAbout());
+        }
+
         $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupContact.class).query()
                 .equal(GroupContact_.groupId, group.getId())
                 .build()
@@ -122,29 +132,19 @@ public class GroupHandler extends PoolMember {
     }
 
     private void redrawContacts() {
-        if (group != null && group.isPublic()) {
-            if ($(Val.class).isEmpty(group.getAbout())) {
-                peopleInGroup.setVisibility(View.GONE);
-            } else {
-                peopleInGroup.setText(group.getAbout());
-                peopleInGroup.setVisibility(View.VISIBLE);
-                peopleInGroup.setBackground(null);
-            }
-        } else {
-            peopleInGroup.setBackgroundResource(R.drawable.clickable_light);
-            peopleInGroup.setVisibility(View.VISIBLE);
+        List<String> names = new ArrayList<>();
+        names.addAll(contactNames);
+        names.addAll(contactInvites);
 
-            List<String> names = new ArrayList<>();
-            names.addAll(contactNames);
-            names.addAll(contactInvites);
-
-            if (names.isEmpty()) {
-                peopleInGroup.setText(R.string.add_contact);
-                return;
-            }
-
-            peopleInGroup.setText(StringUtils.join(names, ", "));
+        if (names.isEmpty()) {
+            peopleInGroup.setVisibility(View.GONE);
+            peopleInGroup.setText(R.string.add_contact);
+            return;
         }
+
+        peopleInGroup.setVisibility(View.VISIBLE);
+
+        peopleInGroup.setText(StringUtils.join(names, ", "));
     }
 
     private void setGroup(Group group) {
