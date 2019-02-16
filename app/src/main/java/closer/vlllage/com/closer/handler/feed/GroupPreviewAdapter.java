@@ -113,6 +113,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
         GroupMessagesAdapter groupMessagesAdapter = new GroupMessagesAdapter($pool());
         groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
         groupMessagesAdapter.setOnEventClickListener(event -> $(GroupActivityTransitionHandler.class).showGroupForEvent(holder.itemView, event));
+        groupMessagesAdapter.setOnGroupClickListener(group1 -> $(GroupActivityTransitionHandler.class).showGroupMessages(holder.itemView, group1.getId()));
 
         QueryBuilder<GroupMessage> queryBuilder = $(StoreHandler.class).getStore().box(GroupMessage.class).query();
         holder.pool.$(DisposableHandler.class).add(queryBuilder

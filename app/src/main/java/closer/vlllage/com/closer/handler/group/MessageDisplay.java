@@ -18,6 +18,7 @@ import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
+import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Phone;
@@ -27,11 +28,11 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MessageDisplay extends PoolMember {
 
-    public void displayShare(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnEventClickListener onEventClickListener, GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
+    public void displayShare(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnEventClickListener onEventClickListener, GroupMessagesAdapter.OnGroupClickListener onGroupClickListener, GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
         GroupMessage sharedGroupMessage = $(StoreHandler.class).getStore().box(GroupMessage.class).query().equal(GroupMessage_.id, jsonObject.get("share").getAsString()).build().findFirst();
 
         if (sharedGroupMessage != null) {
-            display(holder, sharedGroupMessage, onEventClickListener, onSuggestionClickListener);
+            display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener);
         } else {
             displayFallback(holder, groupMessage);
         }
@@ -130,6 +131,36 @@ public class MessageDisplay extends PoolMember {
             }
         });
     }
+    public void displayGroup(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnGroupClickListener onGroupClickListener) {
+        holder.eventMessage.setVisibility(View.GONE);
+        holder.messageLayout.setVisibility(View.VISIBLE);
+
+        final Group group = $(JsonHandler.class).from(jsonObject.get("group"), Group.class);
+
+        holder.name.setVisibility(View.VISIBLE);
+        holder.time.setVisibility(View.VISIBLE);
+        holder.time.setText($(TimeStr.class).pretty(groupMessage.getTime()));
+
+        Phone phone = getPhone(groupMessage.getFrom());
+
+        String contactName = $(NameHandler.class).getName(phone);
+
+        holder.name.setText($(ResourcesHandler.class).getResources().getString(R.string.phone_shared_a_group, contactName));
+
+        holder.message.setVisibility(View.VISIBLE);
+        holder.message.setGravity(Gravity.START);
+        holder.message.setText(
+                (group.getName() == null ? $(ResourcesHandler.class).getResources().getString(R.string.unknown) : group.getName()) +
+                        (group.getAbout() != null ? "\n" + group.getAbout() : ""));
+
+        holder.action.setVisibility(View.VISIBLE);
+        holder.action.setText($(ResourcesHandler.class).getResources().getString(R.string.open_group));
+        holder.action.setOnClickListener(view -> {
+            if (onGroupClickListener != null) {
+                onGroupClickListener.onGroupClick(group);
+            }
+        });
+    }
 
     public void displaySuggestion(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
         holder.eventMessage.setVisibility(View.GONE);
@@ -202,6 +233,7 @@ public class MessageDisplay extends PoolMember {
 
     public void display(GroupMessagesAdapter.GroupMessageViewHolder holder, GroupMessage groupMessage,
                         GroupMessagesAdapter.OnEventClickListener onEventClickListener,
+                        GroupMessagesAdapter.OnGroupClickListener onGroupClickListener,
                         GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
         if (groupMessage.getAttachment() != null) {
             try {
@@ -212,12 +244,14 @@ public class MessageDisplay extends PoolMember {
                     displayMessage(holder, jsonObject, groupMessage);
                 } else if (jsonObject.has("event")) {
                     displayEvent(holder, jsonObject, groupMessage, onEventClickListener);
+                } else if (jsonObject.has("group")) {
+                    displayGroup(holder, jsonObject, groupMessage, onGroupClickListener);
                 } else if (jsonObject.has("suggestion")) {
                     displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener);
                 } else if (jsonObject.has("photo")) {
                     displayPhoto(holder, jsonObject, groupMessage);
                 } else if (jsonObject.has("share")) {
-                    displayShare(holder, jsonObject, groupMessage, onEventClickListener, onSuggestionClickListener);
+                    displayShare(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener);
                 } else {
                     displayFallback(holder, groupMessage);
                 }

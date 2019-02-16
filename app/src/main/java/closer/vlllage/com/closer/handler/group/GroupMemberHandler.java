@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.handler.helpers.InstallShortcutHandler;
 import closer.vlllage.com.closer.handler.helpers.MenuHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -96,6 +97,11 @@ public class GroupMemberHandler extends PoolMember {
 
                     }
                 }).visible(!isCurrentUserMemberOf(group)),
+                new MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, R.string.share_group, () -> {
+                    if (group != null) {
+                        $(ShareActivityTransitionHandler.class).shareGroupToGroup(group.getId());
+                    }
+                }),
                 new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
                     if (group != null) {
                         $(GroupActionHandler.class).addActionToGroup(group);

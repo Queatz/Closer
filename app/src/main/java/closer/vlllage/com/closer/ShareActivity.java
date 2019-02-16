@@ -17,11 +17,13 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.ToastHandler;
+import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.handler.share.SearchGroupsHeaderAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Group_;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 
@@ -29,11 +31,14 @@ public class ShareActivity extends ListActivity {
 
     public static final String EXTRA_GROUP_MESSAGE_ID = "groupMessageId";
     public static final String EXTRA_INVITE_TO_GROUP_PHONE_ID = "inviteToGroupPhoneId";
+    public static final String EXTRA_SHARE_GROUP_TO_GROUP_ID = "shareGroupToGroupId";
 
     private SearchGroupsHeaderAdapter searchGroupsAdapter;
 
     private String groupMessageId;
     private String phoneId;
+    private String groupId;
+    private Group groupToShare;
     private Uri data;
 
     @Override
@@ -64,6 +69,7 @@ public class ShareActivity extends ListActivity {
         if (getIntent() != null) {
             groupMessageId = getIntent().getStringExtra(EXTRA_GROUP_MESSAGE_ID);
             phoneId = getIntent().getStringExtra(EXTRA_INVITE_TO_GROUP_PHONE_ID);
+            groupId = getIntent().getStringExtra(EXTRA_SHARE_GROUP_TO_GROUP_ID);
 
             searchGroupsAdapter.setHeaderText($(ResourcesHandler.class).getResources().getString(R.string.share_to));
 
@@ -77,6 +83,17 @@ public class ShareActivity extends ListActivity {
                 if (phoneId != null) {
                     searchGroupsAdapter.setHeaderText($(ResourcesHandler.class).getResources().getString(R.string.add_person_to, $(NameHandler.class).getName(phoneId)));
                     searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.add));
+                } else if (groupId != null) {
+
+                    groupToShare = $(StoreHandler.class).getStore().box(Group.class).query()
+                            .equal(Group_.id, groupId)
+                            .build().findFirst();
+
+                    searchGroupsAdapter.setHeaderText($(ResourcesHandler.class).getResources().getString(R.string.share_group_to, $(Val.class).of(
+                            groupToShare != null ? groupToShare.getName() : null, $(ResourcesHandler.class).getResources().getString(R.string.group)
+                    )));
+
+                    searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.share));
                 }
             }
         }
@@ -105,6 +122,9 @@ public class ShareActivity extends ListActivity {
                             $(DefaultAlerts.class).thatDidntWork();
                         }
                     }, error -> $(DefaultAlerts.class).thatDidntWork()));
+        } else if (groupToShare != null) {
+            $(GroupMessageAttachmentHandler.class).shareGroup(groupToShare, group);
+            finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
         } else if (groupMessageId != null) {
             $(GroupMessageAttachmentHandler.class).shareGroupMessage(group.getId(), groupMessageId);
             finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));

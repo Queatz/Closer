@@ -64,6 +64,10 @@ public class GroupMessagesHandler extends PoolMember {
             ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(GroupActivityTransitionHandler.class).showGroupForEvent(null, event));
         });
 
+        groupMessagesAdapter.setOnGroupClickListener(group -> {
+            ((CircularRevealActivity) $(ActivityHandler.class).getActivity()).finish(() -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group.getId()));
+        });
+
 
         this.replyMessage.setOnEditorActionListener((textView, action, keyEvent) -> {
             if (EditorInfo.IME_ACTION_GO == action) {

@@ -39,6 +39,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     private OnMessageClickListener onMessageClickListener;
     private OnSuggestionClickListener onSuggestionClickListener;
     private OnEventClickListener onEventClickListener;
+    private OnGroupClickListener onGroupClickListener;
     private boolean noPadding;
 
     public GroupMessagesAdapter(PoolMember poolMember) {
@@ -55,6 +56,10 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
     public void setOnEventClickListener(OnEventClickListener onEventClickListener) {
         this.onEventClickListener = onEventClickListener;
+    }
+
+    public void setOnGroupClickListener(OnGroupClickListener onGroupClickListener) {
+        this.onGroupClickListener = onGroupClickListener;
     }
 
     @NonNull
@@ -119,7 +124,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         holder.messageActionLayout.setVisibility(View.GONE);
 
-        $(MessageDisplay.class).display(holder, groupMessage, onEventClickListener, onSuggestionClickListener);
+        $(MessageDisplay.class).display(holder, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener);
 
         if (groupMessage.getReactions() == null || groupMessage.getReactions().isEmpty()) {
             holder.reactionsRecyclerView.setVisibility(View.GONE);
@@ -229,5 +234,9 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
     public interface OnEventClickListener {
         void onEventClick(Event event);
+    }
+
+    public interface OnGroupClickListener {
+        void onGroupClick(Group group);
     }
 }

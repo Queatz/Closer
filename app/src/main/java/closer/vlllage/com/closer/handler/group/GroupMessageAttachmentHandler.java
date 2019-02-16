@@ -50,6 +50,15 @@ public class GroupMessageAttachmentHandler extends PoolMember {
         return true;
     }
 
+    public boolean shareGroup(@NonNull Group groupToShare, @NonNull Group group) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("group", $(JsonHandler.class).toJsonTree(groupToShare));
+
+        saveMessageWithAttachment(group.getId(), null, jsonObject);
+
+        return true;
+    }
+
     public boolean sharePhoto(@NonNull String photoUrl, @NonNull String groupId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("photo", new JsonPrimitive(photoUrl));
