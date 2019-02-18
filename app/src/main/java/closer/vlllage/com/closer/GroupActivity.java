@@ -34,6 +34,7 @@ import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageMentionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
 import closer.vlllage.com.closer.handler.group.PhysicalGroupUpgradeHandler;
+import closer.vlllage.com.closer.handler.group.PinnedMessagesHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
@@ -89,6 +90,7 @@ public class GroupActivity extends CircularRevealActivity {
     private MaxSizeFrameLayout mentionSuggestionsLayout;
     private EditText replyMessage;
     private RecyclerView messagesRecyclerView;
+    private RecyclerView pinnedMessagesRecyclerView;
     private RecyclerView shareWithRecyclerView;
     private EditText searchContacts;
     private RecyclerView contactsRecyclerView;
@@ -107,6 +109,7 @@ public class GroupActivity extends CircularRevealActivity {
         replyMessage = findViewById(R.id.replyMessage);
         sendMoreButton = findViewById(R.id.sendMoreButton);
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
+        pinnedMessagesRecyclerView = findViewById(R.id.pinnedMessagesRecyclerView);
         searchContacts = findViewById(R.id.searchContacts);
         contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
         shareWithRecyclerView = findViewById(R.id.shareWithRecyclerView);
@@ -141,6 +144,7 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(GroupActionHandler.class).attach(actionFrameLayout, findViewById(R.id.actionRecyclerView));
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
+        $(PinnedMessagesHandler.class).attach(pinnedMessagesRecyclerView);
         $(GroupMessageMentionHandler.class).attach(mentionSuggestionsLayout, findViewById(R.id.mentionSuggestionRecyclerView), mention -> {
             $(GroupMessagesHandler.class).insertMention(mention);
         });

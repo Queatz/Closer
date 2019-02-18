@@ -25,7 +25,7 @@ public class MiniWindowHandler extends PoolMember {
 
         final int miniWindowHeight = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.miniWindowHeight);
         final ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) windowView.getLayoutParams();
-        final int miniWindowMinTopMargin = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad);
+        final int miniWindowMinTopMargin = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.miniWindowMinTopMargin);
         final int miniWindowTopMargin = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.miniWindowTopMargin);
 
         windowView.setClipToOutline(true);

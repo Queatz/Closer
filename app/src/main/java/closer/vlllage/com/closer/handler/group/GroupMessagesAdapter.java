@@ -75,6 +75,28 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         if (noPadding) {
             holder.itemView.setPadding(0, 0, 0, 0);
+            holder.itemView.setBackgroundResource(R.color.white_15);
+            holder.messageLayout.setBackground(null);
+            int pad = $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.pad);
+            holder.messageActionLayout.setPadding(
+                    pad,
+                    0,
+                    pad,
+                    pad
+            );
+
+            ViewGroup.MarginLayoutParams params;
+            params = ((ViewGroup.MarginLayoutParams) holder.messageLayout.getLayoutParams());
+            params.topMargin = 0;
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            holder.messageLayout.setLayoutParams(params);
+
+            holder.reactionsRecyclerView.setPadding(pad, 0, pad, 0);
+
+            params = ((ViewGroup.MarginLayoutParams) holder.action.getLayoutParams());
+            params.leftMargin = pad;
+            params.bottomMargin = pad;
+            holder.action.setLayoutParams(params);
         }
 
         holder.photo.setVisibility(View.GONE);
@@ -124,6 +146,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         holder.messageActionLayout.setVisibility(View.GONE);
 
+        $(MessageDisplay.class).setNoPadding(noPadding);
         $(MessageDisplay.class).display(holder, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener);
 
         if (groupMessage.getReactions() == null || groupMessage.getReactions().isEmpty()) {

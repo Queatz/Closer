@@ -210,7 +210,6 @@ public class GroupMessagesHandler extends PoolMember {
         }
     }
 
-
     private void setGroupMessages(List<GroupMessage> groupMessages) {
         groupMessagesAdapter.setGroupMessages(groupMessages);
     }
