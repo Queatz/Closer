@@ -19,7 +19,7 @@
         <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:maxHeight="192dp">
+            app:maxHeight="128dp">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/bubbleRecyclerView"

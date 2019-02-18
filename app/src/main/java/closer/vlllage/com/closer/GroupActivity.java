@@ -97,6 +97,8 @@ public class GroupActivity extends CircularRevealActivity {
     private ImageButton sendMoreButton;
     private ImageButton scopeIndicatorButton;
     private String groupId;
+    private android.support.constraint.Group messagesLayoutGroup;
+    private android.support.constraint.Group membersLayoutGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,6 +127,8 @@ public class GroupActivity extends CircularRevealActivity {
         actionFrameLayout = findViewById(R.id.actionFrameLayout);
         mentionSuggestionsLayout = findViewById(R.id.mentionSuggestionsLayout);
         scopeIndicatorButton = findViewById(R.id.scopeIndicatorButton);
+        messagesLayoutGroup = findViewById(R.id.messagesLayoutGroup);
+        membersLayoutGroup = findViewById(R.id.membersLayoutGroup);
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
@@ -432,22 +436,14 @@ public class GroupActivity extends CircularRevealActivity {
         $(GroupMessagesHandler.class).showSendMoreOptions(false);
 
         if (show) {
-            replyMessage.setVisibility(View.VISIBLE);
-            sendButton.setVisibility(View.VISIBLE);
-            sendMoreButton.setVisibility(View.VISIBLE);
-            messagesRecyclerView.setVisibility(View.VISIBLE);
-            searchContacts.setVisibility(View.GONE);
-            contactsRecyclerView.setVisibility(View.GONE);
+            messagesLayoutGroup.setVisibility(View.VISIBLE);
+            membersLayoutGroup.setVisibility(View.GONE);
+
             showPhoneContactsButton.setVisibility(View.GONE);
-            actionFrameLayout.setVisibility(View.VISIBLE);
         } else {
-            replyMessage.setVisibility(View.GONE);
-            sendButton.setVisibility(View.GONE);
-            sendMoreButton.setVisibility(View.GONE);
-            messagesRecyclerView.setVisibility(View.GONE);
-            searchContacts.setVisibility(View.VISIBLE);
-            contactsRecyclerView.setVisibility(View.VISIBLE);
-            actionFrameLayout.setVisibility(View.GONE);
+            messagesLayoutGroup.setVisibility(View.GONE);
+            membersLayoutGroup.setVisibility(View.VISIBLE);
+
             $(GroupActionHandler.class).cancelPendingAnimation();
 
             if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
