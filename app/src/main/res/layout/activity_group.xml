@@ -553,12 +553,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/messagesLayoutGroup"
-            app:constraint_referenced_ids="replyMessage,sendButton,sendMoreButton,messagesRecyclerView,actionFrameLayout"/>
+            app:constraint_referenced_ids="replyMessage,sendButton,messagesRecyclerView,actionFrameLayout"/>
 
         <android.support.constraint.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/membersLayoutGroup"
+            android:visibility="gone"
+            tools:visibility="visible"
             app:constraint_referenced_ids="searchContacts,contactsRecyclerView"/>
 
     </android.support.constraint.ConstraintLayout>

@@ -102,16 +102,6 @@ public class GroupMemberHandler extends PoolMember {
                         $(ShareActivityTransitionHandler.class).shareGroupToGroup(group.getId());
                     }
                 }),
-                new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
-                    if (group != null) {
-                        $(GroupActionHandler.class).addActionToGroup(group);
-                    }
-                }),
-                new MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut, () -> {
-                    if (group != null) {
-                        $(InstallShortcutHandler.class).installShortcut(group);
-                    }
-                }),
                 new MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background, () -> {
                     if (group != null) {
                         $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> { });
@@ -128,6 +118,16 @@ public class GroupMemberHandler extends PoolMember {
                                 .setOnAfterViewCreated((alert, view) -> ((TextView) view.findViewById(alert.getTextViewId())).setText(group.getAbout()))
                                 .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.edit_about_group))
                                 .show();
+                    }
+                }),
+                new MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action, () -> {
+                    if (group != null) {
+                        $(GroupActionHandler.class).addActionToGroup(group);
+                    }
+                }),
+                new MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut, () -> {
+                    if (group != null) {
+                        $(InstallShortcutHandler.class).installShortcut(group);
                     }
                 })
         );

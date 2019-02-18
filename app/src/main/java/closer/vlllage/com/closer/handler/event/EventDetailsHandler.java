@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.event;
 import android.text.format.DateUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -32,8 +33,15 @@ public class EventDetailsHandler extends PoolMember {
                 DAY_IN_MILLIS
         ).toString();
 
+        Date now = Calendar.getInstance().getTime();
+        boolean isHappeningNow = now.after(event.getStartsAt()) && now.before(event.getEndsAt());
+
         String eventTimeText = $(ResourcesHandler.class).getResources()
                 .getString(R.string.event_start_end_time, startTime, endTime, day);
+
+        if (isHappeningNow) {
+            eventTimeText = $(ResourcesHandler.class).getResources().getString(R.string.event_happening_now, eventTimeText);
+        }
 
         if (event.getAbout() != null && !event.getAbout().trim().isEmpty()) {
             return $(ResourcesHandler.class).getResources()

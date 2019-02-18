@@ -132,6 +132,7 @@
     <string name="view">View</string>
     <string name="event_start_end_time">%1$s - %2$s %3$s</string>
     <string name="event_price_and_time">%1$s, %2$s</string>
+    <string name="event_happening_now">%1$s (Happening Now)</string>
     <string name="cancelled">Cancelled</string>
     <string name="event">Event</string>
     <string name="open_event">Open event</string>

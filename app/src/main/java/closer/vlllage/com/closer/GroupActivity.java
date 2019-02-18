@@ -439,10 +439,18 @@ public class GroupActivity extends CircularRevealActivity {
             messagesLayoutGroup.setVisibility(View.VISIBLE);
             membersLayoutGroup.setVisibility(View.GONE);
 
+            if (replyMessage.getText().toString().isEmpty()) {
+                sendMoreButton.setVisibility(View.VISIBLE);
+            } else {
+                sendMoreButton.setVisibility(View.GONE);
+            }
+
             showPhoneContactsButton.setVisibility(View.GONE);
         } else {
             messagesLayoutGroup.setVisibility(View.GONE);
             membersLayoutGroup.setVisibility(View.VISIBLE);
+
+            sendMoreButton.setVisibility(View.GONE);
 
             $(GroupActionHandler.class).cancelPendingAnimation();
 
