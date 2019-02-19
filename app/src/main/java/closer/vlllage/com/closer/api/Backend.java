@@ -154,6 +154,9 @@ public interface Backend {
     @GET("group/{id}/pins")
     Single<List<PinResult>> getPins(@Path("id") String groupId);
 
+    @GET("group/{id}/pins")
+    Single<List<PinResult>> getPins(@Path("id") String groupId);
+
     @GET("action/{latLng}")
     Single<List<GroupActionResult>> getGroupActionsNearGeo(@Path("latLng") String latLng);
 
