@@ -12,6 +12,7 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Pin;
@@ -38,40 +39,43 @@ public class PinnedMessagesHandler extends PoolMember {
         groupMessagesAdapter.setPinned(true);
         pinnedMessagesRecyclerView.setAdapter(groupMessagesAdapter);
 
-        $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
-            if (groupMessagesSubscription != null) {
-                $(DisposableHandler.class).dispose(groupMessagesSubscription);
-            }
+        $(DisposableHandler.class).add($(GroupHandler.class).onGroupUpdated().subscribe(this::refresh));
+        $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(this::refresh));
+    }
 
-            $(RefreshHandler.class).refreshPins(group.getId());
+    private void refresh(Group group) {
+        if (groupMessagesSubscription != null) {
+            $(DisposableHandler.class).dispose(groupMessagesSubscription);
+        }
 
-            groupMessagesSubscription = $(StoreHandler.class).getStore().box(Pin.class).query()
-                    .equal(Pin_.to, group.getId())
-                    .build()
-                    .subscribe()
-                    .on(AndroidScheduler.mainThread())
-                    .observer(pins -> {
-                        if (pins.isEmpty()) {
-                            setGroupMessages(new ArrayList<>());
-                            return;
-                        }
+        $(RefreshHandler.class).refreshPins(group.getId());
 
-                        List<String> ids = new ArrayList<>();
+        groupMessagesSubscription = $(StoreHandler.class).getStore().box(Pin.class).query()
+                .equal(Pin_.to, group.getId())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .observer(pins -> {
+                    if (pins.isEmpty()) {
+                        setGroupMessages(new ArrayList<>());
+                        return;
+                    }
 
-                        for (Pin pin : pins) {
-                            ids.add(pin.getFrom());
-                        }
+                    List<String> ids = new ArrayList<>();
 
-                        groupMessagesSubscription = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
-                                .in(GroupMessage_.id, ids.toArray(new String[0]))
-                                .build()
-                                .subscribe()
-                                .on(AndroidScheduler.mainThread())
-                                .observer(this::setGroupMessages);
-                    });
+                    for (Pin pin : pins) {
+                        ids.add(pin.getFrom());
+                    }
 
-            $(DisposableHandler.class).add(groupMessagesSubscription);
-        }));
+                    groupMessagesSubscription = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
+                            .in(GroupMessage_.id, ids.toArray(new String[0]))
+                            .build()
+                            .subscribe()
+                            .on(AndroidScheduler.mainThread())
+                            .observer(this::setGroupMessages);
+                });
+
+        $(DisposableHandler.class).add(groupMessagesSubscription);
     }
 
     private void setGroupMessages(List<GroupMessage> pinnedMessages) {
