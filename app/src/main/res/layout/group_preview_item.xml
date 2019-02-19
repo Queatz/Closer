@@ -5,9 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/color_green_rounded"
-    android:layout_marginStart="@dimen/pad"
-    android:layout_marginEnd="@dimen/pad"
-    android:layout_marginBottom="@dimen/padQuadruple"
+    android:layout_marginBottom="@dimen/padDouble"
     android:elevation="@dimen/elevation"
     android:clickable="true">
 

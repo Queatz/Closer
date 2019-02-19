@@ -6,7 +6,9 @@ public class ReactionCount {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof ReactionCount && reaction.equals(((ReactionCount) other).reaction) && count == ((ReactionCount) other).count;
+        return other instanceof ReactionCount &&
+                reaction.equals(((ReactionCount) other).reaction) &&
+                count == ((ReactionCount) other).count;
     }
 }
 

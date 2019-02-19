@@ -204,11 +204,11 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         ImageView photo;
         ImageView pinnedIndicator;
         MaxSizeFrameLayout messageActionLayout;
-        View messageActionReply;
-        View messageActionShare;
-        View messageActionRemind;
-        View messageActionPin;
-        View messageActionVote;
+        TextView messageActionReply;
+        TextView messageActionShare;
+        TextView messageActionRemind;
+        TextView messageActionPin;
+        TextView messageActionVote;
         RevealAnimator messageActionLayoutRevealAnimator;
         RecyclerView reactionsRecyclerView;
         ReactionAdapter reactionAdapter;

@@ -9,9 +9,7 @@
     android:paddingBottom="@dimen/padHalf"
     android:background="@drawable/color_white_rounded"
     android:layout_marginTop="@dimen/pad"
-    android:layout_marginStart="@dimen/pad"
-    android:layout_marginEnd="@dimen/pad"
-    android:layout_marginBottom="@dimen/padQuadruple"
+    android:layout_marginBottom="@dimen/padDouble"
     android:clickable="true">
 
     <ImageView

@@ -272,6 +272,7 @@ public class MessageDisplay extends PoolMember {
         if (pinned) {
             holder.time.setVisibility(View.GONE);
             holder.pinnedIndicator.setVisibility(View.VISIBLE);
+            holder.messageActionPin.setText(R.string.unpin);
         }
     }
 
