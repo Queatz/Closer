@@ -154,23 +154,25 @@ public class GroupActivity extends CircularRevealActivity {
             $(GroupMemberHandler.class).changeGroupSettings($(GroupHandler.class).getGroup());
         });
 
-        $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
-                .equal(GroupMember_.group, groupId)
-                .equal(GroupMember_.phone, $(PersistenceHandler.class).getPhoneId())
-                .build().subscribe().on(AndroidScheduler.mainThread()).observer(groupMembers -> {
-                    GroupMember groupMember = groupMembers.isEmpty() ? null : groupMembers.get(0);
+        if ($(PersistenceHandler.class).getPhoneId() != null) {
+            $(DisposableHandler.class).add($(StoreHandler.class).getStore().box(GroupMember.class).query()
+                    .equal(GroupMember_.group, groupId)
+                    .equal(GroupMember_.phone, $(PersistenceHandler.class).getPhoneId())
+                    .build().subscribe().on(AndroidScheduler.mainThread()).observer(groupMembers -> {
+                        GroupMember groupMember = groupMembers.isEmpty() ? null : groupMembers.get(0);
 
-                    if (groupMember == null) {
-                        groupMember = new GroupMember();
-                    }
+                        if (groupMember == null) {
+                            groupMember = new GroupMember();
+                        }
 
-                    if (groupMember.isMuted()) {
-                        findViewById(R.id.notificationSettingsButton).setOnClickListener(view -> $(GroupMemberHandler.class).changeGroupSettings($(GroupHandler.class).getGroup()));
-                        findViewById(R.id.notificationSettingsButton).setVisibility(View.VISIBLE);
-                    } else {
-                        findViewById(R.id.notificationSettingsButton).setVisibility(View.GONE);
-                    }
-                }));
+                        if (groupMember.isMuted()) {
+                            findViewById(R.id.notificationSettingsButton).setOnClickListener(view -> $(GroupMemberHandler.class).changeGroupSettings($(GroupHandler.class).getGroup()));
+                            findViewById(R.id.notificationSettingsButton).setVisibility(View.VISIBLE);
+                        } else {
+                            findViewById(R.id.notificationSettingsButton).setVisibility(View.GONE);
+                        }
+                    }));
+        }
 
         replyMessage.setOnClickListener(view -> {
             $(GroupActionHandler.class).show(false);
@@ -262,24 +264,26 @@ public class GroupActivity extends CircularRevealActivity {
             actionShare.setOnClickListener(view -> share(event));
             actionShowOnMap.setOnClickListener(view -> showEventOnMap(event));
 
-            if (!event.isCancelled() && event.getCreator() != null && new Date().before(event.getEndsAt()) && event.getCreator().equals($(PersistenceHandler.class).getPhoneId())) {
-                actionCancel.setOnClickListener(view -> {
-                    $(AlertHandler.class).make()
-                            .setTitle($(ResourcesHandler.class).getResources().getString(R.string.cancel_event))
-                            .setMessage($(ResourcesHandler.class).getResources().getString(R.string.event_will_be_cancelled, event.getName()))
-                            .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.cancel_event))
-                            .setPositiveButtonCallback(result -> {
-                                $(DisposableHandler.class).add($(ApiHandler.class).cancelEvent(event.getId()).subscribe(successResult -> {
-                                    if (successResult.success) {
-                                        $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.event_cancelled, event.getName()));
-                                        $(RefreshHandler.class).refreshEvents(new LatLng(event.getLatitude(), event.getLongitude()));
-                                    } else {
-                                        $(DefaultAlerts.class).thatDidntWork();
-                                    }
-                                }, error -> $(DefaultAlerts.class).thatDidntWork()));
-                            })
-                            .show();
-                });
+            if ($(PersistenceHandler.class).getPhoneId() != null) {
+                if (!event.isCancelled() && event.getCreator() != null && new Date().before(event.getEndsAt()) && event.getCreator().equals($(PersistenceHandler.class).getPhoneId())) {
+                    actionCancel.setOnClickListener(view -> {
+                        $(AlertHandler.class).make()
+                                .setTitle($(ResourcesHandler.class).getResources().getString(R.string.cancel_event))
+                                .setMessage($(ResourcesHandler.class).getResources().getString(R.string.event_will_be_cancelled, event.getName()))
+                                .setPositiveButton($(ResourcesHandler.class).getResources().getString(R.string.cancel_event))
+                                .setPositiveButtonCallback(result -> {
+                                    $(DisposableHandler.class).add($(ApiHandler.class).cancelEvent(event.getId()).subscribe(successResult -> {
+                                        if (successResult.success) {
+                                            $(DefaultAlerts.class).message($(ResourcesHandler.class).getResources().getString(R.string.event_cancelled, event.getName()));
+                                            $(RefreshHandler.class).refreshEvents(new LatLng(event.getLatitude(), event.getLongitude()));
+                                        } else {
+                                            $(DefaultAlerts.class).thatDidntWork();
+                                        }
+                                    }, error -> $(DefaultAlerts.class).thatDidntWork()));
+                                })
+                                .show();
+                    });
+                }
             } else {
                 actionCancel.setVisibility(View.GONE);
             }

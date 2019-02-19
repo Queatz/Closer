@@ -137,6 +137,9 @@ public interface Backend {
     @POST("group/{id}")
     Single<SuccessResult> setGroupAbout(@Path("id") String groupId, @Query("about") String about);
 
+    @POST("group/{id}")
+    Single<SuccessResult> pin(@Path("id") String groupId, @Query("pin") String messageId, @Query("remove") boolean remove);
+
     // Group Action
 
     @POST("action/{id}/delete")

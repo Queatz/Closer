@@ -132,7 +132,21 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             toggleMessageActionLayout(holder);
         });
         holder.messageActionPin.setOnClickListener(view -> {
-            $(DefaultAlerts.class).message("That doesn't work yet!");
+            if (pinned) {
+                $(DisposableHandler.class).add($(ApiHandler.class).removePin(groupMessage.getId(), groupMessage.getTo())
+                    .subscribe(successResult -> {
+                        if (!successResult.success) {
+                            $(DefaultAlerts.class).thatDidntWork();
+                        }
+                    }, error -> $(DefaultAlerts.class).thatDidntWork()));
+            } else {
+                $(DisposableHandler.class).add($(ApiHandler.class).addPin(groupMessage.getId(), groupMessage.getTo())
+                    .subscribe(successResult -> {
+                        if (!successResult.success) {
+                            $(DefaultAlerts.class).thatDidntWork();
+                        }
+                    }, error -> $(DefaultAlerts.class).thatDidntWork()));
+            }
             toggleMessageActionLayout(holder);
         });
         holder.messageActionVote.setOnClickListener(view -> {

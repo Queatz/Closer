@@ -179,6 +179,14 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().getPins(groupId));
     }
 
+    public Single<SuccessResult> addPin(String messageId, String groupId) {
+        return uiThread(api.getBackend().pin(groupId, messageId, false));
+    }
+
+    public Single<SuccessResult> removePin(String messageId, String groupId) {
+        return uiThread(api.getBackend().pin(groupId, messageId, true));
+    }
+
     public Single<List<GroupMessageResult>> getGroupMessages(String groupId) {
         return uiThread(api.getBackend().getGroupMessages(groupId));
     }

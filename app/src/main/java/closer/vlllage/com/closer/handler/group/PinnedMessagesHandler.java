@@ -51,6 +51,11 @@ public class PinnedMessagesHandler extends PoolMember {
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .observer(pins -> {
+                        if (pins.isEmpty()) {
+                            setGroupMessages(new ArrayList<>());
+                            return;
+                        }
+
                         List<String> ids = new ArrayList<>();
 
                         for (Pin pin : pins) {
@@ -71,6 +76,6 @@ public class PinnedMessagesHandler extends PoolMember {
 
     private void setGroupMessages(List<GroupMessage> pinnedMessages) {
         pinnedMessagesRecyclerView.setVisibility(pinnedMessages.isEmpty() ? View.GONE : View.VISIBLE);
-        groupMessagesAdapter.setGroupMessages(pinnedMessages.subList(0, 1));
+        groupMessagesAdapter.setGroupMessages(pinnedMessages);
     }
 }
