@@ -1,5 +1,20 @@
 
 
+
+
+Press pin ->
+
+    /group?pin=messageId
+
+Press unpin ->
+
+    /group?pin=messageId&remove=true
+
+Load group ->
+
+    /group/pins
+
+
 =============
 BUBBLE MERGER
 =============

@@ -9,6 +9,7 @@ import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.api.models.PinResult;
 import closer.vlllage.com.closer.api.models.ReactionResult;
 import closer.vlllage.com.closer.api.models.StateResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
@@ -29,13 +30,13 @@ public interface Backend {
     @GET("map/{geo}")
     Single<List<PhoneResult>> getPhonesNear(@Path("geo") String geo);
 
-    @POST("phone/{phone}")
-    Single<SuccessResult> sendMessage(@Path("phone") String phone, @Query("message") String message);
+    @POST("message/{message}")
+    Single<SuccessResult> sendMessage(@Path("message") String phone, @Query("message") String message);
 
-    @GET("phone")
+    @GET("message")
     Single<PhoneResult> phone();
 
-    @POST("phone")
+    @POST("message")
     Single<CreateResult> phoneUpdate(
             @Query("geo") String latLng,
             @Query("name") String name,
@@ -44,13 +45,13 @@ public interface Backend {
             @Query("deviceToken") String pushDeviceToken
     );
 
-    @POST("phone")
+    @POST("message")
     Single<CreateResult> phoneUpdatePhoto(@Query("photo") String photo);
 
-    @POST("phone")
+    @POST("message")
     Single<CreateResult> updatePhonePrivateMode(@Query("privateMode") boolean privateMode);
 
-    @GET("phone")
+    @GET("message")
     Single<List<PhoneResult>> searchPhonesNear(@Query("geo") String latLng, @Query("query") String query);
 
     // Verify Number
@@ -119,7 +120,7 @@ public interface Backend {
     Single<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("name") String name, @Query("invite") String phoneNumber);
 
     @POST("group/{id}")
-    Single<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("invite-phone") String phoneId);
+    Single<SuccessResult> inviteToGroup(@Path("id") String groupId, @Query("invite-message") String phoneId);
 
     @POST("group/{id}")
     Single<SuccessResult> leaveGroup(@Path("id") String groupId, @Query("leave") boolean leaveGroup);
@@ -146,6 +147,9 @@ public interface Backend {
 
     @GET("group/{id}/actions")
     Single<List<GroupActionResult>> getGroupActions(@Path("id") String groupId);
+
+    @GET("group/{id}/pins")
+    Single<List<PinResult>> getPins(@Path("id") String groupId);
 
     @GET("action/{latLng}")
     Single<List<GroupActionResult>> getGroupActionsNearGeo(@Path("latLng") String latLng);

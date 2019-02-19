@@ -63,7 +63,7 @@ public class CloserFirebaseMessagingService extends FirebaseMessagingService {
                     case "message":
                         LatLng latLng = data.containsKey("latLng") ? app.$(LatLngStr.class).to(data.get("latLng")) : null;
                         app.$(NotificationHandler.class).showBubbleMessageNotification(
-                                data.get("phone"),
+                                data.get("message"),
                                 latLng,
                                 data.containsKey("name") ? data.get("name") : "",
                                 data.get("message"));

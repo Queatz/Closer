@@ -183,9 +183,18 @@ public class GroupActivity extends CircularRevealActivity {
         }));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
+            actionCancel.setVisibility(View.VISIBLE);
+            actionShare.setVisibility(View.VISIBLE);
+            actionShowOnMap.setVisibility(View.VISIBLE);
+            actionSettingsSetName.setVisibility(View.GONE);
+            actionSettingsSetBackground.setVisibility(View.GONE);
+            actionSettingsGetDirections.setVisibility(View.GONE);
+            actionSettingsHostEvent.setVisibility(View.GONE);
+
             findViewById(R.id.backgroundColor).setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
 
             refreshPhysicalGroupActions(group);
+            cancelShare();
 
             actionSettingsGetDirections.setOnClickListener(view -> {
                 $(OutboundHandler.class).openDirections(new LatLng(
@@ -390,7 +399,8 @@ public class GroupActivity extends CircularRevealActivity {
         showMessagesView(true);
 
         shareWithRecyclerView.setVisibility(View.VISIBLE);
-        messagesRecyclerView.setVisibility(View.GONE);
+        messagesLayoutGroup.setVisibility(View.GONE);
+        sendMoreButton.setVisibility(View.GONE);
         actionShare.setText(R.string.cancel);
 
         QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
@@ -425,7 +435,7 @@ public class GroupActivity extends CircularRevealActivity {
         }
 
         shareWithRecyclerView.setVisibility(View.GONE);
-        messagesRecyclerView.setVisibility(View.VISIBLE);
+        messagesLayoutGroup.setVisibility(View.VISIBLE);
         actionShare.setText(R.string.share);
         return true;
     }

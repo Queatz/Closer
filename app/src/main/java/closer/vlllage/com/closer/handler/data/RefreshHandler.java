@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.ModelResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.api.models.PinResult;
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ListEqual;
@@ -37,6 +38,8 @@ import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
+import closer.vlllage.com.closer.store.models.Pin;
+import closer.vlllage.com.closer.store.models.Pin_;
 import io.objectbox.Box;
 import io.objectbox.Property;
 import io.objectbox.android.AndroidScheduler;
@@ -110,6 +113,19 @@ public class RefreshHandler extends PoolMember {
     public void refreshGroupActions(LatLng latLng) {
         $(DisposableHandler.class).add($(ApiHandler.class).getGroupActions(latLng).subscribe(groupActionResults -> {
             handleFullListResult(groupActionResults, GroupAction.class, GroupAction_.id, false, GroupActionResult::from, GroupActionResult::updateFrom);
+        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
+    public void refreshPins(String groupId) {
+        $(DisposableHandler.class).add($(ApiHandler.class).getPins(groupId).subscribe(pinResults -> {
+            List<GroupMessageResult> groupMessageResults = new ArrayList<>();
+
+            for (PinResult pinResult : pinResults) {
+                groupMessageResults.add(pinResult.message);
+            }
+
+            handleMessages(groupMessageResults);
+            handleFullListResult(pinResults, Pin.class, Pin_.id, true, PinResult::from, PinResult::updateFrom);
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 

@@ -4,15 +4,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
+import closer.vlllage.com.closer.store.models.Pin;
+import closer.vlllage.com.closer.store.models.Pin_;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.reactive.DataSubscription;
 
@@ -40,12 +43,27 @@ public class PinnedMessagesHandler extends PoolMember {
                 $(DisposableHandler.class).dispose(groupMessagesSubscription);
             }
 
-            groupMessagesSubscription = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
-                    .equal(GroupMessage_.to, group.getId())
-                    .sort($(SortHandler.class).sortGroupMessages())
+            $(RefreshHandler.class).refreshPins(group.getId());
+
+            groupMessagesSubscription = $(StoreHandler.class).getStore().box(Pin.class).query()
+                    .equal(Pin_.to, group.getId())
                     .build()
-                    .subscribe().on(AndroidScheduler.mainThread())
-                    .observer(this::setGroupMessages);
+                    .subscribe()
+                    .on(AndroidScheduler.mainThread())
+                    .observer(pins -> {
+                        List<String> ids = new ArrayList<>();
+
+                        for (Pin pin : pins) {
+                            ids.add(pin.getFrom());
+                        }
+
+                        groupMessagesSubscription = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
+                                .in(GroupMessage_.id, ids.toArray(new String[0]))
+                                .build()
+                                .subscribe()
+                                .on(AndroidScheduler.mainThread())
+                                .observer(this::setGroupMessages);
+                    });
 
             $(DisposableHandler.class).add(groupMessagesSubscription);
         }));

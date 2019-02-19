@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
+import closer.vlllage.com.closer.api.models.PinResult;
 import closer.vlllage.com.closer.api.models.ReactionResult;
 import closer.vlllage.com.closer.api.models.StateResult;
 import closer.vlllage.com.closer.api.models.SuccessResult;
@@ -172,6 +173,10 @@ public class ApiHandler extends PoolMember {
 
     public Single<List<GroupActionResult>> getGroupActions(LatLng latLng) {
         return uiThread(api.getBackend().getGroupActionsNearGeo($(LatLngStr.class).from(latLng)));
+    }
+
+    public Single<List<PinResult>> getPins(String groupId) {
+        return uiThread(api.getBackend().getPins(groupId));
     }
 
     public Single<List<GroupMessageResult>> getGroupMessages(String groupId) {

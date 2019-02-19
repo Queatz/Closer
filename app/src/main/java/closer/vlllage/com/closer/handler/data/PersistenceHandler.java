@@ -18,9 +18,9 @@ public class PersistenceHandler extends PoolMember {
     private static final String PREFERENCE_MY_PHOTO = "closer.me.photo";
     private static final String PREFERENCE_MY_PRIVATE_MODE = "closer.me.private-mode";
     private static final String PREFERENCE_DEVICE_TOKEN = "closer.device-token";
-    private static final String PREFERENCE_PHONE = "closer.phone";
+    private static final String PREFERENCE_PHONE = "closer.message";
     private static final String PREFERENCE_VERIFIED = "closer.verified";
-    private static final String PREFERENCE_PHONE_ID = "closer.phone.id";
+    private static final String PREFERENCE_PHONE_ID = "closer.message.id";
     private static final String PREFERENCE_HELP_IS_HIDDEN = "closer.state.help-is-hidden";
     private static final String PREFERENCE_NOTIFICATIONS_PAUSED = "closer.notifications.paused";
     private static final String PREFERENCE_LAST_MAP_CENTER = "closer.map.center";

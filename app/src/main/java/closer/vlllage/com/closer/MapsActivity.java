@@ -20,7 +20,7 @@ public class MapsActivity extends PoolActivity {
     public static final String EXTRA_EVENT_ID = "eventId";
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_STATUS = "status";
-    public static final String EXTRA_PHONE = "phone";
+    public static final String EXTRA_PHONE = "message";
     public static final String EXTRA_MESSAGE = "message";
     public static final String EXTRA_SCREEN = "screen";
     public static final String EXTRA_SCREEN_MAP = "screen.map";
