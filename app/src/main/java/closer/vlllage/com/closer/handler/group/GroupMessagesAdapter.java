@@ -137,6 +137,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     .subscribe(successResult -> {
                         if (!successResult.success) {
                             $(DefaultAlerts.class).thatDidntWork();
+                        } else {
+                            $(RefreshHandler.class).refreshPins(groupMessage.getTo());
                         }
                     }, error -> $(DefaultAlerts.class).thatDidntWork()));
             } else {
@@ -144,6 +146,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
                     .subscribe(successResult -> {
                         if (!successResult.success) {
                             $(DefaultAlerts.class).thatDidntWork();
+                        } else {
+                            $(RefreshHandler.class).refreshPins(groupMessage.getTo());
                         }
                     }, error -> $(DefaultAlerts.class).thatDidntWork()));
             }
