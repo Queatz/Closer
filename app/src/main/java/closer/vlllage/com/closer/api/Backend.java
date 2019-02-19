@@ -5,6 +5,7 @@ import java.util.List;
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupActionResult;
+import closer.vlllage.com.closer.api.models.GroupContactResult;
 import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
@@ -153,6 +154,9 @@ public interface Backend {
 
     @GET("group/{id}/pins")
     Single<List<PinResult>> getPins(@Path("id") String groupId);
+
+    @GET("group/{id}/contacts")
+    Single<List<GroupContactResult>> getContacts(@Path("id") String groupId);
 
     @GET("action/{latLng}")
     Single<List<GroupActionResult>> getGroupActionsNearGeo(@Path("latLng") String latLng);

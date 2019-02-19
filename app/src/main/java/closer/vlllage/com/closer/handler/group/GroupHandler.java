@@ -159,6 +159,7 @@ public class GroupHandler extends PoolMember {
             groupChanged.onNext(group);
             setEventById(group.getEventId());
             $(RefreshHandler.class).refreshGroupMessages(group.getId());
+            $(RefreshHandler.class).refreshGroupContacts(group.getId());
 
             groupDataSubscription = $(StoreHandler.class).getStore().box(Group.class).query()
                     .equal(Group_.id, group.getId())
@@ -170,6 +171,7 @@ public class GroupHandler extends PoolMember {
                         if (groups.isEmpty()) return;
                         redrawContacts();
                         groupUpdated.onNext(groups.get(0));
+                        $(RefreshHandler.class).refreshGroupContacts(group.getId());
                     });
 
             $(DisposableHandler.class).add(groupDataSubscription);

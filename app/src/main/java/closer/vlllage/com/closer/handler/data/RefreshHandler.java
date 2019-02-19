@@ -75,6 +75,11 @@ public class RefreshHandler extends PoolMember {
         });
     }
 
+    public void refreshGroupContacts(String groupId) {
+        $(DisposableHandler.class).add($(ApiHandler.class).getContacts(groupId).subscribe(this::handleGroupContacts,
+                error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+    }
+
     public void refreshEvents(LatLng latLng) {
         $(DisposableHandler.class).add($(ApiHandler.class).getEvents(latLng).subscribe(eventResults -> {
             handleFullListResult(eventResults, Event.class, Event_.id, false, EventResult::from, EventResult::updateFrom);

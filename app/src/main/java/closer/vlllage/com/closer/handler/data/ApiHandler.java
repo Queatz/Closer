@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.api.ApiService;
 import closer.vlllage.com.closer.api.models.CreateResult;
 import closer.vlllage.com.closer.api.models.EventResult;
 import closer.vlllage.com.closer.api.models.GroupActionResult;
+import closer.vlllage.com.closer.api.models.GroupContactResult;
 import closer.vlllage.com.closer.api.models.GroupMemberResult;
 import closer.vlllage.com.closer.api.models.GroupMessageResult;
 import closer.vlllage.com.closer.api.models.GroupResult;
@@ -177,6 +178,10 @@ public class ApiHandler extends PoolMember {
 
     public Single<List<PinResult>> getPins(String groupId) {
         return uiThread(api.getBackend().getPins(groupId));
+    }
+
+    public Single<List<GroupContactResult>> getContacts(String groupId) {
+        return uiThread(api.getBackend().getContacts(groupId));
     }
 
     public Single<SuccessResult> addPin(String messageId, String groupId) {
