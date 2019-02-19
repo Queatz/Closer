@@ -58,7 +58,7 @@ public class ChatAreaHandler extends PoolMember {
         ));
 
         groupMessagesAdapter = new GroupMessagesAdapter(this);
-        groupMessagesAdapter.setNoPadding(true);
+        groupMessagesAdapter.setPinned(true);
         recyclerView.setAdapter(groupMessagesAdapter);
 
         groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));

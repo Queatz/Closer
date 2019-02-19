@@ -289,26 +289,20 @@
                 tools:visibility="visible" />
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/pinnedMessages"
-            android:layout_width="0dp"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pinnedMessagesRecyclerView"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/pad"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eventToolbar"
             app:layout_constraintHeight_default="wrap"
-            app:layout_constraintHeight_max="120dp">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/pinnedMessagesRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/pad"
-                android:overScrollMode="never"
-                tools:listitem="@layout/message_item"/>
-
-        </FrameLayout>
+            app:layout_constraintHeight_max="120dp"
+            android:paddingBottom="@dimen/pad"
+            android:overScrollMode="never"
+            tools:listitem="@layout/message_item"/>
 
         <ImageButton
             android:id="@+id/closeButton"
@@ -504,7 +498,7 @@
             app:layout_constraintBottom_toTopOf="@+id/actionFrameLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinnedMessages"
+            app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"
             tools:listitem="@layout/message_item" />
 
         <android.support.v7.widget.RecyclerView
@@ -517,7 +511,7 @@
             app:layout_constraintBottom_toTopOf="@+id/actionFrameLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinnedMessages" />
+            app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView" />
 
         <EditText
             android:id="@+id/searchContacts"
@@ -570,14 +564,14 @@
             app:layout_constraintBottom_toTopOf="@+id/showPhoneContactsButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinnedMessages"
+            app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"
             android:visibility="gone"/>
 
         <android.support.constraint.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/messagesLayoutGroup"
-            app:constraint_referenced_ids="replyMessage,sendButton,messagesRecyclerView,actionFrameLayout"/>
+            app:constraint_referenced_ids="replyMessage,sendButton,pinnedMessagesRecyclerView,messagesRecyclerView,actionFrameLayout"/>
 
         <android.support.constraint.Group
             android:layout_width="wrap_content"

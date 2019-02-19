@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class PinnedMessagesHandler extends PoolMember {
         ));
 
         groupMessagesAdapter = new GroupMessagesAdapter(this);
-        groupMessagesAdapter.setNoPadding(true);
+        groupMessagesAdapter.setPinned(true);
         pinnedMessagesRecyclerView.setAdapter(groupMessagesAdapter);
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
@@ -50,7 +51,8 @@ public class PinnedMessagesHandler extends PoolMember {
         }));
     }
 
-    private void setGroupMessages(List<GroupMessage> groupMessages) {
-        groupMessagesAdapter.setGroupMessages(groupMessages.subList(0, 1));
+    private void setGroupMessages(List<GroupMessage> pinnedMessages) {
+        pinnedMessagesRecyclerView.setVisibility(pinnedMessages.isEmpty() ? View.GONE : View.VISIBLE);
+        groupMessagesAdapter.setGroupMessages(pinnedMessages.subList(0, 1));
     }
 }

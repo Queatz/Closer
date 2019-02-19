@@ -70,6 +70,21 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/pinnedIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/messageLayout"
+        android:layout_marginTop="@dimen/pad"
+        android:layout_marginEnd="@dimen/padHalf"
+        android:layout_marginStart="@dimen/padHalf"
+        android:contentDescription="@string/pinned_message"
+        android:src="@drawable/ic_pin_black_18dp"
+        android:tint="@color/white"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
     <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
         android:id="@+id/messageActionLayout"
         android:layout_width="0dp"

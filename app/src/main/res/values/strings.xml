@@ -221,4 +221,5 @@
     <string name="join_group_message">Join this group to let others know you\'re here.</string>
     <string name="group">Group</string>
     <string name="share_group">Share this group…</string>
+    <string name="pinned_message">Pinned message</string>
 </resources>

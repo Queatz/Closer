@@ -40,7 +40,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     private OnSuggestionClickListener onSuggestionClickListener;
     private OnEventClickListener onEventClickListener;
     private OnGroupClickListener onGroupClickListener;
-    private boolean noPadding;
+    private boolean pinned;
 
     public GroupMessagesAdapter(PoolMember poolMember) {
         super(poolMember);
@@ -73,7 +73,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     public void onBindViewHolder(@NonNull GroupMessageViewHolder holder, int position) {
         GroupMessage groupMessage = groupMessages.get(position);
 
-        if (noPadding) {
+        if (pinned) {
             holder.itemView.setPadding(0, 0, 0, 0);
             holder.itemView.setBackgroundResource(R.color.white_15);
             holder.messageLayout.setBackground(null);
@@ -146,7 +146,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
 
         holder.messageActionLayout.setVisibility(View.GONE);
 
-        $(MessageDisplay.class).setNoPadding(noPadding);
+        $(MessageDisplay.class).setPinned(pinned);
         $(MessageDisplay.class).display(holder, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener);
 
         if (groupMessage.getReactions() == null || groupMessage.getReactions().isEmpty()) {
@@ -187,8 +187,8 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         notifyDataSetChanged();
     }
 
-    public GroupMessagesAdapter setNoPadding(boolean noPadding) {
-        this.noPadding = noPadding;
+    public GroupMessagesAdapter setPinned(boolean pinned) {
+        this.pinned = pinned;
         return this;
     }
 
@@ -202,6 +202,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         TextView time;
         TextView group;
         ImageView photo;
+        ImageView pinnedIndicator;
         MaxSizeFrameLayout messageActionLayout;
         View messageActionReply;
         View messageActionShare;
@@ -222,6 +223,7 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             time = itemView.findViewById(R.id.time);
             group = itemView.findViewById(R.id.group);
             photo = itemView.findViewById(R.id.photo);
+            pinnedIndicator = itemView.findViewById(R.id.pinnedIndicator);
             reactionsRecyclerView = itemView.findViewById(R.id.reactionsRecyclerView);
             messageActionLayout = itemView.findViewById(R.id.messageActionLayout);
             messageActionReply = itemView.findViewById(R.id.messageActionReply);

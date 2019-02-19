@@ -28,7 +28,7 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MessageDisplay extends PoolMember {
 
-    private boolean noPadding;
+    private boolean pinned;
 
     public void displayShare(GroupMessagesAdapter.GroupMessageViewHolder holder, JsonObject jsonObject, GroupMessage groupMessage, GroupMessagesAdapter.OnEventClickListener onEventClickListener, GroupMessagesAdapter.OnGroupClickListener onGroupClickListener, GroupMessagesAdapter.OnSuggestionClickListener onSuggestionClickListener) {
         GroupMessage sharedGroupMessage = $(StoreHandler.class).getStore().box(GroupMessage.class).query().equal(GroupMessage_.id, jsonObject.get("share").getAsString()).build().findFirst();
@@ -233,8 +233,8 @@ public class MessageDisplay extends PoolMember {
         holder.time.setText($(TimeStr.class).pretty(groupMessage.getTime()));
     }
 
-    public void setNoPadding(boolean noPadding) {
-        this.noPadding = noPadding;
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 
     public void display(GroupMessagesAdapter.GroupMessageViewHolder holder, GroupMessage groupMessage,
@@ -269,8 +269,9 @@ public class MessageDisplay extends PoolMember {
             displayGroupMessage(holder, groupMessage);
         }
 
-        if (noPadding) {
+        if (pinned) {
             holder.time.setVisibility(View.GONE);
+            holder.pinnedIndicator.setVisibility(View.VISIBLE);
         }
     }
 
