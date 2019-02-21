@@ -120,7 +120,7 @@
                     android:paddingTop="6dp"
                     android:paddingRight="12dp"
                     android:paddingBottom="6dp"
-                    android:text="♥"
+                    android:text="@string/heart"
                     android:textColor="@color/text"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -140,7 +140,7 @@
                     android:textColor="@color/text"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:text="Reply"
+                    android:text="@string/reply"
                     android:focusable="true" />
 
                 <TextView
@@ -158,7 +158,7 @@
                     android:textColor="@color/text"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:text="Share"
+                    android:text="@string/share"
                     android:focusable="true" />
 
                 <TextView
@@ -176,7 +176,7 @@
                     android:textColor="@color/text"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:text="Reminder"
+                    android:text="@string/reminder"
                     android:visibility="gone"
                     android:focusable="true" />
 
@@ -195,7 +195,7 @@
                     android:textColor="@color/text"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:text="Pin"
+                    android:text="@string/pin"
                     android:focusable="true" />
 
             </LinearLayout>
@@ -208,6 +208,7 @@
         android:id="@+id/reactionsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padHalf"
         app:layout_constraintTop_toBottomOf="@+id/messageActionLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

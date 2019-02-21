@@ -97,6 +97,10 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             params.leftMargin = pad;
             params.bottomMargin = pad;
             holder.action.setLayoutParams(params);
+
+            params = ((ViewGroup.MarginLayoutParams) holder.reactionsRecyclerView.getLayoutParams());
+            params.topMargin = 0;
+            holder.reactionsRecyclerView.setLayoutParams(params);
         }
 
         holder.photo.setVisibility(View.GONE);

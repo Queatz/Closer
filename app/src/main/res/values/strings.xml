@@ -223,4 +223,7 @@
     <string name="share_group">Share this group…</string>
     <string name="pinned_message">Pinned message</string>
     <string name="unpin">Unpin</string>
+    <string name="pin">Pin</string>
+    <string name="reminder">Reminder</string>
+    <string name="heart">♥</string>
 </resources>
