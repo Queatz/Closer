@@ -226,4 +226,5 @@
     <string name="pin">Pin</string>
     <string name="reminder">Reminder</string>
     <string name="heart">♥</string>
+    <string name="about_this_group">About this group</string>
 </resources>

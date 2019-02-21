@@ -142,6 +142,17 @@ public class GroupActivity extends CircularRevealActivity {
         $(GroupHandler.class).attach(groupName, groupAbout, peopleInGroup, findViewById(R.id.settingsButton));
         handleIntent(getIntent());
 
+        groupAbout.setOnClickListener(v -> {
+            if ($(GroupHandler.class).getGroup() == null || $(GroupHandler.class).getGroup().getAbout() == null) {
+                return;
+            }
+
+            $(DefaultAlerts.class).message(
+                    $(ResourcesHandler.class).getResources().getString(R.string.about_this_group),
+                    $(GroupHandler.class).getGroup().getAbout()
+            );
+        });
+
         $(GroupActionHandler.class).attach(actionFrameLayout, findViewById(R.id.actionRecyclerView));
         $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
         $(PinnedMessagesHandler.class).attach(pinnedMessagesRecyclerView);

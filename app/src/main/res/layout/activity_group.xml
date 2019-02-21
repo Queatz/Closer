@@ -157,6 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
+            android:background="@drawable/clickable_light"
             android:ellipsize="marquee"
             android:gravity="center_horizontal"
             android:marqueeRepeatLimit="marquee_forever"
