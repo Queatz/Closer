@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
@@ -27,6 +28,7 @@ import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageMentionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesAdapter;
+import closer.vlllage.com.closer.handler.group.PinnedMessagesHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -96,6 +98,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
             holder.pool.$(PublicGroupFeedItemHandler.class).attach(holder.itemView);
             return;
         } else {
+            holder.pool.$set($(ApiHandler.class));
             holder.pool.$set($(ApplicationHandler.class));
             holder.pool.$set($(ActivityHandler.class));
             holder.pool.$set($(ResourcesHandler.class));
@@ -124,6 +127,9 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
                 .on(AndroidScheduler.mainThread())
                 .transform(groupMessages -> groupMessages.subList(0, min(groupMessages.size(), 5)))
                 .observer(groupMessagesAdapter::setGroupMessages));
+
+        holder.pool.$(PinnedMessagesHandler.class).attach(holder.pinnedMessagesRecyclerView);
+        holder.pool.$(PinnedMessagesHandler.class).show(group);
 
         holder.messagesRecyclerView.setAdapter(groupMessagesAdapter);
         holder.messagesRecyclerView.setLayoutManager(new LinearLayoutManager(holder.messagesRecyclerView.getContext(), LinearLayoutManager.VERTICAL, true));
@@ -281,6 +287,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
 
         TextView groupName;
         RecyclerView messagesRecyclerView;
+        RecyclerView pinnedMessagesRecyclerView;
         ImageButton sendButton;
         EditText replyMessage;
         ImageView backgroundPhoto;
@@ -294,6 +301,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
             super(itemView);
             groupName = itemView.findViewById(R.id.groupName);
             messagesRecyclerView = itemView.findViewById(R.id.messagesRecyclerView);
+            pinnedMessagesRecyclerView = itemView.findViewById(R.id.pinnedMessagesRecyclerView);
             sendButton = itemView.findViewById(R.id.sendButton);
             replyMessage = itemView.findViewById(R.id.replyMessage);
             backgroundPhoto = itemView.findViewById(R.id.backgroundPhoto);

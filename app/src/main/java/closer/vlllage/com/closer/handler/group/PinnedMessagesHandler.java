@@ -25,6 +25,7 @@ public class PinnedMessagesHandler extends PoolMember {
     private RecyclerView pinnedMessagesRecyclerView;
     private GroupMessagesAdapter groupMessagesAdapter;
     private DataSubscription groupMessagesSubscription;
+    private DataSubscription groupMessagesActualSubscription;
 
     public void attach(RecyclerView pinnedMessagesRecyclerView) {
         this.pinnedMessagesRecyclerView = pinnedMessagesRecyclerView;
@@ -38,13 +39,14 @@ public class PinnedMessagesHandler extends PoolMember {
         groupMessagesAdapter = new GroupMessagesAdapter(this);
         groupMessagesAdapter.setPinned(true);
         pinnedMessagesRecyclerView.setAdapter(groupMessagesAdapter);
-
-        $(DisposableHandler.class).add($(GroupHandler.class).onGroupUpdated().subscribe(this::refresh));
-        $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(this::refresh));
     }
 
-    private void refresh(Group group) {
+    public void show(Group group) {
         if (groupMessagesSubscription != null) {
+            $(DisposableHandler.class).dispose(groupMessagesSubscription);
+        }
+
+        if (groupMessagesActualSubscription != null) {
             $(DisposableHandler.class).dispose(groupMessagesSubscription);
         }
 
@@ -67,12 +69,14 @@ public class PinnedMessagesHandler extends PoolMember {
                         ids.add(pin.getFrom());
                     }
 
-                    groupMessagesSubscription = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
+                    groupMessagesActualSubscription = $(StoreHandler.class).getStore().box(GroupMessage.class).query()
                             .in(GroupMessage_.id, ids.toArray(new String[0]))
                             .build()
                             .subscribe()
+                            .single()
                             .on(AndroidScheduler.mainThread())
                             .observer(this::setGroupMessages);
+                    $(DisposableHandler.class).add(groupMessagesActualSubscription);
                 });
 
         $(DisposableHandler.class).add(groupMessagesSubscription);

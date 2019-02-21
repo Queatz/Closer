@@ -180,11 +180,15 @@ public class GroupActivity extends CircularRevealActivity {
         });
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupUpdated().subscribe(group -> {
+            $(PinnedMessagesHandler.class).show(group);
+
             setGroupBackground(group);
             refreshPhysicalGroupActions(group);
         }));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
+            $(PinnedMessagesHandler.class).show(group);
+
             actionCancel.setVisibility(View.GONE);
             actionShare.setVisibility(View.VISIBLE);
             actionShowOnMap.setVisibility(View.VISIBLE);

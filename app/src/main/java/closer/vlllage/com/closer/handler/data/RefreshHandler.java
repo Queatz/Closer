@@ -130,7 +130,9 @@ public class RefreshHandler extends PoolMember {
             }
 
             handleMessages(groupMessageResults);
-            handleFullListResult(pinResults, Pin.class, Pin_.id, true, PinResult::from, PinResult::updateFrom);
+
+            $(StoreHandler.class).getStore().box(Pin.class).query().equal(Pin_.to, groupId).build().remove();
+            handleFullListResult(pinResults, Pin.class, Pin_.id, false, PinResult::from, PinResult::updateFrom);
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
 

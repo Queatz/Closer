@@ -139,7 +139,7 @@ public class GroupMessageParseHandler extends PoolMember {
 
     private MentionConverter getDefaultMentionConverter() {
         return mention -> {
-            List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).find(Phone_.id, mention);
+            List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).query().equal(Phone_.id, mention).build().find();
             if (phoneList.isEmpty()) {
                 return $(ResourcesHandler.class).getResources().getString(R.string.unknown);
             }

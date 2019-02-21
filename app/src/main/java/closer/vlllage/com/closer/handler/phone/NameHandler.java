@@ -36,7 +36,7 @@ public class NameHandler extends PoolMember {
     };
 
     public String getName(String phoneId) {
-        List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).find(Phone_.id, phoneId);
+        List<Phone> phoneList = $(StoreHandler.class).getStore().box(Phone.class).query().equal(Phone_.id, phoneId).build().find();
         if (phoneList.isEmpty()) {
             return $(ResourcesHandler.class).getResources().getString(R.string.unknown);
         }

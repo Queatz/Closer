@@ -80,6 +80,21 @@
         android:scaleType="centerInside"/>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/pinnedMessagesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/pad"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/groupName"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintHeight_max="120dp"
+        android:paddingBottom="@dimen/pad"
+        android:overScrollMode="never"
+        tools:listitem="@layout/message_item"/>
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -87,13 +102,14 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupName"
+        app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"
         app:layout_constraintHeight_max="240dp"
         app:layout_constrainedHeight="true"
         app:layout_constraintHeight_default="wrap"
         android:maxHeight="240dp"
         android:scrollbars="none"
-        android:overScrollMode="never"/>
+        android:overScrollMode="never"
+        tools:listitem="@layout/message_item"/>
 
     <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
         android:id="@+id/mentionSuggestionsLayout"
