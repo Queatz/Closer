@@ -9,12 +9,14 @@ import java.util.Random;
 import java.util.Set;
 
 import closer.vlllage.com.closer.R;
+import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.SyncHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.TimeStr;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.helpers.ToastHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -73,12 +75,12 @@ public class SuggestionHandler extends PoolMember {
         MapBubble suggestionBubble = new MapBubble(new LatLng(
                 suggestion.getLatitude(),
                 suggestion.getLongitude()
-        ), "Suggestion", suggestion.getName());
+        ), $(ResourcesHandler.class).getResources().getString(R.string.suggestion), suggestion.getName());
         suggestionBubble.setPinned(true);
         suggestionBubble.setOnTop(true);
         suggestionBubble.setType(BubbleType.SUGGESTION);
         suggestionBubble.setTag(suggestion);
-
+        suggestionBubble.setAction($(TimeStr.class).prettyDate(suggestion.getCreated()));
         return suggestionBubble;
     }
 
@@ -117,14 +119,17 @@ public class SuggestionHandler extends PoolMember {
         $(SyncHandler.class).sync(suggestion);
     }
 
-    public void loadAll(List<Suggestion> suggestions) {
-        for (Suggestion suggestion : suggestions) {
+    public void loadAll(List<SuggestionResult> suggestions) {
+        for (SuggestionResult suggestionResult : suggestions) {
             $(StoreHandler.class).getStore().box(Suggestion.class).query()
-                    .equal(Suggestion_.id, suggestion.getId())
+                    .equal(Suggestion_.id, suggestionResult.id)
                     .build().subscribe().single().on(AndroidScheduler.mainThread())
                     .observer(result -> {
                         if (result.isEmpty()) {
-                            $(StoreHandler.class).getStore().box(Suggestion.class).put(suggestion);
+                            $(StoreHandler.class).getStore().box(Suggestion.class).put(SuggestionResult.from(suggestionResult));
+                        } else {
+                            $(StoreHandler.class).getStore().box(Suggestion.class).put(
+                                    SuggestionResult.updateFrom(result.get(0), suggestionResult));
                         }
             });
         }

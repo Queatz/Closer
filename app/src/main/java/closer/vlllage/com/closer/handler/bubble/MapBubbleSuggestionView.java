@@ -22,8 +22,10 @@ public class MapBubbleSuggestionView extends PoolMember {
     }
 
     public void update(View view, MapBubble mapBubble) {
-        TextView textView = view.findViewById(R.id.bubbleText);
-        textView.setText(mapBubble.getStatus());
+        TextView text = view.findViewById(R.id.bubbleText);
+        text.setText(mapBubble.getStatus());
+        TextView action = view.findViewById(R.id.action);
+        action.setText(mapBubble.getAction());
     }
 
     public interface MapBubbleSuggestionClickListener {

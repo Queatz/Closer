@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.store.models;
 
+import java.util.Date;
+
 import io.objectbox.annotation.Entity;
 
 @Entity
@@ -7,6 +9,7 @@ public class Suggestion extends BaseObject {
     private String name;
     private Double latitude;
     private Double longitude;
+    private Date created;
 
     public String getName() {
         return name;
@@ -32,6 +35,15 @@ public class Suggestion extends BaseObject {
 
     public Suggestion setLongitude(Double longitude) {
         this.longitude = longitude;
+        return this;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public Suggestion setCreated(Date created) {
+        this.created = created;
         return this;
     }
 }

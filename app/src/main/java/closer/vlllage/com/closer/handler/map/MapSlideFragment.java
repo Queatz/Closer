@@ -20,7 +20,6 @@ import java.util.Locale;
 
 import closer.vlllage.com.closer.MapsActivity;
 import closer.vlllage.com.closer.R;
-import closer.vlllage.com.closer.api.models.SuggestionResult;
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler;
 import closer.vlllage.com.closer.handler.bubble.BubbleType;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
@@ -159,7 +158,7 @@ public class MapSlideFragment extends PoolFragment {
                         $(BubbleHandler.class).replace(mapBubbles);
                     }, this::networkError));
 
-            $(DisposableHandler.class).add($(ApiHandler.class).getSuggestionsNear(latLng).map(SuggestionResult::from).subscribe(suggestions ->
+            $(DisposableHandler.class).add($(ApiHandler.class).getSuggestionsNear(latLng).subscribe(suggestions ->
                     $(SuggestionHandler.class).loadAll(suggestions), this::networkError));
 
             $(RefreshHandler.class).refreshEvents(latLng);

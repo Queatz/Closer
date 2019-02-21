@@ -33,4 +33,20 @@ public class TimeStr extends PoolMember {
                 0
         ).toString();
     }
+
+    public String prettyDate(Date date) {
+        if (date == null) {
+            return "-";
+        }
+
+        if (DateUtils.isToday(date.getTime())) {
+            return DateUtils.getRelativeTimeSpanString(date.getTime()).toString();
+        }
+
+        return DateUtils.formatDateTime(
+                $(ApplicationHandler.class).getApp(),
+                date.getTime(),
+                0
+        );
+    }
 }
