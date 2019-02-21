@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 
 import closer.vlllage.com.closer.pool.PoolActivity;
 
@@ -61,9 +60,16 @@ public abstract class CircularRevealActivity extends PoolActivity {
                 0,
                 (float) Math.hypot(CircularRevealActivity.this.getWindow().getDecorView().getWidth(), CircularRevealActivity.this.getWindow().getDecorView().getHeight())
         );
-        animator.setDuration(195);
+        animator.setDuration(225);
         animator.setInterpolator(new AccelerateInterpolator());
         animator.start();
+
+        getWindow().getDecorView().setAlpha(0f);
+        getWindow().getDecorView().animate()
+                .alpha(1f)
+                .setDuration(225)
+                .setInterpolator(new AccelerateInterpolator())
+                .start();
     }
 
     protected void setSourceBounds(Rect sourceBounds) {
@@ -89,8 +95,8 @@ public abstract class CircularRevealActivity extends PoolActivity {
                 (float) Math.hypot(getWindow().getDecorView().getWidth(), getWindow().getDecorView().getHeight()),
                 0
         );
-        finishAnimator.setDuration(225);
-        finishAnimator.setInterpolator(new DecelerateInterpolator());
+        finishAnimator.setDuration(195);
+        finishAnimator.setInterpolator(new AccelerateInterpolator(0.5f));
         finishAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
@@ -127,6 +133,12 @@ public abstract class CircularRevealActivity extends PoolActivity {
             }
         });
         finishAnimator.start();
+
+        getWindow().getDecorView().animate()
+                .alpha(0f)
+                .setDuration(195)
+                .setInterpolator(new AccelerateInterpolator(0.5f))
+                .start();
     }
 
     public void finish(Runnable callback) {

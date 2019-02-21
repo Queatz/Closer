@@ -366,6 +366,8 @@
             app:layout_constraintBottom_toTopOf="@+id/mentionSuggestionsLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:visibility="gone"
             tools:visibility="visible">
 
@@ -375,6 +377,7 @@
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/pad"
                 android:clipToPadding="false"
+                android:clipChildren="false"
                 tools:layoutManager="android.support.v7.widget.GridLayoutManager"
                 tools:listitem="@layout/group_action_photo_item"
                 tools:orientation="horizontal" />

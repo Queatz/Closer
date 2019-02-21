@@ -185,7 +185,7 @@ public class GroupActivity extends CircularRevealActivity {
         }));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
-            actionCancel.setVisibility(View.VISIBLE);
+            actionCancel.setVisibility(View.GONE);
             actionShare.setVisibility(View.VISIBLE);
             actionShowOnMap.setVisibility(View.VISIBLE);
             actionSettingsSetName.setVisibility(View.GONE);
