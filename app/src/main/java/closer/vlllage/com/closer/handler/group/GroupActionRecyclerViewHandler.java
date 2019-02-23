@@ -1,4 +1,4 @@
-package closer.vlllage.com.closer.handler.search;
+package closer.vlllage.com.closer.handler.group;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,10 +7,6 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.FeatureHandler;
 import closer.vlllage.com.closer.handler.FeatureType;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
-import closer.vlllage.com.closer.handler.group.GroupActionAdapter;
-import closer.vlllage.com.closer.handler.group.GroupActionUpgradeHandler;
-import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
-import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;

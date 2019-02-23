@@ -10,7 +10,7 @@ import android.widget.EditText;
 
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
-import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
+import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.ui.RecyclerViewHeader;
 

@@ -16,7 +16,6 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.ToastHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
-import closer.vlllage.com.closer.handler.search.GroupActionRecyclerViewHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;

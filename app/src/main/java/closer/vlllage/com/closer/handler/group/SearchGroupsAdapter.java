@@ -1,4 +1,4 @@
-package closer.vlllage.com.closer.handler.search;
+package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
@@ -18,9 +18,6 @@ import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.data.AccountHandler;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler;
-import closer.vlllage.com.closer.handler.group.GroupActionAdapter;
-import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
-import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;

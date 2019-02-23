@@ -21,7 +21,7 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.map.MapHandler;
-import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
+import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;

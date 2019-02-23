@@ -33,7 +33,7 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.map.SetNameHandler;
-import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
+import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter;
 import closer.vlllage.com.closer.pool.PoolFragment;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;

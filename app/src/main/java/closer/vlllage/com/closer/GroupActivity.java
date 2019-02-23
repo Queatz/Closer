@@ -53,7 +53,7 @@ import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.helpers.TopHandler;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
-import closer.vlllage.com.closer.handler.search.SearchGroupsAdapter;
+import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
