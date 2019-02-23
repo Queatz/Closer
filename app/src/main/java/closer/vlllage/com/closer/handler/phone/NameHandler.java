@@ -96,10 +96,12 @@ public class NameHandler extends PoolMember {
     }
 
     private boolean isInactive(GroupContact groupContact) {
+        if(true) return false; // XXX TODO Restore this after server IDs are fixed!
         return groupContact.getContactActive().before($(TimeAgo.class).fifteenDaysAgo());
     }
 
     private boolean isInactive(Phone phone) {
+        if(true) return false; // XXX TODO Restore this after server IDs are fixed!
         return phone.getUpdated().before($(TimeAgo.class).fifteenDaysAgo());
     }
 }
