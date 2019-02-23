@@ -222,7 +222,6 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
         TextView message;
         TextView action;
         TextView time;
-        TextView group;
         ImageView photo;
         ImageView pinnedIndicator;
         MaxSizeFrameLayout messageActionLayout;
@@ -243,7 +242,6 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             message = itemView.findViewById(R.id.message);
             action = itemView.findViewById(R.id.action);
             time = itemView.findViewById(R.id.time);
-            group = itemView.findViewById(R.id.group);
             photo = itemView.findViewById(R.id.photo);
             pinnedIndicator = itemView.findViewById(R.id.pinnedIndicator);
             reactionsRecyclerView = itemView.findViewById(R.id.reactionsRecyclerView);

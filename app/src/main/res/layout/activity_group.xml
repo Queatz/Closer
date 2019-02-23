@@ -28,25 +28,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:importantForAccessibility="no"/>
 
-        <TextView
-            android:id="@+id/groupName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/clickable_light"
-            android:gravity="center_horizontal"
-            android:paddingLeft="@dimen/padDouble"
-            android:paddingTop="@dimen/pad"
-            android:paddingRight="@dimen/padDouble"
-            android:paddingBottom="@dimen/padHalf"
-            android:textAllCaps="true"
-            android:textColor="@color/text"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
+        <ImageView
+            android:id="@+id/profilePhoto"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="888 Friends" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@color/black_50"
+            android:scaleType="centerCrop"
+            android:importantForAccessibility="no"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <android.support.constraint.Barrier
+            android:id="@+id/topBarrier"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:barrierDirection="bottom"
+            app:barrierAllowsGoneWidgets="true"
+            app:constraint_referenced_ids="groupAbout,profilePhoto"/>
 
         <ImageButton
             android:id="@+id/scopeIndicatorButton"
@@ -101,8 +105,28 @@
             tools:visibility="visible"/>
 
         <TextView
+            android:id="@+id/groupName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/clickable_light"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/padDouble"
+            android:paddingTop="@dimen/pad"
+            android:paddingRight="@dimen/padDouble"
+            android:paddingBottom="@dimen/padHalf"
+            android:textAllCaps="true"
+            android:textColor="@color/text"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="888 Friends" />
+
+        <TextView
             android:id="@+id/groupDetails"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:paddingLeft="@dimen/padDouble"
@@ -119,6 +143,7 @@
             android:visibility="gone"
             tools:visibility="visible"
             tools:text="5:00AM - 7:00AM"
+            app:layout_constraintVertical_bias="0"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -145,6 +170,7 @@
             android:textColor="@color/text"
             android:textSize="12sp"
             android:textStyle="bold"
+            app:layout_constraintVertical_bias="0"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -171,11 +197,12 @@
             android:textColor="@color/text"
             android:textSize="12sp"
             android:textStyle="bold"
+            app:layout_constraintVertical_bias="0"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupDetails"
-            app:layout_constraintBottom_toTopOf="@+id/eventToolbar"/>
+            app:layout_constraintTop_toBottomOf="@+id/peopleInGroup"
+            app:layout_constraintBottom_toTopOf="@+id/topBarrier"/>
 
         <LinearLayout
             android:id="@+id/eventToolbar"
@@ -188,7 +215,7 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupAbout">
+            app:layout_constraintTop_toBottomOf="@+id/topBarrier">
             <Button
                 android:id="@+id/actionShare"
                 android:layout_width="wrap_content"
@@ -558,7 +585,6 @@
             android:paddingLeft="@dimen/padDouble"
             android:paddingRight="@dimen/padDouble"
             android:visibility="gone"
-            tools:visibility="visible"
             android:background="@drawable/clickable_light"
             android:textColor="@color/text"
             android:text="@string/show_contacts"/>
@@ -571,8 +597,7 @@
             app:layout_constraintBottom_toTopOf="@+id/showPhoneContactsButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"/>
 
         <android.support.constraint.Group
             android:layout_width="wrap_content"
@@ -585,7 +610,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/membersLayoutGroup"
             android:visibility="gone"
-            tools:visibility="visible"
             app:constraint_referenced_ids="searchContacts,contactsRecyclerView"/>
 
     </android.support.constraint.ConstraintLayout>

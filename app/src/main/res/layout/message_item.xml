@@ -213,36 +213,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:listitem="@layout/group_action_item"
+        tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+        tools:orientation="horizontal" />
 
-    <LinearLayout
-        android:id="@+id/timeLayout"
+    <TextView
+        android:id="@+id/time"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionsRecyclerView"
         android:layout_marginStart="@dimen/padHalf"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/text"
-            tools:text="8:45pm" />
-
-        <TextView
-            android:id="@+id/group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/text"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="8:45pm" />
-
-    </LinearLayout>
+        android:textSize="12sp"
+        android:textColor="@color/text"
+        tools:text="8:45pm" />
 
     <TextView
         android:id="@+id/action"
@@ -259,7 +243,7 @@
         android:textColor="@color/text"
         android:textStyle="bold"
         android:textSize="10sp"
-        app:layout_constraintTop_toBottomOf="@+id/timeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
