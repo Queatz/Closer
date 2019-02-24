@@ -4,13 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Callback;
@@ -33,8 +28,10 @@ import closer.vlllage.com.closer.handler.group.GroupMemberHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessageMentionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
+import closer.vlllage.com.closer.handler.group.GroupViewHolder;
 import closer.vlllage.com.closer.handler.group.PhysicalGroupUpgradeHandler;
 import closer.vlllage.com.closer.handler.group.PinnedMessagesHandler;
+import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.AlertHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
@@ -53,7 +50,6 @@ import closer.vlllage.com.closer.handler.helpers.SystemSettingsHandler;
 import closer.vlllage.com.closer.handler.helpers.TimerHandler;
 import closer.vlllage.com.closer.handler.helpers.TopHandler;
 import closer.vlllage.com.closer.handler.map.MapActivityHandler;
-import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
@@ -61,7 +57,6 @@ import closer.vlllage.com.closer.store.models.GroupMember;
 import closer.vlllage.com.closer.store.models.GroupMember_;
 import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
-import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
@@ -74,64 +69,14 @@ public class GroupActivity extends CircularRevealActivity {
     public static final String EXTRA_GROUP_ID = "groupId";
     public static final String EXTRA_RESPOND = "respond";
 
-    private TextView peopleInGroup;
-    private TextView groupName;
-    private TextView groupAbout;
-    private TextView groupDetails;
-    private View eventToolbar;
-    private Button actionShare;
-    private Button actionShowOnMap;
-    private Button actionCancel;
-    private Button actionSettingsSetName;
-    private Button actionSettingsSetBackground;
-    private Button actionSettingsGetDirections;
-    private Button actionSettingsHostEvent;
-    private MaxSizeFrameLayout actionFrameLayout;
-    private MaxSizeFrameLayout mentionSuggestionsLayout;
-    private EditText replyMessage;
-    private RecyclerView messagesRecyclerView;
-    private RecyclerView pinnedMessagesRecyclerView;
-    private RecyclerView shareWithRecyclerView;
-    private EditText searchContacts;
-    private RecyclerView contactsRecyclerView;
-    private Button showPhoneContactsButton;
-    private ImageButton sendButton;
-    private ImageButton sendMoreButton;
-    private ImageButton scopeIndicatorButton;
-    private String groupId;
-    private android.support.constraint.Group messagesLayoutGroup;
-    private android.support.constraint.Group membersLayoutGroup;
+    public GroupViewHolder view;
+    public String groupId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        replyMessage = findViewById(R.id.replyMessage);
-        sendMoreButton = findViewById(R.id.sendMoreButton);
-        messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
-        pinnedMessagesRecyclerView = findViewById(R.id.pinnedMessagesRecyclerView);
-        searchContacts = findViewById(R.id.searchContacts);
-        contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
-        shareWithRecyclerView = findViewById(R.id.shareWithRecyclerView);
-        peopleInGroup = findViewById(R.id.peopleInGroup);
-        groupAbout = findViewById(R.id.groupAbout);
-        groupDetails = findViewById(R.id.groupDetails);
-        groupName = findViewById(R.id.groupName);
-        eventToolbar = findViewById(R.id.eventToolbar);
-        showPhoneContactsButton = findViewById(R.id.showPhoneContactsButton);
-        sendButton = findViewById(R.id.sendButton);
-        actionShare = findViewById(R.id.actionShare);
-        actionShowOnMap = findViewById(R.id.actionShowOnMap);
-        actionCancel = findViewById(R.id.actionCancel);
-        actionSettingsSetName = findViewById(R.id.actionSettingsSetName);
-        actionSettingsSetBackground = findViewById(R.id.actionSettingsSetBackground);
-        actionSettingsGetDirections = findViewById(R.id.actionSettingsGetDirections);
-        actionSettingsHostEvent = findViewById(R.id.actionSettingsHostEvent);
-        actionFrameLayout = findViewById(R.id.actionFrameLayout);
-        mentionSuggestionsLayout = findViewById(R.id.mentionSuggestionsLayout);
-        scopeIndicatorButton = findViewById(R.id.scopeIndicatorButton);
-        messagesLayoutGroup = findViewById(R.id.messagesLayoutGroup);
-        membersLayoutGroup = findViewById(R.id.membersLayoutGroup);
+        view = new GroupViewHolder(findViewById(android.R.id.content));
 
         findViewById(R.id.closeButton).setOnClickListener(view -> finish());
 
@@ -139,10 +84,10 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(TimerHandler.class).postDisposable(() -> $(RefreshHandler.class).refreshAll(), 1625);
 
-        $(GroupHandler.class).attach(groupName, groupAbout, peopleInGroup, findViewById(R.id.settingsButton));
+        $(GroupHandler.class).attach(view.groupName, view.groupAbout, view.peopleInGroup, findViewById(R.id.settingsButton));
         handleIntent(getIntent());
 
-        groupAbout.setOnClickListener(v -> {
+        view.groupAbout.setOnClickListener(v -> {
             if ($(GroupHandler.class).getGroup() == null || $(GroupHandler.class).getGroup().getAbout() == null) {
                 return;
             }
@@ -153,13 +98,13 @@ public class GroupActivity extends CircularRevealActivity {
             );
         });
 
-        $(GroupActionHandler.class).attach(actionFrameLayout, findViewById(R.id.actionRecyclerView));
-        $(GroupMessagesHandler.class).attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, findViewById(R.id.sendMoreLayout));
-        $(PinnedMessagesHandler.class).attach(pinnedMessagesRecyclerView);
-        $(GroupMessageMentionHandler.class).attach(mentionSuggestionsLayout, findViewById(R.id.mentionSuggestionRecyclerView), mention -> {
+        $(GroupActionHandler.class).attach(view.actionFrameLayout, findViewById(R.id.actionRecyclerView));
+        $(GroupMessagesHandler.class).attach(view.messagesRecyclerView, view.replyMessage, view.sendButton, view.sendMoreButton, findViewById(R.id.sendMoreLayout));
+        $(PinnedMessagesHandler.class).attach(view.pinnedMessagesRecyclerView);
+        $(GroupMessageMentionHandler.class).attach(view.mentionSuggestionsLayout, findViewById(R.id.mentionSuggestionRecyclerView), mention -> {
             $(GroupMessagesHandler.class).insertMention(mention);
         });
-        $(MiniWindowHandler.class).attach(groupName, findViewById(R.id.backgroundColor), this::finish);
+        $(MiniWindowHandler.class).attach(view.groupName, findViewById(R.id.backgroundColor), this::finish);
 
         findViewById(R.id.settingsButton).setOnClickListener(view -> {
             $(GroupMemberHandler.class).changeGroupSettings($(GroupHandler.class).getGroup());
@@ -185,7 +130,7 @@ public class GroupActivity extends CircularRevealActivity {
                     }));
         }
 
-        replyMessage.setOnClickListener(view -> {
+        view.replyMessage.setOnClickListener(view -> {
             $(GroupActionHandler.class).show(false);
             cancelShare();
         });
@@ -200,34 +145,34 @@ public class GroupActivity extends CircularRevealActivity {
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             $(PinnedMessagesHandler.class).show(group);
 
-            actionCancel.setVisibility(View.GONE);
-            actionShare.setVisibility(View.VISIBLE);
-            actionShowOnMap.setVisibility(View.VISIBLE);
-            actionSettingsSetName.setVisibility(View.GONE);
-            actionSettingsSetBackground.setVisibility(View.GONE);
-            actionSettingsGetDirections.setVisibility(View.GONE);
-            actionSettingsHostEvent.setVisibility(View.GONE);
+            view.actionCancel.setVisibility(View.GONE);
+            view.actionShare.setVisibility(View.VISIBLE);
+            view.actionShowOnMap.setVisibility(View.VISIBLE);
+            view.actionSettingsSetName.setVisibility(View.GONE);
+            view.actionSettingsSetBackground.setVisibility(View.GONE);
+            view.actionSettingsGetDirections.setVisibility(View.GONE);
+            view.actionSettingsHostEvent.setVisibility(View.GONE);
 
             findViewById(R.id.backgroundColor).setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
 
             refreshPhysicalGroupActions(group);
             cancelShare();
 
-            actionSettingsGetDirections.setOnClickListener(view -> {
+            view.actionSettingsGetDirections.setOnClickListener(view -> {
                 $(OutboundHandler.class).openDirections(new LatLng(
                         group.getLatitude(),
                         group.getLongitude()
                 ));
             });
 
-            $(GroupScopeHandler.class).setup(group, scopeIndicatorButton);
+            $(GroupScopeHandler.class).setup(group, view.scopeIndicatorButton);
 
-            peopleInGroup.setSelected(true);
-            peopleInGroup.setOnClickListener(view -> toggleContactsView());
+            view.peopleInGroup.setSelected(true);
+            view.peopleInGroup.setOnClickListener(view -> toggleContactsView());
 
-            $(GroupContactsHandler.class).attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton);
+            $(GroupContactsHandler.class).attach(group, view.contactsRecyclerView, view.searchContacts, view.showPhoneContactsButton);
 
-            showPhoneContactsButton.setOnClickListener(view -> {
+            view.showPhoneContactsButton.setOnClickListener(v -> {
                 if ($(PermissionHandler.class).denied(READ_CONTACTS)) {
                     $(AlertHandler.class).make()
                             .setTitle($(ResourcesHandler.class).getResources().getString(R.string.enable_contacts_permission))
@@ -241,27 +186,27 @@ public class GroupActivity extends CircularRevealActivity {
                 $(PermissionHandler.class).check(READ_CONTACTS).when(granted -> {
                     if (granted) {
                         $(GroupContactsHandler.class).showContactsForQuery();
-                        showPhoneContactsButton.setVisibility(View.GONE);
+                        view.showPhoneContactsButton.setVisibility(View.GONE);
                     }
                 });
             });
 
             if (group.isPhysical()) {
-                eventToolbar.setVisibility(View.VISIBLE);
-                actionShare.setVisibility(View.GONE);
-                actionCancel.setVisibility(View.GONE);
-                actionShowOnMap.setVisibility(View.VISIBLE);
-                actionShowOnMap.setOnClickListener(view -> showGroupOnMap(group));
+                view.eventToolbar.setVisibility(View.VISIBLE);
+                view.actionShare.setVisibility(View.GONE);
+                view.actionCancel.setVisibility(View.GONE);
+                view.actionShowOnMap.setVisibility(View.VISIBLE);
+                view.actionShowOnMap.setOnClickListener(view -> showGroupOnMap(group));
 
-                actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group, updatedGroup -> {
+                view.actionSettingsSetName.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).convertToHub(group, updatedGroup -> {
                     $(GroupHandler.class).showGroupName(updatedGroup);
                     refreshPhysicalGroupActions(updatedGroup);
                 }));
-                actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
+                view.actionSettingsSetBackground.setOnClickListener(view -> $(PhysicalGroupUpgradeHandler.class).setBackground(group, updateGroup -> {
                     setGroupBackground(updateGroup);
                     refreshPhysicalGroupActions(updateGroup);
                 }));
-                actionSettingsHostEvent.setOnClickListener(view -> {
+                view.actionSettingsHostEvent.setOnClickListener(view -> {
                     $(EventHandler.class).createNewEvent(new LatLng(
                             group.getLatitude(),
                             group.getLongitude()
@@ -272,16 +217,16 @@ public class GroupActivity extends CircularRevealActivity {
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(event -> {
-            groupDetails.setVisibility(View.VISIBLE);
-            eventToolbar.setVisibility(View.VISIBLE);
-            groupDetails.setText($(EventDetailsHandler.class).formatEventDetails(event));
+            view.groupDetails.setVisibility(View.VISIBLE);
+            view.eventToolbar.setVisibility(View.VISIBLE);
+            view.groupDetails.setText($(EventDetailsHandler.class).formatEventDetails(event));
 
-            actionShare.setOnClickListener(view -> share(event));
-            actionShowOnMap.setOnClickListener(view -> showEventOnMap(event));
+            view.actionShare.setOnClickListener(view -> share(event));
+            view.actionShowOnMap.setOnClickListener(view -> showEventOnMap(event));
 
             if ($(PersistenceHandler.class).getPhoneId() != null) {
                 if (!event.isCancelled() && event.getCreator() != null && new Date().before(event.getEndsAt()) && event.getCreator().equals($(PersistenceHandler.class).getPhoneId())) {
-                    actionCancel.setOnClickListener(view -> {
+                    view.actionCancel.setOnClickListener(view -> {
                         $(AlertHandler.class).make()
                                 .setTitle($(ResourcesHandler.class).getResources().getString(R.string.cancel_event))
                                 .setMessage($(ResourcesHandler.class).getResources().getString(R.string.event_will_be_cancelled, event.getName()))
@@ -300,7 +245,7 @@ public class GroupActivity extends CircularRevealActivity {
                     });
                 }
             } else {
-                actionCancel.setVisibility(View.GONE);
+                view.actionCancel.setVisibility(View.GONE);
             }
         }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
     }
@@ -319,9 +264,9 @@ public class GroupActivity extends CircularRevealActivity {
             $(GroupHandler.class).setGroupById(groupId);
 
             if (intent.hasExtra(EXTRA_RESPOND)) {
-                replyMessage.postDelayed(() -> {
-                    replyMessage.requestFocus();
-                    $(KeyboardHandler.class).showKeyboard(replyMessage, true);
+                view.replyMessage.postDelayed(() -> {
+                    view.replyMessage.requestFocus();
+                    $(KeyboardHandler.class).showKeyboard(view.replyMessage, true);
                 }, 500);
             }
         }
@@ -332,30 +277,30 @@ public class GroupActivity extends CircularRevealActivity {
             int buttonCount = 1;
 
             if (isEmptyOrWhitespace(group.getName())) {
-                actionSettingsSetName.setVisibility(View.VISIBLE);
+                view.actionSettingsSetName.setVisibility(View.VISIBLE);
                 buttonCount++;
             } else {
-                actionSettingsSetName.setVisibility(View.GONE);
+                view.actionSettingsSetName.setVisibility(View.GONE);
             }
 
             if (isEmptyOrWhitespace(group.getPhoto())) {
-                actionSettingsSetBackground.setVisibility(View.VISIBLE);
+                view.actionSettingsSetBackground.setVisibility(View.VISIBLE);
                 buttonCount++;
             } else {
-                actionSettingsSetBackground.setVisibility(View.GONE);
+                view.actionSettingsSetBackground.setVisibility(View.GONE);
             }
 
             if (buttonCount < 3) {
-                actionSettingsGetDirections.setVisibility(View.VISIBLE);
+                view.actionSettingsGetDirections.setVisibility(View.VISIBLE);
                 buttonCount++;
             } else {
-                actionSettingsGetDirections.setVisibility(View.GONE);
+                view.actionSettingsGetDirections.setVisibility(View.GONE);
             }
 
             if (buttonCount < 3) {
-                actionSettingsHostEvent.setVisibility(View.VISIBLE);
+                view.actionSettingsHostEvent.setVisibility(View.VISIBLE);
             } else {
-                actionSettingsHostEvent.setVisibility(View.GONE);
+                view.actionSettingsHostEvent.setVisibility(View.GONE);
             }
         }
     }
@@ -417,10 +362,10 @@ public class GroupActivity extends CircularRevealActivity {
 
         showMessagesView(true);
 
-        shareWithRecyclerView.setVisibility(View.VISIBLE);
-        messagesLayoutGroup.setVisibility(View.GONE);
-        sendMoreButton.setVisibility(View.GONE);
-        actionShare.setText(R.string.cancel);
+        view.shareWithRecyclerView.setVisibility(View.VISIBLE);
+        view.messagesLayoutGroup.setVisibility(View.GONE);
+        view.sendMoreButton.setVisibility(View.GONE);
+        view.actionShare.setText(R.string.cancel);
 
         QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
         List<Group> groups = queryBuilder.sort($(SortHandler.class).sortGroups()).notEqual(Group_.physical, true).build().find();
@@ -440,27 +385,27 @@ public class GroupActivity extends CircularRevealActivity {
         searchGroupsAdapter.setActionText($(ResourcesHandler.class).getResources().getString(R.string.share));
         searchGroupsAdapter.setIsSmall(true);
 
-        shareWithRecyclerView.setAdapter(searchGroupsAdapter);
-        shareWithRecyclerView.setLayoutManager(new LinearLayoutManager(
-                shareWithRecyclerView.getContext(),
+        view.shareWithRecyclerView.setAdapter(searchGroupsAdapter);
+        view.shareWithRecyclerView.setLayoutManager(new LinearLayoutManager(
+                view.shareWithRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL,
                 false
         ));
     }
 
     private boolean cancelShare() {
-        if (shareWithRecyclerView.getVisibility() != View.VISIBLE) {
+        if (view.shareWithRecyclerView.getVisibility() != View.VISIBLE) {
             return false;
         }
 
-        shareWithRecyclerView.setVisibility(View.GONE);
-        messagesLayoutGroup.setVisibility(View.VISIBLE);
-        actionShare.setText(R.string.share);
+        view.shareWithRecyclerView.setVisibility(View.GONE);
+        view.messagesLayoutGroup.setVisibility(View.VISIBLE);
+        view.actionShare.setText(R.string.share);
         return true;
     }
 
     private void toggleContactsView() {
-        showMessagesView(replyMessage.getVisibility() == View.GONE);
+        showMessagesView(view.replyMessage.getVisibility() == View.GONE);
     }
 
     private void showMessagesView(boolean show) {
@@ -469,33 +414,33 @@ public class GroupActivity extends CircularRevealActivity {
         $(GroupMessagesHandler.class).showSendMoreOptions(false);
 
         if (show) {
-            messagesLayoutGroup.setVisibility(View.VISIBLE);
-            membersLayoutGroup.setVisibility(View.GONE);
+            view.messagesLayoutGroup.setVisibility(View.VISIBLE);
+            view.membersLayoutGroup.setVisibility(View.GONE);
 
-            if (replyMessage.getText().toString().isEmpty()) {
-                sendMoreButton.setVisibility(View.VISIBLE);
+            if (view.replyMessage.getText().toString().isEmpty()) {
+                view.sendMoreButton.setVisibility(View.VISIBLE);
             } else {
-                sendMoreButton.setVisibility(View.GONE);
+                view.sendMoreButton.setVisibility(View.GONE);
             }
 
-            showPhoneContactsButton.setVisibility(View.GONE);
+            view.showPhoneContactsButton.setVisibility(View.GONE);
         } else {
-            messagesLayoutGroup.setVisibility(View.GONE);
-            membersLayoutGroup.setVisibility(View.VISIBLE);
+            view.messagesLayoutGroup.setVisibility(View.GONE);
+            view.membersLayoutGroup.setVisibility(View.VISIBLE);
 
-            sendMoreButton.setVisibility(View.GONE);
+            view.sendMoreButton.setVisibility(View.GONE);
 
             $(GroupActionHandler.class).cancelPendingAnimation();
 
             if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
-                showPhoneContactsButton.setVisibility(View.VISIBLE);
+                view.showPhoneContactsButton.setVisibility(View.VISIBLE);
             }
 
             if($(PermissionHandler.class).has(READ_CONTACTS)) {
                 $(GroupContactsHandler.class).showContactsForQuery();
             }
 
-            searchContacts.setText("");
+            view.searchContacts.setText("");
         }
     }
 }
