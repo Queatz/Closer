@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import closer.vlllage.com.closer.R;
@@ -16,13 +17,6 @@ public class GroupViewHolder {
     public final TextView groupAbout;
     public final TextView groupDetails;
     public final View eventToolbar;
-    public final Button actionShare;
-    public final Button actionShowOnMap;
-    public final Button actionCancel;
-    public final Button actionSettingsSetName;
-    public final Button actionSettingsSetBackground;
-    public final Button actionSettingsGetDirections;
-    public final Button actionSettingsHostEvent;
     public final MaxSizeFrameLayout actionFrameLayout;
     public final MaxSizeFrameLayout mentionSuggestionsLayout;
     public final EditText replyMessage;
@@ -37,6 +31,7 @@ public class GroupViewHolder {
     public final ImageButton scopeIndicatorButton;
     public final android.support.constraint.Group messagesLayoutGroup;
     public final android.support.constraint.Group membersLayoutGroup;
+    public final ImageView backgroundPhoto;
 
     public GroupViewHolder(View rootView) {
         replyMessage = rootView.findViewById(R.id.replyMessage);
@@ -53,18 +48,12 @@ public class GroupViewHolder {
         eventToolbar = rootView.findViewById(R.id.eventToolbar);
         showPhoneContactsButton = rootView.findViewById(R.id.showPhoneContactsButton);
         sendButton = rootView.findViewById(R.id.sendButton);
-        actionShare = rootView.findViewById(R.id.actionShare);
-        actionShowOnMap = rootView.findViewById(R.id.actionShowOnMap);
-        actionCancel = rootView.findViewById(R.id.actionCancel);
-        actionSettingsSetName = rootView.findViewById(R.id.actionSettingsSetName);
-        actionSettingsSetBackground = rootView.findViewById(R.id.actionSettingsSetBackground);
-        actionSettingsGetDirections = rootView.findViewById(R.id.actionSettingsGetDirections);
-        actionSettingsHostEvent = rootView.findViewById(R.id.actionSettingsHostEvent);
         actionFrameLayout = rootView.findViewById(R.id.actionFrameLayout);
         mentionSuggestionsLayout = rootView.findViewById(R.id.mentionSuggestionsLayout);
         scopeIndicatorButton = rootView.findViewById(R.id.scopeIndicatorButton);
         messagesLayoutGroup = rootView.findViewById(R.id.messagesLayoutGroup);
         membersLayoutGroup = rootView.findViewById(R.id.membersLayoutGroup);
+        backgroundPhoto = rootView.findViewById(R.id.backgroundPhoto);
     }
 
 }

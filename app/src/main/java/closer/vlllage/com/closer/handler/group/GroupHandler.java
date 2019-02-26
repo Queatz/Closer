@@ -2,7 +2,10 @@ package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Callback;
 
 import org.greenrobot.essentials.StringUtils;
 
@@ -19,6 +22,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.phone.NameHandler;
@@ -35,11 +39,13 @@ import io.objectbox.android.AndroidScheduler;
 import io.objectbox.reactive.DataSubscription;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 public class GroupHandler extends PoolMember {
 
     private TextView groupName;
     private TextView groupAbout;
+    private ImageView backgroundPhoto;
     private TextView peopleInGroup;
     private View settingsButton;
     private Group group;
@@ -51,8 +57,9 @@ public class GroupHandler extends PoolMember {
     private List<String> contactInvites = new ArrayList<>();
     private DataSubscription groupDataSubscription;
 
-    public void attach(TextView groupName, TextView groupAbout, TextView peopleInGroup, View settingsButton) {
+    public void attach(TextView groupName, ImageView backgroundPhoto, TextView groupAbout, TextView peopleInGroup, View settingsButton) {
         this.groupName = groupName;
+        this.backgroundPhoto = backgroundPhoto;
         this.groupAbout = groupAbout;
         this.peopleInGroup = peopleInGroup;
         this.settingsButton = settingsButton;
@@ -187,6 +194,27 @@ public class GroupHandler extends PoolMember {
         }
 
         groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
+    }
+
+    public void setGroupBackground(Group group) {
+        if (group.getPhoto() != null) {
+            backgroundPhoto.setVisibility(View.VISIBLE);
+            backgroundPhoto.setImageDrawable(null);
+            $(ImageHandler.class).get().load(group.getPhoto() + "?s=32").transform(new BlurTransformation(backgroundPhoto.getContext(), 2)).into(backgroundPhoto, new Callback() {
+                @Override
+                public void onSuccess() {
+                    $(ImageHandler.class).get().load(group.getPhoto() + "?s=512").noPlaceholder().into(backgroundPhoto);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    e.printStackTrace();
+                    onSuccess();
+                }
+            });
+        } else {
+            backgroundPhoto.setVisibility(View.GONE);
+        }
     }
 
     private void setEventById(String eventId) {
