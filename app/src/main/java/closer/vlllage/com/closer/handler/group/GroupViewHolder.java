@@ -32,6 +32,7 @@ public class GroupViewHolder {
     public final android.support.constraint.Group messagesLayoutGroup;
     public final android.support.constraint.Group membersLayoutGroup;
     public final ImageView backgroundPhoto;
+    public final ImageView profilePhoto;
 
     public GroupViewHolder(View rootView) {
         replyMessage = rootView.findViewById(R.id.replyMessage);
@@ -54,6 +55,7 @@ public class GroupViewHolder {
         messagesLayoutGroup = rootView.findViewById(R.id.messagesLayoutGroup);
         membersLayoutGroup = rootView.findViewById(R.id.membersLayoutGroup);
         backgroundPhoto = rootView.findViewById(R.id.backgroundPhoto);
+        profilePhoto = rootView.findViewById(R.id.profilePhoto);
     }
 
 }

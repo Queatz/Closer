@@ -35,6 +35,7 @@ import closer.vlllage.com.closer.store.models.GroupContact_;
 import closer.vlllage.com.closer.store.models.GroupInvite;
 import closer.vlllage.com.closer.store.models.GroupInvite_;
 import closer.vlllage.com.closer.store.models.Group_;
+import closer.vlllage.com.closer.store.models.Phone;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.reactive.DataSubscription;
 import io.reactivex.subjects.BehaviorSubject;
@@ -53,6 +54,7 @@ public class GroupHandler extends PoolMember {
     private BehaviorSubject<Group> groupChanged = BehaviorSubject.create();
     private PublishSubject<Group> groupUpdated = PublishSubject.create();
     private BehaviorSubject<Event> eventChanged = BehaviorSubject.create();
+    private BehaviorSubject<Phone> phoneChanged = BehaviorSubject.create();
     private List<String> contactNames = new ArrayList<>();
     private List<String> contactInvites = new ArrayList<>();
     private DataSubscription groupDataSubscription;
@@ -165,6 +167,7 @@ public class GroupHandler extends PoolMember {
             onGroupSet(group);
             groupChanged.onNext(group);
             setEventById(group.getEventId());
+            setPhoneById(group.getPhoneId());
             $(RefreshHandler.class).refreshGroupMessages(group.getId());
             $(RefreshHandler.class).refreshGroupContacts(group.getId());
 
@@ -193,7 +196,15 @@ public class GroupHandler extends PoolMember {
             return;
         }
 
-        groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
+        if (group.hasPhone()) {
+            $(DisposableHandler.class).add($(DataHandler.class).getPhone(group.getPhoneId()).subscribe(
+                    phone -> {
+                        groupName.setText(phone.getName());
+                    }, error -> $(DefaultAlerts.class).thatDidntWork()
+            ));
+        } else {
+            groupName.setText($(Val.class).of(group.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
+        }
     }
 
     public void setGroupBackground(Group group) {
@@ -227,6 +238,16 @@ public class GroupHandler extends PoolMember {
                         error -> $(DefaultAlerts.class).thatDidntWork()));
     }
 
+    private void setPhoneById(String phoneId) {
+        if (phoneId == null) {
+            return;
+        }
+
+        $(DisposableHandler.class).add($(DataHandler.class).getPhone(phoneId)
+                .subscribe(phone -> phoneChanged.onNext(phone),
+                        error -> $(DefaultAlerts.class).thatDidntWork()));
+    }
+
     public Group getGroup() {
         return group;
     }
@@ -245,5 +266,9 @@ public class GroupHandler extends PoolMember {
 
     public BehaviorSubject<Event> onEventChanged() {
         return eventChanged;
+    }
+
+    public BehaviorSubject<Phone> onPhoneChanged() {
+        return phoneChanged;
     }
 }

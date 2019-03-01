@@ -24,6 +24,7 @@ import closer.vlllage.com.closer.handler.group.GroupMessageMentionHandler;
 import closer.vlllage.com.closer.handler.group.GroupMessagesHandler;
 import closer.vlllage.com.closer.handler.group.GroupToolbarHandler;
 import closer.vlllage.com.closer.handler.group.GroupViewHolder;
+import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.PinnedMessagesHandler;
 import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
@@ -34,6 +35,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupScopeHandler;
+import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
@@ -49,6 +51,7 @@ import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
+import io.reactivex.functions.Consumer;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -129,6 +132,8 @@ public class GroupActivity extends CircularRevealActivity {
             $(GroupHandler.class).setGroupBackground(group);
         }));
 
+        Consumer<Throwable> connectionError = error -> $(ConnectionErrorHandler.class).notifyConnectionError();
+
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(group -> {
             $(PinnedMessagesHandler.class).show(group);
 
@@ -161,12 +166,25 @@ public class GroupActivity extends CircularRevealActivity {
             });
 
             $(GroupHandler.class).setGroupBackground(group);
-        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+        }, connectionError));
 
         $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(event -> {
             view.groupDetails.setVisibility(View.VISIBLE);
             view.groupDetails.setText($(EventDetailsHandler.class).formatEventDetails(event));
-        }, error -> $(ConnectionErrorHandler.class).notifyConnectionError()));
+        }, connectionError));
+
+        $(DisposableHandler.class).add($(GroupHandler.class).onPhoneChanged().subscribe(phone -> {
+            view.groupDetails.setVisibility(View.GONE);
+            if (phone.getPhoto() != null) {
+                view.profilePhoto.setVisibility(View.VISIBLE);
+                $(ImageHandler.class).get().load(phone.getPhoto() + "?s=512")
+                        .into(view.profilePhoto);
+                view.profilePhoto.setOnClickListener(v -> {
+                    $(PhotoActivityTransitionHandler.class).show(view.profilePhoto, phone.getPhoto());
+                });
+
+            }
+        }, connectionError));
 
         view.shareWithRecyclerView.setLayoutManager(new LinearLayoutManager(
                 view.shareWithRecyclerView.getContext(),

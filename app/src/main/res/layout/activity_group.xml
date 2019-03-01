@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintHeight_percent=".333"
             android:src="@color/black_50"
             android:scaleType="centerCrop"
             android:importantForAccessibility="no"

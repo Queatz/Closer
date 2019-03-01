@@ -17,6 +17,8 @@ import android.widget.TextView;
 import closer.vlllage.com.closer.R;
 import closer.vlllage.com.closer.handler.bubble.MapBubble;
 import closer.vlllage.com.closer.handler.data.ApiHandler;
+import closer.vlllage.com.closer.handler.data.DataHandler;
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
@@ -111,6 +113,12 @@ public class ReplyLayoutHandler extends PoolMember {
         replyingToMapBubble = mapBubble;
 
         replyLayoutName.setText($(Val.class).of(replyingToMapBubble.getName(), $(ResourcesHandler.class).getResources().getString(R.string.app_name)));
+        replyLayoutName.setOnClickListener(v -> {
+            $(DisposableHandler.class).add($(DataHandler.class).getGroupForPhone(replyingToMapBubble.getPhone())
+                    .subscribe(group -> $(GroupActivityTransitionHandler.class).showGroupMessages(
+                            replyLayoutName, group.getId()
+                    ), error -> $(DefaultAlerts.class).thatDidntWork()));
+        });
 
         if (mapBubble.getPhone() != null) {
             Phone phone = $(StoreHandler.class).getStore().box(Phone.class).query().equal(Phone_.id, mapBubble.getPhone()).build().findFirst();

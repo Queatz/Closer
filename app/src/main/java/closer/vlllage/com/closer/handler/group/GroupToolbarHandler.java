@@ -29,6 +29,7 @@ import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.ui.CircularRevealActivity;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -65,6 +66,7 @@ public class GroupToolbarHandler extends PoolMember {
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupUpdated().subscribe(this::show));
         $(DisposableHandler.class).add($(GroupHandler.class).onGroupChanged().subscribe(this::show));
         $(DisposableHandler.class).add($(GroupHandler.class).onEventChanged().subscribe(g -> show(group)));
+        $(DisposableHandler.class).add($(GroupHandler.class).onPhoneChanged().subscribe(g -> show(group)));
     }
 
     private void show(Group group) {
@@ -74,10 +76,31 @@ public class GroupToolbarHandler extends PoolMember {
 
         this.group = group;
         Event event = $(GroupHandler.class).onEventChanged().getValue();
+        Phone phone = $(GroupHandler.class).onPhoneChanged().getValue();
 
         List<ToolbarItem> items = new ArrayList<>();
 
-        if (event != null) {
+        if (group.hasPhone()) {
+            items.add(new ToolbarItem(
+                    R.string.messages,
+                    R.drawable.ic_message_black_24dp,
+                    v -> {}
+            ));
+
+            items.add(new ToolbarItem(
+                    R.string.photos,
+                    R.drawable.ic_photo_black_24dp,
+                    v -> {}
+            ));
+
+            items.add(new ToolbarItem(
+                    R.string.groups,
+                    R.drawable.ic_person_black_24dp,
+                    v -> {}
+            ));
+        }
+
+        if (items.size() < 3 && event != null) {
             items.add(new ToolbarItem(
                     isShareActiveObservable.getValue() ? R.string.cancel : R.string.share,
                     isShareActiveObservable.getValue() ? R.drawable.ic_close_black_24dp : R.drawable.ic_share_black_24dp,
@@ -85,7 +108,7 @@ public class GroupToolbarHandler extends PoolMember {
             ));
         }
 
-        if (event != null || group.isPhysical()) {
+        if (items.size() < 3 && (event != null || group.isPhysical())) {
             items.add(new ToolbarItem(
                     R.string.show_on_map,
                     R.drawable.ic_my_location_black_24dp,
@@ -96,7 +119,7 @@ public class GroupToolbarHandler extends PoolMember {
             ));
         }
 
-        if (isEventCancelable(event)) {
+        if (items.size() < 3 && isEventCancelable(event)) {
             items.add(new ToolbarItem(
                     R.string.cancel,
                     R.drawable.ic_close_black_24dp,

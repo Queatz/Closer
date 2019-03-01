@@ -57,7 +57,7 @@
         android:layout_marginRight="@dimen/padDouble"
         android:layout_marginBottom="@dimen/pad"
         android:textSize="18sp"
-        android:textColor="@color/text"
+        android:textColor="@color/textInverse"
         android:textIsSelectable="true"
         tools:text="👊 fist bump" />
 

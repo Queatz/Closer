@@ -10,6 +10,7 @@ public class Group extends BaseObject {
     private boolean hub;
     private boolean physical;
     private String eventId;
+    private String phoneId;
     private Double latitude;
     private Double longitude;
     private String photo;
@@ -96,5 +97,18 @@ public class Group extends BaseObject {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getPhoneId() {
+        return phoneId;
+    }
+
+    public Group setPhoneId(String phoneId) {
+        this.phoneId = phoneId;
+        return this;
+    }
+
+    public boolean hasPhone() {
+        return phoneId != null;
     }
 }

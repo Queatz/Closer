@@ -55,6 +55,12 @@ public interface Backend {
     @GET("phone")
     Single<List<PhoneResult>> searchPhonesNear(@Query("geo") String latLng, @Query("query") String query);
 
+    @GET("phone/{phone}")
+    Single<PhoneResult> getPhone(@Query("phone") String phone);
+
+    @GET("phone/{phone}/group")
+    Single<GroupResult> getGroupForPhone(@Path("phone") String phoneId);
+
     // Verify Number
 
     @GET("verify")

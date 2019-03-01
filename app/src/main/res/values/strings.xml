@@ -228,4 +228,8 @@
     <string name="heart">♥</string>
     <string name="about_this_group">About this group</string>
     <string name="suggestion">Suggestion</string>
+    <string name="messages">Messages</string>
+    <string name="groups">Groups</string>
+    <string name="photos">Photos</string>
+    <string name="huaman_found">You found a human!</string>
 </resources>

@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import closer.vlllage.com.closer.api.models.EventResult;
+import closer.vlllage.com.closer.api.models.GroupResult;
 import closer.vlllage.com.closer.api.models.PhoneResult;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Event;
 import closer.vlllage.com.closer.store.models.Event_;
+import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.Group_;
 import closer.vlllage.com.closer.store.models.Phone;
 import closer.vlllage.com.closer.store.models.Phone_;
 import io.reactivex.Single;
@@ -43,4 +46,29 @@ public class DataHandler extends PoolMember {
                 .doOnSuccess(eventFromServer -> $(RefreshHandler.class).refresh(eventFromServer));
     }
 
+    public Single<Phone> getPhone(String phoneId) {
+        Phone phone = $(StoreHandler.class).getStore().box(Phone.class).query()
+                .equal(Phone_.id, phoneId)
+                .build().findFirst();
+
+        if (phone != null) {
+            return Single.just(phone);
+        }
+
+        return $(ApiHandler.class).getPhone(phoneId).map(PhoneResult::from)
+                .doOnSuccess(phoneFromServer -> $(RefreshHandler.class).refresh(phoneFromServer));
+    }
+
+    public Single<Group> getGroupForPhone(String phoneId) {
+        Group group = $(StoreHandler.class).getStore().box(Group.class).query()
+                .equal(Group_.phoneId, phoneId)
+                .build().findFirst();
+
+        if (group != null) {
+            return Single.just(group);
+        }
+
+        return $(ApiHandler.class).getGroupForPhone(phoneId).map(GroupResult::from)
+                .doOnSuccess(groupFromServer -> $(RefreshHandler.class).refresh(groupFromServer));
+    }
 }

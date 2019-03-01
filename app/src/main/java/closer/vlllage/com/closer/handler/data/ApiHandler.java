@@ -79,6 +79,10 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().searchPhonesNear($(LatLngStr.class).from(latLng), query));
     }
 
+    public Single<PhoneResult> getPhone(String phoneId) {
+        return uiThread(api.getBackend().getPhone(phoneId));
+    }
+
     public Single<SuccessResult> sendMessage(String phone, String message) {
         return uiThread(api.getBackend().sendMessage(phone, message));
     }
@@ -214,6 +218,10 @@ public class ApiHandler extends PoolMember {
 
     public Single<CreateResult> updateGroupMember(String groupId, boolean muted, boolean subscribed) {
         return uiThread(api.getBackend().updateGroupMember(groupId, muted, subscribed));
+    }
+
+    public Single<GroupResult> getGroupForPhone(String phoneId) {
+        return uiThread(api.getBackend().getGroupForPhone(phoneId));
     }
 
     public Single<SuccessResult> cancelInvite(String groupId, String groupInviteId) {
