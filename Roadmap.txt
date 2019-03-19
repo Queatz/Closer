@@ -1,4 +1,29 @@
 
+=============
+Profiles & Recent Notifications
+=============
+
+ [ ] Notifications tab next to Subscriptions
+    [ ] @mentions
+    [ ] DMs
+
+ [ ] Groups layout
+    [ ] phone/{id}/groups
+        [ ] Member, recently active in
+
+ [ ] Messages layout
+    [ ] phone/{id}/messagesWithThisPhone
+    [ ] Send direct message
+    [ ] Push notification muted if on top
+
+ [ ] Photos tab
+    [ ] phone/{id}/activity?photo=true
+
+
+
+=============
+PINNING
+=============
 
 
 

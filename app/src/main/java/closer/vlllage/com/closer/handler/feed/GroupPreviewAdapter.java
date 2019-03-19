@@ -37,6 +37,7 @@ import closer.vlllage.com.closer.handler.helpers.GroupColorHandler;
 import closer.vlllage.com.closer.handler.helpers.GroupScopeHandler;
 import closer.vlllage.com.closer.handler.helpers.ImageHandler;
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler;
+import closer.vlllage.com.closer.handler.helpers.PhotoLoader;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.SortHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
@@ -54,7 +55,6 @@ import closer.vlllage.com.closer.ui.CombinedRecyclerAdapter;
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout;
 import io.objectbox.android.AndroidScheduler;
 import io.objectbox.query.QueryBuilder;
-import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 import static closer.vlllage.com.closer.pool.Pool.tempPool;
 import static java.lang.Math.max;
@@ -206,10 +206,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
         if (group.getPhoto() != null) {
             holder.backgroundPhoto.setVisibility(View.VISIBLE);
             holder.backgroundPhoto.setImageDrawable(null);
-            $(ImageHandler.class).get().load(group.getPhoto() + "?s=32")
-                    .noPlaceholder()
-                    .transform(new BlurTransformation($(ActivityHandler.class).getActivity(), 2))
-                    .into(holder.backgroundPhoto);
+            $(PhotoLoader.class).softLoad(group.getPhoto(), holder.backgroundPhoto);
         } else {
             holder.backgroundPhoto.setVisibility(View.GONE);
         }

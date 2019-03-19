@@ -5,8 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
-
 import org.greenrobot.essentials.StringUtils;
 
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
-import closer.vlllage.com.closer.handler.helpers.ImageHandler;
+import closer.vlllage.com.closer.handler.helpers.PhotoLoader;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.handler.phone.NameHandler;
@@ -40,7 +38,6 @@ import io.objectbox.android.AndroidScheduler;
 import io.objectbox.reactive.DataSubscription;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
-import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 public class GroupHandler extends PoolMember {
 
@@ -211,18 +208,7 @@ public class GroupHandler extends PoolMember {
         if (group.getPhoto() != null) {
             backgroundPhoto.setVisibility(View.VISIBLE);
             backgroundPhoto.setImageDrawable(null);
-            $(ImageHandler.class).get().load(group.getPhoto() + "?s=32").transform(new BlurTransformation(backgroundPhoto.getContext(), 2)).into(backgroundPhoto, new Callback() {
-                @Override
-                public void onSuccess() {
-                    $(ImageHandler.class).get().load(group.getPhoto() + "?s=512").noPlaceholder().into(backgroundPhoto);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    e.printStackTrace();
-                    onSuccess();
-                }
-            });
+            $(PhotoLoader.class).softLoad(group.getPhoto(), backgroundPhoto);
         } else {
             backgroundPhoto.setVisibility(View.GONE);
         }

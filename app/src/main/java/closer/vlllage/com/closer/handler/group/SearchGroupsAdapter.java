@@ -22,6 +22,7 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
 import closer.vlllage.com.closer.handler.helpers.ImageHandler;
+import closer.vlllage.com.closer.handler.helpers.PhotoLoader;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
 import closer.vlllage.com.closer.handler.helpers.Val;
 import closer.vlllage.com.closer.pool.PoolMember;
@@ -34,7 +35,6 @@ import closer.vlllage.com.closer.store.models.Group;
 import closer.vlllage.com.closer.store.models.GroupAction;
 import closer.vlllage.com.closer.store.models.GroupAction_;
 import io.objectbox.android.AndroidScheduler;
-import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 import static closer.vlllage.com.closer.pool.Pool.tempPool;
 
@@ -150,10 +150,7 @@ public class SearchGroupsAdapter extends PoolRecyclerAdapter<SearchGroupsAdapter
             if (group.getPhoto() != null) {
                 holder.backgroundPhoto.setVisibility(View.VISIBLE);
                 holder.backgroundPhoto.setImageDrawable(null);
-                $(ImageHandler.class).get().load(group.getPhoto() + "?s=32")
-                        .noPlaceholder()
-                        .transform(new BlurTransformation($(ActivityHandler.class).getActivity(), 2))
-                        .into(holder.backgroundPhoto);
+                $(PhotoLoader.class).softLoad(group.getPhoto(), holder.backgroundPhoto);
             } else {
                 holder.backgroundPhoto.setVisibility(View.GONE);
             }

@@ -30,6 +30,7 @@
             android:id="@+id/backgroundPhoto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             android:visibility="gone"/>
 
@@ -98,7 +99,10 @@
             android:paddingRight="8dp"
             android:clipToPadding="false"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            tools:orientation="horizontal"
+            tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            tools:listitem="@layout/group_action_item"/>
 
     </closer.vlllage.com.closer.ui.ScrollStopper>
 
