@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventMessage"
         android:layout_marginTop="@dimen/padDouble"
-        android:background="@drawable/rounded_dim_8dp"
+        android:background="@drawable/rounded_dim_12dp"
         android:padding="@dimen/pad"
         android:orientation="vertical">
 

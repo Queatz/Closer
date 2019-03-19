@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.group;
 
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +19,9 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler;
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.helpers.ListEqual;
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler;
+import closer.vlllage.com.closer.handler.helpers.StringHandler;
 import closer.vlllage.com.closer.handler.phone.NameHandler;
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler;
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler;
@@ -205,8 +208,37 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
     }
 
     public void setGroupMessages(List<GroupMessage> groupMessages) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return GroupMessagesAdapter.this.groupMessages.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return groupMessages.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldPosition, int newPosition) {
+                return GroupMessagesAdapter.this.groupMessages.get(oldPosition).getObjectBoxId() ==
+                        groupMessages.get(newPosition).getObjectBoxId();
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldPosition, int newPosition) {
+                GroupMessage oldGroupMessage = GroupMessagesAdapter.this.groupMessages.get(oldPosition);
+                GroupMessage newGroupMessage = groupMessages.get(oldPosition);
+
+                return $(StringHandler.class).equals(oldGroupMessage.getId(), newGroupMessage.getId()) &&
+                        $(ListEqual.class).isEqual(oldGroupMessage.getReactions(), newGroupMessage.getReactions()) &&
+                        $(StringHandler.class).equals(oldGroupMessage.getAttachment(), newGroupMessage.getAttachment()) &&
+                        $(StringHandler.class).equals(oldGroupMessage.getFrom(), newGroupMessage.getFrom()) &&
+                        $(StringHandler.class).equals(oldGroupMessage.getText(), newGroupMessage.getText());
+            }
+        });
         this.groupMessages = groupMessages;
-        notifyDataSetChanged();
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public GroupMessagesAdapter setPinned(boolean pinned) {
