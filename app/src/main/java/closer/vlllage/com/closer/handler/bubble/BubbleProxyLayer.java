@@ -19,7 +19,7 @@ import static java.lang.Math.abs;
 
 public class BubbleProxyLayer {
 
-    private static final double MERGE_RESOLUTION = 4f;
+    private static final double MERGE_RESOLUTION = 1.5f;
 
     private final Set<MapBubble> mapBubbles = new HashSet<>();
     private BubbleMapLayer bubbleMapLayer;

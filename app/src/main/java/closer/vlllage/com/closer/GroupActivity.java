@@ -144,6 +144,10 @@ public class GroupActivity extends CircularRevealActivity {
             view.peopleInGroup.setSelected(true);
             view.peopleInGroup.setOnClickListener(view -> toggleContactsView());
 
+            if (!group.hasPhone()) {
+                view.profilePhoto.setVisibility(View.GONE);
+            }
+
             $(GroupContactsHandler.class).attach(group, view.contactsRecyclerView, view.searchContacts, view.showPhoneContactsButton);
 
             view.showPhoneContactsButton.setOnClickListener(v -> {
@@ -183,6 +187,8 @@ public class GroupActivity extends CircularRevealActivity {
                     $(PhotoActivityTransitionHandler.class).show(view.profilePhoto, phone.getPhoto());
                 });
 
+            } else {
+                view.profilePhoto.setVisibility(View.GONE);
             }
         }, connectionError));
 
