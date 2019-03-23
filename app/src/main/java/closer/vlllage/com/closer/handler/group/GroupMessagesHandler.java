@@ -40,18 +40,23 @@ public class GroupMessagesHandler extends PoolMember {
     private ImageButton sendMoreButton;
     private View sendMoreLayout;
     private DataSubscription groupMessagesSubscription;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager layoutManager;
 
     public void attach(RecyclerView recyclerView, EditText replyMessage, ImageButton sendButton, ImageButton sendMoreButton, View sendMoreLayout) {
         this.replyMessage = replyMessage;
         this.sendButton = sendButton;
         this.sendMoreButton = sendMoreButton;
         this.sendMoreLayout = sendMoreLayout;
+        this.recyclerView = recyclerView;
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(
+        layoutManager = new LinearLayoutManager(
                 $(ActivityHandler.class).getActivity(),
                 LinearLayoutManager.VERTICAL,
                 true
-        ));
+        );
+
+        recyclerView.setLayoutManager(layoutManager);
 
         groupMessagesAdapter = new GroupMessagesAdapter(this);
         recyclerView.setAdapter(groupMessagesAdapter);
@@ -212,6 +217,9 @@ public class GroupMessagesHandler extends PoolMember {
 
     private void setGroupMessages(List<GroupMessage> groupMessages) {
         groupMessagesAdapter.setGroupMessages(groupMessages);
+        if (layoutManager.findFirstVisibleItemPosition() < 3) {
+            recyclerView.post(() -> recyclerView.smoothScrollToPosition(0));
+        }
     }
 
     private boolean send(String text) {

@@ -222,13 +222,17 @@ public class GroupMessagesAdapter extends PoolRecyclerAdapter<GroupMessagesAdapt
             @Override
             public boolean areItemsTheSame(int oldPosition, int newPosition) {
                 return GroupMessagesAdapter.this.groupMessages.get(oldPosition).getObjectBoxId() ==
-                        groupMessages.get(newPosition).getObjectBoxId();
+                        groupMessages.get(newPosition).getObjectBoxId() ||
+                        $(StringHandler.class).equals(
+                                GroupMessagesAdapter.this.groupMessages.get(oldPosition).getId(),
+                                groupMessages.get(newPosition).getId()
+                        );
             }
 
             @Override
             public boolean areContentsTheSame(int oldPosition, int newPosition) {
                 GroupMessage oldGroupMessage = GroupMessagesAdapter.this.groupMessages.get(oldPosition);
-                GroupMessage newGroupMessage = groupMessages.get(oldPosition);
+                GroupMessage newGroupMessage = groupMessages.get(newPosition);
 
                 return $(StringHandler.class).equals(oldGroupMessage.getId(), newGroupMessage.getId()) &&
                         $(ListEqual.class).isEqual(oldGroupMessage.getReactions(), newGroupMessage.getReactions()) &&
