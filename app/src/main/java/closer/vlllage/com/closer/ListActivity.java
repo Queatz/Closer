@@ -52,7 +52,7 @@ public abstract class ListActivity extends PoolActivity {
                 TranslateAnimation animation = new TranslateAnimation(
                         Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, yPercent, Animation.RELATIVE_TO_PARENT, 0
                 );
-                animation.setDuration(500);
+                animation.setDuration(225);
                 animation.setInterpolator(new DecelerateInterpolator());
                 recyclerView.startAnimation(animation);
             }
@@ -72,7 +72,7 @@ public abstract class ListActivity extends PoolActivity {
         finishAnimator = new TranslateAnimation(
                 Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 1
         );;
-        finishAnimator.setDuration(225);
+        finishAnimator.setDuration(195);
         finishAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         finishAnimator.setAnimationListener(new Animation.AnimationListener() {
             @Override

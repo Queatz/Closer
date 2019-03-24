@@ -200,7 +200,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
             $(KeyboardHandler.class).showKeyboard(view, false);
         });
 
-        holder.itemView.setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
+        holder.backgroundColor.setBackgroundResource($(GroupColorHandler.class).getColorBackground(group));
 
         $(ImageHandler.class).get().cancelRequest(holder.backgroundPhoto);
         if (group.getPhoto() != null) {
@@ -291,6 +291,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
         ImageButton scopeIndicatorButton;
         MaxSizeFrameLayout mentionSuggestionsLayout;
         RecyclerView mentionSuggestionRecyclerView;
+        View backgroundColor;
 
         TextWatcher textWatcher;
 
@@ -305,6 +306,7 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
             scopeIndicatorButton = itemView.findViewById(R.id.scopeIndicatorButton);
             mentionSuggestionsLayout = itemView.findViewById(R.id.mentionSuggestionsLayout);
             mentionSuggestionRecyclerView = itemView.findViewById(R.id.mentionSuggestionRecyclerView);
+            backgroundColor = itemView.findViewById(R.id.backgroundColor);
         }
     }
 }

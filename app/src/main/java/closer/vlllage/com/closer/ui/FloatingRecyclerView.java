@@ -41,12 +41,12 @@ public class FloatingRecyclerView extends RecyclerView {
                 if (((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition() > 0) {
                     if (!isSolidBackground) {
                         isSolidBackground = true;
-                        animateBackground(recyclerView, R.color.dark);
+                        animateBackground(recyclerView, R.color.offwhite);
                     }
                 } else {
                     if (isSolidBackground) {
                         isSolidBackground = false;
-                        animateBackground(recyclerView, R.color.dark_transparent);
+                        animateBackground(recyclerView, R.color.offwhite_transparent);
                     }
                 }
             }
@@ -77,8 +77,6 @@ public class FloatingRecyclerView extends RecyclerView {
     }
 
     private void animateBackground(RecyclerView recyclerView, @ColorRes int color) {
-//        if (true) return;
-
         if (colorAnimation != null) {
             colorAnimation.end();
         }
