@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/offwhite_bottom_only">
+    android:background="@drawable/map_ambient_bottom_only"
+    android:clickable="true">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

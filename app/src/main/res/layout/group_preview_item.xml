@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/mapAmbient">
+    android:background="@color/mapAmbient"
+    android:clickable="true">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
