@@ -29,6 +29,6 @@ public abstract class HeaderAdapter<T extends RecyclerView.ViewHolder> extends P
 
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        header.attach(recyclerView, $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight));
+        header.attach(recyclerView, $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeekHeight));
     }
 }

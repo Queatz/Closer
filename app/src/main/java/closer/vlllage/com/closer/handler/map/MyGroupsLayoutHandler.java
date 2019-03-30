@@ -109,7 +109,7 @@ public class MyGroupsLayoutHandler extends PoolMember {
                 containerView.getPaddingLeft(),
                 containerView.getPaddingTop(),
                 containerView.getPaddingRight(),
-                showBottomPadding ? $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight) : 0
+                showBottomPadding ? $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeekHeight) : 0
         );
     }
 

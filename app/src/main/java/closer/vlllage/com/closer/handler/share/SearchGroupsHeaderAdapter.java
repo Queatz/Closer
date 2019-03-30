@@ -79,7 +79,7 @@ public class SearchGroupsHeaderAdapter extends SearchGroupsAdapter {
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        header.attach(recyclerView, $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeakHeight) * 2);
+        header.attach(recyclerView, $(ResourcesHandler.class).getResources().getDimensionPixelSize(R.dimen.feedPeekHeight) * 2);
     }
 
     @Override
