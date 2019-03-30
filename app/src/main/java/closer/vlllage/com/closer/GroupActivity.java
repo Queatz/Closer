@@ -200,7 +200,7 @@ public class GroupActivity extends CircularRevealActivity {
 
         $(DisposableHandler.class).add($(GroupToolbarHandler.class).getIsShareActiveObservable()
                 .subscribe(isShareActive -> {
-                    showMessagesView(!isShareActive);
+                    showMessagesView(!isShareActive, true);
 
                     QueryBuilder<Group> queryBuilder = $(StoreHandler.class).getStore().box(Group.class).query();
                     List<Group> groups = queryBuilder.sort($(SortHandler.class).sortGroups()).notEqual(Group_.physical, true).build().find();
@@ -265,11 +265,11 @@ public class GroupActivity extends CircularRevealActivity {
 
     private void toggleContactsView() {
         $(GroupToolbarHandler.class).getIsShareActiveObservable().onNext(false);
-        showMessagesView(view.replyMessage.getVisibility() == View.GONE);
+        showMessagesView(view.replyMessage.getVisibility() == View.GONE, false);
         view.shareWithRecyclerView.setVisibility(View.GONE);
     }
 
-    private void showMessagesView(boolean show) {
+    private void showMessagesView(boolean show, boolean isShowingShare) {
         $(GroupMessagesHandler.class).showSendMoreOptions(false);
 
         if (show) {
@@ -285,23 +285,26 @@ public class GroupActivity extends CircularRevealActivity {
 
             view.showPhoneContactsButton.setVisibility(View.GONE);
         } else {
-            view.shareWithRecyclerView.setVisibility(View.VISIBLE);
             view.messagesLayoutGroup.setVisibility(View.GONE);
-            view.membersLayoutGroup.setVisibility(View.VISIBLE);
-
             view.sendMoreButton.setVisibility(View.GONE);
 
-            $(GroupActionHandler.class).cancelPendingAnimation();
+            if (isShowingShare) {
+                view.shareWithRecyclerView.setVisibility(View.VISIBLE);
+            } else {
+                view.membersLayoutGroup.setVisibility(View.VISIBLE);
 
-            if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
-                view.showPhoneContactsButton.setVisibility(View.VISIBLE);
+                $(GroupActionHandler.class).cancelPendingAnimation();
+
+                if(!$(PermissionHandler.class).has(READ_CONTACTS)) {
+                    view.showPhoneContactsButton.setVisibility(View.VISIBLE);
+                }
+
+                if($(PermissionHandler.class).has(READ_CONTACTS)) {
+                    $(GroupContactsHandler.class).showContactsForQuery();
+                }
+
+                view.searchContacts.setText("");
             }
-
-            if($(PermissionHandler.class).has(READ_CONTACTS)) {
-                $(GroupContactsHandler.class).showContactsForQuery();
-            }
-
-            view.searchContacts.setText("");
         }
     }
 }
