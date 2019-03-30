@@ -10,6 +10,7 @@ import java.util.List;
 import closer.vlllage.com.closer.handler.data.RefreshHandler;
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler;
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler;
+import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
 import closer.vlllage.com.closer.store.models.Group;
@@ -39,6 +40,9 @@ public class PinnedMessagesHandler extends PoolMember {
         groupMessagesAdapter = new GroupMessagesAdapter(this);
         groupMessagesAdapter.setPinned(true);
         pinnedMessagesRecyclerView.setAdapter(groupMessagesAdapter);
+        groupMessagesAdapter.setOnSuggestionClickListener(suggestion -> $(MapActivityHandler.class).showSuggestionOnMap(suggestion));
+        groupMessagesAdapter.setOnEventClickListener(event -> $(GroupActivityTransitionHandler.class).showGroupForEvent(null, event));
+        groupMessagesAdapter.setOnGroupClickListener(group1 -> $(GroupActivityTransitionHandler.class).showGroupMessages(null, group1.getId()));
     }
 
     public void show(Group group) {
