@@ -1,7 +1,10 @@
-package closer.vlllage.com.closer.store.models;
+package closer.vlllage.com.closer.handler.group;
 
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
+import closer.vlllage.com.closer.store.models.Group;
+import closer.vlllage.com.closer.store.models.GroupDraft;
+import closer.vlllage.com.closer.store.models.GroupDraft_;
 
 public class GroupDraftHandler extends PoolMember {
     public void saveDraft(Group group, String message) {

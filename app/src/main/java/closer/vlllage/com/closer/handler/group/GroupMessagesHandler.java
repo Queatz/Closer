@@ -24,7 +24,6 @@ import closer.vlllage.com.closer.handler.map.MapActivityHandler;
 import closer.vlllage.com.closer.handler.media.MediaHandler;
 import closer.vlllage.com.closer.pool.PoolMember;
 import closer.vlllage.com.closer.store.StoreHandler;
-import closer.vlllage.com.closer.store.models.GroupDraftHandler;
 import closer.vlllage.com.closer.store.models.GroupMessage;
 import closer.vlllage.com.closer.store.models.GroupMessage_;
 import closer.vlllage.com.closer.store.models.Phone;
