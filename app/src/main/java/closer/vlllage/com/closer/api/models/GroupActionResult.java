@@ -1,10 +1,8 @@
 package closer.vlllage.com.closer.api.models;
 
-import com.google.gson.annotations.Expose;
-
 import closer.vlllage.com.closer.store.models.GroupAction;
 
-public class GroupActionResult extends ModelResult {@Expose
+public class GroupActionResult extends ModelResult {
     public String group;
     public String name;
     public String intent;
