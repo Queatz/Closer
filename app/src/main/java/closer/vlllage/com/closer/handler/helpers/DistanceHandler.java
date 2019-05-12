@@ -14,7 +14,7 @@ public class DistanceHandler extends PoolMember {
             return false;
         }
 
-        float results[] = new float[1];
+        float[] results = new float[1];
         Location location = $(LocationHandler.class).getLastKnownLocation();
 
         if (location == null) {

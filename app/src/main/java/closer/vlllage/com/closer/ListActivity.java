@@ -71,7 +71,7 @@ public abstract class ListActivity extends PoolActivity {
 
         finishAnimator = new TranslateAnimation(
                 Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 1
-        );;
+        );
         finishAnimator.setDuration(195);
         finishAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         finishAnimator.setAnimationListener(new Animation.AnimationListener() {

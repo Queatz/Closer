@@ -14,7 +14,7 @@ public class PlaceholderHandler extends PoolMember {
     }
 
     public BitmapDrawable drawableFromBase64(Resources resources, String image) {
-        byte bytes[] = Base64.decode(image, Base64.DEFAULT);
+        byte[] bytes = Base64.decode(image, Base64.DEFAULT);
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         return new BitmapDrawable(resources, bitmap);

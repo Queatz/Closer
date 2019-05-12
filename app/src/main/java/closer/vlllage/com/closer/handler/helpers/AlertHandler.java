@@ -109,8 +109,4 @@ public class AlertHandler extends PoolMember {
 
         alertDialog.show();
     }
-
-    public interface OnSubmitCallback {
-        void onSubmit(String input);
-    }
 }

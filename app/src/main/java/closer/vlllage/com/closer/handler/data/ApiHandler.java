@@ -124,10 +124,6 @@ public class ApiHandler extends PoolMember {
         return uiThread(api.getBackend().groupMessageReactions(messageId));
     }
 
-    public Single<CreateResult> sendAreaMessage(LatLng latLng, String text, String attachment) {
-        return uiThread(api.getBackend().sendAreaMessage($(LatLngStr.class).from(latLng), text, attachment));
-    }
-
     public Single<CreateResult> createGroup(String groupName) {
         return uiThread(api.getBackend().createGroup(groupName));
     }

@@ -10,8 +10,8 @@ public class Val extends PoolMember {
     public String rndId() {
         Random random = new Random();
         return Long.toString(random.nextLong()) +
-                Long.toString(random.nextLong()) +
-                Long.toString(random.nextLong());
+                random.nextLong() +
+                random.nextLong();
     }
 
     public String of(String string) {

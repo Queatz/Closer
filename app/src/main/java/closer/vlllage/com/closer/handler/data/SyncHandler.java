@@ -196,21 +196,11 @@ public class SyncHandler extends PoolMember {
         groupMessage.setLocalOnly(true);
         $(StoreHandler.class).getStore().box(GroupMessage.class).put(groupMessage);
 
-        Single<CreateResult> apiCall;
-
-        if (groupMessage.getLatitude() != null && groupMessage.getLongitude() != null) {
-            apiCall = $(ApiHandler.class).sendAreaMessage(
-                    new LatLng(groupMessage.getLatitude(), groupMessage.getLongitude()),
-                    groupMessage.getText(),
-                    $(HttpEncode.class).encode(groupMessage.getAttachment())
-            );
-        } else {
-            apiCall = $(ApiHandler.class).sendGroupMessage(
-                    groupMessage.getTo(),
-                    groupMessage.getText(),
-                    $(HttpEncode.class).encode(groupMessage.getAttachment())
-            );
-        }
+        Single<CreateResult> apiCall = $(ApiHandler.class).sendGroupMessage(
+                groupMessage.getTo(),
+                groupMessage.getText(),
+                $(HttpEncode.class).encode(groupMessage.getAttachment())
+        );
 
         $(ApplicationHandler.class).getApp().$(DisposableHandler.class).add(apiCall.subscribe(createResult -> {
             if (createResult.success) {

@@ -48,11 +48,8 @@ public class SoftScrollStopper extends FrameLayout {
                     if (abs(deltaX) > abs(deltaY)) {
                         if (deltaX > 0 && getChildAt(0).canScrollHorizontally(-1)) {
                             isChildScrolling = true;
-                        } else if (deltaX < 0 && getChildAt(0).canScrollHorizontally(1)) {
-                            isChildScrolling = true;
-                        } else {
-                            isChildScrolling = false;
-                        }
+                        } else
+                            isChildScrolling = deltaX < 0 && getChildAt(0).canScrollHorizontally(1);
                     } else {
                         isChildScrolling = false;
                     }

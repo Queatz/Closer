@@ -261,11 +261,8 @@ public class GroupPreviewAdapter extends HeaderAdapter<GroupPreviewAdapter.ViewH
             public boolean areContentsTheSame(int oldPosition, int newPosition) {
                 if ((newPosition < HEADER_COUNT) != (oldPosition < HEADER_COUNT)) {
                     return false;
-                } else if (newPosition < HEADER_COUNT) {
-                    return true;
-                }
+                } else return newPosition < HEADER_COUNT;
 
-                return false;
             }
         });
         this.groups.clear();
