@@ -20,9 +20,7 @@ class PermissionHandler : PoolMember() {
             return
         }
 
-        for (permission in permissions) {
-            permissionChanges.onNext(permission)
-        }
+        permissions.forEach { permissionChanges.onNext(it) }
     }
 
     fun check(vararg permissions: String): LocationCheck {
@@ -105,7 +103,7 @@ class PermissionHandler : PoolMember() {
 
         private fun subscribe() {
             disposable = permissionChanges.filter { permission ->
-                for (p in permissions!!) {
+                for (p in permissions) {
                     if (p == permission) {
                         return@filter true
                     }
@@ -116,7 +114,7 @@ class PermissionHandler : PoolMember() {
                     { permission ->
                         if (has(permission)) {
                             permissionsGranted.add(permission)
-                            if (permissionsGranted.size == permissions!!.size) {
+                            if (permissionsGranted.size == permissions.size) {
                                 callback!!.invoke(true)
                                 `$`(DisposableHandler::class.java).dispose(disposable!!)
                             }
@@ -131,7 +129,6 @@ class PermissionHandler : PoolMember() {
     }
 
     companion object {
-
-        private val REQUEST_CODE_PERMISSION = 1009293
+        private const val REQUEST_CODE_PERMISSION = 1009293
     }
 }

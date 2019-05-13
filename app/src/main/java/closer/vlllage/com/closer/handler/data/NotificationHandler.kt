@@ -210,12 +210,11 @@ class NotificationHandler : PoolMember() {
     }
 
     companion object {
-
-        val KEY_TEXT_REPLY = "key_text_reply"
-        val NOTIFICATION_ID = 0
-        private val REQUEST_CODE_NOTIFICATION = 101
-        private val REQUEST_CODE_NOTIFICATION_MUTE = 102
-        val EXTRA_NOTIFICATION = "notification"
-        val EXTRA_MUTE = "mute"
+        const val KEY_TEXT_REPLY = "key_text_reply"
+        const val NOTIFICATION_ID = 0
+        private const val REQUEST_CODE_NOTIFICATION = 101
+        private const val REQUEST_CODE_NOTIFICATION_MUTE = 102
+        const val EXTRA_NOTIFICATION = "notification"
+        const val EXTRA_MUTE = "mute"
     }
 }

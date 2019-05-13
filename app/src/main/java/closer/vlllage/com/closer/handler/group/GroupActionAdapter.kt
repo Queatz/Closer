@@ -24,7 +24,8 @@ import java.util.*
 class GroupActionAdapter(poolMember: PoolMember,
                          private val layout: Layout,
                          private val onGroupActionClickListener: OnGroupActionClickListener?,
-                         private val onGroupActionLongClickListener: OnGroupActionLongClickListener?) : PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder>(poolMember) {
+                         private val onGroupActionLongClickListener: OnGroupActionLongClickListener?)
+    : PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder>(poolMember) {
 
     private val groupActions = ArrayList<GroupAction>()
 
@@ -50,13 +51,13 @@ class GroupActionAdapter(poolMember: PoolMember,
             else -> target = holder.actionName
         }
 
-        target.setOnClickListener { view ->
-            onGroupActionClickListener?.onGroupActionClick(groupAction)
+        target.setOnClickListener {
+            onGroupActionClickListener?.invoke(groupAction)
         }
 
-        target.setOnLongClickListener { view ->
+        target.setOnLongClickListener {
             if (onGroupActionLongClickListener != null) {
-                onGroupActionLongClickListener.onGroupActionLongClick(groupAction)
+                onGroupActionLongClickListener.invoke(groupAction)
                 return@setOnLongClickListener true
             }
 
@@ -68,7 +69,8 @@ class GroupActionAdapter(poolMember: PoolMember,
                     .equal(Group_.id, groupActions[position].group!!)
                     .build()
                     .findFirst()
-            holder.groupName.text = if (group == null) "" else group.name
+
+            holder.groupName.text = group?.name ?: ""
 
             when (getRandom(groupAction).nextInt(4)) {
                 1 -> holder.itemView.setBackgroundResource(R.drawable.clickable_blue_8dp)
@@ -92,26 +94,19 @@ class GroupActionAdapter(poolMember: PoolMember,
         }
     }
 
-    override fun getItemCount(): Int {
-        return groupActions.size
-    }
+    override fun getItemCount() = groupActions.size
 
     fun setGroupActions(groupActions: List<GroupAction>) {
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int {
-                return this@GroupActionAdapter.groupActions.size
-            }
-
-            override fun getNewListSize(): Int {
-                return groupActions.size
-            }
+            override fun getOldListSize() = this@GroupActionAdapter.groupActions.size
+            override fun getNewListSize() = groupActions.size
 
             override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                return this@GroupActionAdapter.groupActions[oldPosition].id === groupActions[newPosition].id
+                return this@GroupActionAdapter.groupActions[oldPosition].id == groupActions[newPosition].id
             }
 
             override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                return this@GroupActionAdapter.groupActions[oldPosition].name === groupActions[newPosition].name && this@GroupActionAdapter.groupActions[oldPosition].photo === groupActions[newPosition].photo
+                return this@GroupActionAdapter.groupActions[oldPosition].name == groupActions[newPosition].name && this@GroupActionAdapter.groupActions[oldPosition].photo == groupActions[newPosition].photo
             }
         }, true)
         this.groupActions.clear()
@@ -120,12 +115,10 @@ class GroupActionAdapter(poolMember: PoolMember,
     }
 
     @DrawableRes
-    private fun getRandomBubbleBackgroundResource(groupAction: GroupAction): Int {
-        when (getRandom(groupAction).nextInt(3)) {
-            0 -> return R.drawable.bkg_bubbles
-            1 -> return R.drawable.bkg_bubbles_2
-            else -> return R.drawable.bkg_bubbles_3
-        }
+    private fun getRandomBubbleBackgroundResource(groupAction: GroupAction) = when (getRandom(groupAction).nextInt(3)) {
+        0 -> R.drawable.bkg_bubbles
+        1 -> R.drawable.bkg_bubbles_2
+        else -> R.drawable.bkg_bubbles_3
     }
 
     private fun getRandom(groupAction: GroupAction): Random {
@@ -137,23 +130,15 @@ class GroupActionAdapter(poolMember: PoolMember,
 
     inner class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var photo: ImageView
-        var actionName: TextView
-        var groupName: TextView
+        var photo: ImageView = itemView.findViewById(R.id.photo)
+        var actionName: TextView = itemView.findViewById(R.id.actionName)
+        var groupName: TextView = itemView.findViewById(R.id.groupName)
 
         init {
             itemView.clipToOutline = true
-            actionName = itemView.findViewById(R.id.actionName)
-            groupName = itemView.findViewById(R.id.groupName)
-            photo = itemView.findViewById(R.id.photo)
         }
     }
-
-    interface OnGroupActionClickListener {
-        fun onGroupActionClick(groupAction: GroupAction)
-    }
-
-    interface OnGroupActionLongClickListener {
-        fun onGroupActionLongClick(groupAction: GroupAction)
-    }
 }
+
+typealias OnGroupActionClickListener = (groupAction: GroupAction) -> Unit
+typealias OnGroupActionLongClickListener = (groupAction: GroupAction) -> Unit

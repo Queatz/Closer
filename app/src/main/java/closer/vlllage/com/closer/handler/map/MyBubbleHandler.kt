@@ -18,8 +18,7 @@ import com.google.android.gms.maps.model.LatLng
 
 class MyBubbleHandler : PoolMember() {
 
-    var myBubble: MapBubble? = null
-        private set
+    private var myBubble: MapBubble? = null
 
     fun updateFrom(accountChange: AccountHandler.AccountChange) {
         when (accountChange.prop) {

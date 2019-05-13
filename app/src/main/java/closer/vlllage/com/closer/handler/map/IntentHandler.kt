@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 
 class IntentHandler : PoolMember() {
 
-    fun onNewIntent(intent: Intent, onRequestMapOnScreenListener: MapViewHandler.OnRequestMapOnScreenListener) {
+    fun onNewIntent(intent: Intent, onRequestMapOnScreenListener: (() -> Unit)?) {
         if (Intent.ACTION_VIEW == intent.action) {
             if (intent.hasExtra(EXTRA_STATUS)) {
                 val latLng = intent.getFloatArrayExtra(EXTRA_LAT_LNG)
@@ -28,12 +28,12 @@ class IntentHandler : PoolMember() {
                 ).apply {
                     phone = intent.getStringExtra(EXTRA_PHONE)
                 })
-                onRequestMapOnScreenListener.onRequestMapOnScreen()
+                onRequestMapOnScreenListener?.invoke()
             } else if (intent.hasExtra(EXTRA_EVENT_ID) || intent.hasExtra(EXTRA_GROUP_ID)) {
                 val latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG)
                 val latLng = LatLng(latLngFloats[0].toDouble(), latLngFloats[1].toDouble())
                 `$`(MapHandler::class.java).centerMap(latLng)
-                onRequestMapOnScreenListener.onRequestMapOnScreen()
+                onRequestMapOnScreenListener?.invoke()
             } else if (intent.hasExtra(EXTRA_SUGGESTION)) {
                 val latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG)
                 val latLng = LatLng(latLngFloats[0].toDouble(), latLngFloats[1].toDouble())
@@ -44,16 +44,16 @@ class IntentHandler : PoolMember() {
                 suggestion.name = intent.getStringExtra(EXTRA_SUGGESTION)
 
                 `$`(SuggestionHandler::class.java).clearSuggestions()
-                `$`(BubbleHandler::class.java).remove({ mapBubble -> BubbleType.MENU == mapBubble.type })
+                `$`(BubbleHandler::class.java).remove { mapBubble -> BubbleType.MENU == mapBubble.type }
 
                 `$`(BubbleHandler::class.java).add(`$`(SuggestionHandler::class.java).suggestionBubbleFrom(suggestion))
                 `$`(MapHandler::class.java).centerMap(latLng)
-                onRequestMapOnScreenListener.onRequestMapOnScreen()
+                onRequestMapOnScreenListener?.invoke()
             } else if (intent.hasExtra(EXTRA_LAT_LNG)) {
                 val latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG)
                 val latLng = LatLng(latLngFloats[0].toDouble(), latLngFloats[1].toDouble())
                 `$`(MapHandler::class.java).centerMap(latLng)
-                onRequestMapOnScreenListener.onRequestMapOnScreen()
+                onRequestMapOnScreenListener?.invoke()
             }
         }
     }

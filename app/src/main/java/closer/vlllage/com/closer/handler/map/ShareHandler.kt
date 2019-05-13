@@ -1,6 +1,5 @@
 package closer.vlllage.com.closer.handler.map
 
-import android.view.View
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.*
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
@@ -16,7 +15,7 @@ import java.util.*
 
 class ShareHandler : PoolMember() {
 
-    fun shareTo(latLng: LatLng, onGroupSelectedListener: OnGroupSelectedListener) {
+    fun shareTo(latLng: LatLng, onGroupSelectedListener: (Group) -> Unit) {
         `$`(StoreHandler::class.java).store.box(Group::class.java).query()
                 .notEqual(Group_.physical, true)
                 .sort(`$`(SortHandler::class.java).sortGroups())
@@ -31,22 +30,14 @@ class ShareHandler : PoolMember() {
                     menuBubble.isOnTop = true
                     `$`(TimerHandler::class.java).postDisposable(Runnable {
                         `$`(BubbleHandler::class.java).add(menuBubble)
-                        menuBubble.onViewReadyListener = object : MapBubble.OnViewReadyListener {
-                            override fun onViewReady(view: View) {
-                                `$`(MapBubbleMenuView::class.java).setMenuTitle(menuBubble, `$`(ResourcesHandler::class.java).resources.getString(R.string.share_with))
-                                `$`(MapBubbleMenuView::class.java).getMenuAdapter(menuBubble).setMenuItems(groupNames)
-                                menuBubble.onItemClickListener = object : MapBubble.OnItemClickListener {
-                                    override fun onItemClick(position: Int) {
-                                        onGroupSelectedListener.onGroupSelected(groups[position])
-                                    }
-                                }
+                        menuBubble.onViewReadyListener = {
+                            `$`(MapBubbleMenuView::class.java).setMenuTitle(menuBubble, `$`(ResourcesHandler::class.java).resources.getString(R.string.share_with))
+                            `$`(MapBubbleMenuView::class.java).getMenuAdapter(menuBubble).setMenuItems(groupNames)
+                            menuBubble.onItemClickListener = { position ->
+                                    onGroupSelectedListener.invoke(groups[position])
                             }
                         }
                     }, 225)
                 }
-    }
-
-    interface OnGroupSelectedListener {
-        fun onGroupSelected(group: Group)
     }
 }

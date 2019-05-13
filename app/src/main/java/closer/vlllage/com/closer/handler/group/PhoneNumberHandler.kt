@@ -8,28 +8,26 @@ import java.util.*
 class PhoneNumberHandler : PoolMember() {
 
     fun isValidNumber(phoneNumber: String): Boolean {
-        try {
-            return phoneNumberUtil.isValidNumber(phoneNumberUtil.parse(phoneNumber, Locale.US.country))
+        return try {
+            phoneNumberUtil.isValidNumber(phoneNumberUtil.parse(phoneNumber, Locale.US.country))
         } catch (e: NumberParseException) {
             e.printStackTrace()
-            return false
+            false
         }
 
     }
 
     fun normalize(phoneNumber: String): String? {
-        try {
+        return try {
             val number = phoneNumberUtil.parse(phoneNumber, Locale.US.country)
-            return phoneNumberUtil.format(number, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+            phoneNumberUtil.format(number, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
         } catch (e: NumberParseException) {
             e.printStackTrace()
+            null
         }
-
-        return null
     }
 
     companion object {
-
         private val phoneNumberUtil = PhoneNumberUtil.getInstance()
     }
 }

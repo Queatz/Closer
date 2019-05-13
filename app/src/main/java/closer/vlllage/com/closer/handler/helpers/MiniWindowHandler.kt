@@ -1,10 +1,10 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.Transformation
+import androidx.constraintlayout.widget.ConstraintLayout
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED
@@ -113,12 +113,9 @@ class MiniWindowHandler : PoolMember() {
         }
     }
 
-    private fun mix(a: Float, b: Float, v: Float): Float {
-        return a * (1 - v) + b * v
-    }
+    private fun mix(a: Float, b: Float, v: Float) = a * (1 - v) + b * v
 
     companion object {
-
         private const val CLOSE_TUG_SLOP = 32
     }
 }

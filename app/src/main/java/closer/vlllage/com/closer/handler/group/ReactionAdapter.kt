@@ -45,11 +45,7 @@ class ReactionAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<ReactionAdap
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        internal var reaction: TextView = itemView as TextView
 
-        internal var reaction: TextView
-
-        init {
-            reaction = itemView as TextView
-        }
     }
 }

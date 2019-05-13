@@ -85,7 +85,6 @@ class MaxSizeFrameLayout : FrameLayout {
     }
 
     companion object {
-
-        val UNSPECIFIED = -1
+        const val UNSPECIFIED = -1
     }
 }

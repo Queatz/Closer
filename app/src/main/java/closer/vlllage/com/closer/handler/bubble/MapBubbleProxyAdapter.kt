@@ -16,16 +16,18 @@ import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
-import java.util.*
 
-class MapBubbleProxyAdapter(poolMember: PoolMember, private val proxyMapBubble: MapBubble, private val onClickListener: (MapBubble) -> Unit) : PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder>(poolMember) {
-    private val items = ArrayList<MapBubble>()
+class MapBubbleProxyAdapter(poolMember: PoolMember,
+                            private val proxyMapBubble: MapBubble,
+                            private val onClickListener: (MapBubble) -> Unit)
+    : PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder>(poolMember) {
 
-    fun setItems(items: List<MapBubble>): MapBubbleProxyAdapter {
-        this.items.clear()
-        this.items.addAll(items)
-        return this
-    }
+    var items = mutableListOf<MapBubble>()
+        set(value) {
+            field.clear()
+            field.addAll(value)
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProxyMapBubbleViewHolder {
         return ProxyMapBubbleViewHolder(LayoutInflater.from(parent.context)
@@ -112,22 +114,12 @@ class MapBubbleProxyAdapter(poolMember: PoolMember, private val proxyMapBubble: 
         }
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount() = items.size
 
     inner class ProxyMapBubbleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var click: View
-        var photo: ImageView
-        var name: TextView
-        var info: TextView
-
-        init {
-            click = itemView.findViewById(R.id.click)
-            photo = itemView.findViewById(R.id.photo)
-            name = itemView.findViewById(R.id.name)
-            info = itemView.findViewById(R.id.info)
-        }
+        var click: View = itemView.findViewById(R.id.click)
+        var photo: ImageView = itemView.findViewById(R.id.photo)
+        var name: TextView = itemView.findViewById(R.id.name)
+        var info: TextView = itemView.findViewById(R.id.info)
     }
 }

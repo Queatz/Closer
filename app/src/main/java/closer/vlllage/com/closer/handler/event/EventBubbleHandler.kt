@@ -28,6 +28,7 @@ class EventBubbleHandler : PoolMember() {
                     }
 
                     visibleEvents.clear()
+
                     for (event in events) {
                         if (event.id == null || event.groupId == null) {
                             continue

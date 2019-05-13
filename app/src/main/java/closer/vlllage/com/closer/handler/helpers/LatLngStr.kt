@@ -21,7 +21,7 @@ class LatLngStr : PoolMember() {
 
     }
 
-    fun to(latitude: Double?, longitude: Double?): LatLng {
-        return LatLng(latitude!!, longitude!!)
+    fun to(latitude: Double, longitude: Double): LatLng {
+        return LatLng(latitude, longitude)
     }
 }

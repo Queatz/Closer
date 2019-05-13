@@ -11,11 +11,15 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
-import java.util.*
 
 internal class ToolbarAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(poolMember) {
 
-    private val items = ArrayList<GroupToolbarHandler.ToolbarItem>()
+    var items = mutableListOf<GroupToolbarHandler.ToolbarItem>()
+        set(value) {
+            field.clear()
+            field.addAll(value)
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToolbarViewHolder {
         return ToolbarViewHolder(LayoutInflater.from(parent.context)
@@ -40,21 +44,10 @@ internal class ToolbarAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<Tool
         viewHolder.button.setOnClickListener(item.onClickListener)
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
-    fun setItems(items: List<GroupToolbarHandler.ToolbarItem>) {
-        this.items.clear()
-        this.items.addAll(items)
-        notifyDataSetChanged()
-    }
+    override fun getItemCount() = items.size
 
     internal class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val button: Button
+        val button: Button = itemView.findViewById(R.id.button)
 
-        init {
-            button = itemView.findViewById(R.id.button)
-        }
     }
 }

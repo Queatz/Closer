@@ -51,7 +51,7 @@ class VerifyNumberHandler : PoolMember() {
             } else {
                 codeNotConfirmed(phoneNumber)
             }
-        }, { error -> codeNotConfirmed(phoneNumber) }))
+        }, { codeNotConfirmed(phoneNumber) }))
     }
 
     private fun codeNotConfirmed(phoneNumber: String) {

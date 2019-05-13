@@ -113,11 +113,9 @@ open class SearchGroupsAdapter(poolMember: PoolMember, private val onGroupClickL
             holder.pool!!.`$`(ActivityHandler::class.java).activity = `$`(ActivityHandler::class.java).activity
             holder.pool!!.`$`(ApiHandler::class.java).setAuthorization(`$`(AccountHandler::class.java).phone)
             holder.pool!!.`$`(GroupActionRecyclerViewHandler::class.java).attach(holder.actionRecyclerView, GroupActionAdapter.Layout.TEXT)
-            holder.pool!!.`$`(GroupActionRecyclerViewHandler::class.java).setOnGroupActionRepliedListener(object : GroupActionRecyclerViewHandler.OnGroupActionRepliedListener {
-                override fun onGroupActionReplied(groupAction: GroupAction) {
-                    `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(holder.itemView, groupAction.group)
-                }
-            })
+            holder.pool!!.`$`(GroupActionRecyclerViewHandler::class.java).onGroupActionRepliedListener = { groupAction ->
+                `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(holder.itemView, groupAction.group)
+            }
             holder.pool!!.`$`(DisposableHandler::class.java).add(`$`(StoreHandler::class.java).store.box(GroupAction::class.java).query()
                     .equal(GroupAction_.group, group.id!!)
                     .build().subscribe().single()
@@ -140,14 +138,10 @@ open class SearchGroupsAdapter(poolMember: PoolMember, private val onGroupClickL
     }
 
     override fun onViewRecycled(holder: SearchGroupsViewHolder) {
-        if (holder.pool != null) {
-            holder.pool!!.end()
-        }
+        holder.pool?.end()
     }
 
-    override fun getItemCount(): Int {
-        return groups.size + createGroupCount
-    }
+    override fun getItemCount() = groups.size + createGroupCount
 
     fun setCreatePublicGroupName(createPublicGroupName: String?) {
         this.createPublicGroupName = createPublicGroupName

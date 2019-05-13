@@ -1,9 +1,9 @@
 package closer.vlllage.com.closer.ui
 
 import android.content.Context
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.view.MotionEvent
+import androidx.constraintlayout.widget.ConstraintLayout
 
 class ScrollStopperConstraintLayout : ConstraintLayout {
     constructor(context: Context) : super(context)
@@ -13,9 +13,7 @@ class ScrollStopperConstraintLayout : ConstraintLayout {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
-        if (parent != null) {
-            parent.requestDisallowInterceptTouchEvent(true)
-        }
+        parent?.requestDisallowInterceptTouchEvent(true)
 
         return false
     }

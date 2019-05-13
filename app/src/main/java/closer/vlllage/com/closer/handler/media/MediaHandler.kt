@@ -42,12 +42,11 @@ class MediaHandler : PoolMember() {
             return
         }
 
-        onMediaSelectedListener?.invoke(data!!.data!!)
+        data?.data?.let { onMediaSelectedListener?.invoke(it) }
     }
 
     companion object {
-
-        val AUTHORITY = "closer.vlllage.com.closer.fileprovider"
-        private val REQUEST_CODE_MEDIA = 1045
+        const val AUTHORITY = "closer.vlllage.com.closer.fileprovider"
+        private const val REQUEST_CODE_MEDIA = 1045
     }
 }

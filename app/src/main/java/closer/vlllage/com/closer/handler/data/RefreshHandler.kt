@@ -129,7 +129,7 @@ class RefreshHandler : PoolMember() {
                 .single()
                 .on(AndroidScheduler.mainThread()) as SubscriptionBuilder<List<T>>)
                 .observer { results ->
-                    if (!results.isEmpty()) {
+                    if (results.isNotEmpty()) {
                         `object`.objectBoxId = results[0].objectBoxId
                     }
                     `$`(StoreHandler::class.java).store.box(clazz).put(`object`)

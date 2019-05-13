@@ -39,11 +39,9 @@ class MapsActivity : PoolActivity() {
             onNewIntent(intent)
         }
 
-        `$`(MapViewHandler::class.java).setOnRequestMapOnScreenListener(object : MapViewHandler.OnRequestMapOnScreenListener {
-            override fun onRequestMapOnScreen() {
-                slideScreen.slide = POSITION_SCREEN_MAP
-            }
-        })
+        `$`(MapViewHandler::class.java).onRequestMapOnScreenListener = {
+            slideScreen.slide = POSITION_SCREEN_MAP
+        }
 
         slideScreen.slide = POSITION_SCREEN_MAP
     }

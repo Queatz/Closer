@@ -13,7 +13,7 @@ class MapBubbleSuggestionView : PoolMember() {
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubbleSuggestionClickListener): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_suggestion, layer, false)
 
-        view.findViewById<View>(R.id.click).setOnClickListener { v -> onClickListener.onSuggestionClick(mapBubble) }
+        view.findViewById<View>(R.id.click).setOnClickListener { v -> onClickListener.invoke(mapBubble) }
         update(view, mapBubble)
 
         view.findViewById<View>(R.id.directionsButton).setOnClickListener { v -> `$`(OutboundHandler::class.java).openDirections(mapBubble.latLng) }
@@ -28,7 +28,6 @@ class MapBubbleSuggestionView : PoolMember() {
         action.text = mapBubble.action
     }
 
-    interface MapBubbleSuggestionClickListener {
-        fun onSuggestionClick(mapBubble: MapBubble)
-    }
 }
+
+typealias MapBubbleSuggestionClickListener = (mapBubble: MapBubble) -> Unit

@@ -19,7 +19,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapFragment
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
-import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
@@ -28,11 +27,11 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
     private var map: GoogleMap? = null
     private var mapView: View? = null
     private var centerOnMapLoad: LatLng? = null
-    private var onMapChangedListener: OnMapChangedListener? = null
-    private var onMapClickedListener: OnMapClickedListener? = null
-    private var onMapLongClickedListener: OnMapLongClickedListener? = null
-    private var onMapReadyListener: OnMapReadyListener? = null
-    private var onMapIdleListener: OnMapIdleListener? = null
+    var onMapChangedListener: (() -> Unit)? = null
+    var onMapClickedListener: ((LatLng) -> Unit)? = null
+    var onMapLongClickedListener: ((LatLng) -> Unit)? = null
+    var onMapReadyListener: ((GoogleMap) -> Unit)? = null
+    var onMapIdleListener: ((LatLng) -> Unit)? = null
 
     private val onMapIdleObservable = BehaviorSubject.create<CameraPosition>()
 
@@ -56,26 +55,6 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
         mapView = mapFragment.view
     }
 
-    fun setOnMapChangedListener(onMapChangedListener: OnMapChangedListener) {
-        this.onMapChangedListener = onMapChangedListener
-    }
-
-    fun setOnMapClickedListener(onMapClickedListener: OnMapClickedListener) {
-        this.onMapClickedListener = onMapClickedListener
-    }
-
-    fun setOnMapLongClickedListener(onMapLongClickedListener: OnMapLongClickedListener) {
-        this.onMapLongClickedListener = onMapLongClickedListener
-    }
-
-    fun setOnMapReadyListener(onMapReadyListener: OnMapReadyListener) {
-        this.onMapReadyListener = onMapReadyListener
-    }
-
-    fun setOnMapIdleListener(onMapIdleListener: OnMapIdleListener) {
-        this.onMapIdleListener = onMapIdleListener
-    }
-
     fun centerMap(latLng: LatLng) {
         centerOnMapLoad = latLng
 
@@ -94,17 +73,17 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
             )))
         }
 
-        onMapReadyListener!!.onMapReady(map!!)
+        onMapReadyListener!!.invoke(map!!)
         map!!.setOnCameraMoveListener { this.mapChanged() }
-        map!!.setOnMapClickListener { onMapClickedListener!!.onMapClicked(it) }
-        map!!.setOnMapLongClickListener { onMapLongClickedListener!!.onMapLongClicked(it) }
+        map!!.setOnMapClickListener { onMapClickedListener!!.invoke(it) }
+        map!!.setOnMapLongClickListener { onMapLongClickedListener!!.invoke(it) }
         map!!.setOnCameraIdleListener {
             `$`(PersistenceHandler::class.java).lastMapCenter = map!!.cameraPosition.target
-            onMapIdleListener!!.onMapIdle(map!!.cameraPosition.target)
+            onMapIdleListener!!.invoke(map!!.cameraPosition.target)
             onMapIdleObservable.onNext(map!!.cameraPosition)
         }
-        mapView!!.addOnLayoutChangeListener { v, i1, i2, i3, i4, i5, i6, i7, i8 -> onMapChangedListener!!.onMapChanged() }
-        onMapChangedListener!!.onMapChanged()
+        mapView!!.addOnLayoutChangeListener { v, i1, i2, i3, i4, i5, i6, i7, i8 -> onMapChangedListener!!.invoke() }
+        onMapChangedListener!!.invoke()
         map!!.setPadding(0, `$`(WindowHandler::class.java).statusBarHeight, 0, 0)
 
         if (centerOnMapLoad == null) {
@@ -133,7 +112,7 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
     }
 
     private fun mapChanged() {
-        onMapChangedListener!!.onMapChanged()
+        onMapChangedListener!!.invoke()
 
         if (map == null) {
             return
@@ -199,33 +178,10 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
 
     }
 
-    fun onMapIdleObservable(): Observable<CameraPosition> {
-        return onMapIdleObservable
-    }
-
-    interface OnMapChangedListener {
-        fun onMapChanged()
-    }
-
-    interface OnMapReadyListener {
-        fun onMapReady(map: GoogleMap)
-    }
-
-    interface OnMapClickedListener {
-        fun onMapClicked(latLng: LatLng)
-    }
-
-    interface OnMapLongClickedListener {
-        fun onMapLongClicked(latLng: LatLng)
-    }
-
-    interface OnMapIdleListener {
-        fun onMapIdle(latLng: LatLng)
-    }
+    fun onMapIdleObservable() = onMapIdleObservable
 
     companion object {
-
-        private val DEFAULT_ZOOM = 15f
-        private val DEFAULT_TILT = 15f
+        private const val DEFAULT_ZOOM = 15f
+        private const val DEFAULT_TILT = 15f
     }
 }

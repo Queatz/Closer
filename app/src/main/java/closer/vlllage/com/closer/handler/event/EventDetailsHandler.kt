@@ -37,7 +37,7 @@ class EventDetailsHandler : PoolMember() {
             eventTimeText = `$`(ResourcesHandler::class.java).resources.getString(R.string.event_happening_now, eventTimeText)
         }
 
-        return if (event.about != null && !event.about!!.isBlank()) {
+        return if (event.about?.isBlank() == false) {
             `$`(ResourcesHandler::class.java).resources
                     .getString(R.string.event_price_and_time, event.about, eventTimeText)
         } else {

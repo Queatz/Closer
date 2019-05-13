@@ -29,21 +29,17 @@ class GroupMessageParseHandler : PoolMember() {
     private val mentionPattern = Pattern.compile("@[0-9]+")
 
     private val defaultMentionConverter: MentionConverter
-        get() = object : MentionConverter {
-            override fun convert(mention: String): String {
-                val phoneList = `$`(StoreHandler::class.java).store.box(Phone::class.java).query().equal(Phone_.id, mention).build().find()
-                if (phoneList.isEmpty()) {
-                    return `$`(ResourcesHandler::class.java).resources.getString(R.string.unknown)
-                }
-                return `$`(NameHandler::class.java).getName(phoneList.get(0))
+        get() = { mention ->
+            val phoneList = `$`(StoreHandler::class.java).store.box(Phone::class.java).query().equal(Phone_.id, mention).build().find()
+            if (phoneList.isEmpty()) {
+                `$`(ResourcesHandler::class.java).resources.getString(R.string.unknown)
             }
+            `$`(NameHandler::class.java).getName(phoneList.get(0))
         }
 
     private val defaultMentionClickListener: OnMentionClickListener
-        get() = object : OnMentionClickListener {
-            override fun onMentionClick(mention: String) {
-                `$`(PhoneMessagesHandler::class.java).openMessagesWithPhone(mention, `$`(NameHandler::class.java).getName(mention), "")
-            }
+        get() = { mention ->
+            `$`(PhoneMessagesHandler::class.java).openMessagesWithPhone(mention, `$`(NameHandler::class.java).getName(mention), "")
         }
 
     @JvmOverloads
@@ -56,7 +52,7 @@ class GroupMessageParseHandler : PoolMember() {
         while (matcher.find()) {
             val match = matcher.group()
             val mention = match.substring(1)
-            builder.replace(matcher.start(), matcher.end(), "@" + mentionConverter.convert(mention))
+            builder.replace(matcher.start(), matcher.end(), "@" + mentionConverter.invoke(mention))
         }
 
         return builder.toString()
@@ -72,10 +68,10 @@ class GroupMessageParseHandler : PoolMember() {
         while (matcher.find()) {
             val match = matcher.group()
             val mention = match.substring(1)
-            val span = makeImageSpan(mentionConverter.convert(mention))
+            val span = makeImageSpan(mentionConverter.invoke(mention))
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    onMentionClickListener.onMentionClick(mention)
+                    onMentionClickListener.invoke(mention)
                 }
             }
             builder.setSpan(span, matcher.start(), matcher.end(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -167,12 +163,7 @@ class GroupMessageParseHandler : PoolMember() {
         view.destroyDrawingCache()
         return BitmapDrawable(`$`(ResourcesHandler::class.java).resources, viewBmp)
     }
-
-    interface MentionConverter {
-        fun convert(mention: String): String
-    }
-
-    interface OnMentionClickListener {
-        fun onMentionClick(mention: String)
-    }
 }
+
+typealias MentionConverter = (mention: String) -> String
+typealias OnMentionClickListener = (mention: String) -> Unit

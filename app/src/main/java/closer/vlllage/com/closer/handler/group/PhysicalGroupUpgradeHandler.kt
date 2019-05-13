@@ -14,7 +14,7 @@ class PhysicalGroupUpgradeHandler : PoolMember() {
             layoutResId = R.layout.input_modal
             textViewId = R.id.input
             onTextViewSubmitCallback = { result ->
-                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).convertToHub(group.id!!, result).subscribe({ successResult ->
+                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).convertToHub(group.id!!, result).subscribe({
                     group.name = result
                     `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
                     onGroupUpdateListener.invoke(group)
@@ -41,7 +41,7 @@ class PhysicalGroupUpgradeHandler : PoolMember() {
                         `$`(DefaultAlerts::class.java).thatDidntWork()
                     }
                 },
-                { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
+                { `$`(DefaultAlerts::class.java).thatDidntWork() }
         ))
     }
 
@@ -56,7 +56,7 @@ class PhysicalGroupUpgradeHandler : PoolMember() {
                         `$`(DefaultAlerts::class.java).thatDidntWork()
                     }
                 },
-                { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
+                { `$`(DefaultAlerts::class.java).thatDidntWork() }
         ))
     }
 }

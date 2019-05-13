@@ -17,7 +17,7 @@ class MapBubblePhysicalGroupView : PoolMember() {
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubblePhysicalGroupClickListener): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_physical_group, layer, false)
 
-        view.findViewById<View>(R.id.click).setOnClickListener { v -> onClickListener.onPhysicalGroupClick(mapBubble) }
+        view.findViewById<View>(R.id.click).setOnClickListener { v -> onClickListener.invoke(mapBubble) }
         update(view, mapBubble)
 
         return view
@@ -50,7 +50,6 @@ class MapBubblePhysicalGroupView : PoolMember() {
         (photo.layoutParams as ViewGroup.MarginLayoutParams).width = size
     }
 
-    interface MapBubblePhysicalGroupClickListener {
-        fun onPhysicalGroupClick(mapBubble: MapBubble)
-    }
 }
+
+typealias MapBubblePhysicalGroupClickListener = (mapBubble: MapBubble) -> Unit

@@ -69,7 +69,7 @@ class SyncHandler : PoolMember() {
                 groupAction.id = createResult.id
                 groupAction.localOnly = false
                 `$`(StoreHandler::class.java).store.box(GroupAction::class.java).put(groupAction)
-                onSyncResult?.onSync(createResult.id)
+                onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> `$`(ConnectionErrorHandler::class.java).notifyConnectionError() }))
     }
@@ -87,7 +87,7 @@ class SyncHandler : PoolMember() {
                 groupMember.id = createResult.id
                 groupMember.localOnly = false
                 `$`(StoreHandler::class.java).store.box(GroupMember::class.java).put(groupMember)
-                onSyncResult?.onSync(createResult.id)
+                onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> `$`(ConnectionErrorHandler::class.java).notifyConnectionError() }))
     }
@@ -108,7 +108,7 @@ class SyncHandler : PoolMember() {
                 event.id = createResult.id
                 event.localOnly = false
                 `$`(StoreHandler::class.java).store.box(Event::class.java).put(event)
-                onSyncResult?.onSync(createResult.id)
+                onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> `$`(ConnectionErrorHandler::class.java).notifyConnectionError() }))
     }
@@ -125,7 +125,7 @@ class SyncHandler : PoolMember() {
                 suggestion.id = createResult.id
                 suggestion.localOnly = false
                 `$`(StoreHandler::class.java).store.box(Suggestion::class.java).put(suggestion)
-                onSyncResult?.onSync(createResult.id)
+                onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> `$`(ConnectionErrorHandler::class.java).notifyConnectionError() }))
     }
@@ -155,7 +155,7 @@ class SyncHandler : PoolMember() {
                 group.id = createResult.id
                 group.localOnly = false
                 `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
-                onSyncResult?.onSync(createResult.id)
+                onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> `$`(ConnectionErrorHandler::class.java).notifyConnectionError() }))
     }
@@ -175,12 +175,12 @@ class SyncHandler : PoolMember() {
                 groupMessage.id = createResult.id
                 groupMessage.localOnly = false
                 `$`(StoreHandler::class.java).store.box(GroupMessage::class.java).put(groupMessage)
-                onSyncResult?.onSync(createResult.id)
+                onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> `$`(ConnectionErrorHandler::class.java).notifyConnectionError() }))
     }
 
-    interface OnSyncResult {
-        fun onSync(id: String?)
-    }
 }
+
+typealias OnSyncResult = (id: String) -> Unit
+

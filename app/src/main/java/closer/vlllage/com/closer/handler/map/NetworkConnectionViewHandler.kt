@@ -9,24 +9,20 @@ class NetworkConnectionViewHandler : PoolMember() {
 
     private var connectionErrorView: View? = null
     private val hideCallback = Runnable {
-        if (connectionErrorView != null) {
-            connectionErrorView!!.visibility = View.GONE
-        }
+        connectionErrorView?.visibility = View.GONE
     }
 
     fun attach(connectionErrorView: View) {
         this.connectionErrorView = connectionErrorView
-        `$`(ConnectionErrorHandler::class.java).setOnConnectionErrorListener(object : ConnectionErrorHandler.OnConnectionErrorListener {
-            override fun onConnectionError() {
-                show()
-            }
-        })
+        `$`(ConnectionErrorHandler::class.java).onConnectionErrorListener = {
+            show()
+        }
     }
 
     private fun show() {
-        connectionErrorView!!.visibility = View.VISIBLE
-        connectionErrorView!!.removeCallbacks(hideCallback)
-        connectionErrorView!!.postDelayed(hideCallback, NETWORK_CONNECTION_ERROR_TIMEOUT_MS)
+        connectionErrorView?.visibility = View.VISIBLE
+        connectionErrorView?.removeCallbacks(hideCallback)
+        connectionErrorView?.postDelayed(hideCallback, NETWORK_CONNECTION_ERROR_TIMEOUT_MS)
     }
 
     companion object {

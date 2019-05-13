@@ -24,8 +24,8 @@ class MapBubble {
     var action: String? = null
     var isOnTop: Boolean = false
     var type = BubbleType.STATUS
-    var onItemClickListener: OnItemClickListener? = null
-    var onViewReadyListener: OnViewReadyListener? = null
+    var onItemClickListener: ((position: Int) -> Unit)? = null
+    var onViewReadyListener: ((view: View) -> Unit)? = null
     var tag: Any? = null
     val proxies = ArrayList<MapBubble>()
 
@@ -50,13 +50,5 @@ class MapBubble {
         this.phone = mapBubble.phone
         this.name = mapBubble.name
         this.status = mapBubble.status
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-    }
-
-    interface OnViewReadyListener {
-        fun onViewReady(view: View)
     }
 }

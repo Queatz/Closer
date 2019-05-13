@@ -22,17 +22,10 @@ internal class MenuOptionAdapter(
         viewHolder.itemView.setOnClickListener { onMenuOptionClickListener.invoke(menuOption) }
     }
 
-    override fun getItemCount(): Int {
-        return menuOptions.size
-    }
+    override fun getItemCount() = menuOptions.size
 
     internal class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var name: TextView
-
-        init {
-            name = itemView.findViewById(R.id.name)
-        }
+        var name: TextView = itemView.findViewById(R.id.name)
     }
 
 }

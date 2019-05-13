@@ -74,9 +74,10 @@ class FloatingRecyclerView : RecyclerView {
 
         colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(),
                 (recyclerView.background as ColorDrawable).color,
-                resources.getColor(color))
-        colorAnimation!!.duration = 225
-        colorAnimation!!.addUpdateListener { animator -> setBackgroundColor(animator.animatedValue as Int) }
-        colorAnimation!!.start()
+                resources.getColor(color)).apply {
+            duration = 225
+            addUpdateListener { animator -> setBackgroundColor(animator.animatedValue as Int) }
+            start()
+        }
     }
 }

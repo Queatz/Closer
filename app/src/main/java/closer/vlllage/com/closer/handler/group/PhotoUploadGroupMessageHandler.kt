@@ -14,7 +14,7 @@ class PhotoUploadGroupMessageHandler : PoolMember() {
     fun upload(photoUri: Uri, onPhotoUploadedListener: (photoId: String) -> Unit) {
         try {
             `$`(ApplicationHandler::class.java).app.`$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).uploadPhoto(
-                    `$`(ActivityHandler::class.java).activity!!.contentResolver.openInputStream(photoUri))
+                    `$`(ActivityHandler::class.java).activity!!.contentResolver.openInputStream(photoUri)!!)
                     .subscribe({ onPhotoUploadedListener.invoke(it) }, { `$`(DefaultAlerts::class.java).thatDidntWork() }))
         } catch (e: IOException) {
             e.printStackTrace()

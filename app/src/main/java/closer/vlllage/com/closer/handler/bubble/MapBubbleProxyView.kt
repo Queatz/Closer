@@ -10,7 +10,7 @@ import closer.vlllage.com.closer.pool.PoolMember
 
 class MapBubbleProxyView : PoolMember() {
 
-    private var adapter: MapBubbleProxyAdapter? = null
+    private lateinit var adapter: MapBubbleProxyAdapter
 
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: (MapBubble) -> Unit): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_proxy, layer, false)
@@ -26,6 +26,6 @@ class MapBubbleProxyView : PoolMember() {
     }
 
     fun update(view: View, mapBubble: MapBubble) {
-        adapter!!.setItems(mapBubble.proxies)
+        adapter.items = mapBubble.proxies
     }
 }

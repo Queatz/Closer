@@ -36,9 +36,7 @@ class GroupDraftHandler : PoolMember() {
                 .build()
                 .findFirst()
 
-        return if (draft != null) {
-            draft.message
-        } else ""
+        return draft?.message ?: ""
 
     }
 }

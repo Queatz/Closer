@@ -8,7 +8,7 @@ import closer.vlllage.com.closer.pool.PoolMember
 class MapViewHandler : PoolMember() {
 
     private var mapSlideFragment: MapSlideFragment? = null
-    private var onRequestMapOnScreenListener: OnRequestMapOnScreenListener? = null
+    var onRequestMapOnScreenListener: (() -> Unit)? = null
 
     val mapFragment: Fragment
         get() {
@@ -23,15 +23,6 @@ class MapViewHandler : PoolMember() {
     }
 
     fun handleIntent(intent: Intent) {
-        mapSlideFragment?.post(Runnable { mapSlideFragment!!.handleIntent(intent, onRequestMapOnScreenListener!!) })
-    }
-
-    fun setOnRequestMapOnScreenListener(onRequestMapOnScreenListener: OnRequestMapOnScreenListener): MapViewHandler {
-        this.onRequestMapOnScreenListener = onRequestMapOnScreenListener
-        return this
-    }
-
-    interface OnRequestMapOnScreenListener {
-        fun onRequestMapOnScreen()
+        mapSlideFragment?.post(Runnable { mapSlideFragment!!.handleIntent(intent, onRequestMapOnScreenListener) })
     }
 }

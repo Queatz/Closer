@@ -31,7 +31,9 @@ class MenuHandler : PoolMember() {
         }
     }
 
-    class MenuOption(@param:DrawableRes @field:DrawableRes internal var iconRes: Int, @param:StringRes @field:StringRes internal var titleRes: Int, internal var callback: () -> Unit) {
+    class MenuOption(@DrawableRes internal var iconRes: Int,
+                     @StringRes internal var titleRes: Int,
+                     internal var callback: () -> Unit) {
         internal var visible = true
 
         fun visible(visible: Boolean): MenuOption {

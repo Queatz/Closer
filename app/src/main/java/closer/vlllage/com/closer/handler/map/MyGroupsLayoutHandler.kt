@@ -90,10 +90,8 @@ class MyGroupsLayoutHandler : PoolMember() {
         val group = `$`(StoreHandler::class.java).create(Group::class.java)
         group!!.name = name
         `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
-        `$`(SyncHandler::class.java).sync(group, object : SyncHandler.OnSyncResult {
-            override fun onSync(groupId: String?) {
-                `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, groupId)
-            }
+        `$`(SyncHandler::class.java).sync(group, { groupId ->
+            `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, groupId)
         })
     }
 

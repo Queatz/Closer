@@ -18,12 +18,12 @@ class MessageDisplay : PoolMember() {
 
     private var pinned: Boolean = false
 
-    fun displayShare(holder: GroupMessagesAdapter.GroupMessageViewHolder,
-                     jsonObject: JsonObject,
-                     groupMessage: GroupMessage,
-                     onEventClickListener: (Event) -> Unit,
-                     onGroupClickListener: (Group) -> Unit,
-                     onSuggestionClickListener: (Suggestion) -> Unit) {
+    private fun displayShare(holder: GroupMessagesAdapter.GroupMessageViewHolder,
+                             jsonObject: JsonObject,
+                             groupMessage: GroupMessage,
+                             onEventClickListener: (Event) -> Unit,
+                             onGroupClickListener: (Group) -> Unit,
+                             onSuggestionClickListener: (Suggestion) -> Unit) {
         val sharedGroupMessage = `$`(StoreHandler::class.java).store.box(GroupMessage::class.java).query().equal(GroupMessage_.id, jsonObject.get("share").asString).build().findFirst()
 
         if (sharedGroupMessage != null) {
@@ -35,7 +35,7 @@ class MessageDisplay : PoolMember() {
         holder.time.text = `$`(GroupMessageParseHandler::class.java).parseText(`$`(ResourcesHandler::class.java).resources.getString(R.string.shared_by, `$`(TimeStr::class.java).pretty(groupMessage.time), "@" + groupMessage.from!!))
     }
 
-    fun displayAction(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+    private fun displayAction(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
@@ -63,7 +63,7 @@ class MessageDisplay : PoolMember() {
         holder.action.setOnClickListener { view -> `$`(PhoneMessagesHandler::class.java).openMessagesWithPhone(phone!!.id!!, contactName, comment) }
     }
 
-    fun displayGroupMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
+    private fun displayGroupMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
@@ -85,7 +85,7 @@ class MessageDisplay : PoolMember() {
         holder.message.text = `$`(GroupMessageParseHandler::class.java).parseText(groupMessage.text!!)
     }
 
-    fun displayMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+    private fun displayMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.name.visibility = View.GONE
         holder.time.visibility = View.GONE
         holder.messageLayout.visibility = View.GONE
@@ -95,7 +95,7 @@ class MessageDisplay : PoolMember() {
         holder.action.visibility = View.GONE
     }
 
-    fun displayEvent(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onEventClickListener: (Event) -> Unit) {
+    private fun displayEvent(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onEventClickListener: (Event) -> Unit) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
@@ -124,7 +124,7 @@ class MessageDisplay : PoolMember() {
         }
     }
 
-    fun displayGroup(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onGroupClickListener: (Group) -> Unit) {
+    private fun displayGroup(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onGroupClickListener: (Group) -> Unit) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
@@ -151,7 +151,7 @@ class MessageDisplay : PoolMember() {
         }
     }
 
-    fun displaySuggestion(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onSuggestionClickListener: ((Suggestion) -> Unit)?) {
+    private fun displaySuggestion(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onSuggestionClickListener: ((Suggestion) -> Unit)?) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
@@ -188,7 +188,7 @@ class MessageDisplay : PoolMember() {
         }
     }
 
-    fun displayPhoto(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+    private fun displayPhoto(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
@@ -208,7 +208,7 @@ class MessageDisplay : PoolMember() {
         `$`(ImageHandler::class.java).get().load(photo).transform(RoundedCornersTransformation(`$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.imageCorners), 0)).into(holder.photo)
     }
 
-    fun displayFallback(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
+    private fun displayFallback(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
@@ -263,9 +263,9 @@ class MessageDisplay : PoolMember() {
     }
 
     private fun getPhone(phoneId: String?): Phone? {
-        return if (phoneId == null) {
+        return if (phoneId == null)
             null
-        } else `$`(StoreHandler::class.java).store.box(Phone::class.java).query()
+        else `$`(StoreHandler::class.java).store.box(Phone::class.java).query()
                 .equal(Phone_.id, phoneId)
                 .build()
                 .findFirst()

@@ -10,23 +10,21 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.Math.abs
 import java.util.*
 
-class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val mapViewportCallback: () -> VisibleRegion) {
+class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val mapViewportCallback: () -> VisibleRegion?) {
 
     private val mapBubbles = HashSet<MapBubble>()
     private var lastClusterSize: Double = 0.toDouble()
     private var mergeBubblesDisposable: Disposable? = null
 
     private val clusterSize: Double
-        get() = if (mapViewportCallback == null || mapViewportCallback.invoke() == null) {
+        get() = if (mapViewportCallback.invoke() == null) {
             1.0
         } else abs(mapViewportCallback.invoke()!!.latLngBounds.southwest.longitude - mapViewportCallback.invoke()!!.latLngBounds.northeast.longitude) / MERGE_RESOLUTION
 
-    fun recalculate() {
+    private fun recalculate() {
         lastClusterSize = clusterSize
 
-        if (mergeBubblesDisposable != null) {
-            mergeBubblesDisposable!!.dispose()
-        }
+        mergeBubblesDisposable?.dispose()
 
         mergeBubblesDisposable = mergeBubbles(HashSet(mapBubbles), lastClusterSize)
                 .subscribeOn(Schedulers.computation())
@@ -105,8 +103,8 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
                 result.postCalculationProxyBubbles.add(proxyMapBubble)
             }
 
-            val preHashes = HashMap<Long, MapBubble>()
-            val postHashes = HashMap<Long, MapBubble>()
+            val preHashes = mutableMapOf<Long, MapBubble>()
+            val postHashes = mutableMapOf<Long, MapBubble>()
 
             for (mapBubble in result.preCalculationProxyBubbles) {
                 preHashes[proxyHash(mapBubble)] = mapBubble
@@ -223,7 +221,6 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
     }
 
     companion object {
-
-        private val MERGE_RESOLUTION = 1.5
+        private const val MERGE_RESOLUTION = 1.5
     }
 }

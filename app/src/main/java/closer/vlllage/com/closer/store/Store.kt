@@ -8,11 +8,7 @@ import io.objectbox.BoxStore
 
 class Store internal constructor(app: Application) {
 
-    private val boxStore: BoxStore
-
-    init {
-        boxStore = MyObjectBox.builder().androidContext(app).build()
-    }
+    private val boxStore: BoxStore = MyObjectBox.builder().androidContext(app).build()
 
     fun close() {
         boxStore.close()

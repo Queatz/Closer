@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.widget.EditText
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import android.widget.EditText
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.GroupMemberResult
 import closer.vlllage.com.closer.handler.data.ApiHandler
@@ -121,7 +121,7 @@ class GroupMemberHandler : PoolMember() {
     private fun isCurrentUserMemberOf(group: Group?): Boolean {
         return if (group == null) false else `$`(StoreHandler::class.java).store.box(GroupContact::class.java).query()
                 .equal(GroupContact_.groupId, group.id!!)
-                .equal(GroupContact_.contactId, `$`(PersistenceHandler::class.java).phoneId)
+                .equal(GroupContact_.contactId, `$`(PersistenceHandler::class.java).phoneId!!)
                 .build()
                 .count() > 0
 

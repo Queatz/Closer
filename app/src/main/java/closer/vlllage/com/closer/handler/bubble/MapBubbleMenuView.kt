@@ -1,12 +1,11 @@
 package closer.vlllage.com.closer.handler.bubble
 
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.pool.PoolMember
 
@@ -33,7 +32,7 @@ class MapBubbleMenuView : PoolMember() {
 
     fun setMenuTitle(mapBubble: MapBubble, title: String?) {
         val menuTitle = mapBubble.view!!.findViewById<TextView>(R.id.menuTitle)
-        if (title == null || title.isEmpty()) {
+        if (title?.isEmpty() == false) {
             menuTitle.visibility = View.GONE
         } else {
             menuTitle.visibility = View.VISIBLE
@@ -41,7 +40,6 @@ class MapBubbleMenuView : PoolMember() {
         }
     }
 
-    interface OnMapBubbleMenuItemClickListener {
-        fun onMenuItemClick(mapBubble: MapBubble, position: Int)
-    }
 }
+
+typealias OnMapBubbleMenuItemClickListener = (mapBubble: MapBubble, position: Int) -> Unit

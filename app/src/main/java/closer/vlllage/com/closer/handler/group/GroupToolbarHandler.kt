@@ -23,8 +23,8 @@ import java.util.*
 
 class GroupToolbarHandler : PoolMember() {
 
-    private var recyclerView: RecyclerView? = null
-    private var adapter: ToolbarAdapter? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: ToolbarAdapter
     val isShareActiveObservable = BehaviorSubject.createDefault(false)
 
     private var group: Group? = null
@@ -35,12 +35,12 @@ class GroupToolbarHandler : PoolMember() {
 
         recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, HORIZONTAL, false) {
             override fun measureChild(child: View, widthUsed: Int, heightUsed: Int) {
-                child.layoutParams.width = recyclerView.measuredWidth / adapter!!.itemCount
+                child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
                 super.measureChild(child, widthUsed, heightUsed)
             }
 
             override fun measureChildWithMargins(child: View, widthUsed: Int, heightUsed: Int) {
-                child.layoutParams.width = recyclerView.measuredWidth / adapter!!.itemCount
+                child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
                 super.measureChildWithMargins(child, widthUsed, heightUsed)
             }
         }
@@ -86,8 +86,8 @@ class GroupToolbarHandler : PoolMember() {
 
         if (items.size < 3 && event != null) {
             items.add(ToolbarItem(
-                    if (isShareActiveObservable.getValue()!!) R.string.cancel else R.string.share,
-                    if (isShareActiveObservable.getValue()!!) R.drawable.ic_close_black_24dp else R.drawable.ic_share_black_24dp,
+                    if (isShareActiveObservable.value!!) R.string.cancel else R.string.share,
+                    if (isShareActiveObservable.value!!) R.drawable.ic_close_black_24dp else R.drawable.ic_share_black_24dp,
                     View.OnClickListener { v -> toggleShare() }
             ))
         }
@@ -177,16 +177,14 @@ class GroupToolbarHandler : PoolMember() {
                         `$`(EventHandler::class.java).createNewEvent(LatLng(
                                 group.latitude!!,
                                 group.longitude!!
-                        ), group.isPublic, object : EventHandler.OnEventCreatedListener {
-                            override fun onEventCreated(event: Event) {
-                                showEventOnMap(event)
-                            }
-                        })
+                        ), group.isPublic) {
+                            showEventOnMap(it)
+                        }
                     }
             ))
         }
 
-        adapter!!.setItems(items)
+        adapter.items = items
     }
 
     private fun isEventCancelable(event: Event?): Boolean {
@@ -202,7 +200,7 @@ class GroupToolbarHandler : PoolMember() {
     }
 
     private fun toggleShare() {
-        if (isShareActiveObservable.getValue()!!) {
+        if (isShareActiveObservable.value!!) {
             isShareActiveObservable.onNext(false)
             return
         }

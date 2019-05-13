@@ -103,8 +103,8 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<RecyclerView.V
 
         val group = groups[position]
         holder.groupName.text = `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
-        holder.groupName.setOnClickListener { view -> `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(holder.groupName, group.id) }
-        holder.groupName.setOnLongClickListener { view ->
+        holder.groupName.setOnClickListener { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(holder.groupName, group.id) }
+        holder.groupName.setOnLongClickListener {
             `$`(GroupMemberHandler::class.java).changeGroupSettings(group)
             true
         }
@@ -163,7 +163,7 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<RecyclerView.V
 
         holder.pool.`$`(GroupMessageMentionHandler::class.java).attach(holder.mentionSuggestionsLayout, holder.mentionSuggestionRecyclerView, { mention -> holder.pool.`$`(GroupMessageParseHandler::class.java).insertMention(holder.replyMessage, mention) })
 
-        holder.replyMessage.setOnEditorActionListener { textView, actionId, keyEvent ->
+        holder.replyMessage.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 holder.sendButton.callOnClick()
             }
@@ -204,11 +204,9 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<RecyclerView.V
         `$`(GroupScopeHandler::class.java).setup(group, holder.scopeIndicatorButton)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            0 -> 1
-            else -> 0
-        }
+    override fun getItemViewType(position: Int) = when (position) {
+        0 -> 1
+        else -> 0
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
@@ -219,9 +217,7 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<RecyclerView.V
         }
     }
 
-    override fun getItemCount(): Int {
-        return groups.size + HEADER_COUNT
-    }
+    override fun getItemCount() = groups.size + HEADER_COUNT
 
     override fun getItemPriority(position: Int): Int {
         return max(0, position - if (`$`(DistanceHandler::class.java).isUserNearGroup(groups[position - 1])) 100 else 0)

@@ -14,13 +14,12 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Group
-import java.util.*
 
 class MyGroupsAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder>(poolMember) {
 
-    private var actions: List<GroupActionBarButton> = ArrayList()
-    private var endActions: List<GroupActionBarButton> = ArrayList()
-    private var groups: List<Group> = ArrayList()
+    private var actions: List<GroupActionBarButton> = listOf()
+    private var endActions: List<GroupActionBarButton> = listOf()
+    private var groups: List<Group> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyGroupViewHolder {
         return MyGroupViewHolder(LayoutInflater.from(parent.context)

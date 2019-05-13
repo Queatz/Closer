@@ -19,7 +19,7 @@ class GroupActionRecyclerViewHandler : PoolMember() {
         private set
     var recyclerView: RecyclerView? = null
         private set
-    private var onGroupActionRepliedListener: OnGroupActionRepliedListener? = null
+    var onGroupActionRepliedListener: OnGroupActionRepliedListener? = null
 
     fun attach(actionRecyclerView: RecyclerView, layout: GroupActionAdapter.Layout) {
         this.recyclerView = actionRecyclerView
@@ -29,45 +29,39 @@ class GroupActionRecyclerViewHandler : PoolMember() {
                 false
         )
 
-        adapter = GroupActionAdapter(this, layout, object : GroupActionAdapter.OnGroupActionClickListener {
-            override fun onGroupActionClick(groupAction: GroupAction) {
-                val group = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
-                        .equal(Group_.id, groupAction.group!!).build().findFirst()
+        adapter = GroupActionAdapter(this, layout, { groupAction ->
+            val group = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+                    .equal(Group_.id, groupAction.group!!).build().findFirst()
 
-                if (group == null) {
-                    `$`(DefaultAlerts::class.java).thatDidntWork()
-                    return
-                }
-
-                `$`(AlertHandler::class.java).make().apply {
-                    layoutResId = R.layout.comments_modal
-                    textViewId = R.id.input
-                    onTextViewSubmitCallback = { comment ->
-                        val success = `$`(GroupMessageAttachmentHandler::class.java).groupActionReply(groupAction.group!!, groupAction, comment)
-                        if (!success) {
-                            `$`(DefaultAlerts::class.java).thatDidntWork()
-                        } else {
-                            if (onGroupActionRepliedListener != null) {
-                                onGroupActionRepliedListener!!.onGroupActionReplied(groupAction)
-                            }
-                        }
-                    }
-                    title = groupAction.name
-                    message = group.name
-                    positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.post)
-                    show()
-                }
+            if (group == null) {
+                `$`(DefaultAlerts::class.java).thatDidntWork()
+                return@GroupActionAdapter
             }
-        }, object : GroupActionAdapter.OnGroupActionLongClickListener {
-            override fun onGroupActionLongClick(groupAction: GroupAction) {
-                if (`$`(FeatureHandler::class.java).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
-                    `$`(MenuHandler::class.java).show(
-                            MenuHandler.MenuOption(R.drawable.ic_open_in_new_black_24dp, R.string.open_group) { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, groupAction.group) },
-                            MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo) { takeGroupActionPhoto(groupAction) },
-                            MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo) { uploadGroupActionPhoto(groupAction) },
-                            MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_action_menu_item) { removeGroupAction(groupAction) }
-                    )
+
+            `$`(AlertHandler::class.java).make().apply {
+                layoutResId = R.layout.comments_modal
+                textViewId = R.id.input
+                onTextViewSubmitCallback = { comment ->
+                    val success = `$`(GroupMessageAttachmentHandler::class.java).groupActionReply(groupAction.group!!, groupAction, comment)
+                    if (!success) {
+                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                    } else {
+                        onGroupActionRepliedListener?.invoke(groupAction)
+                    }
                 }
+                title = groupAction.name
+                message = group.name
+                positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.post)
+                show()
+            }
+        }, { groupAction ->
+            if (`$`(FeatureHandler::class.java).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
+                `$`(MenuHandler::class.java).show(
+                        MenuHandler.MenuOption(R.drawable.ic_open_in_new_black_24dp, R.string.open_group) { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, groupAction.group) },
+                        MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo) { takeGroupActionPhoto(groupAction) },
+                        MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo) { uploadGroupActionPhoto(groupAction) },
+                        MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_action_menu_item) { removeGroupAction(groupAction) }
+                )
             }
         })
 
@@ -86,22 +80,15 @@ class GroupActionRecyclerViewHandler : PoolMember() {
         `$`(AlertHandler::class.java).make().apply {
             message = `$`(ResourcesHandler::class.java).resources.getString(R.string.remove_action_message, groupAction.name)
             positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.remove_action)
-            positiveButtonCallback = { alertResult ->
-                    `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).removeGroupAction(groupAction.id!!).subscribe(
-                            { successResult -> `$`(StoreHandler::class.java).store.box(GroupAction::class.java).remove(groupAction) },
-                            { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
+            positiveButtonCallback = {
+                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).removeGroupAction(groupAction.id!!).subscribe(
+                            { `$`(StoreHandler::class.java).store.box(GroupAction::class.java).remove(groupAction) },
+                            { `$`(DefaultAlerts::class.java).thatDidntWork() }
                     ))
                 }
             show()
         }
     }
-
-    fun setOnGroupActionRepliedListener(onGroupActionRepliedListener: OnGroupActionRepliedListener): GroupActionRecyclerViewHandler {
-        this.onGroupActionRepliedListener = onGroupActionRepliedListener
-        return this
-    }
-
-    interface OnGroupActionRepliedListener {
-        fun onGroupActionReplied(groupAction: GroupAction)
-    }
 }
+
+typealias OnGroupActionRepliedListener = (groupAction: GroupAction) -> Unit

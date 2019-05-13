@@ -13,7 +13,7 @@ import com.google.android.gms.location.LocationServices
 
 class LocationHandler : PoolMember() {
 
-    private var fusedLocationProvider: FusedLocationProviderClient? = null
+    private lateinit var fusedLocationProvider: FusedLocationProviderClient
     var lastKnownLocation: Location? = null
         private set
 
@@ -39,7 +39,7 @@ class LocationHandler : PoolMember() {
                 .check(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 .`when` { granted ->
                     if (granted) {
-                        fusedLocationProvider!!.lastLocation.addOnCompleteListener { task ->
+                        fusedLocationProvider.lastLocation.addOnCompleteListener { task ->
                             if (!task.isSuccessful || task.result == null) {
                                 waitForLocation(callback, locationUnavailableCallback)
                                 return@addOnCompleteListener
@@ -59,11 +59,11 @@ class LocationHandler : PoolMember() {
                 .setExpirationDuration(10000)
                 .setNumUpdates(1)
 
-        fusedLocationProvider!!.locationAvailability.addOnCompleteListener { task ->
+        fusedLocationProvider.locationAvailability.addOnCompleteListener { task ->
             if (task.isSuccessful && !task.result!!.isLocationAvailable) {
                 locationUnavailableCallback?.invoke()
             } else {
-                fusedLocationProvider!!.requestLocationUpdates(locationRequest, object : com.google.android.gms.location.LocationCallback() {
+                fusedLocationProvider.requestLocationUpdates(locationRequest, object : com.google.android.gms.location.LocationCallback() {
                     override fun onLocationResult(locationResult: LocationResult?) {
                         if (locationResult!!.lastLocation == null) {
                             locationUnavailableCallback?.invoke()

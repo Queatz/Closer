@@ -17,9 +17,10 @@ import closer.vlllage.com.closer.store.models.GroupInvite
 import java.util.*
 
 class PhoneContactAdapter(poolMember: PoolMember,
-                          private val onPhoneContactClickListener: OnPhoneContactClickListener?,
-                          private val onGroupInviteClickListener: OnGroupInviteClickListener?,
-                          private val onGroupContactClickListener: OnGroupContactClickListener?) : PoolRecyclerAdapter<PhoneContactAdapter.PhoneContactViewHolder>(poolMember) {
+                          private val onPhoneContactClickListener: ((phoneContact: PhoneContact) -> Unit)?,
+                          private val onGroupInviteClickListener: ((groupInvite: GroupInvite) -> Unit)?,
+                          private val onGroupContactClickListener: ((groupContact: GroupContact) -> Unit)?)
+    : PoolRecyclerAdapter<PhoneContactAdapter.PhoneContactViewHolder>(poolMember) {
 
     private var phoneNumber: String? = null
     private var isFiltered: Boolean = false
@@ -51,8 +52,8 @@ class PhoneContactAdapter(poolMember: PoolMember,
                     holder.name.text = `$`(NameHandler::class.java).getName(groupContact)
                     holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(if (isMe) R.string.options else R.string.send_message)
                     holder.number.text = `$`(ResourcesHandler::class.java).resources.getString(if (isMe) R.string.member_you else R.string.member)
-                    holder.itemView.setOnClickListener { view ->
-                        onGroupContactClickListener?.onGroupContactClicked(groupContact)
+                    holder.itemView.setOnClickListener {
+                        onGroupContactClickListener?.invoke(groupContact)
                     }
                 } else {
                     position -= groupContacts.size
@@ -62,8 +63,8 @@ class PhoneContactAdapter(poolMember: PoolMember,
                     holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.cancel_invite)
                     holder.name.text = if (invite.name == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.invite) else invite.name
                     holder.number.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.invited)
-                    holder.itemView.setOnClickListener { view ->
-                        onGroupInviteClickListener?.onGroupInviteClicked(invite)
+                    holder.itemView.setOnClickListener {
+                        onGroupInviteClickListener?.invoke(invite)
                     }
                 }
 
@@ -77,8 +78,8 @@ class PhoneContactAdapter(poolMember: PoolMember,
         holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.invite)
         holder.name.text = if (contact.name == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.invite_by_phone) else contact.name
         holder.number.text = if (contact.phoneNumber == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.no_name) else contact.phoneNumber
-        holder.itemView.setOnClickListener { view ->
-            onPhoneContactClickListener?.onPhoneContactClicked(contact)
+        holder.itemView.setOnClickListener {
+            onPhoneContactClickListener?.invoke(contact)
         }
     }
 
@@ -114,28 +115,10 @@ class PhoneContactAdapter(poolMember: PoolMember,
     }
 
     inner class PhoneContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var name: TextView
-        var number: TextView
-        var action: TextView
-        var phoneIcon: ImageView
+        var name: TextView = itemView.findViewById(R.id.name)
+        var number: TextView = itemView.findViewById(R.id.number)
+        var action: TextView = itemView.findViewById(R.id.action)
+        var phoneIcon: ImageView = itemView.findViewById(R.id.phoneIcon)
 
-        init {
-            name = itemView.findViewById(R.id.name)
-            number = itemView.findViewById(R.id.number)
-            phoneIcon = itemView.findViewById(R.id.phoneIcon)
-            action = itemView.findViewById(R.id.action)
-        }
-    }
-
-    interface OnPhoneContactClickListener {
-        fun onPhoneContactClicked(phoneContact: PhoneContact)
-    }
-
-    interface OnGroupInviteClickListener {
-        fun onGroupInviteClicked(groupInvite: GroupInvite)
-    }
-
-    interface OnGroupContactClickListener {
-        fun onGroupContactClicked(groupContact: GroupContact)
     }
 }

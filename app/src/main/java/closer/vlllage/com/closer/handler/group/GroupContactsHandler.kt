@@ -1,50 +1,26 @@
 package closer.vlllage.com.closer.handler.group
 
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.Manifest.permission.READ_CONTACTS
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
-
-import com.google.android.gms.maps.model.LatLng
-
-import java.util.ArrayList
-import java.util.HashSet
-
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.PhoneResult
-import closer.vlllage.com.closer.handler.data.AccountHandler
-import closer.vlllage.com.closer.handler.data.ApiHandler
-import closer.vlllage.com.closer.handler.data.LocationHandler
-import closer.vlllage.com.closer.handler.data.PermissionHandler
-import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.data.PhoneContactsHandler
-import closer.vlllage.com.closer.handler.data.RefreshHandler
-import closer.vlllage.com.closer.handler.helpers.ActivityHandler
-import closer.vlllage.com.closer.handler.helpers.AlertHandler
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.MenuHandler
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.TimeAgo
-import closer.vlllage.com.closer.handler.helpers.Val
+import closer.vlllage.com.closer.handler.data.*
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.SetNameHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
 import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.GroupContact
-import closer.vlllage.com.closer.store.models.GroupContact_
-import closer.vlllage.com.closer.store.models.GroupInvite
-import closer.vlllage.com.closer.store.models.GroupInvite_
-import closer.vlllage.com.closer.store.models.Phone
-import closer.vlllage.com.closer.store.models.Phone_
+import closer.vlllage.com.closer.store.models.*
+import com.google.android.gms.maps.model.LatLng
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
-
-import android.Manifest.permission.READ_CONTACTS
+import java.util.*
 
 class GroupContactsHandler : PoolMember() {
 
@@ -62,61 +38,55 @@ class GroupContactsHandler : PoolMember() {
         this.contactsRecyclerView = contactsRecyclerView
         this.showPhoneContactsButton = showPhoneContactsButton
         this.searchContacts = searchContacts
-        phoneContactAdapter = PhoneContactAdapter(this, object : PhoneContactAdapter.OnPhoneContactClickListener {
-            override fun onPhoneContactClicked(phoneContact: PhoneContact) {
-                if (phoneContact.name == null) {
-                    `$`(AlertHandler::class.java).make().apply {
-                        positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.invite)
-                        layoutResId = R.layout.invite_by_number_modal
-                        textViewId = R.id.input
-                        onTextViewSubmitCallback = { name ->
-                            phoneContact.name = name
-                            inviteToGroup(group, phoneContact)
-                        }
-                        title = `$`(ResourcesHandler::class.java).resources.getString(R.string.invite_to_group, group.name)
-                        show()
-                    }
-                } else {
-                    `$`(AlertHandler::class.java).make().apply {
-                        positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_phone_name, phoneContact.firstName)
-                        message = phoneContact.phoneNumber
-                        positiveButtonCallback = { alertResult -> inviteToGroup(group, phoneContact) }
-                        title = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_phone_to_group, phoneContact.firstName, group.name)
-                        show()
-                    }
-                }
-            }
-        }, object : PhoneContactAdapter.OnGroupInviteClickListener {
-            override fun onGroupInviteClicked(groupInvite: GroupInvite) {
+        phoneContactAdapter = PhoneContactAdapter(this, { phoneContact ->
+            if (phoneContact.name == null) {
                 `$`(AlertHandler::class.java).make().apply {
-                    positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.cancel_invite)
-                    message = `$`(ResourcesHandler::class.java).resources.getString(R.string.confirm_cancel_invite, groupInvite.name)
-                    positiveButtonCallback = { alertResult -> cancelInvite(groupInvite) }
+                    positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.invite)
+                    layoutResId = R.layout.invite_by_number_modal
+                    textViewId = R.id.input
+                    onTextViewSubmitCallback = { name ->
+                        phoneContact.name = name
+                        inviteToGroup(group, phoneContact)
+                    }
+                    title = `$`(ResourcesHandler::class.java).resources.getString(R.string.invite_to_group, group.name)
+                    show()
+                }
+            } else {
+                `$`(AlertHandler::class.java).make().apply {
+                    positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_phone_name, phoneContact.firstName)
+                    message = phoneContact.phoneNumber
+                    positiveButtonCallback = { alertResult -> inviteToGroup(group, phoneContact) }
+                    title = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_phone_to_group, phoneContact.firstName, group.name)
                     show()
                 }
             }
-        }, object : PhoneContactAdapter.OnGroupContactClickListener {
-            override fun onGroupContactClicked(groupContact: GroupContact) {
-                if (`$`(PersistenceHandler::class.java).phoneId == groupContact.contactId) {
-                    `$`(MenuHandler::class.java).show(MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.leave_group_action) {
-                        `$`(AlertHandler::class.java).make().apply {
-                            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.leave_group, group.name)
-                            positiveButtonCallback = { result -> leaveGroup(group) }
-                            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.leave_group_title, group.name)
-                            message = `$`(ResourcesHandler::class.java).resources.getString(
-                                    if (group.isPublic) R.string.leave_public_group_message else R.string.leave_private_group_message)
-                            show()
-                        }
-                    })
-                } else {
-                    `$`(PhoneMessagesHandler::class.java).openMessagesWithPhone(groupContact.contactId!!, groupContact.contactName!!, "")
-                }
+        }, { groupInvite ->
+            `$`(AlertHandler::class.java).make().apply {
+                positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.cancel_invite)
+                message = `$`(ResourcesHandler::class.java).resources.getString(R.string.confirm_cancel_invite, groupInvite.name)
+                positiveButtonCallback = { alertResult -> cancelInvite(groupInvite) }
+                show()
+            }
+        }, { groupContact ->
+            if (`$`(PersistenceHandler::class.java).phoneId == groupContact.contactId) {
+                `$`(MenuHandler::class.java).show(MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.leave_group_action) {
+                    `$`(AlertHandler::class.java).make().apply {
+                        positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.leave_group, group.name)
+                        positiveButtonCallback = { result -> leaveGroup(group) }
+                        title = `$`(ResourcesHandler::class.java).resources.getString(R.string.leave_group_title, group.name)
+                        message = `$`(ResourcesHandler::class.java).resources.getString(
+                                if (group.isPublic) R.string.leave_public_group_message else R.string.leave_private_group_message)
+                        show()
+                    }
+                })
+            } else {
+                `$`(PhoneMessagesHandler::class.java).openMessagesWithPhone(groupContact.contactId!!, groupContact.contactName!!, "")
             }
         })
 
         if (`$`(PermissionHandler::class.java).has(READ_CONTACTS)) {
             `$`(DisposableHandler::class.java).add(
-                    `$`(PhoneContactsHandler::class.java).allContacts.subscribe({ phoneContactAdapter!!.setContacts(it) })
+                    `$`(PhoneContactsHandler::class.java).allContacts.subscribe { phoneContactAdapter!!.setContacts(it) }
             )
         }
 

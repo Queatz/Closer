@@ -30,7 +30,7 @@ class AppShortcutsHandler : PoolMember() {
         val bitmaps = HashSet<Bitmap>()
 
         for (group in groups) {
-            if (group.name == null || group.name!!.isEmpty()) {
+            if (group.name?.isEmpty() == false) {
                 continue
             }
 
@@ -54,8 +54,6 @@ class AppShortcutsHandler : PoolMember() {
 
         shortcutManager.dynamicShortcuts = shortcuts
 
-        for (bitmap in bitmaps) {
-            bitmap.recycle()
-        }
+        bitmaps.forEach { it.recycle() }
     }
 }

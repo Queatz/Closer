@@ -6,34 +6,25 @@ import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.pool.PoolMember
 import com.google.android.gms.maps.model.LatLng
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 class AccountHandler : PoolMember() {
 
-    val name: String
-        get() = `$`(PersistenceHandler::class.java).myName
+    val name get() = `$`(PersistenceHandler::class.java).myName
+    val status get() = `$`(PersistenceHandler::class.java).myStatus
+    val active get() = `$`(PersistenceHandler::class.java).myActive
+    val phone get(): String {
+        var phone = `$`(PersistenceHandler::class.java).phone
 
-    val status: String
-        get() = `$`(PersistenceHandler::class.java).myStatus
-
-    val active: Boolean
-        get() = `$`(PersistenceHandler::class.java).myActive
-
-    val phone: String
-        get() {
-            var phone = `$`(PersistenceHandler::class.java).phone
-
-            if (phone == null) {
-                phone = `$`(Val::class.java).rndId()
-                `$`(PersistenceHandler::class.java).phone = phone
-            }
-
-            return phone
+        if (phone == null) {
+            phone = `$`(Val::class.java).rndId()
+            `$`(PersistenceHandler::class.java).phone = phone
         }
 
-    val privateMode: Boolean
-        get() = `$`(PersistenceHandler::class.java).privateMode
+        return phone
+    }
+
+    val privateMode get() = `$`(PersistenceHandler::class.java).privateMode
 
     fun updateGeo(latLng: LatLng) {
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_GEO, latLng))
@@ -95,9 +86,7 @@ class AccountHandler : PoolMember() {
                 .subscribe({ createResult -> `$`(PersistenceHandler::class.java).phoneId = createResult.id }, { this.onError(it) }))
     }
 
-    fun changes(): Observable<AccountChange> {
-        return accountChanges
-    }
+    fun changes() = accountChanges
 
     class AccountChange(val prop: String, val value: Any)
 

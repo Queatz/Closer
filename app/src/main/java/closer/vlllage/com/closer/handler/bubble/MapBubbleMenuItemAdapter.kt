@@ -11,7 +11,10 @@ import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import java.util.*
 
-class MapBubbleMenuItemAdapter(poolMember: PoolMember, private val mapBubble: MapBubble, private val onClickListener: MapBubbleMenuView.OnMapBubbleMenuItemClickListener) : PoolRecyclerAdapter<MenuItemViewHolder>(poolMember) {
+class MapBubbleMenuItemAdapter(poolMember: PoolMember,
+                               private val mapBubble: MapBubble,
+                               private val onClickListener: OnMapBubbleMenuItemClickListener)
+    : PoolRecyclerAdapter<MenuItemViewHolder>(poolMember) {
 
     private val menuItems = ArrayList<MapBubbleMenuItem>()
 
@@ -26,12 +29,10 @@ class MapBubbleMenuItemAdapter(poolMember: PoolMember, private val mapBubble: Ma
 
         holder.menuItemTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(menuItem.iconRes ?: 0, 0, 0, 0)
 
-        holder.itemView.setOnClickListener { view -> onClickListener.onMenuItemClick(mapBubble, position) }
+        holder.itemView.setOnClickListener { view -> onClickListener.invoke(mapBubble, position) }
     }
 
-    override fun getItemCount(): Int {
-        return menuItems.size
-    }
+    override fun getItemCount() = menuItems.size
 
     fun setMenuItems(menuItems: List<MapBubbleMenuItem>) {
         this.menuItems.clear()
@@ -46,11 +47,6 @@ class MapBubbleMenuItemAdapter(poolMember: PoolMember, private val mapBubble: Ma
     }
 
     inner class MenuItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var menuItemTitle: TextView
-
-        init {
-            menuItemTitle = itemView.findViewById(R.id.menuItemTitle)
-        }
+        var menuItemTitle: TextView = itemView.findViewById(R.id.menuItemTitle)
     }
 }

@@ -42,9 +42,7 @@ class BubbleMapLayer {
 
         mapBubbles.add(mapBubble)
         mapBubble.view = bubbleView!!.createView(view, mapBubble)
-        if (mapBubble.onViewReadyListener != null) {
-            mapBubble.onViewReadyListener!!.onViewReady(mapBubble.view!!)
-        }
+        mapBubble.onViewReadyListener?.invoke(mapBubble.view!!)
         view!!.addView(mapBubble.view)
 
         if (map == null) {

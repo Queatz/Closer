@@ -255,8 +255,7 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     companion object {
-
-        val EXTRA_GROUP_ID = "groupId"
-        val EXTRA_RESPOND = "respond"
+        const val EXTRA_GROUP_ID = "groupId"
+        const val EXTRA_RESPOND = "respond"
     }
 }

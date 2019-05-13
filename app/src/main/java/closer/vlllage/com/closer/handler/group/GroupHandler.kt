@@ -25,11 +25,11 @@ import java.util.*
 
 class GroupHandler : PoolMember() {
 
-    private var groupName: TextView? = null
-    private var groupAbout: TextView? = null
-    private var backgroundPhoto: ImageView? = null
-    private var peopleInGroup: TextView? = null
-    private var settingsButton: View? = null
+    private lateinit var groupName: TextView
+    private lateinit var groupAbout: TextView
+    private lateinit var backgroundPhoto: ImageView
+    private lateinit var peopleInGroup: TextView
+    private lateinit var settingsButton: View
     var group: Group? = null
         private set(group) {
             field = group
@@ -104,13 +104,13 @@ class GroupHandler : PoolMember() {
 
     private fun onGroupSet(group: Group) {
         setGroupContact()
-        peopleInGroup!!.text = ""
+        peopleInGroup.text = ""
 
         if (`$`(Val::class.java).isEmpty(group.about)) {
-            groupAbout!!.visibility = View.GONE
+            groupAbout.visibility = View.GONE
         } else {
-            groupAbout!!.visibility = View.VISIBLE
-            groupAbout!!.text = group.about
+            groupAbout.visibility = View.VISIBLE
+            groupAbout.text = group.about
         }
 
         `$`(DisposableHandler::class.java).add(`$`(StoreHandler::class.java).store.box(GroupContact::class.java).query()
@@ -140,7 +140,7 @@ class GroupHandler : PoolMember() {
                 })
 
         if (`$`(FeatureHandler::class.java).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
-            settingsButton!!.visibility = View.VISIBLE
+            settingsButton.visibility = View.VISIBLE
         }
     }
 
@@ -161,38 +161,38 @@ class GroupHandler : PoolMember() {
         names.addAll(contactInvites)
 
         if (names.isEmpty()) {
-            peopleInGroup!!.visibility = View.GONE
-            peopleInGroup!!.setText(R.string.add_contact)
+            peopleInGroup.visibility = View.GONE
+            peopleInGroup.setText(R.string.add_contact)
             return
         }
 
-        peopleInGroup!!.visibility = View.VISIBLE
+        peopleInGroup.visibility = View.VISIBLE
 
-        peopleInGroup!!.text = StringUtils.join(names, ", ")
+        peopleInGroup.text = StringUtils.join(names, ", ")
     }
 
     fun showGroupName(group: Group?) {
         if (group == null) {
-            groupName!!.setText(R.string.not_found)
+            groupName.setText(R.string.not_found)
             return
         }
 
         if (group.hasPhone()) {
             `$`(DisposableHandler::class.java).add(`$`(DataHandler::class.java).getPhone(group.phoneId!!).subscribe(
-                    { phone -> groupName!!.text = phone.name }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
+                    { phone -> groupName.text = phone.name }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
             ))
         } else {
-            groupName!!.text = `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+            groupName.text = `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
         }
     }
 
     fun setGroupBackground(group: Group) {
         if (group.photo != null) {
-            backgroundPhoto!!.visibility = View.VISIBLE
-            backgroundPhoto!!.setImageDrawable(null)
-            `$`(PhotoLoader::class.java).softLoad(group.photo!!, backgroundPhoto!!)
+            backgroundPhoto.visibility = View.VISIBLE
+            backgroundPhoto.setImageDrawable(null)
+            `$`(PhotoLoader::class.java).softLoad(group.photo!!, backgroundPhoto)
         } else {
-            backgroundPhoto!!.visibility = View.GONE
+            backgroundPhoto.visibility = View.GONE
         }
     }
 
@@ -216,19 +216,8 @@ class GroupHandler : PoolMember() {
                         { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
     }
 
-    fun onGroupChanged(): BehaviorSubject<Group> {
-        return groupChanged
-    }
-
-    fun onGroupUpdated(): PublishSubject<Group> {
-        return groupUpdated
-    }
-
-    fun onEventChanged(): BehaviorSubject<Event> {
-        return eventChanged
-    }
-
-    fun onPhoneChanged(): BehaviorSubject<Phone> {
-        return phoneChanged
-    }
+    fun onGroupChanged() = groupChanged
+    fun onGroupUpdated() = groupUpdated
+    fun onEventChanged() = eventChanged
+    fun onPhoneChanged() = phoneChanged
 }

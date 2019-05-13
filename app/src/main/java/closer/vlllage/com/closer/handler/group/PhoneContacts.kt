@@ -13,20 +13,12 @@ class PhoneContacts : PoolMember() {
     private var contacts: List<PhoneContact>? = null
 
     val allContacts: Observable<List<PhoneContact>>
-        get() = if (contacts != null && !contacts!!.isEmpty()) {
+        get() = if (contacts?.isEmpty() == false) {
             Observable.just(contacts!!)
         } else Observable.fromCallable<List<PhoneContact>> {
-            val contentResolver = `$`(ApplicationHandler::class.java).app.contentResolver
+            val contentResolver = `$`(ApplicationHandler::class.java).app.contentResolver ?: return@fromCallable listOf<PhoneContact>()
 
-            if (contentResolver == null) {
-                return@fromCallable listOf<PhoneContact>()
-            }
-
-            contentResolver!!.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)!!.use { cursor ->
-                if (cursor == null) {
-                    return@fromCallable listOf<PhoneContact>()
-                }
-
+            contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)!!.use { cursor ->
                 if (cursor.moveToFirst()) {
                     val contactsList = ArrayList<PhoneContact>()
 

@@ -19,10 +19,8 @@ class PhysicalGroupHandler : PoolMember() {
         group.latitude = latLng.latitude
         group.longitude = latLng.longitude
         `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
-        `$`(SyncHandler::class.java).sync(group, object : SyncHandler.OnSyncResult {
-            override fun onSync(id: String?) {
-                openGroup(id!!)
-            }
+        `$`(SyncHandler::class.java).sync(group, { id ->
+            openGroup(id)
         })
     }
 

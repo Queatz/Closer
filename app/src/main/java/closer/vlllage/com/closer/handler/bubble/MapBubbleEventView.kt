@@ -16,10 +16,10 @@ class MapBubbleEventView : PoolMember() {
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubbleEventClickListener): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_event, layer, false)
 
-        view.findViewById<View>(R.id.click).setOnClickListener { v -> onClickListener.onEventClick(mapBubble) }
+        view.findViewById<View>(R.id.click).setOnClickListener { onClickListener.invoke(mapBubble) }
         update(view, mapBubble)
 
-        view.findViewById<View>(R.id.directionsButton).setOnClickListener { v -> `$`(OutboundHandler::class.java).openDirections(mapBubble.latLng) }
+        view.findViewById<View>(R.id.directionsButton).setOnClickListener { `$`(OutboundHandler::class.java).openDirections(mapBubble.latLng) }
 
         return view
     }
@@ -37,8 +37,6 @@ class MapBubbleEventView : PoolMember() {
 
         actionTextView.text = `$`(EventDetailsHandler::class.java).formatEventDetails(mapBubble.tag as Event)
     }
-
-    interface MapBubbleEventClickListener {
-        fun onEventClick(mapBubble: MapBubble)
-    }
 }
+
+typealias MapBubbleEventClickListener = (mapBubble: MapBubble) -> Unit

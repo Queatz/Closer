@@ -12,11 +12,11 @@ class HttpEncode : PoolMember() {
             return null
         }
 
-        try {
-            return URLEncoder.encode(string, UTF_8)
+        return try {
+            URLEncoder.encode(string, UTF_8)
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
-            return null
+            null
         }
 
     }
@@ -26,17 +26,16 @@ class HttpEncode : PoolMember() {
             return null
         }
 
-        try {
-            return URLDecoder.decode(string, UTF_8)
+        return try {
+            URLDecoder.decode(string, UTF_8)
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
-            return null
+            null
         }
 
     }
 
     companion object {
-
-        private val UTF_8 = "UTF-8"
+        private const val UTF_8 = "UTF-8"
     }
 }

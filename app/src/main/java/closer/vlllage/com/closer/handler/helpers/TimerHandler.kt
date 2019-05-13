@@ -9,14 +9,14 @@ import io.reactivex.disposables.Disposable
 
 class TimerHandler : PoolMember() {
 
-    private var handler: Handler? = null
+    private lateinit var handler: Handler
 
     override fun onPoolInit() {
         handler = Handler(Looper.getMainLooper())
     }
 
     fun post(runnable: Runnable) {
-        handler!!.post(runnable)
+        handler.post(runnable)
     }
 
     fun postDisposable(runnable: Runnable, millis: Long) {
@@ -25,7 +25,7 @@ class TimerHandler : PoolMember() {
 
     private fun post(runnable: Runnable, millis: Long): Disposable {
         val disposableRunnable = DisposableRunnable(runnable)
-        handler!!.postDelayed(disposableRunnable, millis)
+        handler.postDelayed(disposableRunnable, millis)
         return disposableRunnable
     }
 
@@ -33,13 +33,11 @@ class TimerHandler : PoolMember() {
         private var disposed: Boolean = false
 
         override fun dispose() {
-            handler!!.removeCallbacks(runnable)
+            handler.removeCallbacks(runnable)
             disposed = true
         }
 
-        override fun isDisposed(): Boolean {
-            return disposed
-        }
+        override fun isDisposed() = disposed
 
         override fun run() {
             disposed = true

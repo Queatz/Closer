@@ -8,16 +8,16 @@ import io.reactivex.Observable
 
 class PhoneContactsHandler : PoolMember() {
 
-    private var phoneContacts: PhoneContacts? = null
+    private lateinit var phoneContacts: PhoneContacts
 
     val allContacts: Observable<List<PhoneContact>>
-        get() = phoneContacts!!.allContacts
+        get() = phoneContacts.allContacts
 
     override fun onPoolInit() {
         phoneContacts = `$`(ApplicationHandler::class.java).app.`$`(PhoneContacts::class.java)
     }
 
     fun forceReload() {
-        phoneContacts!!.forceReload()
+        phoneContacts.forceReload()
     }
 }

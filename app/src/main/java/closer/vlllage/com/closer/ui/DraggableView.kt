@@ -171,8 +171,7 @@ class DraggableView(private val view: View, private val container: View) {
     }
 
     companion object {
-
-        private val SINGLE_TAP_CONFIRM_TIME_MS = 100
-        private val SINGLE_TAP_CONFIRM_MAX_VELOCITY = 2
+        private const val SINGLE_TAP_CONFIRM_TIME_MS = 100
+        private const val SINGLE_TAP_CONFIRM_MAX_VELOCITY = 2
     }
 }

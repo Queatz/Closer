@@ -10,10 +10,10 @@ import java.text.DateFormat
 import java.util.logging.Logger
 
 class ApiService {
-    private val backend: Backend
+    val backend: Backend
     val photoUploadBackend: PhotoUploadBackend
     val contentBackend: ContentBackend
-    private lateinit var authorization: String
+    lateinit var authorization: String
 
     init {
         val httpClient = OkHttpClient.Builder()
@@ -69,12 +69,6 @@ class ApiService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(ContentBackend::class.java)
-    }
-
-    fun getBackend() = backend
-
-    fun setAuthorization(authorization: String) {
-        this.authorization = authorization
     }
 
     companion object {

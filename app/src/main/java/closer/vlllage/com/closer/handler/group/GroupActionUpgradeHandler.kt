@@ -26,7 +26,7 @@ class GroupActionUpgradeHandler : PoolMember() {
                                         `$`(DefaultAlerts::class.java).thatDidntWork()
                                     }
                                 },
-                                { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
+                                { `$`(DefaultAlerts::class.java).thatDidntWork() }
                         ))
             }
         }
@@ -46,7 +46,7 @@ class GroupActionUpgradeHandler : PoolMember() {
                                         `$`(DefaultAlerts::class.java).thatDidntWork()
                                     }
                                 },
-                                { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
+                                { `$`(DefaultAlerts::class.java).thatDidntWork() }
                         ))
             }
         }

@@ -15,7 +15,5 @@ class StoreRefHandler : PoolMember() {
         store.close()
     }
 
-    fun get(): Store {
-        return store
-    }
+    fun get() = store
 }

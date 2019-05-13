@@ -17,8 +17,8 @@ import io.objectbox.query.QueryBuilder
 
 class GroupMessageMentionHandler : PoolMember() {
     private var animator: RevealAnimator? = null
-    private var adapter: MentionAdapter? = null
-    private var container: MaxSizeFrameLayout? = null
+    private lateinit var adapter: MentionAdapter
+    private lateinit var container: MaxSizeFrameLayout
 
     fun attach(container: MaxSizeFrameLayout, recyclerView: RecyclerView, onMentionClickListener: (Phone) -> Unit) {
         this.container = container
@@ -48,7 +48,7 @@ class GroupMessageMentionHandler : PoolMember() {
                 show(false)
             } else {
                 show(true)
-                adapter!!.setItems(phones)
+                adapter.setItems(phones)
             }
         }
     }
@@ -59,13 +59,13 @@ class GroupMessageMentionHandler : PoolMember() {
             return
         }
 
-        if (adapter!!.itemCount < 1) {
+        if (adapter.itemCount < 1) {
             show = false
         }
 
-        if (!show && container!!.visibility == View.VISIBLE) {
+        if (!show && container.visibility == View.VISIBLE) {
             animator!!.show(false, true)
-        } else if (show && container!!.visibility == View.GONE) {
+        } else if (show && container.visibility == View.GONE) {
             animator!!.show(true, true)
         }
     }

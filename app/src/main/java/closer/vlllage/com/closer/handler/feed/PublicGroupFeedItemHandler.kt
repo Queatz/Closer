@@ -24,7 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 
 class PublicGroupFeedItemHandler : PoolMember() {
 
-    private var searchGroups: EditText? = null
+    private lateinit var searchGroups: EditText
 
     fun attach(itemView: View) {
         val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
@@ -40,13 +40,13 @@ class PublicGroupFeedItemHandler : PoolMember() {
                 false
         )
 
-        searchGroups!!.addTextChangedListener(object : TextWatcher {
+        searchGroups.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                `$`(SearchGroupHandler::class.java).showGroupsForQuery(searchGroupsAdapter, searchGroups!!.text.toString())
+                `$`(SearchGroupHandler::class.java).showGroupsForQuery(searchGroupsAdapter, searchGroups.text.toString())
             }
 
             override fun afterTextChanged(s: Editable) {
@@ -54,7 +54,7 @@ class PublicGroupFeedItemHandler : PoolMember() {
             }
         })
 
-        `$`(SearchGroupHandler::class.java).showGroupsForQuery(searchGroupsAdapter, searchGroups!!.text.toString())
+        `$`(SearchGroupHandler::class.java).showGroupsForQuery(searchGroupsAdapter, searchGroups.text.toString())
 
         val distance = .12f
 
@@ -88,7 +88,7 @@ class PublicGroupFeedItemHandler : PoolMember() {
             return
         }
 
-        searchGroups!!.setText("")
+        searchGroups.setText("")
 
         `$`(LocationHandler::class.java).getCurrentLocation({ location ->
             `$`(AlertHandler::class.java).make().apply {
@@ -103,10 +103,8 @@ class PublicGroupFeedItemHandler : PoolMember() {
                     group.latitude = location.latitude
                     group.longitude = location.longitude
                     `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
-                    `$`(SyncHandler::class.java).sync(group, object : SyncHandler.OnSyncResult {
-                        override fun onSync(groupId: String?) {
-                            openGroup(groupId, null)
-                        }
+                    `$`(SyncHandler::class.java).sync(group, { groupId ->
+                        openGroup(groupId, null)
                     })
                 }
                 positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.create_public_group)

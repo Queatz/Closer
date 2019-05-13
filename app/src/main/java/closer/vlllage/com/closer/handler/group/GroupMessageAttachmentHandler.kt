@@ -109,7 +109,7 @@ class GroupMessageAttachmentHandler : PoolMember() {
         return if (`$`(PersistenceHandler::class.java).phoneId == null) {
             null
         } else `$`(StoreHandler::class.java).store.box(GroupContact::class.java).query()
-                .equal(GroupContact_.contactId, `$`(PersistenceHandler::class.java).phoneId)
+                .equal(GroupContact_.contactId, `$`(PersistenceHandler::class.java).phoneId!!)
                 .equal(GroupContact_.groupId, group.id!!)
                 .build().findFirst()
 

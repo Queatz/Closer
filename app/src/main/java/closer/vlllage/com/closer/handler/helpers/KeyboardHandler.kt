@@ -32,7 +32,6 @@ class KeyboardHandler : PoolMember() {
     }
 
     companion object {
-
-        private val KEYBOARD_DELAY_MS = 500
+        private const val KEYBOARD_DELAY_MS = 500
     }
 }

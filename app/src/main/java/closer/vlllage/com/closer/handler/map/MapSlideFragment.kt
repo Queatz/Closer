@@ -25,7 +25,6 @@ import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Suggestion
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.iid.FirebaseInstanceId
@@ -54,113 +53,88 @@ class MapSlideFragment : PoolFragment() {
             } else {
                 `$`(ReplyLayoutHandler::class.java).replyTo(mapBubble)
             }
-        },  object : MapBubbleMenuView.OnMapBubbleMenuItemClickListener {
-            override fun onMenuItemClick(mapBubble: MapBubble, position: Int) {
+        }, { mapBubble, position ->
                 `$`(BubbleHandler::class.java).remove(mapBubble)
-                if (mapBubble.onItemClickListener != null) {
-                    mapBubble.onItemClickListener!!.onItemClick(position)
-                }
-            }
-        }, object : MapBubbleEventView.MapBubbleEventClickListener {
-            override fun onEventClick(mapBubble: MapBubble) {
-                val groupId = (mapBubble.tag as Event).groupId
+                mapBubble.onItemClickListener?.invoke(position)
+        }, { mapBubble ->
+            val groupId = (mapBubble.tag as Event).groupId
 
-                if (groupId != null) {
-                    `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(mapBubble.view, groupId)
-                } else {
-                    `$`(DefaultAlerts::class.java).thatDidntWork()
-                }
-            }
-        }, object : MapBubbleSuggestionView.MapBubbleSuggestionClickListener {
-            override fun onSuggestionClick(mapBubble: MapBubble) {
-                `$`(SuggestionHandler::class.java).clearSuggestions()
-                `$`(ShareHandler::class.java).shareTo(mapBubble.latLng!!, object : ShareHandler.OnGroupSelectedListener {
-                    override fun onGroupSelected(group: Group) {
-                        var success = false
-                        if (mapBubble.tag is Suggestion) {
-                            val suggestion = mapBubble.tag as Suggestion
-                            success = `$`(GroupMessageAttachmentHandler::class.java).shareSuggestion(suggestion, group)
-                        }
-
-                        if (!success) {
-                            `$`(DefaultAlerts::class.java).thatDidntWork()
-                            return
-                        }
-
-                        `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(mapBubble.view, group.id)
-                    }
-                })
-            }
-        }, object : MapBubblePhysicalGroupView.MapBubblePhysicalGroupClickListener {
-            override fun onPhysicalGroupClick(mapBubble: MapBubble) {
-                val groupId = (mapBubble.tag as Group).id
+            if (groupId != null) {
                 `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(mapBubble.view, groupId)
+            } else {
+                `$`(DefaultAlerts::class.java).thatDidntWork()
             }
+        }, { mapBubble ->
+            `$`(SuggestionHandler::class.java).clearSuggestions()
+            `$`(ShareHandler::class.java).shareTo(mapBubble.latLng!!) { group ->
+                var success = false
+                if (mapBubble.tag is Suggestion) {
+                    val suggestion = mapBubble.tag as Suggestion
+                    success = `$`(GroupMessageAttachmentHandler::class.java).shareSuggestion(suggestion, group)
+                }
+
+                if (!success) {
+                    `$`(DefaultAlerts::class.java).thatDidntWork()
+                    return@shareTo
+                }
+
+                `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(mapBubble.view, group.id)
+            }
+        }, { mapBubble ->
+            val groupId = (mapBubble.tag as Group).id
+            `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(mapBubble.view, groupId)
         })
 
+        `$`(MapHandler::class.java).onMapReadyListener = { map ->
+            `$`(PhysicalGroupBubbleHandler::class.java).attach()
+            `$`(BubbleHandler::class.java).attach(map)
+        }
+        `$`(MapHandler::class.java).onMapChangedListener = {
+            `$`(BubbleHandler::class.java).update()
+            `$`(MapZoomHandler::class.java).update(`$`(MapHandler::class.java).zoom)
+        }
+        `$`(MapHandler::class.java).onMapClickedListener = { latLng ->
+            if (`$`(ReplyLayoutHandler::class.java).isVisible) {
+                `$`(ReplyLayoutHandler::class.java).showReplyLayout(false)
+            } else {
+                var anyActionTaken: Boolean
+                anyActionTaken = `$`(SuggestionHandler::class.java).clearSuggestions()
+                anyActionTaken = anyActionTaken || `$`(BubbleHandler::class.java).remove({ mapBubble -> BubbleType.MENU == mapBubble.type })
 
-        `$`(MapHandler::class.java).setOnMapReadyListener(object : MapHandler.OnMapReadyListener {
-            override fun onMapReady(map: GoogleMap) {
-                `$`(PhysicalGroupBubbleHandler::class.java).attach()
-                `$`(BubbleHandler::class.java).attach(map)
-            }
-        })
-        `$`(MapHandler::class.java).setOnMapChangedListener(object : MapHandler.OnMapChangedListener {
-            override fun onMapChanged() {
-                `$`(BubbleHandler::class.java).update()
-                `$`(MapZoomHandler::class.java).update(`$`(MapHandler::class.java).zoom)
-            }
-        })
-        `$`(MapHandler::class.java).setOnMapClickedListener(object : MapHandler.OnMapClickedListener {
-            override fun onMapClicked(latLng: LatLng) {
-                if (`$`(ReplyLayoutHandler::class.java).isVisible) {
-                    `$`(ReplyLayoutHandler::class.java).showReplyLayout(false)
-                } else {
-                    var anyActionTaken: Boolean
-                    anyActionTaken = `$`(SuggestionHandler::class.java).clearSuggestions()
-                    anyActionTaken = anyActionTaken || `$`(BubbleHandler::class.java).remove({ mapBubble -> BubbleType.MENU == mapBubble.type })
-
-                    if (!anyActionTaken) {
-                        showMapMenu(latLng, null)
-                    }
+                if (!anyActionTaken) {
+                    showMapMenu(latLng, null)
                 }
             }
-        })
-        `$`(MapHandler::class.java).setOnMapLongClickedListener(object : MapHandler.OnMapLongClickedListener {
-            override fun onMapLongClicked(latLng: LatLng) {
-                `$`(BubbleHandler::class.java).remove { mapBubble -> BubbleType.MENU == mapBubble.type }
+        }
+        `$`(MapHandler::class.java).onMapLongClickedListener = { latLng ->
+            `$`(BubbleHandler::class.java).remove { mapBubble -> BubbleType.MENU == mapBubble.type }
 
-                val menuBubble = MapBubble(latLng, BubbleType.MENU)
-                menuBubble.onItemClickListener = object : MapBubble.OnItemClickListener {
-                    override fun onItemClick(position: Int) {
-                        when (position) {
-                            0 -> `$`(SuggestionHandler::class.java).createNewSuggestion(menuBubble.latLng!!)
-                        }
-                    }
-                }
-                `$`(BubbleHandler::class.java).add(menuBubble)
-                menuBubble.onViewReadyListener = object : MapBubble.OnViewReadyListener {
-                    override fun onViewReady(view: View) {
-                        `$`(MapBubbleMenuView::class.java)
-                                .getMenuAdapter(menuBubble)
-                                .setMenuItems(MapBubbleMenuItem(getString(R.string.add_suggestion_here)))
-                    }
+            val menuBubble = MapBubble(latLng, BubbleType.MENU)
+            menuBubble.onItemClickListener = { position ->
+                when (position) {
+                    0 -> `$`(SuggestionHandler::class.java).createNewSuggestion(menuBubble.latLng!!)
                 }
             }
-        })
-        `$`(MapHandler::class.java).setOnMapIdleListener(object : MapHandler.OnMapIdleListener {
-            override fun onMapIdle(latLng: LatLng) {
-                `$`(DisposableHandler::class.java).add(`$`(DataHandler::class.java).getPhonesNear(latLng)
-                        .map<List<MapBubble>> { mapBubbleFrom(it) }.subscribe({ mapBubbles -> `$`(BubbleHandler::class.java).replace(mapBubbles) }, { networkError(it) }))
-
-                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).getSuggestionsNear(latLng).subscribe({ suggestions -> `$`(SuggestionHandler::class.java).loadAll(suggestions) }, { networkError(it) }))
-
-                `$`(RefreshHandler::class.java).refreshEvents(latLng)
-                `$`(RefreshHandler::class.java).refreshPhysicalGroups(latLng)
-
-                `$`(MapZoomHandler::class.java).update(`$`(MapHandler::class.java).zoom)
+            `$`(BubbleHandler::class.java).add(menuBubble)
+            menuBubble.onViewReadyListener = {
+                `$`(MapBubbleMenuView::class.java)
+                        .getMenuAdapter(menuBubble)
+                        .setMenuItems(MapBubbleMenuItem(getString(R.string.add_suggestion_here)))
             }
-        })
+        }
+        `$`(MapHandler::class.java).onMapIdleListener = { latLng ->
+            `$`(DisposableHandler::class.java).add(`$`(DataHandler::class.java).run {
+                getPhonesNear(latLng)
+                        .map<List<MapBubble>> { mapBubbleFrom(it) }.subscribe({ mapBubbles -> `$`(BubbleHandler::class.java).replace(mapBubbles) }, { networkError(it) })
+            })
+
+            `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).getSuggestionsNear(latLng).subscribe({ suggestions -> `$`(SuggestionHandler::class.java).loadAll(suggestions) }, { networkError(it) }))
+
+            `$`(RefreshHandler::class.java).refreshEvents(latLng)
+            `$`(RefreshHandler::class.java).refreshPhysicalGroups(latLng)
+
+            `$`(MapZoomHandler::class.java).update(`$`(MapHandler::class.java).zoom)
+        }
         `$`(MapHandler::class.java).attach(childFragmentManager.findFragmentById(R.id.map) as MapFragment)
         `$`(MyBubbleHandler::class.java).start()
         `$`(ReplyLayoutHandler::class.java).attach(view.findViewById(R.id.replyLayout))
@@ -201,45 +175,37 @@ class MapSlideFragment : PoolFragment() {
 
     private fun showMapMenu(latLng: LatLng, title: String?) {
         val menuBubble = MapBubble(latLng, BubbleType.MENU)
-        menuBubble.onItemClickListener = object : MapBubble.OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                when (position) {
-                    0 -> `$`(PhysicalGroupHandler::class.java).createPhysicalGroup(menuBubble.latLng!!)
-                    1 -> `$`(ShareHandler::class.java).shareTo(menuBubble.latLng!!, object : ShareHandler.OnGroupSelectedListener {
-                        override fun onGroupSelected(group: Group) {
-                            val success = `$`(GroupMessageAttachmentHandler::class.java).shareLocation(menuBubble.latLng!!, group)
+        menuBubble.onItemClickListener = { position ->
+            when (position) {
+                0 -> `$`(PhysicalGroupHandler::class.java).createPhysicalGroup(menuBubble.latLng!!)
+                1 -> `$`(ShareHandler::class.java).shareTo(menuBubble.latLng!!) { group ->
+                    val success = `$`(GroupMessageAttachmentHandler::class.java).shareLocation(menuBubble.latLng!!, group)
 
-                            if (!success) {
-                                `$`(DefaultAlerts::class.java).thatDidntWork()
-                            } else {
-                                `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(menuBubble.view, group.id)
-                            }
-                        }
-                    })
-                    2 -> `$`(EventHandler::class.java).createNewEvent(menuBubble.latLng!!, true, object : EventHandler.OnEventCreatedListener {
-                        override fun onEventCreated(event: Event) {
-                            `$`(MapHandler::class.java).centerMap(LatLng(
-                                    event.latitude!!,
-                                    event.longitude!!
-                            ))
-                        }
-                    })
+                    if (!success) {
+                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                    } else {
+                        `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(menuBubble.view, group.id)
+                    }
+                }
+                2 -> `$`(EventHandler::class.java).createNewEvent(menuBubble.latLng!!, true) {
+                    `$`(MapHandler::class.java).centerMap(LatLng(
+                            it.latitude!!,
+                            it.longitude!!
+                    ))
                 }
             }
         }
         `$`(BubbleHandler::class.java).add(menuBubble)
         menuBubble.status = title
-        menuBubble.onViewReadyListener = object : MapBubble.OnViewReadyListener {
-            override fun onViewReady(view: View) {
-                `$`(MapBubbleMenuView::class.java)
-                        .getMenuAdapter(menuBubble)
-                        .setMenuItems(
-                                (MapBubbleMenuItem(getString(R.string.talk_here), R.drawable.ic_wifi_black_18dp)),
-                                (MapBubbleMenuItem(getString(R.string.share_this_location), R.drawable.ic_share_black_18dp)),
-                                (MapBubbleMenuItem(getString(R.string.add_event_here), R.drawable.ic_event_note_black_24dp)))
+        menuBubble.onViewReadyListener = {
+            `$`(MapBubbleMenuView::class.java)
+                    .getMenuAdapter(menuBubble)
+                    .setMenuItems(
+                            (MapBubbleMenuItem(getString(R.string.talk_here), R.drawable.ic_wifi_black_18dp)),
+                            (MapBubbleMenuItem(getString(R.string.share_this_location), R.drawable.ic_share_black_18dp)),
+                            (MapBubbleMenuItem(getString(R.string.add_event_here), R.drawable.ic_event_note_black_24dp)))
 
-                `$`(MapBubbleMenuView::class.java).setMenuTitle(menuBubble, title)
-            }
+            `$`(MapBubbleMenuView::class.java).setMenuTitle(menuBubble, title)
         }
     }
 
@@ -282,7 +248,7 @@ class MapSlideFragment : PoolFragment() {
             }
 
             mapBubbles.add(MapBubble(
-                    `$`(LatLngStr::class.java).to(phone.latitude, phone.longitude),
+                    `$`(LatLngStr::class.java).to(phone.latitude!!, phone.longitude!!),
                     `$`(NameHandler::class.java).getName(phone),
                     phone.status!!
             ).apply {
@@ -308,7 +274,7 @@ class MapSlideFragment : PoolFragment() {
         return false
     }
 
-    fun handleIntent(intent: Intent?, onRequestMapOnScreenListener: MapViewHandler.OnRequestMapOnScreenListener) {
+    fun handleIntent(intent: Intent?, onRequestMapOnScreenListener: (() -> Unit)?) {
         intent ?: return
 
         `$`(IntentHandler::class.java).onNewIntent(intent, onRequestMapOnScreenListener)

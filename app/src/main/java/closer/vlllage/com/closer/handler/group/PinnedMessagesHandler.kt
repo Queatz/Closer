@@ -16,8 +16,8 @@ import java.util.*
 
 class PinnedMessagesHandler : PoolMember() {
 
-    private var pinnedMessagesRecyclerView: RecyclerView? = null
-    private var groupMessagesAdapter: GroupMessagesAdapter? = null
+    private lateinit var pinnedMessagesRecyclerView: RecyclerView
+    private lateinit var groupMessagesAdapter: GroupMessagesAdapter
     private var groupMessagesSubscription: DataSubscription? = null
     private var groupMessagesActualSubscription: DataSubscription? = null
 
@@ -31,11 +31,11 @@ class PinnedMessagesHandler : PoolMember() {
         )
 
         groupMessagesAdapter = GroupMessagesAdapter(this)
-        groupMessagesAdapter!!.setPinned(true)
+        groupMessagesAdapter.setPinned(true)
         pinnedMessagesRecyclerView.adapter = groupMessagesAdapter
-        groupMessagesAdapter!!.onSuggestionClickListener = { suggestion -> `$`(MapActivityHandler::class.java).showSuggestionOnMap(suggestion) }
-        groupMessagesAdapter!!.onEventClickListener = { event -> `$`(GroupActivityTransitionHandler::class.java).showGroupForEvent(null, event) }
-        groupMessagesAdapter!!.onGroupClickListener =  { group1 -> `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group1.id) }
+        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> `$`(MapActivityHandler::class.java).showSuggestionOnMap(suggestion) }
+        groupMessagesAdapter.onEventClickListener = { event -> `$`(GroupActivityTransitionHandler::class.java).showGroupForEvent(null, event) }
+        groupMessagesAdapter.onGroupClickListener =  { group1 -> `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group1.id) }
     }
 
     fun show(group: Group) {
@@ -80,7 +80,7 @@ class PinnedMessagesHandler : PoolMember() {
     }
 
     private fun setGroupMessages(pinnedMessages: List<GroupMessage>) {
-        pinnedMessagesRecyclerView!!.visibility = if (pinnedMessages.isEmpty()) View.GONE else View.VISIBLE
-        groupMessagesAdapter!!.setGroupMessages(pinnedMessages)
+        pinnedMessagesRecyclerView.visibility = if (pinnedMessages.isEmpty()) View.GONE else View.VISIBLE
+        groupMessagesAdapter.setGroupMessages(pinnedMessages)
     }
 }

@@ -52,11 +52,10 @@ class CameraHandler : PoolMember() {
             return
         }
 
-            onPhotoCapturedListener?.invoke(photoUri)
+        onPhotoCapturedListener?.invoke(photoUri)
     }
 
     companion object {
-
         private const val REQUEST_CODE_CAMERA = 1044
     }
 }

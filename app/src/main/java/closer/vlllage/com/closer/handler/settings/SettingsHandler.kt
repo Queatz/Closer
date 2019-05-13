@@ -8,7 +8,7 @@ import closer.vlllage.com.closer.pool.PoolMember
 
 class SettingsHandler : PoolMember() {
 
-    private var sharedPreferences: SharedPreferences? = null
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onPoolInit() {
         sharedPreferences = `$`(ApplicationHandler::class.java).app.getSharedPreferences(
@@ -17,11 +17,11 @@ class SettingsHandler : PoolMember() {
     }
 
     operator fun get(userLocalSetting: UserLocalSetting): Boolean {
-        return sharedPreferences!!.getBoolean(userLocalSetting.name, false)
+        return sharedPreferences.getBoolean(userLocalSetting.name, false)
     }
 
     operator fun set(userLocalSetting: UserLocalSetting, newValue: Boolean) {
-        sharedPreferences!!.edit().putBoolean(userLocalSetting.name, newValue).apply()
+        sharedPreferences.edit().putBoolean(userLocalSetting.name, newValue).apply()
     }
 
     companion object {

@@ -66,6 +66,6 @@ class PhotoActivity : CircularRevealActivity() {
     }
 
     companion object {
-        val EXTRA_PHOTO = "photo"
+        const val EXTRA_PHOTO = "photo"
     }
 }

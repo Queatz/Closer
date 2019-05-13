@@ -141,7 +141,7 @@ class EventHandler : PoolMember() {
         event.endsAt = endsAt
         `$`(StoreHandler::class.java).store.box(Event::class.java).put(event)
         `$`(SyncHandler::class.java).sync(event)
-        onEventCreatedListener.onEventCreated(event)
+        onEventCreatedListener.invoke(event)
     }
 
     fun eventBubbleFrom(event: Event): MapBubble {
@@ -153,34 +153,19 @@ class EventHandler : PoolMember() {
     }
 
     private class CreateEventViewHolder internal constructor(view: View) {
-        internal var isPublicSwitch: Switch
-        internal var isNextDaySwitch: Switch
-        internal var startsAtTimePicker: TimePicker
-        internal var endsAtTimePicker: TimePicker
-        internal var datePicker: DatePicker
-        internal var dateTextView: TextView
-        internal var changeDateButton: View
-        internal var eventName: EditText
-        internal var eventPrice: EditText
-        internal var scrollView: InterceptableScrollView
-
-        init {
-            this.isPublicSwitch = view.findViewById(R.id.isPublicSwitch)
-            this.isNextDaySwitch = view.findViewById(R.id.isNextDaySwitch)
-            this.startsAtTimePicker = view.findViewById(R.id.startsAt)
-            this.endsAtTimePicker = view.findViewById(R.id.endsAt)
-            this.datePicker = view.findViewById(R.id.datePicker)
-            this.dateTextView = view.findViewById(R.id.dateTextView)
-            this.changeDateButton = view.findViewById(R.id.changeDate)
-            this.eventName = view.findViewById(R.id.name)
-            this.eventPrice = view.findViewById(R.id.price)
-            this.scrollView = view as InterceptableScrollView
-        }
+        internal var isPublicSwitch: Switch = view.findViewById(R.id.isPublicSwitch)
+        internal var isNextDaySwitch: Switch = view.findViewById(R.id.isNextDaySwitch)
+        internal var startsAtTimePicker: TimePicker = view.findViewById(R.id.startsAt)
+        internal var endsAtTimePicker: TimePicker = view.findViewById(R.id.endsAt)
+        internal var datePicker: DatePicker = view.findViewById(R.id.datePicker)
+        internal var dateTextView: TextView = view.findViewById(R.id.dateTextView)
+        internal var changeDateButton: View = view.findViewById(R.id.changeDate)
+        internal var eventName: EditText = view.findViewById(R.id.name)
+        internal var eventPrice: EditText = view.findViewById(R.id.price)
+        internal var scrollView: InterceptableScrollView = view as InterceptableScrollView
     }
 
     private inner class CreateEventViewState(internal var startsAt: Calendar, internal var endsAt: Calendar)
-
-    interface OnEventCreatedListener {
-        fun onEventCreated(event: Event)
-    }
 }
+
+typealias OnEventCreatedListener = (event: Event) -> Unit

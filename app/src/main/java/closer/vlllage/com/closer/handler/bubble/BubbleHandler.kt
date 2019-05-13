@@ -10,10 +10,10 @@ import com.google.android.gms.maps.model.LatLng
 class BubbleHandler : PoolMember() {
 
     private var onClickListener: ((MapBubble) -> Unit)? = null
-    private var onMenuItemClickListener: MapBubbleMenuView.OnMapBubbleMenuItemClickListener? = null
-    private var onMapBubbleSuggestionClickListener: MapBubbleSuggestionView.MapBubbleSuggestionClickListener? = null
-    private var onMapBubbleEventClickListener: MapBubbleEventView.MapBubbleEventClickListener? = null
-    private var onMapBubblePhysicalGroupClickListener: MapBubblePhysicalGroupView.MapBubblePhysicalGroupClickListener? = null
+    private lateinit var onMenuItemClickListener: OnMapBubbleMenuItemClickListener
+    private lateinit var onMapBubbleSuggestionClickListener: MapBubbleSuggestionClickListener
+    private lateinit var onMapBubbleEventClickListener: MapBubbleEventClickListener
+    private lateinit var onMapBubblePhysicalGroupClickListener: MapBubblePhysicalGroupClickListener
 
     private val bubbleMapLayer = BubbleMapLayer()
     private val bubbleProxyLayer = BubbleProxyLayer(bubbleMapLayer) { `$`(MapHandler::class.java).visibleRegion!! }
@@ -25,14 +25,14 @@ class BubbleHandler : PoolMember() {
                     BubbleType.PROXY -> `$`(MapBubbleProxyView::class.java).from(view!!, mapBubble) { proxiedMapBubble ->
                         when (proxiedMapBubble.type) {
                             BubbleType.STATUS -> onClickListener!!.invoke(proxiedMapBubble)
-                            BubbleType.EVENT -> onMapBubbleEventClickListener!!.onEventClick(proxiedMapBubble)
-                            BubbleType.PHYSICAL_GROUP -> onMapBubblePhysicalGroupClickListener!!.onPhysicalGroupClick(proxiedMapBubble)
+                            BubbleType.EVENT -> onMapBubbleEventClickListener.invoke(proxiedMapBubble)
+                            BubbleType.PHYSICAL_GROUP -> onMapBubblePhysicalGroupClickListener.invoke(proxiedMapBubble)
                         }
                     }
-                    BubbleType.MENU -> `$`(MapBubbleMenuView::class.java).from(view!!, mapBubble, onMenuItemClickListener!!)
-                    BubbleType.SUGGESTION -> `$`(MapBubbleSuggestionView::class.java).from(view!!, mapBubble, onMapBubbleSuggestionClickListener!!)
-                    BubbleType.EVENT -> `$`(MapBubbleEventView::class.java).from(view!!, mapBubble, onMapBubbleEventClickListener!!)
-                    BubbleType.PHYSICAL_GROUP -> `$`(MapBubblePhysicalGroupView::class.java).from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener!!)
+                    BubbleType.MENU -> `$`(MapBubbleMenuView::class.java).from(view!!, mapBubble, onMenuItemClickListener)
+                    BubbleType.SUGGESTION -> `$`(MapBubbleSuggestionView::class.java).from(view!!, mapBubble, onMapBubbleSuggestionClickListener)
+                    BubbleType.EVENT -> `$`(MapBubbleEventView::class.java).from(view!!, mapBubble, onMapBubbleEventClickListener)
+                    BubbleType.PHYSICAL_GROUP -> `$`(MapBubblePhysicalGroupView::class.java).from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener)
                     else -> `$`(MapBubbleView::class.java).from(view!!, mapBubble, onClickListener!!)
                 }
             }
@@ -46,10 +46,10 @@ class BubbleHandler : PoolMember() {
 
     fun attach(bubbleMapLayerLayout: ViewGroup,
                onClickListener: (MapBubble) -> Unit,
-               onMenuItemClickListener: MapBubbleMenuView.OnMapBubbleMenuItemClickListener,
-               onMapBubbleEventClickListener: MapBubbleEventView.MapBubbleEventClickListener,
-               onMapBubbleSuggestionClickListener: MapBubbleSuggestionView.MapBubbleSuggestionClickListener,
-               onMapBubblePhysicalGroupClickListener: MapBubblePhysicalGroupView.MapBubblePhysicalGroupClickListener) {
+               onMenuItemClickListener: OnMapBubbleMenuItemClickListener,
+               onMapBubbleEventClickListener: MapBubbleEventClickListener,
+               onMapBubbleSuggestionClickListener: MapBubbleSuggestionClickListener,
+               onMapBubblePhysicalGroupClickListener: MapBubblePhysicalGroupClickListener) {
         this.onClickListener = onClickListener
         this.onMenuItemClickListener = onMenuItemClickListener
         this.onMapBubbleEventClickListener = onMapBubbleEventClickListener
