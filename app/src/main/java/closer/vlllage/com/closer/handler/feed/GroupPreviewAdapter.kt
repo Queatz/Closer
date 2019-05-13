@@ -1,8 +1,5 @@
 package closer.vlllage.com.closer.handler.feed
 
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -13,6 +10,9 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -41,13 +41,8 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
     var groups = mutableListOf<Group>()
         set(value) {
             val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun getOldListSize(): Int {
-                    return field.size + HEADER_COUNT
-                }
-
-                override fun getNewListSize(): Int {
-                    return value.size + HEADER_COUNT
-                }
+                override fun getOldListSize() = field.size + HEADER_COUNT
+                override fun getNewListSize() = value.size + HEADER_COUNT
 
                 override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
                     if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT) {
@@ -60,11 +55,10 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
                 }
 
                 override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                    return if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT) {
+                    return if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT)
                         false
-                    } else
+                    else
                         newPosition < HEADER_COUNT
-
                 }
             })
             field.clear()
@@ -133,7 +127,7 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
         holder.pool.`$`(PinnedMessagesHandler::class.java).show(group)
 
         holder.messagesRecyclerView.adapter = groupMessagesAdapter
-        holder.messagesRecyclerView.layoutManager = LinearLayoutManager(holder.messagesRecyclerView.context, LinearLayoutManager.VERTICAL, true)
+        holder.messagesRecyclerView.layoutManager = LinearLayoutManager(holder.messagesRecyclerView.context, RecyclerView.VERTICAL, true)
 
         if (holder.textWatcher != null) {
             holder.replyMessage.removeTextChangedListener(holder.textWatcher)
@@ -179,7 +173,7 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
         holder.sendButton.setOnClickListener { view ->
             val message = holder.replyMessage.text.toString()
 
-            if (message.trim { it <= ' ' }.isEmpty()) {
+            if (message.isBlank()) {
                 return@setOnClickListener
             }
 
@@ -210,9 +204,9 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
     }
 
     override fun getItemViewType(position: Int): Int {
-        when (position) {
-            0 -> return 1
-            else -> return 0
+        return when (position) {
+            0 -> 1
+            else -> 0
         }
     }
 
@@ -233,31 +227,18 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
 
         internal lateinit var pool: TempPool
 
-        internal var groupName: TextView
-        internal var messagesRecyclerView: RecyclerView
-        internal var pinnedMessagesRecyclerView: RecyclerView
-        internal var sendButton: ImageButton
-        internal var replyMessage: EditText
-        internal var backgroundPhoto: ImageView
-        internal var scopeIndicatorButton: ImageButton
-        internal var mentionSuggestionsLayout: MaxSizeFrameLayout
-        internal var mentionSuggestionRecyclerView: RecyclerView
-        internal var backgroundColor: View
+        internal var groupName: TextView = itemView.findViewById(R.id.groupName)
+        internal var messagesRecyclerView: RecyclerView = itemView.findViewById(R.id.messagesRecyclerView)
+        internal var pinnedMessagesRecyclerView: RecyclerView = itemView.findViewById(R.id.pinnedMessagesRecyclerView)
+        internal var sendButton: ImageButton = itemView.findViewById(R.id.sendButton)
+        internal var replyMessage: EditText = itemView.findViewById(R.id.replyMessage)
+        internal var backgroundPhoto: ImageView = itemView.findViewById(R.id.backgroundPhoto)
+        internal var scopeIndicatorButton: ImageButton = itemView.findViewById(R.id.scopeIndicatorButton)
+        internal var mentionSuggestionsLayout: MaxSizeFrameLayout = itemView.findViewById(R.id.mentionSuggestionsLayout)
+        internal var mentionSuggestionRecyclerView: RecyclerView = itemView.findViewById(R.id.mentionSuggestionRecyclerView)
+        internal var backgroundColor: View = itemView.findViewById(R.id.backgroundColor)
 
         internal var textWatcher: TextWatcher? = null
-
-        init {
-            groupName = itemView.findViewById(R.id.groupName)
-            messagesRecyclerView = itemView.findViewById(R.id.messagesRecyclerView)
-            pinnedMessagesRecyclerView = itemView.findViewById(R.id.pinnedMessagesRecyclerView)
-            sendButton = itemView.findViewById(R.id.sendButton)
-            replyMessage = itemView.findViewById(R.id.replyMessage)
-            backgroundPhoto = itemView.findViewById(R.id.backgroundPhoto)
-            scopeIndicatorButton = itemView.findViewById(R.id.scopeIndicatorButton)
-            mentionSuggestionsLayout = itemView.findViewById(R.id.mentionSuggestionsLayout)
-            mentionSuggestionRecyclerView = itemView.findViewById(R.id.mentionSuggestionRecyclerView)
-            backgroundColor = itemView.findViewById(R.id.backgroundColor)
-        }
     }
 
     companion object {

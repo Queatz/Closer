@@ -76,7 +76,7 @@ class EventHandler : PoolMember() {
             buttonClickCallback = { alertResult ->
                     val viewHolder = alertResult as CreateEventViewHolder
 
-                    if (viewHolder.eventName.text.toString().trim { it <= ' ' }.isEmpty()) {
+                    if (viewHolder.eventName.text.toString().isBlank()) {
                         `$`(DefaultAlerts::class.java).message(`$`(ResourcesHandler::class.java).resources.getString(R.string.enter_event_details))
                         viewHolder.eventName.requestFocus()
                         false
@@ -132,8 +132,8 @@ class EventHandler : PoolMember() {
 
     private fun createNewEvent(isPublic: Boolean, latLng: LatLng, name: String, price: String, startsAt: Date, endsAt: Date, onEventCreatedListener: OnEventCreatedListener) {
         val event = `$`(StoreHandler::class.java).create(Event::class.java)
-        event!!.name = name.trim { it <= ' ' }
-        event.about = price.trim { it <= ' ' }
+        event!!.name = name.trim()
+        event.about = price.trim()
         event.isPublic = isPublic
         event.latitude = latLng.latitude
         event.longitude = latLng.longitude

@@ -180,7 +180,7 @@ class GroupContactsHandler : PoolMember() {
 
     private fun inviteToGroup(group: Group, phoneContact: PhoneContact) {
         val myName = `$`(AccountHandler::class.java).name
-        if (myName == null || myName.trim { it <= ' ' }.isEmpty()) {
+        if (myName == null || myName.isBlank()) {
             `$`(SetNameHandler::class.java).modifyName(object : SetNameHandler.OnNameModifiedCallback {
                 override fun onNameModified(name: String?) {
                     sendInviteToGroup(group, phoneContact)
@@ -199,7 +199,7 @@ class GroupContactsHandler : PoolMember() {
 
         `$`(DisposableHandler::class.java).add(inviteToGroup.subscribe({ successResult ->
             if (successResult.success) {
-                val message = if (phoneContact.name == null || phoneContact.name!!.trim { it <= ' ' }.isEmpty())
+                val message = if (phoneContact.name == null || phoneContact.name!!.isBlank())
                     `$`(ResourcesHandler::class.java).resources.getString(R.string.phone_invited, phoneContact.phoneNumber, group.name)
                 else
                     `$`(ResourcesHandler::class.java).resources.getString(R.string.phone_invited, phoneContact.name, group.name)
@@ -216,7 +216,7 @@ class GroupContactsHandler : PoolMember() {
     }
 
     fun showContactsForQuery(originalQuery: String) {
-        val query = originalQuery.trim { it <= ' ' }.toLowerCase()
+        val query = originalQuery.trim().toLowerCase()
 
         if (`$`(LocationHandler::class.java).lastKnownLocation != null) {
             `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).searchPhonesNear(LatLng(

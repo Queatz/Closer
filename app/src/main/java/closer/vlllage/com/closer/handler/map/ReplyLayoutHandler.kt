@@ -74,7 +74,7 @@ class ReplyLayoutHandler : PoolMember() {
             }
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                sendButton!!.isEnabled = !charSequence.toString().trim { it <= ' ' }.isEmpty()
+                sendButton!!.isEnabled = !charSequence.toString().isBlank()
             }
 
             override fun afterTextChanged(editable: Editable) {

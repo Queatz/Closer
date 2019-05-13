@@ -1,15 +1,23 @@
 package closer.vlllage.com.closer
 
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.JsonHandler
 import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.TopHandler
 import closer.vlllage.com.closer.store.models.Event
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 class CloserFirebaseMessagingService : FirebaseMessagingService() {
+
+    override fun onNewToken(p0: String?) {
+        val deviceToken = FirebaseInstanceId.getInstance().token
+        (application as App).`$`(AccountHandler::class.java).updateDeviceToken(deviceToken!!)
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
         val app = application as App
         val data = remoteMessage!!.data

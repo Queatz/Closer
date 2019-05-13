@@ -20,7 +20,7 @@ class SearchGroupHandler : PoolMember() {
         this.searchGroupsAdapter = searchGroupsAdapter
 
         if (!hideCreateGroupOption) {
-            searchGroupsAdapter.setCreatePublicGroupName(if (searchQuery.trim { it <= ' ' }.isEmpty()) null else searchQuery)
+            searchGroupsAdapter.setCreatePublicGroupName(if (searchQuery.isBlank()) null else searchQuery)
         }
 
         if (this.groupsCache != null) {

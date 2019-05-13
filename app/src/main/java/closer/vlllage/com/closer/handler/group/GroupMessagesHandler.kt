@@ -27,14 +27,14 @@ import java.util.*
 
 class GroupMessagesHandler : PoolMember() {
 
-    private var groupMessagesAdapter: GroupMessagesAdapter? = null
-    private var replyMessage: EditText? = null
-    private var sendButton: ImageButton? = null
-    private var sendMoreButton: ImageButton? = null
-    private var sendMoreLayout: View? = null
+    private lateinit var groupMessagesAdapter: GroupMessagesAdapter
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var replyMessage: EditText
+    private lateinit var sendButton: ImageButton
+    private lateinit var sendMoreButton: ImageButton
+    private lateinit var sendMoreLayout: View
+    private lateinit var recyclerView: RecyclerView
     private var groupMessagesSubscription: DataSubscription? = null
-    private var recyclerView: RecyclerView? = null
-    private var layoutManager: LinearLayoutManager? = null
 
     fun attach(recyclerView: RecyclerView, replyMessage: EditText, sendButton: ImageButton, sendMoreButton: ImageButton, sendMoreLayout: View) {
         this.replyMessage = replyMessage
@@ -54,14 +54,14 @@ class GroupMessagesHandler : PoolMember() {
         groupMessagesAdapter = GroupMessagesAdapter(this)
         recyclerView.adapter = groupMessagesAdapter
 
-        groupMessagesAdapter!!.onSuggestionClickListener = { suggestion -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(MapActivityHandler::class.java).showSuggestionOnMap(suggestion) } }
-        groupMessagesAdapter!!.onEventClickListener = { event -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(GroupActivityTransitionHandler::class.java).showGroupForEvent(null, event) } }
-        groupMessagesAdapter!!.onGroupClickListener = { group -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group.id) } }
+        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(MapActivityHandler::class.java).showSuggestionOnMap(suggestion) } }
+        groupMessagesAdapter.onEventClickListener = { event -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(GroupActivityTransitionHandler::class.java).showGroupForEvent(null, event) } }
+        groupMessagesAdapter.onGroupClickListener = { group -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group.id) } }
 
 
-        this.replyMessage!!.setOnEditorActionListener { textView, action, keyEvent ->
+        this.replyMessage.setOnEditorActionListener { textView, action, keyEvent ->
             if (EditorInfo.IME_ACTION_GO == action) {
-                if (replyMessage.text.toString().trim { it <= ' ' }.isEmpty()) {
+                if (replyMessage.text.toString().isBlank()) {
                     return@setOnEditorActionListener false
                 }
                 val success = send(replyMessage.text.toString())
@@ -74,8 +74,8 @@ class GroupMessagesHandler : PoolMember() {
             false
         }
 
-        this.sendButton!!.setOnClickListener { view ->
-            if (replyMessage.text.toString().trim { it <= ' ' }.isEmpty()) {
+        this.sendButton.setOnClickListener {
+            if (replyMessage.text.toString().isBlank()) {
                 `$`(CameraHandler::class.java).showCamera { photoUri ->
                     `$`(PhotoUploadGroupMessageHandler::class.java).upload(photoUri!!) { photoId ->
                         val success = `$`(GroupMessageAttachmentHandler::class.java).sharePhoto(`$`(PhotoUploadGroupMessageHandler::class.java).getPhotoPathFromId(photoId), `$`(GroupHandler::class.java).group!!.id!!)
@@ -101,7 +101,7 @@ class GroupMessagesHandler : PoolMember() {
             }
         }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
 
-        this.replyMessage!!.addTextChangedListener(object : TextWatcher {
+        this.replyMessage.addTextChangedListener(object : TextWatcher {
 
             private var isDeleteMention: Boolean = false
             private var shouldDeleteMention: Boolean = false
@@ -125,27 +125,27 @@ class GroupMessagesHandler : PoolMember() {
             }
         })
 
-        this.sendMoreButton!!.setOnClickListener { view -> showSendMoreOptions(sendMoreLayout.visibility != View.VISIBLE) }
+        this.sendMoreButton.setOnClickListener { view -> showSendMoreOptions(sendMoreLayout.visibility != View.VISIBLE) }
 
-        val sendMoreActionAudio = this.sendMoreLayout!!.findViewById<View>(R.id.sendMoreActionAudio)
-        val sendMoreActionVideo = this.sendMoreLayout!!.findViewById<View>(R.id.sendMoreActionVideo)
-        val sendMoreActionFile = this.sendMoreLayout!!.findViewById<View>(R.id.sendMoreActionFile)
-        val sendMoreActionPhoto = this.sendMoreLayout!!.findViewById<View>(R.id.sendMoreActionPhoto)
+        val sendMoreActionAudio = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionAudio)
+        val sendMoreActionVideo = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionVideo)
+        val sendMoreActionFile = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionFile)
+        val sendMoreActionPhoto = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionPhoto)
 
         sendMoreActionAudio.setOnClickListener { view ->
-            this.sendMoreButton!!.callOnClick()
+            this.sendMoreButton.callOnClick()
             `$`(DefaultAlerts::class.java).message("Woah matey!")
         }
         sendMoreActionVideo.setOnClickListener { view ->
-            this.sendMoreButton!!.callOnClick()
+            this.sendMoreButton.callOnClick()
             `$`(DefaultAlerts::class.java).message("Woah matey!")
         }
         sendMoreActionFile.setOnClickListener { view ->
-            this.sendMoreButton!!.callOnClick()
+            this.sendMoreButton.callOnClick()
             `$`(DefaultAlerts::class.java).message("Woah matey!")
         }
         sendMoreActionPhoto.setOnClickListener { view ->
-            this.sendMoreButton!!.callOnClick()
+            this.sendMoreButton.callOnClick()
             `$`(MediaHandler::class.java).getPhoto { photoUri ->
                 `$`(PhotoUploadGroupMessageHandler::class.java).upload(photoUri) { photoId ->
                     val success = `$`(GroupMessageAttachmentHandler::class.java).sharePhoto(`$`(PhotoUploadGroupMessageHandler::class.java).getPhotoPathFromId(photoId), `$`(GroupHandler::class.java).group!!.id!!)
@@ -174,36 +174,36 @@ class GroupMessagesHandler : PoolMember() {
 
     fun showSendMoreOptions(show: Boolean) {
         if (show) {
-            sendMoreButton!!.setImageResource(R.drawable.ic_close_black_24dp)
-            sendMoreLayout!!.visibility = View.VISIBLE
+            sendMoreButton.setImageResource(R.drawable.ic_close_black_24dp)
+            sendMoreLayout.visibility = View.VISIBLE
         } else {
-            sendMoreButton!!.setImageResource(R.drawable.ic_more_horiz_black_24dp)
-            sendMoreLayout!!.visibility = View.GONE
+            sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
+            sendMoreLayout.visibility = View.GONE
         }
     }
 
     fun insertMention(mention: Phone) {
-        `$`(GroupMessageParseHandler::class.java).insertMention(replyMessage!!, mention)
+        `$`(GroupMessageParseHandler::class.java).insertMention(replyMessage, mention)
     }
 
     private fun updateSendButton() {
-        if (replyMessage!!.text.toString().trim { it <= ' ' }.isEmpty()) {
-            sendButton!!.setImageResource(R.drawable.ic_camera_black_24dp)
-            sendMoreButton!!.visibility = View.VISIBLE
+        if (replyMessage.text.toString().isBlank()) {
+            sendButton.setImageResource(R.drawable.ic_camera_black_24dp)
+            sendMoreButton.visibility = View.VISIBLE
             `$`(GroupActionHandler::class.java).show(true)
         } else {
-            sendButton!!.setImageResource(R.drawable.ic_chevron_right_black_24dp)
-            sendMoreButton!!.visibility = View.GONE
-            sendMoreLayout!!.visibility = View.GONE
-            sendMoreButton!!.setImageResource(R.drawable.ic_more_horiz_black_24dp)
+            sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
+            sendMoreButton.visibility = View.GONE
+            sendMoreLayout.visibility = View.GONE
+            sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
             `$`(GroupActionHandler::class.java).show(false)
         }
     }
 
     private fun setGroupMessages(groupMessages: List<GroupMessage>) {
-        groupMessagesAdapter!!.setGroupMessages(groupMessages)
-        if (layoutManager!!.findFirstVisibleItemPosition() < 3) {
-            recyclerView!!.post { recyclerView!!.smoothScrollToPosition(0) }
+        groupMessagesAdapter.setGroupMessages(groupMessages)
+        if (layoutManager.findFirstVisibleItemPosition() < 3) {
+            recyclerView.post { recyclerView.smoothScrollToPosition(0) }
         }
     }
 

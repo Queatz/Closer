@@ -13,7 +13,7 @@ class Val : PoolMember() {
     }
 
     fun of(string: String?): String {
-        return string?.trim { it <= ' ' } ?: ""
+        return string?.trim() ?: ""
     }
 
     fun of(string: String?, stringWhenEmpty: String): String {

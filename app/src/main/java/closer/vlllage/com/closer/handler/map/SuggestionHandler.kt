@@ -96,12 +96,12 @@ class SuggestionHandler : PoolMember() {
     }
 
     private fun createNewSuggestion(latLng: LatLng, name: String?) {
-        if (name == null || name.trim { it <= ' ' }.isEmpty()) {
+        if (name == null || name.isBlank()) {
             return
         }
 
         val suggestion = `$`(StoreHandler::class.java).create(Suggestion::class.java)
-        suggestion!!.name = name.trim { it <= ' ' }
+        suggestion!!.name = name.trim()
         suggestion.latitude = latLng.latitude
         suggestion.longitude = latLng.longitude
         `$`(StoreHandler::class.java).store.box(Suggestion::class.java).put(suggestion)

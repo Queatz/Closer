@@ -8,7 +8,7 @@ class StoreRefHandler : PoolMember() {
     private lateinit var store: Store
 
     public override fun onPoolInit() {
-        this.store = Store(`$`(ApplicationHandler::class.java).app!!)
+        this.store = Store(`$`(ApplicationHandler::class.java).app)
     }
 
     override fun onPoolEnd() {

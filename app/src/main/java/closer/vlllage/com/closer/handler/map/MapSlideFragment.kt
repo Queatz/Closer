@@ -34,6 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
+
 class MapSlideFragment : PoolFragment() {
 
     private var locationPermissionWasDenied: Boolean = false
@@ -182,10 +183,8 @@ class MapSlideFragment : PoolFragment() {
             }, { this.networkError(it) }))
         }
 
-        val deviceToken = FirebaseInstanceId.getInstance().token
-
-        if (deviceToken != null) {
-            `$`(AccountHandler::class.java).updateDeviceToken(deviceToken)
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(activity) { instanceIdResult ->
+            `$`(AccountHandler::class.java).updateDeviceToken(instanceIdResult.token)
         }
 
         if (`$`(AccountHandler::class.java).active) {

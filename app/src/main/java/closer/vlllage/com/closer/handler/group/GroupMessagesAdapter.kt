@@ -169,13 +169,8 @@ class GroupMessagesAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<GroupMe
 
     fun setGroupMessages(groupMessages: List<GroupMessage>) {
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int {
-                return this@GroupMessagesAdapter.groupMessages.size
-            }
-
-            override fun getNewListSize(): Int {
-                return groupMessages.size
-            }
+            override fun getOldListSize() = this@GroupMessagesAdapter.groupMessages.size
+            override fun getNewListSize() = groupMessages.size
 
             override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
                 return this@GroupMessagesAdapter.groupMessages[oldPosition].objectBoxId == groupMessages[newPosition].objectBoxId ||

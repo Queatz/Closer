@@ -15,8 +15,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 
 class FeedHandler : PoolMember() {
     private lateinit var recyclerView: RecyclerView
-    private var layoutManager: LinearLayoutManager? = null
-    private var groupPreviewAdapter: GroupPreviewAdapter? = null
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var groupPreviewAdapter: GroupPreviewAdapter
 
     fun attach(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
@@ -27,7 +27,8 @@ class FeedHandler : PoolMember() {
         )
         recyclerView.layoutManager = layoutManager
 
-        setupFeedInjections()
+        groupPreviewAdapter = GroupPreviewAdapter(this)
+        recyclerView.adapter = groupPreviewAdapter
 
         val distance = .12f
 
@@ -59,16 +60,11 @@ class FeedHandler : PoolMember() {
     }
 
     private fun setGroups(groups: List<Group>) {
-        groupPreviewAdapter?.groups = groups.toMutableList()
-    }
-
-    private fun setupFeedInjections() {
-        groupPreviewAdapter = GroupPreviewAdapter(this)
-        recyclerView.adapter = groupPreviewAdapter
+        groupPreviewAdapter.groups = groups.toMutableList()
     }
 
     fun hide() {
-        if (layoutManager!!.findFirstVisibleItemPosition() > 2) {
+        if (layoutManager.findFirstVisibleItemPosition() > 2) {
             recyclerView.scrollToPosition(2)
         }
 
