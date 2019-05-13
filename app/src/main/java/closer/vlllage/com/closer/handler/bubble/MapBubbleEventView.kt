@@ -1,0 +1,44 @@
+package closer.vlllage.com.closer.handler.bubble
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+
+import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.event.EventDetailsHandler
+import closer.vlllage.com.closer.handler.helpers.OutboundHandler
+import closer.vlllage.com.closer.pool.PoolMember
+import closer.vlllage.com.closer.store.models.Event
+
+class MapBubbleEventView : PoolMember() {
+
+    fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubbleEventClickListener): View {
+        val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_event, layer, false)
+
+        view.findViewById<View>(R.id.click).setOnClickListener { v -> onClickListener.onEventClick(mapBubble) }
+        update(view, mapBubble)
+
+        view.findViewById<View>(R.id.directionsButton).setOnClickListener { v -> `$`(OutboundHandler::class.java).openDirections(mapBubble.latLng) }
+
+        return view
+    }
+
+    fun update(view: View, mapBubble: MapBubble) {
+        val bubbleTextView = view.findViewById<TextView>(R.id.bubbleText)
+        val actionTextView = view.findViewById<TextView>(R.id.action)
+        bubbleTextView.text = mapBubble.status
+
+        if ((mapBubble.tag as Event).isPublic) {
+            bubbleTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+        } else {
+            bubbleTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0)
+        }
+
+        actionTextView.text = `$`(EventDetailsHandler::class.java).formatEventDetails(mapBubble.tag as Event)
+    }
+
+    interface MapBubbleEventClickListener {
+        fun onEventClick(mapBubble: MapBubble)
+    }
+}

@@ -1,0 +1,29 @@
+package closer.vlllage.com.closer.handler.helpers
+
+import android.support.annotation.LayoutRes
+import android.support.annotation.StyleRes
+import android.support.v7.app.AlertDialog
+import android.view.View
+
+import closer.vlllage.com.closer.R
+
+class AlertConfig(private val showCallback: (AlertConfig) -> Unit) {
+    var title: String? = null
+    var message: String? = null
+    @LayoutRes var layoutResId: Int? = null
+    var positiveButton: String? = null
+    var positiveButtonCallback: ((alertResult: Any?) -> Unit)? = null
+    var negativeButton: String? = null
+    var negativeButtonCallback: ((alertResult: Any?) -> Unit)? = null
+    var textViewId: Int? = null
+    var onTextViewSubmitCallback: ((value: String) -> Unit)? = null
+    var onAfterViewCreated: ((alertConfig: AlertConfig, view: View) -> Unit)? = null
+    var buttonClickCallback: ((alertResult: Any?) -> Boolean)? = null
+    var alertResult: Any? = null
+    @StyleRes var theme = R.style.AppTheme_AlertDialog
+    var dialog: AlertDialog? = null
+
+    fun show() {
+        showCallback.invoke(this)
+    }
+}
