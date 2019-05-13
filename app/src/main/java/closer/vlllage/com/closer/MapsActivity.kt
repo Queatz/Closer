@@ -70,20 +70,18 @@ class MapsActivity : PoolActivity() {
     }
 
     override fun onBackPressed() {
-        `$`(MapViewHandler::class.java).onBackPressed(object : MapViewHandler.OnBackPressedCallback {
-            override fun onBackPressedResult(result: Boolean) {
-                if (result) {
-                    return
-                }
-
-                if (!slideScreen.isExpose) {
-                    slideScreen.expose(true)
-                    return
-                }
-
-                (this@MapsActivity as PoolActivity).onBackPressed()
+        `$`(MapViewHandler::class.java).onBackPressed {
+            if (it) {
+                return@onBackPressed
             }
-        })
+
+            if (!slideScreen.isExpose) {
+                slideScreen.expose(true)
+                return@onBackPressed
+            }
+
+            super.onBackPressed()
+        }
     }
 
     companion object {

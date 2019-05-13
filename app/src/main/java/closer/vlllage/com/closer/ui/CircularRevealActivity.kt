@@ -70,7 +70,7 @@ abstract class CircularRevealActivity : PoolActivity() {
                 .start()
     }
 
-    protected fun setSourceBounds(sourceBounds: Rect) {
+    protected fun setSourceBounds(sourceBounds: Rect?) {
         this.sourceBounds = sourceBounds
     }
 

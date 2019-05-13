@@ -36,7 +36,7 @@ import java.lang.Math.max
 import java.lang.Math.min
 import java.util.*
 
-class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAdapter.ViewHolder>(poolMember), CombinedRecyclerAdapter.PrioritizedAdapter {
+class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<RecyclerView.ViewHolder>(poolMember), CombinedRecyclerAdapter.PrioritizedAdapter {
 
     var groups = mutableListOf<Group>()
         set(value) {
@@ -66,22 +66,22 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
             diffResult.dispatchUpdatesTo(this)
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutResId: Int
-        when (viewType) {
-            1 -> layoutResId = R.layout.feed_item_public_groups
-            else -> layoutResId = R.layout.group_preview_item
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            1 -> HeaderViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.feed_item_public_groups, parent, false))
+            else -> ViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.group_preview_item, parent, false))
         }
-        return ViewHolder(LayoutInflater.from(parent.context)
-                .inflate(layoutResId, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         var position = position
-        super.onBindViewHolder(holder, position)
-        holder.pool = tempPool()
+        super.onBindViewHolder(viewHolder, position)
 
         if (position < HEADER_COUNT) {
+            val holder = viewHolder as HeaderViewHolder
+            holder.pool = tempPool()
             holder.pool.`$set`(`$`(StoreHandler::class.java))
             holder.pool.`$set`(`$`(SyncHandler::class.java))
             holder.pool.`$set`(`$`(MapHandler::class.java))
@@ -92,16 +92,17 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
             holder.pool.`$set`(`$`(GroupMemberHandler::class.java))
             holder.pool.`$`(PublicGroupFeedItemHandler::class.java).attach(holder.itemView)
             return
-        } else {
-            holder.pool.`$set`(`$`(ApiHandler::class.java))
-            holder.pool.`$set`(`$`(ApplicationHandler::class.java))
-            holder.pool.`$set`(`$`(ActivityHandler::class.java))
-            holder.pool.`$set`(`$`(ResourcesHandler::class.java))
-            position--
         }
+        val holder = viewHolder as ViewHolder
+        holder.pool = tempPool()
+        holder.pool.`$set`(`$`(ApiHandler::class.java))
+        holder.pool.`$set`(`$`(ApplicationHandler::class.java))
+        holder.pool.`$set`(`$`(ActivityHandler::class.java))
+        holder.pool.`$set`(`$`(ResourcesHandler::class.java))
+        position--
 
         val group = groups[position]
-        holder.groupName.text = `$`(Val::class.java).of(group.name!!, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+        holder.groupName.text = `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
         holder.groupName.setOnClickListener { view -> `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(holder.groupName, group.id) }
         holder.groupName.setOnLongClickListener { view ->
             `$`(GroupMemberHandler::class.java).changeGroupSettings(group)
@@ -210,9 +211,12 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
         }
     }
 
-    override fun onViewRecycled(holder: ViewHolder) {
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
-        holder.pool.end()
+        when (holder) {
+            is HeaderViewHolder -> holder.pool.end()
+            is ViewHolder -> holder.pool.end()
+        }
     }
 
     override fun getItemCount(): Int {
@@ -223,22 +227,24 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
         return max(0, position - if (`$`(DistanceHandler::class.java).isUserNearGroup(groups[position - 1])) 100 else 0)
     }
 
+    class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        lateinit var pool: TempPool
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        internal lateinit var pool: TempPool
-
-        internal var groupName: TextView = itemView.findViewById(R.id.groupName)
-        internal var messagesRecyclerView: RecyclerView = itemView.findViewById(R.id.messagesRecyclerView)
-        internal var pinnedMessagesRecyclerView: RecyclerView = itemView.findViewById(R.id.pinnedMessagesRecyclerView)
-        internal var sendButton: ImageButton = itemView.findViewById(R.id.sendButton)
-        internal var replyMessage: EditText = itemView.findViewById(R.id.replyMessage)
-        internal var backgroundPhoto: ImageView = itemView.findViewById(R.id.backgroundPhoto)
-        internal var scopeIndicatorButton: ImageButton = itemView.findViewById(R.id.scopeIndicatorButton)
-        internal var mentionSuggestionsLayout: MaxSizeFrameLayout = itemView.findViewById(R.id.mentionSuggestionsLayout)
-        internal var mentionSuggestionRecyclerView: RecyclerView = itemView.findViewById(R.id.mentionSuggestionRecyclerView)
-        internal var backgroundColor: View = itemView.findViewById(R.id.backgroundColor)
-
-        internal var textWatcher: TextWatcher? = null
+        lateinit var pool: TempPool
+        var groupName: TextView = itemView.findViewById(R.id.groupName)
+        var messagesRecyclerView: RecyclerView = itemView.findViewById(R.id.messagesRecyclerView)
+        var pinnedMessagesRecyclerView: RecyclerView = itemView.findViewById(R.id.pinnedMessagesRecyclerView)
+        var sendButton: ImageButton = itemView.findViewById(R.id.sendButton)
+        var replyMessage: EditText = itemView.findViewById(R.id.replyMessage)
+        var backgroundPhoto: ImageView = itemView.findViewById(R.id.backgroundPhoto)
+        var scopeIndicatorButton: ImageButton = itemView.findViewById(R.id.scopeIndicatorButton)
+        var mentionSuggestionsLayout: MaxSizeFrameLayout = itemView.findViewById(R.id.mentionSuggestionsLayout)
+        var mentionSuggestionRecyclerView: RecyclerView = itemView.findViewById(R.id.mentionSuggestionRecyclerView)
+        var backgroundColor: View = itemView.findViewById(R.id.backgroundColor)
+        var textWatcher: TextWatcher? = null
     }
 
     companion object {

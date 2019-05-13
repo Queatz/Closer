@@ -182,7 +182,7 @@ class GroupHandler : PoolMember() {
                     { phone -> groupName!!.text = phone.name }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
             ))
         } else {
-            groupName!!.text = `$`(Val::class.java).of(group.name!!, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+            groupName!!.text = `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
         }
     }
 

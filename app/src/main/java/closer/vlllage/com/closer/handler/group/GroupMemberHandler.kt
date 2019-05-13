@@ -95,7 +95,7 @@ class GroupMemberHandler : PoolMember() {
                 MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.edit_about_group) {
                     if (group != null) {
                         `$`(AlertHandler::class.java).make().apply {
-                            title = `$`(Val::class.java).of(group.name!!, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+                            title = `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
                             layoutResId = R.layout.create_public_group_modal
                             textViewId = R.id.input
                             onTextViewSubmitCallback = { about -> `$`(PhysicalGroupUpgradeHandler::class.java).setAbout(group, about) { updateGroup -> } }

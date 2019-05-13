@@ -18,21 +18,17 @@ class MapViewHandler : PoolMember() {
             return mapSlideFragment!!
         }
 
-    fun onBackPressed(callback: OnBackPressedCallback) {
-        mapSlideFragment!!.post(Runnable { callback.onBackPressedResult(mapSlideFragment!!.onBackPressed()) })
+    fun onBackPressed(callback: (Boolean) -> Unit) {
+        mapSlideFragment?.post(Runnable { callback.invoke(mapSlideFragment!!.onBackPressed()) })
     }
 
     fun handleIntent(intent: Intent) {
-        mapSlideFragment!!.post(Runnable { mapSlideFragment!!.handleIntent(intent, onRequestMapOnScreenListener!!) })
+        mapSlideFragment?.post(Runnable { mapSlideFragment!!.handleIntent(intent, onRequestMapOnScreenListener!!) })
     }
 
     fun setOnRequestMapOnScreenListener(onRequestMapOnScreenListener: OnRequestMapOnScreenListener): MapViewHandler {
         this.onRequestMapOnScreenListener = onRequestMapOnScreenListener
         return this
-    }
-
-    interface OnBackPressedCallback {
-        fun onBackPressedResult(result: Boolean)
     }
 
     interface OnRequestMapOnScreenListener {

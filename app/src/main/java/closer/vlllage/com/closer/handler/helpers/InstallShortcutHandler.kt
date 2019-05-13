@@ -13,7 +13,7 @@ class InstallShortcutHandler : PoolMember() {
     fun installShortcut(group: Group) {
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(`$`(ApplicationHandler::class.java).app)) {
             val icon = `$`(ShortcutIconGenerator::class.java).generate(
-                    `$`(Val::class.java).of(group.name!!, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)),
+                    `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)),
                     128f,
                     Color.WHITE,
                     `$`(GroupColorHandler::class.java).getColor(group),
@@ -21,7 +21,7 @@ class InstallShortcutHandler : PoolMember() {
             )
             val shortcutInfo = ShortcutInfoCompat.Builder(`$`(ApplicationHandler::class.java).app, "group-" + group.id!!)
                     .setIntent(`$`(GroupActivityTransitionHandler::class.java).getIntent(group.id!!, false))
-                    .setShortLabel(`$`(Val::class.java).of(group.name!!, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)))
+                    .setShortLabel(`$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)))
                     .setIcon(IconCompat.createWithBitmap(icon))
                     .build()
             ShortcutManagerCompat.requestPinShortcut(`$`(ApplicationHandler::class.java).app, shortcutInfo, null)

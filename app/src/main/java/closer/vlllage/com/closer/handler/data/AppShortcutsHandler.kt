@@ -35,7 +35,7 @@ class AppShortcutsHandler : PoolMember() {
             }
 
             val icon = `$`(ShortcutIconGenerator::class.java).generate(
-                    `$`(Val::class.java).of(group.name!!, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)),
+                    `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)),
                     128f,
                     Color.WHITE,
                     `$`(GroupColorHandler::class.java).getColor(group),

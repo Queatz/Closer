@@ -21,19 +21,19 @@ class BubbleHandler : PoolMember() {
     private val bubbleView: BubbleMapLayer.BubbleView
         get() = object : BubbleMapLayer.BubbleView {
             override fun createView(view: ViewGroup?, mapBubble: MapBubble): View {
-                when (mapBubble.type) {
-                    BubbleType.PROXY -> return `$`(MapBubbleProxyView::class.java).from(view!!, mapBubble) { proxiedMapBubble ->
+                return when (mapBubble.type) {
+                    BubbleType.PROXY -> `$`(MapBubbleProxyView::class.java).from(view!!, mapBubble) { proxiedMapBubble ->
                         when (proxiedMapBubble.type) {
                             BubbleType.STATUS -> onClickListener!!.invoke(proxiedMapBubble)
                             BubbleType.EVENT -> onMapBubbleEventClickListener!!.onEventClick(proxiedMapBubble)
                             BubbleType.PHYSICAL_GROUP -> onMapBubblePhysicalGroupClickListener!!.onPhysicalGroupClick(proxiedMapBubble)
                         }
                     }
-                    BubbleType.MENU -> return `$`(MapBubbleMenuView::class.java).from(view!!, mapBubble, onMenuItemClickListener!!)
-                    BubbleType.SUGGESTION -> return `$`(MapBubbleSuggestionView::class.java).from(view!!, mapBubble, onMapBubbleSuggestionClickListener!!)
-                    BubbleType.EVENT -> return `$`(MapBubbleEventView::class.java).from(view!!, mapBubble, onMapBubbleEventClickListener!!)
-                    BubbleType.PHYSICAL_GROUP -> return `$`(MapBubblePhysicalGroupView::class.java).from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener!!)
-                    else -> return `$`(MapBubbleView::class.java).from(view!!, mapBubble, onClickListener!!)
+                    BubbleType.MENU -> `$`(MapBubbleMenuView::class.java).from(view!!, mapBubble, onMenuItemClickListener!!)
+                    BubbleType.SUGGESTION -> `$`(MapBubbleSuggestionView::class.java).from(view!!, mapBubble, onMapBubbleSuggestionClickListener!!)
+                    BubbleType.EVENT -> `$`(MapBubbleEventView::class.java).from(view!!, mapBubble, onMapBubbleEventClickListener!!)
+                    BubbleType.PHYSICAL_GROUP -> `$`(MapBubblePhysicalGroupView::class.java).from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener!!)
+                    else -> `$`(MapBubbleView::class.java).from(view!!, mapBubble, onClickListener!!)
                 }
             }
 

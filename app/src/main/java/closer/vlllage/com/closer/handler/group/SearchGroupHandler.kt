@@ -35,7 +35,7 @@ class SearchGroupHandler : PoolMember() {
         for (group in allGroups) {
             if (group.name != null) {
                 if (group.name!!.toLowerCase().contains(searchQuery) ||
-                        `$`(Val::class.java).of(group.about!!, "").toLowerCase().contains(searchQuery) ||
+                        `$`(Val::class.java).of(group.about, "").toLowerCase().contains(searchQuery) ||
                         groupActionNamesContains(group, searchQuery)) {
                     groups.add(group)
                 }

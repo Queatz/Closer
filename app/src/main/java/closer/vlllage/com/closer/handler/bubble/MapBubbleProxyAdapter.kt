@@ -87,7 +87,7 @@ class MapBubbleProxyAdapter(poolMember: PoolMember, private val proxyMapBubble: 
                     }
                 }
 
-                holder.name.text = `$`(Val::class.java).of((mapBubble.tag as Group).name!!, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+                holder.name.text = `$`(Val::class.java).of((mapBubble.tag as Group).name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
             }
             BubbleType.EVENT -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_red_4dp)
