@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.widget.Toast
 
 import closer.vlllage.com.closer.pool.PoolMember

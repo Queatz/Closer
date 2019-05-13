@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.ui
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerViewHeader {
 

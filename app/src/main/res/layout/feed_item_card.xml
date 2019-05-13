@@ -7,7 +7,7 @@
     android:elevation="16dp"
     android:clickable="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padDouble"
@@ -40,6 +40,6 @@
             android:textSize="44sp"
             android:text="Hey!"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

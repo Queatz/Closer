@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.ui
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.handler.helpers.TimerHandler
 import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter

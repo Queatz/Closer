@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.handler.bubble
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 
 data class MapBubbleMenuItem constructor(
     var title: String,

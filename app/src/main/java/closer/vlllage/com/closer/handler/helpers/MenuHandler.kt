@@ -1,9 +1,9 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.pool.PoolMember
 import java.util.*
@@ -14,7 +14,7 @@ class MenuHandler : PoolMember() {
             layoutResId = R.layout.menu_modal
             onAfterViewCreated = { alertConfig, view ->
                 val menuRecyclerView = view.findViewById<RecyclerView>(R.id.menuRecyclerView)
-                menuRecyclerView.layoutManager = LinearLayoutManager(`$`(ActivityHandler::class.java).activity, LinearLayoutManager.VERTICAL, false)
+                menuRecyclerView.layoutManager = LinearLayoutManager(`$`(ActivityHandler::class.java).activity, RecyclerView.VERTICAL, false)
                 val options = ArrayList<MenuOption>()
 
                 for (option in menuOptions) {

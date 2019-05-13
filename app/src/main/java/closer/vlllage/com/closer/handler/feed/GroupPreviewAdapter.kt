@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.handler.feed
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -37,7 +37,40 @@ import java.lang.Math.min
 import java.util.*
 
 class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAdapter.ViewHolder>(poolMember), CombinedRecyclerAdapter.PrioritizedAdapter {
-    private val groups = ArrayList<Group>()
+
+    var groups = mutableListOf<Group>()
+        set(value) {
+            val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                override fun getOldListSize(): Int {
+                    return field.size + HEADER_COUNT
+                }
+
+                override fun getNewListSize(): Int {
+                    return value.size + HEADER_COUNT
+                }
+
+                override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
+                    if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT) {
+                        return false
+                    } else if (newPosition < HEADER_COUNT) {
+                        return true
+                    }
+
+                    return field[oldPosition - 1].objectBoxId == value[newPosition - 1].objectBoxId
+                }
+
+                override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
+                    return if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT) {
+                        false
+                    } else
+                        newPosition < HEADER_COUNT
+
+                }
+            })
+            field.clear()
+            field.addAll(value)
+            diffResult.dispatchUpdatesTo(this)
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutResId: Int
@@ -55,21 +88,21 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
         holder.pool = tempPool()
 
         if (position < HEADER_COUNT) {
-            holder.pool!!.`$set`(`$`(StoreHandler::class.java))
-            holder.pool!!.`$set`(`$`(SyncHandler::class.java))
-            holder.pool!!.`$set`(`$`(MapHandler::class.java))
-            holder.pool!!.`$set`(`$`(ApplicationHandler::class.java))
-            holder.pool!!.`$set`(`$`(ActivityHandler::class.java))
-            holder.pool!!.`$set`(`$`(SortHandler::class.java))
-            holder.pool!!.`$set`(`$`(KeyboardHandler::class.java))
-            holder.pool!!.`$set`(`$`(GroupMemberHandler::class.java))
-            holder.pool!!.`$`(PublicGroupFeedItemHandler::class.java).attach(holder.itemView)
+            holder.pool.`$set`(`$`(StoreHandler::class.java))
+            holder.pool.`$set`(`$`(SyncHandler::class.java))
+            holder.pool.`$set`(`$`(MapHandler::class.java))
+            holder.pool.`$set`(`$`(ApplicationHandler::class.java))
+            holder.pool.`$set`(`$`(ActivityHandler::class.java))
+            holder.pool.`$set`(`$`(SortHandler::class.java))
+            holder.pool.`$set`(`$`(KeyboardHandler::class.java))
+            holder.pool.`$set`(`$`(GroupMemberHandler::class.java))
+            holder.pool.`$`(PublicGroupFeedItemHandler::class.java).attach(holder.itemView)
             return
         } else {
-            holder.pool!!.`$set`(`$`(ApiHandler::class.java))
-            holder.pool!!.`$set`(`$`(ApplicationHandler::class.java))
-            holder.pool!!.`$set`(`$`(ActivityHandler::class.java))
-            holder.pool!!.`$set`(`$`(ResourcesHandler::class.java))
+            holder.pool.`$set`(`$`(ApiHandler::class.java))
+            holder.pool.`$set`(`$`(ApplicationHandler::class.java))
+            holder.pool.`$set`(`$`(ActivityHandler::class.java))
+            holder.pool.`$set`(`$`(ResourcesHandler::class.java))
             position--
         }
 
@@ -87,7 +120,7 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
         groupMessagesAdapter.onGroupClickListener = { group1 -> `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(holder.itemView, group1.id) }
 
         val queryBuilder = `$`(StoreHandler::class.java).store.box(GroupMessage::class.java).query()
-        holder.pool!!.`$`(DisposableHandler::class.java).add(queryBuilder
+        holder.pool.`$`(DisposableHandler::class.java).add(queryBuilder
                 .sort(`$`(SortHandler::class.java).sortGroupMessages())
                 .equal(GroupMessage_.to, group.id!!)
                 .build()
@@ -96,8 +129,8 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
                 .transform<List<GroupMessage>> { groupMessages -> groupMessages.subList(0, min(groupMessages.size, 5)) }
                 .observer { groupMessagesAdapter.setGroupMessages(it) })
 
-        holder.pool!!.`$`(PinnedMessagesHandler::class.java).attach(holder.pinnedMessagesRecyclerView)
-        holder.pool!!.`$`(PinnedMessagesHandler::class.java).show(group)
+        holder.pool.`$`(PinnedMessagesHandler::class.java).attach(holder.pinnedMessagesRecyclerView)
+        holder.pool.`$`(PinnedMessagesHandler::class.java).show(group)
 
         holder.messagesRecyclerView.adapter = groupMessagesAdapter
         holder.messagesRecyclerView.layoutManager = LinearLayoutManager(holder.messagesRecyclerView.context, LinearLayoutManager.VERTICAL, true)
@@ -114,7 +147,7 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
             private var shouldDeleteMention: Boolean = false
 
             override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
-                shouldDeleteMention = !isDeleteMention && after == 0 && holder.pool!!.`$`(GroupMessageParseHandler::class.java).isMentionSelected(holder.replyMessage)
+                shouldDeleteMention = !isDeleteMention && after == 0 && holder.pool.`$`(GroupMessageParseHandler::class.java).isMentionSelected(holder.replyMessage)
                 isDeleteMention = false
             }
 
@@ -122,18 +155,18 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
 
             override fun afterTextChanged(text: Editable) {
                 `$`(GroupDraftHandler::class.java).saveDraft(group, text.toString())
-                holder.pool!!.`$`(GroupMessageMentionHandler::class.java).showSuggestionsForName(holder.pool!!.`$`(GroupMessageParseHandler::class.java).extractName(text, holder.replyMessage.selectionStart))
+                holder.pool.`$`(GroupMessageMentionHandler::class.java).showSuggestionsForName(holder.pool.`$`(GroupMessageParseHandler::class.java).extractName(text, holder.replyMessage.selectionStart))
 
                 if (shouldDeleteMention) {
                     isDeleteMention = true
-                    holder.pool!!.`$`(GroupMessageParseHandler::class.java).deleteMention(holder.replyMessage)
+                    holder.pool.`$`(GroupMessageParseHandler::class.java).deleteMention(holder.replyMessage)
                 }
             }
         }
 
         holder.replyMessage.addTextChangedListener(holder.textWatcher)
 
-        holder.pool!!.`$`(GroupMessageMentionHandler::class.java).attach(holder.mentionSuggestionsLayout, holder.mentionSuggestionRecyclerView, { mention -> holder.pool!!.`$`(GroupMessageParseHandler::class.java).insertMention(holder.replyMessage, mention) })
+        holder.pool.`$`(GroupMessageMentionHandler::class.java).attach(holder.mentionSuggestionsLayout, holder.mentionSuggestionRecyclerView, { mention -> holder.pool.`$`(GroupMessageParseHandler::class.java).insertMention(holder.replyMessage, mention) })
 
         holder.replyMessage.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
@@ -185,44 +218,11 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
 
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
-        holder.pool!!.end()
+        holder.pool.end()
     }
 
     override fun getItemCount(): Int {
         return groups.size + HEADER_COUNT
-    }
-
-    fun setGroups(groups: List<Group>) {
-        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int {
-                return this@GroupPreviewAdapter.groups.size + HEADER_COUNT
-            }
-
-            override fun getNewListSize(): Int {
-                return groups.size + HEADER_COUNT
-            }
-
-            override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT) {
-                    return false
-                } else if (newPosition < HEADER_COUNT) {
-                    return true
-                }
-
-                return this@GroupPreviewAdapter.groups[oldPosition - 1].objectBoxId == groups[newPosition - 1].objectBoxId
-            }
-
-            override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                return if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT) {
-                    false
-                } else
-                    newPosition < HEADER_COUNT
-
-            }
-        })
-        this.groups.clear()
-        this.groups.addAll(groups)
-        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun getItemPriority(position: Int): Int {
@@ -231,7 +231,7 @@ class GroupPreviewAdapter(poolMember: PoolMember) : HeaderAdapter<GroupPreviewAd
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        internal var pool: TempPool? = null
+        internal lateinit var pool: TempPool
 
         internal var groupName: TextView
         internal var messagesRecyclerView: RecyclerView

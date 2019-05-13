@@ -1,8 +1,9 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
+import androidx.constraintlayout.widget.Group
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 
@@ -24,8 +25,8 @@ class GroupViewHolder(rootView: View) {
     val sendButton: ImageButton
     val sendMoreButton: ImageButton
     val scopeIndicatorButton: ImageButton
-    val messagesLayoutGroup: android.support.constraint.Group
-    val membersLayoutGroup: android.support.constraint.Group
+    val messagesLayoutGroup: Group
+    val membersLayoutGroup: Group
     val backgroundPhoto: ImageView
     val profilePhoto: ImageView
 

@@ -3,7 +3,7 @@ package closer.vlllage.com.closer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.RemoteInput
+import androidx.core.app.RemoteInput
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_PHONE
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler

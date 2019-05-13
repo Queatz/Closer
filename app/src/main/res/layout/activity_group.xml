@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/backgroundColor"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -45,7 +45,7 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <android.support.constraint.Barrier
+        <androidx.constraintlayout.widget.Barrier
             android:id="@+id/topBarrier"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -205,7 +205,7 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/eventToolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -217,10 +217,10 @@
             app:layout_constraintTop_toBottomOf="@+id/topBarrier"
             android:overScrollMode="never"
             tools:listitem="@layout/toolbar_item"
-            tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:orientation="horizontal" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pinnedMessagesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -302,14 +302,14 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/actionRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/pad"
                 android:clipToPadding="false"
                 android:clipChildren="false"
-                tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:listitem="@layout/group_action_photo_item"
                 tools:orientation="horizontal" />
 
@@ -327,14 +327,14 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mentionSuggestionRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/pad"
                 android:clipToPadding="false"
                 tools:listitem="@layout/group_action_item"
-                tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:orientation="horizontal"/>
 
         </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
@@ -426,7 +426,7 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messagesRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -438,7 +438,7 @@
             app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"
             tools:listitem="@layout/message_item" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shareWithRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -492,7 +492,7 @@
             android:textColor="@color/text"
             android:text="@string/show_contacts"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/contactsRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -502,19 +502,19 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"/>
 
-        <android.support.constraint.Group
+        <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/messagesLayoutGroup"
             app:constraint_referenced_ids="replyMessage,sendButton,pinnedMessagesRecyclerView,messagesRecyclerView,actionFrameLayout"/>
 
-        <android.support.constraint.Group
+        <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/membersLayoutGroup"
             android:visibility="gone"
             app:constraint_referenced_ids="searchContacts,contactsRecyclerView"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.handler.bubble
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +11,14 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.pool.PoolMember
 
 class MapBubbleMenuView : PoolMember() {
-    fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubbleMenuView.OnMapBubbleMenuItemClickListener): View {
+    fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: OnMapBubbleMenuItemClickListener): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_menu, layer, false)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.menuRecyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(
                 layer.context,
-                LinearLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
         )
 

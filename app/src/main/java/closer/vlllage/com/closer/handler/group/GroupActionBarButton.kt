@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.view.View
 
 import closer.vlllage.com.closer.R

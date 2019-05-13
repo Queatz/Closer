@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import android.widget.EditText
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.GroupMemberResult

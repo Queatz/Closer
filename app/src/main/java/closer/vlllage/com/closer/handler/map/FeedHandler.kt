@@ -1,8 +1,7 @@
 package closer.vlllage.com.closer.handler.map
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler
@@ -23,7 +22,7 @@ class FeedHandler : PoolMember() {
         this.recyclerView = recyclerView
         layoutManager = LinearLayoutManager(
                 recyclerView.context,
-                LinearLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
         )
         recyclerView.layoutManager = layoutManager
@@ -60,7 +59,7 @@ class FeedHandler : PoolMember() {
     }
 
     private fun setGroups(groups: List<Group>) {
-        groupPreviewAdapter?.setGroups(groups)
+        groupPreviewAdapter?.groups = groups.toMutableList()
     }
 
     private fun setupFeedInjections() {

@@ -1,10 +1,10 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -33,7 +33,7 @@ class GroupToolbarHandler : PoolMember() {
         this.recyclerView = recyclerView
         adapter = ToolbarAdapter(this)
 
-        recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, LinearLayoutManager.HORIZONTAL, false) {
+        recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, HORIZONTAL, false) {
             override fun measureChild(child: View, widthUsed: Int, heightUsed: Int) {
                 child.layoutParams.width = recyclerView.measuredWidth / adapter!!.itemCount
                 super.measureChild(child, widthUsed, heightUsed)

@@ -1,12 +1,12 @@
 package closer.vlllage.com.closer.handler.share
 
-import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler

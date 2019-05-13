@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.map
 
-import android.support.v7.widget.RecyclerView
-
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.pool.PoolMember

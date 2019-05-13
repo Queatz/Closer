@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -123,7 +123,7 @@ class GroupContactsHandler : PoolMember() {
         contactsRecyclerView.adapter = phoneContactAdapter
         contactsRecyclerView.layoutManager = LinearLayoutManager(
                 contactsRecyclerView.context,
-                LinearLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
         )
 

@@ -3,8 +3,8 @@ package closer.vlllage.com.closer
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
@@ -146,7 +146,7 @@ class GroupActivity : CircularRevealActivity() {
 
         view.shareWithRecyclerView.layoutManager = LinearLayoutManager(
                 view.shareWithRecyclerView.context,
-                LinearLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
         )
 

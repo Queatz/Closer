@@ -8,7 +8,7 @@
     android:elevation="@dimen/elevation"
     android:clickable="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/padHalf"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/closerLogoText">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/publicGroupsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,6 +70,6 @@
             android:textColorHighlight="@color/colorAccent_50"
             android:textSize="12sp" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

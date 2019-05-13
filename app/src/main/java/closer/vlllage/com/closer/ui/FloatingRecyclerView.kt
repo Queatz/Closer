@@ -4,12 +4,11 @@ import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
-import android.support.annotation.ColorRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.MotionEvent
-
+import androidx.annotation.ColorRes
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 
 class FloatingRecyclerView : RecyclerView {
@@ -65,7 +64,7 @@ class FloatingRecyclerView : RecyclerView {
     }
 
     override fun onScrollStateChanged(state: Int) {
-        isScrolling = state != RecyclerView.SCROLL_STATE_IDLE
+        isScrolling = state != SCROLL_STATE_IDLE
     }
 
     private fun animateBackground(recyclerView: RecyclerView, @ColorRes color: Int) {

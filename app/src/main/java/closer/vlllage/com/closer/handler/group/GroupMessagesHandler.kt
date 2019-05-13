@@ -1,13 +1,13 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
@@ -45,7 +45,7 @@ class GroupMessagesHandler : PoolMember() {
 
         layoutManager = LinearLayoutManager(
                 `$`(ActivityHandler::class.java).activity,
-                LinearLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 true
         )
 

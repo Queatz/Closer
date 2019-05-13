@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.pool.PoolMember

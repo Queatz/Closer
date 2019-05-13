@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.handler.phone
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.ReactionResult
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
@@ -11,12 +11,12 @@ class PhoneAdapterHeaderAdapter(poolMember: PoolMember, onReactionClickListener:
 
     private val header = RecyclerViewHeader()
 
-    override fun onBindViewHolder(holder: PhoneAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
         header.onBind(holder, position)
     }
 
-    override fun onViewRecycled(holder: PhoneAdapter.ViewHolder) {
+    override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         header.onRecycled(holder)
     }

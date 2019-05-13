@@ -1,6 +1,6 @@
 package closer.vlllage.com.closer.pool
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 abstract class PoolRecyclerAdapter<T : RecyclerView.ViewHolder>(poolMember: PoolMember) : RecyclerView.Adapter<T>() {
 

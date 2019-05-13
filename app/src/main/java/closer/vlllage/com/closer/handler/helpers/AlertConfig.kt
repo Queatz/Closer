@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import android.support.annotation.LayoutRes
-import android.support.annotation.StyleRes
-import android.support.v7.app.AlertDialog
+import androidx.annotation.LayoutRes
+import androidx.annotation.StyleRes
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 
 import closer.vlllage.com.closer.R

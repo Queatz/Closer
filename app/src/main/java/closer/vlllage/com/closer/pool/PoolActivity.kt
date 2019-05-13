@@ -2,7 +2,7 @@ package closer.vlllage.com.closer.pool
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 
 import closer.vlllage.com.closer.App
 import closer.vlllage.com.closer.handler.data.PermissionHandler
@@ -11,7 +11,7 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.CameraHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
 
-abstract class PoolActivity : FragmentActivity() {
+abstract class PoolActivity : androidx.fragment.app.FragmentActivity() {
     val pool = Pool()
 
     override fun onCreate(savedInstanceState: Bundle?) {
