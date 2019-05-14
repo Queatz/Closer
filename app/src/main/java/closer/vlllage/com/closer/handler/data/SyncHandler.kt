@@ -166,8 +166,8 @@ class SyncHandler : PoolMember() {
 
         val apiCall = `$`(ApiHandler::class.java).sendGroupMessage(
                 groupMessage.to!!,
-                groupMessage.text!!,
-                `$`(HttpEncode::class.java).encode(groupMessage.attachment)!!
+                groupMessage.text,
+                `$`(HttpEncode::class.java).encode(groupMessage.attachment)
         )
 
         `$`(ApplicationHandler::class.java).app.`$`(DisposableHandler::class.java).add(apiCall.subscribe({ createResult ->

@@ -24,15 +24,14 @@ import java.util.*
 
 class GroupContactsHandler : PoolMember() {
 
-    private var contactsRecyclerView: RecyclerView? = null
-    private var showPhoneContactsButton: View? = null
-    private var searchContacts: EditText? = null
-    private var phoneContactAdapter: PhoneContactAdapter? = null
+    private lateinit var contactsRecyclerView: RecyclerView
+    private lateinit var showPhoneContactsButton: View
+    private lateinit var searchContacts: EditText
+    private lateinit var phoneContactAdapter: PhoneContactAdapter
     private val currentGroupContacts = HashSet<String>()
     private var dataSubscription: DataSubscription? = null
 
-    val isEmpty: Boolean
-        get() = phoneContactAdapter!!.itemCount == 0
+    val isEmpty: Boolean get() = phoneContactAdapter.itemCount == 0
 
     fun attach(group: Group, contactsRecyclerView: RecyclerView, searchContacts: EditText, showPhoneContactsButton: View) {
         this.contactsRecyclerView = contactsRecyclerView
@@ -86,7 +85,7 @@ class GroupContactsHandler : PoolMember() {
 
         if (`$`(PermissionHandler::class.java).has(READ_CONTACTS)) {
             `$`(DisposableHandler::class.java).add(
-                    `$`(PhoneContactsHandler::class.java).allContacts.subscribe { phoneContactAdapter!!.setContacts(it) }
+                    `$`(PhoneContactsHandler::class.java).allContacts.subscribe { phoneContactAdapter.setContacts(it) }
             )
         }
 
@@ -113,19 +112,19 @@ class GroupContactsHandler : PoolMember() {
 
         `$`(DisposableHandler::class.java).add(`$`(StoreHandler::class.java).store.box(GroupInvite::class.java).query()
                 .equal(GroupInvite_.group, group.id!!)
-                .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupInvites -> phoneContactAdapter!!.setInvites(groupInvites) })
+                .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupInvites -> phoneContactAdapter.setInvites(groupInvites) })
 
         `$`(DisposableHandler::class.java).add(`$`(StoreHandler::class.java).store.box(GroupContact::class.java).query()
                 .equal(GroupContact_.groupId, group.id!!)
-                .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupContacts -> phoneContactAdapter!!.setGroupContacts(groupContacts) })
+                .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupContacts -> phoneContactAdapter.setGroupContacts(groupContacts) })
     }
 
     private fun leaveGroup(group: Group) {
         `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).leaveGroup(group.id!!).subscribe({ successResult ->
             if (successResult.success) {
                 `$`(DefaultAlerts::class.java).message(
-                        `$`(ResourcesHandler::class.java).resources.getString(R.string.group_no_more, group.name),
-                        { `$`(ActivityHandler::class.java).activity!!.finish() })
+                        `$`(ResourcesHandler::class.java).resources.getString(R.string.group_no_more, group.name)
+                ) { `$`(ActivityHandler::class.java).activity!!.finish() }
                 `$`(RefreshHandler::class.java).refreshMyGroups()
             } else {
                 `$`(DefaultAlerts::class.java).thatDidntWork()
@@ -150,7 +149,7 @@ class GroupContactsHandler : PoolMember() {
 
     private fun inviteToGroup(group: Group, phoneContact: PhoneContact) {
         val myName = `$`(AccountHandler::class.java).name
-        if (myName == null || myName.isBlank()) {
+        if (myName.isBlank()) {
             `$`(SetNameHandler::class.java).modifyName(object : SetNameHandler.OnNameModifiedCallback {
                 override fun onNameModified(name: String?) {
                     sendInviteToGroup(group, phoneContact)
@@ -201,8 +200,8 @@ class GroupContactsHandler : PoolMember() {
 
         val phoneNumber = `$`(PhoneNumberHandler::class.java).normalize(originalQuery)
 
-        phoneContactAdapter!!.setPhoneNumber(phoneNumber!!)
-        phoneContactAdapter!!.setIsFiltered(!originalQuery.isEmpty())
+        phoneContactAdapter.setPhoneNumber(phoneNumber)
+        phoneContactAdapter.setIsFiltered(!originalQuery.isEmpty())
 
         if (!`$`(PermissionHandler::class.java).has(READ_CONTACTS)) {
             showPhoneContacts(ArrayList(), query)
@@ -241,7 +240,7 @@ class GroupContactsHandler : PoolMember() {
                     }
 
                     if (query.isEmpty()) {
-                        phoneContactAdapter!!.setContacts(allContacts)
+                        phoneContactAdapter.setContacts(allContacts)
                         return@observer
                     }
 
@@ -256,20 +255,20 @@ class GroupContactsHandler : PoolMember() {
                             }
                         }
 
-                        if (!queryPhone.isEmpty() && contact.phoneNumber != null) {
+                        if (queryPhone.isNotEmpty() && contact.phoneNumber != null) {
                             if (contact.phoneNumber!!.replace("[^0-9]".toRegex(), "").contains(queryPhone)) {
                                 contacts.add(contact)
                             }
                         }
                     }
 
-                    phoneContactAdapter!!.setContacts(contacts)
+                    phoneContactAdapter.setContacts(contacts)
                 }
         `$`(DisposableHandler::class.java).add(dataSubscription!!)
     }
 
     fun showContactsForQuery() {
-        showContactsForQuery(searchContacts!!.text.toString())
+        showContactsForQuery(searchContacts.text.toString())
     }
 
     fun setCurrentGroupContacts(groupContacts: List<GroupContact>) {

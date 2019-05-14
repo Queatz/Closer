@@ -87,7 +87,7 @@ class PhoneContactAdapter(poolMember: PoolMember,
         return contacts.size + memberAndInviteCount
     }
 
-    fun setPhoneNumber(phoneNumber: String) {
+    fun setPhoneNumber(phoneNumber: String?) {
         this.phoneNumber = phoneNumber
         notifyDataSetChanged()
     }

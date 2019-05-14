@@ -95,7 +95,7 @@ class ApiHandler : PoolMember() {
         return uiThread(api.backend.sendVerificationCode(verificationCode))
     }
 
-    fun sendGroupMessage(groupId: String, text: String, attachment: String): Single<CreateResult> {
+    fun sendGroupMessage(groupId: String, text: String?, attachment: String?): Single<CreateResult> {
         return uiThread(api.backend.sendGroupMessage(groupId, text, attachment))
     }
 

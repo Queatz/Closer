@@ -74,7 +74,7 @@ interface Backend {
     fun myMessages(@Query("geo") latLng: String): Single<List<GroupMessageResult>>
 
     @POST("message")
-    fun sendGroupMessage(@Query("group") groupId: String, @Query("text") text: String, @Query(value = "attachment", encoded = true) attachment: String): Single<CreateResult>
+    fun sendGroupMessage(@Query("group") groupId: String, @Query("text") text: String?, @Query(value = "attachment", encoded = true) attachment: String?): Single<CreateResult>
 
     @POST("message/{id}")
     fun reactToMessage(@Path("id") messageId: String, @Query("react") text: String, @Query("remove") remove: Boolean): Single<SuccessResult>
