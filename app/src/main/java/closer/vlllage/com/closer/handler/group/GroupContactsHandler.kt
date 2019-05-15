@@ -14,10 +14,10 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.SetNameHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import java.util.*
@@ -79,7 +79,7 @@ class GroupContactsHandler constructor(private val on: On) {
                     }
                 })
             } else {
-                on<PhoneMessagesHandler>().openMessagesWithPhone(groupContact.contactId!!, groupContact.contactName!!, "")
+                on<PhoneMessagesHandler>().openMessagesWithPhone(groupContact.contactId!!, groupContact.contactName, "")
             }
         })
 

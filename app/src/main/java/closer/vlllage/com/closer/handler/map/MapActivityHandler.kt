@@ -14,10 +14,10 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 
 class MapActivityHandler constructor(private val on: On) {
 
@@ -72,7 +72,7 @@ class MapActivityHandler constructor(private val on: On) {
         on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
-    fun replyToPhone(phoneId: String, name: String, status: String, latLng: LatLng?) {
+    fun replyToPhone(phoneId: String, name: String?, status: String, latLng: LatLng?) {
         var name = name
         val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
@@ -81,7 +81,7 @@ class MapActivityHandler constructor(private val on: On) {
             intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(latLng.latitude.toFloat(), latLng.longitude.toFloat()))
         }
 
-        name = if (name.isEmpty())
+        name = if (name.isNullOrBlank())
             on<ResourcesHandler>().resources.getString(R.string.app_name)
         else
             name
