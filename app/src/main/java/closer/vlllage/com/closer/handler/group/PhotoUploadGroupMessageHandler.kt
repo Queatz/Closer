@@ -7,18 +7,18 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import java.io.IOException
 
-class PhotoUploadGroupMessageHandler : PoolMember() {
+class PhotoUploadGroupMessageHandler constructor(private val on: On) {
     fun upload(photoUri: Uri, onPhotoUploadedListener: (photoId: String) -> Unit) {
         try {
-            `$`(ApplicationHandler::class.java).app.`$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).uploadPhoto(
-                    `$`(ActivityHandler::class.java).activity!!.contentResolver.openInputStream(photoUri)!!)
-                    .subscribe({ onPhotoUploadedListener.invoke(it) }, { `$`(DefaultAlerts::class.java).thatDidntWork() }))
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().uploadPhoto(
+                    on<ActivityHandler>().activity!!.contentResolver.openInputStream(photoUri)!!)
+                    .subscribe({ onPhotoUploadedListener.invoke(it) }, { on<DefaultAlerts>().thatDidntWork() }))
         } catch (e: IOException) {
             e.printStackTrace()
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
         }
 
     }

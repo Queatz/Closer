@@ -10,7 +10,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
@@ -20,35 +20,35 @@ import closer.vlllage.com.closer.ui.RevealAnimator
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 
-class GroupActionHandler : PoolMember() {
+class GroupActionHandler constructor(private val on: On) {
 
     private var animator: RevealAnimator? = null
     private var groupActionsDisposable: DataSubscription? = null
     private var isShowing: Boolean = false
 
     fun attach(container: MaxSizeFrameLayout, actionRecyclerView: RecyclerView) {
-        animator = RevealAnimator(container, (`$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
+        animator = RevealAnimator(container, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
 
-        `$`(GroupActionRecyclerViewHandler::class.java).attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO)
+        on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO)
 
-        `$`(DisposableHandler::class.java).add(`$`(GroupHandler::class.java).onGroupChanged().subscribe { group ->
+        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe { group ->
             if (groupActionsDisposable != null) {
-                `$`(DisposableHandler::class.java).dispose(groupActionsDisposable!!)
+                on<DisposableHandler>().dispose(groupActionsDisposable!!)
             }
 
-            groupActionsDisposable = `$`(StoreHandler::class.java).store.box(GroupAction::class.java).query()
+            groupActionsDisposable = on<StoreHandler>().store.box(GroupAction::class.java).query()
                     .equal(GroupAction_.group, group.id!!)
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .observer { groupActions ->
-                        `$`(GroupActionRecyclerViewHandler::class.java).adapter!!.setGroupActions(groupActions)
+                        on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
                         show(!groupActions.isEmpty(), true)
                     }
 
-            `$`(DisposableHandler::class.java).add(groupActionsDisposable!!)
+            on<DisposableHandler>().add(groupActionsDisposable!!)
 
-            `$`(RefreshHandler::class.java).refreshGroupActions(group.id!!)
+            on<RefreshHandler>().refreshGroupActions(group.id!!)
         })
     }
 
@@ -66,7 +66,7 @@ class GroupActionHandler : PoolMember() {
             return
         }
 
-        if (`$`(GroupActionRecyclerViewHandler::class.java).adapter != null && `$`(GroupActionRecyclerViewHandler::class.java).adapter!!.itemCount == 0) {
+        if (on<GroupActionRecyclerViewHandler>().adapter != null && on<GroupActionRecyclerViewHandler>().adapter!!.itemCount == 0) {
             show = false
         }
 
@@ -80,10 +80,10 @@ class GroupActionHandler : PoolMember() {
     }
 
     fun addActionToGroup(group: Group) {
-        `$`(AlertHandler::class.java).make().apply {
-            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_an_action)
-            negativeButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.nope)
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_action)
+        on<AlertHandler>().make().apply {
+            title = on<ResourcesHandler>().resources.getString(R.string.add_an_action)
+            negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.add_action)
             layoutResId = R.layout.add_action_modal
             onAfterViewCreated = { alertConfig, view ->
                 val name = view.findViewById<EditText>(R.id.name)
@@ -122,8 +122,8 @@ class GroupActionHandler : PoolMember() {
             positiveButtonCallback = { alertResult ->
                     val model = alertResult as AddToGroupModalModel
 
-                    if (`$`(Val::class.java).isEmpty(model.name) || `$`(Val::class.java).isEmpty(model.name)) {
-                        `$`(DefaultAlerts::class.java).message(R.string.enter_a_name_and_intent)
+                    if (on<Val>().isEmpty(model.name) || on<Val>().isEmpty(model.name)) {
+                        on<DefaultAlerts>().message(R.string.enter_a_name_and_intent)
                     } else {
                         createGroupAction(group, model.name, model.intent)
                     }
@@ -134,14 +134,14 @@ class GroupActionHandler : PoolMember() {
     }
 
     fun joinGroup(group: Group) {
-        `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).inviteToGroup(group.id!!, `$`(PersistenceHandler::class.java).phoneId!!).subscribe(
+        on<DisposableHandler>().add(on<ApiHandler>().inviteToGroup(group.id!!, on<PersistenceHandler>().phoneId!!).subscribe(
                 { successResult ->
                     if (successResult.success) {
-                        `$`(ToastHandler::class.java).show(`$`(ResourcesHandler::class.java).resources.getString(R.string.you_joined_group, group.name))
+                        on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.you_joined_group, group.name))
                     } else {
-                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                        on<DefaultAlerts>().thatDidntWork()
                     }
-                }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                }, { error -> on<DefaultAlerts>().thatDidntWork() }))
     }
 
     private fun createGroupAction(group: Group, name: String?, intent: String?) {
@@ -150,8 +150,8 @@ class GroupActionHandler : PoolMember() {
         groupAction.name = name
         groupAction.intent = intent
 
-        `$`(StoreHandler::class.java).store.box(GroupAction::class.java).put(groupAction)
-        `$`(SyncHandler::class.java).sync(groupAction)
+        on<StoreHandler>().store.box(GroupAction::class.java).put(groupAction)
+        on<SyncHandler>().sync(groupAction)
     }
 
     private class AddToGroupModalModel {

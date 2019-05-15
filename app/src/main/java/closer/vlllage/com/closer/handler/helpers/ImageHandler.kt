@@ -1,17 +1,18 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
+import com.queatz.on.OnLifecycle
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 
-class ImageHandler : PoolMember() {
+class ImageHandler constructor(private val on: On) : OnLifecycle {
 
-    override fun onPoolInit() {
+    override fun on() {
         if (picasso == null)
-            picasso = Picasso.Builder(`$`(ApplicationHandler::class.java).app)
-                    .downloader(OkHttp3Downloader(OkHttpClient.Builder().cache(Cache(`$`(ApplicationHandler::class.java).app.cacheDir, Integer.MAX_VALUE.toLong())).build()))
+            picasso = Picasso.Builder(on<ApplicationHandler>().app)
+                    .downloader(OkHttp3Downloader(OkHttpClient.Builder().cache(Cache(on<ApplicationHandler>().app.cacheDir, Integer.MAX_VALUE.toLong())).build()))
                     .build()
     }
 

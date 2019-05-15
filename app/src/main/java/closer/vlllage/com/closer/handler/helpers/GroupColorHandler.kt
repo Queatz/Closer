@@ -4,34 +4,34 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Group
 
-class GroupColorHandler : PoolMember() {
+class GroupColorHandler constructor(private val on: On) {
 
     @ColorInt
     fun getColor(group: Group): Int {
         return if (group.hasEvent()) {
-            `$`(ResourcesHandler::class.java).resources.getColor(R.color.red)
+            on<ResourcesHandler>().resources.getColor(R.color.red)
         } else if (group.physical) {
-            `$`(ResourcesHandler::class.java).resources.getColor(R.color.purple)
+            on<ResourcesHandler>().resources.getColor(R.color.purple)
         } else if (group.isPublic) {
-            `$`(ResourcesHandler::class.java).resources.getColor(R.color.green)
+            on<ResourcesHandler>().resources.getColor(R.color.green)
         } else {
-            `$`(ResourcesHandler::class.java).resources.getColor(R.color.colorPrimary)
+            on<ResourcesHandler>().resources.getColor(R.color.colorPrimary)
         }
     }
 
     @ColorInt
     fun getLightColor(group: Group): Int {
         return if (group.hasEvent()) {
-            `$`(ResourcesHandler::class.java).resources.getColor(R.color.redLight)
+            on<ResourcesHandler>().resources.getColor(R.color.redLight)
         } else if (group.physical) {
-            `$`(ResourcesHandler::class.java).resources.getColor(R.color.purpleLight)
+            on<ResourcesHandler>().resources.getColor(R.color.purpleLight)
         } else if (group.isPublic) {
-            `$`(ResourcesHandler::class.java).resources.getColor(R.color.greenLight)
+            on<ResourcesHandler>().resources.getColor(R.color.greenLight)
         } else {
-            `$`(ResourcesHandler::class.java).resources.getColor(R.color.colorPrimaryLight)
+            on<ResourcesHandler>().resources.getColor(R.color.colorPrimaryLight)
         }
     }
 

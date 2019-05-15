@@ -4,14 +4,15 @@ package closer.vlllage.com.closer.handler.helpers
 import android.os.Handler
 import android.os.Looper
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
+import com.queatz.on.OnLifecycle
 import io.reactivex.disposables.Disposable
 
-class TimerHandler : PoolMember() {
+class TimerHandler constructor(private val on: On) : OnLifecycle {
 
     private lateinit var handler: Handler
 
-    override fun onPoolInit() {
+    override fun on() {
         handler = Handler(Looper.getMainLooper())
     }
 
@@ -20,7 +21,7 @@ class TimerHandler : PoolMember() {
     }
 
     fun postDisposable(runnable: Runnable, millis: Long) {
-        `$`(DisposableHandler::class.java).add(post(runnable, millis))
+        on<DisposableHandler>().add(post(runnable, millis))
     }
 
     private fun post(runnable: Runnable, millis: Long): Disposable {

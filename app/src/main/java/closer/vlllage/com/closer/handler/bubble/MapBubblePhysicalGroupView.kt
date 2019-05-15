@@ -9,11 +9,11 @@ import android.widget.ImageView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ImageHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Group
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
-class MapBubblePhysicalGroupView : PoolMember() {
+class MapBubblePhysicalGroupView constructor(private val on: On) {
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubblePhysicalGroupClickListener): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_physical_group, layer, false)
 
@@ -24,24 +24,24 @@ class MapBubblePhysicalGroupView : PoolMember() {
     }
 
     fun update(view: View, mapBubble: MapBubble) {
-        var margin = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.pad)
-        var size = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.physicalGroupIcon)
+        var margin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
+        var size = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupIcon)
         val photo = view.findViewById<ImageView>(R.id.photo)
         if ((mapBubble.tag != null) and (mapBubble.tag is Group)) {
             val group = mapBubble.tag as Group
             if (group.photo != null) {
                 margin /= 4
-                size = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.physicalGroupPhoto)
+                size = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupPhoto)
                 photo.colorFilter = null
-                photo.imageTintList = ColorStateList.valueOf(`$`(ResourcesHandler::class.java).resources.getColor(android.R.color.transparent))
-                `$`(ImageHandler::class.java).get()
+                photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
+                on<ImageHandler>().get()
                         .load(group.photo!! + "?s=32")
                         .fit()
-                        .transform(RoundedCornersTransformation(`$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
+                        .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
                         .into(photo)
             } else {
                 photo.setImageResource(R.drawable.ic_wifi_black_24dp)
-                photo.imageTintList = ColorStateList.valueOf(`$`(ResourcesHandler::class.java).resources.getColor(android.R.color.white))
+                photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
             }
         }
 

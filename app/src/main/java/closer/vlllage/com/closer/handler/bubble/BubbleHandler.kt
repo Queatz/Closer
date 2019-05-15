@@ -3,11 +3,11 @@ package closer.vlllage.com.closer.handler.bubble
 import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.handler.map.MapHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
-class BubbleHandler : PoolMember() {
+class BubbleHandler constructor(private val on: On) {
 
     private var onClickListener: ((MapBubble) -> Unit)? = null
     private lateinit var onMenuItemClickListener: OnMapBubbleMenuItemClickListener
@@ -16,30 +16,30 @@ class BubbleHandler : PoolMember() {
     private lateinit var onMapBubblePhysicalGroupClickListener: MapBubblePhysicalGroupClickListener
 
     private val bubbleMapLayer = BubbleMapLayer()
-    private val bubbleProxyLayer = BubbleProxyLayer(bubbleMapLayer) { `$`(MapHandler::class.java).visibleRegion!! }
+    private val bubbleProxyLayer = BubbleProxyLayer(bubbleMapLayer) { on<MapHandler>().visibleRegion!! }
 
     private val bubbleView: BubbleMapLayer.BubbleView
         get() = object : BubbleMapLayer.BubbleView {
             override fun createView(view: ViewGroup?, mapBubble: MapBubble): View {
                 return when (mapBubble.type) {
-                    BubbleType.PROXY -> `$`(MapBubbleProxyView::class.java).from(view!!, mapBubble) { proxiedMapBubble ->
+                    BubbleType.PROXY -> on<MapBubbleProxyView>().from(view!!, mapBubble) { proxiedMapBubble ->
                         when (proxiedMapBubble.type) {
                             BubbleType.STATUS -> onClickListener!!.invoke(proxiedMapBubble)
                             BubbleType.EVENT -> onMapBubbleEventClickListener.invoke(proxiedMapBubble)
                             BubbleType.PHYSICAL_GROUP -> onMapBubblePhysicalGroupClickListener.invoke(proxiedMapBubble)
                         }
                     }
-                    BubbleType.MENU -> `$`(MapBubbleMenuView::class.java).from(view!!, mapBubble, onMenuItemClickListener)
-                    BubbleType.SUGGESTION -> `$`(MapBubbleSuggestionView::class.java).from(view!!, mapBubble, onMapBubbleSuggestionClickListener)
-                    BubbleType.EVENT -> `$`(MapBubbleEventView::class.java).from(view!!, mapBubble, onMapBubbleEventClickListener)
-                    BubbleType.PHYSICAL_GROUP -> `$`(MapBubblePhysicalGroupView::class.java).from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener)
-                    else -> `$`(MapBubbleView::class.java).from(view!!, mapBubble, onClickListener!!)
+                    BubbleType.MENU -> on<MapBubbleMenuView>().from(view!!, mapBubble, onMenuItemClickListener)
+                    BubbleType.SUGGESTION -> on<MapBubbleSuggestionView>().from(view!!, mapBubble, onMapBubbleSuggestionClickListener)
+                    BubbleType.EVENT -> on<MapBubbleEventView>().from(view!!, mapBubble, onMapBubbleEventClickListener)
+                    BubbleType.PHYSICAL_GROUP -> on<MapBubblePhysicalGroupView>().from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener)
+                    else -> on<MapBubbleView>().from(view!!, mapBubble, onClickListener!!)
                 }
             }
 
             override fun updateView(mapBubble: MapBubble) {
                 when (mapBubble.type) {
-                    BubbleType.STATUS -> `$`(MapBubbleView::class.java).update(mapBubble.view!!, mapBubble)
+                    BubbleType.STATUS -> on<MapBubbleView>().update(mapBubble.view!!, mapBubble)
                 }
             }
         }

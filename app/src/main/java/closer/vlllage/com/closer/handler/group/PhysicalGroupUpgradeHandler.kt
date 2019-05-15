@@ -3,60 +3,60 @@ package closer.vlllage.com.closer.handler.group
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
+import com.queatz.on.On
 
-class PhysicalGroupUpgradeHandler : PoolMember() {
+class PhysicalGroupUpgradeHandler constructor(private val on: On) {
     fun convertToHub(group: Group, onGroupUpdateListener: (Group) -> Unit) {
-        `$`(AlertHandler::class.java).make().apply {
-            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.set_name)
+        on<AlertHandler>().make().apply {
+            title = on<ResourcesHandler>().resources.getString(R.string.set_name)
             layoutResId = R.layout.input_modal
             textViewId = R.id.input
             onTextViewSubmitCallback = { result ->
-                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).convertToHub(group.id!!, result).subscribe({
+                on<DisposableHandler>().add(on<ApiHandler>().convertToHub(group.id!!, result).subscribe({
                     group.name = result
-                    `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
+                    on<StoreHandler>().store.box(Group::class.java).put(group)
                     onGroupUpdateListener.invoke(group)
-                }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                }, { error -> on<DefaultAlerts>().thatDidntWork() }))
             }
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.set_name)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.set_name)
             show()
         }
     }
 
     fun setBackground(group: Group, onGroupUpdateListener: (Group) -> Unit) {
-        `$`(DefaultMenus::class.java).uploadPhoto { photoId -> handlePhoto(group, photoId, onGroupUpdateListener) }
+        on<DefaultMenus>().uploadPhoto { photoId -> handlePhoto(group, photoId, onGroupUpdateListener) }
     }
 
     private fun handlePhoto(group: Group, photoId: String, onGroupUpdateListener: (Group) -> Unit) {
-        val photo = `$`(PhotoUploadGroupMessageHandler::class.java).getPhotoPathFromId(photoId)
-        `$`(ApplicationHandler::class.java).app.`$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).setGroupPhoto(group.id!!, photo).subscribe(
+        val photo = on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)
+        on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().setGroupPhoto(group.id!!, photo).subscribe(
                 { successResult ->
                     if (successResult.success) {
                         group.photo = photo
-                        `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
+                        on<StoreHandler>().store.box(Group::class.java).put(group)
                         onGroupUpdateListener.invoke(group)
                     } else {
-                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                        on<DefaultAlerts>().thatDidntWork()
                     }
                 },
-                { `$`(DefaultAlerts::class.java).thatDidntWork() }
+                { on<DefaultAlerts>().thatDidntWork() }
         ))
     }
 
     fun setAbout(group: Group, about: String, onGroupUpdateListener: (Group) -> Unit) {
-        `$`(ApplicationHandler::class.java).app.`$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).setGroupAbout(group.id!!, about).subscribe(
+        on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().setGroupAbout(group.id!!, about).subscribe(
                 { successResult ->
                     if (successResult.success) {
                         group.about = about
-                        `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
+                        on<StoreHandler>().store.box(Group::class.java).put(group)
                         onGroupUpdateListener.invoke(group)
                     } else {
-                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                        on<DefaultAlerts>().thatDidntWork()
                     }
                 },
-                { `$`(DefaultAlerts::class.java).thatDidntWork() }
+                { on<DefaultAlerts>().thatDidntWork() }
         ))
     }
 }

@@ -6,33 +6,33 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class AlertHandler : PoolMember() {
+class AlertHandler constructor(private val on: On) {
 
     fun make(): AlertConfig {
         return AlertConfig { showAlertConfig(it) }
     }
 
     private fun showAlertConfig(alertConfig: AlertConfig) {
-        if (!`$`(ActivityHandler::class.java).isPresent) {
+        if (!on<ActivityHandler>().isPresent) {
             if (alertConfig.message != null) {
-                `$`(ToastHandler::class.java).show(alertConfig.message!!)
+                on<ToastHandler>().show(alertConfig.message!!)
             }
             return
         }
 
-        val dialogBuilder = AlertDialog.Builder(`$`(ActivityHandler::class.java).activity!!, alertConfig.theme)
+        val dialogBuilder = AlertDialog.Builder(on<ActivityHandler>().activity!!, alertConfig.theme)
         var textView: TextView? = null
         if (alertConfig.layoutResId != null) {
-            val view = View.inflate(`$`(ActivityHandler::class.java).activity, alertConfig.layoutResId!!, null)
+            val view = View.inflate(on<ActivityHandler>().activity, alertConfig.layoutResId!!, null)
 
             if (alertConfig.textViewId != null) {
                 textView = view.findViewById(alertConfig.textViewId!!)
                 val finalTextView = textView
                 textView!!.post { textView.requestFocus() }
-                textView.post { `$`(KeyboardHandler::class.java).showKeyboard(finalTextView, true) }
-                dialogBuilder.setOnDismissListener { dialogInterface -> `$`(KeyboardHandler::class.java).showKeyboard(finalTextView, false) }
+                textView.post { on<KeyboardHandler>().showKeyboard(finalTextView, true) }
+                dialogBuilder.setOnDismissListener { dialogInterface -> on<KeyboardHandler>().showKeyboard(finalTextView, false) }
             }
 
             if (alertConfig.onAfterViewCreated != null) {

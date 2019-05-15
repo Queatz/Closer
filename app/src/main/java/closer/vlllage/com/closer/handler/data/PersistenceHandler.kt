@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
+import com.queatz.on.OnLifecycle
 
-class PersistenceHandler : PoolMember() {
+class PersistenceHandler constructor(private val on: On) : OnLifecycle {
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -105,8 +106,8 @@ class PersistenceHandler : PoolMember() {
             sharedPreferences.edit().putString(PREFERENCE_LAST_MAP_CENTER, latLng!!.latitude.toString() + "," + latLng!!.longitude).commit()
         }
 
-    override fun onPoolInit() {
-        sharedPreferences = `$`(ApplicationHandler::class.java).app.getSharedPreferences(
+    override fun on() {
+        sharedPreferences = on<ApplicationHandler>().app.getSharedPreferences(
                 SHARED_PREFERENCES, Context.MODE_PRIVATE
         )
     }

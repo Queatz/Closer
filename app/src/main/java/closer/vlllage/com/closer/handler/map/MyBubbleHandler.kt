@@ -10,13 +10,13 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.TimeStr
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import com.google.android.gms.maps.model.LatLng
 
-class MyBubbleHandler : PoolMember() {
+class MyBubbleHandler constructor(private val on: On) {
 
     private var myBubble: MapBubble? = null
 
@@ -24,7 +24,7 @@ class MyBubbleHandler : PoolMember() {
         when (accountChange.prop) {
             ACCOUNT_FIELD_GEO -> updateLocation(accountChange.value as LatLng)
             ACCOUNT_FIELD_ACTIVE -> {
-                val location = `$`(LocationHandler::class.java).lastKnownLocation
+                val location = on<LocationHandler>().lastKnownLocation
                 if (location != null) {
                     updateLocation(LatLng(location.latitude, location.latitude))
                 }
@@ -40,25 +40,25 @@ class MyBubbleHandler : PoolMember() {
         }
 
         if (active) {
-            `$`(BubbleHandler::class.java).add(myBubble!!)
+            on<BubbleHandler>().add(myBubble!!)
         } else {
-            `$`(BubbleHandler::class.java).remove(myBubble!!)
+            on<BubbleHandler>().remove(myBubble!!)
         }
     }
 
     private fun updateLocation(latLng: LatLng) {
         if (myBubble == null) {
-            val phone = `$`(StoreHandler::class.java).store.box(Phone::class.java).query().equal(Phone_.id, `$`(PersistenceHandler::class.java).phoneId!!).build().findFirst()
-            myBubble = MapBubble(latLng, `$`(AccountHandler::class.java).name, `$`(AccountHandler::class.java).status)
+            val phone = on<StoreHandler>().store.box(Phone::class.java).query().equal(Phone_.id, on<PersistenceHandler>().phoneId!!).build().findFirst()
+            myBubble = MapBubble(latLng, on<AccountHandler>().name, on<AccountHandler>().status)
             myBubble!!.isPinned = true
 
             if (phone != null) {
                 myBubble!!.tag = phone
-                myBubble!!.action = `$`(TimeStr::class.java).pretty(phone.updated)
+                myBubble!!.action = on<TimeStr>().pretty(phone.updated)
             }
-            updateActive(`$`(AccountHandler::class.java).active)
+            updateActive(on<AccountHandler>().active)
         } else {
-            `$`(BubbleHandler::class.java).move(myBubble!!, latLng)
+            on<BubbleHandler>().move(myBubble!!, latLng)
         }
     }
 
@@ -67,13 +67,13 @@ class MyBubbleHandler : PoolMember() {
             return
         }
 
-        myBubble!!.name = `$`(AccountHandler::class.java).name
-        myBubble!!.status = `$`(AccountHandler::class.java).status
-        `$`(BubbleHandler::class.java).updateDetails(myBubble!!)
+        myBubble!!.name = on<AccountHandler>().name
+        myBubble!!.status = on<AccountHandler>().status
+        on<BubbleHandler>().updateDetails(myBubble!!)
     }
 
     fun start() {
-        `$`(DisposableHandler::class.java).add(`$`(AccountHandler::class.java).changes().subscribe({ this.updateFrom(it) }, { error -> `$`(ConnectionErrorHandler::class.java).notifyConnectionError() }))
+        on<DisposableHandler>().add(on<AccountHandler>().changes().subscribe({ this.updateFrom(it) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
     }
 
     fun isMyBubble(mapBubble: MapBubble): Boolean {

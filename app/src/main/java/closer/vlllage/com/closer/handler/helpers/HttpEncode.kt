@@ -1,11 +1,11 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
 
-class HttpEncode : PoolMember() {
+class HttpEncode constructor(private val on: On) {
 
     fun encode(string: String?): String? {
         if (string == null) {

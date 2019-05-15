@@ -15,15 +15,15 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 import closer.vlllage.com.closer.ui.RevealAnimator
+import com.queatz.on.On
 import java.util.*
 
-class GroupMessagesAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<GroupMessagesAdapter.GroupMessageViewHolder>(poolMember) {
+class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.GroupMessageViewHolder>(on) {
 
     var onMessageClickListener: ((GroupMessage) -> Unit)? = null
     var onSuggestionClickListener: ((Suggestion) -> Unit)? = null
@@ -44,7 +44,7 @@ class GroupMessagesAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<GroupMe
             holder.itemView.setPadding(0, 0, 0, 0)
             holder.itemView.setBackgroundResource(R.color.white_15)
             holder.messageLayout.background = null
-            val pad = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.pad)
+            val pad = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
             holder.messageActionLayout.setPadding(
                     pad,
                     0,
@@ -91,50 +91,50 @@ class GroupMessagesAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<GroupMe
         }
 
         holder.messageActionReply.setOnClickListener { view ->
-            `$`(PhoneMessagesHandler::class.java).openMessagesWithPhone(groupMessage.from!!, `$`(NameHandler::class.java).getName(groupMessage.from!!), "")
+            on<PhoneMessagesHandler>().openMessagesWithPhone(groupMessage.from!!, on<NameHandler>().getName(groupMessage.from!!), "")
             toggleMessageActionLayout(holder)
         }
         holder.messageActionShare.setOnClickListener { view ->
-            `$`(ShareActivityTransitionHandler::class.java).shareGroupMessage(groupMessage.id!!)
+            on<ShareActivityTransitionHandler>().shareGroupMessage(groupMessage.id!!)
             toggleMessageActionLayout(holder)
         }
         holder.messageActionRemind.setOnClickListener { view ->
-            `$`(DefaultAlerts::class.java).message("That doesn't work yet!")
+            on<DefaultAlerts>().message("That doesn't work yet!")
             toggleMessageActionLayout(holder)
         }
         holder.messageActionPin.setOnClickListener { view ->
             if (pinned) {
-                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).removePin(groupMessage.id!!, groupMessage.to!!)
+                on<DisposableHandler>().add(on<ApiHandler>().removePin(groupMessage.id!!, groupMessage.to!!)
                         .subscribe({ successResult ->
                             if (!successResult.success) {
-                                `$`(DefaultAlerts::class.java).thatDidntWork()
+                                on<DefaultAlerts>().thatDidntWork()
                             } else {
-                                `$`(RefreshHandler::class.java).refreshPins(groupMessage.to!!)
+                                on<RefreshHandler>().refreshPins(groupMessage.to!!)
                             }
-                        }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
             } else {
-                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).addPin(groupMessage.id!!, groupMessage.to!!)
+                on<DisposableHandler>().add(on<ApiHandler>().addPin(groupMessage.id!!, groupMessage.to!!)
                         .subscribe({ successResult ->
                             if (!successResult.success) {
-                                `$`(DefaultAlerts::class.java).thatDidntWork()
+                                on<DefaultAlerts>().thatDidntWork()
                             } else {
-                                `$`(RefreshHandler::class.java).refreshPins(groupMessage.to!!)
+                                on<RefreshHandler>().refreshPins(groupMessage.to!!)
                             }
-                        }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
             }
             toggleMessageActionLayout(holder)
         }
         holder.messageActionVote.setOnClickListener { view ->
-            `$`(ApplicationHandler::class.java).app.`$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java)
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
                     .reactToMessage(groupMessage.id!!, "♥", false)
-                    .subscribe({ successResult -> `$`(RefreshHandler::class.java).refreshGroupMessage(groupMessage.id!!) }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                    .subscribe({ successResult -> on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!) }, { error -> on<DefaultAlerts>().thatDidntWork() }))
             toggleMessageActionLayout(holder)
         }
 
         holder.messageActionLayout.visibility = View.GONE
 
-        `$`(MessageDisplay::class.java).setPinned(pinned)
-        `$`(MessageDisplay::class.java).display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
+        on<MessageDisplay>().setPinned(pinned)
+        on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 
         if (groupMessage.reactions.isEmpty()) {
             holder.reactionsRecyclerView.visibility = View.GONE
@@ -147,7 +147,7 @@ class GroupMessagesAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<GroupMe
 
     private fun toggleMessageActionLayout(holder: GroupMessageViewHolder) {
         if (holder.messageActionLayoutRevealAnimator == null) {
-            holder.messageActionLayoutRevealAnimator = RevealAnimator(holder.messageActionLayout, (`$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
+            holder.messageActionLayoutRevealAnimator = RevealAnimator(holder.messageActionLayout, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
         }
 
         if (holder.messageActionLayout.visibility == View.VISIBLE) {
@@ -182,7 +182,7 @@ class GroupMessagesAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<GroupMe
                 val newGroupMessage = groupMessages[newPosition]
 
                 return oldGroupMessage.id == newGroupMessage.id &&
-                        `$`(ListEqual::class.java).isEqual(oldGroupMessage.reactions, newGroupMessage.reactions) &&
+                        on<ListEqual>().isEqual(oldGroupMessage.reactions, newGroupMessage.reactions) &&
                         oldGroupMessage.attachment == newGroupMessage.attachment &&
                         oldGroupMessage.from == newGroupMessage.from &&
                         oldGroupMessage.text == newGroupMessage.text
@@ -235,7 +235,7 @@ class GroupMessagesAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<GroupMe
             messageActionVote = itemView.findViewById(R.id.messageActionVote)
 
             reactionsRecyclerView.layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
-            reactionAdapter = ReactionAdapter(`$pool`())
+            reactionAdapter = ReactionAdapter(on)
             reactionsRecyclerView.adapter = reactionAdapter
         }
     }
@@ -243,7 +243,7 @@ class GroupMessagesAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<GroupMe
     private fun getGroup(groupId: String?): Group? {
         return if (groupId == null) {
             null
-        } else `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+        } else on<StoreHandler>().store.box(Group::class.java).query()
                 .equal(Group_.id, groupId)
                 .build()
                 .findFirst()

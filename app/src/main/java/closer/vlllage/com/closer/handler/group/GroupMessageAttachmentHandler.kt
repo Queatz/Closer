@@ -4,7 +4,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.JsonHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
@@ -12,7 +12,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import java.util.*
 
-class GroupMessageAttachmentHandler : PoolMember() {
+class GroupMessageAttachmentHandler constructor(private val on: On) {
 
     fun shareLocation(latLng: LatLng, group: Group): Boolean {
         val suggestion = Suggestion()
@@ -23,7 +23,7 @@ class GroupMessageAttachmentHandler : PoolMember() {
 
     fun shareSuggestion(suggestion: Suggestion, group: Group): Boolean {
         val jsonObject = JsonObject()
-        jsonObject.add("suggestion", `$`(JsonHandler::class.java).toJsonTree(suggestion))
+        jsonObject.add("suggestion", on<JsonHandler>().toJsonTree(suggestion))
 
         saveMessageWithAttachment(group.id, null, jsonObject)
 
@@ -32,7 +32,7 @@ class GroupMessageAttachmentHandler : PoolMember() {
 
     fun shareEvent(event: Event, group: Group): Boolean {
         val jsonObject = JsonObject()
-        jsonObject.add("event", `$`(JsonHandler::class.java).toJsonTree(event))
+        jsonObject.add("event", on<JsonHandler>().toJsonTree(event))
 
         saveMessageWithAttachment(group.id, null, jsonObject)
 
@@ -41,7 +41,7 @@ class GroupMessageAttachmentHandler : PoolMember() {
 
     fun shareGroup(groupToShare: Group, group: Group): Boolean {
         val jsonObject = JsonObject()
-        jsonObject.add("group", `$`(JsonHandler::class.java).toJsonTree(groupToShare))
+        jsonObject.add("group", on<JsonHandler>().toJsonTree(groupToShare))
 
         saveMessageWithAttachment(group.id, null, jsonObject)
 
@@ -64,7 +64,7 @@ class GroupMessageAttachmentHandler : PoolMember() {
 
     fun groupActionReply(groupId: String, groupAction: GroupAction, comment: String): Boolean {
         if (groupAction.intent == null) {
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
             return false
         }
 
@@ -79,7 +79,7 @@ class GroupMessageAttachmentHandler : PoolMember() {
 
     fun shareGroupMessage(groupId: String, groupMessageId: String?): Boolean {
         if (groupMessageId == null) {
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
             return false
         }
 
@@ -91,7 +91,7 @@ class GroupMessageAttachmentHandler : PoolMember() {
 
     private fun saveMessageWithAttachment(groupId: String?, latLng: LatLng?, jsonObject: JsonObject) {
         val groupMessage = GroupMessage()
-        groupMessage.attachment = `$`(JsonHandler::class.java).to(jsonObject)
+        groupMessage.attachment = on<JsonHandler>().to(jsonObject)
         groupMessage.to = groupId
 
         if (latLng != null) {
@@ -99,17 +99,17 @@ class GroupMessageAttachmentHandler : PoolMember() {
             groupMessage.longitude = latLng.longitude
         }
 
-        groupMessage.from = `$`(PersistenceHandler::class.java).phoneId
+        groupMessage.from = on<PersistenceHandler>().phoneId
         groupMessage.time = Date()
-        `$`(StoreHandler::class.java).store.box(GroupMessage::class.java).put(groupMessage)
-        `$`(SyncHandler::class.java).sync(groupMessage)
+        on<StoreHandler>().store.box(GroupMessage::class.java).put(groupMessage)
+        on<SyncHandler>().sync(groupMessage)
     }
 
     private fun getGroupContactForGroup(group: Group): GroupContact? {
-        return if (`$`(PersistenceHandler::class.java).phoneId == null) {
+        return if (on<PersistenceHandler>().phoneId == null) {
             null
-        } else `$`(StoreHandler::class.java).store.box(GroupContact::class.java).query()
-                .equal(GroupContact_.contactId, `$`(PersistenceHandler::class.java).phoneId!!)
+        } else on<StoreHandler>().store.box(GroupContact::class.java).query()
+                .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)
                 .equal(GroupContact_.groupId, group.id!!)
                 .build().findFirst()
 

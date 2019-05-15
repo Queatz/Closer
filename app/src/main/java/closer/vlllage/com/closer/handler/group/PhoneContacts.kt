@@ -2,13 +2,13 @@ package closer.vlllage.com.closer.handler.group
 
 import android.provider.ContactsContract
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
-class PhoneContacts : PoolMember() {
+class PhoneContacts constructor(private val on: On) {
 
     private var contacts: List<PhoneContact>? = null
 
@@ -16,7 +16,7 @@ class PhoneContacts : PoolMember() {
         get() = if (contacts?.isEmpty() == false) {
             Observable.just(contacts!!)
         } else Observable.fromCallable<List<PhoneContact>> {
-            val contentResolver = `$`(ApplicationHandler::class.java).app.contentResolver ?: return@fromCallable listOf<PhoneContact>()
+            val contentResolver = on<ApplicationHandler>().app.contentResolver ?: return@fromCallable listOf<PhoneContact>()
 
             contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)!!.use { cursor ->
                 if (cursor.moveToFirst()) {

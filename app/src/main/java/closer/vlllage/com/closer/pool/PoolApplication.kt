@@ -1,20 +1,14 @@
 package closer.vlllage.com.closer.pool
 
 import android.app.Application
+import com.queatz.on.On
 
 abstract class PoolApplication : Application() {
-    private val pool = Pool()
 
-    override fun onCreate() {
-        super.onCreate()
-    }
+    val on = On()
 
     override fun onTerminate() {
-        pool.end()
+        on.off()
         super.onTerminate()
-    }
-
-    fun <T : PoolMember> `$`(member: Class<T>): T {
-        return pool.`$`(member)
     }
 }

@@ -10,27 +10,27 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import io.objectbox.android.AndroidScheduler
 
-class GroupMemberHandler : PoolMember() {
+class GroupMemberHandler constructor(private val on: On) {
     fun changeGroupSettings(group: Group?) {
         if (group == null) {
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
             return
         }
 
         if (group.isPublic) {
-            `$`(DisposableHandler::class.java).add(`$`(StoreHandler::class.java).store.box(GroupMember::class.java).query()
+            on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class.java).query()
                     .equal(GroupMember_.group, group.id!!)
-                    .equal(GroupMember_.phone, `$`(PersistenceHandler::class.java).phoneId)
+                    .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId)
                     .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groupMembers ->
                         if (groupMembers.isEmpty()) {
-                            `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).getGroupMember(group.id!!)
+                            on<DisposableHandler>().add(on<ApiHandler>().getGroupMember(group.id!!)
                                     .map { GroupMemberResult.from(it) }
-                                    .doOnSuccess { `$`(StoreHandler::class.java).store.box(GroupMember::class.java).put(it) }
+                                    .doOnSuccess { on<StoreHandler>().store.box(GroupMember::class.java).put(it) }
                                     .subscribe(
                                             { groupMember -> setupGroupMember(group, groupMember) },
                                             { error -> setupGroupMember(group, null) }
@@ -40,10 +40,10 @@ class GroupMemberHandler : PoolMember() {
                         }
                     })
         } else {
-            `$`(MenuHandler::class.java).show(
-                    MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) { `$`(GroupActionHandler::class.java).addActionToGroup(group) },
-                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { `$`(InstallShortcutHandler::class.java).installShortcut(group) },
-                    MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) { `$`(PhysicalGroupUpgradeHandler::class.java).setBackground(group) { updateGroup -> } })
+            on<MenuHandler>().show(
+                    MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) { on<GroupActionHandler>().addActionToGroup(group) },
+                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) },
+                    MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) { on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> } })
         }
     }
 
@@ -52,7 +52,7 @@ class GroupMemberHandler : PoolMember() {
         if (groupMember == null) {
             groupMember = GroupMember()
             groupMember.group = group!!.id
-            groupMember.phone = `$`(PersistenceHandler::class.java).phoneId
+            groupMember.phone = on<PersistenceHandler>().phoneId
         }
 
         @StringRes val subscribeText = if (groupMember.subscribed) R.string.unsubscribe else R.string.subscribe
@@ -61,22 +61,22 @@ class GroupMemberHandler : PoolMember() {
         @DrawableRes val muteIcon = if (groupMember.muted) R.drawable.ic_notifications_off_black_24dp else R.drawable.ic_notifications_none_black_24dp
 
         val updatedGroupMember = groupMember
-        `$`(MenuHandler::class.java).show(
+        on<MenuHandler>().show(
                 MenuHandler.MenuOption(subscribeIcon, subscribeText) {
                     updatedGroupMember.subscribed = !updatedGroupMember.subscribed
-                    `$`(SyncHandler::class.java).sync(updatedGroupMember)
+                    on<SyncHandler>().sync(updatedGroupMember)
                 },
                 MenuHandler.MenuOption(muteIcon, muteText) {
                     updatedGroupMember.muted = !updatedGroupMember.muted
-                    `$`(SyncHandler::class.java).sync(updatedGroupMember)
+                    on<SyncHandler>().sync(updatedGroupMember)
                 },
                 MenuHandler.MenuOption(R.drawable.ic_person_add_black_24dp, R.string.join) {
                     if (group != null) {
-                        `$`(AlertHandler::class.java).make().apply {
-                            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.join_group)
-                            positiveButtonCallback = { result -> `$`(GroupActionHandler::class.java).joinGroup(group) }
-                            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.join_group_title, group.name)
-                            message = `$`(ResourcesHandler::class.java).resources.getString(R.string.join_group_message)
+                        on<AlertHandler>().make().apply {
+                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.join_group)
+                            positiveButtonCallback = { result -> on<GroupActionHandler>().joinGroup(group) }
+                            title = on<ResourcesHandler>().resources.getString(R.string.join_group_title, group.name)
+                            message = on<ResourcesHandler>().resources.getString(R.string.join_group_message)
                             show()
                         }
 
@@ -84,44 +84,44 @@ class GroupMemberHandler : PoolMember() {
                 }.visible(!isCurrentUserMemberOf(group)),
                 MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, R.string.share_group) {
                     if (group != null) {
-                        `$`(ShareActivityTransitionHandler::class.java).shareGroupToGroup(group.id!!)
+                        on<ShareActivityTransitionHandler>().shareGroupToGroup(group.id!!)
                     }
                 },
                 MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) {
                     if (group != null) {
-                        `$`(PhysicalGroupUpgradeHandler::class.java).setBackground(group) { updateGroup -> }
+                        on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> }
                     }
                 },
                 MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.edit_about_group) {
                     if (group != null) {
-                        `$`(AlertHandler::class.java).make().apply {
-                            title = `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+                        on<AlertHandler>().make().apply {
+                            title = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
                             layoutResId = R.layout.create_public_group_modal
                             textViewId = R.id.input
-                            onTextViewSubmitCallback = { about -> `$`(PhysicalGroupUpgradeHandler::class.java).setAbout(group, about) { updateGroup -> } }
+                            onTextViewSubmitCallback = { about -> on<PhysicalGroupUpgradeHandler>().setAbout(group, about) { updateGroup -> } }
                             onAfterViewCreated = { alert, view -> view.findViewById<EditText>(alert.textViewId!!).setText(group.about!!) }
-                            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.edit_about_group)
+                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.edit_about_group)
                             show()
                         }
                     }
                 },
                 MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) {
                     if (group != null) {
-                        `$`(GroupActionHandler::class.java).addActionToGroup(group)
+                        on<GroupActionHandler>().addActionToGroup(group)
                     }
                 },
                 MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) {
                     if (group != null) {
-                        `$`(InstallShortcutHandler::class.java).installShortcut(group)
+                        on<InstallShortcutHandler>().installShortcut(group)
                     }
                 }
         )
     }
 
     private fun isCurrentUserMemberOf(group: Group?): Boolean {
-        return if (group == null) false else `$`(StoreHandler::class.java).store.box(GroupContact::class.java).query()
+        return if (group == null) false else on<StoreHandler>().store.box(GroupContact::class.java).query()
                 .equal(GroupContact_.groupId, group.id!!)
-                .equal(GroupContact_.contactId, `$`(PersistenceHandler::class.java).phoneId!!)
+                .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)
                 .build()
                 .count() > 0
 

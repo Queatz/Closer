@@ -7,45 +7,45 @@ import closer.vlllage.com.closer.handler.helpers.AlertHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class VerifyNumberHandler : PoolMember() {
+class VerifyNumberHandler constructor(private val on: On) {
 
     fun verify() {
-        `$`(AlertHandler::class.java).make().apply {
+        on<AlertHandler>().make().apply {
             layoutResId = R.layout.send_code_layout
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.send_code)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.send_code)
             textViewId = R.id.input
             onTextViewSubmitCallback = { sendPhoneNumber(it) }
-            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.enter_your_phone_number)
-            message = `$`(ResourcesHandler::class.java).resources.getString(R.string.automatic)
+            title = on<ResourcesHandler>().resources.getString(R.string.enter_your_phone_number)
+            message = on<ResourcesHandler>().resources.getString(R.string.automatic)
             show()
         }
     }
 
     private fun sendPhoneNumber(phoneNumber: String) {
-        `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).setPhoneNumber(phoneNumber).subscribe({ result ->
+        on<DisposableHandler>().add(on<ApiHandler>().setPhoneNumber(phoneNumber).subscribe({ result ->
             if (!result.success) {
-                `$`(DefaultAlerts::class.java).thatDidntWork()
+                on<DefaultAlerts>().thatDidntWork()
             }
-        }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
 
         getCodeFromUser(phoneNumber)
     }
 
     private fun getCodeFromUser(phoneNumber: String) {
-        `$`(AlertHandler::class.java).make().apply {
+        on<AlertHandler>().make().apply {
             layoutResId = R.layout.verify_number_layout
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.verify_number)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.verify_number)
             textViewId = R.id.input
             onTextViewSubmitCallback = { verificationCode -> sendVerificationCode(phoneNumber, verificationCode) }
-            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.wait_for_it)
+            title = on<ResourcesHandler>().resources.getString(R.string.wait_for_it)
             show()
         }
     }
 
     private fun sendVerificationCode(phoneNumber: String, verificationCode: String) {
-        `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).sendVerificationCode(verificationCode).subscribe({ result ->
+        on<DisposableHandler>().add(on<ApiHandler>().sendVerificationCode(verificationCode).subscribe({ result ->
             if (result.success) {
                 codeConfirmed()
             } else {
@@ -55,23 +55,23 @@ class VerifyNumberHandler : PoolMember() {
     }
 
     private fun codeNotConfirmed(phoneNumber: String) {
-        `$`(AlertHandler::class.java).make().apply {
-            message = `$`(ResourcesHandler::class.java).resources.getString(R.string.number_not_verified)
-            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.oh_no)
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.resend_code)
+        on<AlertHandler>().make().apply {
+            message = on<ResourcesHandler>().resources.getString(R.string.number_not_verified)
+            title = on<ResourcesHandler>().resources.getString(R.string.oh_no)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.resend_code)
             positiveButtonCallback = { result -> sendPhoneNumber(phoneNumber) }
             show()
         }
     }
 
     private fun codeConfirmed() {
-        `$`(PersistenceHandler::class.java).isVerified = true
-        `$`(MyGroupsLayoutActionsHandler::class.java).showVerifyMyNumber(false)
+        on<PersistenceHandler>().isVerified = true
+        on<MyGroupsLayoutActionsHandler>().showVerifyMyNumber(false)
 
-        `$`(AlertHandler::class.java).make().apply {
-            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.welcome_to_closer)
-            message = `$`(ResourcesHandler::class.java).resources.getString(R.string.number_verified)
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.yaay)
+        on<AlertHandler>().make().apply {
+            title = on<ResourcesHandler>().resources.getString(R.string.welcome_to_closer)
+            message = on<ResourcesHandler>().resources.getString(R.string.number_verified)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.yaay)
             show()
         }
     }

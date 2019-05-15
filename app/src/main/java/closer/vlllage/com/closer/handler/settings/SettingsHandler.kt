@@ -4,14 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
+import com.queatz.on.OnLifecycle
 
-class SettingsHandler : PoolMember() {
+class SettingsHandler constructor(private val on: On) : OnLifecycle {
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    override fun onPoolInit() {
-        sharedPreferences = `$`(ApplicationHandler::class.java).app.getSharedPreferences(
+    override fun on() {
+        sharedPreferences = on<ApplicationHandler>().app.getSharedPreferences(
                 SHARED_PREFERENCES, Context.MODE_PRIVATE
         )
     }

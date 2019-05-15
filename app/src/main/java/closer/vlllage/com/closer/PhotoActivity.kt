@@ -14,6 +14,7 @@ import io.reactivex.subjects.BehaviorSubject
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 class PhotoActivity : CircularRevealActivity() {
+
     private lateinit var photo: PhotoView
     private val enterAnimationCompleteObservable = BehaviorSubject.create<Boolean>()
 
@@ -29,11 +30,11 @@ class PhotoActivity : CircularRevealActivity() {
 
         if (intent != null) {
             val photoUrl = intent.getStringExtra(EXTRA_PHOTO)
-            `$`(ImageHandler::class.java).get().load(photoUrl)
-                    .transform(RoundedCornersTransformation(`$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.imageCorners), 0))
+            on<ImageHandler>().get().load(photoUrl)
+                    .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners), 0))
                     .into(photo, object : Callback {
                         override fun onSuccess() {
-                            `$`(DisposableHandler::class.java).add(enterAnimationCompleteObservable
+                            on<DisposableHandler>().add(enterAnimationCompleteObservable
                                     .subscribeOn(Schedulers.computation())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe({ loadFullRes(photoUrl) }, { it.printStackTrace() }))
@@ -49,9 +50,9 @@ class PhotoActivity : CircularRevealActivity() {
 
         findViewById<View>(R.id.actionShare).setOnClickListener { view ->
             if (photo.drawable is BitmapDrawable) {
-                `$`(SystemShareHandler::class.java).share((photo.drawable as BitmapDrawable).bitmap)
+                on<SystemShareHandler>().share((photo.drawable as BitmapDrawable).bitmap)
             } else {
-                `$`(DefaultAlerts::class.java).thatDidntWork()
+                on<DefaultAlerts>().thatDidntWork()
             }
         }
     }
@@ -59,9 +60,9 @@ class PhotoActivity : CircularRevealActivity() {
     override val backgroundId = R.id.activityLayout
 
     private fun loadFullRes(photoUrl: String) {
-        `$`(ImageHandler::class.java).get().load(photoUrl.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=1600")
+        on<ImageHandler>().get().load(photoUrl.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=1600")
                 .noPlaceholder()
-                .transform(RoundedCornersTransformation(`$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.imageCorners), 0))
+                .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners), 0))
                 .into(photo)
     }
 

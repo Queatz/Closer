@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class ListEqual : PoolMember() {
+class ListEqual constructor(private val on: On) {
     fun isEqual(a: List<*>?, b: List<*>?): Boolean {
         if (a == null || b == null) {
             return a == null && b == null

@@ -1,10 +1,10 @@
 package closer.vlllage.com.closer.handler.map
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 
-class MapZoomHandler : PoolMember() {
+class MapZoomHandler constructor(private val on: On) {
 
     private val onZoomChanged = BehaviorSubject.create<Float>()
 

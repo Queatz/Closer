@@ -1,17 +1,18 @@
 package closer.vlllage.com.closer.store
 
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
+import com.queatz.on.OnLifecycle
 
-class StoreRefHandler : PoolMember() {
+class StoreRefHandler constructor(private val on: On) : OnLifecycle {
 
     private lateinit var store: Store
 
-    public override fun onPoolInit() {
-        this.store = Store(`$`(ApplicationHandler::class.java).app)
+    override fun on() {
+        this.store = Store(on<ApplicationHandler>().app)
     }
 
-    override fun onPoolEnd() {
+    override fun off() {
         store.close()
     }
 

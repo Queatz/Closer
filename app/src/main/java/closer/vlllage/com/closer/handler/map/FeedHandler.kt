@@ -6,14 +6,14 @@ import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler
 import closer.vlllage.com.closer.handler.helpers.SortHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class FeedHandler : PoolMember() {
+class FeedHandler constructor(private val on: On) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var groupPreviewAdapter: GroupPreviewAdapter
@@ -27,22 +27,22 @@ class FeedHandler : PoolMember() {
         )
         recyclerView.layoutManager = layoutManager
 
-        groupPreviewAdapter = GroupPreviewAdapter(this)
+        groupPreviewAdapter = GroupPreviewAdapter(on)
         recyclerView.adapter = groupPreviewAdapter
 
         val distance = .12f
 
-        `$`(DisposableHandler::class.java).add(`$`(MapHandler::class.java).onMapIdleObservable()
+        on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { cameraPosition ->
-                    val groupPreviewQueryBuilder = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+                    val groupPreviewQueryBuilder = on<StoreHandler>().store.box(Group::class.java).query()
                             .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                             .and()
                             .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
                             .or()
                             .equal(Group_.isPublic, false)
-                    `$`(DisposableHandler::class.java).add(groupPreviewQueryBuilder
-                            .sort(`$`(SortHandler::class.java).sortGroups(false))
+                    on<DisposableHandler>().add(groupPreviewQueryBuilder
+                            .sort(on<SortHandler>().sortGroups(false))
                             .build()
                             .subscribe()
                             .single()
@@ -50,9 +50,9 @@ class FeedHandler : PoolMember() {
                             .observer { setGroups(it) })
                 })
 
-        `$`(DisposableHandler::class.java).add(`$`(KeyboardVisibilityHandler::class.java).isKeyboardVisible.subscribe { visible ->
+        on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible.subscribe { visible ->
             if (visible) {
-                recyclerView.setPadding(0, 0, 0, `$`(KeyboardVisibilityHandler::class.java).lastKeyboardHeight)
+                recyclerView.setPadding(0, 0, 0, on<KeyboardVisibilityHandler>().lastKeyboardHeight)
             } else {
                 recyclerView.setPadding(0, 0, 0, 0)
             }

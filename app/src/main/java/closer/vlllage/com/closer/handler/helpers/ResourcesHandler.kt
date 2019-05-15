@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class ResourcesHandler : PoolMember() {
-    val resources get() = `$`(ApplicationHandler::class.java).app.resources!!
+class ResourcesHandler constructor(private val on: On) {
+    val resources get() = on<ApplicationHandler>().app.resources!!
 }

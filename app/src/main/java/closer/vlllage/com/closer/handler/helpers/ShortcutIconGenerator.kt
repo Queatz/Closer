@@ -4,10 +4,10 @@ import android.graphics.*
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import com.vdurmont.emoji.EmojiParser
 
-class ShortcutIconGenerator : PoolMember() {
+class ShortcutIconGenerator constructor(private val on: On) {
     fun generate(text: String, textSize: Float, textColor: Int, bkgColor: Int, bkgLightColor: Int): Bitmap {
         var text = text
 

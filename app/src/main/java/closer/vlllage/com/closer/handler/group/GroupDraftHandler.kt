@@ -1,14 +1,14 @@
 package closer.vlllage.com.closer.handler.group
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupDraft
 import closer.vlllage.com.closer.store.models.GroupDraft_
 
-class GroupDraftHandler : PoolMember() {
+class GroupDraftHandler constructor(private val on: On) {
     fun saveDraft(group: Group, message: String) {
-        `$`(StoreHandler::class.java).store.box(GroupDraft::class.java)
+        on<StoreHandler>().store.box(GroupDraft::class.java)
                 .query()
                 .equal(GroupDraft_.groupId, group.id!!)
                 .build().subscribe().single()
@@ -25,12 +25,12 @@ class GroupDraftHandler : PoolMember() {
                     }
 
                     groupDraft.message = message
-                    `$`(StoreHandler::class.java).store.box(GroupDraft::class.java).put(groupDraft)
+                    on<StoreHandler>().store.box(GroupDraft::class.java).put(groupDraft)
                 }
     }
 
     fun getDraft(group: Group): String? {
-        val draft = `$`(StoreHandler::class.java).store.box(GroupDraft::class.java)
+        val draft = on<StoreHandler>().store.box(GroupDraft::class.java)
                 .query()
                 .equal(GroupDraft_.groupId, group.id!!)
                 .build()

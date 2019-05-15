@@ -10,17 +10,17 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupInvite
+import com.queatz.on.On
 import java.util.*
 
-class PhoneContactAdapter(poolMember: PoolMember,
+class PhoneContactAdapter(on: On,
                           private val onPhoneContactClickListener: ((phoneContact: PhoneContact) -> Unit)?,
                           private val onGroupInviteClickListener: ((groupInvite: GroupInvite) -> Unit)?,
                           private val onGroupContactClickListener: ((groupContact: GroupContact) -> Unit)?)
-    : PoolRecyclerAdapter<PhoneContactAdapter.PhoneContactViewHolder>(poolMember) {
+    : PoolRecyclerAdapter<PhoneContactAdapter.PhoneContactViewHolder>(on) {
 
     private var phoneNumber: String? = null
     private var isFiltered: Boolean = false
@@ -48,10 +48,10 @@ class PhoneContactAdapter(poolMember: PoolMember,
                     val groupContact = groupContacts[position]
 
                     holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
-                    val isMe = `$`(PersistenceHandler::class.java).phoneId == groupContact.contactId
-                    holder.name.text = `$`(NameHandler::class.java).getName(groupContact)
-                    holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(if (isMe) R.string.options else R.string.send_message)
-                    holder.number.text = `$`(ResourcesHandler::class.java).resources.getString(if (isMe) R.string.member_you else R.string.member)
+                    val isMe = on<PersistenceHandler>().phoneId == groupContact.contactId
+                    holder.name.text = on<NameHandler>().getName(groupContact)
+                    holder.action.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.options else R.string.send_message)
+                    holder.number.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.member_you else R.string.member)
                     holder.itemView.setOnClickListener {
                         onGroupContactClickListener?.invoke(groupContact)
                     }
@@ -60,9 +60,9 @@ class PhoneContactAdapter(poolMember: PoolMember,
                     val invite = invites[position]
 
                     holder.phoneIcon.setImageResource(R.drawable.ic_person_add_black_24dp)
-                    holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.cancel_invite)
-                    holder.name.text = if (invite.name == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.invite) else invite.name
-                    holder.number.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.invited)
+                    holder.action.text = on<ResourcesHandler>().resources.getString(R.string.cancel_invite)
+                    holder.name.text = if (invite.name == null) on<ResourcesHandler>().resources.getString(R.string.invite) else invite.name
+                    holder.number.text = on<ResourcesHandler>().resources.getString(R.string.invited)
                     holder.itemView.setOnClickListener {
                         onGroupInviteClickListener?.invoke(invite)
                     }
@@ -75,9 +75,9 @@ class PhoneContactAdapter(poolMember: PoolMember,
         }
 
         holder.phoneIcon.setImageResource(R.drawable.ic_person_add_black_24dp)
-        holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.invite)
-        holder.name.text = if (contact.name == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.invite_by_phone) else contact.name
-        holder.number.text = if (contact.phoneNumber == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.no_name) else contact.phoneNumber
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.invite)
+        holder.name.text = if (contact.name == null) on<ResourcesHandler>().resources.getString(R.string.invite_by_phone) else contact.name
+        holder.number.text = if (contact.phoneNumber == null) on<ResourcesHandler>().resources.getString(R.string.no_name) else contact.phoneNumber
         holder.itemView.setOnClickListener {
             onPhoneContactClickListener?.invoke(contact)
         }

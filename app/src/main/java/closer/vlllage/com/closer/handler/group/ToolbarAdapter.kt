@@ -9,10 +9,10 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
+import com.queatz.on.On
 
-internal class ToolbarAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(poolMember) {
+internal class ToolbarAdapter(on: On) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(on) {
 
     var items = mutableListOf<GroupToolbarHandler.ToolbarItem>()
         set(value) {
@@ -35,7 +35,7 @@ internal class ToolbarAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<Tool
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             viewHolder.button.compoundDrawableTintList = ColorStateList.valueOf(
-                    `$`(ResourcesHandler::class.java).resources.getColor(R.color.text)
+                    on<ResourcesHandler>().resources.getColor(R.color.text)
             )
         }
 

@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class MapBubbleMenuView : PoolMember() {
+class MapBubbleMenuView constructor(private val on: On) {
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: OnMapBubbleMenuItemClickListener): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_menu, layer, false)
 
@@ -21,7 +21,7 @@ class MapBubbleMenuView : PoolMember() {
                 false
         )
 
-        recyclerView.adapter = MapBubbleMenuItemAdapter(this, mapBubble, onClickListener)
+        recyclerView.adapter = MapBubbleMenuItemAdapter(on, mapBubble, onClickListener)
 
         return view
     }

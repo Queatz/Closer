@@ -13,16 +13,16 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.WindowHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapFragment
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
-class MapHandler : PoolMember(), OnMapReadyCallback {
+class MapHandler constructor(private val on: On) : OnMapReadyCallback {
 
     private var map: GoogleMap? = null
     private var mapView: View? = null
@@ -50,7 +50,7 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
             null
         } else map!!.projection.visibleRegion
 
-    fun attach(mapFragment: MapFragment) {
+    fun attach(mapFragment: SupportMapFragment) {
         mapFragment.getMapAsync(this)
         mapView = mapFragment.view
     }
@@ -66,9 +66,9 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        if (`$`(PersistenceHandler::class.java).lastMapCenter != null) {
+        if (on<PersistenceHandler>().lastMapCenter != null) {
             map!!.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(
-                    `$`(PersistenceHandler::class.java).lastMapCenter!!,
+                    on<PersistenceHandler>().lastMapCenter!!,
                     DEFAULT_ZOOM
             )))
         }
@@ -78,13 +78,13 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
         map!!.setOnMapClickListener { onMapClickedListener!!.invoke(it) }
         map!!.setOnMapLongClickListener { onMapLongClickedListener!!.invoke(it) }
         map!!.setOnCameraIdleListener {
-            `$`(PersistenceHandler::class.java).lastMapCenter = map!!.cameraPosition.target
+            on<PersistenceHandler>().lastMapCenter = map!!.cameraPosition.target
             onMapIdleListener!!.invoke(map!!.cameraPosition.target)
             onMapIdleObservable.onNext(map!!.cameraPosition)
         }
         mapView!!.addOnLayoutChangeListener { v, i1, i2, i3, i4, i5, i6, i7, i8 -> onMapChangedListener!!.invoke() }
         onMapChangedListener!!.invoke()
-        map!!.setPadding(0, `$`(WindowHandler::class.java).statusBarHeight, 0, 0)
+        map!!.setPadding(0, on<WindowHandler>().statusBarHeight, 0, 0)
 
         if (centerOnMapLoad == null) {
             locateMe()
@@ -97,7 +97,7 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
     }
 
     fun locateMe() {
-        `$`(LocationHandler::class.java).getCurrentLocation { location: Location -> this.onLocationFound(location) }
+        on<LocationHandler>().getCurrentLocation { location: Location -> this.onLocationFound(location) }
     }
 
     @SuppressLint("MissingPermission")
@@ -106,7 +106,7 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
             return
         }
 
-        `$`(PermissionHandler::class.java)
+        on<PermissionHandler>()
                 .check(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
                 .`when` { granted -> map!!.isMyLocationEnabled = granted }
     }
@@ -147,11 +147,11 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
                 .build()
         map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
-        if (`$`(NightDayHandler::class.java).isNight(Date(), location)) {
-            map!!.setMapStyle(MapStyleOptions.loadRawResourceStyle(`$`(ApplicationHandler::class.java).app, R.raw.google_maps_night_mode))
+        if (on<NightDayHandler>().isNight(Date(), location)) {
+            map!!.setMapStyle(MapStyleOptions.loadRawResourceStyle(on<ApplicationHandler>().app, R.raw.google_maps_night_mode))
         }
 
-        `$`(RefreshHandler::class.java).refreshGroupActions(LatLng(location.latitude, location.longitude))
+        on<RefreshHandler>().refreshGroupActions(LatLng(location.latitude, location.longitude))
     }
 
     fun centerOn(mapBubbles: Collection<MapBubble>) {
@@ -166,8 +166,8 @@ class MapHandler : PoolMember(), OnMapReadyCallback {
 
         try {
             val cu = CameraUpdateFactory.newLatLngBounds(builder.build(), Math.min(
-                    `$`(ActivityHandler::class.java).activity!!.window.decorView.width,
-                    `$`(ActivityHandler::class.java).activity!!.window.decorView.height
+                    on<ActivityHandler>().activity!!.window.decorView.width,
+                    on<ActivityHandler>().activity!!.window.decorView.height
             ) / 4)
             map!!.animateCamera(cu, 225, null)
         } catch (ignored: Throwable) {

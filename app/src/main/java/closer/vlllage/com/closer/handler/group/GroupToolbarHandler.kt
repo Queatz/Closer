@@ -12,16 +12,16 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.google.android.gms.common.util.Strings.isEmptyOrWhitespace
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
-class GroupToolbarHandler : PoolMember() {
+class GroupToolbarHandler constructor(private val on: On) {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ToolbarAdapter
@@ -31,7 +31,7 @@ class GroupToolbarHandler : PoolMember() {
 
     fun attach(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
-        adapter = ToolbarAdapter(this)
+        adapter = ToolbarAdapter(on)
 
         recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, HORIZONTAL, false) {
             override fun measureChild(child: View, widthUsed: Int, heightUsed: Int) {
@@ -46,11 +46,11 @@ class GroupToolbarHandler : PoolMember() {
         }
         recyclerView.adapter = adapter
 
-        `$`(DisposableHandler::class.java).add(isShareActiveObservable.subscribe { isShareActive -> show(group) })
-        `$`(DisposableHandler::class.java).add(`$`(GroupHandler::class.java).onGroupUpdated().subscribe { this.show(it) })
-        `$`(DisposableHandler::class.java).add(`$`(GroupHandler::class.java).onGroupChanged().subscribe { this.show(it) })
-        `$`(DisposableHandler::class.java).add(`$`(GroupHandler::class.java).onEventChanged().subscribe { g -> show(group) })
-        `$`(DisposableHandler::class.java).add(`$`(GroupHandler::class.java).onPhoneChanged().subscribe { g -> show(group) })
+        on<DisposableHandler>().add(isShareActiveObservable.subscribe { isShareActive -> show(group) })
+        on<DisposableHandler>().add(on<GroupHandler>().onGroupUpdated().subscribe { this.show(it) })
+        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe { this.show(it) })
+        on<DisposableHandler>().add(on<GroupHandler>().onEventChanged().subscribe { g -> show(group) })
+        on<DisposableHandler>().add(on<GroupHandler>().onPhoneChanged().subscribe { g -> show(group) })
     }
 
     private fun show(group: Group?) {
@@ -59,8 +59,8 @@ class GroupToolbarHandler : PoolMember() {
         }
 
         this.group = group
-        val event = `$`(GroupHandler::class.java).onEventChanged().value
-        val phone = `$`(GroupHandler::class.java).onPhoneChanged().value
+        val event = on<GroupHandler>().onEventChanged().value
+        val phone = on<GroupHandler>().onPhoneChanged().value
 
         val items = ArrayList<ToolbarItem>()
 
@@ -110,19 +110,19 @@ class GroupToolbarHandler : PoolMember() {
                     R.string.cancel,
                     R.drawable.ic_close_black_24dp,
                     View.OnClickListener { v ->
-                        `$`(AlertHandler::class.java).make().apply {
-                            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.cancel_event)
-                            message = `$`(ResourcesHandler::class.java).resources.getString(R.string.event_will_be_cancelled, event!!.name)
-                            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.cancel_event)
+                        on<AlertHandler>().make().apply {
+                            title = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
+                            message = on<ResourcesHandler>().resources.getString(R.string.event_will_be_cancelled, event!!.name)
+                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
                             positiveButtonCallback = { result ->
-                                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).cancelEvent(event.id!!).subscribe({ successResult ->
+                                on<DisposableHandler>().add(on<ApiHandler>().cancelEvent(event.id!!).subscribe({ successResult ->
                                     if (successResult.success) {
-                                        `$`(DefaultAlerts::class.java).message(`$`(ResourcesHandler::class.java).resources.getString(R.string.event_cancelled, event.name))
-                                        `$`(RefreshHandler::class.java).refreshEvents(LatLng(event.latitude!!, event.longitude!!))
+                                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.event_cancelled, event.name))
+                                        on<RefreshHandler>().refreshEvents(LatLng(event.latitude!!, event.longitude!!))
                                     } else {
-                                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                                        on<DefaultAlerts>().thatDidntWork()
                                     }
-                                }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                                }, { error -> on<DefaultAlerts>().thatDidntWork() }))
                             }
                             show()
                         }
@@ -135,8 +135,8 @@ class GroupToolbarHandler : PoolMember() {
                     R.string.set_name,
                     R.drawable.ic_edit_location_black_24dp,
                     View.OnClickListener { v ->
-                        `$`(PhysicalGroupUpgradeHandler::class.java).convertToHub(group, { updatedGroup ->
-                            `$`(GroupHandler::class.java).showGroupName(updatedGroup)
+                        on<PhysicalGroupUpgradeHandler>().convertToHub(group, { updatedGroup ->
+                            on<GroupHandler>().showGroupName(updatedGroup)
                             show(updatedGroup)
                         })
                     }
@@ -148,8 +148,8 @@ class GroupToolbarHandler : PoolMember() {
                     R.string.set_background,
                     R.drawable.ic_camera_black_24dp,
                     View.OnClickListener { v ->
-                        `$`(PhysicalGroupUpgradeHandler::class.java).setBackground(group, { updateGroup ->
-                            `$`(GroupHandler::class.java).setGroupBackground(updateGroup)
+                        on<PhysicalGroupUpgradeHandler>().setBackground(group, { updateGroup ->
+                            on<GroupHandler>().setGroupBackground(updateGroup)
                             show(updateGroup)
                         })
                     }
@@ -161,7 +161,7 @@ class GroupToolbarHandler : PoolMember() {
                     R.string.get_directions,
                     R.drawable.ic_directions_black_24dp,
                     View.OnClickListener { v ->
-                        `$`(OutboundHandler::class.java).openDirections(LatLng(
+                        on<OutboundHandler>().openDirections(LatLng(
                                 group.latitude!!,
                                 group.longitude!!
                         ))
@@ -174,7 +174,7 @@ class GroupToolbarHandler : PoolMember() {
                     R.string.host_event,
                     R.drawable.ic_event_note_black_24dp,
                     View.OnClickListener { v ->
-                        `$`(EventHandler::class.java).createNewEvent(LatLng(
+                        on<EventHandler>().createNewEvent(LatLng(
                                 group.latitude!!,
                                 group.longitude!!
                         ), group.isPublic) {
@@ -188,15 +188,15 @@ class GroupToolbarHandler : PoolMember() {
     }
 
     private fun isEventCancelable(event: Event?): Boolean {
-        return event != null && `$`(PersistenceHandler::class.java).phoneId != null &&
+        return event != null && on<PersistenceHandler>().phoneId != null &&
                 !event.cancelled && event.creator != null &&
                 Date().before(event.endsAt) &&
-                event.creator == `$`(PersistenceHandler::class.java).phoneId
+                event.creator == on<PersistenceHandler>().phoneId
     }
 
     private fun showGroupOnMap(group: Group?) {
-        (`$`(ActivityHandler::class.java).activity as CircularRevealActivity)
-                .finish { `$`(MapActivityHandler::class.java).showGroupOnMap(group!!) }
+        (on<ActivityHandler>().activity as CircularRevealActivity)
+                .finish { on<MapActivityHandler>().showGroupOnMap(group!!) }
     }
 
     private fun toggleShare() {
@@ -210,8 +210,8 @@ class GroupToolbarHandler : PoolMember() {
 
 
     private fun showEventOnMap(event: Event?) {
-        (`$`(ActivityHandler::class.java).activity as CircularRevealActivity)
-                .finish { `$`(MapActivityHandler::class.java).showEventOnMap(event!!) }
+        (on<ActivityHandler>().activity as CircularRevealActivity)
+                .finish { on<MapActivityHandler>().showEventOnMap(event!!) }
     }
 
     internal class ToolbarItem(@field:StringRes var name: Int, @field:DrawableRes var icon: Int, var onClickListener: View.OnClickListener)

@@ -22,7 +22,7 @@ class Background : BroadcastReceiver() {
         val app = context.applicationContext as App
 
         if (intent.getBooleanExtra(EXTRA_MUTE, false)) {
-                app.`$`(PersistenceHandler::class.java).isNotificationsPaused = true
+                app.on<PersistenceHandler>().isNotificationsPaused = true
         } else {
             val remoteInput = RemoteInput.getResultsFromIntent(intent)
             if (remoteInput != null) {
@@ -37,20 +37,20 @@ class Background : BroadcastReceiver() {
                     return
                 }
 
-                app.`$`(ApiHandler::class.java).setAuthorization(app.`$`(AccountHandler::class.java).phone)
+                app.on<ApiHandler>().setAuthorization(app.on<AccountHandler>().phone)
 
-                app.`$`(DisposableHandler::class.java).add(app.`$`(ApiHandler::class.java).sendMessage(phone, replyMessage.toString()).subscribe({ successResult ->
+                app.on<DisposableHandler>().add(app.on<ApiHandler>().sendMessage(phone, replyMessage.toString()).subscribe({ successResult ->
                     if (successResult.success) {
-                        app.`$`(ToastHandler::class.java).show(R.string.message_sent)
+                        app.on<ToastHandler>().show(R.string.message_sent)
                     } else {
-                        app.`$`(ToastHandler::class.java).show(R.string.message_not_sent)
+                        app.on<ToastHandler>().show(R.string.message_not_sent)
                     }
-                }, { app.`$`(ToastHandler::class.java).show(R.string.message_not_sent) }))
+                }, { app.on<ToastHandler>().show(R.string.message_not_sent) }))
             }
         }
 
         if (intent.hasExtra(EXTRA_NOTIFICATION)) {
-            app.`$`(NotificationHandler::class.java).hide(intent.getStringExtra(EXTRA_NOTIFICATION))
+            app.on<NotificationHandler>().hide(intent.getStringExtra(EXTRA_NOTIFICATION))
         }
     }
 }

@@ -3,15 +3,15 @@ package closer.vlllage.com.closer.handler.helpers
 import androidx.annotation.StringRes
 import android.widget.Toast
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class ToastHandler : PoolMember() {
+class ToastHandler constructor(private val on: On) {
 
     fun show(@StringRes message: Int) {
-        Toast.makeText(`$`(ApplicationHandler::class.java).app, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(on<ApplicationHandler>().app, message, Toast.LENGTH_SHORT).show()
     }
 
     fun show(message: String) {
-        Toast.makeText(`$`(ApplicationHandler::class.java).app, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(on<ApplicationHandler>().app, message, Toast.LENGTH_SHORT).show()
     }
 }

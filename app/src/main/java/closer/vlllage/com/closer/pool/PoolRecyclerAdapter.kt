@@ -1,16 +1,6 @@
 package closer.vlllage.com.closer.pool
 
 import androidx.recyclerview.widget.RecyclerView
+import com.queatz.on.On
 
-abstract class PoolRecyclerAdapter<T : RecyclerView.ViewHolder>(poolMember: PoolMember) : RecyclerView.Adapter<T>() {
-
-    private val pool: Pool = poolMember.pool
-
-    fun `$pool`(): PoolMember {
-        return pool.`$`(PoolMember::class.java)
-    }
-
-    protected fun <T : PoolMember> `$`(member: Class<T>): T {
-        return pool.`$`(member)
-    }
-}
+abstract class PoolRecyclerAdapter<T : RecyclerView.ViewHolder> constructor(protected val on: On) : RecyclerView.Adapter<T>()

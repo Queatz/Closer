@@ -14,7 +14,7 @@ import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
@@ -25,7 +25,7 @@ import io.objectbox.reactive.DataObserver
 import io.objectbox.reactive.DataSubscription
 import java.util.*
 
-class GroupMessagesHandler : PoolMember() {
+class GroupMessagesHandler constructor(private val on: On) {
 
     private lateinit var groupMessagesAdapter: GroupMessagesAdapter
     private lateinit var layoutManager: LinearLayoutManager
@@ -44,19 +44,19 @@ class GroupMessagesHandler : PoolMember() {
         this.recyclerView = recyclerView
 
         layoutManager = LinearLayoutManager(
-                `$`(ActivityHandler::class.java).activity,
+                on<ActivityHandler>().activity,
                 RecyclerView.VERTICAL,
                 true
         )
 
         recyclerView.layoutManager = layoutManager
 
-        groupMessagesAdapter = GroupMessagesAdapter(this)
+        groupMessagesAdapter = GroupMessagesAdapter(on)
         recyclerView.adapter = groupMessagesAdapter
 
-        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(MapActivityHandler::class.java).showSuggestionOnMap(suggestion) } }
-        groupMessagesAdapter.onEventClickListener = { event -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(GroupActivityTransitionHandler::class.java).showGroupForEvent(null, event) } }
-        groupMessagesAdapter.onGroupClickListener = { group -> (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group.id) } }
+        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> (on<ActivityHandler>().activity as CircularRevealActivity).finish { on<MapActivityHandler>().showSuggestionOnMap(suggestion) } }
+        groupMessagesAdapter.onEventClickListener = { event -> (on<ActivityHandler>().activity as CircularRevealActivity).finish { on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) } }
+        groupMessagesAdapter.onGroupClickListener = { group -> (on<ActivityHandler>().activity as CircularRevealActivity).finish { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id) } }
 
 
         this.replyMessage.setOnEditorActionListener { textView, action, keyEvent ->
@@ -76,11 +76,11 @@ class GroupMessagesHandler : PoolMember() {
 
         this.sendButton.setOnClickListener {
             if (replyMessage.text.toString().isBlank()) {
-                `$`(CameraHandler::class.java).showCamera { photoUri ->
-                    `$`(PhotoUploadGroupMessageHandler::class.java).upload(photoUri!!) { photoId ->
-                        val success = `$`(GroupMessageAttachmentHandler::class.java).sharePhoto(`$`(PhotoUploadGroupMessageHandler::class.java).getPhotoPathFromId(photoId), `$`(GroupHandler::class.java).group!!.id!!)
+                on<CameraHandler>().showCamera { photoUri ->
+                    on<PhotoUploadGroupMessageHandler>().upload(photoUri!!) { photoId ->
+                        val success = on<GroupMessageAttachmentHandler>().sharePhoto(on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId), on<GroupHandler>().group!!.id!!)
                         if (!success) {
-                            `$`(DefaultAlerts::class.java).thatDidntWork()
+                            on<DefaultAlerts>().thatDidntWork()
                         }
                     }
                 }
@@ -94,12 +94,12 @@ class GroupMessagesHandler : PoolMember() {
         }
 
         updateSendButton()
-        `$`(DisposableHandler::class.java).add(`$`(GroupHandler::class.java).onGroupChanged().subscribe({ group ->
+        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe({ group ->
             if (replyMessage.text.toString().isEmpty()) {
-                replyMessage.setText(`$`(GroupMessageParseHandler::class.java).parseText(`$`(GroupDraftHandler::class.java).getDraft(group)!!))
+                replyMessage.setText(on<GroupMessageParseHandler>().parseText(on<GroupDraftHandler>().getDraft(group)!!))
                 updateSendButton()
             }
-        }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
 
         this.replyMessage.addTextChangedListener(object : TextWatcher {
 
@@ -107,7 +107,7 @@ class GroupMessagesHandler : PoolMember() {
             private var shouldDeleteMention: Boolean = false
 
             override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
-                shouldDeleteMention = !isDeleteMention && after == 0 && `$`(GroupMessageParseHandler::class.java).isMentionSelected(replyMessage)
+                shouldDeleteMention = !isDeleteMention && after == 0 && on<GroupMessageParseHandler>().isMentionSelected(replyMessage)
                 isDeleteMention = false
             }
 
@@ -115,12 +115,12 @@ class GroupMessagesHandler : PoolMember() {
 
             override fun afterTextChanged(text: Editable) {
                 updateSendButton()
-                `$`(GroupDraftHandler::class.java).saveDraft(`$`(GroupHandler::class.java).group!!, text.toString())
-                `$`(GroupMessageMentionHandler::class.java).showSuggestionsForName(`$`(GroupMessageParseHandler::class.java).extractName(text, replyMessage.selectionStart))
+                on<GroupDraftHandler>().saveDraft(on<GroupHandler>().group!!, text.toString())
+                on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, replyMessage.selectionStart))
 
                 if (shouldDeleteMention) {
                     isDeleteMention = true
-                    `$`(GroupMessageParseHandler::class.java).deleteMention(replyMessage)
+                    on<GroupMessageParseHandler>().deleteMention(replyMessage)
                 }
             }
         })
@@ -134,41 +134,41 @@ class GroupMessagesHandler : PoolMember() {
 
         sendMoreActionAudio.setOnClickListener { view ->
             this.sendMoreButton.callOnClick()
-            `$`(DefaultAlerts::class.java).message("Woah matey!")
+            on<DefaultAlerts>().message("Woah matey!")
         }
         sendMoreActionVideo.setOnClickListener { view ->
             this.sendMoreButton.callOnClick()
-            `$`(DefaultAlerts::class.java).message("Woah matey!")
+            on<DefaultAlerts>().message("Woah matey!")
         }
         sendMoreActionFile.setOnClickListener { view ->
             this.sendMoreButton.callOnClick()
-            `$`(DefaultAlerts::class.java).message("Woah matey!")
+            on<DefaultAlerts>().message("Woah matey!")
         }
         sendMoreActionPhoto.setOnClickListener { view ->
             this.sendMoreButton.callOnClick()
-            `$`(MediaHandler::class.java).getPhoto { photoUri ->
-                `$`(PhotoUploadGroupMessageHandler::class.java).upload(photoUri) { photoId ->
-                    val success = `$`(GroupMessageAttachmentHandler::class.java).sharePhoto(`$`(PhotoUploadGroupMessageHandler::class.java).getPhotoPathFromId(photoId), `$`(GroupHandler::class.java).group!!.id!!)
+            on<MediaHandler>().getPhoto { photoUri ->
+                on<PhotoUploadGroupMessageHandler>().upload(photoUri) { photoId ->
+                    val success = on<GroupMessageAttachmentHandler>().sharePhoto(on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId), on<GroupHandler>().group!!.id!!)
                     if (!success) {
-                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                        on<DefaultAlerts>().thatDidntWork()
                     }
                 }
             }
         }
 
-        `$`(DisposableHandler::class.java).add(`$`(GroupHandler::class.java).onGroupChanged().subscribe { group ->
+        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe { group ->
             if (groupMessagesSubscription != null) {
-                `$`(DisposableHandler::class.java).dispose(groupMessagesSubscription!!)
+                on<DisposableHandler>().dispose(groupMessagesSubscription!!)
             }
 
-            groupMessagesSubscription = `$`(StoreHandler::class.java).store.box(GroupMessage::class.java).query()
+            groupMessagesSubscription = on<StoreHandler>().store.box(GroupMessage::class.java).query()
                     .equal(GroupMessage_.to, group.id!!)
-                    .sort(`$`(SortHandler::class.java).sortGroupMessages())
+                    .sort(on<SortHandler>().sortGroupMessages())
                     .build()
                     .subscribe().on(AndroidScheduler.mainThread())
                     .observer(DataObserver<List<GroupMessage>> { this.setGroupMessages(it) })
 
-            `$`(DisposableHandler::class.java).add(groupMessagesSubscription!!)
+            on<DisposableHandler>().add(groupMessagesSubscription!!)
         })
     }
 
@@ -183,20 +183,20 @@ class GroupMessagesHandler : PoolMember() {
     }
 
     fun insertMention(mention: Phone) {
-        `$`(GroupMessageParseHandler::class.java).insertMention(replyMessage, mention)
+        on<GroupMessageParseHandler>().insertMention(replyMessage, mention)
     }
 
     private fun updateSendButton() {
         if (replyMessage.text.toString().isBlank()) {
             sendButton.setImageResource(R.drawable.ic_camera_black_24dp)
             sendMoreButton.visibility = View.VISIBLE
-            `$`(GroupActionHandler::class.java).show(true)
+            on<GroupActionHandler>().show(true)
         } else {
             sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
             sendMoreButton.visibility = View.GONE
             sendMoreLayout.visibility = View.GONE
             sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
-            `$`(GroupActionHandler::class.java).show(false)
+            on<GroupActionHandler>().show(false)
         }
     }
 
@@ -208,28 +208,28 @@ class GroupMessagesHandler : PoolMember() {
     }
 
     private fun send(text: String): Boolean {
-        if (`$`(PersistenceHandler::class.java).phoneId == null) {
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+        if (on<PersistenceHandler>().phoneId == null) {
+            on<DefaultAlerts>().thatDidntWork()
             return false
         }
 
-        if (`$`(GroupHandler::class.java).group == null) {
+        if (on<GroupHandler>().group == null) {
             return false
         }
 
-        if (`$`(GroupHandler::class.java).groupContact == null) {
-            if (!`$`(GroupHandler::class.java).group!!.isPublic && !`$`(GroupHandler::class.java).group!!.hasEvent()) {
+        if (on<GroupHandler>().groupContact == null) {
+            if (!on<GroupHandler>().group!!.isPublic && !on<GroupHandler>().group!!.hasEvent()) {
                 return false
             }
         }
 
         val groupMessage = GroupMessage()
         groupMessage.text = text
-        groupMessage.to = `$`(GroupHandler::class.java).group!!.id
-        groupMessage.from = `$`(PersistenceHandler::class.java).phoneId
+        groupMessage.to = on<GroupHandler>().group!!.id
+        groupMessage.from = on<PersistenceHandler>().phoneId
         groupMessage.time = Date()
-        `$`(StoreHandler::class.java).store.box(GroupMessage::class.java).put(groupMessage)
-        `$`(SyncHandler::class.java).sync(groupMessage)
+        on<StoreHandler>().store.box(GroupMessage::class.java).put(groupMessage)
+        on<SyncHandler>().sync(groupMessage)
 
         return true
     }

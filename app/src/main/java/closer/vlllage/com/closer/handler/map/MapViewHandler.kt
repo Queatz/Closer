@@ -1,11 +1,11 @@
 package closer.vlllage.com.closer.handler.map
 
-import android.app.Fragment
 import android.content.Intent
+import androidx.fragment.app.Fragment
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class MapViewHandler : PoolMember() {
+class MapViewHandler constructor(private val on: On) {
 
     private var mapSlideFragment: MapSlideFragment? = null
     var onRequestMapOnScreenListener: (() -> Unit)? = null

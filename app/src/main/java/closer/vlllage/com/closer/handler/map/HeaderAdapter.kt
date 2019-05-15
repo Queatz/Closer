@@ -3,11 +3,11 @@ package closer.vlllage.com.closer.handler.map
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.ui.RecyclerViewHeader
+import com.queatz.on.On
 
-abstract class HeaderAdapter<T : RecyclerView.ViewHolder>(poolMember: PoolMember) : PoolRecyclerAdapter<T>(poolMember) {
+abstract class HeaderAdapter<T : RecyclerView.ViewHolder>(on: On) : PoolRecyclerAdapter<T>(on) {
 
     private val header = RecyclerViewHeader()
 
@@ -20,6 +20,6 @@ abstract class HeaderAdapter<T : RecyclerView.ViewHolder>(poolMember: PoolMember
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        header.attach(recyclerView, `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.feedPeekHeight))
+        header.attach(recyclerView, on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeight))
     }
 }

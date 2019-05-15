@@ -8,20 +8,20 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.ui.DragTriggerView
 import closer.vlllage.com.closer.ui.TimedValue
 import java.lang.Math.abs
 import java.lang.Math.max
 
-class MiniWindowHandler : PoolMember() {
+class MiniWindowHandler constructor(private val on: On) {
 
     fun attach(toggleView: View, windowView: View, miniWindowEventListener: (() -> Unit)?) {
 
-        val miniWindowHeight = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.miniWindowHeight)
+        val miniWindowHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowHeight)
         val params = windowView.layoutParams as ConstraintLayout.LayoutParams
-        val miniWindowMinTopMargin = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.miniWindowMinTopMargin)
-        val miniWindowTopMargin = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.miniWindowTopMargin)
+        val miniWindowMinTopMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowMinTopMargin)
+        val miniWindowTopMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowTopMargin)
 
         windowView.clipToOutline = true
 
@@ -91,7 +91,7 @@ class MiniWindowHandler : PoolMember() {
             }
         })
 
-        if (`$`(SettingsHandler::class.java).get(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED)) {
+        if (on<SettingsHandler>().get(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED)) {
             val startMaxHeight = params.matchConstraintMaxHeight
             val startTopMargin = params.topMargin
 

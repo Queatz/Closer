@@ -3,11 +3,11 @@ package closer.vlllage.com.closer.ui
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.handler.helpers.TimerHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
+import com.queatz.on.On
 import java.util.*
 
-class CombinedRecyclerAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(poolMember) {
+class CombinedRecyclerAdapter(on: On) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
     private val adapters = ArrayList<RecyclerView.Adapter<RecyclerView.ViewHolder>>()
     private val adapterCursors = ArrayList<Int>()
@@ -105,7 +105,7 @@ class CombinedRecyclerAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<Recy
         adapterCursors.clear()
         for (ignored in adapters) adapterCursors.add(0)
         adapterItems.clear()
-        `$`(TimerHandler::class.java).post(Runnable { this.notifyDataSetChanged() })
+        on<TimerHandler>().post(Runnable { this.notifyDataSetChanged() })
     }
 
     fun notifyAdapterChanged(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {

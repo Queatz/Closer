@@ -2,27 +2,28 @@ package closer.vlllage.com.closer.store
 
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.Val
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.models.BaseObject
+import com.queatz.on.On
+import com.queatz.on.OnLifecycle
 import io.objectbox.Property
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.SubscriptionBuilder
 import java.lang.reflect.InvocationTargetException
 import java.util.*
 
-class StoreHandler : PoolMember() {
+class StoreHandler constructor(private val on: On) : OnLifecycle {
 
     lateinit var store: Store
         private set
 
-    override fun onPoolInit() {
-        store = `$`(ApplicationHandler::class.java).app.`$`(StoreRefHandler::class.java).get()
+    override fun on() {
+        store = on<ApplicationHandler>().app.on<StoreRefHandler>().get()
     }
 
     fun <T : BaseObject> create(clazz: Class<T>): T? {
         try {
             val baseObject = clazz.getConstructor().newInstance()
-            baseObject.id = `$`(Val::class.java).rndId()
+            baseObject.id = on<Val>().rndId()
             store.box(clazz).put(baseObject)
             return baseObject
         } catch (e: InstantiationException) {

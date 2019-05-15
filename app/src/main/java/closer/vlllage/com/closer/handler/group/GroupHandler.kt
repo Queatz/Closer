@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import io.objectbox.android.AndroidScheduler
@@ -23,7 +23,7 @@ import io.reactivex.subjects.PublishSubject
 import org.greenrobot.essentials.StringUtils
 import java.util.*
 
-class GroupHandler : PoolMember() {
+class GroupHandler constructor(private val on: On) {
 
     private lateinit var groupName: TextView
     private lateinit var groupAbout: TextView
@@ -35,7 +35,7 @@ class GroupHandler : PoolMember() {
             field = group
 
             if (groupDataSubscription != null) {
-                `$`(DisposableHandler::class.java).dispose(groupDataSubscription!!)
+                on<DisposableHandler>().dispose(groupDataSubscription!!)
             }
 
             if (group != null) {
@@ -43,10 +43,10 @@ class GroupHandler : PoolMember() {
                 groupChanged.onNext(group)
                 setEventById(group.eventId)
                 setPhoneById(group.phoneId)
-                `$`(RefreshHandler::class.java).refreshGroupMessages(group.id!!)
-                `$`(RefreshHandler::class.java).refreshGroupContacts(group.id!!)
+                on<RefreshHandler>().refreshGroupMessages(group.id!!)
+                on<RefreshHandler>().refreshGroupContacts(group.id!!)
 
-                groupDataSubscription = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+                groupDataSubscription = on<StoreHandler>().store.box(Group::class.java).query()
                         .equal(Group_.id, group.id!!)
                         .build()
                         .subscribe()
@@ -56,10 +56,10 @@ class GroupHandler : PoolMember() {
                             if (groups.isEmpty()) return@observer
                             redrawContacts()
                             groupUpdated.onNext(groups[0])
-                            `$`(RefreshHandler::class.java).refreshGroupContacts(group.id!!)
+                            on<RefreshHandler>().refreshGroupContacts(group.id!!)
                         }
 
-                `$`(DisposableHandler::class.java).add(groupDataSubscription!!)
+                on<DisposableHandler>().add(groupDataSubscription!!)
             }
 
             showGroupName(group)
@@ -88,15 +88,15 @@ class GroupHandler : PoolMember() {
             return
         }
 
-        group = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+        group = on<StoreHandler>().store.box(Group::class.java).query()
                 .equal(Group_.id, groupId)
                 .build().findFirst()
 
         if (this.group == null) {
-            `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).getGroup(groupId)
+            on<DisposableHandler>().add(on<ApiHandler>().getGroup(groupId)
                     .map { GroupResult.from(it) }
                     .subscribe { group ->
-                        `$`(RefreshHandler::class.java).refresh(group)
+                        on<RefreshHandler>().refresh(group)
                         this.group = group
                     })
         }
@@ -106,52 +106,52 @@ class GroupHandler : PoolMember() {
         setGroupContact()
         peopleInGroup.text = ""
 
-        if (`$`(Val::class.java).isEmpty(group.about)) {
+        if (on<Val>().isEmpty(group.about)) {
             groupAbout.visibility = View.GONE
         } else {
             groupAbout.visibility = View.VISIBLE
             groupAbout.text = group.about
         }
 
-        `$`(DisposableHandler::class.java).add(`$`(StoreHandler::class.java).store.box(GroupContact::class.java).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupContact::class.java).query()
                 .equal(GroupContact_.groupId, group.id!!)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer { groupContacts ->
-                    `$`(GroupContactsHandler::class.java).setCurrentGroupContacts(groupContacts)
+                    on<GroupContactsHandler>().setCurrentGroupContacts(groupContacts)
                     contactNames = ArrayList()
                     for (groupContact in groupContacts) {
-                        contactNames.add(`$`(NameHandler::class.java).getName(groupContact))
+                        contactNames.add(on<NameHandler>().getName(groupContact))
                     }
 
                     redrawContacts()
                 })
 
-        `$`(DisposableHandler::class.java).add(`$`(StoreHandler::class.java).store.box(GroupInvite::class.java).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupInvite::class.java).query()
                 .equal(GroupInvite_.group, group.id!!)
                 .build().subscribe().on(AndroidScheduler.mainThread())
                 .observer { groupInvites ->
                     contactInvites = ArrayList()
                     for (groupInvite in groupInvites) {
-                        contactInvites.add(`$`(ResourcesHandler::class.java).resources.getString(R.string.contact_invited_inline, `$`(NameHandler::class.java).getName(groupInvite)))
+                        contactInvites.add(on<ResourcesHandler>().resources.getString(R.string.contact_invited_inline, on<NameHandler>().getName(groupInvite)))
                     }
                     redrawContacts()
                 })
 
-        if (`$`(FeatureHandler::class.java).has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
+        if (on<FeatureHandler>().has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
             settingsButton.visibility = View.VISIBLE
         }
     }
 
     private fun setGroupContact() {
-        if (`$`(PersistenceHandler::class.java).phoneId == null) {
+        if (on<PersistenceHandler>().phoneId == null) {
             return
         }
 
-        groupContact = `$`(StoreHandler::class.java).store.box(GroupContact::class.java).query()
+        groupContact = on<StoreHandler>().store.box(GroupContact::class.java).query()
                 .equal(GroupContact_.groupId, this.group!!.id!!)
-                .equal(GroupContact_.contactId, `$`(PersistenceHandler::class.java).phoneId)
+                .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId)
                 .build().findFirst()
     }
 
@@ -178,11 +178,11 @@ class GroupHandler : PoolMember() {
         }
 
         if (group.hasPhone()) {
-            `$`(DisposableHandler::class.java).add(`$`(DataHandler::class.java).getPhone(group.phoneId!!).subscribe(
-                    { phone -> groupName.text = phone.name }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }
+            on<DisposableHandler>().add(on<DataHandler>().getPhone(group.phoneId!!).subscribe(
+                    { phone -> groupName.text = phone.name }, { error -> on<DefaultAlerts>().thatDidntWork() }
             ))
         } else {
-            groupName.text = `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+            groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
         }
     }
 
@@ -190,7 +190,7 @@ class GroupHandler : PoolMember() {
         if (group.photo != null) {
             backgroundPhoto.visibility = View.VISIBLE
             backgroundPhoto.setImageDrawable(null)
-            `$`(PhotoLoader::class.java).softLoad(group.photo!!, backgroundPhoto)
+            on<PhotoLoader>().softLoad(group.photo!!, backgroundPhoto)
         } else {
             backgroundPhoto.visibility = View.GONE
         }
@@ -201,9 +201,9 @@ class GroupHandler : PoolMember() {
             return
         }
 
-        `$`(DisposableHandler::class.java).add(`$`(DataHandler::class.java).getEventById(eventId)
+        on<DisposableHandler>().add(on<DataHandler>().getEventById(eventId)
                 .subscribe({ event -> eventChanged.onNext(event) },
-                        { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                        { error -> on<DefaultAlerts>().thatDidntWork() }))
     }
 
     private fun setPhoneById(phoneId: String?) {
@@ -211,9 +211,9 @@ class GroupHandler : PoolMember() {
             return
         }
 
-        `$`(DisposableHandler::class.java).add(`$`(DataHandler::class.java).getPhone(phoneId)
+        on<DisposableHandler>().add(on<DataHandler>().getPhone(phoneId)
                 .subscribe({ phone -> phoneChanged.onNext(phone) },
-                        { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                        { error -> on<DefaultAlerts>().thatDidntWork() }))
     }
 
     fun onGroupChanged() = groupChanged

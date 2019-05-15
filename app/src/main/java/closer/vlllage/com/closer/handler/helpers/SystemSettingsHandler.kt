@@ -4,14 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class SystemSettingsHandler : PoolMember() {
+class SystemSettingsHandler constructor(private val on: On) {
     fun showSystemSettings() {
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        val uri = Uri.fromParts("package", `$`(ApplicationHandler::class.java).app!!.packageName, null)
+        val uri = Uri.fromParts("package", on<ApplicationHandler>().app!!.packageName, null)
         intent.data = uri
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 }

@@ -1,9 +1,9 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import com.google.android.gms.maps.model.LatLng
 
-class LatLngStr : PoolMember() {
+class LatLngStr constructor(private val on: On) {
 
     fun from(latLng: LatLng): String {
         return latLng.latitude.toString() + "," + latLng.longitude

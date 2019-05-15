@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class MapBubbleProxyView : PoolMember() {
+class MapBubbleProxyView constructor(private val on: On) {
 
     private lateinit var adapter: MapBubbleProxyAdapter
 
@@ -17,7 +17,7 @@ class MapBubbleProxyView : PoolMember() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.bubbleRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
-        adapter = MapBubbleProxyAdapter(this, mapBubble, onClickListener)
+        adapter = MapBubbleProxyAdapter(on, mapBubble, onClickListener)
         recyclerView.adapter = adapter
 
         update(view, mapBubble)

@@ -8,11 +8,11 @@ import android.graphics.drawable.Icon
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Group
 import java.util.*
 
-class AppShortcutsHandler : PoolMember() {
+class AppShortcutsHandler constructor(private val on: On) {
     fun setGroupShortcuts(groups: List<Group>) {
         var groups = groups
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N_MR1) {
@@ -23,7 +23,7 @@ class AppShortcutsHandler : PoolMember() {
             groups = groups.subList(0, 3)
         }
 
-        val shortcutManager = `$`(ApplicationHandler::class.java).app.getSystemService(ShortcutManager::class.java)
+        val shortcutManager = on<ApplicationHandler>().app.getSystemService(ShortcutManager::class.java)
                 ?: return
 
         val shortcuts = ArrayList<ShortcutInfo>()
@@ -34,17 +34,17 @@ class AppShortcutsHandler : PoolMember() {
                 continue
             }
 
-            val icon = `$`(ShortcutIconGenerator::class.java).generate(
-                    `$`(Val::class.java).of(group.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)),
+            val icon = on<ShortcutIconGenerator>().generate(
+                    on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name)),
                     128f,
                     Color.WHITE,
-                    `$`(GroupColorHandler::class.java).getColor(group),
-                    `$`(GroupColorHandler::class.java).getLightColor(group)
+                    on<GroupColorHandler>().getColor(group),
+                    on<GroupColorHandler>().getLightColor(group)
             )
 
-            val shortcut = ShortcutInfo.Builder(`$`(ApplicationHandler::class.java).app, "group:" + group.id!!)
+            val shortcut = ShortcutInfo.Builder(on<ApplicationHandler>().app, "group:" + group.id!!)
                     .setShortLabel(group.name!!)
-                    .setIntent(`$`(GroupActivityTransitionHandler::class.java).getIntent(group.id!!, false))
+                    .setIntent(on<GroupActivityTransitionHandler>().getIntent(group.id!!, false))
                     .setIcon(Icon.createWithBitmap(icon))
                     .build()
 

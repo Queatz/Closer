@@ -13,19 +13,19 @@ import closer.vlllage.com.closer.handler.helpers.AlertHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.ui.InterceptableScrollView
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
-class EventHandler : PoolMember() {
+class EventHandler constructor(private val on: On) {
 
     fun createNewEvent(latLng: LatLng, isPublic: Boolean, onEventCreatedListener: OnEventCreatedListener) {
-        `$`(AlertHandler::class.java).make().apply {
+        on<AlertHandler>().make().apply {
             theme = R.style.AppTheme_AlertDialog_Red
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.post_event)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_event)
             layoutResId = R.layout.post_event_modal
             onAfterViewCreated = { alertConfig, view ->
                 val viewHolder = CreateEventViewHolder(view)
@@ -58,13 +58,13 @@ class EventHandler : PoolMember() {
                         if (viewHolder.eventName.hasFocus()) {
                             viewHolder.eventName.clearFocus()
                             viewHolder.scrollView.requestFocus()
-                            `$`(KeyboardHandler::class.java).showKeyboard(viewHolder.eventName, false)
+                            on<KeyboardHandler>().showKeyboard(viewHolder.eventName, false)
                         }
 
                         if (viewHolder.eventPrice.hasFocus()) {
                             viewHolder.eventPrice.clearFocus()
                             viewHolder.scrollView.requestFocus()
-                            `$`(KeyboardHandler::class.java).showKeyboard(viewHolder.eventPrice, false)
+                            on<KeyboardHandler>().showKeyboard(viewHolder.eventPrice, false)
                         }
 
                         false
@@ -77,19 +77,19 @@ class EventHandler : PoolMember() {
                     val viewHolder = alertResult as CreateEventViewHolder
 
                     if (viewHolder.eventName.text.toString().isBlank()) {
-                        `$`(DefaultAlerts::class.java).message(`$`(ResourcesHandler::class.java).resources.getString(R.string.enter_event_details))
+                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.enter_event_details))
                         viewHolder.eventName.requestFocus()
                         false
                     } else {
                         var isValid = getViewState(viewHolder).endsAt.time.after(getViewState(viewHolder).startsAt.time)
                         if (!isValid) {
-                            `$`(DefaultAlerts::class.java).message(`$`(ResourcesHandler::class.java).resources.getString(R.string.event_must_not_end_before_it_starts))
+                            on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.event_must_not_end_before_it_starts))
                         }
 
                         if (isValid) {
                             isValid = Date().before(getViewState(viewHolder).endsAt.time)
                             if (!isValid) {
-                                `$`(DefaultAlerts::class.java).message(`$`(ResourcesHandler::class.java).resources.getString(R.string.event_must_not_end_in_the_past))
+                                on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.event_must_not_end_in_the_past))
                             }
                         }
 
@@ -109,7 +109,7 @@ class EventHandler : PoolMember() {
                             event.endsAt.time,
                             onEventCreatedListener)
                 }
-            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.post_event)
+            title = on<ResourcesHandler>().resources.getString(R.string.post_event)
             show()
         }
     }
@@ -131,7 +131,7 @@ class EventHandler : PoolMember() {
     }
 
     private fun createNewEvent(isPublic: Boolean, latLng: LatLng, name: String, price: String, startsAt: Date, endsAt: Date, onEventCreatedListener: OnEventCreatedListener) {
-        val event = `$`(StoreHandler::class.java).create(Event::class.java)
+        val event = on<StoreHandler>().create(Event::class.java)
         event!!.name = name.trim()
         event.about = price.trim()
         event.isPublic = isPublic
@@ -139,8 +139,8 @@ class EventHandler : PoolMember() {
         event.longitude = latLng.longitude
         event.startsAt = startsAt
         event.endsAt = endsAt
-        `$`(StoreHandler::class.java).store.box(Event::class.java).put(event)
-        `$`(SyncHandler::class.java).sync(event)
+        on<StoreHandler>().store.box(Event::class.java).put(event)
+        on<SyncHandler>().sync(event)
         onEventCreatedListener.invoke(event)
     }
 

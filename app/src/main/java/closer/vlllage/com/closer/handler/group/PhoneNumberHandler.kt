@@ -1,11 +1,11 @@
 package closer.vlllage.com.closer.handler.group
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import java.util.*
 
-class PhoneNumberHandler : PoolMember() {
+class PhoneNumberHandler constructor(private val on: On) {
 
     fun isValidNumber(phoneNumber: String): Boolean {
         return try {

@@ -1,17 +1,18 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
+import com.queatz.on.OnLifecycle
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import java.util.*
 
-class DisposableHandler : PoolMember() {
+class DisposableHandler constructor(private val on: On) : OnLifecycle {
 
     private val disposables = CompositeDisposable()
     private val dataSubscriptions = HashSet<DataSubscription>()
 
-    override fun onPoolEnd() {
+    override fun off() {
         disposables.dispose()
         for (dataSubscription in dataSubscriptions) {
             if (!dataSubscription.isCanceled)

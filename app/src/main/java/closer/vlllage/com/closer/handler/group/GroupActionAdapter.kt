@@ -12,20 +12,20 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ImageHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.Group_
+import com.queatz.on.On
 import java.util.*
 
 
-class GroupActionAdapter(poolMember: PoolMember,
+class GroupActionAdapter(on: On,
                          private val layout: Layout,
                          private val onGroupActionClickListener: OnGroupActionClickListener?,
                          private val onGroupActionLongClickListener: OnGroupActionLongClickListener?)
-    : PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder>(poolMember) {
+    : PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder>(on) {
 
     private val groupActions = ArrayList<GroupAction>()
 
@@ -65,7 +65,7 @@ class GroupActionAdapter(poolMember: PoolMember,
         }
 
         if (layout == Layout.PHOTO) {
-            val group = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+            val group = on<StoreHandler>().store.box(Group::class.java).query()
                     .equal(Group_.id, groupActions[position].group!!)
                     .build()
                     .findFirst()
@@ -80,14 +80,14 @@ class GroupActionAdapter(poolMember: PoolMember,
             }
 
             if (groupAction.photo != null) {
-                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, `$`(ResourcesHandler::class.java).resources.getDimension(R.dimen.groupActionSmallTextSize))
+                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionSmallTextSize))
                 holder.actionName.setBackgroundResource(R.color.black_25)
                 holder.photo.setImageDrawable(null)
-                `$`(ImageHandler::class.java).get().load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=256")
+                on<ImageHandler>().get().load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=256")
                         .noPlaceholder()
                         .into(holder.photo)
             } else {
-                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, `$`(ResourcesHandler::class.java).resources.getDimension(R.dimen.groupActionLargeTextSize))
+                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionLargeTextSize))
                 holder.actionName.background = null
                 holder.photo.setImageResource(getRandomBubbleBackgroundResource(groupAction))
             }

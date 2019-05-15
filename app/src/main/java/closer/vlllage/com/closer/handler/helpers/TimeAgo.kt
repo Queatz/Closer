@@ -2,10 +2,10 @@ package closer.vlllage.com.closer.handler.helpers
 
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.text.format.DateUtils.HOUR_IN_MILLIS
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import java.util.*
 
-class TimeAgo : PoolMember() {
+class TimeAgo constructor(private val on: On) {
     fun fifteenDaysAgo(): Date {
         val fifteenDaysAgo = Date()
         fifteenDaysAgo.time = fifteenDaysAgo.time - 15 * DAY_IN_MILLIS

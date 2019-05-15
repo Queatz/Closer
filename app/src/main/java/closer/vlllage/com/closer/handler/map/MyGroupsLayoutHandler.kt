@@ -15,14 +15,14 @@ import closer.vlllage.com.closer.handler.helpers.AlertHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.SortHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
 import io.objectbox.android.AndroidScheduler
 import java.util.*
 
-class MyGroupsLayoutHandler : PoolMember() {
+class MyGroupsLayoutHandler constructor(private val on: On) {
     private var myGroupsLayout: ViewGroup? = null
     private var myGroupsAdapter: MyGroupsAdapter? = null
     private var myGroupsRecyclerView: RecyclerView? = null
@@ -43,23 +43,23 @@ class MyGroupsLayoutHandler : PoolMember() {
                 false
         )
 
-        myGroupsAdapter = MyGroupsAdapter(this)
-        `$`(MyGroupsLayoutActionsHandler::class.java).attach(myGroupsAdapter!!)
+        myGroupsAdapter = MyGroupsAdapter(on)
+        on<MyGroupsLayoutActionsHandler>().attach(myGroupsAdapter!!)
         myGroupsRecyclerView!!.adapter = myGroupsAdapter
-        `$`(DisposableHandler::class.java).add(`$`(StoreHandler::class.java).store.box(Group::class.java).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Group::class.java).query()
                 .notEqual(Group_.isPublic, true)
-                .sort(`$`(SortHandler::class.java).sortGroups())
+                .sort(on<SortHandler>().sortGroups())
                 .build().subscribe().on(AndroidScheduler.mainThread())
                 .observer { this.setGroups(it) })
 
 
         val endActions = ArrayList<GroupActionBarButton>()
         endActions.add(GroupActionBarButton(
-                `$`(ResourcesHandler::class.java).resources.getString(R.string.add_new_private_group),
+                on<ResourcesHandler>().resources.getString(R.string.add_new_private_group),
                 View.OnClickListener { view ->
-                    `$`(AlertHandler::class.java).make().apply {
-                        positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.create_group)
-                        title = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_new_private_group)
+                    on<AlertHandler>().make().apply {
+                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_group)
+                        title = on<ResourcesHandler>().resources.getString(R.string.add_new_private_group)
                         layoutResId = R.layout.create_group_modal
                         textViewId = R.id.input
                         onTextViewSubmitCallback = { createGroup(it) }
@@ -68,14 +68,14 @@ class MyGroupsLayoutHandler : PoolMember() {
                 }, null,
                 R.drawable.clickable_blue_light).also { it.icon = R.drawable.ic_group_add_black_24dp })
         endActions.add(GroupActionBarButton(
-                `$`(ResourcesHandler::class.java).resources.getString(R.string.random_suggestion),
-                View.OnClickListener { view -> `$`(SuggestionHandler::class.java).shuffle() }, null,
+                on<ResourcesHandler>().resources.getString(R.string.random_suggestion),
+                View.OnClickListener { view -> on<SuggestionHandler>().shuffle() }, null,
                 R.drawable.clickable_green_light
 
         ).also { it.icon = R.drawable.ic_shuffle_black_24dp })
         endActions.add(GroupActionBarButton(
-                `$`(ResourcesHandler::class.java).resources.getString(R.string.settings),
-                View.OnClickListener { view -> `$`(MapActivityHandler::class.java).goToScreen(MapsActivity.EXTRA_SCREEN_SETTINGS) }, null,
+                on<ResourcesHandler>().resources.getString(R.string.settings),
+                View.OnClickListener { view -> on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_SETTINGS) }, null,
                 R.drawable.clickable_accent
 
         ).also { it.icon = R.drawable.ic_settings_black_24dp })
@@ -87,17 +87,17 @@ class MyGroupsLayoutHandler : PoolMember() {
             return
         }
 
-        val group = `$`(StoreHandler::class.java).create(Group::class.java)
+        val group = on<StoreHandler>().create(Group::class.java)
         group!!.name = name
-        `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
-        `$`(SyncHandler::class.java).sync(group, { groupId ->
-            `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, groupId)
+        on<StoreHandler>().store.box(Group::class.java).put(group)
+        on<SyncHandler>().sync(group, { groupId ->
+            on<GroupActivityTransitionHandler>().showGroupMessages(null, groupId)
         })
     }
 
     private fun setGroups(groups: List<Group>) {
         if (!hasSetGroupShortcuts) {
-            `$`(AppShortcutsHandler::class.java).setGroupShortcuts(groups)
+            on<AppShortcutsHandler>().setGroupShortcuts(groups)
             hasSetGroupShortcuts = true
         }
         myGroupsAdapter!!.setGroups(groups)
@@ -108,7 +108,7 @@ class MyGroupsLayoutHandler : PoolMember() {
                 container!!.paddingLeft,
                 container!!.paddingTop,
                 container!!.paddingRight,
-                if (showBottomPadding) `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.feedPeekHeight) else 0
+                if (showBottomPadding) on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeight) else 0
         )
     }
 

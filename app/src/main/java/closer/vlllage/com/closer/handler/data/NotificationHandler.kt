@@ -24,15 +24,15 @@ import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.Val
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Event
 import com.google.android.gms.maps.model.LatLng
 
-class NotificationHandler : PoolMember() {
+class NotificationHandler constructor(private val on: On) {
 
     fun showBubbleMessageNotification(phone: String, latLng: LatLng?, name: String, message: String) {
         var name = name
-        val context = `$`(ApplicationHandler::class.java).app
+        val context = on<ApplicationHandler>().app
 
         val remoteInput = RemoteInput.Builder(KEY_TEXT_REPLY)
                 .setLabel(context.getString(R.string.reply))
@@ -46,7 +46,7 @@ class NotificationHandler : PoolMember() {
         }
 
         name = if (name.isEmpty())
-            `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)
+            on<ResourcesHandler>().resources.getString(R.string.app_name)
         else
             name
 
@@ -61,7 +61,7 @@ class NotificationHandler : PoolMember() {
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notificationTag = phone + "/" + `$`(Val::class.java).rndId()
+        val notificationTag = phone + "/" + on<Val>().rndId()
 
         val backgroundIntent = Intent(context, Background::class.java)
         backgroundIntent.putExtra(EXTRA_PHONE, phone)
@@ -71,7 +71,7 @@ class NotificationHandler : PoolMember() {
     }
 
     fun showInvitedToGroupNotification(invitedBy: String, groupName: String, groupId: String) {
-        val context = `$`(ApplicationHandler::class.java).app
+        val context = on<ApplicationHandler>().app
 
         val intent = Intent(context, GroupActivity::class.java)
         intent.action = Intent.ACTION_VIEW
@@ -85,13 +85,13 @@ class NotificationHandler : PoolMember() {
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        show(contentIntent, null, null, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name),
-                `$`(ResourcesHandler::class.java).resources.getString(R.string.invited_to_group_notification, invitedBy, groupName),
+        show(contentIntent, null, null, on<ResourcesHandler>().resources.getString(R.string.app_name),
+                on<ResourcesHandler>().resources.getString(R.string.invited_to_group_notification, invitedBy, groupName),
                 "$groupId/invited", true)
     }
 
     fun showGroupMessageNotification(text: String, messageFrom: String, groupName: String, groupId: String, isPassive: String) {
-        val context = `$`(ApplicationHandler::class.java).app
+        val context = on<ApplicationHandler>().app
 
         val intent = Intent(context, GroupActivity::class.java)
         intent.action = Intent.ACTION_VIEW
@@ -106,13 +106,13 @@ class NotificationHandler : PoolMember() {
         )
 
         show(contentIntent, null, null,
-                `$`(ResourcesHandler::class.java).resources.getString(R.string.group_message_notification, messageFrom, groupName),
-                `$`(GroupMessageParseHandler::class.java).parseString(text),
+                on<ResourcesHandler>().resources.getString(R.string.group_message_notification, messageFrom, groupName),
+                on<GroupMessageParseHandler>().parseString(text),
                 "$groupId/message", !java.lang.Boolean.valueOf(isPassive))
     }
 
     fun showEventNotification(event: Event) {
-        val context = `$`(ApplicationHandler::class.java).app
+        val context = on<ApplicationHandler>().app
 
         val intent = Intent(context, GroupActivity::class.java)
         intent.action = Intent.ACTION_VIEW
@@ -127,13 +127,13 @@ class NotificationHandler : PoolMember() {
         )
 
         show(contentIntent, null, null,
-                `$`(ResourcesHandler::class.java).resources.getString(R.string.event_notification, event.name, `$`(EventDetailsHandler::class.java).formatRelative(event.startsAt!!)),
-                `$`(EventDetailsHandler::class.java).formatEventDetails(event),
+                on<ResourcesHandler>().resources.getString(R.string.event_notification, event.name, on<EventDetailsHandler>().formatRelative(event.startsAt!!)),
+                on<EventDetailsHandler>().formatEventDetails(event),
                 event.id!! + "/group", false)
     }
 
     fun hide(notificationTag: String) {
-        val notificationManager = NotificationManagerCompat.from(`$`(ApplicationHandler::class.java).app)
+        val notificationManager = NotificationManagerCompat.from(on<ApplicationHandler>().app)
         notificationManager.cancel(notificationTag, NOTIFICATION_ID)
     }
 
@@ -143,9 +143,9 @@ class NotificationHandler : PoolMember() {
                      message: String,
                      notificationTag: String,
                      sound: Boolean) {
-        val context = `$`(ApplicationHandler::class.java).app
+        val context = on<ApplicationHandler>().app
 
-        if (`$`(PersistenceHandler::class.java).isNotificationsPaused) {
+        if (on<PersistenceHandler>().isNotificationsPaused) {
             return
         }
 
@@ -177,7 +177,7 @@ class NotificationHandler : PoolMember() {
                     PendingIntent.FLAG_UPDATE_CURRENT)
 
             val action = NotificationCompat.Action.Builder(R.drawable.ic_notification,
-                    `$`(ResourcesHandler::class.java).resources.getString(R.string.reply), replyPendingIntent)
+                    on<ResourcesHandler>().resources.getString(R.string.reply), replyPendingIntent)
                     .addRemoteInput(remoteInput)
                     .build()
 
@@ -194,7 +194,7 @@ class NotificationHandler : PoolMember() {
                 PendingIntent.FLAG_UPDATE_CURRENT)
 
         val muteAction = NotificationCompat.Action.Builder(R.drawable.ic_notifications_paused_white_24dp,
-                `$`(ResourcesHandler::class.java).resources.getString(R.string.mute), mutePendingIntent)
+                on<ResourcesHandler>().resources.getString(R.string.mute), mutePendingIntent)
                 .build()
 
         builder.addAction(muteAction)
@@ -206,7 +206,7 @@ class NotificationHandler : PoolMember() {
     }
 
     private fun notificationChannel(): String {
-        return `$`(ResourcesHandler::class.java).resources.getString(R.string.notification_channel)
+        return on<ResourcesHandler>().resources.getString(R.string.notification_channel)
     }
 
     companion object {

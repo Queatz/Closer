@@ -11,14 +11,14 @@ import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
 import closer.vlllage.com.closer.handler.helpers.TimeStr
 import closer.vlllage.com.closer.handler.helpers.Val
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Phone
 
 /**
  * Created by jacob on 2/18/18.
  */
 
-class MapBubbleView : PoolMember() {
+class MapBubbleView constructor(private val on: On) {
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: (MapBubble) -> Unit): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble, layer, false)
 
@@ -40,7 +40,7 @@ class MapBubbleView : PoolMember() {
             name.text = mapBubble.name + "\n" + mapBubble.status
 
             if (info != null) {
-                info.text = `$`(TimeStr::class.java).pretty((mapBubble.tag as Phone).updated)
+                info.text = on<TimeStr>().pretty((mapBubble.tag as Phone).updated)
             }
         } else {
             if (mapBubble.name!!.isEmpty()) {
@@ -50,7 +50,7 @@ class MapBubbleView : PoolMember() {
                 name.text = mapBubble.name
             }
 
-            (view.findViewById<View>(R.id.status) as TextView).text = `$`(Val::class.java).of(mapBubble.status)
+            (view.findViewById<View>(R.id.status) as TextView).text = on<Val>().of(mapBubble.status)
 
             if (mapBubble.action != null && action != null) {
                 action.text = mapBubble.action
@@ -58,13 +58,13 @@ class MapBubbleView : PoolMember() {
                 val phone = mapBubble.tag as Phone
 
                 if (action != null) {
-                    action.text = `$`(TimeStr::class.java).pretty(phone.updated)
+                    action.text = on<TimeStr>().pretty(phone.updated)
                 }
 
                 if (photo != null) {
-                    if (!`$`(Val::class.java).isEmpty(phone.photo)) {
-                        `$`(PhotoHelper::class.java).loadCircle(photo, phone.photo!!)
-                        photo.setOnClickListener { v -> `$`(PhotoActivityTransitionHandler::class.java).show(photo, phone.photo!!) }
+                    if (!on<Val>().isEmpty(phone.photo)) {
+                        on<PhotoHelper>().loadCircle(photo, phone.photo!!)
+                        photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(photo, phone.photo!!) }
                     }
                 }
             }

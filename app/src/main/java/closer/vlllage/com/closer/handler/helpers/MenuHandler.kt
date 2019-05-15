@@ -5,16 +5,16 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import java.util.*
 
-class MenuHandler : PoolMember() {
+class MenuHandler constructor(private val on: On) {
     fun show(vararg menuOptions: MenuOption) {
-        `$`(AlertHandler::class.java).make().apply {
+        on<AlertHandler>().make().apply {
             layoutResId = R.layout.menu_modal
             onAfterViewCreated = { alertConfig, view ->
                 val menuRecyclerView = view.findViewById<RecyclerView>(R.id.menuRecyclerView)
-                menuRecyclerView.layoutManager = LinearLayoutManager(`$`(ActivityHandler::class.java).activity, RecyclerView.VERTICAL, false)
+                menuRecyclerView.layoutManager = LinearLayoutManager(on<ActivityHandler>().activity, RecyclerView.VERTICAL, false)
                 val options = ArrayList<MenuOption>()
 
                 for (option in menuOptions) {
@@ -26,7 +26,7 @@ class MenuHandler : PoolMember() {
                     alertConfig.dialog?.dismiss()
                 }
             }
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.close)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.close)
             show()
         }
     }

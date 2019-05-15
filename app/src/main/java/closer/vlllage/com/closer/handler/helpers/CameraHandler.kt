@@ -6,10 +6,10 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import closer.vlllage.com.closer.handler.media.MediaHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import java.io.File
 
-class CameraHandler : PoolMember() {
+class CameraHandler constructor(private val on: On) {
 
     private var photoUri: Uri? = null
 
@@ -23,7 +23,7 @@ class CameraHandler : PoolMember() {
         val photo: File?
 
         try {
-            photo = `$`(MediaHandler::class.java).createTemporaryFile("picture", ".jpg")
+            photo = on<MediaHandler>().createTemporaryFile("picture", ".jpg")
 
             if (photo == null) {
                 return
@@ -32,15 +32,15 @@ class CameraHandler : PoolMember() {
             photo.delete()
         } catch (e: Exception) {
             e.printStackTrace()
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
             return
         }
 
-        photoUri = FileProvider.getUriForFile(`$`(ActivityHandler::class.java).activity!!, MediaHandler.AUTHORITY, photo)
+        photoUri = FileProvider.getUriForFile(on<ActivityHandler>().activity!!, MediaHandler.AUTHORITY, photo)
 
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.INTERNAL_CONTENT_URI.path)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-        `$`(ActivityHandler::class.java).activity!!.startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA)
+        on<ActivityHandler>().activity!!.startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA)
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

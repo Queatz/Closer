@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class ConnectionErrorHandler : PoolMember() {
+class ConnectionErrorHandler constructor(private val on: On) {
 
     var onConnectionErrorListener: (() -> Unit)? = null
 
@@ -12,6 +12,6 @@ class ConnectionErrorHandler : PoolMember() {
             return
         }
 
-        `$`(DefaultAlerts::class.java).syncError()
+        on<DefaultAlerts>().syncError()
     }
 }

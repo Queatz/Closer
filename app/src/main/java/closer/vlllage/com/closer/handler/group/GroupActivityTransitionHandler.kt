@@ -9,15 +9,15 @@ import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_RESPOND
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Event
 
-class GroupActivityTransitionHandler : PoolMember() {
+class GroupActivityTransitionHandler constructor(private val on: On) {
 
     @JvmOverloads
     fun showGroupMessages(view: View?, groupId: String?, isRespond: Boolean = false) {
         if (groupId == null) {
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
             return
         }
 
@@ -30,11 +30,11 @@ class GroupActivityTransitionHandler : PoolMember() {
             intent.sourceBounds = bounds
         }
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun getIntent(groupId: String, isRespond: Boolean): Intent {
-        val intent = Intent(`$`(ApplicationHandler::class.java).app, GroupActivity::class.java)
+        val intent = Intent(on<ApplicationHandler>().app, GroupActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_GROUP_ID, groupId)
 
@@ -48,9 +48,9 @@ class GroupActivityTransitionHandler : PoolMember() {
 
     fun showGroupForEvent(view: View?, event: Event) {
         if (event.groupId != null) {
-            `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(view, event.groupId)
+            on<GroupActivityTransitionHandler>().showGroupMessages(view, event.groupId)
         } else {
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
         }
     }
 }

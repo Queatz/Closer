@@ -11,17 +11,17 @@ import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_SUGGESTION
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler
 import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.bubble.MapBubble
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Suggestion
 import com.google.android.gms.maps.model.LatLng
 
-class IntentHandler : PoolMember() {
+class IntentHandler constructor(private val on: On) {
 
     fun onNewIntent(intent: Intent, onRequestMapOnScreenListener: (() -> Unit)?) {
         if (Intent.ACTION_VIEW == intent.action) {
             if (intent.hasExtra(EXTRA_STATUS)) {
                 val latLng = intent.getFloatArrayExtra(EXTRA_LAT_LNG)
-                `$`(ReplyLayoutHandler::class.java).replyTo(MapBubble(
+                on<ReplyLayoutHandler>().replyTo(MapBubble(
                         if (intent.hasExtra(EXTRA_LAT_LNG)) LatLng(latLng[0].toDouble(), latLng[1].toDouble()) else null,
                         if (intent.hasExtra(EXTRA_NAME)) intent.getStringExtra(EXTRA_NAME) else "",
                         intent.getStringExtra(EXTRA_STATUS)
@@ -32,7 +32,7 @@ class IntentHandler : PoolMember() {
             } else if (intent.hasExtra(EXTRA_EVENT_ID) || intent.hasExtra(EXTRA_GROUP_ID)) {
                 val latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG)
                 val latLng = LatLng(latLngFloats[0].toDouble(), latLngFloats[1].toDouble())
-                `$`(MapHandler::class.java).centerMap(latLng)
+                on<MapHandler>().centerMap(latLng)
                 onRequestMapOnScreenListener?.invoke()
             } else if (intent.hasExtra(EXTRA_SUGGESTION)) {
                 val latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG)
@@ -43,16 +43,16 @@ class IntentHandler : PoolMember() {
                 suggestion.longitude = latLng.longitude
                 suggestion.name = intent.getStringExtra(EXTRA_SUGGESTION)
 
-                `$`(SuggestionHandler::class.java).clearSuggestions()
-                `$`(BubbleHandler::class.java).remove { mapBubble -> BubbleType.MENU == mapBubble.type }
+                on<SuggestionHandler>().clearSuggestions()
+                on<BubbleHandler>().remove { mapBubble -> BubbleType.MENU == mapBubble.type }
 
-                `$`(BubbleHandler::class.java).add(`$`(SuggestionHandler::class.java).suggestionBubbleFrom(suggestion))
-                `$`(MapHandler::class.java).centerMap(latLng)
+                on<BubbleHandler>().add(on<SuggestionHandler>().suggestionBubbleFrom(suggestion))
+                on<MapHandler>().centerMap(latLng)
                 onRequestMapOnScreenListener?.invoke()
             } else if (intent.hasExtra(EXTRA_LAT_LNG)) {
                 val latLngFloats = intent.getFloatArrayExtra(EXTRA_LAT_LNG)
                 val latLng = LatLng(latLngFloats[0].toDouble(), latLngFloats[1].toDouble())
-                `$`(MapHandler::class.java).centerMap(latLng)
+                on<MapHandler>().centerMap(latLng)
                 onRequestMapOnScreenListener?.invoke()
             }
         }

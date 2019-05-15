@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.handler.settings
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class ConfigHandler : PoolMember() {
+class ConfigHandler constructor(private val on: On) {
     fun feedbackGroupId() = "37197167"
 }

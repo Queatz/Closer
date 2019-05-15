@@ -4,20 +4,18 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
 import closer.vlllage.com.closer.pool.PoolActivity
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class DefaultMenus : PoolMember() {
+class DefaultMenus constructor(private val on: On) {
     fun uploadPhoto(onPhotoUploadedListener: (photoId: String) -> Unit) {
-        `$`(MenuHandler::class.java).show(
+        on<MenuHandler>().show(
                 MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo) {
-                    (`$`(ActivityHandler::class.java).activity as PoolActivity).pool
-                            .`$`(CameraHandler::class.java)
-                            .showCamera { photoUri -> `$`(PhotoUploadGroupMessageHandler::class.java).upload(photoUri!!, onPhotoUploadedListener) }
+                    (on<ActivityHandler>().activity as PoolActivity).on<CameraHandler>()
+                            .showCamera { photoUri -> on<PhotoUploadGroupMessageHandler>().upload(photoUri!!, onPhotoUploadedListener) }
                 },
                 MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo) {
-                    (`$`(ActivityHandler::class.java).activity as PoolActivity).pool
-                            .`$`(MediaHandler::class.java)
-                            .getPhoto { photoUri -> `$`(PhotoUploadGroupMessageHandler::class.java).upload(photoUri, onPhotoUploadedListener) }
+                    (on<ActivityHandler>().activity as PoolActivity).on<MediaHandler>()
+                            .getPhoto { photoUri -> on<PhotoUploadGroupMessageHandler>().upload(photoUri, onPhotoUploadedListener) }
                 })
     }
 }

@@ -15,7 +15,7 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(p0: String?) {
         val deviceToken = FirebaseInstanceId.getInstance().token
-        (application as App).`$`(AccountHandler::class.java).updateDeviceToken(deviceToken!!)
+        (application as App).on<AccountHandler>().updateDeviceToken(deviceToken!!)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
@@ -24,20 +24,20 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
         if (data.isNotEmpty()) {
             if (data.containsKey("action")) {
                 when (data["action"]) {
-                    "event" -> app.`$`(NotificationHandler::class.java).showEventNotification(
-                            app.`$`(JsonHandler::class.java).from(data["event"]!!, Event::class.java))
+                    "event" -> app.on<NotificationHandler>().showEventNotification(
+                            app.on<JsonHandler>().from(data["event"]!!, Event::class.java))
                     "group.invited" -> {
-                        app.`$`(NotificationHandler::class.java).showInvitedToGroupNotification(
+                        app.on<NotificationHandler>().showInvitedToGroupNotification(
                                 data["invitedBy"]!!,
                                 data["groupName"]!!,
                                 data["groupId"]!!)
 
-                        app.`$`(RefreshHandler::class.java).refreshMyGroups()
-                        app.`$`(RefreshHandler::class.java).refreshGroupMessages(data["groupId"]!!)
+                        app.on<RefreshHandler>().refreshMyGroups()
+                        app.on<RefreshHandler>().refreshGroupMessages(data["groupId"]!!)
                     }
                     "group.message" -> {
-                        if (!app.`$`(TopHandler::class.java).isGroupActive(data["groupId"]!!)) {
-                            app.`$`(NotificationHandler::class.java).showGroupMessageNotification(
+                        if (!app.on<TopHandler>().isGroupActive(data["groupId"]!!)) {
+                            app.on<NotificationHandler>().showGroupMessageNotification(
                                     data["text"]!!,
                                     data["messageFrom"]!!,
                                     data["groupName"]!!,
@@ -45,17 +45,17 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
                                     data["passive"]!!)
                         }
 
-                        app.`$`(RefreshHandler::class.java).refreshGroupMessages(data["groupId"]!!)
+                        app.on<RefreshHandler>().refreshGroupMessages(data["groupId"]!!)
                     }
                     "refresh" -> if (data.containsKey("what")) {
                         when (data["what"]!!) {
-                            "groups" -> app.`$`(RefreshHandler::class.java).refreshMyGroups()
-                            "messages" -> app.`$`(RefreshHandler::class.java).refreshMyMessages()
+                            "groups" -> app.on<RefreshHandler>().refreshMyGroups()
+                            "messages" -> app.on<RefreshHandler>().refreshMyMessages()
                         }
                     }
                     "message" -> {
-                        val latLng = if (data.containsKey("latLng")) app.`$`(LatLngStr::class.java).to(data["latLng"]!!) else null
-                        app.`$`(NotificationHandler::class.java).showBubbleMessageNotification(
+                        val latLng = if (data.containsKey("latLng")) app.on<LatLngStr>().to(data["latLng"]!!) else null
+                        app.on<NotificationHandler>().showBubbleMessageNotification(
                                 data["phone"]!!,
                                 latLng,
                                 if (data.containsKey("name")) data["name"]!! else "",

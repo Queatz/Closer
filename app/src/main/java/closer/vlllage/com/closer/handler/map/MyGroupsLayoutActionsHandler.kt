@@ -7,10 +7,10 @@ import closer.vlllage.com.closer.handler.group.GroupActionBarButton
 import closer.vlllage.com.closer.handler.group.MyGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.settings.HelpHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import java.util.*
 
-class MyGroupsLayoutActionsHandler : PoolMember() {
+class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     private var myGroupsAdapter: MyGroupsAdapter? = null
 
@@ -24,8 +24,8 @@ class MyGroupsLayoutActionsHandler : PoolMember() {
 
     private val verifyYourNumberButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
-            val action = `$`(ResourcesHandler::class.java).resources.getString(R.string.verify_your_number)
-            verifyYourNumberButton = GroupActionBarButton(action, View.OnClickListener { view -> `$`(VerifyNumberHandler::class.java).verify() })
+            val action = on<ResourcesHandler>().resources.getString(R.string.verify_your_number)
+            verifyYourNumberButton = GroupActionBarButton(action, View.OnClickListener { view -> on<VerifyNumberHandler>().verify() })
         }
 
         override fun get(): GroupActionBarButton? {
@@ -35,13 +35,13 @@ class MyGroupsLayoutActionsHandler : PoolMember() {
 
     private val allowPermissionsButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
-            val action = `$`(ResourcesHandler::class.java).resources.getString(R.string.use_your_location)
+            val action = on<ResourcesHandler>().resources.getString(R.string.use_your_location)
             allowPermissionsButton = GroupActionBarButton(action, View.OnClickListener { view ->
-                `$`(AlertHandler::class.java).make().apply {
-                    title = `$`(ResourcesHandler::class.java).resources.getString(R.string.enable_location_permission)
-                    message = `$`(ResourcesHandler::class.java).resources.getString(R.string.enable_location_permission_rationale)
-                    positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.open_settings)
-                    positiveButtonCallback = { alertResult -> `$`(SystemSettingsHandler::class.java).showSystemSettings() }
+                on<AlertHandler>().make().apply {
+                    title = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission)
+                    message = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission_rationale)
+                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.open_settings)
+                    positiveButtonCallback = { alertResult -> on<SystemSettingsHandler>().showSystemSettings() }
                 }
             })
         }
@@ -53,10 +53,10 @@ class MyGroupsLayoutActionsHandler : PoolMember() {
 
     private val unmuteNotificationsButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
-            val action = `$`(ResourcesHandler::class.java).resources.getString(R.string.unmute_notifications)
+            val action = on<ResourcesHandler>().resources.getString(R.string.unmute_notifications)
             unmuteNotificationsButton = GroupActionBarButton(action, View.OnClickListener{  view ->
-                `$`(PersistenceHandler::class.java).isNotificationsPaused = false
-                `$`(ToastHandler::class.java).show(R.string.notifications_on)
+                on<PersistenceHandler>().isNotificationsPaused = false
+                on<ToastHandler>().show(R.string.notifications_on)
                 actions.remove(unmuteNotificationsButton)
                 myGroupsAdapter!!.setActions(actions)
             })
@@ -69,12 +69,12 @@ class MyGroupsLayoutActionsHandler : PoolMember() {
 
     private val showHelpButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
-            val action = `$`(ResourcesHandler::class.java).resources.getString(R.string.show_help)
-            showHelpButton = GroupActionBarButton(action, View.OnClickListener { view -> `$`(HelpHandler::class.java).showHelp() }, View.OnClickListener { view ->
-                `$`(PersistenceHandler::class.java).isHelpHidden = true
-                `$`(AlertHandler::class.java).make().apply {
-                    message = `$`(ResourcesHandler::class.java).resources.getString(R.string.you_hid_the_help_bubble)
-                    positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.ok)
+            val action = on<ResourcesHandler>().resources.getString(R.string.show_help)
+            showHelpButton = GroupActionBarButton(action, View.OnClickListener { view -> on<HelpHandler>().showHelp() }, View.OnClickListener { view ->
+                on<PersistenceHandler>().isHelpHidden = true
+                on<AlertHandler>().make().apply {
+                    message = on<ResourcesHandler>().resources.getString(R.string.you_hid_the_help_bubble)
+                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.ok)
                     show()
                 }
                 showHelpButton(false)
@@ -88,11 +88,11 @@ class MyGroupsLayoutActionsHandler : PoolMember() {
 
     private val setMyNameHandle = object : GroupActionBarButtonHandle {
         override fun set() {
-            val action = `$`(ResourcesHandler::class.java).resources.getString(R.string.set_my_name)
+            val action = on<ResourcesHandler>().resources.getString(R.string.set_my_name)
             setMyName = GroupActionBarButton(action, View.OnClickListener { view ->
-                `$`(SetNameHandler::class.java).modifyName(object : SetNameHandler.OnNameModifiedCallback {
+                on<SetNameHandler>().modifyName(object : SetNameHandler.OnNameModifiedCallback {
                     override fun onNameModified(name: String?) {
-                        if (!`$`(Val::class.java).isEmpty(name)) {
+                        if (!on<Val>().isEmpty(name)) {
                             showSetMyName(false)
                         }
                     }

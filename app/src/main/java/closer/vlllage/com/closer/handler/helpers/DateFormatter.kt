@@ -1,10 +1,10 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DateFormatter : PoolMember() {
+class DateFormatter constructor(private val on: On) {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
 

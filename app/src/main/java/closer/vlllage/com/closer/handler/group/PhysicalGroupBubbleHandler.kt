@@ -6,7 +6,7 @@ import closer.vlllage.com.closer.handler.bubble.BubbleHandler
 import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.map.MapZoomHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
@@ -14,7 +14,7 @@ import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import java.util.*
 
-class PhysicalGroupBubbleHandler : PoolMember() {
+class PhysicalGroupBubbleHandler constructor(private val on: On) {
 
     private val visiblePublicGroups = HashSet<String>()
     private var physicalGroupSubscription: DataSubscription? = null
@@ -22,7 +22,7 @@ class PhysicalGroupBubbleHandler : PoolMember() {
     private val newPhysicalGroupObservable: DataSubscription?
         get() {
             if (physicalGroupSubscription != null) {
-                `$`(DisposableHandler::class.java).dispose(physicalGroupSubscription!!)
+                on<DisposableHandler>().dispose(physicalGroupSubscription!!)
             }
 
             val oneHourAgo = Date()
@@ -31,7 +31,7 @@ class PhysicalGroupBubbleHandler : PoolMember() {
             val oneMonthAgo = Date()
             oneMonthAgo.time = oneMonthAgo.time - 90 * DAY_IN_MILLIS
 
-            physicalGroupSubscription = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+            physicalGroupSubscription = on<StoreHandler>().store.box(Group::class.java).query()
                     .equal(Group_.physical, true)
                     .and()
                     .greater(Group_.updated, oneHourAgo)
@@ -44,10 +44,10 @@ class PhysicalGroupBubbleHandler : PoolMember() {
                         clearBubbles()
                         for (group in groups) {
                             if (!visiblePublicGroups.contains(group.id)) {
-                                val mapBubble = `$`(PhysicalGroupHandler::class.java).physicalGroupBubbleFrom(group)
+                                val mapBubble = on<PhysicalGroupHandler>().physicalGroupBubbleFrom(group)
 
                                 if (mapBubble != null) {
-                                    `$`(BubbleHandler::class.java).add(mapBubble)
+                                    on<BubbleHandler>().add(mapBubble)
                                 }
                             }
                         }
@@ -61,21 +61,21 @@ class PhysicalGroupBubbleHandler : PoolMember() {
                         }
                     }
 
-            `$`(DisposableHandler::class.java).add(physicalGroupSubscription!!)
+            on<DisposableHandler>().add(physicalGroupSubscription!!)
 
             return physicalGroupSubscription
         }
 
     fun attach() {
-        `$`(DisposableHandler::class.java).add(`$`(MapZoomHandler::class.java).onZoomGreaterThanChanged(GEO_GROUPS_ZOOM).subscribe(
+        on<DisposableHandler>().add(on<MapZoomHandler>().onZoomGreaterThanChanged(GEO_GROUPS_ZOOM).subscribe(
                 { zoomIsGreaterThan15 ->
                     if (zoomIsGreaterThan15!!) {
-                        `$`(DisposableHandler::class.java).add(newPhysicalGroupObservable!!)
+                        on<DisposableHandler>().add(newPhysicalGroupObservable!!)
                     } else {
                         visiblePublicGroups.clear()
                         clearBubbles()
                         if (physicalGroupSubscription != null) {
-                            `$`(DisposableHandler::class.java).dispose(physicalGroupSubscription!!)
+                            on<DisposableHandler>().dispose(physicalGroupSubscription!!)
                             physicalGroupSubscription = null
                         }
                     }
@@ -85,7 +85,7 @@ class PhysicalGroupBubbleHandler : PoolMember() {
     }
 
     private fun clearBubbles() {
-        `$`(BubbleHandler::class.java).remove { mapBubble -> mapBubble.type == BubbleType.PHYSICAL_GROUP && !visiblePublicGroups.contains((mapBubble.tag as Group).id) }
+        on<BubbleHandler>().remove { mapBubble -> mapBubble.type == BubbleType.PHYSICAL_GROUP && !visiblePublicGroups.contains((mapBubble.tag as Group).id) }
     }
 
     companion object {

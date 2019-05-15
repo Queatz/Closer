@@ -7,7 +7,7 @@ import java.util.ArrayList
 import closer.vlllage.com.closer.api.models.EventResult
 import closer.vlllage.com.closer.api.models.GroupResult
 import closer.vlllage.com.closer.api.models.PhoneResult
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Event_
@@ -17,10 +17,10 @@ import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import io.reactivex.Single
 
-class DataHandler : PoolMember() {
+class DataHandler constructor(private val on: On) {
     fun getPhonesNear(latLng: LatLng): Single<List<Phone>> {
-        return `$`(ApiHandler::class.java).getPhonesNear(latLng)
-                .doOnSuccess { phoneResults -> `$`(RefreshHandler::class.java).handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
+        return on<ApiHandler>().getPhonesNear(latLng)
+                .doOnSuccess { phoneResults -> on<RefreshHandler>().handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
                         { PhoneResult.from(it) },
                         { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) }) }
                 .map { phoneResults ->
@@ -33,38 +33,38 @@ class DataHandler : PoolMember() {
     }
 
     fun getEventById(eventId: String): Single<Event> {
-        val event = `$`(StoreHandler::class.java).store.box(Event::class.java).query()
+        val event = on<StoreHandler>().store.box(Event::class.java).query()
                 .equal(Event_.id, eventId)
                 .build().findFirst()
 
         return if (event != null) {
             Single.just(event)
-        } else `$`(ApiHandler::class.java).getEvent(eventId).map<Event>({ EventResult.from(it) })
-                .doOnSuccess { eventFromServer -> `$`(RefreshHandler::class.java).refresh(eventFromServer) }
+        } else on<ApiHandler>().getEvent(eventId).map<Event>({ EventResult.from(it) })
+                .doOnSuccess { eventFromServer -> on<RefreshHandler>().refresh(eventFromServer) }
 
     }
 
     fun getPhone(phoneId: String): Single<Phone> {
-        val phone = `$`(StoreHandler::class.java).store.box(Phone::class.java).query()
+        val phone = on<StoreHandler>().store.box(Phone::class.java).query()
                 .equal(Phone_.id, phoneId)
                 .build().findFirst()
 
         return if (phone != null) {
             Single.just(phone)
-        } else `$`(ApiHandler::class.java).getPhone(phoneId).map<Phone>({ PhoneResult.from(it) })
-                .doOnSuccess { phoneFromServer -> `$`(RefreshHandler::class.java).refresh(phoneFromServer) }
+        } else on<ApiHandler>().getPhone(phoneId).map<Phone>({ PhoneResult.from(it) })
+                .doOnSuccess { phoneFromServer -> on<RefreshHandler>().refresh(phoneFromServer) }
 
     }
 
     fun getGroupForPhone(phoneId: String): Single<Group> {
-        val group = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+        val group = on<StoreHandler>().store.box(Group::class.java).query()
                 .equal(Group_.phoneId, phoneId)
                 .build().findFirst()
 
         return if (group != null) {
             Single.just(group)
-        } else `$`(ApiHandler::class.java).getGroupForPhone(phoneId).map<Group>({ GroupResult.from(it) })
-                .doOnSuccess { groupFromServer -> `$`(RefreshHandler::class.java).refresh(groupFromServer) }
+        } else on<ApiHandler>().getGroupForPhone(phoneId).map<Group>({ GroupResult.from(it) })
+                .doOnSuccess { groupFromServer -> on<RefreshHandler>().refresh(groupFromServer) }
 
     }
 }

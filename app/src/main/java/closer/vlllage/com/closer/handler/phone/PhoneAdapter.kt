@@ -11,11 +11,11 @@ import closer.vlllage.com.closer.api.models.ReactionResult
 import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
 import closer.vlllage.com.closer.handler.helpers.Val
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
+import com.queatz.on.On
 import java.util.*
 
-open class PhoneAdapter(poolMember: PoolMember, private val onReactionClickListener: (ReactionResult) -> Unit) : PoolRecyclerAdapter<PhoneAdapter.ViewHolder>(poolMember) {
+open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionResult) -> Unit) : PoolRecyclerAdapter<PhoneAdapter.ViewHolder>(on) {
     var items: List<ReactionResult> = ArrayList()
         set(items) {
             field = items
@@ -33,12 +33,12 @@ open class PhoneAdapter(poolMember: PoolMember, private val onReactionClickListe
         viewHolder.name.text = reaction.phone!!.name
         viewHolder.reaction.text = reaction.reaction
 
-        if (`$`(Val::class.java).isEmpty(reaction.phone?.photo)) {
+        if (on<Val>().isEmpty(reaction.phone?.photo)) {
             viewHolder.photo.visibility = View.GONE
         } else {
             viewHolder.photo.visibility = View.VISIBLE
-            `$`(PhotoHelper::class.java).loadCircle(viewHolder.photo, reaction.phone!!.photo!!)
-            viewHolder.photo.setOnClickListener { v -> `$`(PhotoActivityTransitionHandler::class.java).show(viewHolder.photo, reaction.phone!!.photo!!) }
+            on<PhotoHelper>().loadCircle(viewHolder.photo, reaction.phone!!.photo!!)
+            viewHolder.photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(viewHolder.photo, reaction.phone!!.photo!!) }
         }
 
         viewHolder.itemView.setOnClickListener { v -> onReactionClickListener.invoke(reaction) }

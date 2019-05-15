@@ -1,19 +1,19 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.Phone
 import java.util.*
 
-class SortHandler : PoolMember() {
+class SortHandler constructor(private val on: On) {
 
     @JvmOverloads
     fun sortGroups(privateFirst: Boolean = true): Comparator<Group> {
         return Comparator { group, groupOther ->
-            if (!`$`(DistanceHandler::class.java).isUserNearGroup(group) && `$`(DistanceHandler::class.java).isUserNearGroup(groupOther))
+            if (!on<DistanceHandler>().isUserNearGroup(group) && on<DistanceHandler>().isUserNearGroup(groupOther))
                 1
-            else if (!`$`(DistanceHandler::class.java).isUserNearGroup(groupOther) && `$`(DistanceHandler::class.java).isUserNearGroup(group))
+            else if (!on<DistanceHandler>().isUserNearGroup(groupOther) && on<DistanceHandler>().isUserNearGroup(group))
                 -1
             else if (privateFirst && group.isPublic && !groupOther.isPublic)
                 1

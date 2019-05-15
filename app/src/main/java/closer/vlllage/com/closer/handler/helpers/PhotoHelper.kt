@@ -2,13 +2,13 @@ package closer.vlllage.com.closer.handler.helpers
 
 import android.widget.ImageView
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 
-class PhotoHelper : PoolMember() {
+class PhotoHelper constructor(private val on: On) {
     fun loadCircle(imageView: ImageView, url: String) {
-        `$`(ImageHandler::class.java).get().cancelRequest(imageView)
-        `$`(ImageHandler::class.java).get().load(url)
+        on<ImageHandler>().get().cancelRequest(imageView)
+        on<ImageHandler>().get().load(url)
                 .noPlaceholder()
                 .transform(CropCircleTransformation())
                 .into(imageView)

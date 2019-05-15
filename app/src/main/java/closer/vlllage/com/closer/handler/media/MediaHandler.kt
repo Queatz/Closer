@@ -4,11 +4,11 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import java.io.File
 import java.io.IOException
 
-class MediaHandler : PoolMember() {
+class MediaHandler constructor(private val on: On) {
 
     private var onMediaSelectedListener: ((Uri) -> Unit)? = null
 
@@ -18,12 +18,12 @@ class MediaHandler : PoolMember() {
         val mediaIntent = Intent(Intent.ACTION_GET_CONTENT)
         mediaIntent.type = "image/*"
 
-        `$`(ActivityHandler::class.java).activity!!.startActivityForResult(mediaIntent, REQUEST_CODE_MEDIA)
+        on<ActivityHandler>().activity!!.startActivityForResult(mediaIntent, REQUEST_CODE_MEDIA)
     }
 
     @Throws(IOException::class)
     fun createTemporaryFile(part: String, ext: String): File? {
-        var tempDir = `$`(ActivityHandler::class.java).activity!!.cacheDir
+        var tempDir = on<ActivityHandler>().activity!!.cacheDir
         tempDir = File(tempDir.absolutePath + "/shared/")
         if (!tempDir.exists()) {
             if (!tempDir.mkdirs()) {

@@ -4,7 +4,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.handler.helpers.Val
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupInvite
@@ -12,12 +12,12 @@ import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import java.util.*
 
-class NameHandler : PoolMember() {
+class NameHandler constructor(private val on: On) {
 
     fun getName(phoneId: String): String {
-        val phoneList = `$`(StoreHandler::class.java).store.box(Phone::class.java).query().equal(Phone_.id, phoneId).build().find()
+        val phoneList = on<StoreHandler>().store.box(Phone::class.java).query().equal(Phone_.id, phoneId).build().find()
         return if (phoneList.isEmpty()) {
-            `$`(ResourcesHandler::class.java).resources.getString(R.string.unknown)
+            on<ResourcesHandler>().resources.getString(R.string.unknown)
         } else getName(phoneList[0])
 
     }
@@ -27,13 +27,13 @@ class NameHandler : PoolMember() {
             return noName()
         }
 
-        val name = if (`$`(Val::class.java).isEmpty(phone.name))
+        val name = if (on<Val>().isEmpty(phone.name))
             fallbackName(phone.id)
         else
             phone.name
 
         return if (isInactive(phone)) {
-            `$`(ResourcesHandler::class.java).resources.getString(R.string.contact_inactive_inline, name)
+            on<ResourcesHandler>().resources.getString(R.string.contact_inactive_inline, name)
         } else {
             name!!
         }
@@ -44,13 +44,13 @@ class NameHandler : PoolMember() {
             return noName()
         }
 
-        val name = if (`$`(Val::class.java).isEmpty(groupContact.contactName))
+        val name = if (on<Val>().isEmpty(groupContact.contactName))
             fallbackName(groupContact.contactId)
         else
             groupContact.contactName
 
         return if (isInactive(groupContact)) {
-            `$`(ResourcesHandler::class.java).resources.getString(R.string.contact_inactive_inline, name)
+            on<ResourcesHandler>().resources.getString(R.string.contact_inactive_inline, name)
         } else {
             name!!
         }
@@ -61,7 +61,7 @@ class NameHandler : PoolMember() {
             return noName()
         }
 
-        return if (`$`(Val::class.java).isEmpty(groupInvite.name)) noName() else groupInvite.name
+        return if (on<Val>().isEmpty(groupInvite.name)) noName() else groupInvite.name
     }
 
     private fun fallbackName(phoneId: String?): String {
@@ -74,15 +74,15 @@ class NameHandler : PoolMember() {
     }
 
     private fun noName(): String {
-        return `$`(ResourcesHandler::class.java).resources.getString(R.string.no_name)
+        return on<ResourcesHandler>().resources.getString(R.string.no_name)
     }
 
     private fun isInactive(groupContact: GroupContact): Boolean {
-        return if (true) false else groupContact.contactActive!!.before(`$`(TimeAgo::class.java).fifteenDaysAgo()) // XXX TODO Restore this after server IDs are fixed!
+        return if (true) false else groupContact.contactActive!!.before(on<TimeAgo>().fifteenDaysAgo()) // XXX TODO Restore this after server IDs are fixed!
     }
 
     private fun isInactive(phone: Phone): Boolean {
-        return if (true) false else phone.updated!!.before(`$`(TimeAgo::class.java).fifteenDaysAgo()) // XXX TODO Restore this after server IDs are fixed!
+        return if (true) false else phone.updated!!.before(on<TimeAgo>().fifteenDaysAgo()) // XXX TODO Restore this after server IDs are fixed!
     }
 
     companion object {

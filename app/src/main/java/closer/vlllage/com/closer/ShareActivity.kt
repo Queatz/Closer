@@ -13,7 +13,6 @@ import closer.vlllage.com.closer.handler.group.SearchGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.share.SearchGroupsHeaderAdapter
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
@@ -32,37 +31,37 @@ class ShareActivity : ListActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        `$`(ApiHandler::class.java).setAuthorization(`$`(AccountHandler::class.java).phone)
+        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
 
-        `$`(SearchGroupHandler::class.java).hideCreateGroupOption()
+        on<SearchGroupHandler>().hideCreateGroupOption()
 
-        searchGroupsAdapter = SearchGroupsHeaderAdapter(`$`(PoolMember::class.java), { group, view -> onGroupSelected(group) }, null, object : SearchGroupsHeaderAdapter.OnQueryChangedListener {
+        searchGroupsAdapter = SearchGroupsHeaderAdapter(on, { group, view -> onGroupSelected(group) }, null, object : SearchGroupsHeaderAdapter.OnQueryChangedListener {
             override fun onQueryChanged(query: String) {
-                `$`(SearchGroupHandler::class.java).showGroupsForQuery(searchGroupsAdapter!!, query)
+                on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter!!, query)
             }
         })
 
-        searchGroupsAdapter!!.setActionText(`$`(ResourcesHandler::class.java).resources.getString(R.string.share))
+        searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
         searchGroupsAdapter!!.setLayoutResId(R.layout.search_groups_item_light)
         searchGroupsAdapter!!.setBackgroundResId(R.drawable.clickable_green_flat)
 
-        `$`(SearchGroupHandler::class.java).showGroupsForQuery(searchGroupsAdapter!!, "")
+        on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter!!, "")
 
-        val queryBuilder = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
-        `$`(DisposableHandler::class.java).add(queryBuilder
-                .sort(`$`(SortHandler::class.java).sortGroups())
+        val queryBuilder = on<StoreHandler>().store.box(Group::class.java).query()
+        on<DisposableHandler>().add(queryBuilder
+                .sort(on<SortHandler>().sortGroups())
                 .build()
                 .subscribe()
                 .single()
                 .on(AndroidScheduler.mainThread())
-                .observer { `$`(SearchGroupHandler::class.java).setGroups(it) })
+                .observer { on<SearchGroupHandler>().setGroups(it) })
 
         if (intent != null) {
             groupMessageId = intent.getStringExtra(EXTRA_GROUP_MESSAGE_ID)
             phoneId = intent.getStringExtra(EXTRA_INVITE_TO_GROUP_PHONE_ID)
             groupId = intent.getStringExtra(EXTRA_SHARE_GROUP_TO_GROUP_ID)
 
-            searchGroupsAdapter!!.setHeaderText(`$`(ResourcesHandler::class.java).resources.getString(R.string.share_to))
+            searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_to))
 
             if (Intent.ACTION_SEND == intent.action) {
                 data = intent.data
@@ -72,19 +71,19 @@ class ShareActivity : ListActivity() {
                 }
             } else if (Intent.ACTION_VIEW == intent.action) {
                 if (phoneId != null) {
-                    searchGroupsAdapter!!.setHeaderText(`$`(ResourcesHandler::class.java).resources.getString(R.string.add_person_to, `$`(NameHandler::class.java).getName(phoneId!!)))
-                    searchGroupsAdapter!!.setActionText(`$`(ResourcesHandler::class.java).resources.getString(R.string.add))
+                    searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.add_person_to, on<NameHandler>().getName(phoneId!!)))
+                    searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.add))
                 } else if (groupId != null) {
 
-                    groupToShare = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+                    groupToShare = on<StoreHandler>().store.box(Group::class.java).query()
                             .equal(Group_.id, groupId!!)
                             .build().findFirst()
 
-                    searchGroupsAdapter!!.setHeaderText(`$`(ResourcesHandler::class.java).resources.getString(R.string.share_group_to, `$`(Val::class.java).of(
-                            groupToShare?.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.group)
+                    searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
+                            groupToShare?.name, on<ResourcesHandler>().resources.getString(R.string.group)
                     )))
 
-                    searchGroupsAdapter!!.setActionText(`$`(ResourcesHandler::class.java).resources.getString(R.string.share))
+                    searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
                 }
             }
         }
@@ -103,30 +102,30 @@ class ShareActivity : ListActivity() {
         }
 
         if (phoneId != null) {
-            `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).inviteToGroup(group.id!!, phoneId!!).subscribe(
+            on<DisposableHandler>().add(on<ApiHandler>().inviteToGroup(group.id!!, phoneId!!).subscribe(
                     { successResult ->
                         if (successResult.success) {
-                            `$`(ToastHandler::class.java).show(`$`(ResourcesHandler::class.java).resources.getString(R.string.added_phone, `$`(NameHandler::class.java).getName(phoneId!!)))
+                            on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.added_phone, on<NameHandler>().getName(phoneId!!)))
                             finish()
                         } else {
-                            `$`(DefaultAlerts::class.java).thatDidntWork()
+                            on<DefaultAlerts>().thatDidntWork()
                         }
-                    }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                    }, { error -> on<DefaultAlerts>().thatDidntWork() }))
         } else if (groupToShare != null) {
-            `$`(GroupMessageAttachmentHandler::class.java).shareGroup(groupToShare!!, group)
-            finish (Runnable { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group.id!!) })
+            on<GroupMessageAttachmentHandler>().shareGroup(groupToShare!!, group)
+            finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
         } else if (groupMessageId != null) {
-            `$`(GroupMessageAttachmentHandler::class.java).shareGroupMessage(group.id!!, groupMessageId)
-            finish (Runnable { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group.id!!) })
+            on<GroupMessageAttachmentHandler>().shareGroupMessage(group.id!!, groupMessageId)
+            finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
         } else if (data != null) {
-            `$`(ToastHandler::class.java).show(R.string.sending_photo)
-            `$`(PhotoUploadGroupMessageHandler::class.java).upload(data!!) { photoId ->
-                val success = `$`(GroupMessageAttachmentHandler::class.java).sharePhoto(`$`(PhotoUploadGroupMessageHandler::class.java).getPhotoPathFromId(photoId), group.id!!)
+            on<ToastHandler>().show(R.string.sending_photo)
+            on<PhotoUploadGroupMessageHandler>().upload(data!!) { photoId ->
+                val success = on<GroupMessageAttachmentHandler>().sharePhoto(on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId), group.id!!)
                 if (!success) {
-                    `$`(DefaultAlerts::class.java).thatDidntWork()
+                    on<DefaultAlerts>().thatDidntWork()
                 }
 
-                finish (Runnable { `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group.id!!) })
+                finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
             }
         }
     }

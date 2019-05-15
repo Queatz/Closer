@@ -7,14 +7,14 @@ import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
-class MessageDisplay : PoolMember() {
+class MessageDisplay constructor(private val on: On) {
 
     private var pinned: Boolean = false
 
@@ -24,7 +24,7 @@ class MessageDisplay : PoolMember() {
                              onEventClickListener: (Event) -> Unit,
                              onGroupClickListener: (Group) -> Unit,
                              onSuggestionClickListener: (Suggestion) -> Unit) {
-        val sharedGroupMessage = `$`(StoreHandler::class.java).store.box(GroupMessage::class.java).query().equal(GroupMessage_.id, jsonObject.get("share").asString).build().findFirst()
+        val sharedGroupMessage = on<StoreHandler>().store.box(GroupMessage::class.java).query().equal(GroupMessage_.id, jsonObject.get("share").asString).build().findFirst()
 
         if (sharedGroupMessage != null) {
             display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
@@ -32,7 +32,7 @@ class MessageDisplay : PoolMember() {
             displayFallback(holder, groupMessage)
         }
 
-        holder.time.text = `$`(GroupMessageParseHandler::class.java).parseText(`$`(ResourcesHandler::class.java).resources.getString(R.string.shared_by, `$`(TimeStr::class.java).pretty(groupMessage.time), "@" + groupMessage.from!!))
+        holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.time), "@" + groupMessage.from!!))
     }
 
     private fun displayAction(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -40,16 +40,16 @@ class MessageDisplay : PoolMember() {
         holder.messageLayout.visibility = View.VISIBLE
 
         val phone = getPhone(groupMessage.from)
-        val contactName = `$`(NameHandler::class.java).getName(phone)
+        val contactName = on<NameHandler>().getName(phone)
 
         val action = jsonObject.get("action").asJsonObject
         holder.name.visibility = View.VISIBLE
         holder.name.text = contactName + " " + action.get("intent").asString
         holder.time.visibility = View.VISIBLE
-        holder.time.text = `$`(TimeStr::class.java).pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
 
         val comment = action.get("comment").asString
-        if (`$`(Val::class.java).isEmpty(comment)) {
+        if (on<Val>().isEmpty(comment)) {
             holder.message.visibility = View.GONE
         } else {
             holder.message.visibility = View.VISIBLE
@@ -59,8 +59,8 @@ class MessageDisplay : PoolMember() {
         holder.action.visibility = View.GONE
 
         holder.action.visibility = View.VISIBLE
-        holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.reply)
-        holder.action.setOnClickListener { view -> `$`(PhoneMessagesHandler::class.java).openMessagesWithPhone(phone!!.id!!, contactName, comment) }
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.reply)
+        holder.action.setOnClickListener { view -> on<PhoneMessagesHandler>().openMessagesWithPhone(phone!!.id!!, contactName, comment) }
     }
 
     private fun displayGroupMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
@@ -73,7 +73,7 @@ class MessageDisplay : PoolMember() {
         holder.message.gravity = Gravity.START
 
         holder.time.visibility = View.VISIBLE
-        holder.time.text = `$`(TimeStr::class.java).pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
 
         var phone: Phone? = null
 
@@ -81,8 +81,8 @@ class MessageDisplay : PoolMember() {
             phone = getPhone(groupMessage.from)
         }
 
-        holder.name.text = `$`(NameHandler::class.java).getName(phone)
-        holder.message.text = `$`(GroupMessageParseHandler::class.java).parseText(groupMessage.text!!)
+        holder.name.text = on<NameHandler>().getName(phone)
+        holder.message.text = on<GroupMessageParseHandler>().parseText(groupMessage.text!!)
     }
 
     private fun displayMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -99,26 +99,26 @@ class MessageDisplay : PoolMember() {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
-        val event = `$`(JsonHandler::class.java).from(jsonObject.get("event"), Event::class.java)
+        val event = on<JsonHandler>().from(jsonObject.get("event"), Event::class.java)
 
         holder.name.visibility = View.VISIBLE
         holder.time.visibility = View.VISIBLE
-        holder.time.text = `$`(TimeStr::class.java).pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
 
         val phone = getPhone(groupMessage.from)
 
-        val contactName = `$`(NameHandler::class.java).getName(phone)
+        val contactName = on<NameHandler>().getName(phone)
 
-        holder.name.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.phone_shared_an_event, contactName)
+        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_an_event, contactName)
 
         holder.message.visibility = View.VISIBLE
         holder.message.gravity = Gravity.START
-        holder.message.text = (if (event.name == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.unknown) else event.name) +
+        holder.message.text = (if (event.name == null) on<ResourcesHandler>().resources.getString(R.string.unknown) else event.name) +
                 "\n" +
-                `$`(EventDetailsHandler::class.java).formatEventDetails(event)
+                on<EventDetailsHandler>().formatEventDetails(event)
 
         holder.action.visibility = View.VISIBLE
-        holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.open_event)
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.open_event)
         holder.action.setOnClickListener { view ->
             onEventClickListener?.invoke(event)
         }
@@ -128,24 +128,24 @@ class MessageDisplay : PoolMember() {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
-        val group = `$`(JsonHandler::class.java).from(jsonObject.get("group"), Group::class.java)
+        val group = on<JsonHandler>().from(jsonObject.get("group"), Group::class.java)
 
         holder.name.visibility = View.VISIBLE
         holder.time.visibility = View.VISIBLE
-        holder.time.text = `$`(TimeStr::class.java).pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
 
         val phone = getPhone(groupMessage.from)
 
-        val contactName = `$`(NameHandler::class.java).getName(phone)
+        val contactName = on<NameHandler>().getName(phone)
 
-        holder.name.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.phone_shared_a_group, contactName)
+        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_group, contactName)
 
         holder.message.visibility = View.VISIBLE
         holder.message.gravity = Gravity.START
-        holder.message.text = (if (group.name == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.unknown) else group.name) + if (group.about != null) "\n" + group.about!! else ""
+        holder.message.text = (if (group.name == null) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name) + if (group.about != null) "\n" + group.about!! else ""
 
         holder.action.visibility = View.VISIBLE
-        holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.open_group)
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.open_group)
         holder.action.setOnClickListener { view ->
             onGroupClickListener?.invoke(group)
         }
@@ -155,22 +155,22 @@ class MessageDisplay : PoolMember() {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
-        val suggestion = `$`(JsonHandler::class.java).from(jsonObject.get("suggestion"), Suggestion::class.java)
+        val suggestion = on<JsonHandler>().from(jsonObject.get("suggestion"), Suggestion::class.java)
 
         val suggestionHasNoName = suggestion == null || suggestion.name == null || suggestion.name!!.isEmpty()
 
         holder.name.visibility = View.VISIBLE
         holder.time.visibility = View.VISIBLE
-        holder.time.text = `$`(TimeStr::class.java).pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
 
         val phone = getPhone(groupMessage.from)
 
-        val contactName = `$`(NameHandler::class.java).getName(phone)
+        val contactName = on<NameHandler>().getName(phone)
 
         if (suggestionHasNoName) {
-            holder.name.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.phone_shared_a_location, contactName)
+            holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_location, contactName)
         } else {
-            holder.name.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.phone_shared_a_suggestion, contactName)
+            holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_suggestion, contactName)
         }
 
         if (suggestionHasNoName) {
@@ -182,7 +182,7 @@ class MessageDisplay : PoolMember() {
         }
 
         holder.action.visibility = View.VISIBLE
-        holder.action.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.show_on_map)
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.show_on_map)
         holder.action.setOnClickListener { view ->
             onSuggestionClickListener?.invoke(suggestion)
         }
@@ -193,29 +193,29 @@ class MessageDisplay : PoolMember() {
         holder.messageLayout.visibility = View.VISIBLE
 
         val phone = getPhone(groupMessage.from)
-        val contactName = `$`(NameHandler::class.java).getName(phone)
+        val contactName = on<NameHandler>().getName(phone)
 
         val photo = jsonObject.get("photo").asString + "?s=500"
         holder.name.visibility = View.VISIBLE
-        holder.name.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.phone_shared_a_photo, contactName)
+        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_photo, contactName)
         holder.time.visibility = View.VISIBLE
-        holder.time.text = `$`(TimeStr::class.java).pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
         holder.message.visibility = View.GONE
         holder.action.visibility = View.GONE// or Share / save photo?
         holder.photo.visibility = View.VISIBLE
-        holder.photo.setOnClickListener { view -> `$`(PhotoActivityTransitionHandler::class.java).show(view, photo) }
-        `$`(ImageHandler::class.java).get().cancelRequest(holder.photo)
-        `$`(ImageHandler::class.java).get().load(photo).transform(RoundedCornersTransformation(`$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.imageCorners), 0)).into(holder.photo)
+        holder.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, photo) }
+        on<ImageHandler>().get().cancelRequest(holder.photo)
+        on<ImageHandler>().get().load(photo).transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners), 0)).into(holder.photo)
     }
 
     private fun displayFallback(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
-        holder.name.text = `$`(ResourcesHandler::class.java).resources.getString(R.string.unknown)
+        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.unknown)
         holder.message.text = ""
         holder.time.visibility = View.VISIBLE
-        holder.time.text = `$`(TimeStr::class.java).pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
     }
 
     fun setPinned(pinned: Boolean) {
@@ -228,7 +228,7 @@ class MessageDisplay : PoolMember() {
                 onSuggestionClickListener: (Suggestion) -> Unit) {
         if (groupMessage.attachment != null) {
             try {
-                val jsonObject = `$`(JsonHandler::class.java).from(groupMessage.attachment!!, JsonObject::class.java)
+                val jsonObject = on<JsonHandler>().from(groupMessage.attachment!!, JsonObject::class.java)
                 if (jsonObject.has("action")) {
                     displayAction(holder, jsonObject, groupMessage)
                 } else if (jsonObject.has("message")) {
@@ -265,7 +265,7 @@ class MessageDisplay : PoolMember() {
     private fun getPhone(phoneId: String?): Phone? {
         return if (phoneId == null)
             null
-        else `$`(StoreHandler::class.java).store.box(Phone::class.java).query()
+        else on<StoreHandler>().store.box(Phone::class.java).query()
                 .equal(Phone_.id, phoneId)
                 .build()
                 .findFirst()

@@ -47,7 +47,7 @@ abstract class ListActivity : PoolActivity() {
             }
 
             private fun reveal() {
-                val yPercent = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.feedPeekHeight) * 2 / recyclerView.measuredHeight.toFloat()
+                val yPercent = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeight) * 2 / recyclerView.measuredHeight.toFloat()
                 val animation = TranslateAnimation(
                         Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, yPercent, Animation.RELATIVE_TO_PARENT, 0f
                 )

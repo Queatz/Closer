@@ -6,47 +6,47 @@ import closer.vlllage.com.closer.handler.helpers.CameraHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupAction
+import com.queatz.on.On
 
-class GroupActionUpgradeHandler : PoolMember() {
+class GroupActionUpgradeHandler constructor(private val on: On) {
 
     fun setPhotoFromMedia(groupAction: GroupAction) {
-        `$`(MediaHandler::class.java).getPhoto { photoUri ->
-            `$`(PhotoUploadGroupMessageHandler::class.java).upload(photoUri) { photoId ->
-                val photo = `$`(PhotoUploadGroupMessageHandler::class.java).getPhotoPathFromId(photoId)
-                `$`(ApplicationHandler::class.java).app.`$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java)
+        on<MediaHandler>().getPhoto { photoUri ->
+            on<PhotoUploadGroupMessageHandler>().upload(photoUri) { photoId ->
+                val photo = on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)
+                on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
                         .setGroupActionPhoto(groupAction.id!!, photo).subscribe(
                                 { successResult ->
                                     if (successResult.success) {
                                         groupAction.photo = photo
-                                        `$`(StoreHandler::class.java).store.box(GroupAction::class.java).put(groupAction)
+                                        on<StoreHandler>().store.box(GroupAction::class.java).put(groupAction)
                                     } else {
-                                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                                        on<DefaultAlerts>().thatDidntWork()
                                     }
                                 },
-                                { `$`(DefaultAlerts::class.java).thatDidntWork() }
+                                { on<DefaultAlerts>().thatDidntWork() }
                         ))
             }
         }
     }
 
     fun setPhotoFromCamera(groupAction: GroupAction) {
-        `$`(CameraHandler::class.java).showCamera { photoUri ->
-            `$`(PhotoUploadGroupMessageHandler::class.java).upload(photoUri!!) { photoId ->
-                val photo = `$`(PhotoUploadGroupMessageHandler::class.java).getPhotoPathFromId(photoId)
-                `$`(ApplicationHandler::class.java).app.`$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java)
+        on<CameraHandler>().showCamera { photoUri ->
+            on<PhotoUploadGroupMessageHandler>().upload(photoUri!!) { photoId ->
+                val photo = on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)
+                on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
                         .setGroupActionPhoto(groupAction.id!!, photo).subscribe(
                                 { successResult ->
                                     if (successResult.success) {
                                         groupAction.photo = photo
-                                        `$`(StoreHandler::class.java).store.box(GroupAction::class.java).put(groupAction)
+                                        on<StoreHandler>().store.box(GroupAction::class.java).put(groupAction)
                                     } else {
-                                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                                        on<DefaultAlerts>().thatDidntWork()
                                     }
                                 },
-                                { `$`(DefaultAlerts::class.java).thatDidntWork() }
+                                { on<DefaultAlerts>().thatDidntWork() }
                         ))
             }
         }

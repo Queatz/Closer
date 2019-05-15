@@ -21,13 +21,13 @@ import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import closer.vlllage.com.closer.ui.AnimationDuration
 
-class ReplyLayoutHandler : PoolMember() {
+class ReplyLayoutHandler constructor(private val on: On) {
 
     private lateinit var replyLayout: View
     private lateinit var replyLayoutName: TextView
@@ -82,19 +82,19 @@ class ReplyLayoutHandler : PoolMember() {
             }
         })
 
-        getDirectionsButton.setOnClickListener { view -> `$`(OutboundHandler::class.java).openDirections(replyingToMapBubble!!.latLng) }
+        getDirectionsButton.setOnClickListener { view -> on<OutboundHandler>().openDirections(replyingToMapBubble!!.latLng) }
 
-        showOnMapButton.setOnClickListener { view -> `$`(MapActivityHandler::class.java).showPhoneOnMap(replyingToMapBubble!!.phone) }
+        showOnMapButton.setOnClickListener { view -> on<MapActivityHandler>().showPhoneOnMap(replyingToMapBubble!!.phone) }
 
-        inviteToGroupButton.setOnClickListener { view -> `$`(ShareActivityTransitionHandler::class.java).inviteToGroup(replyingToMapBubble!!.phone!!) }
+        inviteToGroupButton.setOnClickListener { view -> on<ShareActivityTransitionHandler>().inviteToGroup(replyingToMapBubble!!.phone!!) }
     }
 
     private fun reply() {
-        `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).sendMessage(replyingToMapBubble!!.phone!!, replyMessage.text.toString()).subscribe({ successResult ->
+        on<DisposableHandler>().add(on<ApiHandler>().sendMessage(replyingToMapBubble!!.phone!!, replyMessage.text.toString()).subscribe({ successResult ->
             if (!successResult.success) {
-                `$`(DefaultAlerts::class.java).thatDidntWork()
+                on<DefaultAlerts>().thatDidntWork()
             }
-        }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
         replyMessage.setText("")
         showReplyLayout(false)
     }
@@ -102,23 +102,23 @@ class ReplyLayoutHandler : PoolMember() {
     fun replyTo(mapBubble: MapBubble) {
         replyingToMapBubble = mapBubble
 
-        replyLayoutName.text = `$`(Val::class.java).of(replyingToMapBubble?.name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+        replyLayoutName.text = on<Val>().of(replyingToMapBubble?.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
         replyLayoutName.setOnClickListener { v ->
-            `$`(DisposableHandler::class.java).add(`$`(DataHandler::class.java).getGroupForPhone(replyingToMapBubble!!.phone!!)
+            on<DisposableHandler>().add(on<DataHandler>().getGroupForPhone(replyingToMapBubble!!.phone!!)
                     .subscribe({ group ->
-                        `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(
+                        on<GroupActivityTransitionHandler>().showGroupMessages(
                                 replyLayoutName, group.id
                         )
-                    }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                    }, { error -> on<DefaultAlerts>().thatDidntWork() }))
         }
 
         if (mapBubble.phone != null) {
-            val phone = `$`(StoreHandler::class.java).store.box(Phone::class.java).query().equal(Phone_.id, mapBubble.phone!!).build().findFirst()
+            val phone = on<StoreHandler>().store.box(Phone::class.java).query().equal(Phone_.id, mapBubble.phone!!).build().findFirst()
 
-            if (phone != null && !`$`(Val::class.java).isEmpty(phone.photo)) {
+            if (phone != null && !on<Val>().isEmpty(phone.photo)) {
                 replyLayoutPhoto.visibility = View.VISIBLE
-                `$`(PhotoHelper::class.java).loadCircle(replyLayoutPhoto, phone.photo!!)
-                replyLayoutPhoto.setOnClickListener { v -> `$`(PhotoActivityTransitionHandler::class.java).show(replyLayoutPhoto, phone.photo!!) }
+                on<PhotoHelper>().loadCircle(replyLayoutPhoto, phone.photo!!)
+                replyLayoutPhoto.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(replyLayoutPhoto, phone.photo!!) }
             } else {
                 replyLayoutPhoto.visibility = View.GONE
             }
@@ -129,7 +129,7 @@ class ReplyLayoutHandler : PoolMember() {
         replyLayoutStatus.text = replyingToMapBubble!!.status
 
         if (replyingToMapBubble!!.latLng != null) {
-            `$`(MapHandler::class.java).centerMap(replyingToMapBubble!!.latLng!!)
+            on<MapHandler>().centerMap(replyingToMapBubble!!.latLng!!)
         }
 
         showReplyLayout(true)
@@ -161,7 +161,7 @@ class ReplyLayoutHandler : PoolMember() {
             animation.setDuration(AnimationDuration.ENTER_DURATION.toLong())
             replyLayout.post {
                 replyMessage.requestFocus()
-                `$`(KeyboardHandler::class.java).showKeyboard(replyMessage, true)
+                on<KeyboardHandler>().showKeyboard(replyMessage, true)
             }
         } else {
             animation = TranslateAnimation(0f, 0f, replyLayout.translationY, (-totalHeight).toFloat())
@@ -181,7 +181,7 @@ class ReplyLayoutHandler : PoolMember() {
             })
             animation.setInterpolator(DecelerateInterpolator())
             animation.setDuration(AnimationDuration.EXIT_DURATION.toLong())
-            `$`(KeyboardHandler::class.java).showKeyboard(replyMessage, false)
+            on<KeyboardHandler>().showKeyboard(replyMessage, false)
         }
 
         replyLayout.startAnimation(animation)

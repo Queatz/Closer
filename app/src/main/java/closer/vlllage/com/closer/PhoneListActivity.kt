@@ -12,7 +12,6 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneAdapterHeaderAdapter
-import closer.vlllage.com.closer.pool.PoolMember
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
@@ -21,29 +20,29 @@ class PhoneListActivity : ListActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        `$`(ApiHandler::class.java).setAuthorization(`$`(AccountHandler::class.java).phone)
+        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
 
-        val adapter = PhoneAdapterHeaderAdapter(`$`(PoolMember::class.java)) { reactionResult ->
-            if (reactionResult.from == `$`(PersistenceHandler::class.java).phoneId) {
-                `$`(DefaultAlerts::class.java).message(`$`(ResourcesHandler::class.java).resources.getString(R.string.remove_heart)) { result ->
-                    `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).reactToMessage(reactionResult.to!!, "♥", true)
+        val adapter = PhoneAdapterHeaderAdapter(on) { reactionResult ->
+            if (reactionResult.from == on<PersistenceHandler>().phoneId) {
+                on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_heart)) { result ->
+                    on<DisposableHandler>().add(on<ApiHandler>().reactToMessage(reactionResult.to!!, "♥", true)
                             .subscribe({ successResult ->
                                 if (successResult.success) {
-                                    `$`(ToastHandler::class.java).show(R.string.heart_removed)
-                                    `$`(ApplicationHandler::class.java).app.`$`(RefreshHandler::class.java).refreshGroupMessage(reactionResult.to!!)
+                                    on<ToastHandler>().show(R.string.heart_removed)
+                                    on<ApplicationHandler>().app.on<RefreshHandler>().refreshGroupMessage(reactionResult.to!!)
                                     finish()
                                 } else {
-                                    `$`(DefaultAlerts::class.java).thatDidntWork()
+                                    on<DefaultAlerts>().thatDidntWork()
                                 }
-                            }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                            }, { error -> on<DefaultAlerts>().thatDidntWork() }))
                 }
                 return@PhoneAdapterHeaderAdapter
             }
 
             finish(Runnable {
-                `$`(MapActivityHandler::class.java).replyToPhone(
+                on<MapActivityHandler>().replyToPhone(
                         reactionResult.phone!!.id!!,
-                        `$`(NameHandler::class.java).getName(PhoneResult.from(reactionResult.phone!!)),
+                        on<NameHandler>().getName(PhoneResult.from(reactionResult.phone!!)),
                         reactionResult.reaction!!,
                         if (reactionResult.phone!!.geo == null)
                             null
@@ -60,18 +59,18 @@ class PhoneListActivity : ListActivity() {
             val groupMessageId = intent.getStringExtra(EXTRA_GROUP_MESSAGE_ID)
 
             if (groupMessageId == null) {
-                `$`(DefaultAlerts::class.java).thatDidntWork()
+                on<DefaultAlerts>().thatDidntWork()
             } else {
-                `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).groupMessageReactions(groupMessageId)
+                on<DisposableHandler>().add(on<ApiHandler>().groupMessageReactions(groupMessageId)
                         .map { this.sortItems(it) }
-                        .subscribe({ adapter.items = it }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() }))
+                        .subscribe({ adapter.items = it }, { error -> on<DefaultAlerts>().thatDidntWork() }))
             }
         }
 
     }
 
     private fun sortItems(reactionResults: List<ReactionResult>): List<ReactionResult> {
-        val phoneId = `$`(PersistenceHandler::class.java).phoneId
+        val phoneId = on<PersistenceHandler>().phoneId
 
         Collections.sort(reactionResults) { o1, o2 ->
             if (o1.from == phoneId && o2.from != phoneId) {

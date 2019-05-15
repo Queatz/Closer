@@ -7,12 +7,12 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 
-class PermissionHandler : PoolMember() {
+class PermissionHandler constructor(private val on: On) {
     private val permissionChanges = PublishSubject.create<String>()
 
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -30,10 +30,10 @@ class PermissionHandler : PoolMember() {
             check = LocationCheck(true)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             check = LocationCheck(arrayOf(*permissions))
-            `$`(ActivityHandler::class.java).activity!!.requestPermissions(permissions, REQUEST_CODE_PERMISSION)
+            on<ActivityHandler>().activity!!.requestPermissions(permissions, REQUEST_CODE_PERMISSION)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             check = LocationCheck(arrayOf(*permissions))
-            ActivityCompat.requestPermissions(`$`(ActivityHandler::class.java).activity!!, permissions, REQUEST_CODE_PERMISSION)
+            ActivityCompat.requestPermissions(on<ActivityHandler>().activity!!, permissions, REQUEST_CODE_PERMISSION)
         } else {
             check = LocationCheck(has(*permissions))
         }
@@ -42,7 +42,7 @@ class PermissionHandler : PoolMember() {
     }
 
     fun has(vararg permissions: String): Boolean {
-        val context = `$`(ApplicationHandler::class.java).app
+        val context = on<ApplicationHandler>().app
 
         for (permission in permissions) {
             if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -54,7 +54,7 @@ class PermissionHandler : PoolMember() {
     }
 
     fun denied(vararg permissions: String): Boolean {
-        val activity = `$`(ActivityHandler::class.java).activity
+        val activity = on<ActivityHandler>().activity
 
         if (has(*permissions)) {
             return false
@@ -116,15 +116,15 @@ class PermissionHandler : PoolMember() {
                             permissionsGranted.add(permission)
                             if (permissionsGranted.size == permissions.size) {
                                 callback!!.invoke(true)
-                                `$`(DisposableHandler::class.java).dispose(disposable!!)
+                                on<DisposableHandler>().dispose(disposable!!)
                             }
                         } else {
                             callback!!.invoke(false)
-                            `$`(DisposableHandler::class.java).dispose(disposable!!)
+                            on<DisposableHandler>().dispose(disposable!!)
                         }
-                    }, { error -> `$`(DefaultAlerts::class.java).thatDidntWork() })
+                    }, { error -> on<DefaultAlerts>().thatDidntWork() })
 
-            `$`(DisposableHandler::class.java).add(disposable!!)
+            on<DisposableHandler>().add(disposable!!)
         }
     }
 

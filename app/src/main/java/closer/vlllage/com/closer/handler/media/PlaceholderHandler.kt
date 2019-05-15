@@ -4,9 +4,9 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.util.Base64
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class PlaceholderHandler : PoolMember() {
+class PlaceholderHandler constructor(private val on: On) {
     fun getHeightFromAspectRatio(width: Float, aspectRatio: Float): Int {
         return (width / aspectRatio).toInt()
     }

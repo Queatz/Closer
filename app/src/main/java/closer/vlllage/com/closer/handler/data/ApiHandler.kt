@@ -6,7 +6,7 @@ import closer.vlllage.com.closer.handler.helpers.DateFormatter
 import closer.vlllage.com.closer.handler.helpers.HttpEncode
 import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.Val
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,7 +20,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.util.*
 
-class ApiHandler : PoolMember() {
+class ApiHandler constructor(private val on: On) {
 
     private val api = ApiService()
 
@@ -36,15 +36,15 @@ class ApiHandler : PoolMember() {
     }
 
     fun getPhonesNear(latLng: LatLng): Single<List<PhoneResult>> {
-        return uiThread(api.backend.getPhonesNear(`$`(LatLngStr::class.java).from(latLng)))
+        return uiThread(api.backend.getPhonesNear(on<LatLngStr>().from(latLng)))
     }
 
     fun getSuggestionsNear(latLng: LatLng): Single<List<SuggestionResult>> {
-        return uiThread(api.backend.getSuggestionsNear(`$`(LatLngStr::class.java).from(latLng)))
+        return uiThread(api.backend.getSuggestionsNear(on<LatLngStr>().from(latLng)))
     }
 
     fun addSuggestion(name: String, latLng: LatLng): Single<CreateResult> {
-        return uiThread(api.backend.addSuggestion(name, `$`(LatLngStr::class.java).from(latLng)))
+        return uiThread(api.backend.addSuggestion(name, on<LatLngStr>().from(latLng)))
     }
 
     fun updatePhone(latLng: String?, name: String?, status: String?, active: Boolean?, deviceToken: String?): Single<CreateResult> {
@@ -64,7 +64,7 @@ class ApiHandler : PoolMember() {
     }
 
     fun searchPhonesNear(latLng: LatLng, query: String): Single<List<PhoneResult>> {
-        return uiThread(api.backend.searchPhonesNear(`$`(LatLngStr::class.java).from(latLng), query))
+        return uiThread(api.backend.searchPhonesNear(on<LatLngStr>().from(latLng), query))
     }
 
     fun getPhone(phoneId: String): Single<PhoneResult> {
@@ -76,11 +76,11 @@ class ApiHandler : PoolMember() {
     }
 
     fun myMessages(latLng: LatLng): Single<List<GroupMessageResult>> {
-        return uiThread(api.backend.myMessages(`$`(LatLngStr::class.java).from(latLng)))
+        return uiThread(api.backend.myMessages(on<LatLngStr>().from(latLng)))
     }
 
     fun myGroups(latLng: LatLng): Single<StateResult> {
-        return uiThread(api.backend.myGroups(`$`(LatLngStr::class.java).from(latLng)))
+        return uiThread(api.backend.myGroups(on<LatLngStr>().from(latLng)))
     }
 
     fun getGroup(groupId: String): Single<GroupResult> {
@@ -112,11 +112,11 @@ class ApiHandler : PoolMember() {
     }
 
     fun createPublicGroup(groupName: String, about: String, latLng: LatLng): Single<CreateResult> {
-        return uiThread(api.backend.createPublicGroup(groupName, about, `$`(LatLngStr::class.java).from(latLng), true))
+        return uiThread(api.backend.createPublicGroup(groupName, about, on<LatLngStr>().from(latLng), true))
     }
 
     fun createPhysicalGroup(latLng: LatLng): Single<CreateResult> {
-        return uiThread(api.backend.createPhysicalGroup(`$`(LatLngStr::class.java).from(latLng), true))
+        return uiThread(api.backend.createPhysicalGroup(on<LatLngStr>().from(latLng), true))
     }
 
     fun convertToHub(groupId: String, name: String): Single<SuccessResult> {
@@ -156,7 +156,7 @@ class ApiHandler : PoolMember() {
     }
 
     fun getGroupActions(latLng: LatLng): Single<List<GroupActionResult>> {
-        return uiThread(api.backend.getGroupActionsNearGeo(`$`(LatLngStr::class.java).from(latLng)))
+        return uiThread(api.backend.getGroupActionsNearGeo(on<LatLngStr>().from(latLng)))
     }
 
     fun getPins(groupId: String): Single<List<PinResult>> {
@@ -204,11 +204,11 @@ class ApiHandler : PoolMember() {
     }
 
     fun createEvent(name: String, about: String, isPublic: Boolean, latLng: LatLng, startsAt: Date, endsAt: Date): Single<CreateResult> {
-        return uiThread(api.backend.createEvent(name, about, isPublic, `$`(LatLngStr::class.java).from(latLng), `$`(HttpEncode::class.java).encode(`$`(DateFormatter::class.java).format(startsAt))!!, `$`(HttpEncode::class.java).encode(`$`(DateFormatter::class.java).format(endsAt))!!))
+        return uiThread(api.backend.createEvent(name, about, isPublic, on<LatLngStr>().from(latLng), on<HttpEncode>().encode(on<DateFormatter>().format(startsAt))!!, on<HttpEncode>().encode(on<DateFormatter>().format(endsAt))!!))
     }
 
     fun getEvents(latLng: LatLng): Single<List<EventResult>> {
-        return uiThread(api.backend.getEvents(`$`(LatLngStr::class.java).from(latLng)))
+        return uiThread(api.backend.getEvents(on<LatLngStr>().from(latLng)))
     }
 
     fun getEvent(eventId: String): Single<EventResult> {
@@ -220,7 +220,7 @@ class ApiHandler : PoolMember() {
     }
 
     fun getPhysicalGroups(latLng: LatLng): Single<List<GroupResult>> {
-        return uiThread(api.backend.getPhysicalGroups(`$`(LatLngStr::class.java).from(latLng), "physical"))
+        return uiThread(api.backend.getPhysicalGroups(on<LatLngStr>().from(latLng), "physical"))
     }
 
     fun uploadPhoto(photo: InputStream): Single<String> {
@@ -251,7 +251,7 @@ class ApiHandler : PoolMember() {
             }
         }
         val part = MultipartBody.Part.createFormData("photo", "closer-photo", body)
-        val id = `$`(Val::class.java).rndId()
+        val id = on<Val>().rndId()
         return uiThread(api.photoUploadBackend.uploadPhoto(id, part))
                 .map { responseBody -> id }
     }

@@ -5,17 +5,17 @@ import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Event
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EventDetailsHandler : PoolMember() {
+class EventDetailsHandler constructor(private val on: On) {
     private val timeFormatter = SimpleDateFormat("h:mma", Locale.US)
 
     fun formatEventDetails(event: Event): String {
         if (event.cancelled) {
-            return `$`(ResourcesHandler::class.java).resources.getString(R.string.cancelled)
+            return on<ResourcesHandler>().resources.getString(R.string.cancelled)
         }
 
         timeFormatter.timeZone = TimeZone.getDefault()
@@ -30,15 +30,15 @@ class EventDetailsHandler : PoolMember() {
         val now = Calendar.getInstance().time
         val isHappeningNow = now.after(event.startsAt) && now.before(event.endsAt)
 
-        var eventTimeText = `$`(ResourcesHandler::class.java).resources
+        var eventTimeText = on<ResourcesHandler>().resources
                 .getString(R.string.event_start_end_time, startTime, endTime, day)
 
         if (isHappeningNow) {
-            eventTimeText = `$`(ResourcesHandler::class.java).resources.getString(R.string.event_happening_now, eventTimeText)
+            eventTimeText = on<ResourcesHandler>().resources.getString(R.string.event_happening_now, eventTimeText)
         }
 
         return if (event.about?.isBlank() == false) {
-            `$`(ResourcesHandler::class.java).resources
+            on<ResourcesHandler>().resources
                     .getString(R.string.event_price_and_time, event.about, eventTimeText)
         } else {
             eventTimeText

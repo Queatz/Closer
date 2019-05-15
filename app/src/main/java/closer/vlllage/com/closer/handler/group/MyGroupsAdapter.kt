@@ -11,11 +11,11 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.GroupColorHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Group
+import com.queatz.on.On
 
-class MyGroupsAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder>(poolMember) {
+class MyGroupsAdapter(on: On) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewHolder>(on) {
 
     private var actions: List<GroupActionBarButton> = listOf()
     private var endActions: List<GroupActionBarButton> = listOf()
@@ -34,10 +34,10 @@ class MyGroupsAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<MyGroupsAdap
             val actionBarButton = actions[position]
             groupName.setBackgroundResource(actionBarButton.backgroundDrawableRes)
             groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(actionBarButton.icon, 0, 0, 0)
-            groupName.compoundDrawablePadding = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.pad)
+            groupName.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 groupName.compoundDrawableTintList = ColorStateList.valueOf(
-                        `$`(ResourcesHandler::class.java).resources.getColor(android.R.color.white, `$`(ActivityHandler::class.java).activity!!.theme)
+                        on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)
                 )
             }
             groupName.text = actionBarButton.name!!
@@ -60,10 +60,10 @@ class MyGroupsAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<MyGroupsAdap
             val actionBarButton = endActions[position - groups.size]
             groupName.setBackgroundResource(actionBarButton.backgroundDrawableRes)
             groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(actionBarButton.icon, 0, 0, 0)
-            groupName.compoundDrawablePadding = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.pad)
+            groupName.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 groupName.compoundDrawableTintList = ColorStateList.valueOf(
-                        `$`(ResourcesHandler::class.java).resources.getColor(android.R.color.white, `$`(ActivityHandler::class.java).activity!!.theme)
+                        on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)
                 )
             }
             groupName.text = actionBarButton.name
@@ -81,20 +81,20 @@ class MyGroupsAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<MyGroupsAdap
 
         val group = groups[position]
 
-        groupName.setBackgroundResource(`$`(GroupColorHandler::class.java).getColorClickable(group))
+        groupName.setBackgroundResource(on<GroupColorHandler>().getColorClickable(group))
         groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0)
-        groupName.compoundDrawablePadding = `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.pad)
+        groupName.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             groupName.compoundDrawableTintList = ColorStateList.valueOf(
-                    `$`(ResourcesHandler::class.java).resources.getColor(android.R.color.white, `$`(ActivityHandler::class.java).activity!!.theme)
+                    on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)
             )
         }
         groupName.text = group.name
 
-        groupName.setOnClickListener { view -> `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(holder.itemView, group.id) }
+        groupName.setOnClickListener { view -> on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, group.id) }
 
         groupName.setOnLongClickListener { view ->
-            `$`(GroupMemberHandler::class.java).changeGroupSettings(group)
+            on<GroupMemberHandler>().changeGroupSettings(group)
 
             true
         }

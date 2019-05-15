@@ -18,28 +18,28 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import java.util.regex.Pattern
 
-class GroupMessageParseHandler : PoolMember() {
+class GroupMessageParseHandler constructor(private val on: On) {
 
     private val mentionPattern = Pattern.compile("@[0-9]+")
 
     private val defaultMentionConverter: MentionConverter
         get() = { mention ->
-            val phoneList = `$`(StoreHandler::class.java).store.box(Phone::class.java).query().equal(Phone_.id, mention).build().find()
+            val phoneList = on<StoreHandler>().store.box(Phone::class.java).query().equal(Phone_.id, mention).build().find()
             if (phoneList.isEmpty()) {
-                `$`(ResourcesHandler::class.java).resources.getString(R.string.unknown)
+                on<ResourcesHandler>().resources.getString(R.string.unknown)
             }
-            `$`(NameHandler::class.java).getName(phoneList.get(0))
+            on<NameHandler>().getName(phoneList.get(0))
         }
 
     private val defaultMentionClickListener: OnMentionClickListener
         get() = { mention ->
-            `$`(PhoneMessagesHandler::class.java).openMessagesWithPhone(mention, `$`(NameHandler::class.java).getName(mention), "")
+            on<PhoneMessagesHandler>().openMessagesWithPhone(mention, on<NameHandler>().getName(mention), "")
         }
 
     @JvmOverloads
@@ -140,10 +140,10 @@ class GroupMessageParseHandler : PoolMember() {
     }
 
     private fun createContactTextView(text: String?): TextView {
-        val textView = TextView(`$`(ActivityHandler::class.java).activity)
+        val textView = TextView(on<ActivityHandler>().activity)
         textView.text = "@" + text!!
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, `$`(ResourcesHandler::class.java).resources.getDimension(R.dimen.groupMessageMentionTextSize))
-        textView.setTextColor(`$`(ResourcesHandler::class.java).resources.getColor(R.color.colorAccentLight))
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupMessageMentionTextSize))
+        textView.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorAccentLight))
         textView.setTypeface(textView.typeface, Typeface.BOLD)
         return textView
     }
@@ -161,7 +161,7 @@ class GroupMessageParseHandler : PoolMember() {
         val cacheBmp = view.drawingCache
         val viewBmp = cacheBmp.copy(Bitmap.Config.ARGB_8888, true)
         view.destroyDrawingCache()
-        return BitmapDrawable(`$`(ResourcesHandler::class.java).resources, viewBmp)
+        return BitmapDrawable(on<ResourcesHandler>().resources, viewBmp)
     }
 }
 

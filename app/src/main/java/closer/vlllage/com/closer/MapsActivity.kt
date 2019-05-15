@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer
 
-import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import closer.vlllage.com.closer.handler.PersonalSlideFragment
 import closer.vlllage.com.closer.handler.map.MapViewHandler
 import closer.vlllage.com.closer.handler.settings.SettingsSlideFragment
@@ -26,20 +26,20 @@ class MapsActivity : PoolActivity() {
             override fun getSlide(position: Int): Fragment {
                 return when (position) {
                     POSITION_SCREEN_PERSONAL -> PersonalSlideFragment()
-                    POSITION_SCREEN_MAP -> `$`(MapViewHandler::class.java).mapFragment
+                    POSITION_SCREEN_MAP -> on<MapViewHandler>().mapFragment
                     POSITION_SCREEN_SETTINGS -> SettingsSlideFragment()
                     else -> throw IndexOutOfBoundsException()
                 }
             }
 
-            override fun getFragmentManager() = this@MapsActivity.fragmentManager
+            override fun getFragmentManager() = this@MapsActivity.supportFragmentManager
         }
 
         if (intent != null) {
             onNewIntent(intent)
         }
 
-        `$`(MapViewHandler::class.java).onRequestMapOnScreenListener = {
+        on<MapViewHandler>().onRequestMapOnScreenListener = {
             slideScreen.slide = POSITION_SCREEN_MAP
         }
 
@@ -64,11 +64,11 @@ class MapsActivity : PoolActivity() {
             }
         }
 
-        `$`(MapViewHandler::class.java).handleIntent(intent)
+        on<MapViewHandler>().handleIntent(intent)
     }
 
     override fun onBackPressed() {
-        `$`(MapViewHandler::class.java).onBackPressed {
+        on<MapViewHandler>().onBackPressed {
             if (it) {
                 return@onBackPressed
             }

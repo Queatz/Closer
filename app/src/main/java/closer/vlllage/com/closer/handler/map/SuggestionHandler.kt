@@ -7,7 +7,7 @@ import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Suggestion
 import closer.vlllage.com.closer.store.models.Suggestion_
@@ -17,19 +17,19 @@ import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.SubscriptionBuilder
 import java.util.*
 
-class SuggestionHandler : PoolMember() {
+class SuggestionHandler constructor(private val on: On) {
 
     private val suggestionBubbles = HashSet<MapBubble>()
 
     fun shuffle() {
-        `$`(BubbleHandler::class.java).remove { mapBubble -> BubbleType.MENU == mapBubble.type }
+        on<BubbleHandler>().remove { mapBubble -> BubbleType.MENU == mapBubble.type }
         clearSuggestions()
 
         val nextBubbles = HashSet<MapBubble>()
 
-        getRandomSuggestions(`$`(MapHandler::class.java).visibleRegion!!.latLngBounds).observer { suggestions ->
+        getRandomSuggestions(on<MapHandler>().visibleRegion!!.latLngBounds).observer { suggestions ->
             if (suggestions.isEmpty()) {
-                `$`(ToastHandler::class.java).show(R.string.no_suggestions_here)
+                on<ToastHandler>().show(R.string.no_suggestions_here)
                 return@observer
             }
 
@@ -46,15 +46,15 @@ class SuggestionHandler : PoolMember() {
 
                 val suggestionBubble = suggestionBubbleFrom(suggestion)
 
-                `$`(TimerHandler::class.java).postDisposable(Runnable {
-                    `$`(BubbleHandler::class.java).add(suggestionBubble)
+                on<TimerHandler>().postDisposable(Runnable {
+                    on<BubbleHandler>().add(suggestionBubble)
                     suggestionBubbles.add(suggestionBubble)
                 }, (225 * 2 + i * 95).toLong())
 
                 nextBubbles.add(suggestionBubble)
             }
 
-            `$`(MapHandler::class.java).centerOn(nextBubbles)
+            on<MapHandler>().centerOn(nextBubbles)
         }
     }
 
@@ -62,32 +62,32 @@ class SuggestionHandler : PoolMember() {
         val suggestionBubble = MapBubble(LatLng(
                 suggestion.latitude!!,
                 suggestion.longitude!!
-        ), `$`(ResourcesHandler::class.java).resources.getString(R.string.suggestion), suggestion.name)
+        ), on<ResourcesHandler>().resources.getString(R.string.suggestion), suggestion.name)
         suggestionBubble.isPinned = true
         suggestionBubble.isOnTop = true
         suggestionBubble.type = BubbleType.SUGGESTION
         suggestionBubble.tag = suggestion
-        suggestionBubble.action = `$`(TimeStr::class.java).prettyDate(suggestion.created)
+        suggestionBubble.action = on<TimeStr>().prettyDate(suggestion.created)
         return suggestionBubble
     }
 
     private fun getRandomSuggestions(bounds: LatLngBounds): SubscriptionBuilder<List<Suggestion>> {
-        return `$`(StoreHandler::class.java).store.box(Suggestion::class.java).query()
+        return on<StoreHandler>().store.box(Suggestion::class.java).query()
                 .between(Suggestion_.latitude, bounds.southwest.latitude, bounds.northeast.latitude)
                 .between(Suggestion_.longitude, bounds.southwest.longitude, bounds.northeast.longitude)
                 .build().subscribe().single().on(AndroidScheduler.mainThread())
     }
 
     fun clearSuggestions(): Boolean {
-        val anyBubblesRemoved = `$`(BubbleHandler::class.java).remove { mapBubble -> BubbleType.SUGGESTION == mapBubble.type }
+        val anyBubblesRemoved = on<BubbleHandler>().remove { mapBubble -> BubbleType.SUGGESTION == mapBubble.type }
         suggestionBubbles.clear()
         return anyBubblesRemoved
     }
 
     fun createNewSuggestion(latLng: LatLng) {
-        `$`(AlertHandler::class.java).make().apply {
-            title = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_suggestion_here)
-            positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.add_suggestion)
+        on<AlertHandler>().make().apply {
+            title = on<ResourcesHandler>().resources.getString(R.string.add_suggestion_here)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.add_suggestion)
             layoutResId = R.layout.make_suggestion_modal
             textViewId = R.id.input
             onTextViewSubmitCallback = { result -> createNewSuggestion(latLng, result) }
@@ -100,24 +100,24 @@ class SuggestionHandler : PoolMember() {
             return
         }
 
-        val suggestion = `$`(StoreHandler::class.java).create(Suggestion::class.java)
+        val suggestion = on<StoreHandler>().create(Suggestion::class.java)
         suggestion!!.name = name.trim()
         suggestion.latitude = latLng.latitude
         suggestion.longitude = latLng.longitude
-        `$`(StoreHandler::class.java).store.box(Suggestion::class.java).put(suggestion)
-        `$`(SyncHandler::class.java).sync(suggestion)
+        on<StoreHandler>().store.box(Suggestion::class.java).put(suggestion)
+        on<SyncHandler>().sync(suggestion)
     }
 
     fun loadAll(suggestions: List<SuggestionResult>) {
         for (suggestionResult in suggestions) {
-            `$`(StoreHandler::class.java).store.box(Suggestion::class.java).query()
+            on<StoreHandler>().store.box(Suggestion::class.java).query()
                     .equal(Suggestion_.id, suggestionResult.id!!)
                     .build().subscribe().single().on(AndroidScheduler.mainThread())
                     .observer { result ->
                         if (result.isEmpty()) {
-                            `$`(StoreHandler::class.java).store.box(Suggestion::class.java).put(SuggestionResult.from(suggestionResult))
+                            on<StoreHandler>().store.box(Suggestion::class.java).put(SuggestionResult.from(suggestionResult))
                         } else {
-                            `$`(StoreHandler::class.java).store.box(Suggestion::class.java).put(
+                            on<StoreHandler>().store.box(Suggestion::class.java).put(
                                     SuggestionResult.updateFrom(result[0], suggestionResult))
                         }
                     }

@@ -7,14 +7,14 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import java.util.*
 
-class PinnedMessagesHandler : PoolMember() {
+class PinnedMessagesHandler constructor(private val on: On) {
 
     private lateinit var pinnedMessagesRecyclerView: RecyclerView
     private lateinit var groupMessagesAdapter: GroupMessagesAdapter
@@ -25,31 +25,31 @@ class PinnedMessagesHandler : PoolMember() {
         this.pinnedMessagesRecyclerView = pinnedMessagesRecyclerView
 
         pinnedMessagesRecyclerView.layoutManager = LinearLayoutManager(
-                `$`(ActivityHandler::class.java).activity,
+                on<ActivityHandler>().activity,
                 RecyclerView.VERTICAL,
                 true
         )
 
-        groupMessagesAdapter = GroupMessagesAdapter(this)
+        groupMessagesAdapter = GroupMessagesAdapter(on)
         groupMessagesAdapter.setPinned(true)
         pinnedMessagesRecyclerView.adapter = groupMessagesAdapter
-        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> `$`(MapActivityHandler::class.java).showSuggestionOnMap(suggestion) }
-        groupMessagesAdapter.onEventClickListener = { event -> `$`(GroupActivityTransitionHandler::class.java).showGroupForEvent(null, event) }
-        groupMessagesAdapter.onGroupClickListener =  { group1 -> `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(null, group1.id) }
+        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
+        groupMessagesAdapter.onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
+        groupMessagesAdapter.onGroupClickListener =  { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
     }
 
     fun show(group: Group) {
         if (groupMessagesSubscription != null) {
-            `$`(DisposableHandler::class.java).dispose(groupMessagesSubscription!!)
+            on<DisposableHandler>().dispose(groupMessagesSubscription!!)
         }
 
         if (groupMessagesActualSubscription != null) {
-            `$`(DisposableHandler::class.java).dispose(groupMessagesSubscription!!)
+            on<DisposableHandler>().dispose(groupMessagesSubscription!!)
         }
 
-        `$`(RefreshHandler::class.java).refreshPins(group.id!!)
+        on<RefreshHandler>().refreshPins(group.id!!)
 
-        groupMessagesSubscription = `$`(StoreHandler::class.java).store.box(Pin::class.java).query()
+        groupMessagesSubscription = on<StoreHandler>().store.box(Pin::class.java).query()
                 .equal(Pin_.to, group.id!!)
                 .build()
                 .subscribe()
@@ -66,17 +66,17 @@ class PinnedMessagesHandler : PoolMember() {
                         ids.add(pin.from!!)
                     }
 
-                    groupMessagesActualSubscription = `$`(StoreHandler::class.java).store.box(GroupMessage::class.java).query()
+                    groupMessagesActualSubscription = on<StoreHandler>().store.box(GroupMessage::class.java).query()
                             .`in`(GroupMessage_.id, ids.toTypedArray())
                             .build()
                             .subscribe()
                             .single()
                             .on(AndroidScheduler.mainThread())
                             .observer { this.setGroupMessages(it) }
-                    `$`(DisposableHandler::class.java).add(groupMessagesActualSubscription!!)
+                    on<DisposableHandler>().add(groupMessagesActualSubscription!!)
                 }
 
-        `$`(DisposableHandler::class.java).add(groupMessagesSubscription!!)
+        on<DisposableHandler>().add(groupMessagesSubscription!!)
     }
 
     private fun setGroupMessages(pinnedMessages: List<GroupMessage>) {

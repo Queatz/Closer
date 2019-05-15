@@ -4,9 +4,9 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class Animate : PoolMember() {
+class Animate constructor(private val on: On) {
     fun alpha(view: View, show: Boolean) {
         view.clearAnimation()
 

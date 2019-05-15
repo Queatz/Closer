@@ -8,10 +8,10 @@ import android.widget.TextView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.OutboundHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Event
 
-class MapBubbleEventView : PoolMember() {
+class MapBubbleEventView constructor(private val on: On) {
 
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubbleEventClickListener): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_event, layer, false)
@@ -19,7 +19,7 @@ class MapBubbleEventView : PoolMember() {
         view.findViewById<View>(R.id.click).setOnClickListener { onClickListener.invoke(mapBubble) }
         update(view, mapBubble)
 
-        view.findViewById<View>(R.id.directionsButton).setOnClickListener { `$`(OutboundHandler::class.java).openDirections(mapBubble.latLng) }
+        view.findViewById<View>(R.id.directionsButton).setOnClickListener { on<OutboundHandler>().openDirections(mapBubble.latLng) }
 
         return view
     }
@@ -35,7 +35,7 @@ class MapBubbleEventView : PoolMember() {
             bubbleTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0)
         }
 
-        actionTextView.text = `$`(EventDetailsHandler::class.java).formatEventDetails(mapBubble.tag as Event)
+        actionTextView.text = on<EventDetailsHandler>().formatEventDetails(mapBubble.tag as Event)
     }
 }
 

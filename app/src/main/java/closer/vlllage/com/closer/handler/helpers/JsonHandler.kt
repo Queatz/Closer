@@ -1,10 +1,10 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 
-class JsonHandler : PoolMember() {
+class JsonHandler constructor(private val on: On) {
 
     private val gson = GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")

@@ -14,46 +14,46 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
 
-class MapActivityHandler : PoolMember() {
+class MapActivityHandler constructor(private val on: On) {
 
     fun showSuggestionOnMap(suggestion: Suggestion) {
-        val intent = Intent(`$`(ActivityHandler::class.java).activity, MapsActivity::class.java)
+        val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(suggestion.latitude!!.toFloat(), suggestion.longitude!!.toFloat()))
-        intent.putExtra(EXTRA_SUGGESTION, if (suggestion.name == null) `$`(ResourcesHandler::class.java).resources.getString(R.string.shared_location) else suggestion.name)
+        intent.putExtra(EXTRA_SUGGESTION, if (suggestion.name == null) on<ResourcesHandler>().resources.getString(R.string.shared_location) else suggestion.name)
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun showEventOnMap(event: Event) {
-        val intent = Intent(`$`(ActivityHandler::class.java).activity, MapsActivity::class.java)
+        val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(event.latitude!!.toFloat(), event.longitude!!.toFloat()))
         intent.putExtra(EXTRA_EVENT_ID, event.id)
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun showGroupOnMap(group: Group) {
-        val intent = Intent(`$`(ActivityHandler::class.java).activity, MapsActivity::class.java)
+        val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(group.latitude!!.toFloat(), group.longitude!!.toFloat()))
         intent.putExtra(EXTRA_GROUP_ID, group.id)
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun showPhoneOnMap(phoneId: String?) {
         if (phoneId == null) {
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
             return
         }
-        val phone = `$`(StoreHandler::class.java).store.box(Phone::class.java).query()
+        val phone = on<StoreHandler>().store.box(Phone::class.java).query()
                 .equal(Phone_.id, phoneId)
                 .notNull(Phone_.latitude)
                 .notNull(Phone_.longitude)
@@ -61,20 +61,20 @@ class MapActivityHandler : PoolMember() {
                 .findFirst()
 
         if (phone == null) {
-            `$`(DefaultAlerts::class.java).thatDidntWork()
+            on<DefaultAlerts>().thatDidntWork()
             return
         }
 
-        val intent = Intent(`$`(ActivityHandler::class.java).activity, MapsActivity::class.java)
+        val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(phone.latitude!!.toFloat(), phone.longitude!!.toFloat()))
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun replyToPhone(phoneId: String, name: String, status: String, latLng: LatLng?) {
         var name = name
-        val intent = Intent(`$`(ActivityHandler::class.java).activity, MapsActivity::class.java)
+        val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
 
         if (latLng != null) {
@@ -82,7 +82,7 @@ class MapActivityHandler : PoolMember() {
         }
 
         name = if (name.isEmpty())
-            `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name)
+            on<ResourcesHandler>().resources.getString(R.string.app_name)
         else
             name
 
@@ -90,14 +90,14 @@ class MapActivityHandler : PoolMember() {
         intent.putExtra(EXTRA_STATUS, status)
         intent.putExtra(EXTRA_PHONE, phoneId)
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun goToScreen(screenName: String) {
-        val intent = Intent(`$`(ActivityHandler::class.java).activity, MapsActivity::class.java)
+        val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_SCREEN, screenName)
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
 
     }
 }

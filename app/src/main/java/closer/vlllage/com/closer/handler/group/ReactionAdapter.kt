@@ -7,13 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.PhoneListActivityTransitionHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.ReactionCount
+import com.queatz.on.On
 import java.util.*
 
-class ReactionAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(poolMember) {
+class ReactionAdapter(on: On) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(on) {
 
     private var items: List<ReactionCount> = ArrayList()
     private var groupMessage: GroupMessage? = null
@@ -27,7 +27,7 @@ class ReactionAdapter(poolMember: PoolMember) : PoolRecyclerAdapter<ReactionAdap
         val reaction = items[position]
 
         viewHolder.reaction.text = reaction.reaction + " " + reaction.count
-        viewHolder.reaction.setOnClickListener { v -> `$`(PhoneListActivityTransitionHandler::class.java).showReactions(groupMessage!!.id!!) }
+        viewHolder.reaction.setOnClickListener { v -> on<PhoneListActivityTransitionHandler>().showReactions(groupMessage!!.id!!) }
     }
 
     override fun getItemCount(): Int {

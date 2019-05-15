@@ -6,9 +6,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class KeyboardHandler : PoolMember() {
+class KeyboardHandler constructor(private val on: On) {
 
     fun showKeyboard(view: View, show: Boolean) {
         val inputMethodManager = view.context
@@ -22,11 +22,11 @@ class KeyboardHandler : PoolMember() {
     }
 
     fun showViewAboveKeyboard(view: View) {
-        `$`(TimerHandler::class.java).postDisposable(Runnable {
+        on<TimerHandler>().postDisposable(Runnable {
             val rect = Rect()
             view.getLocalVisibleRect(rect)
-            rect.bottom += `$`(KeyboardVisibilityHandler::class.java).lastKeyboardHeight
-            rect.bottom += `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.padDouble)
+            rect.bottom += on<KeyboardVisibilityHandler>().lastKeyboardHeight
+            rect.bottom += on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble)
             view.requestRectangleOnScreen(rect)
         }, KEYBOARD_DELAY_MS.toLong())
     }

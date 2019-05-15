@@ -4,10 +4,10 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.ReactionResult
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.ui.RecyclerViewHeader
+import com.queatz.on.On
 
-class PhoneAdapterHeaderAdapter(poolMember: PoolMember, onReactionClickListener: (ReactionResult) -> Unit) : PhoneAdapter(poolMember, onReactionClickListener) {
+class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult) -> Unit) : PhoneAdapter(on, onReactionClickListener) {
 
     private val header = RecyclerViewHeader()
 
@@ -23,6 +23,6 @@ class PhoneAdapterHeaderAdapter(poolMember: PoolMember, onReactionClickListener:
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        header.attach(recyclerView, `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.feedPeekHeight) * 2)
+        header.attach(recyclerView, on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeight) * 2)
     }
 }

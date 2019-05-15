@@ -3,9 +3,9 @@ package closer.vlllage.com.closer.handler.map
 import android.view.View
 
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class NetworkConnectionViewHandler : PoolMember() {
+class NetworkConnectionViewHandler constructor(private val on: On) {
 
     private var connectionErrorView: View? = null
     private val hideCallback = Runnable {
@@ -14,7 +14,7 @@ class NetworkConnectionViewHandler : PoolMember() {
 
     fun attach(connectionErrorView: View) {
         this.connectionErrorView = connectionErrorView
-        `$`(ConnectionErrorHandler::class.java).onConnectionErrorListener = {
+        on<ConnectionErrorHandler>().onConnectionErrorListener = {
             show()
         }
     }

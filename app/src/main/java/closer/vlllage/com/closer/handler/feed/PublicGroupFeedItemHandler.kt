@@ -14,15 +14,15 @@ import closer.vlllage.com.closer.handler.group.SearchGroupHandler
 import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
 import com.google.android.gms.maps.model.CameraPosition
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class PublicGroupFeedItemHandler : PoolMember() {
+class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     private lateinit var searchGroups: EditText
 
@@ -30,7 +30,7 @@ class PublicGroupFeedItemHandler : PoolMember() {
         val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
         searchGroups = itemView.findViewById(R.id.searchGroups)
 
-        val searchGroupsAdapter = SearchGroupsAdapter(`$`(PoolMember::class.java), { group, view -> openGroup(group.id, view) }, { groupName: String -> this.createGroup(groupName) })
+        val searchGroupsAdapter = SearchGroupsAdapter(on, { group, view -> openGroup(group.id, view) }, { groupName: String -> this.createGroup(groupName) })
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         groupsRecyclerView.adapter = searchGroupsAdapter
@@ -46,7 +46,7 @@ class PublicGroupFeedItemHandler : PoolMember() {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                `$`(SearchGroupHandler::class.java).showGroupsForQuery(searchGroupsAdapter, searchGroups.text.toString())
+                on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter, searchGroups.text.toString())
             }
 
             override fun afterTextChanged(s: Editable) {
@@ -54,31 +54,31 @@ class PublicGroupFeedItemHandler : PoolMember() {
             }
         })
 
-        `$`(SearchGroupHandler::class.java).showGroupsForQuery(searchGroupsAdapter, searchGroups.text.toString())
+        on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter, searchGroups.text.toString())
 
         val distance = .12f
 
         val cameraPositionCallback = { cameraPosition: CameraPosition ->
-            val queryBuilder = `$`(StoreHandler::class.java).store.box(Group::class.java).query()
+            val queryBuilder = on<StoreHandler>().store.box(Group::class.java).query()
                     .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                     .and()
                     .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
                     .or()
                     .equal(Group_.isPublic, false)
 
-            `$`(DisposableHandler::class.java).add(queryBuilder
-                    .sort(`$`(SortHandler::class.java).sortGroups(false))
+            on<DisposableHandler>().add(queryBuilder
+                    .sort(on<SortHandler>().sortGroups(false))
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .single()
                     .observer { groups ->
-                        `$`(SearchGroupHandler::class.java).setGroups(groups)
-                        `$`(TimerHandler::class.java).post(Runnable { groupsRecyclerView.scrollBy(0, 0) })
+                        on<SearchGroupHandler>().setGroups(groups)
+                        on<TimerHandler>().post(Runnable { groupsRecyclerView.scrollBy(0, 0) })
                     })
         }
 
-        `$`(DisposableHandler::class.java).add(`$`(MapHandler::class.java).onMapIdleObservable()
+        on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(cameraPositionCallback))
     }
@@ -90,32 +90,32 @@ class PublicGroupFeedItemHandler : PoolMember() {
 
         searchGroups.setText("")
 
-        `$`(LocationHandler::class.java).getCurrentLocation({ location ->
-            `$`(AlertHandler::class.java).make().apply {
-                title = `$`(ResourcesHandler::class.java).resources.getString(R.string.group_as_public, groupName)
+        on<LocationHandler>().getCurrentLocation({ location ->
+            on<AlertHandler>().make().apply {
+                title = on<ResourcesHandler>().resources.getString(R.string.group_as_public, groupName)
                 layoutResId = R.layout.create_public_group_modal
                 textViewId = R.id.input
                 onTextViewSubmitCallback = { about ->
-                    val group = `$`(StoreHandler::class.java).create(Group::class.java)
+                    val group = on<StoreHandler>().create(Group::class.java)
                     group!!.name = groupName
                     group.about = about
                     group.isPublic = true
                     group.latitude = location.latitude
                     group.longitude = location.longitude
-                    `$`(StoreHandler::class.java).store.box(Group::class.java).put(group)
-                    `$`(SyncHandler::class.java).sync(group, { groupId ->
+                    on<StoreHandler>().store.box(Group::class.java).put(group)
+                    on<SyncHandler>().sync(group, { groupId ->
                         openGroup(groupId, null)
                     })
                 }
-                positiveButton = `$`(ResourcesHandler::class.java).resources.getString(R.string.create_public_group)
+                positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_public_group)
                 show()
             }
 
-        }, { `$`(DefaultAlerts::class.java).thatDidntWork(`$`(ResourcesHandler::class.java).resources.getString(R.string.location_is_needed)) })
+        }, { on<DefaultAlerts>().thatDidntWork(on<ResourcesHandler>().resources.getString(R.string.location_is_needed)) })
     }
 
     fun openGroup(groupId: String?, view: View?) {
-        `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(view, groupId)
+        on<GroupActivityTransitionHandler>().showGroupMessages(view, groupId)
     }
 
 }

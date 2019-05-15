@@ -10,15 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.RecyclerViewHeader
+import com.queatz.on.On
 
-class SearchGroupsHeaderAdapter(poolMember: PoolMember,
+class SearchGroupsHeaderAdapter(on: On,
                                 onGroupClickListener: ((Group, View) -> Unit)?,
                                 onCreateGroupClickListener: ((String) -> Unit)?,
                                 private val onQueryChangedListener: OnQueryChangedListener)
-    : SearchGroupsAdapter(poolMember, onGroupClickListener, onCreateGroupClickListener) {
+    : SearchGroupsAdapter(on, onGroupClickListener, onCreateGroupClickListener) {
 
     private val header = RecyclerViewHeader()
 
@@ -69,7 +69,7 @@ class SearchGroupsHeaderAdapter(poolMember: PoolMember,
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        header.attach(recyclerView, `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.feedPeekHeight) * 2)
+        header.attach(recyclerView, on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeight) * 2)
     }
 
     override fun getItemViewType(position: Int): Int {

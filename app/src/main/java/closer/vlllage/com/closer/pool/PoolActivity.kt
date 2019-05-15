@@ -10,31 +10,29 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.CameraHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
+import com.queatz.on.On
 
-abstract class PoolActivity : androidx.fragment.app.FragmentActivity() {
-    val pool = Pool()
+abstract class PoolActivity : FragmentActivity() {
+
+    val on = On()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        `$`(ApplicationHandler::class.java).app = application as App
-        `$`(ActivityHandler::class.java).activity = this
+        on<ApplicationHandler>().app = application as App
+        on<ActivityHandler>().activity = this
     }
 
     override fun onDestroy() {
-        pool.end()
+        on.off()
         super.onDestroy()
     }
 
-    protected fun <T : PoolMember> `$`(member: Class<T>): T {
-        return pool.`$`(member)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        `$`(PermissionHandler::class.java).onRequestPermissionsResult(requestCode, permissions, grantResults)
+        on<PermissionHandler>().onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        `$`(CameraHandler::class.java).onActivityResult(requestCode, resultCode, data)
-        `$`(MediaHandler::class.java).onActivityResult(requestCode, resultCode, data)
+        on<CameraHandler>().onActivityResult(requestCode, resultCode, data)
+        on<MediaHandler>().onActivityResult(requestCode, resultCode, data)
     }
 }

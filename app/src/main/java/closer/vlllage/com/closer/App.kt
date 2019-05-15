@@ -7,10 +7,11 @@ import closer.vlllage.com.closer.pool.PoolApplication
 import com.google.firebase.FirebaseApp
 
 class App : PoolApplication() {
+
     override fun onCreate() {
         super.onCreate()
-        `$`(ApplicationHandler::class.java).app = this
-        `$`(ApiHandler::class.java).setAuthorization(`$`(AccountHandler::class.java).phone)
+        on<ApplicationHandler>().app = this
+        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
         FirebaseApp.initializeApp(this)
     }
 }

@@ -7,30 +7,30 @@ import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_INVITE_TO_GROUP_P
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SHARE_GROUP_TO_GROUP_ID
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class ShareActivityTransitionHandler : PoolMember() {
+class ShareActivityTransitionHandler constructor(private val on: On) {
     fun shareGroupMessage(groupMessageId: String) {
-        val intent = Intent(`$`(ApplicationHandler::class.java).app, ShareActivity::class.java)
+        val intent = Intent(on<ApplicationHandler>().app, ShareActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_GROUP_MESSAGE_ID, groupMessageId)
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun inviteToGroup(phoneId: String) {
-        val intent = Intent(`$`(ApplicationHandler::class.java).app, ShareActivity::class.java)
+        val intent = Intent(on<ApplicationHandler>().app, ShareActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_INVITE_TO_GROUP_PHONE_ID, phoneId)
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun shareGroupToGroup(groupId: String) {
-        val intent = Intent(`$`(ApplicationHandler::class.java).app, ShareActivity::class.java)
+        val intent = Intent(on<ApplicationHandler>().app, ShareActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_SHARE_GROUP_TO_GROUP_ID, groupId)
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 }

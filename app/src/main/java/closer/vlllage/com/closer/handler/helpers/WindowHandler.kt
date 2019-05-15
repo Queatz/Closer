@@ -1,15 +1,15 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class WindowHandler : PoolMember() {
+class WindowHandler constructor(private val on: On) {
     val statusBarHeight: Int
         get() {
-            val statusBarHeightResId = `$`(ResourcesHandler::class.java).resources.getIdentifier("status_bar_height", "dimen", "android")
+            val statusBarHeightResId = on<ResourcesHandler>().resources.getIdentifier("status_bar_height", "dimen", "android")
 
             return if (statusBarHeightResId == 0)
                 0
-            else `$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(statusBarHeightResId)
+            else on<ResourcesHandler>().resources.getDimensionPixelSize(statusBarHeightResId)
 
         }
 }

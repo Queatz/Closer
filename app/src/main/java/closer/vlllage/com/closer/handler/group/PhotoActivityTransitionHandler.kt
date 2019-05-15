@@ -7,11 +7,11 @@ import closer.vlllage.com.closer.PhotoActivity
 import closer.vlllage.com.closer.PhotoActivity.Companion.EXTRA_PHOTO
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class PhotoActivityTransitionHandler : PoolMember() {
+class PhotoActivityTransitionHandler constructor(private val on: On) {
     fun show(view: View?, photo: String) {
-        val intent = Intent(`$`(ApplicationHandler::class.java).app, PhotoActivity::class.java)
+        val intent = Intent(on<ApplicationHandler>().app, PhotoActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_PHOTO, photo)
 
@@ -22,6 +22,6 @@ class PhotoActivityTransitionHandler : PoolMember() {
             intent.sourceBounds = bounds
         }
 
-        `$`(ActivityHandler::class.java).activity!!.startActivity(intent)
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 }

@@ -10,17 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
-class MapBubbleProxyAdapter(poolMember: PoolMember,
+class MapBubbleProxyAdapter(on: On,
                             private val proxyMapBubble: MapBubble,
                             private val onClickListener: (MapBubble) -> Unit)
-    : PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder>(poolMember) {
+    : PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder>(on) {
 
     var items = mutableListOf<MapBubble>()
         set(value) {
@@ -39,12 +39,12 @@ class MapBubbleProxyAdapter(poolMember: PoolMember,
 
         when (mapBubble.type) {
             BubbleType.STATUS -> {
-                holder.name.setTextColor(`$`(ResourcesHandler::class.java).resources.getColor(R.color.textInverse))
-                holder.info.setTextColor(`$`(ResourcesHandler::class.java).resources.getColor(R.color.textInverse))
+                holder.name.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+                holder.info.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textInverse))
             }
             else -> {
-                holder.name.setTextColor(`$`(ResourcesHandler::class.java).resources.getColor(R.color.text))
-                holder.info.setTextColor(`$`(ResourcesHandler::class.java).resources.getColor(R.color.text))
+                holder.name.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.text))
+                holder.info.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.text))
             }
         }
 
@@ -53,15 +53,15 @@ class MapBubbleProxyAdapter(poolMember: PoolMember,
                 holder.click.setBackgroundResource(R.drawable.clickable_white_4dp)
                 holder.photo.visibility = View.VISIBLE
                 holder.photo.colorFilter = null
-                holder.photo.imageTintList = ColorStateList.valueOf(`$`(ResourcesHandler::class.java).resources.getColor(android.R.color.transparent))
+                holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
                 holder.name.text = mapBubble.name + "\n" + mapBubble.status
                 if (mapBubble.tag is Phone) {
                     holder.info.visibility = View.VISIBLE
                     val phone = mapBubble.tag as Phone
-                    holder.info.text = `$`(TimeStr::class.java).pretty(phone.updated)
-                    if (!`$`(Val::class.java).isEmpty(phone.photo)) {
-                        `$`(PhotoHelper::class.java).loadCircle(holder.photo, phone.photo!!)
+                    holder.info.text = on<TimeStr>().pretty(phone.updated)
+                    if (!on<Val>().isEmpty(phone.photo)) {
+                        on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!)
                     }
 
                 } else {
@@ -77,19 +77,19 @@ class MapBubbleProxyAdapter(poolMember: PoolMember,
                     val group = mapBubble.tag as Group
                     if (group.photo != null) {
                         holder.photo.colorFilter = null
-                        holder.photo.imageTintList = ColorStateList.valueOf(`$`(ResourcesHandler::class.java).resources.getColor(android.R.color.transparent))
-                        `$`(ImageHandler::class.java).get()
+                        holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
+                        on<ImageHandler>().get()
                                 .load(group.photo!! + "?s=32")
                                 .fit()
-                                .transform(RoundedCornersTransformation(`$`(ResourcesHandler::class.java).resources.getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
+                                .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
                                 .into(holder.photo)
                     } else {
                         holder.photo.setImageResource(R.drawable.ic_wifi_black_24dp)
-                        holder.photo.imageTintList = ColorStateList.valueOf(`$`(ResourcesHandler::class.java).resources.getColor(android.R.color.white))
+                        holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
                     }
                 }
 
-                holder.name.text = `$`(Val::class.java).of((mapBubble.tag as Group).name, `$`(ResourcesHandler::class.java).resources.getString(R.string.app_name))
+                holder.name.text = on<Val>().of((mapBubble.tag as Group).name, on<ResourcesHandler>().resources.getString(R.string.app_name))
             }
             BubbleType.EVENT -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_red_4dp)
@@ -98,7 +98,7 @@ class MapBubbleProxyAdapter(poolMember: PoolMember,
 
                 val event = mapBubble.tag as Event
 
-                holder.name.text = event.name + "\n" + `$`(EventDetailsHandler::class.java).formatEventDetails(event)
+                holder.name.text = event.name + "\n" + on<EventDetailsHandler>().formatEventDetails(event)
 
                 if (event.isPublic) {
                     holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)

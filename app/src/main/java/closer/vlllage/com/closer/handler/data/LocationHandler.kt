@@ -5,26 +5,27 @@ import android.annotation.SuppressLint
 import android.location.Location
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.pool.PoolMember
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.queatz.on.On
+import com.queatz.on.OnLifecycle
 
-class LocationHandler : PoolMember() {
+class LocationHandler constructor(private val on: On) : OnLifecycle {
 
     private lateinit var fusedLocationProvider: FusedLocationProviderClient
     var lastKnownLocation: Location? = null
         private set
 
-    override fun onPoolInit() {
-        fusedLocationProvider = if (`$`(ActivityHandler::class.java).isPresent) {
+    override fun on() {
+        fusedLocationProvider = if (on<ActivityHandler>().isPresent) {
             LocationServices.getFusedLocationProviderClient(
-                    `$`(ActivityHandler::class.java).activity!!
+                    on<ActivityHandler>().activity!!
             )
         } else {
             LocationServices.getFusedLocationProviderClient(
-                    `$`(ApplicationHandler::class.java).app
+                    on<ApplicationHandler>().app
             )
         }
     }
@@ -35,7 +36,7 @@ class LocationHandler : PoolMember() {
 
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(callback: (Location) -> Unit, locationUnavailableCallback: (() -> Unit)?) {
-        `$`(PermissionHandler::class.java)
+        on<PermissionHandler>()
                 .check(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 .`when` { granted ->
                     if (granted) {
@@ -74,7 +75,7 @@ class LocationHandler : PoolMember() {
                         lastKnownLocation = locationResult.lastLocation
                         callback.invoke(locationResult.lastLocation)
                     }
-                }, `$`(ActivityHandler::class.java).activity!!.mainLooper)
+                }, on<ActivityHandler>().activity!!.mainLooper)
             }
         }
     }

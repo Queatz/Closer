@@ -7,14 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuItemAdapter.MenuItemViewHolder
-import closer.vlllage.com.closer.pool.PoolMember
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
+import com.queatz.on.On
 import java.util.*
 
-class MapBubbleMenuItemAdapter(poolMember: PoolMember,
+class MapBubbleMenuItemAdapter(on: On,
                                private val mapBubble: MapBubble,
                                private val onClickListener: OnMapBubbleMenuItemClickListener)
-    : PoolRecyclerAdapter<MenuItemViewHolder>(poolMember) {
+    : PoolRecyclerAdapter<MenuItemViewHolder>(on) {
 
     private val menuItems = ArrayList<MapBubbleMenuItem>()
 

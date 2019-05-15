@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class TopHandler : PoolMember() {
+class TopHandler constructor(private val on: On) {
 
     private var activeGroupId: String? = null
 

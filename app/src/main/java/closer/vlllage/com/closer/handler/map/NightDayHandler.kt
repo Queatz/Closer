@@ -9,9 +9,9 @@ import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 
-class NightDayHandler : PoolMember() {
+class NightDayHandler constructor(private val on: On) {
     fun isNight(date: Date, location: Location): Boolean {
         val cal = Calendar.getInstance()
         cal.time = date

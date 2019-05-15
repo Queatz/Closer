@@ -2,15 +2,15 @@ package closer.vlllage.com.closer.handler.phone
 
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 
-class PhoneMessagesHandler : PoolMember() {
+class PhoneMessagesHandler constructor(private val on: On) {
     fun openMessagesWithPhone(phoneId: String, name: String, status: String) {
-        val runnable = { `$`(MapActivityHandler::class.java).replyToPhone(phoneId, name, status, null) }
+        val runnable = { on<MapActivityHandler>().replyToPhone(phoneId, name, status, null) }
 
-        if (`$`(ActivityHandler::class.java).activity is CircularRevealActivity) {
-            (`$`(ActivityHandler::class.java).activity as CircularRevealActivity).finish(runnable)
+        if (on<ActivityHandler>().activity is CircularRevealActivity) {
+            (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)
         } else {
             runnable.invoke()
         }

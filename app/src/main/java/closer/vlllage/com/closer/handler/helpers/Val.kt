@@ -1,10 +1,10 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import closer.vlllage.com.closer.pool.PoolMember
+import com.queatz.on.On
 import com.google.android.gms.common.util.Strings.isEmptyOrWhitespace
 import java.util.*
 
-class Val : PoolMember() {
+class Val constructor(private val on: On) {
     fun rndId(): String {
         val random = Random()
         return java.lang.Long.toString(random.nextLong()) +

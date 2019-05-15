@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.*
@@ -25,7 +26,7 @@ import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Suggestion
-import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.iid.FirebaseInstanceId
 import io.reactivex.Single
@@ -42,133 +43,133 @@ class MapSlideFragment : PoolFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_maps, container, false)
 
-        `$`(NetworkConnectionViewHandler::class.java).attach(view.findViewById(R.id.connectionError))
-        `$`(ApiHandler::class.java).setAuthorization(`$`(AccountHandler::class.java).phone)
-        `$`(TimerHandler::class.java).postDisposable(Runnable { `$`(SyncHandler::class.java).syncAll() }, 1325)
-        `$`(TimerHandler::class.java).postDisposable(Runnable { `$`(RefreshHandler::class.java).refreshAll() }, 1625)
+        on<NetworkConnectionViewHandler>().attach(view.findViewById(R.id.connectionError))
+        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
+        on<TimerHandler>().postDisposable(Runnable { on<SyncHandler>().syncAll() }, 1325)
+        on<TimerHandler>().postDisposable(Runnable { on<RefreshHandler>().refreshAll() }, 1625)
 
-        `$`(BubbleHandler::class.java).attach(view.findViewById(R.id.bubbleMapLayer), { mapBubble ->
-            if (`$`(MyBubbleHandler::class.java).isMyBubble(mapBubble)) {
-                `$`(MapActivityHandler::class.java).goToScreen(MapsActivity.EXTRA_SCREEN_PERSONAL)
+        on<BubbleHandler>().attach(view.findViewById(R.id.bubbleMapLayer), { mapBubble ->
+            if (on<MyBubbleHandler>().isMyBubble(mapBubble)) {
+                on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_PERSONAL)
             } else {
-                `$`(ReplyLayoutHandler::class.java).replyTo(mapBubble)
+                on<ReplyLayoutHandler>().replyTo(mapBubble)
             }
         }, { mapBubble, position ->
-                `$`(BubbleHandler::class.java).remove(mapBubble)
+                on<BubbleHandler>().remove(mapBubble)
                 mapBubble.onItemClickListener?.invoke(position)
         }, { mapBubble ->
             val groupId = (mapBubble.tag as Event).groupId
 
             if (groupId != null) {
-                `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(mapBubble.view, groupId)
+                on<GroupActivityTransitionHandler>().showGroupMessages(mapBubble.view, groupId)
             } else {
-                `$`(DefaultAlerts::class.java).thatDidntWork()
+                on<DefaultAlerts>().thatDidntWork()
             }
         }, { mapBubble ->
-            `$`(SuggestionHandler::class.java).clearSuggestions()
-            `$`(ShareHandler::class.java).shareTo(mapBubble.latLng!!) { group ->
+            on<SuggestionHandler>().clearSuggestions()
+            on<ShareHandler>().shareTo(mapBubble.latLng!!) { group ->
                 var success = false
                 if (mapBubble.tag is Suggestion) {
                     val suggestion = mapBubble.tag as Suggestion
-                    success = `$`(GroupMessageAttachmentHandler::class.java).shareSuggestion(suggestion, group)
+                    success = on<GroupMessageAttachmentHandler>().shareSuggestion(suggestion, group)
                 }
 
                 if (!success) {
-                    `$`(DefaultAlerts::class.java).thatDidntWork()
+                    on<DefaultAlerts>().thatDidntWork()
                     return@shareTo
                 }
 
-                `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(mapBubble.view, group.id)
+                on<GroupActivityTransitionHandler>().showGroupMessages(mapBubble.view, group.id)
             }
         }, { mapBubble ->
             val groupId = (mapBubble.tag as Group).id
-            `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(mapBubble.view, groupId)
+            on<GroupActivityTransitionHandler>().showGroupMessages(mapBubble.view, groupId)
         })
 
-        `$`(MapHandler::class.java).onMapReadyListener = { map ->
-            `$`(PhysicalGroupBubbleHandler::class.java).attach()
-            `$`(BubbleHandler::class.java).attach(map)
+        on<MapHandler>().onMapReadyListener = { map ->
+            on<PhysicalGroupBubbleHandler>().attach()
+            on<BubbleHandler>().attach(map)
         }
-        `$`(MapHandler::class.java).onMapChangedListener = {
-            `$`(BubbleHandler::class.java).update()
-            `$`(MapZoomHandler::class.java).update(`$`(MapHandler::class.java).zoom)
+        on<MapHandler>().onMapChangedListener = {
+            on<BubbleHandler>().update()
+            on<MapZoomHandler>().update(on<MapHandler>().zoom)
         }
-        `$`(MapHandler::class.java).onMapClickedListener = { latLng ->
-            if (`$`(ReplyLayoutHandler::class.java).isVisible) {
-                `$`(ReplyLayoutHandler::class.java).showReplyLayout(false)
+        on<MapHandler>().onMapClickedListener = { latLng ->
+            if (on<ReplyLayoutHandler>().isVisible) {
+                on<ReplyLayoutHandler>().showReplyLayout(false)
             } else {
                 var anyActionTaken: Boolean
-                anyActionTaken = `$`(SuggestionHandler::class.java).clearSuggestions()
-                anyActionTaken = anyActionTaken || `$`(BubbleHandler::class.java).remove({ mapBubble -> BubbleType.MENU == mapBubble.type })
+                anyActionTaken = on<SuggestionHandler>().clearSuggestions()
+                anyActionTaken = anyActionTaken || on<BubbleHandler>().remove({ mapBubble -> BubbleType.MENU == mapBubble.type })
 
                 if (!anyActionTaken) {
                     showMapMenu(latLng, null)
                 }
             }
         }
-        `$`(MapHandler::class.java).onMapLongClickedListener = { latLng ->
-            `$`(BubbleHandler::class.java).remove { mapBubble -> BubbleType.MENU == mapBubble.type }
+        on<MapHandler>().onMapLongClickedListener = { latLng ->
+            on<BubbleHandler>().remove { mapBubble -> BubbleType.MENU == mapBubble.type }
 
             val menuBubble = MapBubble(latLng, BubbleType.MENU)
             menuBubble.onItemClickListener = { position ->
                 when (position) {
-                    0 -> `$`(SuggestionHandler::class.java).createNewSuggestion(menuBubble.latLng!!)
+                    0 -> on<SuggestionHandler>().createNewSuggestion(menuBubble.latLng!!)
                 }
             }
-            `$`(BubbleHandler::class.java).add(menuBubble)
+            on<BubbleHandler>().add(menuBubble)
             menuBubble.onViewReadyListener = {
-                `$`(MapBubbleMenuView::class.java)
+                on<MapBubbleMenuView>()
                         .getMenuAdapter(menuBubble)
                         .setMenuItems(MapBubbleMenuItem(getString(R.string.add_suggestion_here)))
             }
         }
-        `$`(MapHandler::class.java).onMapIdleListener = { latLng ->
-            `$`(DisposableHandler::class.java).add(`$`(DataHandler::class.java).run {
+        on<MapHandler>().onMapIdleListener = { latLng ->
+            on<DisposableHandler>().add(on<DataHandler>().run {
                 getPhonesNear(latLng)
-                        .map<List<MapBubble>> { mapBubbleFrom(it) }.subscribe({ mapBubbles -> `$`(BubbleHandler::class.java).replace(mapBubbles) }, { networkError(it) })
+                        .map<List<MapBubble>> { mapBubbleFrom(it) }.subscribe({ mapBubbles -> on<BubbleHandler>().replace(mapBubbles) }, { networkError(it) })
             })
 
-            `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).getSuggestionsNear(latLng).subscribe({ suggestions -> `$`(SuggestionHandler::class.java).loadAll(suggestions) }, { networkError(it) }))
+            on<DisposableHandler>().add(on<ApiHandler>().getSuggestionsNear(latLng).subscribe({ suggestions -> on<SuggestionHandler>().loadAll(suggestions) }, { networkError(it) }))
 
-            `$`(RefreshHandler::class.java).refreshEvents(latLng)
-            `$`(RefreshHandler::class.java).refreshPhysicalGroups(latLng)
+            on<RefreshHandler>().refreshEvents(latLng)
+            on<RefreshHandler>().refreshPhysicalGroups(latLng)
 
-            `$`(MapZoomHandler::class.java).update(`$`(MapHandler::class.java).zoom)
+            on<MapZoomHandler>().update(on<MapHandler>().zoom)
         }
-        `$`(MapHandler::class.java).attach(childFragmentManager.findFragmentById(R.id.map) as MapFragment)
-        `$`(MyBubbleHandler::class.java).start()
-        `$`(ReplyLayoutHandler::class.java).attach(view.findViewById(R.id.replyLayout))
-        `$`(MyGroupsLayoutHandler::class.java).attach(view.findViewById(R.id.myGroupsLayout))
-        `$`(MyGroupsLayoutHandler::class.java).setContainerView(view.findViewById(R.id.bottomContainer))
+        on<MapHandler>().attach(childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment)
+        on<MyBubbleHandler>().start()
+        on<ReplyLayoutHandler>().attach(view.findViewById(R.id.replyLayout))
+        on<MyGroupsLayoutHandler>().attach(view.findViewById(R.id.myGroupsLayout))
+        on<MyGroupsLayoutHandler>().setContainerView(view.findViewById(R.id.bottomContainer))
 
-        `$`(ViewAttributeHandler::class.java).linkPadding(view.findViewById(R.id.contentAboveView), view.findViewById(R.id.contentView))
+        on<ViewAttributeHandler>().linkPadding(view.findViewById(R.id.contentAboveView), view.findViewById(R.id.contentView))
 
-        `$`(KeyboardVisibilityHandler::class.java).attach(view.findViewById(R.id.contentView))
-        `$`(DisposableHandler::class.java).add(`$`(KeyboardVisibilityHandler::class.java).isKeyboardVisible
+        on<KeyboardVisibilityHandler>().attach(view.findViewById(R.id.contentView))
+        on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ isVisible -> `$`(MyGroupsLayoutHandler::class.java).showBottomPadding(!isVisible) }, { it.printStackTrace() }))
+                .subscribe({ isVisible -> on<MyGroupsLayoutHandler>().showBottomPadding(!isVisible) }, { it.printStackTrace() }))
 
-        val verifiedNumber = `$`(PersistenceHandler::class.java).isVerified
-        `$`(MyGroupsLayoutActionsHandler::class.java).showVerifyMyNumber(!verifiedNumber)
+        val verifiedNumber = on<PersistenceHandler>().isVerified
+        on<MyGroupsLayoutActionsHandler>().showVerifyMyNumber(!verifiedNumber)
         if (!verifiedNumber) {
-            `$`(DisposableHandler::class.java).add(`$`(ApiHandler::class.java).isVerified.subscribe({ verified ->
-                `$`(PersistenceHandler::class.java).isVerified = verified
-                `$`(MyGroupsLayoutActionsHandler::class.java).showVerifyMyNumber(!verified)
+            on<DisposableHandler>().add(on<ApiHandler>().isVerified.subscribe({ verified ->
+                on<PersistenceHandler>().isVerified = verified
+                on<MyGroupsLayoutActionsHandler>().showVerifyMyNumber(!verified)
             }, { this.networkError(it) }))
         }
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(activity) { instanceIdResult ->
-            `$`(AccountHandler::class.java).updateDeviceToken(instanceIdResult.token)
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(activity as FragmentActivity) { instanceIdResult ->
+            on<AccountHandler>().updateDeviceToken(instanceIdResult.token)
         }
 
-        if (`$`(AccountHandler::class.java).active) {
-            `$`(AccountHandler::class.java).updateStatus(`$`(AccountHandler::class.java).status)
+        if (on<AccountHandler>().active) {
+            on<AccountHandler>().updateStatus(on<AccountHandler>().status)
         }
 
-        `$`(MyGroupsLayoutActionsHandler::class.java).showHelpButton(!`$`(PersistenceHandler::class.java).isHelpHidden)
+        on<MyGroupsLayoutActionsHandler>().showHelpButton(!on<PersistenceHandler>().isHelpHidden)
 
-        `$`(EventBubbleHandler::class.java).attach()
-        `$`(FeedHandler::class.java).attach(view.findViewById(R.id.feed))
+        on<EventBubbleHandler>().attach()
+        on<FeedHandler>().attach(view.findViewById(R.id.feed))
 
         return view
     }
@@ -177,35 +178,35 @@ class MapSlideFragment : PoolFragment() {
         val menuBubble = MapBubble(latLng, BubbleType.MENU)
         menuBubble.onItemClickListener = { position ->
             when (position) {
-                0 -> `$`(PhysicalGroupHandler::class.java).createPhysicalGroup(menuBubble.latLng!!)
-                1 -> `$`(ShareHandler::class.java).shareTo(menuBubble.latLng!!) { group ->
-                    val success = `$`(GroupMessageAttachmentHandler::class.java).shareLocation(menuBubble.latLng!!, group)
+                0 -> on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!)
+                1 -> on<ShareHandler>().shareTo(menuBubble.latLng!!) { group ->
+                    val success = on<GroupMessageAttachmentHandler>().shareLocation(menuBubble.latLng!!, group)
 
                     if (!success) {
-                        `$`(DefaultAlerts::class.java).thatDidntWork()
+                        on<DefaultAlerts>().thatDidntWork()
                     } else {
-                        `$`(GroupActivityTransitionHandler::class.java).showGroupMessages(menuBubble.view, group.id)
+                        on<GroupActivityTransitionHandler>().showGroupMessages(menuBubble.view, group.id)
                     }
                 }
-                2 -> `$`(EventHandler::class.java).createNewEvent(menuBubble.latLng!!, true) {
-                    `$`(MapHandler::class.java).centerMap(LatLng(
+                2 -> on<EventHandler>().createNewEvent(menuBubble.latLng!!, true) {
+                    on<MapHandler>().centerMap(LatLng(
                             it.latitude!!,
                             it.longitude!!
                     ))
                 }
             }
         }
-        `$`(BubbleHandler::class.java).add(menuBubble)
+        on<BubbleHandler>().add(menuBubble)
         menuBubble.status = title
         menuBubble.onViewReadyListener = {
-            `$`(MapBubbleMenuView::class.java)
+            on<MapBubbleMenuView>()
                     .getMenuAdapter(menuBubble)
                     .setMenuItems(
                             (MapBubbleMenuItem(getString(R.string.talk_here), R.drawable.ic_wifi_black_18dp)),
                             (MapBubbleMenuItem(getString(R.string.share_this_location), R.drawable.ic_share_black_18dp)),
                             (MapBubbleMenuItem(getString(R.string.add_event_here), R.drawable.ic_event_note_black_24dp)))
 
-            `$`(MapBubbleMenuView::class.java).setMenuTitle(menuBubble, title)
+            on<MapBubbleMenuView>().setMenuTitle(menuBubble, title)
         }
     }
 
@@ -219,21 +220,21 @@ class MapSlideFragment : PoolFragment() {
     override fun onResume() {
         super.onResume()
 
-        val locationPermissionGranted = `$`(PermissionHandler::class.java).has(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val locationPermissionGranted = on<PermissionHandler>().has(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         if (locationPermissionGranted) {
-            `$`(LocationHandler::class.java).getCurrentLocation { location -> `$`(AccountHandler::class.java).updateGeo(LatLng(location.latitude, location.longitude)) }
+            on<LocationHandler>().getCurrentLocation { location -> on<AccountHandler>().updateGeo(LatLng(location.latitude, location.longitude)) }
         }
 
-        val locationPermissionDenied = `$`(PermissionHandler::class.java).denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        `$`(MyGroupsLayoutActionsHandler::class.java).showAllowLocationPermissionsInSettings(locationPermissionDenied)
+        val locationPermissionDenied = on<PermissionHandler>().denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        on<MyGroupsLayoutActionsHandler>().showAllowLocationPermissionsInSettings(locationPermissionDenied)
 
-        val isNotificationsPaused = `$`(PersistenceHandler::class.java).isNotificationsPaused
-        `$`(MyGroupsLayoutActionsHandler::class.java).showUnmuteNotifications(isNotificationsPaused)
-        `$`(MyGroupsLayoutActionsHandler::class.java).showSetMyName(`$`(Val::class.java).isEmpty(`$`(AccountHandler::class.java).name))
+        val isNotificationsPaused = on<PersistenceHandler>().isNotificationsPaused
+        on<MyGroupsLayoutActionsHandler>().showUnmuteNotifications(isNotificationsPaused)
+        on<MyGroupsLayoutActionsHandler>().showSetMyName(on<Val>().isEmpty(on<AccountHandler>().name))
 
         if (locationPermissionGranted && locationPermissionWasDenied) {
-            `$`(MapHandler::class.java).updateMyLocationEnabled()
-            `$`(MapHandler::class.java).locateMe()
+            on<MapHandler>().updateMyLocationEnabled()
+            on<MapHandler>().locateMe()
         }
 
         locationPermissionWasDenied = locationPermissionDenied
@@ -248,8 +249,8 @@ class MapSlideFragment : PoolFragment() {
             }
 
             mapBubbles.add(MapBubble(
-                    `$`(LatLngStr::class.java).to(phone.latitude!!, phone.longitude!!),
-                    `$`(NameHandler::class.java).getName(phone),
+                    on<LatLngStr>().to(phone.latitude!!, phone.longitude!!),
+                    on<NameHandler>().getName(phone),
                     phone.status!!
             ).apply {
                 tag = phone
@@ -262,12 +263,12 @@ class MapSlideFragment : PoolFragment() {
 
     private fun networkError(throwable: Throwable) {
         throwable.printStackTrace()
-        `$`(ConnectionErrorHandler::class.java).notifyConnectionError()
+        on<ConnectionErrorHandler>().notifyConnectionError()
     }
 
     fun onBackPressed(): Boolean {
-        if (`$`(ReplyLayoutHandler::class.java).isVisible) {
-            `$`(ReplyLayoutHandler::class.java).showReplyLayout(false)
+        if (on<ReplyLayoutHandler>().isVisible) {
+            on<ReplyLayoutHandler>().showReplyLayout(false)
             return true
         }
 
@@ -277,19 +278,19 @@ class MapSlideFragment : PoolFragment() {
     fun handleIntent(intent: Intent?, onRequestMapOnScreenListener: (() -> Unit)?) {
         intent ?: return
 
-        `$`(IntentHandler::class.java).onNewIntent(intent, onRequestMapOnScreenListener)
+        on<IntentHandler>().onNewIntent(intent, onRequestMapOnScreenListener)
         if (Intent.ACTION_VIEW == intent.action) {
-            `$`(FeedHandler::class.java).hide()
+            on<FeedHandler>().hide()
         } else if (Intent.ACTION_SEND == intent.action) {
             val name = intent.getStringExtra(Intent.EXTRA_SUBJECT)
             val address = intent.getStringExtra(Intent.EXTRA_TEXT)
 
             if (address != null) {
-                `$`(DisposableHandler::class.java).add(Single.fromCallable { Geocoder(activity, Locale.getDefault()).getFromLocationName(address, 1) }.subscribeOn(Schedulers.io())
+                on<DisposableHandler>().add(Single.fromCallable { Geocoder(activity, Locale.getDefault()).getFromLocationName(address, 1) }.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ addresses ->
                             if (addresses.isEmpty()) {
-                                `$`(DefaultAlerts::class.java).thatDidntWork()
+                                on<DefaultAlerts>().thatDidntWork()
                             } else {
                                 showAddressOnMap(name, addresses[0])
                             }
@@ -302,7 +303,7 @@ class MapSlideFragment : PoolFragment() {
     private fun showAddressOnMap(name: String, address: Address) {
         val latLng = LatLng(address.latitude, address.longitude)
         showMapMenu(latLng, name)
-        `$`(MapHandler::class.java).centerMap(latLng)
+        on<MapHandler>().centerMap(latLng)
     }
 
     fun post(runnable: Runnable) {
