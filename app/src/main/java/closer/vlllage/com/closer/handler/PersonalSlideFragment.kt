@@ -12,10 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.AccountHandler
-import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.group.GroupHandler
 import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler
 import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
@@ -39,11 +37,7 @@ class PersonalSlideFragment : PoolFragment() {
     private lateinit var shareYourLocationSwitch: Switch
     private var previousStatus: String? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
-
-        val view = inflater.inflate(R.layout.activity_personal, container, false)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val subscribedGroupsRecyclerView = view.findViewById<RecyclerView>(R.id.subscribedGroupsRecyclerView)
         val youveSubscribedEmpty = view.findViewById<TextView>(R.id.youveSubscribedEmpty)
 
@@ -134,8 +128,10 @@ class PersonalSlideFragment : PoolFragment() {
         yourName.setOnClickListener { v -> on<SetNameHandler>().modifyName() }
 
         yourName.requestFocus()
+    }
 
-        return view
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.activity_personal, container, false)
     }
 
     private fun updateLocationInfo() {

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.ViewTreeObserver
-import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler
@@ -30,8 +29,6 @@ class ShareActivity : ListActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
 
         on<SearchGroupHandler>().hideCreateGroupOption()
 

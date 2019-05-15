@@ -41,10 +41,11 @@ class MapSlideFragment : PoolFragment() {
     private var pendingRunnable: Runnable? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.activity_maps, container, false)
+        return inflater.inflate(R.layout.activity_maps, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         on<NetworkConnectionViewHandler>().attach(view.findViewById(R.id.connectionError))
-        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
         on<TimerHandler>().postDisposable(Runnable { on<SyncHandler>().syncAll() }, 1325)
         on<TimerHandler>().postDisposable(Runnable { on<RefreshHandler>().refreshAll() }, 1625)
 
@@ -171,7 +172,10 @@ class MapSlideFragment : PoolFragment() {
         on<EventBubbleHandler>().attach()
         on<FeedHandler>().attach(view.findViewById(R.id.feed))
 
-        return view
+        if (pendingRunnable != null) {
+            pendingRunnable!!.run()
+            pendingRunnable = null
+        }
     }
 
     private fun showMapMenu(latLng: LatLng, title: String?) {
@@ -207,13 +211,6 @@ class MapSlideFragment : PoolFragment() {
                             (MapBubbleMenuItem(getString(R.string.add_event_here), R.drawable.ic_event_note_black_24dp)))
 
             on<MapBubbleMenuView>().setMenuTitle(menuBubble, title)
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (pendingRunnable != null) {
-            pendingRunnable!!.run()
-            pendingRunnable = null
         }
     }
 

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import closer.vlllage.com.closer.api.models.PhoneResult
 import closer.vlllage.com.closer.api.models.ReactionResult
-import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
@@ -19,8 +18,6 @@ class PhoneListActivity : ListActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
 
         val adapter = PhoneAdapterHeaderAdapter(on) { reactionResult ->
             if (reactionResult.from == on<PersistenceHandler>().phoneId) {

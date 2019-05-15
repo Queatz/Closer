@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 
 import closer.vlllage.com.closer.App
+import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PermissionHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
@@ -20,6 +22,7 @@ abstract class PoolActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         on<ApplicationHandler>().app = application as App
         on<ActivityHandler>().activity = this
+        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
     }
 
     override fun onDestroy() {

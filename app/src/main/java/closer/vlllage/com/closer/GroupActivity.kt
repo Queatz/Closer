@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import closer.vlllage.com.closer.handler.data.*
+import closer.vlllage.com.closer.handler.data.PermissionHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
@@ -29,8 +31,6 @@ class GroupActivity : CircularRevealActivity() {
         view = GroupViewHolder(findViewById(android.R.id.content))
 
         findViewById<View>(R.id.closeButton).setOnClickListener { view -> finish() }
-
-        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
 
         on<TimerHandler>().postDisposable(Runnable { on<RefreshHandler>().refreshAll() }, 1625)
 
