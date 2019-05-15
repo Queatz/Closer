@@ -24,9 +24,9 @@ import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.Val
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Event
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 
 class NotificationHandler constructor(private val on: On) {
 
@@ -90,7 +90,7 @@ class NotificationHandler constructor(private val on: On) {
                 "$groupId/invited", true)
     }
 
-    fun showGroupMessageNotification(text: String, messageFrom: String, groupName: String, groupId: String, isPassive: String) {
+    fun showGroupMessageNotification(text: String, messageFrom: String, groupName: String, groupId: String, isPassive: String?) {
         val context = on<ApplicationHandler>().app
 
         val intent = Intent(context, GroupActivity::class.java)

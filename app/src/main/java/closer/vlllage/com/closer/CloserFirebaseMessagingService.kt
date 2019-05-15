@@ -42,7 +42,7 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
                                     data["messageFrom"]!!,
                                     data["groupName"]!!,
                                     data["groupId"]!!,
-                                    data["passive"]!!)
+                                    data["passive"])
                         }
 
                         app.on<RefreshHandler>().refreshGroupMessages(data["groupId"]!!)
