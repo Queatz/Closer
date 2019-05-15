@@ -48,7 +48,7 @@ class FloatingRecyclerView : RecyclerView {
     }
 
     override fun onInterceptTouchEvent(e: MotionEvent): Boolean {
-        if (!isSolidBackground && e.action == MotionEvent.ACTION_DOWN) {
+        if (!isInLayout && !isSolidBackground && e.action == MotionEvent.ACTION_DOWN) {
             isLayoutFrozen = false
         }
 
@@ -56,7 +56,7 @@ class FloatingRecyclerView : RecyclerView {
     }
 
     override fun onTouchEvent(e: MotionEvent): Boolean {
-        if (!isSolidBackground && e.action == MotionEvent.ACTION_DOWN) {
+        if (!isInLayout && !isSolidBackground && e.action == MotionEvent.ACTION_DOWN) {
             isLayoutFrozen = !isScrolling
         }
 
