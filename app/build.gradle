@@ -88,7 +88,7 @@ dependencies {
     implementation 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
     implementation 'com.github.Queatz:Android-UX-Extras-Slide-Screen:0.2'
-    implementation 'com.github.Queatz:On:0.1.2'
+    implementation 'com.github.Queatz:On:0.1.3'
     implementation group: 'com.github.haifengl', name: 'smile-core', version: '1.5.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

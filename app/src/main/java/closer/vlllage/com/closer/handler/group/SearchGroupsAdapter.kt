@@ -10,7 +10,6 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
@@ -109,9 +108,10 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
                     holder.actionRecyclerView.visibility = View.GONE
                 } else {
                     holder.actionRecyclerView.visibility = View.VISIBLE
-                    holder.on<ApplicationHandler>().app = on<ApplicationHandler>().app
-                    holder.on<ActivityHandler>().activity = on<ActivityHandler>().activity
-                    holder.on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
+                    holder.on.use(on<ApplicationHandler>())
+                    holder.on.use(on<ActivityHandler>())
+                    holder.on.use(on<ApiHandler>())
+                    holder.on.use(on<StoreHandler>())
                     holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionAdapter.Layout.TEXT)
                     holder.on<GroupActionRecyclerViewHandler>().onGroupActionRepliedListener = { groupAction ->
                         on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, groupAction.group)

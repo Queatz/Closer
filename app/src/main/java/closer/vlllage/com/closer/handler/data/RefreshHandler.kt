@@ -4,10 +4,10 @@ import closer.vlllage.com.closer.api.models.*
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ListEqual
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 import io.objectbox.Property
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.SubscriptionBuilder
@@ -194,7 +194,7 @@ class RefreshHandler constructor(private val on: On) {
             serverIdList.add(obj.id!!)
         }
 
-        on<StoreHandler>().findAll<T>(clazz, idProperty, serverIdList).observer { existingObjs ->
+        on<StoreHandler>().findAll(clazz, idProperty, serverIdList).observer { existingObjs ->
             val existingObjsMap = HashMap<String, T>()
             for (existingObj in existingObjs) {
                 existingObjsMap[existingObj.id!!] = existingObj

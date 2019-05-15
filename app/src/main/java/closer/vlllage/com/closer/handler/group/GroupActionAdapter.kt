@@ -70,7 +70,7 @@ class GroupActionAdapter(on: On,
                     .build()
                     .findFirst()
 
-            holder.groupName.text = group?.name ?: ""
+            holder.groupName?.text = group?.name ?: ""
 
             when (getRandom(groupAction).nextInt(4)) {
                 1 -> holder.itemView.setBackgroundResource(R.drawable.clickable_blue_8dp)
@@ -82,14 +82,14 @@ class GroupActionAdapter(on: On,
             if (groupAction.photo != null) {
                 holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionSmallTextSize))
                 holder.actionName.setBackgroundResource(R.color.black_25)
-                holder.photo.setImageDrawable(null)
+                holder.photo?.setImageDrawable(null)
                 on<ImageHandler>().get().load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=256")
                         .noPlaceholder()
                         .into(holder.photo)
             } else {
                 holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionLargeTextSize))
                 holder.actionName.background = null
-                holder.photo.setImageResource(getRandomBubbleBackgroundResource(groupAction))
+                holder.photo?.setImageResource(getRandomBubbleBackgroundResource(groupAction))
             }
         }
     }
@@ -130,9 +130,9 @@ class GroupActionAdapter(on: On,
 
     inner class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var photo: ImageView = itemView.findViewById(R.id.photo)
+        var photo: ImageView? = itemView.findViewById(R.id.photo)
         var actionName: TextView = itemView.findViewById(R.id.actionName)
-        var groupName: TextView = itemView.findViewById(R.id.groupName)
+        var groupName: TextView? = itemView.findViewById(R.id.groupName)
 
         init {
             itemView.clipToOutline = true

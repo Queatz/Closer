@@ -97,6 +97,7 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         holder.on.use(on<ApplicationHandler>())
         holder.on.use(on<ActivityHandler>())
         holder.on.use(on<ResourcesHandler>())
+        holder.on.use(on<StoreHandler>())
         position--
 
         val group = groups[position]
