@@ -21,7 +21,7 @@ import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import java.util.*
 
-open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group: Group, view: View) -> Unit)?, private val onCreateGroupClickListener: ((groupName: String) -> Unit)?) : PoolRecyclerAdapter<SearchGroupsAdapter.SearchGroupsViewHolder>(on) {
+open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group: Group, view: View) -> Unit)?, private val onCreateGroupClickListener: ((groupName: String) -> Unit)?) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
     private var createPublicGroupName: String? = null
     private val groups = ArrayList<Group>()
@@ -46,97 +46,105 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
         return this
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchGroupsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return SearchGroupsViewHolder(LayoutInflater.from(parent.context)
                 .inflate(layoutResId, parent, false))
     }
 
-    override fun onBindViewHolder(holder: SearchGroupsViewHolder, position: Int) {
-        if (position >= itemCount - createGroupCount) {
-            holder.pool = On()
-            holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
-            holder.name.text = createPublicGroupName
-            holder.about.text = on<ResourcesHandler>().resources.getString(R.string.add_new_public_group)
-            holder.backgroundPhoto.visibility = View.GONE
-            holder.actionRecyclerView.visibility = View.GONE
-            holder.cardView.setOnClickListener { view ->
-                onCreateGroupClickListener?.invoke(createPublicGroupName!!)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is SearchGroupsViewHolder -> {
+                if (position >= itemCount - createGroupCount) {
+                    holder.on = On()
+                    holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
+                    holder.name.text = createPublicGroupName
+                    holder.about.text = on<ResourcesHandler>().resources.getString(R.string.add_new_public_group)
+                    holder.backgroundPhoto.visibility = View.GONE
+                    holder.actionRecyclerView.visibility = View.GONE
+                    holder.cardView.setOnClickListener { view ->
+                        onCreateGroupClickListener?.invoke(createPublicGroupName!!)
+                    }
+                    holder.cardView.setOnLongClickListener(null)
+                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
+                    return
+                }
+
+                val group = groups[position]
+
+                holder.name.text = on<Val>().of(group.name!!, on<ResourcesHandler>().resources.getString(R.string.app_name))
+                if (!group.hasEvent() && !group.isPublic) {
+                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_blue_4dp)
+                    holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
+                    holder.about.text = on<ResourcesHandler>().resources.getString(R.string.private_group)
+                } else if (group.physical) {
+                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_purple_4dp)
+                    holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
+                    holder.about.text = on<Val>().of(group.about)
+                } else if (group.hasEvent()) {
+                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_red_4dp)
+                    holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_event)
+                    val event = on<StoreHandler>().store.box(Event::class.java).query()
+                            .equal(Event_.id, group.eventId!!)
+                            .build().findFirst()
+                    holder.about.text = if (event != null)
+                        on<EventDetailsHandler>().formatEventDetails(event)
+                    else
+                        on<ResourcesHandler>().resources.getString(R.string.event)
+                } else {
+                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
+                    holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
+                    holder.about.text = on<Val>().of(group.about)
+                }
+                holder.cardView.setOnClickListener { view ->
+                    onGroupClickListener?.invoke(group, holder.itemView)
+                }
+                holder.cardView.setOnLongClickListener { view ->
+                    on<GroupMemberHandler>().changeGroupSettings(group)
+                    true
+                }
+
+                holder.on = On()
+
+                if (isSmall) {
+                    holder.actionRecyclerView.visibility = View.GONE
+                } else {
+                    holder.actionRecyclerView.visibility = View.VISIBLE
+                    holder.on<ApplicationHandler>().app = on<ApplicationHandler>().app
+                    holder.on<ActivityHandler>().activity = on<ActivityHandler>().activity
+                    holder.on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
+                    holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionAdapter.Layout.TEXT)
+                    holder.on<GroupActionRecyclerViewHandler>().onGroupActionRepliedListener = { groupAction ->
+                        on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, groupAction.group)
+                    }
+                    holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class.java).query()
+                            .equal(GroupAction_.group, group.id!!)
+                            .build().subscribe().single()
+                            .on(AndroidScheduler.mainThread())
+                            .observer { groupActions ->
+                                holder.on<GroupActionRecyclerViewHandler>().recyclerView!!.visibility = if (groupActions.isEmpty()) View.GONE else View.VISIBLE
+                                holder.on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
+                            })
+
+                    on<ImageHandler>().get().cancelRequest(holder.backgroundPhoto)
+                    if (group.photo != null) {
+                        holder.backgroundPhoto.visibility = View.VISIBLE
+                        holder.backgroundPhoto.setImageDrawable(null)
+                        on<PhotoLoader>().softLoad(group.photo!!, holder.backgroundPhoto)
+                    } else {
+                        holder.backgroundPhoto.visibility = View.GONE
+                    }
+                }
+
             }
-            holder.cardView.setOnLongClickListener(null)
-            holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
-            return
         }
-
-        val group = groups[position]
-
-        holder.name.text = on<Val>().of(group.name!!, on<ResourcesHandler>().resources.getString(R.string.app_name))
-        if (!group.hasEvent() && !group.isPublic) {
-            holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_blue_4dp)
-            holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
-            holder.about.text = on<ResourcesHandler>().resources.getString(R.string.private_group)
-        } else if (group.physical) {
-            holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_purple_4dp)
-            holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
-            holder.about.text = on<Val>().of(group.about)
-        } else if (group.hasEvent()) {
-            holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_red_4dp)
-            holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_event)
-            val event = on<StoreHandler>().store.box(Event::class.java).query()
-                    .equal(Event_.id, group.eventId!!)
-                    .build().findFirst()
-            holder.about.text = if (event != null)
-                on<EventDetailsHandler>().formatEventDetails(event)
-            else
-                on<ResourcesHandler>().resources.getString(R.string.event)
-        } else {
-            holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
-            holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
-            holder.about.text = on<Val>().of(group.about)
-        }
-        holder.cardView.setOnClickListener { view ->
-            onGroupClickListener?.invoke(group, holder.itemView)
-        }
-        holder.cardView.setOnLongClickListener { view ->
-            on<GroupMemberHandler>().changeGroupSettings(group)
-            true
-        }
-
-        holder.pool = On()
-
-        if (isSmall) {
-            holder.actionRecyclerView.visibility = View.GONE
-        } else {
-            holder.actionRecyclerView.visibility = View.VISIBLE
-            holder.pool!!<ApplicationHandler>().app = on<ApplicationHandler>().app
-            holder.pool!!<ActivityHandler>().activity = on<ActivityHandler>().activity
-            holder.pool!!<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
-            holder.pool!!<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionAdapter.Layout.TEXT)
-            holder.pool!!<GroupActionRecyclerViewHandler>().onGroupActionRepliedListener = { groupAction ->
-                on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, groupAction.group)
-            }
-            holder.pool!!<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class.java).query()
-                    .equal(GroupAction_.group, group.id!!)
-                    .build().subscribe().single()
-                    .on(AndroidScheduler.mainThread())
-                    .observer { groupActions ->
-                        holder.pool!!<GroupActionRecyclerViewHandler>().recyclerView!!.visibility = if (groupActions.isEmpty()) View.GONE else View.VISIBLE
-                        holder.pool!!<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
-                    })
-
-            on<ImageHandler>().get().cancelRequest(holder.backgroundPhoto)
-            if (group.photo != null) {
-                holder.backgroundPhoto.visibility = View.VISIBLE
-                holder.backgroundPhoto.setImageDrawable(null)
-                on<PhotoLoader>().softLoad(group.photo!!, holder.backgroundPhoto)
-            } else {
-                holder.backgroundPhoto.visibility = View.GONE
-            }
-        }
-
     }
 
-    override fun onViewRecycled(holder: SearchGroupsViewHolder) {
-        holder.pool?.off()
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        when (holder) {
+            is SearchGroupsViewHolder -> {
+                holder.on.off()
+            }
+        }
     }
 
     override fun getItemCount() = groups.size + createGroupCount
@@ -199,6 +207,6 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
         var action: TextView = itemView.findViewById(R.id.action)
         var actionRecyclerView: RecyclerView = itemView.findViewById(R.id.actionRecyclerView)
         var backgroundPhoto: ImageView = itemView.findViewById(R.id.backgroundPhoto)
-        var pool: On? = null
+        lateinit var on: On
     }
 }
