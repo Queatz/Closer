@@ -248,7 +248,7 @@ class MapSlideFragment : PoolFragment() {
             mapBubbles.add(MapBubble(
                     on<LatLngStr>().to(phone.latitude!!, phone.longitude!!),
                     on<NameHandler>().getName(phone),
-                    phone.status!!
+                    phone.status
             ).apply {
                 tag = phone
                 this.phone = phone.id

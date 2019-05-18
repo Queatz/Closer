@@ -32,11 +32,11 @@ class MapBubbleMenuView constructor(private val on: On) {
 
     fun setMenuTitle(mapBubble: MapBubble, title: String?) {
         val menuTitle = mapBubble.view!!.findViewById<TextView>(R.id.menuTitle)
-        if (title?.isEmpty() == false) {
-            menuTitle.visibility = View.GONE
-        } else {
+        if (title?.isNotEmpty() == true) {
             menuTitle.visibility = View.VISIBLE
             menuTitle.text = title
+        } else {
+            menuTitle.visibility = View.GONE
         }
     }
 
