@@ -18,10 +18,10 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
+import com.queatz.on.On
 import java.util.regex.Pattern
 
 class GroupMessageParseHandler constructor(private val on: On) {
@@ -34,7 +34,9 @@ class GroupMessageParseHandler constructor(private val on: On) {
             if (phoneList.isEmpty()) {
                 on<ResourcesHandler>().resources.getString(R.string.unknown)
             }
-            on<NameHandler>().getName(phoneList.get(0))
+            else {
+                on<NameHandler>().getName(phoneList[0])
+            }
         }
 
     private val defaultMentionClickListener: OnMentionClickListener
