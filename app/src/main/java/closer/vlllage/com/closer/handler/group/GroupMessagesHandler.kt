@@ -14,14 +14,13 @@ import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.CircularRevealActivity
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.objectbox.reactive.DataObserver
 import io.objectbox.reactive.DataSubscription
 import java.util.*
 
@@ -94,12 +93,12 @@ class GroupMessagesHandler constructor(private val on: On) {
         }
 
         updateSendButton()
-        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe({ group ->
+        on<GroupHandler>().onGroupChanged { group ->
             if (replyMessage.text.toString().isEmpty()) {
                 replyMessage.setText(on<GroupMessageParseHandler>().parseText(on<GroupDraftHandler>().getDraft(group)!!))
                 updateSendButton()
             }
-        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+        }
 
         this.replyMessage.addTextChangedListener(object : TextWatcher {
 
@@ -156,7 +155,7 @@ class GroupMessagesHandler constructor(private val on: On) {
             }
         }
 
-        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe { group ->
+        on<GroupHandler>().onGroupChanged { group ->
             if (groupMessagesSubscription != null) {
                 on<DisposableHandler>().dispose(groupMessagesSubscription!!)
             }
@@ -166,10 +165,10 @@ class GroupMessagesHandler constructor(private val on: On) {
                     .sort(on<SortHandler>().sortGroupMessages())
                     .build()
                     .subscribe().on(AndroidScheduler.mainThread())
-                    .observer(DataObserver<List<GroupMessage>> { this.setGroupMessages(it) })
+                    .observer { this.setGroupMessages(it) }
 
             on<DisposableHandler>().add(groupMessagesSubscription!!)
-        })
+        }
     }
 
     fun showSendMoreOptions(show: Boolean) {
@@ -214,6 +213,7 @@ class GroupMessagesHandler constructor(private val on: On) {
         }
 
         if (on<GroupHandler>().group == null) {
+            on<DefaultAlerts>().thatDidntWork()
             return false
         }
 

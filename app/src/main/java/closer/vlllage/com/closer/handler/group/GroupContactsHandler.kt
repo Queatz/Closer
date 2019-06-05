@@ -63,7 +63,7 @@ class GroupContactsHandler constructor(private val on: On) {
             on<AlertHandler>().make().apply {
                 positiveButton = on<ResourcesHandler>().resources.getString(R.string.cancel_invite)
                 message = on<ResourcesHandler>().resources.getString(R.string.confirm_cancel_invite, groupInvite.name)
-                positiveButtonCallback = { alertResult -> cancelInvite(groupInvite) }
+                positiveButtonCallback = { cancelInvite(groupInvite) }
                 show()
             }
         }, { groupContact ->

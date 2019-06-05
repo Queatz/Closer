@@ -10,13 +10,13 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 import closer.vlllage.com.closer.ui.RevealAnimator
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 
@@ -31,7 +31,7 @@ class GroupActionHandler constructor(private val on: On) {
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO)
 
-        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe { group ->
+        on<GroupHandler>().onGroupChanged { group ->
             if (groupActionsDisposable != null) {
                 on<DisposableHandler>().dispose(groupActionsDisposable!!)
             }
@@ -49,7 +49,7 @@ class GroupActionHandler constructor(private val on: On) {
             on<DisposableHandler>().add(groupActionsDisposable!!)
 
             on<RefreshHandler>().refreshGroupActions(group.id!!)
-        })
+        }
     }
 
     fun cancelPendingAnimation() {

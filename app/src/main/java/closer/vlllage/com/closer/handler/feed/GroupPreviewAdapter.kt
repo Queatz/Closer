@@ -74,23 +74,13 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        var position = position
         super.onBindViewHolder(viewHolder, position)
 
         if (position < HEADER_COUNT) {
-            val holder = viewHolder as HeaderViewHolder
-            holder.on = On()
-            holder.on.use(on<StoreHandler>())
-            holder.on.use(on<SyncHandler>())
-            holder.on.use(on<MapHandler>())
-            holder.on.use(on<ApplicationHandler>())
-            holder.on.use(on<ActivityHandler>())
-            holder.on.use(on<SortHandler>())
-            holder.on.use(on<KeyboardHandler>())
-            holder.on.use(on<GroupMemberHandler>())
-            holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView)
+            bindHeader(viewHolder as HeaderViewHolder)
             return
         }
+
         val holder = viewHolder as ViewHolder
         holder.on = On()
         holder.on.use(on<ApiHandler>())
@@ -98,9 +88,8 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         holder.on.use(on<ActivityHandler>())
         holder.on.use(on<ResourcesHandler>())
         holder.on.use(on<StoreHandler>())
-        position--
 
-        val group = groups[position]
+        val group = groups[position - HEADER_COUNT]
         holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
         holder.groupName.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupMessages(holder.groupName, group.id) }
         holder.groupName.setOnLongClickListener {
@@ -222,6 +211,19 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
 
     override fun getItemPriority(position: Int): Int {
         return max(0, position - if (on<DistanceHandler>().isUserNearGroup(groups[position - 1])) 100 else 0)
+    }
+
+    private fun bindHeader(holder: HeaderViewHolder) {
+        holder.on = On()
+        holder.on.use(on<StoreHandler>())
+        holder.on.use(on<SyncHandler>())
+        holder.on.use(on<MapHandler>())
+        holder.on.use(on<ApplicationHandler>())
+        holder.on.use(on<ActivityHandler>())
+        holder.on.use(on<SortHandler>())
+        holder.on.use(on<KeyboardHandler>())
+        holder.on.use(on<GroupMemberHandler>())
+        holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView)
     }
 
     class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

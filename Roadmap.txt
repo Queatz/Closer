@@ -1,4 +1,47 @@
 
+
+Confusing files
+===============
+
+
+DataHandler (single reusable chains)
+RefreshHandler (revisit when @Unique lands)
+
+
+GroupContactsHandler
+GroupHandler
+GroupMessagesHandler
+GroupActivity
+
+
+
+
+
+
+Move all db/api calls to DataManager across entire codebase
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 =============
 Profiles & Recent Notifications
 =============

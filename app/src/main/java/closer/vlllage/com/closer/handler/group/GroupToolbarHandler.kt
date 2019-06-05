@@ -27,8 +27,6 @@ class GroupToolbarHandler constructor(private val on: On) {
     private lateinit var adapter: ToolbarAdapter
     val isShareActiveObservable = BehaviorSubject.createDefault(false)
 
-    private var group: Group? = null
-
     fun attach(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
         adapter = ToolbarAdapter(on)
@@ -46,11 +44,11 @@ class GroupToolbarHandler constructor(private val on: On) {
         }
         recyclerView.adapter = adapter
 
-        on<DisposableHandler>().add(isShareActiveObservable.subscribe { isShareActive -> show(group) })
-        on<DisposableHandler>().add(on<GroupHandler>().onGroupUpdated().subscribe { this.show(it) })
-        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe { this.show(it) })
-        on<DisposableHandler>().add(on<GroupHandler>().onEventChanged().subscribe { g -> show(group) })
-        on<DisposableHandler>().add(on<GroupHandler>().onPhoneChanged().subscribe { g -> show(group) })
+        on<DisposableHandler>().add(isShareActiveObservable.subscribe { show(on<GroupHandler>().group) })
+        on<GroupHandler>().onGroupUpdated { this.show(it) }
+        on<GroupHandler>().onGroupChanged { this.show(it) }
+        on<GroupHandler>().onEventChanged { show(on<GroupHandler>().group) }
+        on<GroupHandler>().onPhoneChanged { show(on<GroupHandler>().group) }
     }
 
     private fun show(group: Group?) {
@@ -58,9 +56,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             return
         }
 
-        this.group = group
-        val event = on<GroupHandler>().onEventChanged().value
-        val phone = on<GroupHandler>().onPhoneChanged().value
+        val event = on<GroupHandler>().event
 
         val items = ArrayList<ToolbarItem>()
 
@@ -68,19 +64,19 @@ class GroupToolbarHandler constructor(private val on: On) {
             items.add(ToolbarItem(
                     R.string.messages,
                     R.drawable.ic_message_black_24dp,
-                    View.OnClickListener { v -> }
+                    View.OnClickListener { }
             ))
 
             items.add(ToolbarItem(
                     R.string.photos,
                     R.drawable.ic_photo_black_24dp,
-                    View.OnClickListener { v -> }
+                    View.OnClickListener { }
             ))
 
             items.add(ToolbarItem(
                     R.string.groups,
                     R.drawable.ic_person_black_24dp,
-                    View.OnClickListener { v -> }
+                    View.OnClickListener { }
             ))
         }
 
@@ -122,7 +118,7 @@ class GroupToolbarHandler constructor(private val on: On) {
                                     } else {
                                         on<DefaultAlerts>().thatDidntWork()
                                     }
-                                }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                                }, { on<DefaultAlerts>().thatDidntWork() }))
                             }
                             show()
                         }
@@ -135,10 +131,10 @@ class GroupToolbarHandler constructor(private val on: On) {
                     R.string.set_name,
                     R.drawable.ic_edit_location_black_24dp,
                     View.OnClickListener { v ->
-                        on<PhysicalGroupUpgradeHandler>().convertToHub(group, { updatedGroup ->
-                            on<GroupHandler>().showGroupName(updatedGroup)
+                        on<PhysicalGroupUpgradeHandler>().convertToHub(group) { updatedGroup ->
+                            on<RefreshHandler>().refresh(updatedGroup)
                             show(updatedGroup)
-                        })
+                        }
                     }
             ))
         }
@@ -148,10 +144,10 @@ class GroupToolbarHandler constructor(private val on: On) {
                     R.string.set_background,
                     R.drawable.ic_camera_black_24dp,
                     View.OnClickListener { v ->
-                        on<PhysicalGroupUpgradeHandler>().setBackground(group, { updateGroup ->
-                            on<GroupHandler>().setGroupBackground(updateGroup)
-                            show(updateGroup)
-                        })
+                        on<PhysicalGroupUpgradeHandler>().setBackground(group) { updatedGroup ->
+                            on<RefreshHandler>().refresh(updatedGroup)
+                            show(updatedGroup)
+                        }
                     }
             ))
         }
@@ -187,6 +183,11 @@ class GroupToolbarHandler constructor(private val on: On) {
         adapter.items = items
     }
 
+    private fun toggleShare() {
+        isShareActiveObservable.onNext(!isShareActiveObservable.value!!)
+    }
+
+
     private fun isEventCancelable(event: Event?): Boolean {
         return event != null && on<PersistenceHandler>().phoneId != null &&
                 !event.cancelled && event.creator != null &&
@@ -198,17 +199,6 @@ class GroupToolbarHandler constructor(private val on: On) {
         (on<ActivityHandler>().activity as CircularRevealActivity)
                 .finish { on<MapActivityHandler>().showGroupOnMap(group!!) }
     }
-
-    private fun toggleShare() {
-        if (isShareActiveObservable.value!!) {
-            isShareActiveObservable.onNext(false)
-            return
-        }
-
-        isShareActiveObservable.onNext(true)
-    }
-
-
     private fun showEventOnMap(event: Event?) {
         (on<ActivityHandler>().activity as CircularRevealActivity)
                 .finish { on<MapActivityHandler>().showEventOnMap(event!!) }

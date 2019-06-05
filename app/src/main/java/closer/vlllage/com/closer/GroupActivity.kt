@@ -5,7 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.FeatureHandler
+import closer.vlllage.com.closer.handler.FeatureType
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PermissionHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
@@ -19,6 +22,8 @@ import closer.vlllage.com.closer.store.models.GroupMember_
 import closer.vlllage.com.closer.store.models.Group_
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import io.objectbox.android.AndroidScheduler
+import org.greenrobot.essentials.StringUtils
+import java.util.*
 
 class GroupActivity : CircularRevealActivity() {
 
@@ -30,125 +35,89 @@ class GroupActivity : CircularRevealActivity() {
         setContentView(R.layout.activity_group)
         view = GroupViewHolder(findViewById(android.R.id.content))
 
-        findViewById<View>(R.id.closeButton).setOnClickListener { view -> finish() }
+        bindViewEvents()
 
-        on<TimerHandler>().postDisposable(Runnable { on<RefreshHandler>().refreshAll() }, 1625)
-
-        on<GroupToolbarHandler>().attach(findViewById<RecyclerView>(R.id.eventToolbar))
-
-        on<GroupHandler>().attach(view.groupName, view.backgroundPhoto, view.groupAbout, view.peopleInGroup, findViewById(R.id.settingsButton))
-        handleIntent(intent)
-
-        view.groupAbout.setOnClickListener { v ->
-            if (on<GroupHandler>().group == null || on<GroupHandler>().group!!.about == null) {
-                return@setOnClickListener
-            }
-
-            on<DefaultAlerts>().message(
-                    on<ResourcesHandler>().resources.getString(R.string.about_this_group),
-                    on<GroupHandler>().group!!.about!!
-            )
+        if (on<FeatureHandler>().has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
+            view.settingsButton.visible = true
         }
 
-        on<GroupActionHandler>().attach(view.actionFrameLayout, findViewById<RecyclerView>(R.id.actionRecyclerView))
-        on<GroupMessagesHandler>().attach(view.messagesRecyclerView, view.replyMessage, view.sendButton, view.sendMoreButton, findViewById(R.id.sendMoreLayout))
-        on<PinnedMessagesHandler>().attach(view.pinnedMessagesRecyclerView)
-        on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, findViewById<RecyclerView>(R.id.mentionSuggestionRecyclerView)) { mention -> on<GroupMessagesHandler>().insertMention(mention) }
-        on<MiniWindowHandler>().attach(view.groupName, findViewById(R.id.backgroundColor)) { this.finish() }
+        on<TimerHandler>().postDisposable(Runnable { on<RefreshHandler>().refreshAll() }, 1625)
+        handleIntent(intent)
 
-        findViewById<View>(R.id.settingsButton).setOnClickListener { view -> on<GroupMemberHandler>().changeGroupSettings(on<GroupHandler>().group) }
+        on<GroupToolbarHandler>().attach(view.eventToolbar)
+        on<GroupActionHandler>().attach(view.actionFrameLayout, view.actionRecyclerView)
+        on<GroupMessagesHandler>().attach(view.messagesRecyclerView, view.replyMessage, view.sendButton, view.sendMoreButton, view.sendMoreLayout)
+        on<PinnedMessagesHandler>().attach(view.pinnedMessagesRecyclerView)
+        on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
+            mention -> on<GroupMessagesHandler>().insertMention(mention)
+        }
+
+        on<MiniWindowHandler>().attach(view.groupName, view.backgroundColor) { finish() }
 
         if (on<PersistenceHandler>().phoneId != null) {
             on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class.java).query()
                     .equal(GroupMember_.group, groupId)
-                    .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId)
+                    .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
                     .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupMembers ->
-                        var groupMember: GroupMember? = if (groupMembers.isEmpty()) null else groupMembers[0]
+                        val groupMember = if (groupMembers.isEmpty()) GroupMember() else groupMembers[0]
 
-                        if (groupMember == null) {
-                            groupMember = GroupMember()
-                        }
-
-                        if (groupMember.muted) {
-                            findViewById<View>(R.id.notificationSettingsButton).setOnClickListener { view -> on<GroupMemberHandler>().changeGroupSettings(on<GroupHandler>().group) }
-                            findViewById<View>(R.id.notificationSettingsButton).visibility = View.VISIBLE
-                        } else {
-                            findViewById<View>(R.id.notificationSettingsButton).visibility = View.GONE
-                        }
+                        view.notificationSettingsButton.visible = groupMember.muted
                     })
         }
 
-        view.replyMessage.setOnClickListener { view -> on<GroupActionHandler>().show(false) }
-
-        on<DisposableHandler>().add(on<GroupHandler>().onGroupUpdated().subscribe { group ->
+        on<GroupHandler>().onGroupUpdated { group ->
             on<PinnedMessagesHandler>().show(group)
-            on<GroupHandler>().setGroupBackground(group)
-        })
+            setGroupBackground(group)
+        }
 
-        val connectionError = { _: Throwable -> on<ConnectionErrorHandler>().notifyConnectionError() }
+        on<GroupHandler>().onContactInfoChanged { contactInfo ->
+            redrawContacts(contactInfo.contactNames, contactInfo.contactInvites)
+        }
 
-        on<DisposableHandler>().add(on<GroupHandler>().onGroupChanged().subscribe({ group ->
+        on<GroupHandler>().onGroupChanged { group ->
+            showGroupName(group)
+            view.peopleInGroup.text = ""
+
+            if (on<Val>().isEmpty(group.about)) {
+                view.groupAbout.visible = false
+            } else {
+                view.groupAbout.visible = true
+                view.groupAbout.text = group.about
+            }
+
             on<PinnedMessagesHandler>().show(group)
-
-            findViewById<View>(R.id.backgroundColor).setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
 
             on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
 
             view.peopleInGroup.isSelected = true
-            view.peopleInGroup.setOnClickListener { view -> toggleContactsView() }
 
-            if (!group.hasPhone()) {
-                view.profilePhoto.visibility = View.GONE
-            }
+            view.profilePhoto.visible = group.hasPhone()
 
             on<GroupContactsHandler>().attach(group, view.contactsRecyclerView, view.searchContacts, view.showPhoneContactsButton)
 
-            view.showPhoneContactsButton.setOnClickListener { v ->
-                if (on<PermissionHandler>().denied(READ_CONTACTS)) {
-                    on<AlertHandler>().make().apply {
-                        title = on<ResourcesHandler>().resources.getString(R.string.enable_contacts_permission)
-                        message = on<ResourcesHandler>().resources.getString(R.string.enable_contacts_permission_rationale)
-                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.open_settings)
-                        positiveButtonCallback = { on<SystemSettingsHandler>().showSystemSettings() }
-                        show()
-                    }
-                    return@setOnClickListener
-                }
+            setGroupBackground(group)
+        }
 
-                on<PermissionHandler>().check(READ_CONTACTS).`when` { granted ->
-                    if (granted) {
-                        on<GroupContactsHandler>().showContactsForQuery()
-                        view.showPhoneContactsButton.visibility = View.GONE
-                    }
-                }
-            }
-
-            on<GroupHandler>().setGroupBackground(group)
-        }, connectionError))
-
-        on<DisposableHandler>().add(on<GroupHandler>().onEventChanged().subscribe({ event ->
-            view.groupDetails.visibility = View.VISIBLE
+        on<GroupHandler>().onEventChanged { event ->
+            view.groupDetails.visible = true
             view.groupDetails.text = on<EventDetailsHandler>().formatEventDetails(event)
-        }, connectionError))
+        }
 
-        on<DisposableHandler>().add(on<GroupHandler>().onPhoneChanged().subscribe({ phone ->
-            view.groupDetails.visibility = View.GONE
+        on<GroupHandler>().onPhoneChanged { phone ->
+            view.groupDetails.visible = false
             if (phone.photo != null) {
-                view.profilePhoto.visibility = View.VISIBLE
+                view.profilePhoto.visible = true
                 on<ImageHandler>().get().load(phone.photo + "?s=512")
                         .into(view.profilePhoto)
-                view.profilePhoto.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(view.profilePhoto, phone.photo!!) }
+                view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, phone.photo!!) }
 
             } else {
-                view.profilePhoto.visibility = View.GONE
+                view.profilePhoto.visible = false
             }
-        }, connectionError))
+        }
 
-        view.shareWithRecyclerView.layoutManager = LinearLayoutManager(
-                view.shareWithRecyclerView.context,
-                RecyclerView.VERTICAL,
-                false
-        )
+        view.shareWithRecyclerView.layoutManager =
+                LinearLayoutManager(view.shareWithRecyclerView.context)
 
         on<DisposableHandler>().add(on<GroupToolbarHandler>().isShareActiveObservable
                 .subscribe { isShareActive ->
@@ -158,7 +127,7 @@ class GroupActivity : CircularRevealActivity() {
                     val groups = queryBuilder.sort(on<SortHandler>().sortGroups()).notEqual(Group_.physical, true).build().find()
 
                     val searchGroupsAdapter = SearchGroupsAdapter(on, { group, view ->
-                        val success = on<GroupMessageAttachmentHandler>().shareEvent(on<GroupHandler>().onEventChanged().getValue()!!, group)
+                        val success = on<GroupMessageAttachmentHandler>().shareEvent(on<GroupHandler>().event!!, group)
 
                         if (success) {
                             (on<ActivityHandler>().activity as CircularRevealActivity)
@@ -174,6 +143,88 @@ class GroupActivity : CircularRevealActivity() {
 
                     view.shareWithRecyclerView.adapter = searchGroupsAdapter
                 })
+    }
+
+    private fun redrawContacts(contactNames: List<String>, contactInvites: List<String>) {
+        val names = ArrayList<String>()
+        names.addAll(contactNames)
+        names.addAll(contactInvites)
+
+        if (names.isEmpty()) {
+            view.peopleInGroup.visible = false
+            view.peopleInGroup.setText(R.string.add_contact)
+            return
+        }
+
+        view.peopleInGroup.visible = true
+
+        view.peopleInGroup.text = StringUtils.join(names, ", ")
+    }
+
+    private fun showGroupName(group: Group?) {
+        if (group == null) {
+            view.groupName.setText(R.string.not_found)
+            return
+        }
+
+        if (group.hasPhone()) {
+            on<DisposableHandler>().add(on<DataHandler>().getPhone(group.phoneId!!).subscribe(
+                    { phone -> view.groupName.text = phone.name }, { error -> on<DefaultAlerts>().thatDidntWork() }
+            ))
+        } else {
+            view.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
+        }
+    }
+
+    private fun setGroupBackground(group: Group) {
+        if (group.photo != null) {
+            view.backgroundPhoto.visible = true
+            view.backgroundPhoto.setImageDrawable(null)
+            on<PhotoLoader>().softLoad(group.photo!!, view.backgroundPhoto)
+        } else {
+            view.backgroundPhoto.visible = false
+        }
+    }
+
+    private fun bindViewEvents() {
+        view.closeButton.setOnClickListener { finish() }
+
+        view.groupAbout.setOnClickListener {
+            on<DefaultAlerts>().message(
+                    on<ResourcesHandler>().resources.getString(R.string.about_this_group),
+                    on<GroupHandler>().group?.about ?: ""
+            )
+        }
+
+        view.replyMessage.setOnClickListener { on<GroupActionHandler>().show(false) }
+
+        view.peopleInGroup.setOnClickListener { toggleContactsView() }
+
+        view.settingsButton.setOnClickListener {
+            on<GroupMemberHandler>().changeGroupSettings(on<GroupHandler>().group)
+        }
+
+        view.showPhoneContactsButton.setOnClickListener { v ->
+            if (on<PermissionHandler>().denied(READ_CONTACTS)) {
+                on<AlertHandler>().make().apply {
+                    title = on<ResourcesHandler>().resources.getString(R.string.enable_contacts_permission)
+                    message = on<ResourcesHandler>().resources.getString(R.string.enable_contacts_permission_rationale)
+                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.open_settings)
+                    positiveButtonCallback = { on<SystemSettingsHandler>().showSystemSettings() }
+                    show()
+                }
+                return@setOnClickListener
+            }
+
+            on<PermissionHandler>().check(READ_CONTACTS).`when` { granted ->
+                if (granted) {
+                    on<GroupContactsHandler>().showContactsForQuery()
+                    view.showPhoneContactsButton.visible = false
+                }
+            }
+        }
+
+        view.notificationSettingsButton.setOnClickListener { on<GroupMemberHandler>().changeGroupSettings(on<GroupHandler>().group) }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -212,37 +263,33 @@ class GroupActivity : CircularRevealActivity() {
     private fun toggleContactsView() {
         on<GroupToolbarHandler>().isShareActiveObservable.onNext(false)
         showMessagesView(view.replyMessage.visibility == View.GONE, false)
-        view.shareWithRecyclerView.visibility = View.GONE
+        view.shareWithRecyclerView.visible = false
     }
 
     private fun showMessagesView(show: Boolean, isShowingShare: Boolean) {
         on<GroupMessagesHandler>().showSendMoreOptions(false)
 
         if (show) {
-            view.shareWithRecyclerView.visibility = View.GONE
-            view.messagesLayoutGroup.visibility = View.VISIBLE
-            view.membersLayoutGroup.visibility = View.GONE
+            view.shareWithRecyclerView.visible = false
+            view.messagesLayoutGroup.visible = true
+            view.membersLayoutGroup.visible = false
 
-            if (view.replyMessage.text.toString().isEmpty()) {
-                view.sendMoreButton.visibility = View.VISIBLE
-            } else {
-                view.sendMoreButton.visibility = View.GONE
-            }
+            view.sendMoreButton.visible = view.replyMessage.text.toString().isEmpty()
 
-            view.showPhoneContactsButton.visibility = View.GONE
+            view.showPhoneContactsButton.visible = false
         } else {
-            view.messagesLayoutGroup.visibility = View.GONE
-            view.sendMoreButton.visibility = View.GONE
+            view.messagesLayoutGroup.visible = false
+            view.sendMoreButton.visible = false
 
             if (isShowingShare) {
-                view.shareWithRecyclerView.visibility = View.VISIBLE
+                view.shareWithRecyclerView.visible = true
             } else {
-                view.membersLayoutGroup.visibility = View.VISIBLE
+                view.membersLayoutGroup.visible = true
 
                 on<GroupActionHandler>().cancelPendingAnimation()
 
                 if (!on<PermissionHandler>().has(READ_CONTACTS)) {
-                    view.showPhoneContactsButton.visibility = View.VISIBLE
+                    view.showPhoneContactsButton.visible = true
                 }
 
                 if (on<PermissionHandler>().has(READ_CONTACTS)) {
