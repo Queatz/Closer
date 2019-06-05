@@ -217,6 +217,7 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun setGroupBackground(group: Group) {
+        view.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
         view.backgroundPhoto.visible = group.photo != null
 
         if (group.photo != null) {
