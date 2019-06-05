@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
@@ -124,7 +125,7 @@ class GroupMessagesHandler constructor(private val on: On) {
             }
         })
 
-        this.sendMoreButton.setOnClickListener { view -> showSendMoreOptions(sendMoreLayout.visibility != View.VISIBLE) }
+        this.sendMoreButton.setOnClickListener { showSendMoreOptions(!sendMoreLayout.visible) }
 
         val sendMoreActionAudio = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionAudio)
         val sendMoreActionVideo = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionVideo)
