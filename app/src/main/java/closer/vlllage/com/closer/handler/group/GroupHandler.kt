@@ -1,8 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.api.models.GroupResult
-import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
@@ -15,7 +13,6 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.objectbox.reactive.DataSubscription
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -24,13 +21,13 @@ class GroupHandler constructor(private val on: On) {
 
     private val connectionError = { _: Throwable -> on<ConnectionErrorHandler>().notifyConnectionError() }
 
+    private val disposableGroup = on<DisposableHandler>().group()
+
     var group: Group? = null
         set(group) {
             field = group
 
-            if (groupDataSubscription != null) {
-                on<DisposableHandler>().dispose(groupDataSubscription!!)
-            }
+            disposableGroup.clear()
 
             if (group != null) {
                 onGroupSet(group)
@@ -40,7 +37,7 @@ class GroupHandler constructor(private val on: On) {
                 on<RefreshHandler>().refreshGroupMessages(group.id!!)
                 on<RefreshHandler>().refreshGroupContacts(group.id!!)
 
-                groupDataSubscription = on<StoreHandler>().store.box(Group::class.java).query()
+                disposableGroup.add(on<StoreHandler>().store.box(Group::class.java).query()
                         .equal(Group_.id, group.id!!)
                         .build()
                         .subscribe()
@@ -50,17 +47,11 @@ class GroupHandler constructor(private val on: On) {
                             if (groups.isEmpty()) return@observer
                             groupUpdated.onNext(groups[0])
                             on<RefreshHandler>().refreshGroupContacts(group.id!!)
-                        }
-
-                on<DisposableHandler>().add(groupDataSubscription!!)
+                        })
 
 
                 if (on<PersistenceHandler>().phoneId != null) {
-                    if (groupMemberSubscription != null) {
-                        on<DisposableHandler>().dispose(groupMemberSubscription!!)
-                    }
-
-                    groupMemberSubscription = on<StoreHandler>().store.box(GroupMember::class.java).query()
+                    disposableGroup.add(on<StoreHandler>().store.box(GroupMember::class.java).query()
                             .equal(GroupMember_.group, group.id!!)
                             .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
                             .build()
@@ -68,8 +59,7 @@ class GroupHandler constructor(private val on: On) {
                             .on(AndroidScheduler.mainThread())
                             .observer { groupMembers ->
                                 groupMemberChanged.onNext(if (groupMembers.isEmpty()) GroupMember() else groupMembers[0])
-                            }
-                    on<DisposableHandler>().add(groupMemberSubscription!!)
+                            })
                 }
             }
         }
@@ -86,8 +76,6 @@ class GroupHandler constructor(private val on: On) {
     private val contactInfoChanged = BehaviorSubject.create<ContactInfo>()
     private val groupMemberChanged = BehaviorSubject.create<GroupMember>()
     private val contactInfo = ContactInfo()
-    private var groupDataSubscription: DataSubscription? = null
-    private var groupMemberSubscription: DataSubscription? = null
 
     fun setGroupById(groupId: String?) {
         if (groupId == null) {
@@ -95,30 +83,21 @@ class GroupHandler constructor(private val on: On) {
             return
         }
 
-        group = on<StoreHandler>().store.box(Group::class.java).query()
-                .equal(Group_.id, groupId)
-                .build().findFirst()
-
-        if (group == null) {
-            on<DisposableHandler>().add(on<ApiHandler>().getGroup(groupId)
-                    .map { GroupResult.from(it) }
-                    .subscribe { group ->
-                        on<RefreshHandler>().refresh(group)
-                        this.group = group
-                    })
-        }
+        disposableGroup.add(on<DataHandler>().getGroupById(groupId).subscribe({
+            group = it
+        }, { on<DefaultAlerts>().thatDidntWork() }))
     }
 
     private fun onGroupSet(group: Group) {
-        setGroupContact()
-
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupContact::class.java)
+        disposableGroup.add(on<StoreHandler>().store.box(GroupContact::class.java)
                 .query()
                 .equal(GroupContact_.groupId, group.id!!)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer { groupContacts ->
+                    groupContact = groupContacts.firstOrNull { it.contactId == on<PersistenceHandler>().phoneId!! }
+
                     on<GroupContactsHandler>().setCurrentGroupContacts(groupContacts)
                     contactInfo.contactNames.clear()
                     for (groupContact in groupContacts) {
@@ -128,7 +107,7 @@ class GroupHandler constructor(private val on: On) {
                     contactInfoChanged.onNext(contactInfo)
                 })
 
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupInvite::class.java)
+        disposableGroup.add(on<StoreHandler>().store.box(GroupInvite::class.java)
                 .query()
                 .equal(GroupInvite_.group, group.id!!)
                 .build()
@@ -143,24 +122,12 @@ class GroupHandler constructor(private val on: On) {
                 })
     }
 
-    private fun setGroupContact() {
-        if (group == null || on<PersistenceHandler>().phoneId == null) {
-            return
-        }
-
-        groupContact = on<StoreHandler>().store.box(GroupContact::class.java).query()
-                .equal(GroupContact_.groupId, group!!.id!!)
-                .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)
-                .build()
-                .findFirst()
-    }
-
     private fun setEventById(eventId: String?) {
         if (eventId == null) {
             return
         }
 
-        on<DisposableHandler>().add(on<DataHandler>().getEventById(eventId)
+        disposableGroup.add(on<DataHandler>().getEventById(eventId)
                 .subscribe({ event -> eventChanged.onNext(event) },
                         { on<DefaultAlerts>().thatDidntWork() }))
     }

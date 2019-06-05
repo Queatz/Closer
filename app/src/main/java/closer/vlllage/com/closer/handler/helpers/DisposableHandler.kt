@@ -9,21 +9,32 @@ import java.util.*
 
 class DisposableHandler constructor(private val on: On) : OnLifecycle {
 
-    private val disposables = CompositeDisposable()
-    private val dataSubscriptions = HashSet<DataSubscription>()
+    private val disposableGroup = DisposableGroup()
 
     override fun off() {
-        disposables.dispose()
-        for (dataSubscription in dataSubscriptions) {
-            if (!dataSubscription.isCanceled)
-                try {
-                    dataSubscription.cancel()
-                } catch (ignored: NullPointerException) {
-                    // Objectbox NPE
-                }
+        disposableGroup.clear()
+    }
 
-        }
-        dataSubscriptions.clear()
+    fun add(disposable: Disposable) = disposableGroup.add(disposable)
+    fun dispose(disposable: Disposable) = disposableGroup.dispose(disposable)
+    fun add(dataSubscription: DataSubscription) = disposableGroup.add(dataSubscription)
+    fun dispose(dataSubscription: DataSubscription) = disposableGroup.dispose(dataSubscription)
+
+    fun group() = DisposableGroup().also { disposableGroup.add(it) }
+}
+
+class DisposableGroup {
+    private val disposables = CompositeDisposable()
+    private val dataSubscriptions = HashSet<DataSubscription>()
+    private val disposableGroups = HashSet<DisposableGroup>()
+
+    fun add(disposableGroup: DisposableGroup) {
+        disposableGroups.add(disposableGroup)
+    }
+
+    fun dispose(disposableGroup: DisposableGroup) {
+        disposableGroup.clear()
+        disposableGroups.remove(disposableGroup)
     }
 
     fun add(disposable: Disposable) {
@@ -52,5 +63,20 @@ class DisposableHandler constructor(private val on: On) : OnLifecycle {
         }
 
         dataSubscriptions.remove(dataSubscription)
+    }
+
+    fun clear() {
+        disposableGroups.forEach { it.clear() }
+        disposables.dispose()
+        for (dataSubscription in dataSubscriptions) {
+            if (!dataSubscription.isCanceled)
+                try {
+                    dataSubscription.cancel()
+                } catch (ignored: NullPointerException) {
+                    // Objectbox NPE
+                }
+
+        }
+        dataSubscriptions.clear()
     }
 }
