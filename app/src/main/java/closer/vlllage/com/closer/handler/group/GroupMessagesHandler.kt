@@ -23,6 +23,7 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
+import kotlinx.android.synthetic.main.activity_group.view.*
 import java.util.*
 
 class GroupMessagesHandler constructor(private val on: On) {
@@ -127,10 +128,10 @@ class GroupMessagesHandler constructor(private val on: On) {
 
         this.sendMoreButton.setOnClickListener { showSendMoreOptions(!sendMoreLayout.visible) }
 
-        val sendMoreActionAudio = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionAudio)
-        val sendMoreActionVideo = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionVideo)
-        val sendMoreActionFile = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionFile)
-        val sendMoreActionPhoto = this.sendMoreLayout.findViewById<View>(R.id.sendMoreActionPhoto)
+        val sendMoreActionAudio = this.sendMoreLayout.sendMoreActionAudio
+        val sendMoreActionVideo = this.sendMoreLayout.sendMoreActionVideo
+        val sendMoreActionFile = this.sendMoreLayout.sendMoreActionFile
+        val sendMoreActionPhoto = this.sendMoreLayout.sendMoreActionPhoto
 
         sendMoreActionAudio.setOnClickListener { view ->
             this.sendMoreButton.callOnClick()
@@ -170,6 +171,14 @@ class GroupMessagesHandler constructor(private val on: On) {
 
             on<DisposableHandler>().add(groupMessagesSubscription!!)
         }
+
+        on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
+            sendMoreButton.imageTintList = it.tint
+            sendMoreActionAudio.imageTintList = it.tint
+            sendMoreActionVideo.imageTintList = it.tint
+            sendMoreActionFile.imageTintList = it.tint
+            sendMoreActionPhoto.imageTintList = it.tint
+        })
     }
 
     fun showSendMoreOptions(show: Boolean) {

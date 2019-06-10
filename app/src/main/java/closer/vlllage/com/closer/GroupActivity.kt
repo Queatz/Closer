@@ -31,6 +31,7 @@ class GroupActivity : CircularRevealActivity() {
 
         bindViewEvents()
         bindToGroup()
+        bindLightDark()
 
         if (on<FeatureHandler>().has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
             view.settingsButton.visible = true
@@ -77,6 +78,16 @@ class GroupActivity : CircularRevealActivity() {
                 })
 
         on<MiniWindowHandler>().attach(view.groupName, view.backgroundColor) { finish() }
+    }
+
+    private fun bindLightDark() {
+        on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
+            view.closeButton.imageTintList = it.tint
+            view.sendButton.imageTintList = it.tint
+            view.replyMessage.setTextColor(it.text)
+            view.replyMessage.setHintTextColor(it.hint)
+            view.replyMessage.setBackgroundResource(it.clickableRoundedBackground)
+        })
     }
 
     private fun bindToGroup() {
@@ -143,6 +154,8 @@ class GroupActivity : CircularRevealActivity() {
 
             onGroupChanged { group ->
                 showGroupName(group)
+                view.groupDetails.visible = false
+                view.groupDetails.text = ""
                 view.peopleInGroup.text = ""
 
                 if (on<Val>().isEmpty(group.about)) {
@@ -163,6 +176,8 @@ class GroupActivity : CircularRevealActivity() {
                 on<GroupContactsHandler>().attach(group, view.contactsRecyclerView, view.searchContacts, view.showPhoneContactsButton)
 
                 setGroupBackground(group)
+
+                on<LightDarkHandler>().setLight(group.hasPhone())
             }
 
             onEventChanged { event ->

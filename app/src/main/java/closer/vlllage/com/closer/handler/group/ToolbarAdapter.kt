@@ -1,6 +1,5 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.content.res.ColorStateList
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
+import io.reactivex.disposables.Disposable
 
 internal class ToolbarAdapter(on: On) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(on) {
 
@@ -33,21 +34,29 @@ internal class ToolbarAdapter(on: On) : PoolRecyclerAdapter<ToolbarAdapter.Toolb
                 0, item.icon, 0, 0
         )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            viewHolder.button.compoundDrawableTintList = ColorStateList.valueOf(
-                    on<ResourcesHandler>().resources.getColor(R.color.text)
-            )
-        }
-
         viewHolder.button.setText(item.name)
 
         viewHolder.button.setOnClickListener(item.onClickListener)
+
+        viewHolder.lightDarkSubscription = on<LightDarkHandler>().onLightChanged.subscribe {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                viewHolder.button.compoundDrawableTintList = it.tint
+            }
+
+            viewHolder.button.setTextColor(it.text)
+
+            viewHolder.button.setBackgroundResource(it.clickableBackground)
+        }
+    }
+
+    override fun onViewRecycled(holder: ToolbarViewHolder) {
+        on<DisposableHandler>().dispose(holder.lightDarkSubscription)
     }
 
     override fun getItemCount() = items.size
 
     internal class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val button: Button = itemView.findViewById(R.id.button)
-
+        lateinit var lightDarkSubscription: Disposable
     }
 }

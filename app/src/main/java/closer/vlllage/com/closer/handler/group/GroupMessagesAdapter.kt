@@ -34,7 +34,9 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupMessageViewHolder {
         return GroupMessageViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.message_item, parent, false))
+                .inflate(R.layout.message_item, parent, false)).also {
+            it.disposableGroup = on<DisposableHandler>().group()
+        }
     }
 
     override fun onBindViewHolder(holder: GroupMessageViewHolder, position: Int) {
@@ -52,8 +54,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                     pad
             )
 
-            var params: ViewGroup.MarginLayoutParams
-            params = holder.messageLayout.layoutParams as ViewGroup.MarginLayoutParams
+            var params = holder.messageLayout.layoutParams as ViewGroup.MarginLayoutParams
             params.topMargin = 0
             params.width = ViewGroup.LayoutParams.MATCH_PARENT
             holder.messageLayout.layoutParams = params
@@ -143,6 +144,25 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.reactionAdapter.setItems(groupMessage.reactions)
             holder.reactionAdapter.setGroupMessage(groupMessage)
         }
+
+        on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
+            holder.messageActionReply.setTextColor(it.text)
+            holder.messageActionShare.setTextColor(it.text)
+            holder.messageActionRemind.setTextColor(it.text)
+            holder.messageActionPin.setTextColor(it.text)
+            holder.messageActionVote.setTextColor(it.text)
+            holder.messageActionReply.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionShare.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionRemind.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionPin.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionVote.setBackgroundResource(it.clickableRoundedBackground)
+            holder.message.setTextColor(it.text)
+            holder.name.setTextColor(it.text)
+            holder.time.setTextColor(it.text)
+            holder.action.setTextColor(it.text)
+            holder.eventMessage.setTextColor(it.text)
+            holder.pinnedIndicator.imageTintList = it.tint
+        })
     }
 
     private fun toggleMessageActionLayout(holder: GroupMessageViewHolder) {
@@ -161,6 +181,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         if (holder.messageActionLayoutRevealAnimator != null) {
             holder.messageActionLayoutRevealAnimator!!.cancel()
         }
+        holder.disposableGroup.clear()
     }
 
     override fun getItemCount(): Int {
@@ -216,6 +237,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var messageActionLayoutRevealAnimator: RevealAnimator? = null
         internal var reactionsRecyclerView: RecyclerView
         internal var reactionAdapter: ReactionAdapter
+        internal lateinit var disposableGroup: DisposableGroup
 
         init {
             name = itemView.findViewById(R.id.name)

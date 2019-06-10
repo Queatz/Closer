@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.helpers.DisposableGroup
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.handler.helpers.PhoneListActivityTransitionHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupMessage
@@ -20,7 +23,9 @@ class ReactionAdapter(on: On) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.reaction_item, viewGroup, false))
+                .inflate(R.layout.reaction_item, viewGroup, false)).also {
+            it.disposableGroup = on<DisposableHandler>().group()
+        }
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
@@ -28,11 +33,18 @@ class ReactionAdapter(on: On) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(
 
         viewHolder.reaction.text = reaction.reaction + " " + reaction.count
         viewHolder.reaction.setOnClickListener { v -> on<PhoneListActivityTransitionHandler>().showReactions(groupMessage!!.id!!) }
+
+        viewHolder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
+            viewHolder.reaction.setTextColor(it.text)
+            viewHolder.reaction.setBackgroundResource(it.clickableRoundedBackground8dp)
+        })
     }
 
-    override fun getItemCount(): Int {
-        return items.size
+    override fun onViewRecycled(holder: ViewHolder) {
+        holder.disposableGroup.clear()
     }
+
+    override fun getItemCount() = items.size
 
     fun setItems(items: List<ReactionCount>): ReactionAdapter {
         this.items = items
@@ -46,6 +58,6 @@ class ReactionAdapter(on: On) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var reaction: TextView = itemView as TextView
-
+        internal lateinit var disposableGroup: DisposableGroup
     }
 }
