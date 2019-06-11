@@ -20,9 +20,11 @@ import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import java.util.*
 
-open class SearchGroupsAdapter constructor(on: On,
-                               private val onGroupClickListener: ((group: Group, view: View) -> Unit)?,
-                               private val onCreateGroupClickListener: ((groupName: String) -> Unit)?
+open class SearchGroupsAdapter constructor(
+        on: On,
+       private val showCreateGroup: Boolean,
+       private val onGroupClickListener: ((group: Group, view: View) -> Unit)?,
+       private val onCreateGroupClickListener: ((groupName: String) -> Unit)?
 ) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
     private var createPublicGroupName: String? = null
@@ -35,7 +37,7 @@ open class SearchGroupsAdapter constructor(on: On,
     private var isSmall: Boolean = false
     private var isNoAnimation: Boolean = false
 
-    private val createGroupCount = 1
+    private val createGroupCount = if (showCreateGroup) 1 else 0
 
     fun setLayoutResId(layoutResId: Int): SearchGroupsAdapter {
         this.layoutResId = layoutResId

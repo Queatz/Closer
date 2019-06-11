@@ -41,7 +41,7 @@ class PersonalSlideFragment : PoolFragment() {
         val subscribedGroupsRecyclerView = view.findViewById<RecyclerView>(R.id.subscribedGroupsRecyclerView)
         val youveSubscribedEmpty = view.findViewById<TextView>(R.id.youveSubscribedEmpty)
 
-        val searchGroupsAdapter = SearchGroupsAdapter(on, { group, v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, group.id) }, null)
+        val searchGroupsAdapter = SearchGroupsAdapter(on, false, { group, v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, group.id) }, null)
 
         searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.open_group))
         searchGroupsAdapter.setIsSmall(true)

@@ -19,7 +19,7 @@ class SearchGroupsHeaderAdapter constructor(on: On,
                                 onGroupClickListener: ((Group, View) -> Unit)?,
                                 onCreateGroupClickListener: ((String) -> Unit)?,
                                 private val onQueryChangedListener: OnQueryChangedListener)
-    : SearchGroupsAdapter(on, onGroupClickListener, onCreateGroupClickListener) {
+    : SearchGroupsAdapter(on, false, onGroupClickListener, onCreateGroupClickListener) {
 
     private val header = RecyclerViewHeader()
 

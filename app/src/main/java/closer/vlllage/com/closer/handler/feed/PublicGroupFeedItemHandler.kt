@@ -31,7 +31,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
         searchGroups = itemView.findViewById(R.id.searchGroups)
 
-        val searchGroupsAdapter = SearchGroupsAdapter(on, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        val searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         groupsRecyclerView.adapter = searchGroupsAdapter
