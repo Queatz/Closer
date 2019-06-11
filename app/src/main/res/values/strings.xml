@@ -26,7 +26,7 @@
     <string name="enter_code">Enter the code…</string>
     <string name="verify_number">Verify number</string>
     <string name="create_group">Create group</string>
-    <string name="create_public_group">Add public group</string>
+    <string name="create_public_group">Create public group</string>
     <string name="enter_group_name">Enter group name…</string>
     <string name="wait_for_it">Wait for it…</string>
     <string name="phone_number_or_name">Phone number or contact</string>
@@ -232,4 +232,5 @@
     <string name="groups">Groups</string>
     <string name="photos">Photos</string>
     <string name="huaman_found">You found a human!</string>
+    <string name="continue_text">Continue</string>
 </resources>

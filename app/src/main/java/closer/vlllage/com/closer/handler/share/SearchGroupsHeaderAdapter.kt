@@ -15,7 +15,7 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.RecyclerViewHeader
 import com.queatz.on.On
 
-class SearchGroupsHeaderAdapter(on: On,
+class SearchGroupsHeaderAdapter constructor(on: On,
                                 onGroupClickListener: ((Group, View) -> Unit)?,
                                 onCreateGroupClickListener: ((String) -> Unit)?,
                                 private val onQueryChangedListener: OnQueryChangedListener)

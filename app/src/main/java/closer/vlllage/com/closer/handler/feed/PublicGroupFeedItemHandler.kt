@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.create_group_modal.view.*
 
 class PublicGroupFeedItemHandler constructor(private val on: On) {
 
@@ -30,7 +31,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
         searchGroups = itemView.findViewById(R.id.searchGroups)
 
-        val searchGroupsAdapter = SearchGroupsAdapter(on, { group, view -> openGroup(group.id, view) }, { groupName: String -> this.createGroup(groupName) })
+        val searchGroupsAdapter = SearchGroupsAdapter(on, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         groupsRecyclerView.adapter = searchGroupsAdapter
@@ -84,10 +85,29 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun createGroup(groupName: String?) {
-        if (groupName == null || groupName.isEmpty()) {
-            return
+        if (groupName.isNullOrBlank()) {
+            on<AlertHandler>().make().apply {
+                title = on<ResourcesHandler>().resources.getString(R.string.create_public_group)
+                layoutResId = R.layout.create_group_modal
+                textViewId = R.id.input
+                onTextViewSubmitCallback = {
+                    addGroupDescription(it.trim())
+                }
+                onAfterViewCreated = { alertConfig, view ->
+                    alertConfig.alertResult = view.input
+                }
+                buttonClickCallback = {
+                    (it as EditText).text.isNotBlank()
+                }
+                positiveButton = on<ResourcesHandler>().resources.getString(R.string.continue_text)
+                show()
+            }
+        } else {
+            addGroupDescription(groupName)
         }
+    }
 
+    private fun addGroupDescription(groupName: String) {
         searchGroups.setText("")
 
         on<LocationHandler>().getCurrentLocation({ location ->

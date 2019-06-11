@@ -20,7 +20,10 @@ import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import java.util.*
 
-open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group: Group, view: View) -> Unit)?, private val onCreateGroupClickListener: ((groupName: String) -> Unit)?) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
+open class SearchGroupsAdapter constructor(on: On,
+                               private val onGroupClickListener: ((group: Group, view: View) -> Unit)?,
+                               private val onCreateGroupClickListener: ((groupName: String) -> Unit)?
+) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
     private var createPublicGroupName: String? = null
     private val groups = ArrayList<Group>()
@@ -32,8 +35,7 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
     private var isSmall: Boolean = false
     private var isNoAnimation: Boolean = false
 
-    private val createGroupCount: Int
-        get() = if (createPublicGroupName == null) 0 else 1
+    private val createGroupCount = 1
 
     fun setLayoutResId(layoutResId: Int): SearchGroupsAdapter {
         this.layoutResId = layoutResId
@@ -53,15 +55,16 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is SearchGroupsViewHolder -> {
+                holder.on = On()
+
                 if (position >= itemCount - createGroupCount) {
-                    holder.on = On()
                     holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
-                    holder.name.text = createPublicGroupName
+                    holder.name.text = createPublicGroupName ?: "+"
                     holder.about.text = on<ResourcesHandler>().resources.getString(R.string.add_new_public_group)
                     holder.backgroundPhoto.visibility = View.GONE
                     holder.actionRecyclerView.visibility = View.GONE
-                    holder.cardView.setOnClickListener { view ->
-                        onCreateGroupClickListener?.invoke(createPublicGroupName!!)
+                    holder.cardView.setOnClickListener {
+                        onCreateGroupClickListener?.invoke(createPublicGroupName ?: "")
                     }
                     holder.cardView.setOnLongClickListener(null)
                     holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
@@ -70,17 +73,17 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
 
                 val group = groups[position]
 
-                holder.name.text = on<Val>().of(group.name!!, on<ResourcesHandler>().resources.getString(R.string.app_name))
+                holder.cardView.setBackgroundResource(if (isSmall)
+                    backgroundResId else on<GroupColorHandler>().getColorClickable4dp(group))
+
+                holder.name.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
                 if (!group.hasEvent() && !group.isPublic) {
-                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_blue_4dp)
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
                     holder.about.text = on<ResourcesHandler>().resources.getString(R.string.private_group)
                 } else if (group.physical) {
-                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_purple_4dp)
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
                     holder.about.text = on<Val>().of(group.about)
                 } else if (group.hasEvent()) {
-                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_red_4dp)
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_event)
                     val event = on<StoreHandler>().store.box(Event::class).query()
                             .equal(Event_.id, group.eventId!!)
@@ -90,7 +93,6 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
                     else
                         on<ResourcesHandler>().resources.getString(R.string.event)
                 } else {
-                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
                     holder.about.text = on<Val>().of(group.about)
                 }
@@ -101,8 +103,6 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
                     on<GroupMemberHandler>().changeGroupSettings(group)
                     true
                 }
-
-                holder.on = On()
 
                 if (isSmall) {
                     holder.actionRecyclerView.visibility = View.GONE
@@ -155,20 +155,16 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
     }
 
     fun setGroups(groups: List<Group>) {
-        if (isNoAnimation) {
+        if (isNoAnimation || this.groups.isEmpty()) {
             this.groups.clear()
             this.groups.addAll(groups)
             this.notifyDataSetChanged()
         }
 
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int {
-                return this@SearchGroupsAdapter.groups.size
-            }
+            override fun getOldListSize() = this@SearchGroupsAdapter.groups.size
 
-            override fun getNewListSize(): Int {
-                return groups.size
-            }
+            override fun getNewListSize() = groups.size
 
             override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
                 return this@SearchGroupsAdapter.groups[oldPosition].id != null &&

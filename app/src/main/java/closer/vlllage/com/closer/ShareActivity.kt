@@ -32,15 +32,15 @@ class ShareActivity : ListActivity() {
 
         on<SearchGroupHandler>().hideCreateGroupOption()
 
-        searchGroupsAdapter = SearchGroupsHeaderAdapter(on, { group, view -> onGroupSelected(group) }, null, object : SearchGroupsHeaderAdapter.OnQueryChangedListener {
+        searchGroupsAdapter = SearchGroupsHeaderAdapter(on, { group, _ -> onGroupSelected(group) }, null, object : SearchGroupsHeaderAdapter.OnQueryChangedListener {
             override fun onQueryChanged(query: String) {
                 on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter!!, query)
             }
-        })
-
-        searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
-        searchGroupsAdapter!!.setLayoutResId(R.layout.search_groups_item_light)
-        searchGroupsAdapter!!.setBackgroundResId(R.drawable.clickable_green_flat)
+        }).apply {
+            setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
+            setLayoutResId(R.layout.search_groups_item_light)
+            setBackgroundResId(R.drawable.clickable_green_flat)
+        }
 
         on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter!!, "")
 
@@ -107,7 +107,7 @@ class ShareActivity : ListActivity() {
                         } else {
                             on<DefaultAlerts>().thatDidntWork()
                         }
-                    }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                    }, { on<DefaultAlerts>().thatDidntWork() }))
         } else if (groupToShare != null) {
             on<GroupMessageAttachmentHandler>().shareGroup(groupToShare!!, group)
             finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
