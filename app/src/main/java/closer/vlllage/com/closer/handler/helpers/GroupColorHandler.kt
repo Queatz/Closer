@@ -12,7 +12,7 @@ class GroupColorHandler constructor(private val on: On) {
     fun getColor(group: Group): Int {
         return when {
             group.hasEvent() -> on<ResourcesHandler>().resources.getColor(R.color.white)
-            group.hasPhone() -> on<ResourcesHandler>().resources.getColor(R.color.colorAccent)
+            group.hasPhone() -> on<ResourcesHandler>().resources.getColor(R.color.white)
             group.physical -> on<ResourcesHandler>().resources.getColor(R.color.purple)
             group.isPublic -> on<ResourcesHandler>().resources.getColor(R.color.green)
             else -> on<ResourcesHandler>().resources.getColor(R.color.colorPrimary)

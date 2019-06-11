@@ -29,8 +29,8 @@ class AlertHandler constructor(private val on: On) {
             if (alertConfig.textViewId != null) {
                 textView = view.findViewById(alertConfig.textViewId!!)
                 val finalTextView = textView
-                textView!!.post { textView.requestFocus() }
-                textView.post { on<KeyboardHandler>().showKeyboard(finalTextView, true) }
+                textView?.post { textView.requestFocus() }
+                textView?.post { on<KeyboardHandler>().showKeyboard(finalTextView, true) }
                 dialogBuilder.setOnDismissListener { on<KeyboardHandler>().showKeyboard(finalTextView, false) }
             }
 

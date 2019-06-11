@@ -63,8 +63,13 @@ class GroupHandler constructor(private val on: On) {
                 }
             }
         }
+
     var event: Event? = null
         get() = eventChanged.value
+        private set
+
+    var phone: Phone? = null
+        get() = phoneChanged.value
         private set
 
     var groupContact: GroupContact? = null

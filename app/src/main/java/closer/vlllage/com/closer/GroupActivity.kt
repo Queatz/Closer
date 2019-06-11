@@ -187,6 +187,9 @@ class GroupActivity : CircularRevealActivity() {
 
             onPhoneChanged { phone ->
                 view.groupDetails.visible = false
+                view.groupDetails.text = ""
+                view.groupAbout.visible = true
+                view.groupAbout.text = phone.status ?: ""
                 if (phone.photo != null) {
                     view.profilePhoto.visible = true
                     on<ImageHandler>().get().load(phone.photo + "?s=512")
@@ -246,8 +249,8 @@ class GroupActivity : CircularRevealActivity() {
 
         view.groupAbout.setOnClickListener {
             on<DefaultAlerts>().message(
-                    on<ResourcesHandler>().resources.getString(R.string.about_this_group),
-                    on<GroupHandler>().group?.about ?: ""
+                    on<ResourcesHandler>().resources.getString(on<GroupHandler>().phone?.let { R.string.public_status } ?: R.string.about_this_group),
+                    on<GroupHandler>().phone?.status ?: on<GroupHandler>().group?.about ?: ""
             )
         }
 
