@@ -21,7 +21,7 @@ class GroupActionUpgradeHandler constructor(private val on: On) {
                                 { successResult ->
                                     if (successResult.success) {
                                         groupAction.photo = photo
-                                        on<StoreHandler>().store.box(GroupAction::class.java).put(groupAction)
+                                        on<StoreHandler>().store.box(GroupAction::class).put(groupAction)
                                     } else {
                                         on<DefaultAlerts>().thatDidntWork()
                                     }
@@ -41,7 +41,7 @@ class GroupActionUpgradeHandler constructor(private val on: On) {
                                 { successResult ->
                                     if (successResult.success) {
                                         groupAction.photo = photo
-                                        on<StoreHandler>().store.box(GroupAction::class.java).put(groupAction)
+                                        on<StoreHandler>().store.box(GroupAction::class).put(groupAction)
                                     } else {
                                         on<DefaultAlerts>().thatDidntWork()
                                     }

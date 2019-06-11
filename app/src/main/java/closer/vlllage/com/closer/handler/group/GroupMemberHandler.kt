@@ -23,14 +23,14 @@ class GroupMemberHandler constructor(private val on: On) {
         }
 
         if (group.isPublic) {
-            on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class.java).query()
+            on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
                     .equal(GroupMember_.group, group.id!!)
                     .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId)
                     .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groupMembers ->
                         if (groupMembers.isEmpty()) {
                             on<DisposableHandler>().add(on<ApiHandler>().getGroupMember(group.id!!)
                                     .map { GroupMemberResult.from(it) }
-                                    .doOnSuccess { on<StoreHandler>().store.box(GroupMember::class.java).put(it) }
+                                    .doOnSuccess { on<StoreHandler>().store.box(GroupMember::class).put(it) }
                                     .subscribe(
                                             { groupMember -> setupGroupMember(group, groupMember) },
                                             { error -> setupGroupMember(group, null) }
@@ -119,7 +119,7 @@ class GroupMemberHandler constructor(private val on: On) {
     }
 
     private fun isCurrentUserMemberOf(group: Group?): Boolean {
-        return if (group == null) false else on<StoreHandler>().store.box(GroupContact::class.java).query()
+        return if (group == null) false else on<StoreHandler>().store.box(GroupContact::class).query()
                 .equal(GroupContact_.groupId, group.id!!)
                 .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)
                 .build()

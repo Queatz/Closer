@@ -113,7 +113,7 @@ class ReplyLayoutHandler constructor(private val on: On) {
         }
 
         if (mapBubble.phone != null) {
-            val phone = on<StoreHandler>().store.box(Phone::class.java).query().equal(Phone_.id, mapBubble.phone!!).build().findFirst()
+            val phone = on<StoreHandler>().store.box(Phone::class).query().equal(Phone_.id, mapBubble.phone!!).build().findFirst()
 
             if (phone != null && !on<Val>().isEmpty(phone.photo)) {
                 replyLayoutPhoto.visibility = View.VISIBLE

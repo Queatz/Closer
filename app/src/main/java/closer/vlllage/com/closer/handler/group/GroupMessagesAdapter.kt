@@ -16,8 +16,10 @@ import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
-import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.*
+import closer.vlllage.com.closer.store.models.Event
+import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.GroupMessage
+import closer.vlllage.com.closer.store.models.Suggestion
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 import closer.vlllage.com.closer.ui.RevealAnimator
 import com.queatz.on.On
@@ -112,7 +114,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                             } else {
                                 on<RefreshHandler>().refreshPins(groupMessage.to!!)
                             }
-                        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                        }, { on<DefaultAlerts>().thatDidntWork() }))
             } else {
                 on<DisposableHandler>().add(on<ApiHandler>().addPin(groupMessage.id!!, groupMessage.to!!)
                         .subscribe({ successResult ->
@@ -121,14 +123,18 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                             } else {
                                 on<RefreshHandler>().refreshPins(groupMessage.to!!)
                             }
-                        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                        }, { on<DefaultAlerts>().thatDidntWork() }))
             }
             toggleMessageActionLayout(holder)
         }
         holder.messageActionVote.setOnClickListener { view ->
             on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
                     .reactToMessage(groupMessage.id!!, "♥", false)
-                    .subscribe({ successResult -> on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!) }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
             toggleMessageActionLayout(holder)
         }
 
@@ -260,15 +266,5 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             reactionAdapter = ReactionAdapter(on)
             reactionsRecyclerView.adapter = reactionAdapter
         }
-    }
-
-    private fun getGroup(groupId: String?): Group? {
-        return if (groupId == null) {
-            null
-        } else on<StoreHandler>().store.box(Group::class.java).query()
-                .equal(Group_.id, groupId)
-                .build()
-                .findFirst()
-
     }
 }

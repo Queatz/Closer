@@ -102,7 +102,7 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         groupMessagesAdapter.onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event) }
         groupMessagesAdapter.onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, group1.id) }
 
-        val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class.java).query()
+        val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
         holder.on<DisposableHandler>().add(queryBuilder
                 .sort(on<SortHandler>().sortGroupMessages())
                 .equal(GroupMessage_.to, group.id!!)
@@ -173,7 +173,7 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
             groupMessage.from = on<PersistenceHandler>().phoneId
             groupMessage.to = group.id
             groupMessage.time = Date()
-            on<StoreHandler>().store.box(GroupMessage::class.java).put(groupMessage)
+            on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
             on<SyncHandler>().sync(groupMessage)
 
             holder.replyMessage.setText("")

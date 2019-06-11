@@ -16,7 +16,7 @@ class PhysicalGroupUpgradeHandler constructor(private val on: On) {
             onTextViewSubmitCallback = { result ->
                 on<DisposableHandler>().add(on<ApiHandler>().convertToHub(group.id!!, result).subscribe({
                     group.name = result
-                    on<StoreHandler>().store.box(Group::class.java).put(group)
+                    on<StoreHandler>().store.box(Group::class).put(group)
                     onGroupUpdateListener.invoke(group)
                 }, { error -> on<DefaultAlerts>().thatDidntWork() }))
             }
@@ -35,7 +35,7 @@ class PhysicalGroupUpgradeHandler constructor(private val on: On) {
                 { successResult ->
                     if (successResult.success) {
                         group.photo = photo
-                        on<StoreHandler>().store.box(Group::class.java).put(group)
+                        on<StoreHandler>().store.box(Group::class).put(group)
                         onGroupUpdateListener.invoke(group)
                     } else {
                         on<DefaultAlerts>().thatDidntWork()
@@ -50,7 +50,7 @@ class PhysicalGroupUpgradeHandler constructor(private val on: On) {
                 { successResult ->
                     if (successResult.success) {
                         group.about = about
-                        on<StoreHandler>().store.box(Group::class.java).put(group)
+                        on<StoreHandler>().store.box(Group::class).put(group)
                         onGroupUpdateListener.invoke(group)
                     } else {
                         on<DefaultAlerts>().thatDidntWork()

@@ -101,14 +101,14 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
 
         groupMessage.from = on<PersistenceHandler>().phoneId
         groupMessage.time = Date()
-        on<StoreHandler>().store.box(GroupMessage::class.java).put(groupMessage)
+        on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
         on<SyncHandler>().sync(groupMessage)
     }
 
     private fun getGroupContactForGroup(group: Group): GroupContact? {
         return if (on<PersistenceHandler>().phoneId == null) {
             null
-        } else on<StoreHandler>().store.box(GroupContact::class.java).query()
+        } else on<StoreHandler>().store.box(GroupContact::class).query()
                 .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)
                 .equal(GroupContact_.groupId, group.id!!)
                 .build().findFirst()

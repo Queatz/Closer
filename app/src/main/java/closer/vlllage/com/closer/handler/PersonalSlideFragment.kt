@@ -50,7 +50,7 @@ class PersonalSlideFragment : PoolFragment() {
         subscribedGroupsRecyclerView.adapter = searchGroupsAdapter
         subscribedGroupsRecyclerView.layoutManager = LinearLayoutManager(subscribedGroupsRecyclerView.context)
 
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class.java).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
                 .equal(GroupMember_.phone, on<Val>().of(on<PersistenceHandler>().phoneId))
                 .equal(GroupMember_.subscribed, true)
                 .build()

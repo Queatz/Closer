@@ -82,7 +82,7 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
                 } else if (group.hasEvent()) {
                     holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_red_4dp)
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_event)
-                    val event = on<StoreHandler>().store.box(Event::class.java).query()
+                    val event = on<StoreHandler>().store.box(Event::class).query()
                             .equal(Event_.id, group.eventId!!)
                             .build().findFirst()
                     holder.about.text = if (event != null)
@@ -116,7 +116,7 @@ open class SearchGroupsAdapter(on: On, private val onGroupClickListener: ((group
                     holder.on<GroupActionRecyclerViewHandler>().onGroupActionRepliedListener = { groupAction ->
                         on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, groupAction.group)
                     }
-                    holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class.java).query()
+                    holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
                             .equal(GroupAction_.group, group.id!!)
                             .build().subscribe().single()
                             .on(AndroidScheduler.mainThread())

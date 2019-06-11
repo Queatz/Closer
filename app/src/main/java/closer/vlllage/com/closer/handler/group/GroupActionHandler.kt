@@ -36,7 +36,7 @@ class GroupActionHandler constructor(private val on: On) {
                 on<DisposableHandler>().dispose(groupActionsDisposable!!)
             }
 
-            groupActionsDisposable = on<StoreHandler>().store.box(GroupAction::class.java).query()
+            groupActionsDisposable = on<StoreHandler>().store.box(GroupAction::class).query()
                     .equal(GroupAction_.group, group.id!!)
                     .build()
                     .subscribe()
@@ -150,7 +150,7 @@ class GroupActionHandler constructor(private val on: On) {
         groupAction.name = name
         groupAction.intent = intent
 
-        on<StoreHandler>().store.box(GroupAction::class.java).put(groupAction)
+        on<StoreHandler>().store.box(GroupAction::class).put(groupAction)
         on<SyncHandler>().sync(groupAction)
     }
 

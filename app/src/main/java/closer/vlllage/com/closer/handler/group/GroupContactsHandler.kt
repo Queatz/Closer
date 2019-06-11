@@ -110,11 +110,11 @@ class GroupContactsHandler constructor(private val on: On) {
             }
         })
 
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupInvite::class.java).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupInvite::class).query()
                 .equal(GroupInvite_.group, group.id!!)
                 .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupInvites -> phoneContactAdapter.setInvites(groupInvites) })
 
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupContact::class.java).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupContact::class).query()
                 .equal(GroupContact_.groupId, group.id!!)
                 .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupContacts -> phoneContactAdapter.setGroupContacts(groupContacts) })
     }
@@ -215,7 +215,7 @@ class GroupContactsHandler constructor(private val on: On) {
         if (dataSubscription != null) {
             on<DisposableHandler>().dispose(dataSubscription!!)
         }
-        dataSubscription = on<StoreHandler>().store.box(Phone::class.java).query()
+        dataSubscription = on<StoreHandler>().store.box(Phone::class).query()
                 .contains(Phone_.name, on<Val>().of(query))
                 .notNull(Phone_.id)
                 .greater(Phone_.updated, on<TimeAgo>().fifteenDaysAgo())

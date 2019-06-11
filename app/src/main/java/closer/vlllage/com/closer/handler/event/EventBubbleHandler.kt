@@ -15,7 +15,7 @@ class EventBubbleHandler constructor(private val on: On) {
     private val visibleEvents = HashSet<String>()
 
     fun attach() {
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(Event::class.java).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Event::class).query()
                 .greater(Event_.endsAt, Calendar.getInstance(TimeZone.getTimeZone("UTC")).time)
                 .notEqual(Event_.cancelled, true)
                 .build().subscribe().on(AndroidScheduler.mainThread())

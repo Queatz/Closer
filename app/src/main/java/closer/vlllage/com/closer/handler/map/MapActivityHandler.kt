@@ -53,7 +53,7 @@ class MapActivityHandler constructor(private val on: On) {
             on<DefaultAlerts>().thatDidntWork()
             return
         }
-        val phone = on<StoreHandler>().store.box(Phone::class.java).query()
+        val phone = on<StoreHandler>().store.box(Phone::class).query()
                 .equal(Phone_.id, phoneId)
                 .notNull(Phone_.latitude)
                 .notNull(Phone_.longitude)

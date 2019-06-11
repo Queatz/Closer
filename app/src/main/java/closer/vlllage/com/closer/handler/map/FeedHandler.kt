@@ -35,7 +35,7 @@ class FeedHandler constructor(private val on: On) {
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { cameraPosition ->
-                    val groupPreviewQueryBuilder = on<StoreHandler>().store.box(Group::class.java).query()
+                    val groupPreviewQueryBuilder = on<StoreHandler>().store.box(Group::class).query()
                             .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                             .and()
                             .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)

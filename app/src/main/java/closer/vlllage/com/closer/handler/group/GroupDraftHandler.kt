@@ -8,7 +8,7 @@ import closer.vlllage.com.closer.store.models.GroupDraft_
 
 class GroupDraftHandler constructor(private val on: On) {
     fun saveDraft(group: Group, message: String) {
-        on<StoreHandler>().store.box(GroupDraft::class.java)
+        on<StoreHandler>().store.box(GroupDraft::class)
                 .query()
                 .equal(GroupDraft_.groupId, group.id!!)
                 .build().subscribe().single()
@@ -25,12 +25,12 @@ class GroupDraftHandler constructor(private val on: On) {
                     }
 
                     groupDraft.message = message
-                    on<StoreHandler>().store.box(GroupDraft::class.java).put(groupDraft)
+                    on<StoreHandler>().store.box(GroupDraft::class).put(groupDraft)
                 }
     }
 
     fun getDraft(group: Group): String? {
-        val draft = on<StoreHandler>().store.box(GroupDraft::class.java)
+        val draft = on<StoreHandler>().store.box(GroupDraft::class)
                 .query()
                 .equal(GroupDraft_.groupId, group.id!!)
                 .build()

@@ -24,7 +24,7 @@ class MessageDisplay constructor(private val on: On) {
                              onEventClickListener: (Event) -> Unit,
                              onGroupClickListener: (Group) -> Unit,
                              onSuggestionClickListener: (Suggestion) -> Unit) {
-        val sharedGroupMessage = on<StoreHandler>().store.box(GroupMessage::class.java).query().equal(GroupMessage_.id, jsonObject.get("share").asString).build().findFirst()
+        val sharedGroupMessage = on<StoreHandler>().store.box(GroupMessage::class).query().equal(GroupMessage_.id, jsonObject.get("share").asString).build().findFirst()
 
         if (sharedGroupMessage != null) {
             display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
@@ -265,7 +265,7 @@ class MessageDisplay constructor(private val on: On) {
     private fun getPhone(phoneId: String?): Phone? {
         return if (phoneId == null)
             null
-        else on<StoreHandler>().store.box(Phone::class.java).query()
+        else on<StoreHandler>().store.box(Phone::class).query()
                 .equal(Phone_.id, phoneId)
                 .build()
                 .findFirst()

@@ -30,7 +30,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
 
     private val defaultMentionConverter: MentionConverter
         get() = { mention ->
-            val phoneList = on<StoreHandler>().store.box(Phone::class.java).query().equal(Phone_.id, mention).build().find()
+            val phoneList = on<StoreHandler>().store.box(Phone::class).query().equal(Phone_.id, mention).build().find()
             if (phoneList.isEmpty()) {
                 on<ResourcesHandler>().resources.getString(R.string.unknown)
             }

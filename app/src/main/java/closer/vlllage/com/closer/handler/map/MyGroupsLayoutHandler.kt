@@ -46,7 +46,7 @@ class MyGroupsLayoutHandler constructor(private val on: On) {
         myGroupsAdapter = MyGroupsAdapter(on)
         on<MyGroupsLayoutActionsHandler>().attach(myGroupsAdapter!!)
         myGroupsRecyclerView!!.adapter = myGroupsAdapter
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(Group::class.java).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Group::class).query()
                 .notEqual(Group_.isPublic, true)
                 .sort(on<SortHandler>().sortGroups())
                 .build().subscribe().on(AndroidScheduler.mainThread())
@@ -89,7 +89,7 @@ class MyGroupsLayoutHandler constructor(private val on: On) {
 
         val group = on<StoreHandler>().create(Group::class.java)
         group!!.name = name
-        on<StoreHandler>().store.box(Group::class.java).put(group)
+        on<StoreHandler>().store.box(Group::class).put(group)
         on<SyncHandler>().sync(group, { groupId ->
             on<GroupActivityTransitionHandler>().showGroupMessages(null, groupId)
         })

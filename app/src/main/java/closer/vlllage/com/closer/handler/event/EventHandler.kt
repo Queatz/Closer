@@ -139,7 +139,7 @@ class EventHandler constructor(private val on: On) {
         event.longitude = latLng.longitude
         event.startsAt = startsAt
         event.endsAt = endsAt
-        on<StoreHandler>().store.box(Event::class.java).put(event)
+        on<StoreHandler>().store.box(Event::class).put(event)
         on<SyncHandler>().sync(event)
         onEventCreatedListener.invoke(event)
     }

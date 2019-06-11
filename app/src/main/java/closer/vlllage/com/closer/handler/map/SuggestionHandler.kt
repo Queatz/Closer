@@ -72,7 +72,7 @@ class SuggestionHandler constructor(private val on: On) {
     }
 
     private fun getRandomSuggestions(bounds: LatLngBounds): SubscriptionBuilder<List<Suggestion>> {
-        return on<StoreHandler>().store.box(Suggestion::class.java).query()
+        return on<StoreHandler>().store.box(Suggestion::class).query()
                 .between(Suggestion_.latitude, bounds.southwest.latitude, bounds.northeast.latitude)
                 .between(Suggestion_.longitude, bounds.southwest.longitude, bounds.northeast.longitude)
                 .build().subscribe().single().on(AndroidScheduler.mainThread())
@@ -104,20 +104,20 @@ class SuggestionHandler constructor(private val on: On) {
         suggestion!!.name = name.trim()
         suggestion.latitude = latLng.latitude
         suggestion.longitude = latLng.longitude
-        on<StoreHandler>().store.box(Suggestion::class.java).put(suggestion)
+        on<StoreHandler>().store.box(Suggestion::class).put(suggestion)
         on<SyncHandler>().sync(suggestion)
     }
 
     fun loadAll(suggestions: List<SuggestionResult>) {
         for (suggestionResult in suggestions) {
-            on<StoreHandler>().store.box(Suggestion::class.java).query()
+            on<StoreHandler>().store.box(Suggestion::class).query()
                     .equal(Suggestion_.id, suggestionResult.id!!)
                     .build().subscribe().single().on(AndroidScheduler.mainThread())
                     .observer { result ->
                         if (result.isEmpty()) {
-                            on<StoreHandler>().store.box(Suggestion::class.java).put(SuggestionResult.from(suggestionResult))
+                            on<StoreHandler>().store.box(Suggestion::class).put(SuggestionResult.from(suggestionResult))
                         } else {
-                            on<StoreHandler>().store.box(Suggestion::class.java).put(
+                            on<StoreHandler>().store.box(Suggestion::class).put(
                                     SuggestionResult.updateFrom(result[0], suggestionResult))
                         }
                     }

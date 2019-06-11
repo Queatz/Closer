@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ListEqual
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
+import closer.vlllage.com.closer.store.models.GroupMember_.phone
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.Property
@@ -60,7 +61,7 @@ class RefreshHandler constructor(private val on: On) {
 
     fun refreshGroupActions(groupId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getGroupActions(groupId).subscribe({ groupActionResults ->
-            val removeQuery = on<StoreHandler>().store.box(GroupAction::class.java).query()
+            val removeQuery = on<StoreHandler>().store.box(GroupAction::class).query()
                     .equal(GroupAction_.group, groupId)
 
             for (groupActionResult in groupActionResults) {
@@ -68,7 +69,7 @@ class RefreshHandler constructor(private val on: On) {
             }
 
             val removeIds = removeQuery.build().findIds()
-            on<StoreHandler>().store.box(GroupAction::class.java).remove(*removeIds)
+            on<StoreHandler>().store.box(GroupAction::class).remove(*removeIds)
 
             handleFullListResult(groupActionResults, GroupAction::class.java, GroupAction_.id, false, { GroupActionResult.from(it) }, { groupAction, groupActionResult -> GroupActionResult.updateFrom(groupAction, groupActionResult) })
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
@@ -88,7 +89,7 @@ class RefreshHandler constructor(private val on: On) {
 
             handleMessages(groupMessageResults)
 
-            on<StoreHandler>().store.box(Pin::class.java).query().equal(Pin_.to, groupId).build().remove()
+            on<StoreHandler>().store.box(Pin::class).query().equal(Pin_.to, groupId).build().remove()
             handleFullListResult(pinResults, Pin::class.java, Pin_.id, false, { PinResult.from(it) }, { pin, pinResult -> PinResult.updateFrom(pin, pinResult) })
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
     }
@@ -104,20 +105,13 @@ class RefreshHandler constructor(private val on: On) {
                         { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
     }
 
-    fun refresh(event: Event) {
-        refreshObject(event, Event::class.java, Event_.id)
-    }
-
-    fun refresh(group: Group) {
-        refreshObject(group, Group::class.java, Group_.id)
-    }
-
-    fun refresh(phone: Phone) {
-        refreshObject(phone, Phone::class.java, Phone_.id)
-    }
-
-    fun refresh(groupMessage: GroupMessage) {
-        refreshObject(groupMessage, GroupMessage::class.java, GroupMessage_.id)
+    fun refresh(baseObject: BaseObject) {
+        when (baseObject) {
+            is Event -> refreshObject(baseObject, Event::class.java, Event_.id)
+            is Group -> refreshObject(baseObject, Group::class.java, Group_.id)
+            is Phone -> refreshObject(baseObject, Phone::class.java, Phone_.id)
+            is GroupMessage -> refreshObject(baseObject, GroupMessage::class.java, GroupMessage_.id)
+        }
     }
 
     fun <T : BaseObject> refreshObject(`object`: T, clazz: Class<T>, idProperty: Property<T>) {
@@ -146,7 +140,7 @@ class RefreshHandler constructor(private val on: On) {
 
         handlePhones(phoneResults)
 
-        val query = on<StoreHandler>().store.box(GroupMessage::class.java).query()
+        val query = on<StoreHandler>().store.box(GroupMessage::class).query()
 
         var isFirst = true
         for (message in messages) {
@@ -166,7 +160,7 @@ class RefreshHandler constructor(private val on: On) {
                         existingObjsMap[existingObj.id!!] = existingObj
                     }
 
-                    val groupMessageBox = on<StoreHandler>().store.box(GroupMessage::class.java)
+                    val groupMessageBox = on<StoreHandler>().store.box(GroupMessage::class)
                     for (message in messages) {
                         if (!existingObjsMap.containsKey(message.id)) {
                             groupMessageBox.put(GroupMessageResult.from(message))
@@ -245,13 +239,13 @@ class RefreshHandler constructor(private val on: On) {
                 } else {
                     existingGroupContactsMap[groupContactResult.id]!!.contactName = groupContactResult.phone!!.name
                     existingGroupContactsMap[groupContactResult.id]!!.contactActive = groupContactResult.phone!!.updated
-                    on<StoreHandler>().store.box(GroupContact::class.java).put(
+                    on<StoreHandler>().store.box(GroupContact::class).put(
                             existingGroupContactsMap[groupContactResult.id]!!
                     )
                 }
             }
 
-            on<StoreHandler>().store.box(GroupContact::class.java).put(groupsToAdd)
+            on<StoreHandler>().store.box(GroupContact::class).put(groupsToAdd)
             on<StoreHandler>().removeAllExcept(GroupContact::class.java, GroupContact_.id, allMyGroupContactIds)
         }
     }

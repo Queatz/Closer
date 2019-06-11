@@ -55,7 +55,7 @@ class GroupActivity : CircularRevealActivity() {
                 .subscribe { isShareActive ->
                     showMessagesView(!isShareActive, true)
 
-                    val queryBuilder = on<StoreHandler>().store.box(Group::class.java).query()
+                    val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
                     val groups = queryBuilder.sort(on<SortHandler>().sortGroups()).notEqual(Group_.physical, true).build().find()
 
                     val searchGroupsAdapter = SearchGroupsAdapter(on, { group, view ->

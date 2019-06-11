@@ -46,7 +46,7 @@ class SearchGroupHandler constructor(private val on: On) {
     }
 
     private fun groupActionNamesContains(group: Group, searchQuery: String): Boolean {
-        val groupActions = on<StoreHandler>().store.box(GroupAction::class.java).query()
+        val groupActions = on<StoreHandler>().store.box(GroupAction::class).query()
                 .equal(GroupAction_.group, group.id!!).build().find()
 
         for (groupAction in groupActions) {

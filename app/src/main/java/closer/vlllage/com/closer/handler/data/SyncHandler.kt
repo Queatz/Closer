@@ -58,7 +58,7 @@ class SyncHandler constructor(private val on: On) {
 
     private fun sendCreateGroupAction(groupAction: GroupAction, onSyncResult: OnSyncResult?) {
         groupAction.localOnly = true
-        on<StoreHandler>().store.box(GroupAction::class.java).put(groupAction)
+        on<StoreHandler>().store.box(GroupAction::class).put(groupAction)
 
         on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().createGroupAction(
                 groupAction.group!!,
@@ -68,7 +68,7 @@ class SyncHandler constructor(private val on: On) {
             if (createResult.success) {
                 groupAction.id = createResult.id
                 groupAction.localOnly = false
-                on<StoreHandler>().store.box(GroupAction::class.java).put(groupAction)
+                on<StoreHandler>().store.box(GroupAction::class).put(groupAction)
                 onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
@@ -76,7 +76,7 @@ class SyncHandler constructor(private val on: On) {
 
     private fun sendUpdateGroupMember(groupMember: GroupMember, onSyncResult: OnSyncResult?) {
         groupMember.localOnly = true
-        on<StoreHandler>().store.box(GroupMember::class.java).put(groupMember)
+        on<StoreHandler>().store.box(GroupMember::class).put(groupMember)
 
         on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().updateGroupMember(
                 groupMember.group!!,
@@ -86,7 +86,7 @@ class SyncHandler constructor(private val on: On) {
             if (createResult.success) {
                 groupMember.id = createResult.id
                 groupMember.localOnly = false
-                on<StoreHandler>().store.box(GroupMember::class.java).put(groupMember)
+                on<StoreHandler>().store.box(GroupMember::class).put(groupMember)
                 onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
@@ -94,7 +94,7 @@ class SyncHandler constructor(private val on: On) {
 
     private fun sendCreateEvent(event: Event, onSyncResult: OnSyncResult?) {
         event.localOnly = true
-        on<StoreHandler>().store.box(Event::class.java).put(event)
+        on<StoreHandler>().store.box(Event::class).put(event)
 
         on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().createEvent(
                 event.name!!,
@@ -107,7 +107,7 @@ class SyncHandler constructor(private val on: On) {
             if (createResult.success) {
                 event.id = createResult.id
                 event.localOnly = false
-                on<StoreHandler>().store.box(Event::class.java).put(event)
+                on<StoreHandler>().store.box(Event::class).put(event)
                 onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
@@ -115,7 +115,7 @@ class SyncHandler constructor(private val on: On) {
 
     private fun sendCreateSuggestion(suggestion: Suggestion, onSyncResult: OnSyncResult?) {
         suggestion.localOnly = true
-        on<StoreHandler>().store.box(Suggestion::class.java).put(suggestion)
+        on<StoreHandler>().store.box(Suggestion::class).put(suggestion)
 
         on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().addSuggestion(
                 suggestion.name!!,
@@ -124,7 +124,7 @@ class SyncHandler constructor(private val on: On) {
             if (createResult.success) {
                 suggestion.id = createResult.id
                 suggestion.localOnly = false
-                on<StoreHandler>().store.box(Suggestion::class.java).put(suggestion)
+                on<StoreHandler>().store.box(Suggestion::class).put(suggestion)
                 onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
@@ -132,7 +132,7 @@ class SyncHandler constructor(private val on: On) {
 
     private fun sendCreateGroup(group: Group, onSyncResult: OnSyncResult?) {
         group.localOnly = true
-        on<StoreHandler>().store.box(Group::class.java).put(group)
+        on<StoreHandler>().store.box(Group::class).put(group)
 
         val createApiRequest: Single<CreateResult>
 
@@ -154,7 +154,7 @@ class SyncHandler constructor(private val on: On) {
             if (createResult.success) {
                 group.id = createResult.id
                 group.localOnly = false
-                on<StoreHandler>().store.box(Group::class.java).put(group)
+                on<StoreHandler>().store.box(Group::class).put(group)
                 onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
@@ -162,7 +162,7 @@ class SyncHandler constructor(private val on: On) {
 
     private fun sendCreateGroupMessage(groupMessage: GroupMessage, onSyncResult: OnSyncResult?) {
         groupMessage.localOnly = true
-        on<StoreHandler>().store.box(GroupMessage::class.java).put(groupMessage)
+        on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
 
         val apiCall = on<ApiHandler>().sendGroupMessage(
                 groupMessage.to!!,
@@ -174,7 +174,7 @@ class SyncHandler constructor(private val on: On) {
             if (createResult.success) {
                 groupMessage.id = createResult.id
                 groupMessage.localOnly = false
-                on<StoreHandler>().store.box(GroupMessage::class.java).put(groupMessage)
+                on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
                 onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))

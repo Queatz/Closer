@@ -65,7 +65,7 @@ class GroupActionAdapter(on: On,
         }
 
         if (layout == Layout.PHOTO) {
-            val group = on<StoreHandler>().store.box(Group::class.java).query()
+            val group = on<StoreHandler>().store.box(Group::class).query()
                     .equal(Group_.id, groupActions[position].group!!)
                     .build()
                     .findFirst()

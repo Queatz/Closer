@@ -59,7 +59,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         val distance = .12f
 
         val cameraPositionCallback = { cameraPosition: CameraPosition ->
-            val queryBuilder = on<StoreHandler>().store.box(Group::class.java).query()
+            val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
                     .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                     .and()
                     .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
@@ -102,7 +102,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                     group.isPublic = true
                     group.latitude = location.latitude
                     group.longitude = location.longitude
-                    on<StoreHandler>().store.box(Group::class.java).put(group)
+                    on<StoreHandler>().store.box(Group::class).put(group)
                     on<SyncHandler>().sync(group, { groupId ->
                         openGroup(groupId, null)
                     })

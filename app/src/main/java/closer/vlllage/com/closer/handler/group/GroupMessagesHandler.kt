@@ -162,7 +162,7 @@ class GroupMessagesHandler constructor(private val on: On) {
                 on<DisposableHandler>().dispose(groupMessagesSubscription!!)
             }
 
-            groupMessagesSubscription = on<StoreHandler>().store.box(GroupMessage::class.java).query()
+            groupMessagesSubscription = on<StoreHandler>().store.box(GroupMessage::class).query()
                     .equal(GroupMessage_.to, group.id!!)
                     .sort(on<SortHandler>().sortGroupMessages())
                     .build()
@@ -238,7 +238,7 @@ class GroupMessagesHandler constructor(private val on: On) {
         groupMessage.to = on<GroupHandler>().group!!.id
         groupMessage.from = on<PersistenceHandler>().phoneId
         groupMessage.time = Date()
-        on<StoreHandler>().store.box(GroupMessage::class.java).put(groupMessage)
+        on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
         on<SyncHandler>().sync(groupMessage)
 
         return true

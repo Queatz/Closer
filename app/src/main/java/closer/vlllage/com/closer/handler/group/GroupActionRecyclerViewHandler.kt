@@ -30,7 +30,7 @@ class GroupActionRecyclerViewHandler constructor(private val on: On) {
         )
 
         adapter = GroupActionAdapter(on, layout, { groupAction ->
-            val group = on<StoreHandler>().store.box(Group::class.java).query()
+            val group = on<StoreHandler>().store.box(Group::class).query()
                     .equal(Group_.id, groupAction.group!!).build().findFirst()
 
             if (group == null) {
@@ -82,7 +82,7 @@ class GroupActionRecyclerViewHandler constructor(private val on: On) {
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.remove_action)
             positiveButtonCallback = {
                 on<DisposableHandler>().add(on<ApiHandler>().removeGroupAction(groupAction.id!!).subscribe(
-                            { on<StoreHandler>().store.box(GroupAction::class.java).remove(groupAction) },
+                            { on<StoreHandler>().store.box(GroupAction::class).remove(groupAction) },
                             { on<DefaultAlerts>().thatDidntWork() }
                     ))
                 }

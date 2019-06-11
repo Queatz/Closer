@@ -44,7 +44,7 @@ class ShareActivity : ListActivity() {
 
         on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter!!, "")
 
-        val queryBuilder = on<StoreHandler>().store.box(Group::class.java).query()
+        val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
         on<DisposableHandler>().add(queryBuilder
                 .sort(on<SortHandler>().sortGroups())
                 .build()
@@ -72,7 +72,7 @@ class ShareActivity : ListActivity() {
                     searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.add))
                 } else if (groupId != null) {
 
-                    groupToShare = on<StoreHandler>().store.box(Group::class.java).query()
+                    groupToShare = on<StoreHandler>().store.box(Group::class).query()
                             .equal(Group_.id, groupId!!)
                             .build().findFirst()
 

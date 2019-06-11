@@ -4,22 +4,21 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.handler.helpers.Val
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupInvite
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
+import com.queatz.on.On
 import java.util.*
 
 class NameHandler constructor(private val on: On) {
 
     fun getName(phoneId: String): String {
-        val phoneList = on<StoreHandler>().store.box(Phone::class.java).query().equal(Phone_.id, phoneId).build().find()
+        val phoneList = on<StoreHandler>().store.box(Phone::class).query().equal(Phone_.id, phoneId).build().find()
         return if (phoneList.isEmpty()) {
             on<ResourcesHandler>().resources.getString(R.string.unknown)
         } else getName(phoneList[0])
-
     }
 
     fun getName(phone: Phone?): String {

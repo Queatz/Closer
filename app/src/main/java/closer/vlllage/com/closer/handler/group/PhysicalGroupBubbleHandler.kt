@@ -31,7 +31,7 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
             val oneMonthAgo = Date()
             oneMonthAgo.time = oneMonthAgo.time - 90 * DAY_IN_MILLIS
 
-            physicalGroupSubscription = on<StoreHandler>().store.box(Group::class.java).query()
+            physicalGroupSubscription = on<StoreHandler>().store.box(Group::class).query()
                     .equal(Group_.physical, true)
                     .and()
                     .greater(Group_.updated, oneHourAgo)

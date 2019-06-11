@@ -37,7 +37,7 @@ class GroupMessageMentionHandler constructor(private val on: On) {
             if (name[0] == '@') {
                 name = name.subSequence(1, name.length)
             }
-            val phones = on<StoreHandler>().store.box(Phone::class.java).query()
+            val phones = on<StoreHandler>().store.box(Phone::class).query()
                     .contains(Phone_.name, name.toString(), QueryBuilder.StringOrder.CASE_INSENSITIVE)
                     .greater(Phone_.updated, on<TimeAgo>().oneMonthAgo())
                     .sort(on<SortHandler>().sortPhones())

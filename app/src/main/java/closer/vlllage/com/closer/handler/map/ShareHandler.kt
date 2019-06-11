@@ -16,7 +16,7 @@ import java.util.*
 class ShareHandler constructor(private val on: On) {
 
     fun shareTo(latLng: LatLng, onGroupSelectedListener: (Group) -> Unit) {
-        on<StoreHandler>().store.box(Group::class.java).query()
+        on<StoreHandler>().store.box(Group::class).query()
                 .notEqual(Group_.physical, true)
                 .sort(on<SortHandler>().sortGroups())
                 .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groups ->

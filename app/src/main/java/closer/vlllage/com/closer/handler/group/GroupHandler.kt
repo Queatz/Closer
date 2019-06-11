@@ -37,7 +37,7 @@ class GroupHandler constructor(private val on: On) {
                 on<RefreshHandler>().refreshGroupMessages(group.id!!)
                 on<RefreshHandler>().refreshGroupContacts(group.id!!)
 
-                disposableGroup.add(on<StoreHandler>().store.box(Group::class.java).query()
+                disposableGroup.add(on<StoreHandler>().store.box(Group::class).query()
                         .equal(Group_.id, group.id!!)
                         .build()
                         .subscribe()
@@ -51,7 +51,7 @@ class GroupHandler constructor(private val on: On) {
 
 
                 if (on<PersistenceHandler>().phoneId != null) {
-                    disposableGroup.add(on<StoreHandler>().store.box(GroupMember::class.java).query()
+                    disposableGroup.add(on<StoreHandler>().store.box(GroupMember::class).query()
                             .equal(GroupMember_.group, group.id!!)
                             .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
                             .build()
@@ -83,13 +83,13 @@ class GroupHandler constructor(private val on: On) {
             return
         }
 
-        disposableGroup.add(on<DataHandler>().getGroupById(groupId).subscribe({
+        disposableGroup.add(on<DataHandler>().getGroup(groupId).subscribe({
             group = it
         }, { on<DefaultAlerts>().thatDidntWork() }))
     }
 
     private fun onGroupSet(group: Group) {
-        disposableGroup.add(on<StoreHandler>().store.box(GroupContact::class.java)
+        disposableGroup.add(on<StoreHandler>().store.box(GroupContact::class)
                 .query()
                 .equal(GroupContact_.groupId, group.id!!)
                 .build()
@@ -107,7 +107,7 @@ class GroupHandler constructor(private val on: On) {
                     contactInfoChanged.onNext(contactInfo)
                 })
 
-        disposableGroup.add(on<StoreHandler>().store.box(GroupInvite::class.java)
+        disposableGroup.add(on<StoreHandler>().store.box(GroupInvite::class)
                 .query()
                 .equal(GroupInvite_.group, group.id!!)
                 .build()
@@ -127,7 +127,7 @@ class GroupHandler constructor(private val on: On) {
             return
         }
 
-        disposableGroup.add(on<DataHandler>().getEventById(eventId)
+        disposableGroup.add(on<DataHandler>().getEvent(eventId)
                 .subscribe({ event -> eventChanged.onNext(event) },
                         { on<DefaultAlerts>().thatDidntWork() }))
     }

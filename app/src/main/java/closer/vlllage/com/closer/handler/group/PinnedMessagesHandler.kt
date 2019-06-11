@@ -49,7 +49,7 @@ class PinnedMessagesHandler constructor(private val on: On) {
 
         on<RefreshHandler>().refreshPins(group.id!!)
 
-        groupMessagesSubscription = on<StoreHandler>().store.box(Pin::class.java).query()
+        groupMessagesSubscription = on<StoreHandler>().store.box(Pin::class).query()
                 .equal(Pin_.to, group.id!!)
                 .build()
                 .subscribe()
@@ -66,7 +66,7 @@ class PinnedMessagesHandler constructor(private val on: On) {
                         ids.add(pin.from!!)
                     }
 
-                    groupMessagesActualSubscription = on<StoreHandler>().store.box(GroupMessage::class.java).query()
+                    groupMessagesActualSubscription = on<StoreHandler>().store.box(GroupMessage::class).query()
                             .`in`(GroupMessage_.id, ids.toTypedArray())
                             .build()
                             .subscribe()
