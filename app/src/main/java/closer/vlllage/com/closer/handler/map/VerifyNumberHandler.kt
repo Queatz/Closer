@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.map
 
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.AlertHandler
@@ -46,8 +47,9 @@ class VerifyNumberHandler constructor(private val on: On) {
 
     private fun sendVerificationCode(phoneNumber: String, verificationCode: String) {
         on<DisposableHandler>().add(on<ApiHandler>().sendVerificationCode(verificationCode).subscribe({ result ->
-            if (result.success) {
+            if (result.verified) {
                 codeConfirmed()
+                confirmToken(result.token)
             } else {
                 codeNotConfirmed(phoneNumber)
             }
@@ -73,6 +75,12 @@ class VerifyNumberHandler constructor(private val on: On) {
             message = on<ResourcesHandler>().resources.getString(R.string.number_verified)
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.yaay)
             show()
+        }
+    }
+
+    private fun confirmToken(token: String?) {
+        if (on<AccountHandler>().phone != token && token != null) {
+            on<AccountHandler>().updatePhone(token)
         }
     }
 }

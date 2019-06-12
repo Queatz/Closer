@@ -6,8 +6,8 @@ import closer.vlllage.com.closer.handler.helpers.DateFormatter
 import closer.vlllage.com.closer.handler.helpers.HttpEncode
 import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.Val
-import com.queatz.on.On
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import okhttp3.MediaType
@@ -91,7 +91,7 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.setPhoneNumber(phoneNumber))
     }
 
-    fun sendVerificationCode(verificationCode: String): Single<SuccessResult> {
+    fun sendVerificationCode(verificationCode: String): Single<VerifiedResult> {
         return uiThread(api.backend.sendVerificationCode(verificationCode))
     }
 

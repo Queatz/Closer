@@ -58,7 +58,7 @@ interface Backend {
     fun setPhoneNumber(@Query("set-number") phoneNumber: String): Single<SuccessResult>
 
     @POST("verify")
-    fun sendVerificationCode(@Query("verify-code") verificationCode: String): Single<SuccessResult>
+    fun sendVerificationCode(@Query("verify-code") verificationCode: String): Single<VerifiedResult>
 
     // Suggestion
 

@@ -4,8 +4,8 @@ import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.Val
-import com.queatz.on.On
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 import io.reactivex.subjects.PublishSubject
 
 class AccountHandler constructor(private val on: On) {
@@ -25,6 +25,12 @@ class AccountHandler constructor(private val on: On) {
     }
 
     val privateMode get() = on<PersistenceHandler>().privateMode
+
+    fun updatePhone(token: String) {
+        on<PersistenceHandler>().phone = token
+        on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
+        on<RefreshHandler>().refreshAll()
+    }
 
     fun updateGeo(latLng: LatLng) {
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_GEO, latLng))

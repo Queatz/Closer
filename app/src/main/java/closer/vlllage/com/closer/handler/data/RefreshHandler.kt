@@ -6,7 +6,6 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ListEqual
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import closer.vlllage.com.closer.store.models.GroupMember_.phone
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.Property
@@ -17,8 +16,17 @@ import java.util.*
 class RefreshHandler constructor(private val on: On) {
 
     fun refreshAll() {
+        refreshMe()
         refreshMyGroups()
         refreshMyMessages()
+    }
+
+    fun refreshMe() {
+        on<DisposableHandler>().add(on<ApiHandler>().phone().subscribe({
+            refresh(PhoneResult.from(it))
+        }, {
+            on<ConnectionErrorHandler>().notifyConnectionError()
+        }))
     }
 
     fun refreshMyMessages() {
