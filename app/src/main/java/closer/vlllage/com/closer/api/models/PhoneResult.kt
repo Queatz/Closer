@@ -8,6 +8,7 @@ class PhoneResult : ModelResult() {
     var photo: String? = null
     var status: String? = null
     var active: Boolean? = null
+    var verified: Boolean? = null
 
     companion object {
 
@@ -27,6 +28,7 @@ class PhoneResult : ModelResult() {
             phone.name = phoneResult.name
             phone.status = phoneResult.status
             phone.photo = phoneResult.photo
+            phone.verified = phoneResult.verified
 
             return phone
         }

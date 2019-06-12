@@ -102,7 +102,7 @@
         android:contentDescription="@string/get_directions"
         android:minWidth="0dp"
         android:tint="@color/colorPrimary"
-        android:src="@drawable/ic_add_black_24dp"/>
+        android:src="@drawable/ic_person_add_black_24dp"/>
 
     <ImageButton
         android:id="@+id/getDirectionsButton"

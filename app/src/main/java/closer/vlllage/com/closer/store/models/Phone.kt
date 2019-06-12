@@ -9,4 +9,5 @@ class Phone : BaseObject() {
     var photo: String? = null
     var latitude: Double? = null
     var longitude: Double? = null
+    var verified: Boolean? = null
 }

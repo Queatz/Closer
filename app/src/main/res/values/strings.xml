@@ -234,4 +234,5 @@
     <string name="photos">Photos</string>
     <string name="huaman_found">You found a human!</string>
     <string name="continue_text">Continue</string>
+    <string name="invite_to">Invite to goup...</string>
 </resources>
