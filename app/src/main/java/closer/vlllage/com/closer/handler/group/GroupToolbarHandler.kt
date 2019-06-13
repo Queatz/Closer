@@ -45,8 +45,8 @@ class GroupToolbarHandler constructor(private val on: On) {
         recyclerView.adapter = adapter
 
         on<DisposableHandler>().add(isShareActiveObservable.subscribe { show(on<GroupHandler>().group) })
-        on<GroupHandler>().onGroupUpdated { this.show(it) }
-        on<GroupHandler>().onGroupChanged { this.show(it) }
+        on<GroupHandler>().onGroupUpdated { show(it) }
+        on<GroupHandler>().onGroupChanged { show(it) }
         on<GroupHandler>().onEventChanged { show(on<GroupHandler>().group) }
         on<GroupHandler>().onPhoneChanged { show(on<GroupHandler>().group) }
     }

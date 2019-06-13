@@ -67,7 +67,7 @@ class DisposableGroup {
 
     fun clear() {
         disposableGroups.forEach { it.clear() }
-        disposables.dispose()
+        disposables.clear()
         for (dataSubscription in dataSubscriptions) {
             if (!dataSubscription.isCanceled)
                 try {
