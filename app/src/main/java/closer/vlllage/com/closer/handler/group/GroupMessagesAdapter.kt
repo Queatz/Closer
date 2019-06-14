@@ -32,7 +32,8 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
     var onEventClickListener: ((Event) -> Unit)? = null
     var onGroupClickListener: ((Group) -> Unit)? = null
     private var groupMessages: List<GroupMessage> = ArrayList()
-    private var pinned: Boolean = false
+    var pinned: Boolean = false
+    var global: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupMessageViewHolder {
         return GroupMessageViewHolder(LayoutInflater.from(parent.context)
@@ -107,7 +108,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         }
         holder.messageActionPin.setOnClickListener { view ->
             if (pinned) {
-                on<DisposableHandler>().add(on<ApiHandler>().removePin(groupMessage.id!!, groupMessage.to!!)
+                on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().removePin(groupMessage.id!!, groupMessage.to!!)
                         .subscribe({ successResult ->
                             if (!successResult.success) {
                                 on<DefaultAlerts>().thatDidntWork()
@@ -116,7 +117,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                             }
                         }, { on<DefaultAlerts>().thatDidntWork() }))
             } else {
-                on<DisposableHandler>().add(on<ApiHandler>().addPin(groupMessage.id!!, groupMessage.to!!)
+                on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().addPin(groupMessage.id!!, groupMessage.to!!)
                         .subscribe({ successResult ->
                             if (!successResult.success) {
                                 on<DefaultAlerts>().thatDidntWork()
@@ -140,7 +141,8 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
 
         holder.messageActionLayout.visibility = View.GONE
 
-        on<MessageDisplay>().setPinned(pinned)
+        on<MessageDisplay>().pinned = pinned
+        on<MessageDisplay>().global = global
         on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 
         if (groupMessage.reactions.isEmpty()) {
@@ -151,7 +153,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.reactionAdapter.setGroupMessage(groupMessage)
         }
 
-        on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
+        holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             holder.messageActionReply.setTextColor(it.text)
             holder.messageActionShare.setTextColor(it.text)
             holder.messageActionRemind.setTextColor(it.text)
@@ -165,6 +167,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.message.setTextColor(it.text)
             holder.name.setTextColor(it.text)
             holder.time.setTextColor(it.text)
+            holder.group.setTextColor(it.text)
             holder.action.setTextColor(it.text)
             holder.eventMessage.setTextColor(it.text)
             holder.pinnedIndicator.imageTintList = it.tint
@@ -219,11 +222,6 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun setPinned(pinned: Boolean): GroupMessagesAdapter {
-        this.pinned = pinned
-        return this
-    }
-
     inner class GroupMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         internal var name: TextView
@@ -232,6 +230,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var message: TextView
         internal var action: TextView
         internal var time: TextView
+        internal var group: TextView
         internal var photo: ImageView
         internal var pinnedIndicator: ImageView
         internal var messageActionLayout: MaxSizeFrameLayout
@@ -252,6 +251,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             message = itemView.findViewById(R.id.message)
             action = itemView.findViewById(R.id.action)
             time = itemView.findViewById(R.id.time)
+            group = itemView.findViewById(R.id.group)
             photo = itemView.findViewById(R.id.photo)
             pinnedIndicator = itemView.findViewById(R.id.pinnedIndicator)
             reactionsRecyclerView = itemView.findViewById(R.id.reactionsRecyclerView)

@@ -3,20 +3,22 @@ package closer.vlllage.com.closer.handler.group
 import android.view.Gravity
 import android.view.View
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
+import com.queatz.on.On
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 class MessageDisplay constructor(private val on: On) {
 
-    private var pinned: Boolean = false
+    var pinned: Boolean = false
+    var global: Boolean = false
 
     private fun displayShare(holder: GroupMessagesAdapter.GroupMessageViewHolder,
                              jsonObject: JsonObject,
@@ -218,10 +220,6 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.text = on<TimeStr>().pretty(groupMessage.time)
     }
 
-    fun setPinned(pinned: Boolean) {
-        this.pinned = pinned
-    }
-
     fun display(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage,
                 onEventClickListener: (Event) -> Unit,
                 onGroupClickListener: (Group) -> Unit,
@@ -260,6 +258,11 @@ class MessageDisplay constructor(private val on: On) {
             holder.pinnedIndicator.visibility = View.VISIBLE
             holder.messageActionPin.setText(R.string.unpin)
         }
+
+        if (global) {
+            holder.group.visible = true
+            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, getGroup(groupMessage.to!!)?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
+        }
     }
 
     private fun getPhone(phoneId: String?): Phone? {
@@ -269,6 +272,14 @@ class MessageDisplay constructor(private val on: On) {
                 .equal(Phone_.id, phoneId)
                 .build()
                 .findFirst()
+    }
 
+    private fun getGroup(groupId: String?): Group? {
+        return if (groupId == null)
+            null
+        else on<StoreHandler>().store.box(Group::class).query()
+                .equal(Group_.id, groupId)
+                .build()
+                .findFirst()
     }
 }

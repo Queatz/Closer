@@ -27,13 +27,20 @@ class GroupActivity : CircularRevealActivity() {
                 ContentViewType.MESSAGES -> GroupMessagesFragment()
                 ContentViewType.SHARE -> ShareGroupFragment()
                 ContentViewType.CONTACTS -> GroupContactsFragment()
+                ContentViewType.PHONE_MESSAGES -> PhoneMessagesFragment()
+                ContentViewType.PHONE_PHOTOS -> PhonePhotosFragment()
+                ContentViewType.PHONE_GROUPS -> Fragment()
+
             })
         }
 
     enum class ContentViewType {
         MESSAGES,
         SHARE,
-        CONTACTS
+        CONTACTS,
+        PHONE_MESSAGES,
+        PHONE_PHOTOS,
+        PHONE_GROUPS,
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,12 +63,8 @@ class GroupActivity : CircularRevealActivity() {
 
         on<GroupToolbarHandler>().attach(view.eventToolbar)
 
-        contentView = ContentViewType.MESSAGES
-
-        on<DisposableHandler>().add(on<GroupToolbarHandler>().isShareActiveObservable
-                .subscribe { isShareActive ->
-                    contentView = if (isShareActive) ContentViewType.SHARE else ContentViewType.MESSAGES
-                })
+        on<DisposableHandler>().add(on<GroupToolbarHandler>().contentView
+                .subscribe { contentView = it })
 
         on<MiniWindowHandler>().attach(view.groupName, view.backgroundColor) { finish() }
 
@@ -93,7 +96,7 @@ class GroupActivity : CircularRevealActivity() {
                     view.groupAbout.text = group.about
                 }
 
-                on<GroupToolbarHandler>().isShareActiveObservable.onNext(false)
+                on<GroupToolbarHandler>().contentView.onNext(ContentViewType.MESSAGES)
                 on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
 
                 view.peopleInGroup.isSelected = true

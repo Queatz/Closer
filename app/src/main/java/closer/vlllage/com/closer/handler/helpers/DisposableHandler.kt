@@ -20,7 +20,7 @@ class DisposableHandler constructor(private val on: On) : OnLifecycle {
     fun add(dataSubscription: DataSubscription) = disposableGroup.add(dataSubscription)
     fun dispose(dataSubscription: DataSubscription) = disposableGroup.dispose(dataSubscription)
 
-    fun group() = DisposableGroup().also { disposableGroup.add(it) }
+    fun group() = disposableGroup.group()
     fun self() = disposableGroup
 }
 
@@ -28,6 +28,8 @@ class DisposableGroup {
     private val disposables = CompositeDisposable()
     private val dataSubscriptions = HashSet<DataSubscription>()
     private val disposableGroups = HashSet<DisposableGroup>()
+
+    fun group() = DisposableGroup().also { add(it) }
 
     fun add(disposableGroup: DisposableGroup) {
         disposableGroups.add(disposableGroup)

@@ -229,6 +229,19 @@
         tools:text="8:45pm" />
 
     <TextView
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padHalf"
+        app:layout_constraintStart_toEndOf="@+id/time"
+        app:layout_constraintTop_toBottomOf="@+id/reactionsRecyclerView"
+        android:textSize="12sp"
+        android:textColor="@color/text"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Matcha Club" />
+
+    <TextView
         android:id="@+id/action"
         android:layout_width="wrap_content"
         android:layout_height="32dp"

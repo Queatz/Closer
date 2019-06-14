@@ -5,6 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -25,7 +26,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ToolbarAdapter
-    val isShareActiveObservable = BehaviorSubject.createDefault(false)
+    val contentView = BehaviorSubject.createDefault(GroupActivity.ContentViewType.MESSAGES)
 
     fun attach(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
@@ -44,7 +45,7 @@ class GroupToolbarHandler constructor(private val on: On) {
         }
         recyclerView.adapter = adapter
 
-        on<DisposableHandler>().add(isShareActiveObservable.subscribe { show(on<GroupHandler>().group) })
+        on<DisposableHandler>().add(contentView.subscribe { show(on<GroupHandler>().group) })
         on<GroupHandler>().onGroupUpdated { show(it) }
         on<GroupHandler>().onGroupChanged { show(it) }
         on<GroupHandler>().onEventChanged { show(on<GroupHandler>().group) }
@@ -64,27 +65,33 @@ class GroupToolbarHandler constructor(private val on: On) {
             items.add(ToolbarItem(
                     R.string.messages,
                     R.drawable.ic_message_black_24dp,
-                    View.OnClickListener { }
+                    View.OnClickListener {
+                        contentView.onNext(GroupActivity.ContentViewType.PHONE_MESSAGES)
+                    }
             ))
 
             items.add(ToolbarItem(
                     R.string.photos,
                     R.drawable.ic_photo_black_24dp,
-                    View.OnClickListener { }
+                    View.OnClickListener {
+                        contentView.onNext(GroupActivity.ContentViewType.PHONE_PHOTOS)
+                    }
             ))
 
             items.add(ToolbarItem(
                     R.string.groups,
                     R.drawable.ic_person_black_24dp,
-                    View.OnClickListener { }
+                    View.OnClickListener {
+                        contentView.onNext(GroupActivity.ContentViewType.PHONE_GROUPS)
+                    }
             ))
         }
 
         if (items.size < 3 && event != null) {
             items.add(ToolbarItem(
-                    if (isShareActiveObservable.value!!) R.string.cancel else R.string.share,
-                    if (isShareActiveObservable.value!!) R.drawable.ic_close_black_24dp else R.drawable.ic_share_black_24dp,
-                    View.OnClickListener { v -> toggleShare() }
+                    if (contentView.value == GroupActivity.ContentViewType.SHARE) R.string.cancel else R.string.share,
+                    if (contentView.value == GroupActivity.ContentViewType.SHARE) R.drawable.ic_close_black_24dp else R.drawable.ic_share_black_24dp,
+                    View.OnClickListener { toggleShare() }
             ))
         }
 
@@ -184,7 +191,10 @@ class GroupToolbarHandler constructor(private val on: On) {
     }
 
     private fun toggleShare() {
-        isShareActiveObservable.onNext(!isShareActiveObservable.value!!)
+        contentView.onNext(if (contentView.value == GroupActivity.ContentViewType.SHARE)
+            GroupActivity.ContentViewType.MESSAGES
+        else
+            GroupActivity.ContentViewType.SHARE)
     }
 
 
