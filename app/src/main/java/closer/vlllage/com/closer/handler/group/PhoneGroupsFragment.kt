@@ -38,6 +38,7 @@ class PhoneGroupsFragment : PoolActivityFragment() {
             setActionText(on<ResourcesHandler>().resources.getString(R.string.open_group))
             setLayoutResId(R.layout.search_groups_item_light)
             setBackgroundResId(R.drawable.clickable_green_flat)
+            flat = true
         }
 
         photosRecyclerView.layoutManager = LinearLayoutManager(photosRecyclerView.context)

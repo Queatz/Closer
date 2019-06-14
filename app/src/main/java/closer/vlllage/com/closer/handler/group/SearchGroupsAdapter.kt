@@ -36,6 +36,7 @@ open class SearchGroupsAdapter constructor(
     private var backgroundResId = R.drawable.clickable_light
     private var isSmall: Boolean = false
     private var isNoAnimation: Boolean = false
+    var flat: Boolean = false
 
     private val createGroupCount = if (showCreateGroup) 1 else 0
 
@@ -98,6 +99,11 @@ open class SearchGroupsAdapter constructor(
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
                     holder.about.text = on<Val>().of(group.about)
                 }
+
+                if (flat) {
+                    holder.container?.elevation = 0f
+                }
+
                 holder.cardView.setOnClickListener { view ->
                     onGroupClickListener?.invoke(group, holder.itemView)
                 }
@@ -199,6 +205,7 @@ open class SearchGroupsAdapter constructor(
     }
 
     class SearchGroupsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var container = itemView.findViewById<View>(R.id.container)
         var cardView: View = itemView.findViewById(R.id.rootView)
         var name: TextView = itemView.findViewById(R.id.name)
         var about: TextView = itemView.findViewById(R.id.about)
