@@ -203,6 +203,10 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.getMessagesForPhone(phoneId))
     }
 
+    fun getGroupContactsForPhone(phoneId: String): Single<List<GroupContactResult>> {
+        return uiThread(api.backend.getGroupContactsForPhone(phoneId))
+    }
+
     fun cancelInvite(groupId: String, groupInviteId: String): Single<SuccessResult> {
         return uiThread(api.backend.cancelInvite(groupId, groupInviteId))
     }

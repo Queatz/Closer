@@ -10,6 +10,9 @@
     android:drawableTint="@color/text"
     android:drawablePadding="@dimen/padHalf"
     android:background="@drawable/clickable_light"
+    android:singleLine="true"
+    android:ellipsize="marquee"
+    android:scrollHorizontally="true"
     android:textColor="@color/text"
     tools:drawableTop="@drawable/ic_close_black_24dp"
     tools:text="@string/cancel" />

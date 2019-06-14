@@ -236,4 +236,5 @@
     <string name="huaman_found">You found a human!</string>
     <string name="continue_text">Continue</string>
     <string name="invite_to">Invite to group…</string>
+    <string name="activity">Activity</string>
 </resources>

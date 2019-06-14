@@ -8,11 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
+import closer.vlllage.com.closer.handler.phone.NameHandler
+import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
@@ -34,11 +38,13 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, HORIZONTAL, false) {
             override fun measureChild(child: View, widthUsed: Int, heightUsed: Int) {
+                if (adapter.itemCount <= 3)
                 child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
                 super.measureChild(child, widthUsed, heightUsed)
             }
 
             override fun measureChildWithMargins(child: View, widthUsed: Int, heightUsed: Int) {
+                if (adapter.itemCount <= 3)
                 child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
                 super.measureChildWithMargins(child, widthUsed, heightUsed)
             }
@@ -83,6 +89,52 @@ class GroupToolbarHandler constructor(private val on: On) {
                     R.drawable.ic_person_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_GROUPS)
+                    }
+            ))
+
+            items.add(ToolbarItem(
+                    R.string.talk,
+                    R.drawable.ic_mail_black_24dp,
+                    View.OnClickListener {
+                        on<PhoneMessagesHandler>().openMessagesWithPhone(group.phoneId!!, on<NameHandler>().getName(group.phoneId!!), "")
+                    }
+            ))
+
+            items.add(ToolbarItem(
+                    R.string.invite,
+                    R.drawable.ic_person_add_black_24dp,
+                    View.OnClickListener {
+                        on<ShareActivityTransitionHandler>().inviteToGroup(group.phoneId!!)
+                    }
+            ))
+
+            items.add(ToolbarItem(
+                    R.string.get_directions,
+                    R.drawable.ic_directions_black_24dp,
+                    View.OnClickListener {
+                        on<DataHandler>().getPhone(group.phoneId!!).subscribe({
+                            if (it.latitude != null && it.longitude != null) {
+                                on<OutboundHandler>().openDirections(LatLng(it.latitude!!, it.longitude!!
+                                ))
+                            } else {
+                                on<DefaultAlerts>().thatDidntWork()
+                            }
+                        }, {
+                            on<DefaultAlerts>().thatDidntWork()
+                        })
+                    }
+            ))
+
+            items.add(ToolbarItem(
+                    R.string.show_on_map,
+                    R.drawable.ic_my_location_black_24dp,
+                    View.OnClickListener {
+                        val runnable = { on<MapActivityHandler>().showPhoneOnMap(group.phoneId) }
+                        if (on<ActivityHandler>().activity is CircularRevealActivity) {
+                            (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)
+                        } else {
+                            runnable.invoke()
+                        }
                     }
             ))
         }

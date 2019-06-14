@@ -53,6 +53,12 @@ class RefreshHandler constructor(private val on: On) {
         }
     }
 
+    fun refreshGroupContactsForPhone(phoneId: String) {
+        on<DisposableHandler>().add(on<ApiHandler>().getGroupContactsForPhone(phoneId).subscribe({
+            handleGroupContacts(it!!)
+        }, connectionError))
+    }
+
     fun refreshGroupContacts(groupId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getContacts(groupId).subscribe({ this.handleGroupContacts(it) },
                 connectionError))

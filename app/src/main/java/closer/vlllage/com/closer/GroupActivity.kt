@@ -29,7 +29,7 @@ class GroupActivity : CircularRevealActivity() {
                 ContentViewType.CONTACTS -> GroupContactsFragment()
                 ContentViewType.PHONE_MESSAGES -> PhoneMessagesFragment()
                 ContentViewType.PHONE_PHOTOS -> PhonePhotosFragment()
-                ContentViewType.PHONE_GROUPS -> Fragment()
+                ContentViewType.PHONE_GROUPS -> PhoneGroupsFragment()
 
             })
         }

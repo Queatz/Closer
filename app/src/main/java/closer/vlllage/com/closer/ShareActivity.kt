@@ -46,7 +46,7 @@ class ShareActivity : ListActivity() {
 
         val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
         on<DisposableHandler>().add(queryBuilder
-                .sort(on<SortHandler>().sortGroups())
+                .sort(on<SortHandler>().sortGroups(false))
                 .build()
                 .subscribe()
                 .single()

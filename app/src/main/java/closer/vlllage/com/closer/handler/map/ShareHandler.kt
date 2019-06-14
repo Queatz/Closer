@@ -18,7 +18,7 @@ class ShareHandler constructor(private val on: On) {
     fun shareTo(latLng: LatLng, onGroupSelectedListener: (Group) -> Unit) {
         on<StoreHandler>().store.box(Group::class).query()
                 .notEqual(Group_.physical, true)
-                .sort(on<SortHandler>().sortGroups())
+                .sort(on<SortHandler>().sortGroups(false))
                 .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groups ->
                     val groupNames = ArrayList<MapBubbleMenuItem>()
                     for (group in groups) {
