@@ -12,7 +12,7 @@ class DisposableHandler constructor(private val on: On) : OnLifecycle {
     private val disposableGroup = DisposableGroup()
 
     override fun off() {
-        disposableGroup.clear()
+        disposableGroup.dispose()
     }
 
     fun add(disposable: Disposable) = disposableGroup.add(disposable)
@@ -21,6 +21,7 @@ class DisposableHandler constructor(private val on: On) : OnLifecycle {
     fun dispose(dataSubscription: DataSubscription) = disposableGroup.dispose(dataSubscription)
 
     fun group() = DisposableGroup().also { disposableGroup.add(it) }
+    fun self() = disposableGroup
 }
 
 class DisposableGroup {
@@ -33,7 +34,7 @@ class DisposableGroup {
     }
 
     fun dispose(disposableGroup: DisposableGroup) {
-        disposableGroup.clear()
+        disposableGroup.dispose()
         disposableGroups.remove(disposableGroup)
     }
 
@@ -63,6 +64,21 @@ class DisposableGroup {
         }
 
         dataSubscriptions.remove(dataSubscription)
+    }
+
+    fun dispose() {
+        disposableGroups.forEach { it.dispose() }
+        disposables.dispose()
+        for (dataSubscription in dataSubscriptions) {
+            if (!dataSubscription.isCanceled)
+                try {
+                    dataSubscription.cancel()
+                } catch (ignored: NullPointerException) {
+                    // Objectbox NPE
+                }
+
+        }
+        dataSubscriptions.clear()
     }
 
     fun clear() {

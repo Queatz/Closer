@@ -23,7 +23,7 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
-import kotlinx.android.synthetic.main.activity_group.view.*
+import kotlinx.android.synthetic.main.fragment_group_messages.view.*
 import java.util.*
 
 class GroupMessagesHandler constructor(private val on: On) {
@@ -60,7 +60,7 @@ class GroupMessagesHandler constructor(private val on: On) {
         groupMessagesAdapter.onGroupClickListener = { group -> (on<ActivityHandler>().activity as CircularRevealActivity).finish { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id) } }
 
 
-        this.replyMessage.setOnEditorActionListener { textView, action, keyEvent ->
+        this.replyMessage.setOnEditorActionListener { textView, action, _ ->
             if (EditorInfo.IME_ACTION_GO == action) {
                 if (replyMessage.text.toString().isBlank()) {
                     return@setOnEditorActionListener false
@@ -96,10 +96,8 @@ class GroupMessagesHandler constructor(private val on: On) {
 
         updateSendButton()
         on<GroupHandler>().onGroupChanged { group ->
-            if (replyMessage.text.toString().isEmpty()) {
-                replyMessage.setText(on<GroupMessageParseHandler>().parseText(on<GroupDraftHandler>().getDraft(group)!!))
-                updateSendButton()
-            }
+            replyMessage.setText(on<GroupMessageParseHandler>().parseText(on<GroupDraftHandler>().getDraft(group)!!))
+            updateSendButton()
         }
 
         this.replyMessage.addTextChangedListener(object : TextWatcher {
@@ -133,19 +131,19 @@ class GroupMessagesHandler constructor(private val on: On) {
         val sendMoreActionFile = this.sendMoreLayout.sendMoreActionFile
         val sendMoreActionPhoto = this.sendMoreLayout.sendMoreActionPhoto
 
-        sendMoreActionAudio.setOnClickListener { view ->
+        sendMoreActionAudio.setOnClickListener {
             this.sendMoreButton.callOnClick()
             on<DefaultAlerts>().message("Woah matey!")
         }
-        sendMoreActionVideo.setOnClickListener { view ->
+        sendMoreActionVideo.setOnClickListener {
             this.sendMoreButton.callOnClick()
             on<DefaultAlerts>().message("Woah matey!")
         }
-        sendMoreActionFile.setOnClickListener { view ->
+        sendMoreActionFile.setOnClickListener {
             this.sendMoreButton.callOnClick()
             on<DefaultAlerts>().message("Woah matey!")
         }
-        sendMoreActionPhoto.setOnClickListener { view ->
+        sendMoreActionPhoto.setOnClickListener {
             this.sendMoreButton.callOnClick()
             on<MediaHandler>().getPhoto { photoUri ->
                 on<PhotoUploadGroupMessageHandler>().upload(photoUri) { photoId ->
@@ -242,5 +240,12 @@ class GroupMessagesHandler constructor(private val on: On) {
         on<SyncHandler>().sync(groupMessage)
 
         return true
+    }
+
+    fun setIsRespond() {
+        replyMessage.postDelayed({
+                    replyMessage.requestFocus()
+                    on<KeyboardHandler>().showKeyboard(replyMessage, true)
+                }, 500)
     }
 }

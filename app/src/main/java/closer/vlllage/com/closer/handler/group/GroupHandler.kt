@@ -4,10 +4,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
-import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
@@ -147,15 +144,15 @@ class GroupHandler constructor(private val on: On) {
                         { on<DefaultAlerts>().thatDidntWork() }))
     }
 
-    fun onGroupChanged(callback: (Group) -> Unit) = onChangeCallback(groupChanged, callback)
-    fun onGroupUpdated(callback: (Group) -> Unit) = onChangeCallback(groupUpdated, callback)
-    fun onEventChanged(callback: (Event) -> Unit) = onChangeCallback(eventChanged, callback)
-    fun onPhoneChanged(callback: (Phone) -> Unit) = onChangeCallback(phoneChanged, callback)
-    fun onContactInfoChanged(callback: (ContactInfo) -> Unit) = onChangeCallback(contactInfoChanged, callback)
-    fun onGroupMemberChanged(callback: (GroupMember) -> Unit) = onChangeCallback(groupMemberChanged, callback)
+    fun onGroupChanged(disposableGroup: DisposableGroup? = null, callback: (Group) -> Unit) = onChangeCallback(groupChanged, callback, disposableGroup)
+    fun onGroupUpdated(disposableGroup: DisposableGroup? = null, callback: (Group) -> Unit) = onChangeCallback(groupUpdated, callback, disposableGroup)
+    fun onEventChanged(disposableGroup: DisposableGroup? = null, callback: (Event) -> Unit) = onChangeCallback(eventChanged, callback, disposableGroup)
+    fun onPhoneChanged(disposableGroup: DisposableGroup? = null, callback: (Phone) -> Unit) = onChangeCallback(phoneChanged, callback, disposableGroup)
+    fun onContactInfoChanged(disposableGroup: DisposableGroup? = null, callback: (ContactInfo) -> Unit) = onChangeCallback(contactInfoChanged, callback, disposableGroup)
+    fun onGroupMemberChanged(disposableGroup: DisposableGroup? = null, callback: (GroupMember) -> Unit) = onChangeCallback(groupMemberChanged, callback, disposableGroup)
 
-    private fun <T> onChangeCallback(observable: Observable<T>, callback: (T) -> Unit) {
-        on<DisposableHandler>().add(observable.subscribe({ callback.invoke(it) }, connectionError))
+    private fun <T> onChangeCallback(observable: Observable<T>, callback: (T) -> Unit, disposableGroup: DisposableGroup? = null) {
+        (disposableGroup ?: on<DisposableHandler>().self()).add(observable.subscribe({ callback.invoke(it) }, connectionError))
     }
 }
 
