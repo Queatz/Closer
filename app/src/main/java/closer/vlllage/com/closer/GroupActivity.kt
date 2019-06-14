@@ -96,7 +96,9 @@ class GroupActivity : CircularRevealActivity() {
                     view.groupAbout.text = group.about
                 }
 
-                on<GroupToolbarHandler>().contentView.onNext(ContentViewType.MESSAGES)
+                on<GroupToolbarHandler>().contentView.onNext(if (group.hasPhone())
+                    ContentViewType.PHONE_MESSAGES else ContentViewType.MESSAGES)
+
                 on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
 
                 view.peopleInGroup.isSelected = true

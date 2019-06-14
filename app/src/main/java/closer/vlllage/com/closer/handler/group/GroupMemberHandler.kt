@@ -42,7 +42,6 @@ class GroupMemberHandler constructor(private val on: On) {
                                 on<DefaultAlerts>().thatDidntWork()
                             })
                         },
-                        MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) { on<GroupActionHandler>().addActionToGroup(group) },
                         MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) }
                 )
             }

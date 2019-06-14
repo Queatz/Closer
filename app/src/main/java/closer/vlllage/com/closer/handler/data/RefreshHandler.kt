@@ -15,6 +15,10 @@ import java.util.*
 
 class RefreshHandler constructor(private val on: On) {
 
+    private val connectionError: (Throwable) -> Unit = {
+        on<ConnectionErrorHandler>().notifyConnectionError()
+    }
+
     fun refreshAll() {
         refreshMe()
         refreshMyGroups()
@@ -24,9 +28,7 @@ class RefreshHandler constructor(private val on: On) {
     fun refreshMe() {
         on<DisposableHandler>().add(on<ApiHandler>().phone().subscribe({
             refresh(PhoneResult.from(it))
-        }, {
-            on<ConnectionErrorHandler>().notifyConnectionError()
-        }))
+        }, connectionError))
     }
 
     fun refreshMyMessages() {
@@ -34,7 +36,7 @@ class RefreshHandler constructor(private val on: On) {
             on<DisposableHandler>().add(on<ApiHandler>().myMessages(LatLng(
                     location.latitude,
                     location.longitude
-            )).subscribe({ this.handleMessages(it) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+            )).subscribe({ this.handleMessages(it) }, connectionError))
         }
     }
 
@@ -47,24 +49,24 @@ class RefreshHandler constructor(private val on: On) {
                 handleFullListResult(stateResult.groups, Group::class.java, Group_.id, true, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) })
                 handleFullListResult(stateResult.groupInvites, GroupInvite::class.java, GroupInvite_.id, true, { GroupInviteResult.from(it) }, null)
                 handleGroupContacts(stateResult.groupContacts!!)
-            }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+            }, connectionError))
         }
     }
 
     fun refreshGroupContacts(groupId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getContacts(groupId).subscribe({ this.handleGroupContacts(it) },
-                { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+                connectionError))
     }
 
     fun refreshEvents(latLng: LatLng) {
-        on<DisposableHandler>().add(on<ApiHandler>().getEvents(latLng).subscribe({ eventResults -> handleFullListResult(eventResults, Event::class.java, Event_.id, false, { EventResult.from(it) }, { event, eventResult -> EventResult.updateFrom(event, eventResult) }) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+        on<DisposableHandler>().add(on<ApiHandler>().getEvents(latLng).subscribe({ eventResults -> handleFullListResult(eventResults, Event::class.java, Event_.id, false, { EventResult.from(it) }, { event, eventResult -> EventResult.updateFrom(event, eventResult) }) }, connectionError))
     }
 
     fun refreshPhysicalGroups(latLng: LatLng) {
-        on<DisposableHandler>().add(on<ApiHandler>().getPhysicalGroups(latLng).subscribe({ groupResults -> handleFullListResult(groupResults, Group::class.java, Group_.id, false, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) }) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+        on<DisposableHandler>().add(on<ApiHandler>().getPhysicalGroups(latLng).subscribe({ groupResults -> handleFullListResult(groupResults, Group::class.java, Group_.id, false, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) }) }, connectionError))
 
         on<DisposableHandler>().add(on<ApiHandler>().myMessages(latLng)
-                .subscribe({ this.handleMessages(it) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+                .subscribe({ this.handleMessages(it) }, connectionError))
     }
 
     fun refreshGroupActions(groupId: String) {
@@ -80,11 +82,11 @@ class RefreshHandler constructor(private val on: On) {
             on<StoreHandler>().store.box(GroupAction::class).remove(*removeIds)
 
             handleFullListResult(groupActionResults, GroupAction::class.java, GroupAction_.id, false, { GroupActionResult.from(it) }, { groupAction, groupActionResult -> GroupActionResult.updateFrom(groupAction, groupActionResult) })
-        }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+        }, connectionError))
     }
 
     fun refreshGroupActions(latLng: LatLng) {
-        on<DisposableHandler>().add(on<ApiHandler>().getGroupActions(latLng).subscribe({ groupActionResults -> handleFullListResult(groupActionResults, GroupAction::class.java, GroupAction_.id, false, { GroupActionResult.from(it) }, { groupAction, groupActionResult -> GroupActionResult.updateFrom(groupAction, groupActionResult) }) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+        on<DisposableHandler>().add(on<ApiHandler>().getGroupActions(latLng).subscribe({ groupActionResults -> handleFullListResult(groupActionResults, GroupAction::class.java, GroupAction_.id, false, { GroupActionResult.from(it) }, { groupAction, groupActionResult -> GroupActionResult.updateFrom(groupAction, groupActionResult) }) }, connectionError))
     }
 
     fun refreshPins(groupId: String) {
@@ -99,23 +101,23 @@ class RefreshHandler constructor(private val on: On) {
 
             on<StoreHandler>().store.box(Pin::class).query().equal(Pin_.to, groupId).build().remove()
             handleFullListResult(pinResults, Pin::class.java, Pin_.id, false, { PinResult.from(it) }, { pin, pinResult -> PinResult.updateFrom(pin, pinResult) })
-        }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+        }, connectionError))
     }
 
     fun refreshGroupMessages(groupId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getGroupMessages(groupId)
-                .subscribe({ this.handleMessages(it) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+                .subscribe({ this.handleMessages(it) }, connectionError))
     }
 
     fun refreshGroupMessagesForPhone(phoneId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getMessagesForPhone(phoneId)
-                .subscribe({ this.handleMessages(it) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+                .subscribe({ this.handleMessages(it) }, connectionError))
     }
 
     fun refreshGroupMessage(groupMessageId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getGroupMessage(groupMessageId)
                 .subscribe({ groupMessageResult -> refresh(GroupMessageResult.from(groupMessageResult)) },
-                        { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+                        connectionError))
     }
 
     fun refresh(baseObject: BaseObject) {
