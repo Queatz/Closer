@@ -58,7 +58,7 @@ interface Backend {
     fun getMessagesForPhone(@Path("phone") phoneId: String): Single<List<GroupMessageResult>>
 
     @GET("phone/{phone}/groups")
-    fun getGroupContactsForPhone(@Path("phone") phoneId: String): Single<List<GroupContactResult>>
+    fun getGroupContactsFromPhone(@Path("phone") phoneId: String): Single<List<GroupContactResult>>
 
     @POST("verify")
     fun setPhoneNumber(@Query("set-number") phoneNumber: String): Single<SuccessResult>

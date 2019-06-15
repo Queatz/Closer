@@ -204,7 +204,7 @@ class ApiHandler constructor(private val on: On) {
     }
 
     fun getGroupContactsForPhone(phoneId: String): Single<List<GroupContactResult>> {
-        return uiThread(api.backend.getGroupContactsForPhone(phoneId))
+        return uiThread(api.backend.getGroupContactsFromPhone(phoneId))
     }
 
     fun cancelInvite(groupId: String, groupInviteId: String): Single<SuccessResult> {

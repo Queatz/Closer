@@ -6,6 +6,7 @@ class GroupContactResult : ModelResult() {
     var to: String? = null
     var from: String? = null
     var phone: PhoneResult? = null
+    var group: GroupResult? = null
 
     companion object {
 

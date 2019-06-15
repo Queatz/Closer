@@ -145,7 +145,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         on<MessageDisplay>().global = global
         on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 
-        if (groupMessage.reactions.isEmpty()) {
+        if (groupMessage.reactions.isNullOrEmpty()) {
             holder.reactionsRecyclerView.visibility = View.GONE
         } else {
             holder.reactionsRecyclerView.visibility = View.VISIBLE

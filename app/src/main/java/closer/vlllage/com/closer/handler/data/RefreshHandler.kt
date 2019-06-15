@@ -12,6 +12,7 @@ import io.objectbox.Property
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.SubscriptionBuilder
 import java.util.*
+import kotlin.collections.HashSet
 
 class RefreshHandler constructor(private val on: On) {
 
@@ -46,21 +47,21 @@ class RefreshHandler constructor(private val on: On) {
                     location.latitude,
                     location.longitude
             )).subscribe({ stateResult ->
-                handleFullListResult(stateResult.groups, Group::class.java, Group_.id, true, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) })
+                handleGroups(stateResult.groups!!, deleteLocal = true)
                 handleFullListResult(stateResult.groupInvites, GroupInvite::class.java, GroupInvite_.id, true, { GroupInviteResult.from(it) }, null)
-                handleGroupContacts(stateResult.groupContacts!!)
+                handleGroupContacts(stateResult.groupContacts!!, noGroups = true)
             }, connectionError))
         }
     }
 
     fun refreshGroupContactsForPhone(phoneId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getGroupContactsForPhone(phoneId).subscribe({
-            handleGroupContacts(it!!)
+            handleGroupContacts(it!!, noPhones = true)
         }, connectionError))
     }
 
     fun refreshGroupContacts(groupId: String) {
-        on<DisposableHandler>().add(on<ApiHandler>().getContacts(groupId).subscribe({ this.handleGroupContacts(it) },
+        on<DisposableHandler>().add(on<ApiHandler>().getContacts(groupId).subscribe({ this.handleGroupContacts(it, noGroups = true) },
                 connectionError))
     }
 
@@ -189,7 +190,7 @@ class RefreshHandler constructor(private val on: On) {
                             val existing = existingObjsMap[message.id]
 
                             if (existing != null && !on<ListEqual>().isEqual(message.reactions, existing.reactions)) {
-                                existing.reactions = message.reactions!!
+                                existing.reactions = message.reactions
                                 groupMessageBox.put(existing)
                             }
                         }
@@ -216,35 +217,59 @@ class RefreshHandler constructor(private val on: On) {
             }
 
             val objsToAdd = ArrayList<T>()
+            val idsToAdd = mutableSetOf<String>()
 
             for (result in results) {
-                if (!existingObjsMap.containsKey(result.id)) {
+                if (idsToAdd.contains(result.id!!)) continue
+                idsToAdd.add(result.id!!)
+
+                if (!existingObjsMap.containsKey(result.id!!)) {
                     objsToAdd.add(createTransformer.invoke(result))
                 } else if (updateTransformer != null) {
-                    objsToAdd.add(updateTransformer.invoke(existingObjsMap[result.id]!!, result))
+                    objsToAdd.add(updateTransformer.invoke(existingObjsMap[result.id!!]!!, result))
                 }
             }
 
             on<StoreHandler>().store.box(clazz).put(objsToAdd)
 
             if (deleteLocalNotReturnedFromServer) {
-                on<StoreHandler>().removeAllExcept<T>(clazz, idProperty, serverIdList)
+                on<StoreHandler>().removeAllExcept(clazz, idProperty, serverIdList)
             }
         }
     }
 
-    private fun handleGroupContacts(groupContacts: List<GroupContactResult>) {
-        val allMyGroupContactIds = HashSet<String>()
-        val phoneResults = ArrayList<PhoneResult>()
-        for (groupContactResult in groupContacts) {
-            allMyGroupContactIds.add(groupContactResult.id!!)
+    private fun handleGroups(groups: List<GroupResult>, deleteLocal: Boolean = false) {
+        handleFullListResult(groups, Group::class.java, Group_.id, deleteLocal, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) })
+    }
 
-            if (groupContactResult.phone != null) {
-                phoneResults.add(groupContactResult.phone!!)
+    private fun handleGroupContacts(groupContacts: List<GroupContactResult>, noGroups: Boolean = false, noPhones: Boolean = false) {
+        val allMyGroupContactIds = HashSet<String>()
+
+        if (!noPhones) {
+            val phoneResults = ArrayList<PhoneResult>()
+            for (groupContactResult in groupContacts) {
+                allMyGroupContactIds.add(groupContactResult.id!!)
+
+                if (groupContactResult.phone != null) {
+                    phoneResults.add(groupContactResult.phone!!)
+                }
             }
+
+            handlePhones(phoneResults)
         }
 
-        handlePhones(phoneResults)
+        if (!noGroups) {
+            val groupResults = ArrayList<GroupResult>()
+            for (groupContactResult in groupContacts) {
+                allMyGroupContactIds.add(groupContactResult.id!!)
+
+                if (groupContactResult.group != null) {
+                    groupResults.add(groupContactResult.group!!)
+                }
+            }
+
+            handleGroups(groupResults)
+        }
 
         on<StoreHandler>().findAll(GroupContact::class.java, GroupContact_.id, allMyGroupContactIds).observer { existingGroupContacts ->
             val existingGroupContactsMap = HashMap<String, GroupContact>()
@@ -252,11 +277,11 @@ class RefreshHandler constructor(private val on: On) {
                 existingGroupContactsMap[existingGroupContact.id!!] = existingGroupContact
             }
 
-            val groupsToAdd = ArrayList<GroupContact>()
+            val groupContactsToAdd = ArrayList<GroupContact>()
 
             for (groupContactResult in groupContacts) {
                 if (!existingGroupContactsMap.containsKey(groupContactResult.id)) {
-                    groupsToAdd.add(GroupContactResult.from(groupContactResult))
+                    groupContactsToAdd.add(GroupContactResult.from(groupContactResult))
                 } else {
                     existingGroupContactsMap[groupContactResult.id]!!.contactName = groupContactResult.phone!!.name
                     existingGroupContactsMap[groupContactResult.id]!!.contactActive = groupContactResult.phone!!.updated
@@ -266,7 +291,7 @@ class RefreshHandler constructor(private val on: On) {
                 }
             }
 
-            on<StoreHandler>().store.box(GroupContact::class).put(groupsToAdd)
+            on<StoreHandler>().store.box(GroupContact::class).put(groupContactsToAdd)
             on<StoreHandler>().removeAllExcept(GroupContact::class.java, GroupContact_.id, allMyGroupContactIds)
         }
     }
