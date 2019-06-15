@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -140,6 +141,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         }
 
         holder.messageActionLayout.visibility = View.GONE
+        holder.time.movementMethod = LinkMovementMethod.getInstance()
 
         on<MessageDisplay>().pinned = pinned
         on<MessageDisplay>().global = global

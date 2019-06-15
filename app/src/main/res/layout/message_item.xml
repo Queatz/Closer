@@ -226,19 +226,22 @@
         android:layout_marginStart="@dimen/padHalf"
         android:textSize="12sp"
         android:textColor="@color/text"
+        android:gravity="bottom"
         tools:text="8:45pm" />
 
     <TextView
         android:id="@+id/group"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="@dimen/padHalf"
         app:layout_constraintStart_toEndOf="@+id/time"
-        app:layout_constraintTop_toBottomOf="@+id/reactionsRecyclerView"
+        app:layout_constraintTop_toTopOf="@+id/time"
+        app:layout_constraintBottom_toBottomOf="@+id/time"
         android:textSize="12sp"
         android:textColor="@color/text"
         android:visibility="gone"
         tools:visibility="visible"
+        android:gravity="bottom"
         tools:text="Matcha Club" />
 
     <TextView
