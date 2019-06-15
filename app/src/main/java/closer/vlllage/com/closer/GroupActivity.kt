@@ -72,6 +72,12 @@ class GroupActivity : CircularRevealActivity() {
 
         on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
             view.closeButton.imageTintList = it.tint
+            view.scopeIndicatorButton.imageTintList = it.tint
+            view.settingsButton.imageTintList = it.tint
+            view.notificationSettingsButton.imageTintList = it.tint
+            view.groupName.setTextColor(it.text)
+            view.groupAbout.setTextColor(it.text)
+            view.groupDetails.setTextColor(it.text)
         })
     }
 
@@ -166,7 +172,7 @@ class GroupActivity : CircularRevealActivity() {
             onPhoneChanged { phone ->
                 view.groupDetails.visible = false
                 view.groupDetails.text = ""
-                view.groupAbout.visible = true
+                view.groupAbout.visible = !phone.status.isNullOrBlank()
                 view.groupAbout.text = phone.status ?: ""
                 if (phone.photo != null) {
                     view.profilePhoto.visible = true

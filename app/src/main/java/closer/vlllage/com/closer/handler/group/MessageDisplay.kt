@@ -157,9 +157,8 @@ class MessageDisplay constructor(private val on: On) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
 
-        val suggestion = on<JsonHandler>().from(jsonObject.get("suggestion"), Suggestion::class.java)
-
-        val suggestionHasNoName = suggestion == null || suggestion.name == null || suggestion.name!!.isEmpty()
+        val suggestion: Suggestion = on<JsonHandler>().from(jsonObject.get("suggestion"), Suggestion::class.java)
+        val suggestionHasNoName = suggestion.name.isNullOrBlank()
 
         holder.name.visibility = View.VISIBLE
         holder.time.visibility = View.VISIBLE
@@ -227,22 +226,15 @@ class MessageDisplay constructor(private val on: On) {
         if (groupMessage.attachment != null) {
             try {
                 val jsonObject = on<JsonHandler>().from(groupMessage.attachment!!, JsonObject::class.java)
-                if (jsonObject.has("action")) {
-                    displayAction(holder, jsonObject, groupMessage)
-                } else if (jsonObject.has("message")) {
-                    displayMessage(holder, jsonObject, groupMessage)
-                } else if (jsonObject.has("event")) {
-                    displayEvent(holder, jsonObject, groupMessage, onEventClickListener)
-                } else if (jsonObject.has("group")) {
-                    displayGroup(holder, jsonObject, groupMessage, onGroupClickListener)
-                } else if (jsonObject.has("suggestion")) {
-                    displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener)
-                } else if (jsonObject.has("photo")) {
-                    displayPhoto(holder, jsonObject, groupMessage)
-                } else if (jsonObject.has("share")) {
-                    displayShare(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
-                } else {
-                    displayFallback(holder, groupMessage)
+                when {
+                    jsonObject.has("action") -> displayAction(holder, jsonObject, groupMessage)
+                    jsonObject.has("message") -> displayMessage(holder, jsonObject, groupMessage)
+                    jsonObject.has("event") -> displayEvent(holder, jsonObject, groupMessage, onEventClickListener)
+                    jsonObject.has("group") -> displayGroup(holder, jsonObject, groupMessage, onGroupClickListener)
+                    jsonObject.has("suggestion") -> displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener)
+                    jsonObject.has("photo") -> displayPhoto(holder, jsonObject, groupMessage)
+                    jsonObject.has("share") -> displayShare(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
+                    else -> displayFallback(holder, groupMessage)
                 }
             } catch (e: JsonSyntaxException) {
                 displayFallback(holder, groupMessage)
@@ -261,7 +253,7 @@ class MessageDisplay constructor(private val on: On) {
 
         if (global) {
             holder.group.visible = true
-            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, getGroup(groupMessage.to!!)?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
+            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, groupMessage.to?.let { getGroup(it) }?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
         }
     }
 

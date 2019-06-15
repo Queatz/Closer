@@ -16,5 +16,4 @@ class GroupViewHolder(rootView: View) {
     val closeButton = rootView.closeButton!!
     val notificationSettingsButton = rootView.notificationSettingsButton!!
     val backgroundColor = rootView.backgroundColor!!
-    val contentFrame = rootView.contentFrame!!
 }
