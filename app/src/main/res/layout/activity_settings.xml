@@ -36,6 +36,17 @@
                 android:id="@+id/publicNotificationsSettingsSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/settings_public_notifications" />
+
+            <Switch
+                android:id="@+id/showCloseButtonSettingsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingStart="@dimen/padQuadruple"
                 android:paddingEnd="@dimen/padQuadruple"
                 android:paddingTop="@dimen/padQuadruple"
@@ -44,7 +55,7 @@
                 android:background="@drawable/clickable_light"
                 android:gravity="start"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:text="@string/settings_public_notifications" />
+                android:text="@string/settings_show_close_button" />
 
             <TextView
                 android:id="@+id/publicNotificationsSettingsSwitchDescription"

@@ -11,6 +11,8 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.settings.SettingsHandler
+import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import org.greenrobot.essentials.StringUtils
@@ -239,6 +241,8 @@ class GroupActivity : CircularRevealActivity() {
         view.notificationSettingsButton.setOnClickListener {
             on<GroupMemberHandler>().changeGroupSettings(on<GroupHandler>().group)
         }
+
+        view.closeButton.visible = !on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON]
     }
 
     override fun onNewIntent(intent: Intent) {

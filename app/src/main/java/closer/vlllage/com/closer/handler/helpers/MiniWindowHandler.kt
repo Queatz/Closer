@@ -91,7 +91,7 @@ class MiniWindowHandler constructor(private val on: On) {
             }
         })
 
-        if (on<SettingsHandler>().get(CLOSER_SETTINGS_OPEN_GROUP_EXPANDED)) {
+        if (on<SettingsHandler>()[CLOSER_SETTINGS_OPEN_GROUP_EXPANDED]) {
             val startMaxHeight = params.matchConstraintMaxHeight
             val startTopMargin = params.topMargin
 

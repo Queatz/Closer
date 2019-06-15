@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.handler.helpers.WindowHandler
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.ui.Animate
+import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsSlideFragment : PoolFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -25,9 +26,11 @@ class SettingsSlideFragment : PoolFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<View>(R.id.scrollView).setPadding(0, on<WindowHandler>().statusBarHeight, 0, 0)
 
-        val openGroupsExpandedSettingsSwitch = view.findViewById<Switch>(R.id.openGroupsExpandedSettingsSwitch)
-        openGroupsExpandedSettingsSwitch.isChecked = on<SettingsHandler>().get(UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED)
-        openGroupsExpandedSettingsSwitch.setOnCheckedChangeListener { v, checked -> on<SettingsHandler>().set(UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED, checked) }
+        openGroupsExpandedSettingsSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED]
+        openGroupsExpandedSettingsSwitch.setOnCheckedChangeListener { v, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED] = checked }
+
+        showCloseButtonSettingsSwitch.isChecked = !on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON]
+        showCloseButtonSettingsSwitch.setOnCheckedChangeListener { v, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON] = !checked }
 
         view.findViewById<View>(R.id.sendFeedbackButton).setOnClickListener { v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, on<ConfigHandler>().feedbackGroupId()) }
         view.findViewById<View>(R.id.viewPrivacyPolicyButton).setOnClickListener { v -> on<DisposableHandler>().add(on<ApiHandler>().privacy().subscribe({ privacyPolicy -> on<DefaultAlerts>().message(privacyPolicy) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
