@@ -162,6 +162,8 @@ class GroupActivity : CircularRevealActivity() {
                 setGroupBackground(group)
 
                 on<LightDarkHandler>().setLight(group.hasPhone())
+
+                on<ApplicationHandler>().app.on<TopHandler>().setGroupActive(group.id!!)
             }
 
             onEventChanged { event ->
@@ -259,19 +261,30 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun handleIntent(intent: Intent?) {
-        if (intent != null && intent.hasExtra(EXTRA_GROUP_ID)) {
+        intent ?: return
+
+        if (intent.hasExtra(EXTRA_GROUP_ID)) {
             groupId = intent.getStringExtra(EXTRA_GROUP_ID)
             on<GroupHandler>().setGroupById(groupId)
+        } else if (intent.hasExtra(EXTRA_PHONE_ID)) {
+            on<DisposableHandler>().add(on<DataHandler>().getGroupForPhone(intent.getStringExtra(EXTRA_PHONE_ID)).subscribe({
+                groupId = it.id!!
+                on<GroupHandler>().setGroupById(groupId)
+            }, {
+                on<DefaultAlerts>().thatDidntWork()
+            }))
+        }
 
-            if (intent.hasExtra(EXTRA_RESPOND)) {
-                on<GroupMessagesHandler>().setIsRespond()
-            }
+        if (intent.hasExtra(EXTRA_RESPOND)) {
+            on<GroupMessagesHandler>().setIsRespond()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        on<ApplicationHandler>().app.on<TopHandler>().setGroupActive(groupId)
+        if (this::groupId.isInitialized) {
+            on<ApplicationHandler>().app.on<TopHandler>().setGroupActive(groupId)
+        }
     }
 
     override fun onPause() {
@@ -294,6 +307,7 @@ class GroupActivity : CircularRevealActivity() {
 
     companion object {
         const val EXTRA_GROUP_ID = "groupId"
+        const val EXTRA_PHONE_ID = "phoneId"
         const val EXTRA_RESPOND = "respond"
     }
 }

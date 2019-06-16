@@ -13,11 +13,10 @@ import androidx.core.app.RemoteInput
 import closer.vlllage.com.closer.Background
 import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_GROUP_ID
-import closer.vlllage.com.closer.MapsActivity
+import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_PHONE_ID
+import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_RESPOND
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_LAT_LNG
-import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_NAME
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_PHONE
-import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_STATUS
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
@@ -38,7 +37,7 @@ class NotificationHandler constructor(private val on: On) {
                 .setLabel(context.getString(R.string.reply))
                 .build()
 
-        val intent = Intent(context, MapsActivity::class.java)
+        val intent = Intent(context, GroupActivity::class.java)
         intent.action = Intent.ACTION_VIEW
 
         if (latLng != null) {
@@ -50,9 +49,8 @@ class NotificationHandler constructor(private val on: On) {
         else
             name
 
-        intent.putExtra(EXTRA_NAME, name)
-        intent.putExtra(EXTRA_STATUS, message)
-        intent.putExtra(EXTRA_PHONE, phone)
+        intent.putExtra(EXTRA_PHONE_ID, phone)
+        intent.putExtra(EXTRA_RESPOND, true)
 
         val contentIntent = PendingIntent.getActivity(
                 context,

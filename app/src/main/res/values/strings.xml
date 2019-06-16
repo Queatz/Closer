@@ -44,7 +44,7 @@
     <string name="add_suggestion_here">Add suggestion here…</string>
     <string name="make_suggestion">Make suggestion…</string>
     <string name="add_suggestion">Add suggestion</string>
-    <string name="make_a_suggestion">Map a suggestion…</string>
+    <string name="make_a_suggestion">Make a suggestion…</string>
     <string name="share_with">Share with…</string>
     <string name="add_new_private_group">Create a private group</string>
     <string name="add_new_public_group">Create a public group</string>
@@ -149,7 +149,7 @@
     <string name="settings">Settings</string>
     <string name="event_must_not_end_before_it_starts">Event must not end before it starts</string>
     <string name="set_background">Set background</string>
-    <string name="mute">Mute</string>
+    <string name="mute">Mute All</string>
     <string name="mute_notifications">Mute notifications</string>
     <string name="unmute_notifications">Unmute notifications</string>
     <string name="notifications_on">Notifications on</string>

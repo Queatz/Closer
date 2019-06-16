@@ -87,7 +87,6 @@ class MapsActivity : PoolActivity() {
         const val EXTRA_SUGGESTION = "suggestion"
         const val EXTRA_EVENT_ID = "eventId"
         const val EXTRA_NAME = "name"
-        const val EXTRA_STATUS = "status"
         const val EXTRA_PHONE = "phone"
         const val EXTRA_MESSAGE = "message"
         const val EXTRA_SCREEN = "screen"

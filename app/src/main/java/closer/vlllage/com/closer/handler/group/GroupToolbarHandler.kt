@@ -14,7 +14,6 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.handler.phone.ProfileHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
@@ -95,7 +94,21 @@ class GroupToolbarHandler constructor(private val on: On) {
                     R.string.talk,
                     R.drawable.ic_mail_black_24dp,
                     View.OnClickListener {
-                        on<ProfileHandler>().showProfile(group.phoneId!!)
+                        on<AlertHandler>().make().apply {
+                            layoutResId = R.layout.direct_message_modal
+                            textViewId = R.id.input
+                            onTextViewSubmitCallback = { message ->
+                                on<DisposableHandler>().add(on<ApiHandler>().sendMessage(group.phoneId!!, message).subscribe({ successResult ->
+                                    if (!successResult.success) {
+                                        on<DefaultAlerts>().thatDidntWork()
+                                    }
+                                }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                            }
+                            title = on<ResourcesHandler>().resources.getString(R.string.send_message)
+                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.send)
+                            show()
+
+                        }
                     }
             ))
 

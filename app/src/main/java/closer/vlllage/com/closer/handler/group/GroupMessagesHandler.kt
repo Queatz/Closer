@@ -243,6 +243,8 @@ class GroupMessagesHandler constructor(private val on: On) {
     }
 
     fun setIsRespond() {
+        null ?: return
+        // TODO...
         replyMessage.postDelayed({
                     replyMessage.requestFocus()
                     on<KeyboardHandler>().showKeyboard(replyMessage, true)
