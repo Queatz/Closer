@@ -1,11 +1,10 @@
 package closer.vlllage.com.closer
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.transition.TransitionManager
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
@@ -67,15 +66,24 @@ class GroupActivity : CircularRevealActivity() {
         handleIntent(intent)
 
         on<GroupToolbarHandler>().attach(view.eventToolbar) {
-            TransitionManager.beginDelayedTransition(view.backgroundColor as ViewGroup)
+            if ((view.profilePhoto.layoutParams as ConstraintLayout.LayoutParams).matchConstraintPercentHeight == 1f) {
+                return@attach
+            }
 
-            val params = view.profilePhoto.layoutParams as ConstraintLayout.LayoutParams
-            if (params.matchConstraintPercentHeight != 1f) {
-                params.apply {
-                    matchConstraintPercentHeight = 1f
-                    height = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.profilePhotoCollapsedHeight)
-                    view.profilePhoto.layoutParams = this
+            val initialHeight = view.profilePhoto.measuredHeight
+            val finalHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.profilePhotoCollapsedHeight)
+
+            ObjectAnimator.ofFloat(0f, 1f).apply {
+
+                addUpdateListener {
+                    val params = view.profilePhoto.layoutParams as ConstraintLayout.LayoutParams
+                    params.apply {
+                        matchConstraintPercentHeight = 1f
+                        height = (initialHeight + it.animatedFraction * (finalHeight - initialHeight)).toInt()
+                        view.profilePhoto.layoutParams = this
+                    }
                 }
+                start()
             }
         }
 
