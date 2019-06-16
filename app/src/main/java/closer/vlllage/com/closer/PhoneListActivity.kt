@@ -8,7 +8,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.PhoneAdapterHeaderAdapter
-import closer.vlllage.com.closer.handler.phone.ProfileHandler
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import java.util.*
 
 class PhoneListActivity : ListActivity() {
@@ -34,7 +34,7 @@ class PhoneListActivity : ListActivity() {
             }
 
             finish(Runnable {
-                on<ProfileHandler>().showProfile(reactionResult.phone!!.id!!)
+                on<NavigationHandler>().showProfile(reactionResult.phone!!.id!!)
             })
         }
 

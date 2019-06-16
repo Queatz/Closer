@@ -22,26 +22,43 @@
             android:orientation="vertical">
 
             <Switch
-                android:id="@+id/openGroupsExpandedSettingsSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padQuadruple"
-                android:textColor="@color/text"
-                android:background="@drawable/clickable_light"
-                android:gravity="start"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:text="@string/settings_open_groups_expanded" />
-
-            <Switch
                 android:id="@+id/publicNotificationsSettingsSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padQuadruple"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
                 android:textColor="@color/text"
                 android:background="@drawable/clickable_light"
                 android:gravity="start"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:text="@string/settings_public_notifications" />
+
+            <TextView
+                android:id="@+id/publicNotificationsSettingsSwitchDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
+                android:textColor="@color/textHint"
+                android:gravity="start"
+                android:text="@string/public_notifications_switch_description" />
+
+            <Switch
+                android:id="@+id/openGroupsExpandedSettingsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/settings_open_groups_expanded" />
 
             <Switch
                 android:id="@+id/showCloseButtonSettingsSwitch"
@@ -56,17 +73,6 @@
                 android:gravity="start"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:text="@string/settings_show_close_button" />
-
-            <TextView
-                android:id="@+id/publicNotificationsSettingsSwitchDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padQuadruple"
-                android:paddingEnd="@dimen/padQuadruple"
-                android:paddingBottom="@dimen/padDouble"
-                android:textColor="@color/textHint"
-                android:gravity="start"
-                android:text="@string/public_notifications_switch_description" />
 
             <Button style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/sendFeedbackButton"

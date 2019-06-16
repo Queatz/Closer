@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.handler.phone.ProfileHandler
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Event
@@ -94,10 +94,22 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             true
         }
 
-        holder.messageActionReply.setOnClickListener {
-            on<ProfileHandler>().showProfile(groupMessage.from!!)
-            toggleMessageActionLayout(holder)
+        holder.messageActionReply.text = on<ResourcesHandler>().resources.getString(
+                if (global) R.string.group else R.string.profile
+        )
+        if (global) {
+            holder.messageActionReply.setOnClickListener {
+                on<NavigationHandler>().showGroup(groupMessage.to!!)
+                toggleMessageActionLayout(holder)
+            }
+        } else {
+            holder.messageActionReply.setOnClickListener {
+                on<NavigationHandler>().showProfile(groupMessage.from!!)
+                toggleMessageActionLayout(holder)
+            }
         }
+
+
         holder.messageActionShare.setOnClickListener {
             on<ShareActivityTransitionHandler>().shareGroupMessage(groupMessage.id!!)
             toggleMessageActionLayout(holder)

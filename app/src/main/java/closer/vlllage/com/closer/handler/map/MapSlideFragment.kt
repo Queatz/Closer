@@ -21,7 +21,7 @@ import closer.vlllage.com.closer.handler.group.PhysicalGroupBubbleHandler
 import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.handler.phone.ProfileHandler
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
@@ -54,7 +54,7 @@ class MapSlideFragment : PoolFragment() {
             if (on<MyBubbleHandler>().isMyBubble(mapBubble)) {
                 on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_PERSONAL)
             } else {
-                on<ProfileHandler>().showProfile(mapBubble.phone!!, mapBubble.view)
+                on<NavigationHandler>().showProfile(mapBubble.phone!!, mapBubble.view)
             }
         }, { mapBubble, position ->
                 on<BubbleHandler>().remove(mapBubble)

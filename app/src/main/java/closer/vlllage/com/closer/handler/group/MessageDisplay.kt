@@ -7,7 +7,7 @@ import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.handler.phone.ProfileHandler
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.gson.JsonObject
@@ -62,7 +62,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.action.visibility = View.VISIBLE
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.reply)
-        holder.action.setOnClickListener { on<ProfileHandler>().showProfile(phone!!.id!!) }
+        holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
     }
 
     private fun displayGroupMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {

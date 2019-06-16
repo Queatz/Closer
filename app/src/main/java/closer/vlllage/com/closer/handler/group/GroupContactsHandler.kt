@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.SetNameHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.handler.phone.ProfileHandler
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
@@ -79,7 +79,7 @@ class GroupContactsHandler constructor(private val on: On) {
                     }
                 })
             } else {
-                on<ProfileHandler>().showProfile(groupContact.contactId!!)
+                on<NavigationHandler>().showProfile(groupContact.contactId!!)
             }
         })
 

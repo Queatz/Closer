@@ -17,7 +17,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.handler.phone.ProfileHandler
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
@@ -41,7 +41,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
 
     private val defaultMentionClickListener: OnMentionClickListener
         get() = { mention ->
-            on<ProfileHandler>().showProfile(mention)
+            on<NavigationHandler>().showProfile(mention)
         }
 
     @JvmOverloads
