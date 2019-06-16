@@ -6,14 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.helpers.DisposableGroup
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.LightDarkColors
 import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
-import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.BehaviorSubject
 
 internal class ToolbarAdapter(on: On) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(on) {
+
+    val selectedContentView = BehaviorSubject.create<GroupActivity.ContentViewType>()
 
     var items = mutableListOf<GroupToolbarHandler.ToolbarItem>()
         set(value) {
@@ -38,25 +43,34 @@ internal class ToolbarAdapter(on: On) : PoolRecyclerAdapter<ToolbarAdapter.Toolb
 
         viewHolder.button.setOnClickListener(item.onClickListener)
 
-        viewHolder.lightDarkSubscription = on<LightDarkHandler>().onLightChanged.subscribe {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                viewHolder.button.compoundDrawableTintList = it.tint
-            }
+        viewHolder.disposableGroup = on<DisposableHandler>().group()
 
-            viewHolder.button.setTextColor(it.text)
+        viewHolder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
+            recolor(item, viewHolder.button, it, selectedContentView.value)
+        })
 
-            viewHolder.button.setBackgroundResource(it.clickableBackground)
+        viewHolder.disposableGroup.add(selectedContentView.subscribe {
+            recolor(item, viewHolder.button, on<LightDarkHandler>().onLightChanged.value!!, it)
+        })
+    }
+
+    private fun recolor(item: GroupToolbarHandler.ToolbarItem, button: Button, colors: LightDarkColors, selected: GroupActivity.ContentViewType?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            button.compoundDrawableTintList = if (item.value == selected) colors.tintSelected else colors.tint
         }
+
+        button.setTextColor(if (item.value == selected) colors.selected else colors.text)
+        button.setBackgroundResource(colors.clickableRoundedBackground8dp)
     }
 
     override fun onViewRecycled(holder: ToolbarViewHolder) {
-        on<DisposableHandler>().dispose(holder.lightDarkSubscription)
+        holder.disposableGroup.dispose()
     }
 
     override fun getItemCount() = items.size
 
     internal class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val button: Button = itemView.findViewById(R.id.button)
-        lateinit var lightDarkSubscription: Disposable
+        lateinit var disposableGroup: DisposableGroup
     }
 }

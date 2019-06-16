@@ -49,7 +49,10 @@ class GroupToolbarHandler constructor(private val on: On) {
         }
         recyclerView.adapter = adapter
 
-        on<DisposableHandler>().add(contentView.subscribe { show(on<GroupHandler>().group) })
+        on<DisposableHandler>().add(contentView.subscribe {
+            show(on<GroupHandler>().group)
+            adapter.selectedContentView.onNext(it)
+        })
         on<GroupHandler>().onGroupUpdated { show(it) }
         on<GroupHandler>().onGroupChanged { show(it) }
         on<GroupHandler>().onEventChanged { show(on<GroupHandler>().group) }
@@ -71,7 +74,8 @@ class GroupToolbarHandler constructor(private val on: On) {
                     R.drawable.ic_message_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_MESSAGES)
-                    }
+                    },
+                    GroupActivity.ContentViewType.PHONE_MESSAGES
             ))
 
             items.add(ToolbarItem(
@@ -79,7 +83,8 @@ class GroupToolbarHandler constructor(private val on: On) {
                     R.drawable.ic_photo_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_PHOTOS)
-                    }
+                    },
+                    GroupActivity.ContentViewType.PHONE_PHOTOS
             ))
 
             items.add(ToolbarItem(
@@ -87,7 +92,8 @@ class GroupToolbarHandler constructor(private val on: On) {
                     R.drawable.ic_person_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_GROUPS)
-                    }
+                    },
+                    GroupActivity.ContentViewType.PHONE_GROUPS
             ))
 
             items.add(ToolbarItem(
@@ -278,5 +284,8 @@ class GroupToolbarHandler constructor(private val on: On) {
                 .finish { on<MapActivityHandler>().showEventOnMap(event!!) }
     }
 
-    internal class ToolbarItem(@field:StringRes var name: Int, @field:DrawableRes var icon: Int, var onClickListener: View.OnClickListener)
+    internal class ToolbarItem(@field:StringRes var name: Int,
+                               @field:DrawableRes var icon: Int,
+                               var onClickListener: View.OnClickListener,
+                               var value: GroupActivity.ContentViewType? = null)
 }
