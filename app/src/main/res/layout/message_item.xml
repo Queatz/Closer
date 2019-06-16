@@ -140,7 +140,7 @@
                     android:textColor="@color/text"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:text="@string/reply"
+                    android:text="@string/profile"
                     android:focusable="true" />
 
                 <TextView

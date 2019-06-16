@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.handler.group.PhysicalGroupBubbleHandler
 import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
+import closer.vlllage.com.closer.handler.phone.ProfileHandler
 import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
@@ -53,7 +54,7 @@ class MapSlideFragment : PoolFragment() {
             if (on<MyBubbleHandler>().isMyBubble(mapBubble)) {
                 on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_PERSONAL)
             } else {
-                on<ReplyLayoutHandler>().replyTo(mapBubble)
+                on<ProfileHandler>().showProfile(mapBubble.phone!!, mapBubble.view)
             }
         }, { mapBubble, position ->
                 on<BubbleHandler>().remove(mapBubble)
@@ -96,16 +97,12 @@ class MapSlideFragment : PoolFragment() {
             on<MapZoomHandler>().update(on<MapHandler>().zoom)
         }
         on<MapHandler>().onMapClickedListener = { latLng ->
-            if (on<ReplyLayoutHandler>().isVisible) {
-                on<ReplyLayoutHandler>().showReplyLayout(false)
-            } else {
-                var anyActionTaken: Boolean
-                anyActionTaken = on<SuggestionHandler>().clearSuggestions()
-                anyActionTaken = anyActionTaken || on<BubbleHandler>().remove({ mapBubble -> BubbleType.MENU == mapBubble.type })
+            var anyActionTaken: Boolean
+            anyActionTaken = on<SuggestionHandler>().clearSuggestions()
+            anyActionTaken = anyActionTaken || on<BubbleHandler>().remove({ mapBubble -> BubbleType.MENU == mapBubble.type })
 
-                if (!anyActionTaken) {
-                    showMapMenu(latLng, null)
-                }
+            if (!anyActionTaken) {
+                showMapMenu(latLng, null)
             }
         }
         on<MapHandler>().onMapLongClickedListener = { latLng ->
@@ -139,11 +136,8 @@ class MapSlideFragment : PoolFragment() {
         }
         on<MapHandler>().attach(childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment)
         on<MyBubbleHandler>().start()
-        on<ReplyLayoutHandler>().attach(view.findViewById(R.id.replyLayout))
         on<MyGroupsLayoutHandler>().attach(view.findViewById(R.id.myGroupsLayout))
         on<MyGroupsLayoutHandler>().setContainerView(view.findViewById(R.id.bottomContainer))
-
-        on<ViewAttributeHandler>().linkPadding(view.findViewById(R.id.contentAboveView), view.findViewById(R.id.contentView))
 
         on<KeyboardVisibilityHandler>().attach(view.findViewById(R.id.contentView))
         on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
@@ -264,11 +258,6 @@ class MapSlideFragment : PoolFragment() {
     }
 
     fun onBackPressed(): Boolean {
-        if (on<ReplyLayoutHandler>().isVisible) {
-            on<ReplyLayoutHandler>().showReplyLayout(false)
-            return true
-        }
-
         return false
     }
 

@@ -1,16 +1,18 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Rect
 import android.view.View
 import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_GROUP_ID
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_RESPOND
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Event
+import com.queatz.on.On
 
 class GroupActivityTransitionHandler constructor(private val on: On) {
 
@@ -52,5 +54,14 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
         } else {
             on<DefaultAlerts>().thatDidntWork()
         }
+    }
+
+    @SuppressLint("CheckResult")
+    fun showGroupForPhone(view: View?, phoneId: String) {
+        on<DataHandler>().getGroupForPhone(phoneId).subscribe({
+            on<GroupActivityTransitionHandler>().showGroupMessages(view, it.id)
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        })
     }
 }

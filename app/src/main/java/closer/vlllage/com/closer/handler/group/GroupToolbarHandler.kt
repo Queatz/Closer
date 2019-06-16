@@ -14,8 +14,7 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
+import closer.vlllage.com.closer.handler.phone.ProfileHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
@@ -96,7 +95,7 @@ class GroupToolbarHandler constructor(private val on: On) {
                     R.string.talk,
                     R.drawable.ic_mail_black_24dp,
                     View.OnClickListener {
-                        on<PhoneMessagesHandler>().openMessagesWithPhone(group.phoneId!!, on<NameHandler>().getName(group.phoneId!!), "")
+                        on<ProfileHandler>().showProfile(group.phoneId!!)
                     }
             ))
 

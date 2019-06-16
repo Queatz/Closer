@@ -5,10 +5,7 @@ import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_GROUP_ID
 import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_EVENT_ID
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_LAT_LNG
-import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_NAME
-import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_PHONE
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_SCREEN
-import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_STATUS
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_SUGGESTION
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
@@ -16,7 +13,6 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 
 class MapActivityHandler constructor(private val on: On) {
@@ -68,27 +64,6 @@ class MapActivityHandler constructor(private val on: On) {
         val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(phone.latitude!!.toFloat(), phone.longitude!!.toFloat()))
-
-        on<ActivityHandler>().activity!!.startActivity(intent)
-    }
-
-    fun replyToPhone(phoneId: String, name: String?, status: String, latLng: LatLng?) {
-        var name = name
-        val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
-        intent.action = Intent.ACTION_VIEW
-
-        if (latLng != null) {
-            intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(latLng.latitude.toFloat(), latLng.longitude.toFloat()))
-        }
-
-        name = if (name.isNullOrBlank())
-            on<ResourcesHandler>().resources.getString(R.string.app_name)
-        else
-            name
-
-        intent.putExtra(EXTRA_NAME, name)
-        intent.putExtra(EXTRA_STATUS, status)
-        intent.putExtra(EXTRA_PHONE, phoneId)
 
         on<ActivityHandler>().activity!!.startActivity(intent)
     }

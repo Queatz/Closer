@@ -13,8 +13,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.handler.phone.PhoneMessagesHandler
+import closer.vlllage.com.closer.handler.phone.ProfileHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Event
@@ -77,7 +76,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
 
         holder.photo.visibility = View.GONE
 
-        holder.itemView.setOnClickListener { view ->
+        holder.itemView.setOnClickListener {
             if (onMessageClickListener != null) {
                 onMessageClickListener!!.invoke(groupMessages[position])
             } else {
@@ -85,29 +84,29 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             }
         }
 
-        holder.itemView.setOnLongClickListener { view ->
+        holder.itemView.setOnLongClickListener {
             toggleMessageActionLayout(holder)
             true
         }
 
-        holder.photo.setOnLongClickListener { view ->
+        holder.photo.setOnLongClickListener {
             toggleMessageActionLayout(holder)
             true
         }
 
-        holder.messageActionReply.setOnClickListener { view ->
-            on<PhoneMessagesHandler>().openMessagesWithPhone(groupMessage.from!!, on<NameHandler>().getName(groupMessage.from!!), "")
+        holder.messageActionReply.setOnClickListener {
+            on<ProfileHandler>().showProfile(groupMessage.from!!)
             toggleMessageActionLayout(holder)
         }
-        holder.messageActionShare.setOnClickListener { view ->
+        holder.messageActionShare.setOnClickListener {
             on<ShareActivityTransitionHandler>().shareGroupMessage(groupMessage.id!!)
             toggleMessageActionLayout(holder)
         }
-        holder.messageActionRemind.setOnClickListener { view ->
+        holder.messageActionRemind.setOnClickListener {
             on<DefaultAlerts>().message("That doesn't work yet!")
             toggleMessageActionLayout(holder)
         }
-        holder.messageActionPin.setOnClickListener { view ->
+        holder.messageActionPin.setOnClickListener {
             if (pinned) {
                 on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().removePin(groupMessage.id!!, groupMessage.to!!)
                         .subscribe({ successResult ->
@@ -189,9 +188,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
     }
 
     override fun onViewRecycled(holder: GroupMessageViewHolder) {
-        if (holder.messageActionLayoutRevealAnimator != null) {
-            holder.messageActionLayoutRevealAnimator!!.cancel()
-        }
+        holder.messageActionLayoutRevealAnimator?.cancel()
         holder.disposableGroup.clear()
     }
 

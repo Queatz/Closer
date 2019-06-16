@@ -50,7 +50,7 @@ class PhoneContactAdapter(on: On,
                     holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
                     val isMe = on<PersistenceHandler>().phoneId == groupContact.contactId
                     holder.name.text = on<NameHandler>().getName(groupContact)
-                    holder.action.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.options else R.string.send_message)
+                    holder.action.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.options else R.string.profile)
                     holder.number.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.member_you else R.string.member)
                     holder.itemView.setOnClickListener {
                         onGroupContactClickListener?.invoke(groupContact)

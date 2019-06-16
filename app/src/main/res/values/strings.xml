@@ -238,4 +238,5 @@
     <string name="invite_to">Invite to group…</string>
     <string name="activity">Activity</string>
     <string name="settings_show_close_button">Show close button in groups</string>
+    <string name="profile">Profile</string>
 </resources>

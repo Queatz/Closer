@@ -2,16 +2,13 @@ package closer.vlllage.com.closer
 
 import android.content.Intent
 import android.os.Bundle
-import closer.vlllage.com.closer.api.models.PhoneResult
 import closer.vlllage.com.closer.api.models.ReactionResult
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.PhoneAdapterHeaderAdapter
-import com.google.android.gms.maps.model.LatLng
+import closer.vlllage.com.closer.handler.phone.ProfileHandler
 import java.util.*
 
 class PhoneListActivity : ListActivity() {
@@ -37,19 +34,10 @@ class PhoneListActivity : ListActivity() {
             }
 
             finish(Runnable {
-                on<MapActivityHandler>().replyToPhone(
-                        reactionResult.phone!!.id!!,
-                        on<NameHandler>().getName(PhoneResult.from(reactionResult.phone!!)),
-                        reactionResult.reaction!!,
-                        if (reactionResult.phone!!.geo == null)
-                            null
-                        else
-                            LatLng(
-                                    reactionResult.phone!!.geo!![0],
-                                    reactionResult.phone!!.geo!![1]
-                            ))
+                on<ProfileHandler>().showProfile(reactionResult.phone!!.id!!)
             })
         }
+
         recyclerView.adapter = adapter
 
         if (intent != null && Intent.ACTION_VIEW == intent.action) {
