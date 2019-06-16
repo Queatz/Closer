@@ -2,7 +2,10 @@ package closer.vlllage.com.closer
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.transition.TransitionManager
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
@@ -63,7 +66,18 @@ class GroupActivity : CircularRevealActivity() {
 
         handleIntent(intent)
 
-        on<GroupToolbarHandler>().attach(view.eventToolbar)
+        on<GroupToolbarHandler>().attach(view.eventToolbar) {
+            TransitionManager.beginDelayedTransition(view.backgroundColor as ViewGroup)
+
+            val params = view.profilePhoto.layoutParams as ConstraintLayout.LayoutParams
+            if (params.matchConstraintPercentHeight != 1f) {
+                params.apply {
+                    matchConstraintPercentHeight = 1f
+                    height = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.profilePhotoCollapsedHeight)
+                    view.profilePhoto.layoutParams = this
+                }
+            }
+        }
 
         on<DisposableHandler>().add(on<GroupToolbarHandler>().contentView
                 .subscribe { contentView = it })
@@ -180,7 +194,9 @@ class GroupActivity : CircularRevealActivity() {
                     view.profilePhoto.visible = true
                     on<ImageHandler>().get().load(phone.photo + "?s=512")
                             .into(view.profilePhoto)
-                    view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, phone.photo!!) }
+                    view.profilePhoto.setOnClickListener {
+                        on<PhotoActivityTransitionHandler>().show(view.profilePhoto, phone.photo!!)
+                    }
 
                 } else {
                     view.profilePhoto.visible = false

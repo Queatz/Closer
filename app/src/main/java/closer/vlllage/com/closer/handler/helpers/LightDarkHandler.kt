@@ -34,7 +34,7 @@ class LightDarkHandler constructor(private val on: On) {
     val onLightChanged = BehaviorSubject.createDefault(DARK)
 
     fun setLight(isLight: Boolean) {
-        (onLightChanged as BehaviorSubject).onNext(if (isLight) LIGHT else DARK)
+        onLightChanged.onNext(if (isLight) LIGHT else DARK)
     }
 }
 

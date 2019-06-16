@@ -16,7 +16,7 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
 
-internal class ToolbarAdapter(on: On) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(on) {
+class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(on) {
 
     val selectedContentView = BehaviorSubject.create<GroupActivity.ContentViewType>()
 
@@ -41,10 +41,12 @@ internal class ToolbarAdapter(on: On) : PoolRecyclerAdapter<ToolbarAdapter.Toolb
 
         viewHolder.button.setText(item.name)
 
-        viewHolder.button.setOnClickListener(item.onClickListener)
+        viewHolder.button.setOnClickListener {
+            item.onClickListener.onClick(it)
+            onToolbarItemSelected.invoke(item)
+        }
 
         viewHolder.disposableGroup = on<DisposableHandler>().group()
-
         viewHolder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             recolor(item, viewHolder.button, it, selectedContentView.value)
         })
@@ -69,7 +71,7 @@ internal class ToolbarAdapter(on: On) : PoolRecyclerAdapter<ToolbarAdapter.Toolb
 
     override fun getItemCount() = items.size
 
-    internal class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val button: Button = itemView.findViewById(R.id.button)
         lateinit var disposableGroup: DisposableGroup
     }

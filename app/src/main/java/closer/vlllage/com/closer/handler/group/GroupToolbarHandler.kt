@@ -30,9 +30,9 @@ class GroupToolbarHandler constructor(private val on: On) {
     private lateinit var adapter: ToolbarAdapter
     val contentView = BehaviorSubject.createDefault(GroupActivity.ContentViewType.MESSAGES)
 
-    fun attach(recyclerView: RecyclerView) {
+    fun attach(recyclerView: RecyclerView, onToolbarItemSelected: (ToolbarItem) -> Unit) {
         this.recyclerView = recyclerView
-        adapter = ToolbarAdapter(on)
+        adapter = ToolbarAdapter(on, onToolbarItemSelected)
 
         recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, HORIZONTAL, false) {
             override fun measureChild(child: View, widthUsed: Int, heightUsed: Int) {
@@ -284,7 +284,7 @@ class GroupToolbarHandler constructor(private val on: On) {
                 .finish { on<MapActivityHandler>().showEventOnMap(event!!) }
     }
 
-    internal class ToolbarItem(@field:StringRes var name: Int,
+    class ToolbarItem(@field:StringRes var name: Int,
                                @field:DrawableRes var icon: Int,
                                var onClickListener: View.OnClickListener,
                                var value: GroupActivity.ContentViewType? = null)
