@@ -82,6 +82,7 @@ class GroupActivity : CircularRevealActivity() {
                         height = (initialHeight + it.animatedFraction * (finalHeight - initialHeight)).toInt()
                         view.profilePhoto.layoutParams = this
                     }
+                    view.profilePhoto.alpha = 1f - (0.66f * it.animatedFraction)
                 }
                 start()
             }
