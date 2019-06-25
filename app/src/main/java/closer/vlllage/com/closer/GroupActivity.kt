@@ -34,7 +34,7 @@ class GroupActivity : CircularRevealActivity() {
                 ContentViewType.PHONE_MESSAGES -> PhoneMessagesFragment()
                 ContentViewType.PHONE_PHOTOS -> PhonePhotosFragment()
                 ContentViewType.PHONE_GROUPS -> PhoneGroupsFragment()
-
+                ContentViewType.PHONE_ABOUT -> PhoneAboutFragment()
             })
         }
 
@@ -42,6 +42,7 @@ class GroupActivity : CircularRevealActivity() {
         MESSAGES,
         SHARE,
         CONTACTS,
+        PHONE_ABOUT,
         PHONE_MESSAGES,
         PHONE_PHOTOS,
         PHONE_GROUPS,
@@ -128,7 +129,7 @@ class GroupActivity : CircularRevealActivity() {
                 }
 
                 on<GroupToolbarHandler>().contentView.onNext(if (group.hasPhone())
-                    ContentViewType.PHONE_MESSAGES else ContentViewType.MESSAGES)
+                    ContentViewType.PHONE_ABOUT else ContentViewType.MESSAGES)
 
                 on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
 

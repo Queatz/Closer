@@ -70,6 +70,15 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (group.hasPhone()) {
             items.add(ToolbarItem(
+                    R.string.about,
+                    R.drawable.ic_person_black_24dp,
+                    View.OnClickListener {
+                        contentView.onNext(GroupActivity.ContentViewType.PHONE_ABOUT)
+                    },
+                    GroupActivity.ContentViewType.PHONE_ABOUT
+            ))
+
+            items.add(ToolbarItem(
                     R.string.messages,
                     R.drawable.ic_message_black_24dp,
                     View.OnClickListener {
@@ -89,7 +98,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
             items.add(ToolbarItem(
                     R.string.groups,
-                    R.drawable.ic_person_black_24dp,
+                    R.drawable.ic_group_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_GROUPS)
                     },

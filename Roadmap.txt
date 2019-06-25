@@ -1,0 +1,59 @@
+
+ETC
+===
+
+
+on<ProximityHandler>().findClosestPhysicalGroup(latLng): Group?
+on<ProximityHandler>().isAt(latLng, latLng): boolean
+
+RATE
+====
+
+New message attachment type 'rating' { stars: 5 }
+Creates Rating record
+Updates avg. rating of group
+Group exposes avg rating
+
+
+MEET
+====
+
+Add ( 46 People Nearby ) button in My Groups
+
+POST /meet?phone=<value>&want=yes
+
+CRON at 5PM to find NEW matches
+
+
+ABOUT
+=====
+
+Updated endpoints:
+
+POST /phone?introduction=<value>
+POST /phone?history=<value>
+POST /phone?offtime=<value>
+
+POST /lifestyles?name=<value>
+POST /lifestyles?name=<value>&delete=true
+
+POST /goals?name=<value>
+POST /goals?name=<value>&delete=true
+
+Updated phone mode:
+
+phone {
+    ...
+
+    introduction: '',
+    relationships: [
+        {lifestyle},
+        {lifestyle},
+        {goal},
+        {goal},
+        {goal},
+    ],
+    history: '',
+    offtime: ''
+}
+
