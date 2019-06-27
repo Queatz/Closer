@@ -49,7 +49,7 @@ interface Backend {
     fun searchPhonesNear(@Query("geo") latLng: String, @Query("query") query: String): Single<List<PhoneResult>>
 
     @GET("phone/{phone}")
-    fun getPhone(@Query("phone") phone: String): Single<PhoneResult>
+    fun getPhone(@Path("phone") phone: String): Single<PhoneResult>
 
     @GET("phone/{phone}/group")
     fun getGroupForPhone(@Path("phone") phoneId: String): Single<GroupResult>

@@ -2,27 +2,25 @@
 ETC
 ===
 
-
-on<ProximityHandler>().findClosestPhysicalGroup(latLng): Group?
-on<ProximityHandler>().isAt(latLng, latLng): boolean
+ [ ] on<ProximityHandler>().findClosestPhysicalGroup(latLng): Group?
+ [ ] on<ProximityHandler>().isAt(latLng, latLng): boolean
 
 RATE
 ====
 
-New message attachment type 'rating' { stars: 5 }
-Creates Rating record
-Updates avg. rating of group
-Group exposes avg rating
+ [ ] Review button in group toolbar
+ [ ] New message attachment type 'rating' { stars: 5 }
+ [ ] Creates Rating record
+ [ ] Updates avg. rating of group
+ [ ] Group exposes avg rating
 
 
 MEET
 ====
 
-Add ( 46 People Nearby ) button in My Groups
-
-POST /meet?phone=<value>&want=yes
-
-CRON at 5PM to find NEW matches
+ [ ] Add ( 46 People Nearby ) button in My Groups
+ [ ] POST /meet?phone=<value>&want=yes
+ [ ] CRON at 5PM to find NEW matches
 
 
 ABOUT
@@ -30,30 +28,30 @@ ABOUT
 
 Updated endpoints:
 
-POST /phone?introduction=<value>
-POST /phone?history=<value>
-POST /phone?offtime=<value>
+ [X] POST /phone?introduction=<value>
+ [X] POST /phone?history=<value>
+ [X] POST /phone?offtime=<value>
 
-POST /lifestyles?name=<value>
-POST /lifestyles?name=<value>&delete=true
+ [X] POST /lifestyles?name=<value>
+ [X] POST /lifestyles?name=<value>&remove=true
 
-POST /goals?name=<value>
-POST /goals?name=<value>&delete=true
+ [X] POST /goals?name=<value>
+ [X] POST /goals?name=<value>&remove=true
 
-Updated phone mode:
+ [ ] Updated phone mode:
 
-phone {
-    ...
+        phone {
+            ...
 
-    introduction: '',
-    relationships: [
-        {lifestyle},
-        {lifestyle},
-        {goal},
-        {goal},
-        {goal},
-    ],
-    history: '',
-    offtime: ''
-}
+            introduction: '',
+            relationships: [
+                {lifestyle},
+                {lifestyle},
+                {goal},
+                {goal},
+                {goal},
+            ],
+            history: '',
+            offtime: ''
+        }
 
