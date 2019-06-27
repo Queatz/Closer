@@ -16,6 +16,8 @@ class GoalAdapter constructor(private val on: On, private val callback: (String)
             notifyDataSetChanged()
         }
 
+    lateinit var type: String
+
     var isRemove: Boolean = false
 
     var items = mutableListOf<String>()
@@ -38,6 +40,7 @@ class GoalAdapter constructor(private val on: On, private val callback: (String)
             callback.invoke(item)
         }
 
+        holder.itemView.type.text = type
         holder.itemView.goalName.text = item
         holder.itemView.cheerButton.text = if (isRemove)
             on<ResourcesHandler>().resources.getString(R.string.remove)

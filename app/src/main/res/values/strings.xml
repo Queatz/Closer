@@ -260,4 +260,5 @@
     <string name="remove_lifestyle">Remove lifestyle?</string>
     <string name="remove_goal">Remove goal?</string>
     <string name="view_profile">View your profile</string>
+    <string name="goal">Goal</string>
 </resources>

@@ -16,11 +16,26 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/pink500"
+            android:textSize="12sp"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingTop="@dimen/padDouble"
+            android:paddingBottom="@dimen/padHalf"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="Goal"/>
+
+        <TextView
             android:id="@+id/goalName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Goal #1"
-            android:padding="@dimen/padDouble"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/padDouble"
+            android:paddingBottom="@dimen/padDouble"
             android:textSize="16sp"
             android:textColor="@color/textInverse"/>
 
@@ -28,7 +43,7 @@
             android:id="@+id/cheerButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/pink500"
             android:gravity="center_horizontal"
             android:textSize="12sp"
             android:padding="@dimen/pad"

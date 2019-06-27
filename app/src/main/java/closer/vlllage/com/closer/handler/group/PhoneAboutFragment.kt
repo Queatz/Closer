@@ -71,6 +71,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
                 }
 
+                goalAdapter.type = on<ResourcesHandler>().resources.getString(R.string.goal)
                 goalAdapter.name = phone.name!!
                 goalAdapter.items = phone.goals?.toMutableList() ?: mutableListOf()
                 goalAdapter.isRemove = editable
@@ -91,6 +92,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
                 }
 
+                lifestyleAdapter.type = on<ResourcesHandler>().resources.getString(R.string.lifestyle)
                 lifestyleAdapter.name = phone.name!!
                 lifestyleAdapter.items = phone.lifestyles?.toMutableList() ?: mutableListOf()
                 lifestyleAdapter.isRemove = editable
