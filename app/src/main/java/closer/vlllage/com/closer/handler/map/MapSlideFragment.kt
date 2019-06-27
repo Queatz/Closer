@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.*
 import closer.vlllage.com.closer.handler.data.*
@@ -51,11 +50,7 @@ class MapSlideFragment : PoolFragment() {
         on<TimerHandler>().postDisposable(Runnable { on<RefreshHandler>().refreshAll() }, 1625)
 
         on<BubbleHandler>().attach(view.findViewById(R.id.bubbleMapLayer), { mapBubble ->
-            if (on<MyBubbleHandler>().isMyBubble(mapBubble)) {
-                on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_PERSONAL)
-            } else {
-                on<NavigationHandler>().showProfile(mapBubble.phone!!, mapBubble.view)
-            }
+            on<NavigationHandler>().showProfile(mapBubble.phone!!, mapBubble.view)
         }, { mapBubble, position ->
                 on<BubbleHandler>().remove(mapBubble)
                 mapBubble.onItemClickListener?.invoke(position)

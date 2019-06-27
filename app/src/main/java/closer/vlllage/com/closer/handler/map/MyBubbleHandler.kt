@@ -10,11 +10,11 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.TimeStr
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 
 class MyBubbleHandler constructor(private val on: On) {
 
@@ -53,6 +53,7 @@ class MyBubbleHandler constructor(private val on: On) {
             myBubble!!.isPinned = true
 
             if (phone != null) {
+                myBubble!!.phone = phone.id
                 myBubble!!.tag = phone
                 myBubble!!.action = on<TimeStr>().pretty(phone.updated)
             }

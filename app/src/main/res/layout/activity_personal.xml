@@ -55,13 +55,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/actionViewProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/yourName"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingEnd="@dimen/padDouble"
+        android:gravity="center_vertical"
+        android:elevation="2dp"
+        android:textAllCaps="true"
+        android:background="@drawable/clickable_accent"
+        android:textColor="@color/text"
+        android:textStyle="bold"
+        android:textSize="10sp"
+        android:text="@string/view_profile" />
+
     <Switch
         android:id="@+id/shareYourLocationSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/yourName"
+        app:layout_constraintTop_toBottomOf="@+id/actionViewProfile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/padDouble"
         android:paddingRight="24dp"
         android:paddingLeft="24dp"
         android:padding="@dimen/padDouble"

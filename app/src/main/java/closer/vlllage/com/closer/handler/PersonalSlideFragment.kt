@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +15,7 @@ import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler
 import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.SetNameHandler
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
@@ -27,14 +25,11 @@ import closer.vlllage.com.closer.store.models.Group_
 import closer.vlllage.com.closer.ui.Animate
 import io.objectbox.android.AndroidScheduler
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.activity_personal.*
 import java.util.*
 
 class PersonalSlideFragment : PoolFragment() {
 
-    private lateinit var yourCurrentStatus: EditText
-    private lateinit var yourName: TextView
-    private lateinit var yourPhoto: ImageButton
-    private lateinit var shareYourLocationSwitch: Switch
     private var previousStatus: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,11 +67,6 @@ class PersonalSlideFragment : PoolFragment() {
                     }
                 })
 
-        yourCurrentStatus = view.findViewById(R.id.currentStatus)
-        shareYourLocationSwitch = view.findViewById(R.id.shareYourLocationSwitch)
-        yourName = view.findViewById(R.id.yourName)
-        yourPhoto = view.findViewById(R.id.yourPhoto)
-
         updateLocationInfo()
 
         shareYourLocationSwitch.setOnCheckedChangeListener { switchView, isChecked ->
@@ -86,15 +76,15 @@ class PersonalSlideFragment : PoolFragment() {
 
         shareYourLocationSwitch.isChecked = on<AccountHandler>().active
         previousStatus = on<AccountHandler>().status
-        yourCurrentStatus.setText(previousStatus)
+        currentStatus.setText(previousStatus)
 
-        yourCurrentStatus.setOnFocusChangeListener { editTextView, isFocused ->
-            if (yourCurrentStatus.text.toString() == previousStatus) {
+        currentStatus.setOnFocusChangeListener { editTextView, isFocused ->
+            if (currentStatus.text.toString() == previousStatus) {
                 return@setOnFocusChangeListener
             }
 
-            on<AccountHandler>().updateStatus(yourCurrentStatus.text.toString())
-            on<KeyboardHandler>().showKeyboard(yourCurrentStatus, false)
+            on<AccountHandler>().updateStatus(currentStatus.text.toString())
+            on<KeyboardHandler>().showKeyboard(currentStatus, false)
         }
 
         yourName.text = on<Val>().of(on<AccountHandler>().name, on<ResourcesHandler>().resources.getString(R.string.update_your_name))
@@ -128,6 +118,11 @@ class PersonalSlideFragment : PoolFragment() {
         yourName.setOnClickListener { v -> on<SetNameHandler>().modifyName() }
 
         yourName.requestFocus()
+
+        actionViewProfile.setOnClickListener {
+            on<NavigationHandler>().showProfile(on<PersistenceHandler>().phoneId!!, actionViewProfile)
+        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -135,7 +130,7 @@ class PersonalSlideFragment : PoolFragment() {
     }
 
     private fun updateLocationInfo() {
-        on<Animate>().alpha(yourCurrentStatus, shareYourLocationSwitch.isChecked)
+        on<Animate>().alpha(currentStatus, shareYourLocationSwitch.isChecked)
     }
 
 }
