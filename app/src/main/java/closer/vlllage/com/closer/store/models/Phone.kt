@@ -3,7 +3,6 @@ package closer.vlllage.com.closer.store.models
 import closer.vlllage.com.closer.store.StringListJsonConverter
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
-import java.util.*
 
 @Entity
 class Phone : BaseObject() {
@@ -18,8 +17,8 @@ class Phone : BaseObject() {
     var verified: Boolean? = null
 
     @Convert(converter = StringListJsonConverter::class, dbType = String::class)
-    var goals: List<String> = ArrayList()
+    var goals: List<String>? = null
 
     @Convert(converter = StringListJsonConverter::class, dbType = String::class)
-    var lifestyles: List<String> = ArrayList()
+    var lifestyles: List<String>? = null
 }

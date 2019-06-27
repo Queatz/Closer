@@ -257,4 +257,6 @@
     <string name="them">Them</string>
     <string name="cheer_them">Cheer %1$s</string>
     <string name="remove">Remove</string>
+    <string name="remove_lifestyle">Remove lifestyle?</string>
+    <string name="remove_goal">Remove goal?</string>
 </resources>

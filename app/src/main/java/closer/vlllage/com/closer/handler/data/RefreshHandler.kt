@@ -151,7 +151,17 @@ class RefreshHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread()) as SubscriptionBuilder<List<T>>)
                 .observer { results ->
                     if (results.isNotEmpty()) {
-                        `object`.objectBoxId = results[0].objectBoxId
+                        `object`.objectBoxId = results.first().objectBoxId
+
+                        if (`object` is Phone) {
+                            if (`object`.goals == null) {
+                                `object`.goals = (results.first() as Phone).goals
+                            }
+
+                            if (`object`.lifestyles == null) {
+                                `object`.lifestyles = (results.first() as Phone).lifestyles
+                            }
+                        }
                     }
                     on<StoreHandler>().store.box(clazz).put(`object`)
                 }

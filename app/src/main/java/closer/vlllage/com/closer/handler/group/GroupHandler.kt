@@ -46,22 +46,10 @@ class GroupHandler constructor(private val on: On) {
                             on<RefreshHandler>().refreshGroupContacts(group.id!!)
                         })
 
-
-                if (on<PersistenceHandler>().phoneId != null) {
-                    on<RefreshHandler>().refreshPhone(on<PersistenceHandler>().phoneId!!)
-
-                    disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
-                            .equal(Phone_.id, on<PersistenceHandler>().phoneId!!)
-                            .build()
-                            .subscribe()
-                            .on(AndroidScheduler.mainThread())
-                            .observer {
-                                if (it.isNotEmpty()) phoneChanged.onNext(it.first())
-                            })
-
+                on<PersistenceHandler>().phoneId?.let { phoneId ->
                     disposableGroup.add(on<StoreHandler>().store.box(GroupMember::class).query()
                             .equal(GroupMember_.group, group.id!!)
-                            .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
+                            .equal(GroupMember_.phone, phoneId)
                             .build()
                             .subscribe()
                             .on(AndroidScheduler.mainThread())
@@ -150,9 +138,16 @@ class GroupHandler constructor(private val on: On) {
             return
         }
 
-        on<DisposableHandler>().add(on<DataHandler>().getPhone(phoneId)
-                .subscribe({ phone -> phoneChanged.onNext(phone) },
-                        { on<DefaultAlerts>().thatDidntWork() }))
+        on<RefreshHandler>().refreshPhone(phoneId)
+
+        disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
+                .equal(Phone_.id, phoneId)
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .observer {
+                    if (it.isNotEmpty()) phoneChanged.onNext(it.first())
+                })
     }
 
     fun onGroupChanged(disposableGroup: DisposableGroup? = null, callback: (Group) -> Unit) = onChangeCallback(groupChanged, callback, disposableGroup)

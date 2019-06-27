@@ -37,9 +37,8 @@ class PhoneResult : ModelResult() {
             phone.history = phoneResult.history
             phone.photo = phoneResult.photo
             phone.verified = phoneResult.verified
-
-            phone.goals = phoneResult.goals?.map { it.name ?: "-" } ?: ArrayList()
-            phone.lifestyles = phoneResult.lifestyles?.map { it.name ?: "-" } ?: ArrayList()
+            phone.goals = phoneResult.goals?.map { it.name ?: "-" }
+            phone.lifestyles = phoneResult.lifestyles?.map { it.name ?: "-" }
 
             return phone
         }

@@ -27,16 +27,16 @@ class ApiService {
         }
 
         httpClient.addInterceptor { chain ->
-            Logger.getAnonymousLogger().warning("NETWORK: REQUEST: " + chain.request().toString())
+            Logger.getAnonymousLogger().warning("NETWORK: REQUEST: " + chain.request().url())
 
             val response = chain.proceed(chain.request())
 
             if (response.body() == null) {
-                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: null")
+                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: (null) " + response.request().url())
             } else if (response.body()!!.contentLength() < 0) {
-                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: no content")
+                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: (no content) " + response.request().url())
             } else {
-                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: " + response.peekBody(response.body()!!.contentLength()).string())
+                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: " + response.request().url() + " " + response.peekBody(response.body()!!.contentLength()).string())
             }
 
             response

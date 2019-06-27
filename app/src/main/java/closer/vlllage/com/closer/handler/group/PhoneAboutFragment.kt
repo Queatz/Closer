@@ -53,24 +53,26 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 else
                     on<ResourcesHandler>().resources.getColor(R.color.textInverse))
 
-                goalsEmptyTextView.visible = phone.goals.isEmpty()
-                lifestylesEmptyTextView.visible = phone.lifestyles.isEmpty()
+                goalsEmptyTextView.visible = phone.goals.isNullOrEmpty()
+                lifestylesEmptyTextView.visible = phone.lifestyles.isNullOrEmpty()
 
                 val editable = phone.id == on<PersistenceHandler>().phoneId
 
                 val goalAdapter = GoalAdapter(on) {
                     if (editable) {
-                        disposableGroup.add(on<ApiHandler>().addGoal(it, true)
-                                .subscribe({
-                                    on<RefreshHandler>().refreshPhone(phone.id!!)
-                                }, { on<DefaultAlerts>().thatDidntWork() }))
+                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_goal)) { _ ->
+                            disposableGroup.add(on<ApiHandler>().addGoal(it, true)
+                                    .subscribe({
+                                        on<RefreshHandler>().refreshPhone(phone.id!!)
+                                    }, { on<DefaultAlerts>().thatDidntWork() }))
+                        }
                     } else {
                         on<ReplyHandler>().reply(phone.id!!)
                     }
                 }
 
                 goalAdapter.name = phone.name!!
-                goalAdapter.items = phone.goals.toMutableList()
+                goalAdapter.items = phone.goals?.toMutableList() ?: mutableListOf()
                 goalAdapter.isRemove = editable
 
                 goalsRecyclerView.adapter = goalAdapter
@@ -78,17 +80,19 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 val lifestyleAdapter = GoalAdapter(on) {
                     if (editable) {
-                        disposableGroup.add(on<ApiHandler>().addLifestyle(it, true)
-                                .subscribe({
-                                    on<RefreshHandler>().refreshPhone(phone.id!!)
-                                }, { on<DefaultAlerts>().thatDidntWork() }))
+                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_lifestyle)) { _ ->
+                            disposableGroup.add(on<ApiHandler>().addLifestyle(it, true)
+                                    .subscribe({
+                                        on<RefreshHandler>().refreshPhone(phone.id!!)
+                                    }, { on<DefaultAlerts>().thatDidntWork() }))
+                        }
                     } else {
                         on<ReplyHandler>().reply(phone.id!!)
                     }
                 }
 
                 lifestyleAdapter.name = phone.name!!
-                lifestyleAdapter.items = phone.lifestyles.toMutableList()
+                lifestyleAdapter.items = phone.lifestyles?.toMutableList() ?: mutableListOf()
                 lifestyleAdapter.isRemove = editable
 
                 lifestyleRecyclerView.adapter = lifestyleAdapter

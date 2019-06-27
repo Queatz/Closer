@@ -167,7 +167,6 @@
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padDouble"
                 tools:text="Something here..."/>
 
             <TextView
