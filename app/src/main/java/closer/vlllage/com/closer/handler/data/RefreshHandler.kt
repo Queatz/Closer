@@ -111,6 +111,11 @@ class RefreshHandler constructor(private val on: On) {
         }, connectionError))
     }
 
+    fun refreshPhone(phoneId: String) {
+        on<DisposableHandler>().add(on<ApiHandler>().getPhone(phoneId)
+                .subscribe({ this.refresh(PhoneResult.from(it)) }, connectionError))
+    }
+
     fun refreshGroupMessages(groupId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getGroupMessages(groupId)
                 .subscribe({ this.handleMessages(it) }, connectionError))

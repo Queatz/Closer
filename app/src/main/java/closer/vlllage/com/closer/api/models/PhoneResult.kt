@@ -7,8 +7,13 @@ class PhoneResult : ModelResult() {
     var name: String? = null
     var photo: String? = null
     var status: String? = null
+    var introduction: String? = null
+    var offtime: String? = null
+    var history: String? = null
     var active: Boolean? = null
     var verified: Boolean? = null
+    var goals: List<GoalResult>? = null
+    var lifestyles: List<LifestyleResult>? = null
 
     companion object {
 
@@ -27,8 +32,14 @@ class PhoneResult : ModelResult() {
 
             phone.name = phoneResult.name
             phone.status = phoneResult.status
+            phone.introduction = phoneResult.introduction
+            phone.offtime = phoneResult.offtime
+            phone.history = phoneResult.history
             phone.photo = phoneResult.photo
             phone.verified = phoneResult.verified
+
+            phone.goals = phoneResult.goals?.map { it.name ?: "-" } ?: ArrayList()
+            phone.lifestyles = phoneResult.lifestyles?.map { it.name ?: "-" } ?: ArrayList()
 
             return phone
         }

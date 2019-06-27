@@ -36,7 +36,10 @@ interface Backend {
             @Query("name") name: String?,
             @Query("status") status: String?,
             @Query("active") active: Boolean?,
-            @Query("deviceToken") pushDeviceToken: String?
+            @Query("deviceToken") pushDeviceToken: String?,
+            @Query("introduction") introduction: String?,
+            @Query("offtime") offtime: String?,
+            @Query("history") history: String?
     ): Single<CreateResult>
 
     @POST("phone")
@@ -65,6 +68,16 @@ interface Backend {
 
     @POST("verify")
     fun sendVerificationCode(@Query("verify-code") verificationCode: String): Single<VerifiedResult>
+
+    // Goal
+
+    @POST("goal")
+    fun addGoal(@Query("name") goalName: String, @Query("remove") remove: Boolean?): Single<SuccessResult>
+
+    // Lifestyle
+
+    @POST("lifestyle")
+    fun addLifestyle(@Query("name") lifestyleName: String, @Query("remove") remove: Boolean?): Single<SuccessResult>
 
     // Suggestion
 

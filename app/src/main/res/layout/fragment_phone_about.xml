@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/padDouble"
+            android:clipToPadding="false">
+
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad"
+                android:text="@string/introduction"/>
+
+            <TextView
+                android:id="@+id/introductionTextView"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Something here..."/>
+
+            <TextView
+                android:id="@+id/actionEditIntroduction"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/pad"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:gravity="center_vertical"
+                android:elevation="2dp"
+                android:textAllCaps="true"
+                android:background="@drawable/clickable_accent"
+                android:textColor="@color/textInverse"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:text="@string/edit_your_introduction" />
+
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
+                android:layout_marginBottom="@dimen/pad"
+                android:text="@string/goals"/>
+
+            <TextView
+                android:id="@+id/goalsEmptyTextView"
+                android:textColor="@color/textHintInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nothing_here"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/goalsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/actionAddGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/pad"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:gravity="center_vertical"
+                android:elevation="2dp"
+                android:textAllCaps="true"
+                android:background="@drawable/clickable_accent"
+                android:textColor="@color/textInverse"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:text="@string/add_a_goal" />
+
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
+                android:layout_marginBottom="@dimen/pad"
+                android:text="@string/lifestyle"/>
+
+            <TextView
+                android:id="@+id/lifestylesEmptyTextView"
+                android:textColor="@color/textHintInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nothing_here"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lifestyleRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/actionAddLifestyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/pad"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:gravity="center_vertical"
+                android:elevation="2dp"
+                android:textAllCaps="true"
+                android:background="@drawable/clickable_accent"
+                android:textColor="@color/textInverse"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:text="@string/add_a_lifestyle" />
+
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
+                android:layout_marginBottom="@dimen/pad"
+                android:text="@string/offtime"/>
+
+            <TextView
+                android:id="@+id/offtimeTextView"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Something here..."/>
+
+            <TextView
+                android:id="@+id/actionEditOfftime"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/pad"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:gravity="center_vertical"
+                android:elevation="2dp"
+                android:textAllCaps="true"
+                android:background="@drawable/clickable_accent"
+                android:textColor="@color/textInverse"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:text="@string/edit_your_offtime" />
+
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
+                android:layout_marginBottom="@dimen/pad"
+                android:text="@string/history"/>
+
+            <TextView
+                android:id="@+id/historyTextView"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padDouble"
+                tools:text="Something here..."/>
+
+            <TextView
+                android:id="@+id/actionEditHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/pad"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:gravity="center_vertical"
+                android:elevation="2dp"
+                android:textAllCaps="true"
+                android:background="@drawable/clickable_accent"
+                android:textColor="@color/textInverse"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:text="@string/edit_your_history" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

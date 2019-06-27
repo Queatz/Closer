@@ -48,6 +48,17 @@ class GroupHandler constructor(private val on: On) {
 
 
                 if (on<PersistenceHandler>().phoneId != null) {
+                    on<RefreshHandler>().refreshPhone(on<PersistenceHandler>().phoneId!!)
+
+                    disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
+                            .equal(Phone_.id, on<PersistenceHandler>().phoneId!!)
+                            .build()
+                            .subscribe()
+                            .on(AndroidScheduler.mainThread())
+                            .observer {
+                                if (it.isNotEmpty()) phoneChanged.onNext(it.first())
+                            })
+
                     disposableGroup.add(on<StoreHandler>().store.box(GroupMember::class).query()
                             .equal(GroupMember_.group, group.id!!)
                             .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)

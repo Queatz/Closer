@@ -29,4 +29,5 @@
     <dimen name="groupMessageMentionTextSize">12sp</dimen>
     <dimen name="groupToolbarTextSize">12sp</dimen>
     <dimen name="iconSizeSm">18dp</dimen>
+    <dimen name="cornerRadiusHalf">12dp</dimen>
 </resources>

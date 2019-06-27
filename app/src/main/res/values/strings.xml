@@ -240,4 +240,21 @@
     <string name="settings_show_close_button">Show close button in groups</string>
     <string name="profile">Profile</string>
     <string name="about">About</string>
+    <string name="introduction">Introduction</string>
+    <string name="offtime">In my offtime</string>
+    <string name="history">History</string>
+    <string name="goals">Current goals</string>
+    <string name="lifestyle">Lifestyle</string>
+    <string name="nothing_here">Nothing here</string>
+    <string name="edit_your_introduction">Edit your introduction</string>
+    <string name="edit_your_history">Edit your history</string>
+    <string name="edit_your_offtime">Edit your offtime</string>
+    <string name="add_a_lifestyle">Add a lifestyle</string>
+    <string name="add_a_goal">Add a  goal</string>
+    <string name="introduction_hint">What\'s the first thing people might want to know about you?</string>
+    <string name="history_hint">Where are you from, what have you done?</string>
+    <string name="offtime_hint">What do you do in your offtime?</string>
+    <string name="them">Them</string>
+    <string name="cheer_them">Cheer %1$s</string>
+    <string name="remove">Remove</string>
 </resources>

@@ -35,15 +35,15 @@ class AccountHandler constructor(private val on: On) {
     fun updateGeo(latLng: LatLng) {
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_GEO, latLng))
 
-        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(on<LatLngStr>().from(latLng), null, null, null, null)
-                .subscribe({ success -> }, { this.onError(it) }))
+        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(latLng = on<LatLngStr>().from(latLng))
+                .subscribe({}, { this.onError(it) }))
     }
 
     fun updateName(name: String) {
         on<PersistenceHandler>().myName = name
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_NAME, name))
-        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(null, name, null, null, null)
-                .subscribe({ success -> }, { this.onError(it) }))
+        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(name = name)
+                .subscribe({}, { this.onError(it) }))
 
     }
 
@@ -51,21 +51,21 @@ class AccountHandler constructor(private val on: On) {
         on<PersistenceHandler>().myPhoto = photoUrl
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_PHOTO, photoUrl))
         on<DisposableHandler>().add(on<ApiHandler>().updatePhonePhoto(photoUrl)
-                .subscribe({ success -> }, { this.onError(it) }))
+                .subscribe({}, { this.onError(it) }))
     }
 
     fun updateStatus(status: String) {
         on<PersistenceHandler>().myStatus = status
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_STATUS, status))
-        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(null, null, status, null, null)
-                .subscribe({ success -> }, { this.onError(it) }))
+        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(status = status)
+                .subscribe({}, { this.onError(it) }))
     }
 
     fun updatePrivateMode(privateMode: Boolean) {
         on<PersistenceHandler>().privateMode = privateMode
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_NOTIFICATIONS, privateMode))
         on<DisposableHandler>().add(on<ApiHandler>().updatePhonePrivateMode(privateMode)
-                .subscribe({ success -> }, { this.onError(it) }))
+                .subscribe({}, { this.onError(it) }))
     }
 
     private fun onError(throwable: Throwable) {
@@ -76,8 +76,8 @@ class AccountHandler constructor(private val on: On) {
     fun updateActive(active: Boolean) {
         on<PersistenceHandler>().myActive = active
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_ACTIVE, active))
-        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(null, null, null, active, null)
-                .subscribe({ success -> }, { this.onError(it) }))
+        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(active = active)
+                .subscribe({}, { this.onError(it) }))
 
         if (!active) {
             return
@@ -88,8 +88,18 @@ class AccountHandler constructor(private val on: On) {
 
     fun updateDeviceToken(deviceToken: String) {
         on<PersistenceHandler>().deviceToken = deviceToken
-        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(null, null, null, null, deviceToken)
+        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(deviceToken = deviceToken)
                 .subscribe({ createResult -> on<PersistenceHandler>().phoneId = createResult.id }, { this.onError(it) }))
+    }
+
+    fun updateAbout(introduction: String? = null, offtime: String? = null, history: String? = null, callback: (() -> Unit)? = null) {
+        on<DisposableHandler>().add(on<ApiHandler>().updatePhone(
+                introduction = introduction,
+                offtime = offtime,
+                history = history
+        ).subscribe({
+            callback?.invoke()
+        }, { this.onError(it) }))
     }
 
     fun changes() = accountChanges

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="@dimen/pad"
+    app:cardCornerRadius="@dimen/cornerRadiusHalf"
+    android:foreground="?selectableItemBackgroundBorderless"
+    android:clickable="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/goalName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Goal #1"
+            android:padding="@dimen/padDouble"
+            android:textSize="16sp"
+            android:textColor="@color/textInverse"/>
+
+        <TextView
+            android:id="@+id/cheerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:textSize="12sp"
+            android:padding="@dimen/pad"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="Cheer Amanda"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

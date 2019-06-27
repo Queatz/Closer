@@ -47,8 +47,15 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.addSuggestion(name, on<LatLngStr>().from(latLng)))
     }
 
-    fun updatePhone(latLng: String?, name: String?, status: String?, active: Boolean?, deviceToken: String?): Single<CreateResult> {
-        return uiThread(api.backend.phoneUpdate(latLng, name, status, active, deviceToken))
+    fun updatePhone(latLng: String? = null,
+                    name: String? = null,
+                    status: String? = null,
+                    active: Boolean? = null,
+                    deviceToken: String? = null,
+                    introduction: String? = null,
+                    offtime: String? = null,
+                    history: String? = null): Single<CreateResult> {
+        return uiThread(api.backend.phoneUpdate(latLng, name, status, active, deviceToken, introduction, offtime, history))
     }
 
     fun updatePhonePhoto(photoUrl: String): Single<CreateResult> {
@@ -93,6 +100,14 @@ class ApiHandler constructor(private val on: On) {
 
     fun sendVerificationCode(verificationCode: String): Single<VerifiedResult> {
         return uiThread(api.backend.sendVerificationCode(verificationCode))
+    }
+
+    fun addGoal(goalName: String, remove: Boolean? = null): Single<SuccessResult> {
+        return uiThread(api.backend.addGoal(goalName, remove))
+    }
+
+    fun addLifestyle(lifestyleName: String, remove: Boolean? = null): Single<SuccessResult> {
+        return uiThread(api.backend.addLifestyle(lifestyleName, remove))
     }
 
     fun sendGroupMessage(groupId: String, text: String?, attachment: String?): Single<CreateResult> {

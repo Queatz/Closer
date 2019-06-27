@@ -38,7 +38,7 @@ Updated endpoints:
  [X] POST /goals?name=<value>
  [X] POST /goals?name=<value>&remove=true
 
- [ ] Updated phone mode:
+ [X] Updated phone mode:
 
         phone {
             ...

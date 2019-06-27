@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.phone.GoalAdapter
+import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.pool.PoolActivityFragment
-import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.GroupMessage
-import closer.vlllage.com.closer.store.models.GroupMessage_
-import closer.vlllage.com.closer.ui.GridSpacingItemDecoration
-import com.google.gson.JsonObject
-import io.objectbox.android.AndroidScheduler
-import kotlinx.android.synthetic.main.fragment_phone_photos.*
+import kotlinx.android.synthetic.main.fragment_phone_about.*
 
 
 class PhoneAboutFragment : PoolActivityFragment() {
@@ -24,38 +24,127 @@ class PhoneAboutFragment : PoolActivityFragment() {
     private lateinit var phoneDisposableGroup: DisposableGroup
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_phone_photos, container, false)
+        return inflater.inflate(R.layout.fragment_phone_about, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
         phoneDisposableGroup = disposableGroup.group()
 
-        val groupMessagesAdapter = PhotosAdapter(on)
-
-        photosRecyclerView.layoutManager = GridLayoutManager(photosRecyclerView.context, 3)
-        photosRecyclerView.adapter = groupMessagesAdapter
-        photosRecyclerView.addItemDecoration(GridSpacingItemDecoration(3,
-                on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padQuarter)))
-
         on<GroupHandler> {
             onPhoneChanged(disposableGroup) { phone ->
-                phoneDisposableGroup.clear()
+                val nothing = on<ResourcesHandler>().resources.getString(R.string.nothing_here)
+                introductionTextView.text = phone.introduction ?: nothing
+                offtimeTextView.text = phone.offtime ?: nothing
+                historyTextView.text = phone.history ?: nothing
 
-                on<RefreshHandler>().refreshGroupMessagesForPhone(phone.id!!)
+                introductionTextView.setTextColor(if (phone.introduction.isNullOrBlank())
+                    on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
+                else
+                    on<ResourcesHandler>().resources.getColor(R.color.textInverse))
 
-                val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
-                phoneDisposableGroup.add(queryBuilder
-                        .sort(on<SortHandler>().sortGroupMessages())
-                        .equal(GroupMessage_.from, phone.id!!)
-                        .build()
-                        .subscribe()
-                        .on(AndroidScheduler.mainThread())
-                        .observer { groupMessages ->
-                            groupMessagesAdapter.items = groupMessages.filter { it.attachment?.let {
-                                on<JsonHandler>().from(it, JsonObject::class.java).get("photo")?.isJsonPrimitive
-                            } ?: false }
-                        })
+                offtimeTextView.setTextColor(if (phone.offtime.isNullOrBlank())
+                    on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
+                else
+                    on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+
+                historyTextView.setTextColor(if (phone.history.isNullOrBlank())
+                    on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
+                else
+                    on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+
+                goalsEmptyTextView.visible = phone.goals.isEmpty()
+                lifestylesEmptyTextView.visible = phone.lifestyles.isEmpty()
+
+                val editable = phone.id == on<PersistenceHandler>().phoneId
+
+                val goalAdapter = GoalAdapter(on) {
+                    if (editable) {
+                        disposableGroup.add(on<ApiHandler>().addGoal(it, true)
+                                .subscribe({
+                                    on<RefreshHandler>().refreshPhone(phone.id!!)
+                                }, { on<DefaultAlerts>().thatDidntWork() }))
+                    } else {
+                        on<ReplyHandler>().reply(phone.id!!)
+                    }
+                }
+
+                goalAdapter.name = phone.name!!
+                goalAdapter.items = phone.goals.toMutableList()
+                goalAdapter.isRemove = editable
+
+                goalsRecyclerView.adapter = goalAdapter
+                goalsRecyclerView.layoutManager = LinearLayoutManager(context)
+
+                val lifestyleAdapter = GoalAdapter(on) {
+                    if (editable) {
+                        disposableGroup.add(on<ApiHandler>().addLifestyle(it, true)
+                                .subscribe({
+                                    on<RefreshHandler>().refreshPhone(phone.id!!)
+                                }, { on<DefaultAlerts>().thatDidntWork() }))
+                    } else {
+                        on<ReplyHandler>().reply(phone.id!!)
+                    }
+                }
+
+                lifestyleAdapter.name = phone.name!!
+                lifestyleAdapter.items = phone.lifestyles.toMutableList()
+                lifestyleAdapter.isRemove = editable
+
+                lifestyleRecyclerView.adapter = lifestyleAdapter
+                lifestyleRecyclerView.layoutManager = LinearLayoutManager(context)
+
+
+                actionEditIntroduction.visible = editable
+                actionAddGoal.visible = editable
+                actionAddLifestyle.visible = editable
+                actionEditOfftime.visible = editable
+                actionEditHistory.visible = editable
+
+                if (editable) {
+                    actionEditIntroduction.setOnClickListener {
+                        on<DefaultInput>().show(R.string.introduction_hint, prefill = phone.introduction) {
+                            on<AccountHandler>().updateAbout(introduction = it) {
+                                on<RefreshHandler>().refreshPhone(phone.id!!)
+                            }
+                        }
+                    }
+
+                    actionAddGoal.setOnClickListener {
+                        on<DefaultInput>().show(R.string.add_a_goal) {
+                            disposableGroup.add(on<ApiHandler>().addGoal(it)
+                                    .subscribe({
+                                        on<RefreshHandler>().refreshPhone(phone.id!!)
+                                    }, { on<DefaultAlerts>().thatDidntWork() }))
+                        }
+                    }
+
+                    actionAddLifestyle.setOnClickListener {
+                        on<DefaultInput>().show(R.string.add_a_lifestyle) {
+                            disposableGroup.add(on<ApiHandler>().addLifestyle(it)
+                                    .subscribe({
+                                        on<RefreshHandler>().refreshPhone(phone.id!!)
+                                    }, { on<DefaultAlerts>().thatDidntWork() }))
+                        }
+                    }
+
+                    actionEditOfftime.setOnClickListener {
+                        on<DefaultInput>().show(R.string.offtime_hint, prefill = phone.offtime) {
+                            on<AccountHandler>().updateAbout(offtime = it) {
+                                on<RefreshHandler>().refreshPhone(phone.id!!)
+                            }
+                        }
+                    }
+
+                    actionEditHistory.setOnClickListener {
+                        on<DefaultInput>().show(R.string.history_hint, prefill = phone.history) {
+                            on<AccountHandler>().updateAbout(history = it) {
+                                on<RefreshHandler>().refreshPhone(phone.id!!)
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }
