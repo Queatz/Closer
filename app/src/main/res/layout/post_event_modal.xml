@@ -2,12 +2,51 @@
 <closer.vlllage.com.closer.ui.InterceptableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/AppTheme.Red">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/postEventInContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/postEventIn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/removeGroupFromEvent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:padding="24dp"
+                tools:text="in Mermaid Sea Club" />
+
+            <ImageButton
+                android:id="@+id/removeGroupFromEvent"
+                android:contentDescription="@string/remove_from_group"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                android:tint="@color/red"
+                android:background="?selectableItemBackground"
+                android:src="@drawable/ic_close_black_24dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Switch
             android:id="@+id/isPublicSwitch"

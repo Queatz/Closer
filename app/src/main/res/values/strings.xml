@@ -261,4 +261,7 @@
     <string name="remove_goal">Remove goal?</string>
     <string name="view_profile">View your profile</string>
     <string name="goal">Goal</string>
+    <string name="remove_from_group">Remove from group</string>
+    <string name="in_x">in %1$s</string>
+    <string name="create_event_in_group_instructions">Tap anywhere on the map and choose \"Host Event\"</string>
 </resources>

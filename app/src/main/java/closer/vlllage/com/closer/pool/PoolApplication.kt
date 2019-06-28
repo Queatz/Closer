@@ -5,7 +5,7 @@ import com.queatz.on.On
 
 abstract class PoolApplication : Application() {
 
-    val on = On()
+    internal val on = On()
 
     override fun onTerminate() {
         on.off()

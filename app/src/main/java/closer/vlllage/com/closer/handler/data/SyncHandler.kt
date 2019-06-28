@@ -23,11 +23,7 @@ class SyncHandler constructor(private val on: On) {
         syncAll(GroupMember::class.java, GroupMember_.localOnly)
     }
 
-    fun <T : BaseObject> sync(obj: T) {
-        sync(obj, null)
-    }
-
-    fun <T : BaseObject> sync(obj: T, onSyncResult: OnSyncResult?) {
+    fun <T : BaseObject> sync(obj: T, onSyncResult: OnSyncResult? = null) {
         send(obj, onSyncResult)
     }
 

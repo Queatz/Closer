@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import closer.vlllage.com.closer.handler.PersonalSlideFragment
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.map.MapViewHandler
 import closer.vlllage.com.closer.handler.settings.SettingsSlideFragment
 import closer.vlllage.com.closer.pool.PoolActivity
@@ -47,6 +48,10 @@ class MapsActivity : PoolActivity() {
     }
 
     override fun onNewIntent(intent: Intent) {
+        if (intent.hasExtra(EXTRA_PROMPT)) {
+            on<DefaultAlerts>().message(intent.getStringExtra(EXTRA_PROMPT))
+        }
+
         if (intent.hasExtra(EXTRA_SCREEN)) {
             when (intent.getStringExtra(EXTRA_SCREEN)) {
                 EXTRA_SCREEN_PERSONAL -> {
@@ -86,10 +91,9 @@ class MapsActivity : PoolActivity() {
         const val EXTRA_LAT_LNG = "latLng"
         const val EXTRA_SUGGESTION = "suggestion"
         const val EXTRA_EVENT_ID = "eventId"
-        const val EXTRA_NAME = "name"
         const val EXTRA_PHONE = "phone"
-        const val EXTRA_MESSAGE = "message"
         const val EXTRA_SCREEN = "screen"
+        const val EXTRA_PROMPT = "prompt"
         const val EXTRA_SCREEN_MAP = "screen.map"
         const val EXTRA_SCREEN_PERSONAL = "screen.personal"
         const val EXTRA_SCREEN_SETTINGS = "screen.settings"

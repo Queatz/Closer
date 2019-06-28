@@ -4,20 +4,27 @@ import android.os.Build
 import android.text.format.DateUtils
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.TaskHandler
+import closer.vlllage.com.closer.handler.TaskType
 import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler
 import closer.vlllage.com.closer.handler.helpers.AlertHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.KeyboardHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import com.queatz.on.On
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.ui.InterceptableScrollView
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
+import kotlinx.android.synthetic.main.post_event_modal.view.*
 import java.util.*
 
 class EventHandler constructor(private val on: On) {
@@ -40,7 +47,7 @@ class EventHandler constructor(private val on: On) {
                 viewHolder.datePicker.minDate = now.timeInMillis
                 viewHolder.isPublicSwitch.isChecked = isPublic
 
-                viewHolder.datePicker.init(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)) { datePicker1, year, month, dayOfMonth ->
+                viewHolder.datePicker.init(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)) { _, year, month, dayOfMonth ->
                     val calendar = Calendar.getInstance(TimeZone.getDefault())
                     calendar.set(year, month, dayOfMonth)
                     viewHolder.dateTextView.text = DateUtils.getRelativeTimeSpanString(
@@ -53,8 +60,23 @@ class EventHandler constructor(private val on: On) {
 
                 viewHolder.changeDateButton.setOnClickListener { viewHolder.datePicker.visibility = if (viewHolder.datePicker.visibility == View.GONE) View.VISIBLE else View.GONE }
 
+                on<TaskHandler>().activeTask?.let {
+                    if (it.taskType == TaskType.CREATE_EVENT_IN_GROUP) {
+                        viewHolder.isPublicSwitch.isChecked = it.group.isPublic
+                        viewHolder.isPublicSwitch.visible = false
+                        viewHolder.postEventInContainer.visible = true
+                        viewHolder.postEventIn.text = on<ResourcesHandler>().resources.getString(R.string.in_x,
+                                it.group.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
+                        viewHolder.removeGroupFromEvent.setOnClickListener {
+                            on<TaskHandler>().activeTask = null
+                            viewHolder.postEventInContainer.visible = false
+                            viewHolder.isPublicSwitch.visible = true
+                        }
+                    }
+                }
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    viewHolder.scrollView.setOnInterceptTouchListener(View.OnTouchListener { v, event ->
+                    viewHolder.scrollView.setOnInterceptTouchListener(View.OnTouchListener { _, _ ->
                         if (viewHolder.eventName.hasFocus()) {
                             viewHolder.eventName.clearFocus()
                             viewHolder.scrollView.requestFocus()
@@ -130,7 +152,13 @@ class EventHandler constructor(private val on: On) {
         return CreateEventViewState(startsAt, endsAt)
     }
 
-    private fun createNewEvent(isPublic: Boolean, latLng: LatLng, name: String, price: String, startsAt: Date, endsAt: Date, onEventCreatedListener: OnEventCreatedListener) {
+    private fun createNewEvent(isPublic: Boolean,
+                               latLng: LatLng,
+                               name: String,
+                               price: String,
+                               startsAt: Date,
+                               endsAt: Date,
+                               onEventCreatedListener: OnEventCreatedListener) {
         val event = on<StoreHandler>().create(Event::class.java)
         event!!.name = name.trim()
         event.about = price.trim()
@@ -140,7 +168,17 @@ class EventHandler constructor(private val on: On) {
         event.startsAt = startsAt
         event.endsAt = endsAt
         on<StoreHandler>().store.box(Event::class).put(event)
-        on<SyncHandler>().sync(event)
+
+        val group = on<TaskHandler>().activeTask?.group
+        on<TaskHandler>().activeTask = null
+
+        on<SyncHandler>().sync(event) { id ->
+            if (group != null) {
+                event.id = id
+                on<GroupMessageAttachmentHandler>().shareEvent(event, group)
+                on<NavigationHandler>().showGroup(group.id!!)
+            }
+        }
         onEventCreatedListener.invoke(event)
     }
 
@@ -153,16 +191,19 @@ class EventHandler constructor(private val on: On) {
     }
 
     private class CreateEventViewHolder internal constructor(view: View) {
-        internal var isPublicSwitch: Switch = view.findViewById(R.id.isPublicSwitch)
-        internal var isNextDaySwitch: Switch = view.findViewById(R.id.isNextDaySwitch)
-        internal var startsAtTimePicker: TimePicker = view.findViewById(R.id.startsAt)
-        internal var endsAtTimePicker: TimePicker = view.findViewById(R.id.endsAt)
-        internal var datePicker: DatePicker = view.findViewById(R.id.datePicker)
-        internal var dateTextView: TextView = view.findViewById(R.id.dateTextView)
-        internal var changeDateButton: View = view.findViewById(R.id.changeDate)
-        internal var eventName: EditText = view.findViewById(R.id.name)
-        internal var eventPrice: EditText = view.findViewById(R.id.price)
-        internal var scrollView: InterceptableScrollView = view as InterceptableScrollView
+        var isPublicSwitch: Switch = view.isPublicSwitch
+        var isNextDaySwitch: Switch = view.isNextDaySwitch
+        var startsAtTimePicker: TimePicker = view.startsAt
+        var endsAtTimePicker: TimePicker = view.endsAt
+        var datePicker: DatePicker = view.datePicker
+        var dateTextView: TextView = view.dateTextView
+        var changeDateButton: View = view.changeDate
+        var eventName: EditText = view.name
+        var eventPrice: EditText = view.price
+        var postEventInContainer: ViewGroup = view.postEventInContainer
+        var postEventIn: TextView = view.postEventIn
+        var removeGroupFromEvent: ImageButton = view.removeGroupFromEvent
+        var scrollView: InterceptableScrollView = view as InterceptableScrollView
     }
 
     private inner class CreateEventViewState(internal var startsAt: Calendar, internal var endsAt: Calendar)

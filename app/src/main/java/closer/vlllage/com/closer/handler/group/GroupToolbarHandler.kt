@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.TaskDefinition
+import closer.vlllage.com.closer.handler.TaskHandler
+import closer.vlllage.com.closer.handler.TaskType
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -14,6 +17,7 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.Event
@@ -153,7 +157,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (items.size < 3 && event != null) {
+        if (event != null) {
             items.add(ToolbarItem(
                     if (contentView.value == GroupActivity.ContentViewType.SHARE) R.string.cancel else R.string.share,
                     if (contentView.value == GroupActivity.ContentViewType.SHARE) R.drawable.ic_close_black_24dp else R.drawable.ic_share_black_24dp,
@@ -161,7 +165,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (items.size < 3 && (event != null || group.physical)) {
+        if ((event != null || group.physical)) {
             items.add(ToolbarItem(
                     R.string.show_on_map,
                     R.drawable.ic_my_location_black_24dp,
@@ -174,7 +178,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (items.size < 3 && isEventCancelable(event)) {
+        if (isEventCancelable(event)) {
             items.add(ToolbarItem(
                     R.string.cancel,
                     R.drawable.ic_close_black_24dp,
@@ -199,7 +203,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (items.size < 3 && group.physical && isEmptyOrWhitespace(group.name)) {
+        if (group.physical && isEmptyOrWhitespace(group.name)) {
             items.add(ToolbarItem(
                     R.string.set_name,
                     R.drawable.ic_edit_location_black_24dp,
@@ -212,7 +216,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (items.size < 3 && group.physical && isEmptyOrWhitespace(group.photo)) {
+        if (group.physical && isEmptyOrWhitespace(group.photo)) {
             items.add(ToolbarItem(
                     R.string.set_background,
                     R.drawable.ic_camera_black_24dp,
@@ -225,7 +229,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (items.size < 3 && (event != null || group.physical)) {
+        if ((event != null || group.physical)) {
             items.add(ToolbarItem(
                     R.string.get_directions,
                     R.drawable.ic_directions_black_24dp,
@@ -238,16 +242,21 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (items.size < 3 && group.physical) {
+        if (group.physical || !group.isPublic) {
             items.add(ToolbarItem(
                     R.string.host_event,
                     R.drawable.ic_event_note_black_24dp,
-                    View.OnClickListener { v ->
-                        on<EventHandler>().createNewEvent(LatLng(
-                                group.latitude!!,
-                                group.longitude!!
-                        ), group.isPublic) {
-                            showEventOnMap(it)
+                    View.OnClickListener {
+                        if (group.physical) {
+                            on<EventHandler>().createNewEvent(LatLng(
+                                    group.latitude!!,
+                                    group.longitude!!
+                            ), group.isPublic) {
+                                showEventOnMap(it)
+                            }
+                        } else {
+                            on<TaskHandler>().activeTask = TaskDefinition(TaskType.CREATE_EVENT_IN_GROUP, group)
+                            on<NavigationHandler>().showMap(on<ResourcesHandler>().resources.getString(R.string.create_event_in_group_instructions))
                         }
                     }
             ))
