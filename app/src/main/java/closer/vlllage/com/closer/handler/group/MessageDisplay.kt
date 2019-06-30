@@ -122,7 +122,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.action.visibility = View.VISIBLE
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.open_event)
         holder.action.setOnClickListener { view ->
-            onEventClickListener?.invoke(event)
+            onEventClickListener.invoke(event)
         }
     }
 

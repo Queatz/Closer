@@ -10,6 +10,7 @@ class Phone : BaseObject() {
     var status: String? = null
     var introduction: String? = null
     var offtime: String? = null
+    var occupation: String? = null
     var history: String? = null
     var photo: String? = null
     var latitude: Double? = null

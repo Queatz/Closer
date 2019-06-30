@@ -170,6 +170,40 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
+                android:text="@string/occupations"/>
+
+            <TextView
+                android:id="@+id/occupationTextView"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Something here..."/>
+
+            <TextView
+                android:id="@+id/actionEditOccupation"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/pad"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:gravity="center_vertical"
+                android:elevation="2dp"
+                android:textAllCaps="true"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:background="@drawable/clickable_accent"
+                android:textColor="@color/textInverse"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:text="@string/edit_your_occupation" />
+
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/textInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
+                android:layout_marginBottom="@dimen/pad"
                 android:text="@string/history"/>
 
             <TextView

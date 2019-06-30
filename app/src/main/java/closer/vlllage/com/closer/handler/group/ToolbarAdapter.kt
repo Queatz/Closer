@@ -18,6 +18,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(on) {
 
+    private var recyclerView: RecyclerView? = null
     val selectedContentView = BehaviorSubject.create<GroupActivity.ContentViewType>()
 
     var items = mutableListOf<GroupToolbarHandler.ToolbarItem>()
@@ -25,7 +26,12 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
             field.clear()
             field.addAll(value)
             notifyDataSetChanged()
+            recyclerView?.layoutManager?.isAutoMeasureEnabled = false
         }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        this.recyclerView = recyclerView
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToolbarViewHolder {
         return ToolbarViewHolder(LayoutInflater.from(parent.context)

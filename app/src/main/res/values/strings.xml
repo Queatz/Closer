@@ -264,4 +264,10 @@
     <string name="remove_from_group">Remove from group</string>
     <string name="in_x">in %1$s</string>
     <string name="create_event_in_group_instructions">Tap anywhere on the map and choose \"Host Event\"</string>
+    <string name="enter_welcome_message">Welcome message (optional)</string>
+    <string name="occupation_hint">What are your primary occupation(s)?</string>
+    <string name="occupations">Occupation(s)</string>
+    <string name="edit_your_occupation">Edit your occupation(s)</string>
+    <string name="at">at</string>
+    <string name="near">near</string>
 </resources>

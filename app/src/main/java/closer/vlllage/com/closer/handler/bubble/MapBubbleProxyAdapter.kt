@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import com.queatz.on.On
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
+import com.queatz.on.On
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 class MapBubbleProxyAdapter(on: On,
@@ -55,7 +55,7 @@ class MapBubbleProxyAdapter(on: On,
                 holder.photo.colorFilter = null
                 holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
-                holder.name.text = mapBubble.name + "\n" + mapBubble.status
+                holder.name.text = mapBubble.name + (on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)) + "\n" + mapBubble.status
                 if (mapBubble.tag is Phone) {
                     holder.info.visibility = View.VISIBLE
                     val phone = mapBubble.tag as Phone

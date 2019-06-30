@@ -147,6 +147,16 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
+            android:id="@+id/pinnedMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_welcome_message"
+            android:imeOptions="actionGo"
+            android:padding="24dp"
+            android:background="@null"
+            android:inputType="textShortMessage|textCapSentences" />
+
+        <EditText
             android:id="@+id/price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

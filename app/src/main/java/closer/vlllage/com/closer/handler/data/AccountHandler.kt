@@ -92,10 +92,11 @@ class AccountHandler constructor(private val on: On) {
                 .subscribe({ createResult -> on<PersistenceHandler>().phoneId = createResult.id }, { this.onError(it) }))
     }
 
-    fun updateAbout(introduction: String? = null, offtime: String? = null, history: String? = null, callback: (() -> Unit)? = null) {
+    fun updateAbout(introduction: String? = null, offtime: String? = null, occupation: String? = null, history: String? = null, callback: (() -> Unit)? = null) {
         on<DisposableHandler>().add(on<ApiHandler>().updatePhone(
                 introduction = introduction,
                 offtime = offtime,
+                occupation = occupation,
                 history = history
         ).subscribe({
             callback?.invoke()

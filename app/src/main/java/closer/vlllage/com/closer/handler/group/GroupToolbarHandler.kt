@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.group
 
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,17 +42,24 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, HORIZONTAL, false) {
             override fun measureChild(child: View, widthUsed: Int, heightUsed: Int) {
-                if (adapter.itemCount <= 3)
-                child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
+                if (adapter.itemCount <= 4) {
+                    child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
+                } else {
+                    child.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                }
                 super.measureChild(child, widthUsed, heightUsed)
             }
 
             override fun measureChildWithMargins(child: View, widthUsed: Int, heightUsed: Int) {
-                if (adapter.itemCount <= 3)
-                child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
+                if (adapter.itemCount <= 4) {
+                    child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
+                } else {
+                    child.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                }
                 super.measureChildWithMargins(child, widthUsed, heightUsed)
             }
         }
+
         recyclerView.adapter = adapter
 
         on<DisposableHandler>().add(contentView.subscribe {
@@ -165,7 +173,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if ((event != null || group.physical)) {
+        if (event != null || group.physical) {
             items.add(ToolbarItem(
                     R.string.show_on_map,
                     R.drawable.ic_my_location_black_24dp,
@@ -242,7 +250,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (group.physical || !group.isPublic) {
+        if (group.physical || (!group.hasEvent() && !group.isPublic)) {
             items.add(ToolbarItem(
                     R.string.host_event,
                     R.drawable.ic_event_note_black_24dp,

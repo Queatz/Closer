@@ -9,6 +9,7 @@ class PhoneResult : ModelResult() {
     var status: String? = null
     var introduction: String? = null
     var offtime: String? = null
+    var occupation: String? = null
     var history: String? = null
     var active: Boolean? = null
     var verified: Boolean? = null
@@ -34,6 +35,7 @@ class PhoneResult : ModelResult() {
             phone.status = phoneResult.status
             phone.introduction = phoneResult.introduction
             phone.offtime = phoneResult.offtime
+            phone.occupation = phoneResult.occupation
             phone.history = phoneResult.history
             phone.photo = phoneResult.photo
             phone.verified = phoneResult.verified

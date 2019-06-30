@@ -210,7 +210,7 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
     override fun getItemCount() = groups.size + HEADER_COUNT
 
     override fun getItemPriority(position: Int): Int {
-        return max(0, position - if (on<DistanceHandler>().isUserNearGroup(groups[position - 1])) 100 else 0)
+        return max(0, position - if (on<DistanceHandler>().isPhoneNearGroup(groups[position - 1])) 100 else 0)
     }
 
     private fun bindHeader(holder: HeaderViewHolder) {

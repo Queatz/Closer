@@ -5,14 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
+import closer.vlllage.com.closer.handler.helpers.PhoneDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
 import closer.vlllage.com.closer.handler.helpers.TimeStr
 import closer.vlllage.com.closer.handler.helpers.Val
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Phone
+import com.queatz.on.On
 
 /**
  * Created by jacob on 2/18/18.
@@ -37,7 +37,7 @@ class MapBubbleView constructor(private val on: On) {
 
         if (mapBubble.inProxy) {
             name.visibility = View.VISIBLE
-            name.text = mapBubble.name + "\n" + mapBubble.status
+            name.text = mapBubble.name + on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)
 
             if (info != null) {
                 info.text = on<TimeStr>().pretty((mapBubble.tag as Phone).updated)
@@ -47,7 +47,7 @@ class MapBubbleView constructor(private val on: On) {
                 name.visibility = View.GONE
             } else {
                 name.visibility = View.VISIBLE
-                name.text = mapBubble.name
+                name.text = mapBubble.name + on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)
             }
 
             (view.findViewById<View>(R.id.status) as TextView).text = on<Val>().of(mapBubble.status)

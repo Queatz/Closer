@@ -36,6 +36,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 val nothing = on<ResourcesHandler>().resources.getString(R.string.nothing_here)
                 introductionTextView.text = phone.introduction ?: nothing
                 offtimeTextView.text = phone.offtime ?: nothing
+                occupationTextView.text = phone.occupation ?: nothing
                 historyTextView.text = phone.history ?: nothing
 
                 introductionTextView.setTextColor(if (phone.introduction.isNullOrBlank())
@@ -44,6 +45,11 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     on<ResourcesHandler>().resources.getColor(R.color.textInverse))
 
                 offtimeTextView.setTextColor(if (phone.offtime.isNullOrBlank())
+                    on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
+                else
+                    on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+
+                occupationTextView.setTextColor(if (phone.occupation.isNullOrBlank())
                     on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
                 else
                     on<ResourcesHandler>().resources.getColor(R.color.textInverse))
@@ -105,6 +111,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 actionAddGoal.visible = editable
                 actionAddLifestyle.visible = editable
                 actionEditOfftime.visible = editable
+                actionEditOccupation.visible = editable
                 actionEditHistory.visible = editable
 
                 if (editable) {
@@ -137,6 +144,14 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     actionEditOfftime.setOnClickListener {
                         on<DefaultInput>().show(R.string.offtime_hint, prefill = phone.offtime) {
                             on<AccountHandler>().updateAbout(offtime = it) {
+                                on<RefreshHandler>().refreshPhone(phone.id!!)
+                            }
+                        }
+                    }
+
+                    actionEditOccupation.setOnClickListener {
+                        on<DefaultInput>().show(R.string.occupation_hint, prefill = phone.occupation) {
+                            on<AccountHandler>().updateAbout(occupation = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }
                         }

@@ -10,9 +10,9 @@ class SortHandler constructor(private val on: On) {
     @JvmOverloads
     fun sortGroups(privateFirst: Boolean = true): Comparator<Group> {
         return Comparator { group, groupOther ->
-            if (!on<DistanceHandler>().isUserNearGroup(group) && on<DistanceHandler>().isUserNearGroup(groupOther))
+            if (!on<DistanceHandler>().isPhoneNearGroup(group) && on<DistanceHandler>().isPhoneNearGroup(groupOther))
                 1
-            else if (!on<DistanceHandler>().isUserNearGroup(groupOther) && on<DistanceHandler>().isUserNearGroup(group))
+            else if (!on<DistanceHandler>().isPhoneNearGroup(groupOther) && on<DistanceHandler>().isPhoneNearGroup(group))
                 -1
             else if (privateFirst && group.isPublic && !groupOther.isPublic)
                 1
@@ -42,9 +42,9 @@ class SortHandler constructor(private val on: On) {
                 return@Comparator 0
             }
 
-            return@Comparator if (!on<DistanceHandler>().isUserNearGroup(group) && on<DistanceHandler>().isUserNearGroup(groupOther))
+            return@Comparator if (!on<DistanceHandler>().isPhoneNearGroup(group) && on<DistanceHandler>().isPhoneNearGroup(groupOther))
                 1
-            else if (!on<DistanceHandler>().isUserNearGroup(groupOther) && on<DistanceHandler>().isUserNearGroup(group))
+            else if (!on<DistanceHandler>().isPhoneNearGroup(groupOther) && on<DistanceHandler>().isPhoneNearGroup(group))
                 -1
             else if (group.updated == null || groupOther.updated == null)
                 0

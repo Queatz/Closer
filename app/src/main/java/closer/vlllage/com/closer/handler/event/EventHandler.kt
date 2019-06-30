@@ -7,20 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.api.models.EventResult
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.TaskHandler
 import closer.vlllage.com.closer.handler.TaskType
 import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.bubble.MapBubble
+import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler
-import closer.vlllage.com.closer.handler.helpers.AlertHandler
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
-import closer.vlllage.com.closer.handler.helpers.KeyboardHandler
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
+import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.ui.InterceptableScrollView
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
@@ -89,6 +90,12 @@ class EventHandler constructor(private val on: On) {
                             on<KeyboardHandler>().showKeyboard(viewHolder.eventPrice, false)
                         }
 
+                        if (viewHolder.pinnedMessage.hasFocus()) {
+                            viewHolder.pinnedMessage.clearFocus()
+                            viewHolder.scrollView.requestFocus()
+                            on<KeyboardHandler>().showKeyboard(viewHolder.pinnedMessage, false)
+                        }
+
                         false
                     })
                 }
@@ -126,6 +133,7 @@ class EventHandler constructor(private val on: On) {
                     createNewEvent(viewHolder.isPublicSwitch.isChecked,
                             latLng,
                             viewHolder.eventName.text.toString(),
+                            viewHolder.pinnedMessage.text.toString(),
                             viewHolder.eventPrice.text.toString(),
                             event.startsAt.time,
                             event.endsAt.time,
@@ -155,6 +163,7 @@ class EventHandler constructor(private val on: On) {
     private fun createNewEvent(isPublic: Boolean,
                                latLng: LatLng,
                                name: String,
+                               pinnedMessage: String,
                                price: String,
                                startsAt: Date,
                                endsAt: Date,
@@ -167,7 +176,6 @@ class EventHandler constructor(private val on: On) {
         event.longitude = latLng.longitude
         event.startsAt = startsAt
         event.endsAt = endsAt
-        on<StoreHandler>().store.box(Event::class).put(event)
 
         val group = on<TaskHandler>().activeTask?.group
         on<TaskHandler>().activeTask = null
@@ -177,6 +185,26 @@ class EventHandler constructor(private val on: On) {
                 event.id = id
                 on<GroupMessageAttachmentHandler>().shareEvent(event, group)
                 on<NavigationHandler>().showGroup(group.id!!)
+            }
+
+            if (pinnedMessage.isNotBlank()) {
+                on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().getEvent(id).map { EventResult.from(it) }.subscribe({
+                    val groupMessage = GroupMessage()
+                    groupMessage.text = pinnedMessage
+                    groupMessage.from = on<PersistenceHandler>().phoneId
+                    groupMessage.to = it.groupId
+                    groupMessage.time = Date()
+
+                    val eventGroupId = it.groupId!!
+
+                    on<SyncHandler>().sync(groupMessage) { groupMessageId ->
+                        on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().addPin(groupMessageId, eventGroupId).subscribe({}, {
+                            on<DefaultAlerts>().thatDidntWork()
+                        }))
+                    }
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                }))
             }
         }
         onEventCreatedListener.invoke(event)
@@ -199,6 +227,7 @@ class EventHandler constructor(private val on: On) {
         var dateTextView: TextView = view.dateTextView
         var changeDateButton: View = view.changeDate
         var eventName: EditText = view.name
+        var pinnedMessage: EditText = view.pinnedMessage
         var eventPrice: EditText = view.price
         var postEventInContainer: ViewGroup = view.postEventInContainer
         var postEventIn: TextView = view.postEventIn

@@ -54,8 +54,9 @@ class ApiHandler constructor(private val on: On) {
                     deviceToken: String? = null,
                     introduction: String? = null,
                     offtime: String? = null,
+                    occupation: String? = null,
                     history: String? = null): Single<CreateResult> {
-        return uiThread(api.backend.phoneUpdate(latLng, name, status, active, deviceToken, introduction, offtime, history))
+        return uiThread(api.backend.phoneUpdate(latLng, name, status, active, deviceToken, introduction, offtime, occupation, history))
     }
 
     fun updatePhonePhoto(photoUrl: String): Single<CreateResult> {

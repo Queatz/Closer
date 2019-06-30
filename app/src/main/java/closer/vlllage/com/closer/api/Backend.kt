@@ -39,6 +39,7 @@ interface Backend {
             @Query("deviceToken") pushDeviceToken: String?,
             @Query("introduction") introduction: String?,
             @Query("offtime") offtime: String?,
+            @Query("occupation") occupation: String?,
             @Query("history") history: String?
     ): Single<CreateResult>
 

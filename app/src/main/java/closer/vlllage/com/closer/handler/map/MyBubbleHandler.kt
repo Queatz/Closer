@@ -49,7 +49,10 @@ class MyBubbleHandler constructor(private val on: On) {
     private fun updateLocation(latLng: LatLng) {
         if (myBubble == null) {
             val phone = on<StoreHandler>().store.box(Phone::class).query().equal(Phone_.id, on<PersistenceHandler>().phoneId!!).build().findFirst()
-            myBubble = MapBubble(latLng, on<AccountHandler>().name, on<AccountHandler>().status)
+            myBubble = MapBubble(
+                    latLng,
+                    on<AccountHandler>().name,
+                    on<AccountHandler>().status)
             myBubble!!.isPinned = true
 
             if (phone != null) {
