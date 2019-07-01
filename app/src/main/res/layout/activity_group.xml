@@ -73,6 +73,55 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="888 Friends" />
 
+        <RatingBar style="?android:attr/ratingBarStyleSmall"
+            android:id="@+id/groupRatingAverage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pad"
+            android:layout_marginTop="@dimen/padHalf"
+            app:layout_constraintWidth_default="wrap"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/groupRatingCount"
+            app:layout_constraintTop_toBottomOf="@+id/groupName"
+            app:layout_constraintBottom_toTopOf="@+id/groupDetails"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:stepSize=".5"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="5" />
+
+        <TextView
+            android:id="@+id/groupRatingCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/pad"
+            android:paddingTop="@dimen/padHalf"
+            android:paddingStart="@dimen/padHalf"
+            android:singleLine="true"
+            tools:text="(22 reviews)"
+            android:textColor="@color/text"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintWidth_default="wrap"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toRightOf="@+id/groupRatingAverage"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupName"
+            app:layout_constraintBottom_toTopOf="@+id/groupDetails" />
+
+
         <TextView
             android:id="@+id/groupDetails"
             android:layout_width="0dp"
@@ -96,7 +145,7 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupName"
+            app:layout_constraintTop_toBottomOf="@+id/groupRatingAverage"
             app:layout_constraintBottom_toTopOf="@+id/peopleInGroup" />
 
         <TextView

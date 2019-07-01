@@ -274,4 +274,9 @@
     <string name="review_place">Review %1$s</string>
     <string name="phone_posted_a_review">%1$s posted a review</string>
     <string name="choose_a_rating">Choose a rating</string>
+
+    <plurals name="review_count">
+        <item quantity="one">(%1$s review)</item>
+        <item quantity="other">(%1$s reviews)</item>
+    </plurals>
 </resources>

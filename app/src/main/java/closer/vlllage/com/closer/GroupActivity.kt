@@ -113,6 +113,7 @@ class GroupActivity : CircularRevealActivity() {
 
             onGroupUpdated { group ->
                 setGroupBackground(group)
+                setGroupRating(group)
             }
 
             onContactInfoChanged { redrawContacts(it) }
@@ -244,6 +245,20 @@ class GroupActivity : CircularRevealActivity() {
         } else {
             view.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
         }
+    }
+
+    private fun setGroupRating(group: Group) {
+        val visible = group.ratingAverage != null && group.ratingCount != null
+
+        view.groupRatingAverage.visible = visible
+        view.groupRatingCount.visible = visible
+
+        if (!visible) {
+            return
+        }
+
+        view.groupRatingAverage.rating = group.ratingAverage!!.toFloat()
+        view.groupRatingCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count, group.ratingCount!!, group.ratingCount)
     }
 
     private fun setGroupBackground(group: Group) {

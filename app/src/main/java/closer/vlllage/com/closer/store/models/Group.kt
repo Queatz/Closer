@@ -6,6 +6,8 @@ import io.objectbox.annotation.Entity
 class Group : BaseObject() {
     var name: String? = null
     var about: String? = null
+    var ratingAverage: Double? = null
+    var ratingCount: Int? = null
     var isPublic: Boolean = false
     var hub: Boolean = false
     var physical: Boolean = false
@@ -16,6 +18,5 @@ class Group : BaseObject() {
     var photo: String? = null
 
     fun hasEvent() = eventId != null
-
     fun hasPhone() = phoneId != null
 }

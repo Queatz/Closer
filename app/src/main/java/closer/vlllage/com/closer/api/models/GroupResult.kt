@@ -13,6 +13,8 @@ class GroupResult : ModelResult() {
     var hub: Boolean? = null
     var eventId: String? = null
     var phoneId: String? = null
+    var ratingAverage: Double? = null
+    var ratingCount: Int? = null
     var geo: List<Double>? = null
     private val photo: String? = null
 
@@ -29,6 +31,8 @@ class GroupResult : ModelResult() {
             group.name = groupResult.name
             group.updated = groupResult.updated
             group.about = groupResult.about
+            group.ratingAverage = groupResult.ratingAverage
+            group.ratingCount = groupResult.ratingCount
             group.isPublic = TRUE == groupResult.isPublic
             group.physical = TRUE == groupResult.physical
             group.hub = TRUE == groupResult.hub

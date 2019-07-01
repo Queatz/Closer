@@ -7,6 +7,8 @@ class GroupViewHolder(rootView: View) {
     val peopleInGroup = rootView.peopleInGroup!!
     val groupName = rootView.groupName!!
     val groupAbout = rootView.groupAbout!!
+    val groupRatingAverage = rootView.groupRatingAverage!!
+    val groupRatingCount = rootView.groupRatingCount!!
     val groupDetails = rootView.groupDetails!!
     val eventToolbar = rootView.eventToolbar!!
     val scopeIndicatorButton = rootView.scopeIndicatorButton!!
