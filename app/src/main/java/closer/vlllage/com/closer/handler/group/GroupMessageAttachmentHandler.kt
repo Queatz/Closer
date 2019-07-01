@@ -4,12 +4,12 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.JsonHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
+import com.queatz.on.On
 import java.util.*
 
 class GroupMessageAttachmentHandler constructor(private val on: On) {
@@ -52,13 +52,6 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
         val jsonObject = JsonObject()
         jsonObject.add("photo", JsonPrimitive(photoUrl))
         saveMessageWithAttachment(groupId, null, jsonObject)
-        return true
-    }
-
-    fun sharePhoto(photoUrl: String, latLng: LatLng): Boolean {
-        val jsonObject = JsonObject()
-        jsonObject.add("photo", JsonPrimitive(photoUrl))
-        saveMessageWithAttachment(null, latLng, jsonObject)
         return true
     }
 
@@ -113,5 +106,14 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
                 .equal(GroupContact_.groupId, group.id!!)
                 .build().findFirst()
 
+    }
+
+    fun postReview(groupId: String, rating: Int, review: String) {
+        val jsonObject = JsonObject()
+        val action = JsonObject()
+        action.add("rating", JsonPrimitive(rating))
+        action.add("comment", JsonPrimitive(review))
+        jsonObject.add("review", action)
+        saveMessageWithAttachment(groupId, null, jsonObject)
     }
 }

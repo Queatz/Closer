@@ -45,6 +45,15 @@
             android:textStyle="bold"
             tools:text="Stella" />
 
+        <RatingBar style="?android:attr/ratingBarStyleSmall"
+            android:id="@+id/rating"
+            android:layout_marginTop="@dimen/padHalf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stepSize="1"
+            android:isIndicator="true"
+            android:rating="5" />
+
         <ImageView
             android:id="@+id/photo"
             android:layout_width="wrap_content"

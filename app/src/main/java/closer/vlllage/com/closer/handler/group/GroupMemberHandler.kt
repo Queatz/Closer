@@ -105,7 +105,7 @@ class GroupMemberHandler constructor(private val on: On) {
                             layoutResId = R.layout.create_public_group_modal
                             textViewId = R.id.input
                             onTextViewSubmitCallback = { about -> on<PhysicalGroupUpgradeHandler>().setAbout(group, about) { updateGroup -> } }
-                            onAfterViewCreated = { alert, view -> view.findViewById<EditText>(alert.textViewId!!).setText(group.about!!) }
+                            onAfterViewCreated = { alert, view -> view.findViewById<EditText>(alert.textViewId!!).setText(group.about ?: "") }
                             positiveButton = on<ResourcesHandler>().resources.getString(R.string.edit_about_group)
                             show()
                         }

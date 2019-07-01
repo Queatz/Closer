@@ -65,6 +65,38 @@ class MessageDisplay constructor(private val on: On) {
         holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
     }
 
+    private fun displayReview(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+        holder.eventMessage.visibility = View.GONE
+        holder.messageLayout.visibility = View.VISIBLE
+
+        val phone = getPhone(groupMessage.from)
+        val contactName = on<NameHandler>().getName(phone)
+
+        val review = jsonObject.get("review").asJsonObject
+        holder.name.visibility = View.VISIBLE
+        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_posted_a_review, contactName)
+        holder.time.visibility = View.VISIBLE
+        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+
+        val rating = review.get("rating").asFloat
+        val comment = review.get("comment").asString
+
+        if (on<Val>().isEmpty(comment)) {
+            holder.message.visibility = View.GONE
+        } else {
+            holder.message.visibility = View.VISIBLE
+            holder.message.gravity = Gravity.START
+            holder.message.text = comment
+        }
+
+        holder.rating.visibility = View.VISIBLE
+        holder.rating.rating = rating
+
+        holder.action.visibility = View.VISIBLE
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.reply)
+        holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
+    }
+
     private fun displayGroupMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
         holder.eventMessage.visibility = View.GONE
         holder.messageLayout.visibility = View.VISIBLE
@@ -228,6 +260,7 @@ class MessageDisplay constructor(private val on: On) {
                 val jsonObject = on<JsonHandler>().from(groupMessage.attachment!!, JsonObject::class.java)
                 when {
                     jsonObject.has("action") -> displayAction(holder, jsonObject, groupMessage)
+                    jsonObject.has("review") -> displayReview(holder, jsonObject, groupMessage)
                     jsonObject.has("message") -> displayMessage(holder, jsonObject, groupMessage)
                     jsonObject.has("event") -> displayEvent(holder, jsonObject, groupMessage, onEventClickListener)
                     jsonObject.has("group") -> displayGroup(holder, jsonObject, groupMessage, onGroupClickListener)

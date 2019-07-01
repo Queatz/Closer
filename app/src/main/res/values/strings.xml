@@ -13,7 +13,6 @@
     <string name="your_name_here">Your name here</string>
     <string name="set_name">Set name</string>
     <string name="add_a_name">Add a name…</string>
-
     <string name="notification_channel" translatable="false">notifications</string>
     <string name="message_not_sent">Couldn\'t send message</string>
     <string name="network_down">Network unavailable</string>
@@ -270,4 +269,9 @@
     <string name="edit_your_occupation">Edit your occupation(s)</string>
     <string name="at">at</string>
     <string name="near">near</string>
+    <string name="post_review">Post review</string>
+    <string name="write_your_review">How was your experience?</string>
+    <string name="review_place">Review %1$s</string>
+    <string name="phone_posted_a_review">%1$s posted a review</string>
+    <string name="choose_a_rating">Choose a rating</string>
 </resources>

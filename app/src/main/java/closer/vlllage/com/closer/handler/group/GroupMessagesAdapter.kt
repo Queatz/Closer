@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,6 +76,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         }
 
         holder.photo.visibility = View.GONE
+        holder.rating.visibility = View.GONE
 
         holder.itemView.setOnClickListener {
             if (onMessageClickListener != null) {
@@ -243,6 +245,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var time: TextView
         internal var group: TextView
         internal var photo: ImageView
+        internal var rating: RatingBar
         internal var pinnedIndicator: ImageView
         internal var messageActionLayout: MaxSizeFrameLayout
         internal var messageActionReply: TextView
@@ -264,6 +267,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             time = itemView.findViewById(R.id.time)
             group = itemView.findViewById(R.id.group)
             photo = itemView.findViewById(R.id.photo)
+            rating = itemView.findViewById(R.id.rating)
             pinnedIndicator = itemView.findViewById(R.id.pinnedIndicator)
             reactionsRecyclerView = itemView.findViewById(R.id.reactionsRecyclerView)
             messageActionLayout = itemView.findViewById(R.id.messageActionLayout)

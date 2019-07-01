@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,26 +39,7 @@ class GroupToolbarHandler constructor(private val on: On) {
         this.recyclerView = recyclerView
         adapter = ToolbarAdapter(on, onToolbarItemSelected)
 
-        recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, HORIZONTAL, false) {
-            override fun measureChild(child: View, widthUsed: Int, heightUsed: Int) {
-                if (adapter.itemCount <= 4) {
-                    child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
-                } else {
-                    child.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
-                }
-                super.measureChild(child, widthUsed, heightUsed)
-            }
-
-            override fun measureChildWithMargins(child: View, widthUsed: Int, heightUsed: Int) {
-                if (adapter.itemCount <= 4) {
-                    child.layoutParams.width = recyclerView.measuredWidth / adapter.itemCount
-                } else {
-                    child.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
-                }
-                super.measureChildWithMargins(child, widthUsed, heightUsed)
-            }
-        }
-
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, RecyclerView.HORIZONTAL, false)
         recyclerView.adapter = adapter
 
         on<DisposableHandler>().add(contentView.subscribe {
@@ -135,6 +115,19 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
+                    R.string.show_on_map,
+                    R.drawable.ic_my_location_black_24dp,
+                    View.OnClickListener {
+                        val runnable = { on<MapActivityHandler>().showPhoneOnMap(group.phoneId) }
+                        if (on<ActivityHandler>().activity is CircularRevealActivity) {
+                            (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)
+                        } else {
+                            runnable.invoke()
+                        }
+                    }
+            ))
+
+            items.add(ToolbarItem(
                     R.string.get_directions,
                     R.drawable.ic_directions_black_24dp,
                     View.OnClickListener {
@@ -148,19 +141,6 @@ class GroupToolbarHandler constructor(private val on: On) {
                         }, {
                             on<DefaultAlerts>().thatDidntWork()
                         })
-                    }
-            ))
-
-            items.add(ToolbarItem(
-                    R.string.show_on_map,
-                    R.drawable.ic_my_location_black_24dp,
-                    View.OnClickListener {
-                        val runnable = { on<MapActivityHandler>().showPhoneOnMap(group.phoneId) }
-                        if (on<ActivityHandler>().activity is CircularRevealActivity) {
-                            (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)
-                        } else {
-                            runnable.invoke()
-                        }
                     }
             ))
         }
@@ -266,6 +246,16 @@ class GroupToolbarHandler constructor(private val on: On) {
                             on<TaskHandler>().activeTask = TaskDefinition(TaskType.CREATE_EVENT_IN_GROUP, group)
                             on<NavigationHandler>().showMap(on<ResourcesHandler>().resources.getString(R.string.create_event_in_group_instructions))
                         }
+                    }
+            ))
+        }
+
+        if (group.physical) {
+            items.add(ToolbarItem(
+                    R.string.post_review,
+                    R.drawable.ic_star_half_black_24dp,
+                    View.OnClickListener {
+                        on<ReviewHandler>().postReview(group)
                     }
             ))
         }

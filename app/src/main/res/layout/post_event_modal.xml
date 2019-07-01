@@ -42,7 +42,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
-                android:tint="@color/red"
+                android:tint="@color/textHint"
                 android:background="?selectableItemBackground"
                 android:src="@drawable/ic_close_black_24dp"/>
 
