@@ -7,22 +7,16 @@ import com.queatz.on.On
 
 class MapViewHandler constructor(private val on: On) {
 
-    private var mapSlideFragment: MapSlideFragment? = null
-    var onRequestMapOnScreenListener: (() -> Unit)? = null
+    private val mapSlideFragment by lazy { MapSlideFragment() }
+    lateinit var onRequestMapOnScreenListener: (() -> Unit)
 
-    val mapFragment: Fragment
-        get() {
-            if (mapSlideFragment == null) {
-                mapSlideFragment = MapSlideFragment()
-            }
-            return mapSlideFragment!!
-        }
+    val mapFragment: Fragment = mapSlideFragment
 
     fun onBackPressed(callback: (Boolean) -> Unit) {
-        mapSlideFragment?.post(Runnable { callback.invoke(mapSlideFragment!!.onBackPressed()) })
+        mapSlideFragment.post(Runnable { callback.invoke(mapSlideFragment.onBackPressed()) })
     }
 
     fun handleIntent(intent: Intent) {
-        mapSlideFragment?.post(Runnable { mapSlideFragment!!.handleIntent(intent, onRequestMapOnScreenListener) })
+        mapSlideFragment.post(Runnable { mapSlideFragment.handleIntent(intent, onRequestMapOnScreenListener) })
     }
 }

@@ -232,7 +232,7 @@
     <string name="messages">Messages</string>
     <string name="groups">Groups</string>
     <string name="photos">Photos</string>
-    <string name="huaman_found">You found a human!</string>
+    <string name="human_found">You found a human!</string>
     <string name="continue_text">Continue</string>
     <string name="invite_to">Invite to group…</string>
     <string name="activity">Activity</string>
@@ -266,10 +266,10 @@
     <string name="enter_welcome_message">Welcome message (optional)</string>
     <string name="occupation_hint">What are your primary occupation(s)?</string>
     <string name="occupations">Occupation(s)</string>
-    <string name="edit_your_occupation">Edit your occupation(s)</string>
+    <string name="edit_your_occupation">Edit your occupations</string>
     <string name="at">at</string>
     <string name="near">near</string>
-    <string name="post_review">Post review</string>
+    <string name="review">Review</string>
     <string name="write_your_review">How was your experience?</string>
     <string name="review_place">Review %1$s</string>
     <string name="phone_posted_a_review">%1$s posted a review</string>

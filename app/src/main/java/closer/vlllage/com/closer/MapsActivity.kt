@@ -56,15 +56,12 @@ class MapsActivity : PoolActivity() {
             when (intent.getStringExtra(EXTRA_SCREEN)) {
                 EXTRA_SCREEN_PERSONAL -> {
                     slideScreen.slide = POSITION_SCREEN_PERSONAL
-                    return
                 }
                 EXTRA_SCREEN_MAP -> {
                     slideScreen.slide = POSITION_SCREEN_MAP
-                    return
                 }
                 EXTRA_SCREEN_SETTINGS -> {
                     slideScreen.slide = POSITION_SCREEN_SETTINGS
-                    return
                 }
             }
         }

@@ -166,31 +166,6 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (isEventCancelable(event)) {
-            items.add(ToolbarItem(
-                    R.string.cancel,
-                    R.drawable.ic_close_black_24dp,
-                    View.OnClickListener { v ->
-                        on<AlertHandler>().make().apply {
-                            title = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
-                            message = on<ResourcesHandler>().resources.getString(R.string.event_will_be_cancelled, event!!.name)
-                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
-                            positiveButtonCallback = { result ->
-                                on<DisposableHandler>().add(on<ApiHandler>().cancelEvent(event.id!!).subscribe({ successResult ->
-                                    if (successResult.success) {
-                                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.event_cancelled, event.name))
-                                        on<RefreshHandler>().refreshEvents(LatLng(event.latitude!!, event.longitude!!))
-                                    } else {
-                                        on<DefaultAlerts>().thatDidntWork()
-                                    }
-                                }, { on<DefaultAlerts>().thatDidntWork() }))
-                            }
-                            show()
-                        }
-                    }
-            ))
-        }
-
         if (group.physical && isEmptyOrWhitespace(group.name)) {
             items.add(ToolbarItem(
                     R.string.set_name,
@@ -230,6 +205,31 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
+        if (isEventCancelable(event)) {
+            items.add(ToolbarItem(
+                    R.string.cancel,
+                    R.drawable.ic_close_black_24dp,
+                    View.OnClickListener { v ->
+                        on<AlertHandler>().make().apply {
+                            title = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
+                            message = on<ResourcesHandler>().resources.getString(R.string.event_will_be_cancelled, event!!.name)
+                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
+                            positiveButtonCallback = { result ->
+                                on<DisposableHandler>().add(on<ApiHandler>().cancelEvent(event.id!!).subscribe({ successResult ->
+                                    if (successResult.success) {
+                                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.event_cancelled, event.name))
+                                        on<RefreshHandler>().refreshEvents(LatLng(event.latitude!!, event.longitude!!))
+                                    } else {
+                                        on<DefaultAlerts>().thatDidntWork()
+                                    }
+                                }, { on<DefaultAlerts>().thatDidntWork() }))
+                            }
+                            show()
+                        }
+                    }
+            ))
+        }
+
         if (group.physical || (!group.hasEvent() && !group.isPublic)) {
             items.add(ToolbarItem(
                     R.string.host_event,
@@ -252,7 +252,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (group.physical) {
             items.add(ToolbarItem(
-                    R.string.post_review,
+                    R.string.review,
                     R.drawable.ic_star_half_black_24dp,
                     View.OnClickListener {
                         on<ReviewHandler>().postReview(group)
