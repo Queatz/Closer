@@ -281,13 +281,75 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/meetLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_goneMarginBottom="@dimen/padDouble"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@+id/closeButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:elevation="@dimen/elevationSmall"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/contentFrame">
+
+            <TextView
+                android:id="@+id/meetPrompt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/meetFalse"
+                app:layout_constraintEnd_toStartOf="@id/meetTrue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:gravity="center"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="Want to meet Allen?"
+                android:textColor="@color/textInverse"/>
+
+            <Button style="?android:borderlessButtonStyle"
+                android:id="@+id/meetTrue"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/yes"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:drawableEnd="@drawable/ic_check_black_24dp"
+                android:drawablePadding="@dimen/pad"
+                android:background="?selectableItemBackgroundBorderless"
+                android:textColor="@color/green700"
+                android:drawableTint="@color/green700"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <Button style="?android:borderlessButtonStyle"
+                android:id="@+id/meetFalse"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/skip"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:drawableStart="@drawable/ic_close_black_24dp"
+                android:drawablePadding="@dimen/pad"
+                android:background="?selectableItemBackgroundBorderless"
+                android:textColor="@color/red"
+                android:drawableTint="@color/red"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <FrameLayout
             android:id="@+id/contentFrame"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_goneMarginBottom="@dimen/pad"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintBottom_toTopOf="@+id/closeButton"
+            app:layout_constraintBottom_toTopOf="@+id/meetLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eventToolbar" />

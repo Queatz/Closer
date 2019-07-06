@@ -13,10 +13,13 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.map.MeetHandler
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
+import kotlinx.android.synthetic.main.activity_group.view.*
 import org.greenrobot.essentials.StringUtils
 
 class GroupActivity : CircularRevealActivity() {
@@ -212,6 +215,19 @@ class GroupActivity : CircularRevealActivity() {
                 } else {
                     view.profilePhoto.visible = false
                 }
+
+                if (on<MatchHandler>().active) {
+                    view.meetLayout.visible = true
+                    view.meetLayout.meetPrompt.text = on<ResourcesHandler>().resources.getString(R.string.want_to_meet_phone, on<NameHandler>().getName(phone))
+                    view.meetLayout.meetTrue.setOnClickListener {
+                        on<MeetHandler>().meet(phone.id!!, true)
+                        if (!on<MeetHandler>().next()) finish()
+                    }
+                    view.meetLayout.meetFalse.setOnClickListener {
+                        on<MeetHandler>().meet(phone.id!!, false)
+                        if (!on<MeetHandler>().next()) finish()
+                    }
+                }
             }
         }
     }
@@ -319,6 +335,10 @@ class GroupActivity : CircularRevealActivity() {
         if (intent.hasExtra(EXTRA_RESPOND)) {
             on<GroupMessagesHandler>().setIsRespond()
         }
+
+        if (intent.hasExtra(EXTRA_MEET)) {
+            on<MatchHandler>().activate()
+        }
     }
 
     override fun onResume() {
@@ -350,5 +370,6 @@ class GroupActivity : CircularRevealActivity() {
         const val EXTRA_GROUP_ID = "groupId"
         const val EXTRA_PHONE_ID = "phoneId"
         const val EXTRA_RESPOND = "respond"
+        const val EXTRA_MEET = "meet"
     }
 }

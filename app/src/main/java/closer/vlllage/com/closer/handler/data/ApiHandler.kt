@@ -111,6 +111,14 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.addLifestyle(lifestyleName, remove))
     }
 
+    fun getNewPhonesToMeetNear(latLng: LatLng): Single<MeetResult> {
+        return uiThread(api.backend.getNewPhonesToMeetNear(on<LatLngStr>().from(latLng)))
+    }
+
+    fun setMeet(phoneId: String, meet: Boolean): Single<SuccessResult> {
+        return uiThread(api.backend.setMeet(phoneId, meet))
+    }
+
     fun sendGroupMessage(groupId: String, text: String?, attachment: String?): Single<CreateResult> {
         return uiThread(api.backend.sendGroupMessage(groupId, text, attachment))
     }

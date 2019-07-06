@@ -4,6 +4,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_group.view.*
 
 class GroupViewHolder(rootView: View) {
+    val meetLayout = rootView.meetLayout!!
     val peopleInGroup = rootView.peopleInGroup!!
     val groupName = rootView.groupName!!
     val groupAbout = rootView.groupAbout!!

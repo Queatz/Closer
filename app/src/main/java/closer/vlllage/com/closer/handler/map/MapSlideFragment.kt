@@ -119,7 +119,7 @@ class MapSlideFragment : PoolFragment() {
         on<MapHandler>().onMapIdleListener = { latLng ->
             on<DisposableHandler>().add(on<DataHandler>().run {
                 getPhonesNear(latLng)
-                        .map<List<MapBubble>> { mapBubbleFrom(it) }.subscribe({ mapBubbles -> on<BubbleHandler>().replace(mapBubbles) }, { networkError(it) })
+                        .map { mapBubbleFrom(it) }.subscribe({ mapBubbles -> on<BubbleHandler>().replace(mapBubbles) }, { networkError(it) })
             })
 
             on<DisposableHandler>().add(on<ApiHandler>().getSuggestionsNear(latLng).subscribe({ suggestions -> on<SuggestionHandler>().loadAll(suggestions) }, { networkError(it) }))
@@ -128,6 +128,8 @@ class MapSlideFragment : PoolFragment() {
             on<RefreshHandler>().refreshPhysicalGroups(latLng)
 
             on<MapZoomHandler>().update(on<MapHandler>().zoom)
+
+            on<MeetHandler>().setLocation(latLng)
         }
         on<MapHandler>().attach(childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment)
         on<MyBubbleHandler>().start()
@@ -160,6 +162,11 @@ class MapSlideFragment : PoolFragment() {
 
         on<EventBubbleHandler>().attach()
         on<FeedHandler>().attach(view.findViewById(R.id.feed))
+
+        on<DisposableHandler>().add(on<MeetHandler>().total
+                .subscribe {
+            on<MyGroupsLayoutActionsHandler>().showMeetPeople(it > 0)
+        })
 
         if (pendingRunnable != null) {
             pendingRunnable!!.run()

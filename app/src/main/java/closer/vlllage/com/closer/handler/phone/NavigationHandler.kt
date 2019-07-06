@@ -9,8 +9,8 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.queatz.on.On
 
 class NavigationHandler constructor(private val on: On) {
-    fun showProfile(phoneId: String, view: View? = null) {
-        val runnable = { on<GroupActivityTransitionHandler>().showGroupForPhone(view, phoneId) }
+    fun showProfile(phoneId: String, view: View? = null, meet: Boolean = false) {
+        val runnable = { on<GroupActivityTransitionHandler>().showGroupForPhone(view, phoneId, meet) }
 
         if (on<ActivityHandler>().activity is CircularRevealActivity) {
             (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)

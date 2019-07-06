@@ -70,6 +70,14 @@ interface Backend {
     @POST("verify")
     fun sendVerificationCode(@Query("verify-code") verificationCode: String): Single<VerifiedResult>
 
+    // Meet
+
+    @GET("meet")
+    fun getNewPhonesToMeetNear(@Query("geo") geo: String): Single<MeetResult>
+
+    @POST("meet")
+    fun setMeet(@Query("phone") phone: String, @Query("meet") meet: Boolean): Single<SuccessResult>
+
     // Goal
 
     @POST("goal")

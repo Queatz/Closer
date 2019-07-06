@@ -274,6 +274,9 @@
     <string name="review_place">Review %1$s</string>
     <string name="phone_posted_a_review">%1$s posted a review</string>
     <string name="choose_a_rating">Choose a rating</string>
+    <string name="x_new_people_to_meet">%1$s new people to meet here</string>
+    <string name="want_to_meet_phone">Want to meet %1$s?</string>
+    <string name="yes">Yeah</string>
 
     <plurals name="review_count">
         <item quantity="one">(%1$s review)</item>

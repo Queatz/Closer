@@ -1,57 +1,44 @@
 
-ETC
-===
+MEET ACTION PLAN
 
- [ ] on<ProximityHandler>().findClosestPhysicalGroup(latLng): Group?
- [ ] on<ProximityHandler>().isAt(latLng, latLng): boolean
+ [X] Backend
+    [X] MeetHandler
+        [X] Meet (object model)
+            {
+                from: phoneId
+                to: phoneId
+                meet: true
+                processed: false
+            }
+        [X] GET /meet?geo=l,l
+            [X] Return phones active in last 7 days with no match record
+                { total: 14234, phones: [{phone}, ...20 ] }
+                ( ordered by last active )
+        [X] POST /meet?phone={id}&meet=true/false
+            Creates Meet object
+            Return { success: true }
+    [X] CRON
+        [X] Setup cron to run at 6PM CST
+        [X] Query match overlaps up to 5 where { processed: false, meet: true }
+        [X] Create groups named i.e. "Jenny, Jessica, Marla"
+            [X] Invite phones to created group
+            [X] Send message (same as joins) to group "You 4 all wanted to meet each other"
+        [X] Mark all meets as { processed: true }
+    [X] Tests
 
-RATE
-====
-
- [ ] Review button in group toolbar
- [ ] New message attachment type 'rating' { stars: 5 }
- [ ] Creates Rating record
- [ ] Updates avg. rating of group
- [ ] Group exposes avg rating
-
-
-MEET
-====
-
- [ ] Add ( 46 People Nearby ) button in My Groups
- [ ] POST /meet?phone=<value>&want=yes
- [ ] CRON at 5PM to find NEW matches
-
-
-ABOUT
-=====
-
-Updated endpoints:
-
- [X] POST /phone?introduction=<value>
- [X] POST /phone?history=<value>
- [X] POST /phone?offtime=<value>
-
- [X] POST /lifestyles?name=<value>
- [X] POST /lifestyles?name=<value>&remove=true
-
- [X] POST /goals?name=<value>
- [X] POST /goals?name=<value>&remove=true
-
- [X] Updated phone mode:
-
-        phone {
-            ...
-
-            introduction: '',
-            relationships: [
-                {lifestyle},
-                {lifestyle},
-                {goal},
-                {goal},
-                {goal},
-            ],
-            history: '',
-            offtime: ''
-        }
+ [ ] Frontend
+    [X] Add call to Backend GET /meet
+    [X] Call GET /meet onMapIdle
+    [X] MeetHandler
+        .setPhones(...)
+        .meet(phoneId, false) -> POST /meet
+        .nextPhone(): phoneId
+    [X] Add "6 new people to meet" to MyGroupsLayout
+        [X] Tap opens 1st profile
+            [X] EXTRA_MEET=true
+            [X] Show meet widget at bottom
+                [X] Tap Yes/No MeetHandler.meet()
+                    [X] Close profile group
+                    [X] MeetHandler.nextPhone()
+                    [X] Open next group
 

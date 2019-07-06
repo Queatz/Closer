@@ -37,10 +37,11 @@ class MyGroupsAdapter(on: On) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewH
             groupName.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 groupName.compoundDrawableTintList = ColorStateList.valueOf(
-                        on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)
+                        on<ResourcesHandler>().resources.getColor(actionBarButton.textColorRes, on<ActivityHandler>().activity!!.theme)
                 )
             }
             groupName.text = actionBarButton.name!!
+            groupName.setTextColor(on<ResourcesHandler>().resources.getColor(actionBarButton.textColorRes))
             groupName.setOnClickListener(actionBarButton.onClick!!)
             groupName.setOnLongClickListener { view ->
                 if (actionBarButton.onLongClick != null) {
@@ -52,6 +53,8 @@ class MyGroupsAdapter(on: On) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewH
             }
             return
         }
+
+        groupName.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.text))
 
         position -= actions.size
         val isEndActionButton = position >= groups.size
