@@ -25,7 +25,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     private val meetPeopleHandle = object : GroupActionBarButtonHandle {
         override fun set() {
-            val action = on<ResourcesHandler>().resources.getString(R.string.x_new_people_to_meet, on<MeetHandler>().total.value.toString())
+            val action = on<ResourcesHandler>().resources.getQuantityString(R.plurals.x_new_people_to_meet, on<MeetHandler>().total.value!!, on<MeetHandler>().total.value.toString())
             meetPeopleButton = GroupActionBarButton(action, View.OnClickListener { on<MeetHandler>().next() },
                     backgroundDrawableRes = R.drawable.clickable_white_rounded,
                     textColorRes = R.color.textInverse).also {
