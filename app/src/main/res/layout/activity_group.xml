@@ -269,31 +269,30 @@
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:orientation="horizontal" />
 
-        <ImageButton
-            android:id="@+id/closeButton"
-            style="@style/Widget.AppCompat.Light.ActionButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/close_messages"
-            android:src="@drawable/ic_expand_more_black_24dp"
-            android:tint="@color/text"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <FrameLayout
+            android:id="@+id/contentFrame"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="1"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@+id/meetLayout"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/eventToolbar" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/meetLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_goneMarginBottom="@dimen/padDouble"
+            android:layout_margin="@dimen/pad"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintBottom_toTopOf="@+id/closeButton"
+            app:layout_constraintBottom_toTopOf="@+id/lowerSpacer"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:visibility="gone"
             tools:visibility="visible"
-            android:elevation="@dimen/elevationSmall"
-            android:background="@color/white"
+            android:elevation="@dimen/elevation"
+            android:background="@drawable/rounded_white_bkg"
             app:layout_constraintTop_toBottomOf="@+id/contentFrame">
 
             <TextView
@@ -306,6 +305,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:gravity="center"
                 android:textStyle="bold"
+                android:paddingStart="@dimen/pad"
+                android:paddingEnd="@dimen/pad"
+                android:paddingTop="@dimen/padDouble"
+                android:paddingBottom="@dimen/padDouble"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="Want to meet Allen?"
                 android:textColor="@color/textInverse"/>
@@ -330,7 +333,7 @@
                 android:id="@+id/meetFalse"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/skip"
+                android:text="@string/pass"
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
                 android:drawableStart="@drawable/ic_close_black_24dp"
@@ -344,15 +347,30 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
-            android:id="@+id/contentFrame"
-            android:layout_width="0dp"
+        <View
+            android:id="@+id/lowerSpacer"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintBottom_toTopOf="@+id/meetLayout"
+            app:layout_goneMarginBottom="@dimen/pad"
+            app:layout_constraintBottom_toTopOf="@id/closeButton"
+            app:layout_constraintTop_toBottomOf="@id/meetLayout"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventToolbar" />
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <ImageButton
+            android:id="@+id/closeButton"
+            style="@style/Widget.AppCompat.Light.ActionButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/close_messages"
+            android:src="@drawable/ic_expand_more_black_24dp"
+            android:tint="@color/text"
+            tools:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/lowerSpacer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
