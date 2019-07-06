@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.GoalAdapter
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.pool.PoolActivityFragment
 import kotlinx.android.synthetic.main.fragment_phone_about.*
@@ -78,7 +79,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 }
 
                 goalAdapter.type = on<ResourcesHandler>().resources.getString(R.string.goal)
-                goalAdapter.name = phone.name!!
+                goalAdapter.name = on<NameHandler>().getName(phone)
                 goalAdapter.items = phone.goals?.toMutableList() ?: mutableListOf()
                 goalAdapter.isRemove = editable
 
@@ -99,7 +100,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 }
 
                 lifestyleAdapter.type = on<ResourcesHandler>().resources.getString(R.string.lifestyle)
-                lifestyleAdapter.name = phone.name!!
+                lifestyleAdapter.name = on<NameHandler>().getName(phone)
                 lifestyleAdapter.items = phone.lifestyles?.toMutableList() ?: mutableListOf()
                 lifestyleAdapter.isRemove = editable
 

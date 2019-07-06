@@ -256,7 +256,7 @@ class GroupActivity : CircularRevealActivity() {
 
         if (group.hasPhone()) {
             on<DisposableHandler>().add(on<DataHandler>().getPhone(group.phoneId!!).subscribe(
-                    { phone -> view.groupName.text = phone.name }, { on<DefaultAlerts>().thatDidntWork() }
+                    { view.groupName.text = on<NameHandler>().getName(it) }, { on<DefaultAlerts>().thatDidntWork() }
             ))
         } else {
             view.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))

@@ -16,7 +16,10 @@ import io.reactivex.subjects.PublishSubject
 
 class GroupHandler constructor(private val on: On) {
 
-    private val connectionError = { _: Throwable -> on<ConnectionErrorHandler>().notifyConnectionError() }
+    private val connectionError = { throwable: Throwable ->
+        throwable.printStackTrace()
+        on<ConnectionErrorHandler>().notifyConnectionError()
+    }
 
     private val disposableGroup = on<DisposableHandler>().group()
 
