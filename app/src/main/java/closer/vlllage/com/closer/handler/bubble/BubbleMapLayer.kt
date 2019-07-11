@@ -142,8 +142,8 @@ class BubbleMapLayer {
             val value = animation.animatedFraction
 
             mapBubble.latLng = LatLng(
-                    sourceLatLng.latitude * (1 - value) + targetLatLng.latitude * value,
-                    sourceLatLng.longitude * (1 - value) + targetLatLng.longitude * value
+                    sourceLatLng.latitude * (1.0 - value.toDouble()) + targetLatLng.latitude * value.toDouble(),
+                    sourceLatLng.longitude * (1.0 - value.toDouble()) + targetLatLng.longitude * value.toDouble()
             )
             update(mapBubble)
         }
