@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/home/jacob/Downloads/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_check_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/home/jacob/Downloads/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_chat_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +28,11 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_check_black_24dp" />
+                            <entry key="height" value="18" />
+                            <entry key="outputName" value="ic_chat_black_18dp" />
+                            <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="$PROJECT_DIR$/wip/drawing-1-2-3.svg" />
+                            <entry key="width" value="18" />
                           </map>
                         </option>
                       </PersistentState>

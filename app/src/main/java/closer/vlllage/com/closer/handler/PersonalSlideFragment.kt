@@ -22,7 +22,6 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMember
 import closer.vlllage.com.closer.store.models.GroupMember_
 import closer.vlllage.com.closer.store.models.Group_
-import closer.vlllage.com.closer.ui.Animate
 import io.objectbox.android.AndroidScheduler
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_personal.*
@@ -67,11 +66,8 @@ class PersonalSlideFragment : PoolFragment() {
                     }
                 })
 
-        updateLocationInfo()
-
         shareYourLocationSwitch.setOnCheckedChangeListener { switchView, isChecked ->
             on<AccountHandler>().updateActive(isChecked)
-            updateLocationInfo()
         }
 
         shareYourLocationSwitch.isChecked = on<AccountHandler>().active
@@ -127,10 +123,6 @@ class PersonalSlideFragment : PoolFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.activity_personal, container, false)
-    }
-
-    private fun updateLocationInfo() {
-        on<Animate>().alpha(currentStatus, shareYourLocationSwitch.isChecked)
     }
 
 }

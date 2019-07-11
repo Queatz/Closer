@@ -84,7 +84,7 @@ class MapBubbleProxyAdapter(on: On,
                                 .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
                                 .into(holder.photo)
                     } else {
-                        holder.photo.setImageResource(R.drawable.ic_wifi_black_24dp)
+                        holder.photo.setImageResource(R.drawable.ic_chat_black_24dp)
                         holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
                     }
                 }

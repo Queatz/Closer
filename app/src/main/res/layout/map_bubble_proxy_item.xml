@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        android:src="@drawable/ic_wifi_black_24dp"
+        android:src="@drawable/ic_chat_black_24dp"
         android:scaleType="centerCrop"
         android:layout_margin="@dimen/pad"
         android:tint="@color/white"/>

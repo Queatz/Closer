@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ImageHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Group
+import com.queatz.on.On
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 class MapBubblePhysicalGroupView constructor(private val on: On) {
@@ -40,7 +39,7 @@ class MapBubblePhysicalGroupView constructor(private val on: On) {
                         .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
                         .into(photo)
             } else {
-                photo.setImageResource(R.drawable.ic_wifi_black_24dp)
+                photo.setImageResource(R.drawable.ic_chat_black_24dp)
                 photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
             }
         }

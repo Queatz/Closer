@@ -88,7 +88,7 @@
         android:text="@string/share_your_location"
         android:textColor="@color/text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:drawableStart="@drawable/ic_wifi_black_24dp"
+        android:drawableStart="@drawable/ic_location_on_black_24dp"
         android:drawableTint="@color/text"
         android:drawablePadding="@dimen/pad" />
 
@@ -108,13 +108,11 @@
         android:textColor="@color/text"
         android:textColorHint="@color/textHint"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:drawableStart="@drawable/ic_edit_black_24dp"
+        android:drawableStart="@drawable/ic_chat_black_24dp"
         android:drawableTint="@color/text"
         android:drawablePadding="@dimen/pad"
         android:maxLength="24"
-        android:maxLines="1"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        android:maxLines="1" />
 
     <TextView
         android:id="@+id/youveSubscribedHeader"

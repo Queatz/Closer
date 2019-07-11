@@ -202,7 +202,7 @@ class MapSlideFragment : PoolFragment() {
             on<MapBubbleMenuView>()
                     .getMenuAdapter(menuBubble)
                     .setMenuItems(
-                            (MapBubbleMenuItem(getString(R.string.talk_here), R.drawable.ic_wifi_black_18dp)),
+                            (MapBubbleMenuItem(getString(R.string.talk_here), R.drawable.ic_chat_black_18dp)),
                             (MapBubbleMenuItem(getString(R.string.share_this_location), R.drawable.ic_share_black_18dp)),
                             (MapBubbleMenuItem(getString(R.string.add_event_here), R.drawable.ic_event_note_black_24dp)))
 
