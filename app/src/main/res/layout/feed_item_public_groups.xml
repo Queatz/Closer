@@ -55,7 +55,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:background="@drawable/clickable_dark_flat"
-            android:focusedByDefault="true"
+            android:focusedByDefault="false"
             android:hint="@string/search_public_groups_hint"
             android:imeOptions="actionGo"
             android:inputType="text|textCapWords"

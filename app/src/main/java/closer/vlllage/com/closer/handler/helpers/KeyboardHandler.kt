@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.helpers
 import android.app.Service
 import android.graphics.Rect
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
 import closer.vlllage.com.closer.R
@@ -12,12 +13,16 @@ class KeyboardHandler constructor(private val on: On) {
 
     fun showKeyboard(view: View, show: Boolean) {
         val inputMethodManager = view.context
-                .getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager ?: return
+                .getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
 
         if (show) {
             inputMethodManager.showSoftInput(view, 0)
         } else {
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            view.windowToken?.let {
+                inputMethodManager.hideSoftInputFromWindow(it, 0)
+            } ?: on<ActivityHandler>().activity?.window?.setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            )
         }
     }
 
