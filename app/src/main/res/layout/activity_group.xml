@@ -191,7 +191,7 @@
             android:paddingTop="@dimen/padHalf"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            tools:text="All of us bros &amp; sises"
+            tools:text="All of us bros &amp; sisses"
             android:textColor="@color/text"
             android:textSize="12sp"
             android:textStyle="bold"

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
@@ -99,12 +100,18 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         holder.messageActionReply.text = on<ResourcesHandler>().resources.getString(
                 if (global) R.string.group else R.string.profile
         )
+
+        holder.messageActionShare.visible = groupMessage.from != null
+        holder.messageActionPin.visible = groupMessage.from != null
+
+        holder.messageActionReply.visible = global || groupMessage.from != null
+
         if (global) {
             holder.messageActionReply.setOnClickListener {
                 on<NavigationHandler>().showGroup(groupMessage.to!!)
                 toggleMessageActionLayout(holder)
             }
-        } else {
+        } else if (groupMessage.from != null) {
             holder.messageActionReply.setOnClickListener {
                 on<NavigationHandler>().showProfile(groupMessage.from!!)
                 toggleMessageActionLayout(holder)
