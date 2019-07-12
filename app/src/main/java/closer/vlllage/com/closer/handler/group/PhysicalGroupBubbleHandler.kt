@@ -6,10 +6,10 @@ import closer.vlllage.com.closer.handler.bubble.BubbleHandler
 import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.map.MapZoomHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import java.util.*
@@ -68,8 +68,8 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
 
     fun attach() {
         on<DisposableHandler>().add(on<MapZoomHandler>().onZoomGreaterThanChanged(GEO_GROUPS_ZOOM).subscribe(
-                { zoomIsGreaterThan15 ->
-                    if (zoomIsGreaterThan15!!) {
+                { zoomIsGreaterThan12 ->
+                    if (zoomIsGreaterThan12!!) {
                         on<DisposableHandler>().add(newPhysicalGroupObservable!!)
                     } else {
                         visiblePublicGroups.clear()
@@ -89,6 +89,6 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
     }
 
     companion object {
-        private const val GEO_GROUPS_ZOOM = 14f
+        private const val GEO_GROUPS_ZOOM = 12f
     }
 }

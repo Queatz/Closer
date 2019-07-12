@@ -221,6 +221,6 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
     }
 
     companion object {
-        private const val MERGE_RESOLUTION = 1.5
+        private const val MERGE_RESOLUTION = 4
     }
 }
