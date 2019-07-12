@@ -277,6 +277,9 @@
     <string name="want_to_meet_phone">Want to meet %1$s?</string>
     <string name="yes">Yeah</string>
     <string name="pass">Pass</string>
+    <string name="things_to_do_around_here">Things to do</string>
+    <string name="groups_around_here">Public &amp; Private Groups</string>
+    <string name="conversations_around_here">Recent Conversations</string>
 
     <plurals name="review_count">
         <item quantity="one">(%1$s review)</item>

@@ -26,21 +26,71 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <closer.vlllage.com.closer.ui.SoftScrollStopper
-            android:id="@+id/publicGroupsRecyclerViewContainer"
+        <LinearLayout
+            android:id="@+id/stuff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/closerLogoText">
+            app:layout_constraintTop_toBottomOf="@+id/closerLogoText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/publicGroupsRecyclerView"
+            <TextView
+                android:id="@+id/thingsToDoHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/padHalf"
-                android:paddingRight="@dimen/padHalf"
-                android:clipToPadding="false" />
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:text="@string/things_to_do_around_here"
+                android:textColor="@color/black_50"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
 
-        </closer.vlllage.com.closer.ui.SoftScrollStopper>
+            <closer.vlllage.com.closer.ui.SoftScrollStopper
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/groupActionsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingStart="@dimen/padQuarter"
+                    android:paddingEnd="@dimen/pad"
+                    android:paddingTop="@dimen/pad"
+                    android:paddingBottom="@dimen/pad" />
+
+            </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padDialog"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:text="@string/groups_around_here"
+                android:textColor="@color/black_50"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
+
+            <closer.vlllage.com.closer.ui.SoftScrollStopper
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/publicGroupsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padHalf"
+                    android:paddingRight="@dimen/padHalf"
+                    android:clipToPadding="false" />
+
+            </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/searchGroups"
@@ -50,11 +100,14 @@
             android:layout_marginBottom="@dimen/pad"
             android:layout_marginStart="@dimen/pad"
             android:layout_marginEnd="@dimen/pad"
-            app:layout_constraintTop_toBottomOf="@+id/publicGroupsRecyclerViewContainer"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stuff"
+            app:layout_constraintBottom_toTopOf="@+id/feedText"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:background="@drawable/clickable_dark_flat"
+            android:drawableStart="@drawable/ic_search_black_24dp"
+            android:drawablePadding="@dimen/pad"
+            android:drawableTint="@color/colorPrimary"
             android:focusedByDefault="false"
             android:hint="@string/search_public_groups_hint"
             android:imeOptions="actionGo"
@@ -68,7 +121,23 @@
             android:textColor="@color/textInverse"
             android:textColorHint="@color/textHintInverse"
             android:textColorHighlight="@color/colorAccent_50"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/feedText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchGroups"
+            android:paddingTop="@dimen/padDialog"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/padDouble"
+            android:paddingBottom="@dimen/pad"
+            android:text="@string/conversations_around_here"
+            android:textColor="@color/black_50"
+            android:textStyle="bold"
+            android:textAllCaps="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

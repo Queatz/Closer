@@ -52,4 +52,8 @@ class SortHandler constructor(private val on: On) {
                 groupOther.updated!!.compareTo(group.updated)
         }
     }
+
+    fun sortGroupActions(): Comparator<GroupAction> {
+        return Comparator { action, actionOther -> action.name!!.compareTo(actionOther.name!!) }
+    }
 }

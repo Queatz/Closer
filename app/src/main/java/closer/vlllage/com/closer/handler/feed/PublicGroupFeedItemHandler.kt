@@ -7,15 +7,16 @@ import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.LocationHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
-import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.group.SearchGroupHandler
-import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter
+import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.GroupAction
+import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.store.models.Group_
 import com.google.android.gms.maps.model.CameraPosition
 import com.queatz.on.On
@@ -29,7 +30,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     fun attach(itemView: View) {
         val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
+        val actionRecyclerView = itemView.findViewById<RecyclerView>(R.id.groupActionsRecyclerView)
         searchGroups = itemView.findViewById(R.id.searchGroups)
+
+        on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO)
 
         val searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item)
@@ -75,6 +79,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                     .single()
                     .observer { groups ->
                         on<SearchGroupHandler>().setGroups(groups)
+                        showGroupActions(itemView.findViewById<RecyclerView>(R.id.thingsToDoHeader), groups)
                         on<TimerHandler>().post(Runnable { groupsRecyclerView.scrollBy(0, 0) })
                     })
         }
@@ -82,6 +87,23 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(cameraPositionCallback))
+    }
+
+    private fun showGroupActions(header: View, groups: List<Group>) {
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
+                .`in`(GroupAction_.group, groups
+                        .filter { it.id != null }
+                        .map { it.id }
+                        .toTypedArray())
+                .sort(on<SortHandler>().sortGroupActions())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { groupActions ->
+                    header.visible = groupActions.isNotEmpty()
+                    on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
+                })
     }
 
     private fun createGroup(groupName: String?) {
