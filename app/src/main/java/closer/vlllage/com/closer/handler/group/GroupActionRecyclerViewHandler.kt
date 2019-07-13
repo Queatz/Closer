@@ -5,13 +5,14 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.Group_
+import com.queatz.on.On
 
 class GroupActionRecyclerViewHandler constructor(private val on: On) {
 
@@ -49,8 +50,8 @@ class GroupActionRecyclerViewHandler constructor(private val on: On) {
                         onGroupActionRepliedListener?.invoke(groupAction)
                     }
                 }
-                title = groupAction.name
-                message = group.name
+                title = on<AccountHandler>().name + " " + groupAction.intent
+                message = group.name ?: ""
                 positiveButton = on<ResourcesHandler>().resources.getString(R.string.post)
                 show()
             }

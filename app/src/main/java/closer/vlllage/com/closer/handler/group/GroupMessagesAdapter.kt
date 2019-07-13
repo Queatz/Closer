@@ -118,15 +118,16 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             }
         }
 
-
         holder.messageActionShare.setOnClickListener {
             on<ShareActivityTransitionHandler>().shareGroupMessage(groupMessage.id!!)
             toggleMessageActionLayout(holder)
         }
+
         holder.messageActionRemind.setOnClickListener {
             on<DefaultAlerts>().message("That doesn't work yet!")
             toggleMessageActionLayout(holder)
         }
+
         holder.messageActionPin.setOnClickListener {
             if (pinned) {
                 on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().removePin(groupMessage.id!!, groupMessage.to!!)
@@ -149,9 +150,43 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             }
             toggleMessageActionLayout(holder)
         }
-        holder.messageActionVote.setOnClickListener { view ->
+
+        holder.messageActionVote.setOnClickListener {
             on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
                     .reactToMessage(groupMessage.id!!, "♥", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            toggleMessageActionLayout(holder)
+        }
+
+        holder.messageActionVoteLaugh.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE02", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            toggleMessageActionLayout(holder)
+        }
+
+        holder.messageActionVoteKiss.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE18", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            toggleMessageActionLayout(holder)
+        }
+
+        holder.messageActionVoteCool.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE0E", false)
                     .subscribe({
                         on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
                     }, {
@@ -180,12 +215,14 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.messageActionShare.setTextColor(it.text)
             holder.messageActionRemind.setTextColor(it.text)
             holder.messageActionPin.setTextColor(it.text)
-            holder.messageActionVote.setTextColor(it.text)
             holder.messageActionReply.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionShare.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionRemind.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionPin.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionVote.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionVoteLaugh.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionVoteKiss.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionVoteCool.setBackgroundResource(it.clickableRoundedBackground)
             holder.message.setTextColor(it.text)
             holder.name.setTextColor(it.text)
             holder.time.setTextColor(it.text)
@@ -260,6 +297,9 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var messageActionRemind: TextView
         internal var messageActionPin: TextView
         internal var messageActionVote: TextView
+        internal var messageActionVoteLaugh: TextView
+        internal var messageActionVoteKiss: TextView
+        internal var messageActionVoteCool: TextView
         internal var messageActionLayoutRevealAnimator: RevealAnimator? = null
         internal var reactionsRecyclerView: RecyclerView
         internal var reactionAdapter: ReactionAdapter
@@ -283,6 +323,9 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             messageActionRemind = itemView.findViewById(R.id.messageActionReminder)
             messageActionPin = itemView.findViewById(R.id.messageActionPin)
             messageActionVote = itemView.findViewById(R.id.messageActionVote)
+            messageActionVoteLaugh = itemView.findViewById(R.id.messageActionVoteLaugh)
+            messageActionVoteKiss = itemView.findViewById(R.id.messageActionVoteKiss)
+            messageActionVoteCool = itemView.findViewById(R.id.messageActionVoteCool)
 
             reactionsRecyclerView.layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
             reactionAdapter = ReactionAdapter(on)

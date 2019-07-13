@@ -81,7 +81,7 @@ class GroupActionAdapter(on: On,
 
             if (groupAction.photo != null) {
                 holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionSmallTextSize))
-                holder.actionName.setBackgroundResource(R.color.black_25)
+                holder.actionName.setBackgroundResource(R.drawable.gradient_shadow_top_rounded_8dp)
                 holder.photo?.setImageDrawable(null)
                 on<ImageHandler>().get().load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=256")
                         .noPlaceholder()

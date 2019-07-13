@@ -8,5 +8,5 @@
     android:paddingBottom="@dimen/padHalf"
     android:paddingEnd="@dimen/pad"
     android:textColor="@color/text"
-    android:textSize="12sp"
+    android:textSize="14sp"
     tools:text="♥"/>
