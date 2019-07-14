@@ -139,7 +139,7 @@ class EventHandler constructor(private val on: On) {
                             event.endsAt.time,
                             onEventCreatedListener)
                 }
-            title = on<ResourcesHandler>().resources.getString(R.string.post_event)
+            title = on<ResourcesHandler>().resources.getString(R.string.host_event)
             show()
         }
     }

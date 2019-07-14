@@ -53,17 +53,14 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                 holder.photo.colorFilter = null
                 holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
-                holder.name.text = mapBubble.name + (on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)) + "\n" + mapBubble.status
+                holder.name.text = mapBubble.name + (on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone, true)) + "\n" + mapBubble.status
+                holder.info.visibility = View.GONE
+
                 if (mapBubble.tag is Phone) {
-                    holder.info.visibility = View.VISIBLE
                     val phone = mapBubble.tag as Phone
-                    holder.info.text = on<TimeStr>().pretty(phone.updated)
                     if (!on<Val>().isEmpty(phone.photo)) {
                         on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!)
                     }
-
-                } else {
-                    holder.info.visibility = View.GONE
                 }
             }
             BubbleType.SUGGESTION -> {

@@ -146,10 +146,9 @@ class GroupToolbarHandler constructor(private val on: On) {
         }
 
         if (event != null) {
-            items.add(ToolbarItem(
-                    if (contentView.value == GroupActivity.ContentViewType.SHARE) R.string.cancel else R.string.share,
-                    if (contentView.value == GroupActivity.ContentViewType.SHARE) R.drawable.ic_close_black_24dp else R.drawable.ic_share_black_24dp,
-                    View.OnClickListener { toggleShare() }
+            items.add(ToolbarItem(R.string.share,
+                    R.drawable.ic_share_black_24dp,
+                    View.OnClickListener { shareEvent(event) }
             ))
         }
 
@@ -250,7 +249,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (group.physical) {
+        if (group.physical || group.hasEvent()) {
             items.add(ToolbarItem(
                     R.string.review,
                     R.drawable.ic_star_half_black_24dp,
@@ -263,11 +262,8 @@ class GroupToolbarHandler constructor(private val on: On) {
         adapter.items = items
     }
 
-    private fun toggleShare() {
-        contentView.onNext(if (contentView.value == GroupActivity.ContentViewType.SHARE)
-            GroupActivity.ContentViewType.MESSAGES
-        else
-            GroupActivity.ContentViewType.SHARE)
+    private fun shareEvent(event: Event) {
+        on<ShareActivityTransitionHandler>().shareEvent(event.id!!)
     }
 
 

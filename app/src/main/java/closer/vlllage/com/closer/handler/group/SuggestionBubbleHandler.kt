@@ -63,7 +63,7 @@ class SuggestionBubbleHandler constructor(private val on: On) {
     fun attach() {
         on<DisposableHandler>().add(on<MapZoomHandler>().onZoomGreaterThanChanged(GEO_SUGGESTIONS_ZOOM).subscribe(
                 { zoomIsGreaterThan15 ->
-                    if (zoomIsGreaterThan15!!) {
+                    if (zoomIsGreaterThan15) {
                         update()
                     } else {
                         disposableGroup.clear()

@@ -32,7 +32,6 @@ class GroupActivity : CircularRevealActivity() {
             field = value
             setContent(when (field) {
                 ContentViewType.MESSAGES -> GroupMessagesFragment()
-                ContentViewType.SHARE -> ShareGroupFragment()
                 ContentViewType.CONTACTS -> GroupContactsFragment()
                 ContentViewType.PHONE_MESSAGES -> PhoneMessagesFragment()
                 ContentViewType.PHONE_PHOTOS -> PhonePhotosFragment()
@@ -43,7 +42,6 @@ class GroupActivity : CircularRevealActivity() {
 
     enum class ContentViewType {
         MESSAGES,
-        SHARE,
         CONTACTS,
         PHONE_ABOUT,
         PHONE_MESSAGES,

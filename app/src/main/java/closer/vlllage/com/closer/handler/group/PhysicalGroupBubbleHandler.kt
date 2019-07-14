@@ -62,8 +62,8 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
         })
 
         on<DisposableHandler>().add(on<MapZoomHandler>().onZoomGreaterThanChanged(GEO_GROUPS_ZOOM).subscribe(
-                { zoomIsGreaterThan12 ->
-                    if (zoomIsGreaterThan12!!) {
+                { zoomIsGreaterThan14 ->
+                    if (zoomIsGreaterThan14) {
                         update()
                     } else {
                         disposableGroup.clear()
@@ -80,6 +80,6 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
     }
 
     companion object {
-        private const val GEO_GROUPS_ZOOM = 12f
+        private const val GEO_GROUPS_ZOOM = 14f
     }
 }

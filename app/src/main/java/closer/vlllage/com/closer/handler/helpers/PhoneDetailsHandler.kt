@@ -7,8 +7,9 @@ import com.queatz.on.On
 
 class PhoneDetailsHandler constructor(private val on: On) {
 
-    fun detailsOf(phone: Phone): String {
+    fun detailsOf(phone: Phone, small: Boolean = false): String {
         val groups = if (
+                !small &&
                 phone.updated!!.after(on<TimeAgo>().oneHourAgo()) &&
                 phone.latitude != null && phone.longitude != null
         ) on<ProximityHandler>().findGroupsNear(LatLng(
@@ -18,13 +19,14 @@ class PhoneDetailsHandler constructor(private val on: On) {
 
         val groupName = groups.firstOrNull()?.name
         val isAt = groups.firstOrNull()?.let { on<DistanceHandler>().isPhoneNearGroup(it, phone) } ?: false
+        val occupation = if (small) null else phone.occupation
 
-        return (if (phone.occupation != null) "\n" + phone.occupation else "") +
+        return (if (occupation != null) "\n" + occupation else "") +
                 (if (groupName != null) "\n" + (if (isAt)
                     on<ResourcesHandler>().resources.getString(R.string.at)
                 else
                     on<ResourcesHandler>().resources.getString(R.string.near)
                 ) + " " + groupName else "") +
-                (if (phone.occupation != null || groupName != null) "\n" else "")
+                (if (occupation != null || groupName != null) "\n" else "")
     }
 }

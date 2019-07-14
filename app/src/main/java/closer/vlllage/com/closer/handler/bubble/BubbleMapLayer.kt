@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnticipateInterpolator
-import android.view.animation.OvershootInterpolator
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
@@ -55,7 +55,8 @@ class BubbleMapLayer {
         val animator = mapBubble.view!!.animate()
                 .scaleX(zoomScale(mapBubble))
                 .scaleY(zoomScale(mapBubble))
-                .setInterpolator(OvershootInterpolator())
+                .setDuration(150)
+                .setInterpolator(DecelerateInterpolator())
                 .setListener(object : Animator.AnimatorListener {
                     override fun onAnimationStart(animation: Animator) {
 
@@ -74,7 +75,6 @@ class BubbleMapLayer {
 
                     }
                 })
-                .setDuration(195)
 
         mapBubbleAppearDisappearAnimations[mapBubble] = animator
 
@@ -181,8 +181,8 @@ class BubbleMapLayer {
                     .animate()
                     .scaleX(0f)
                     .scaleY(0f)
-                    .setInterpolator(AnticipateInterpolator())
-                    .setDuration(225)
+                    .setInterpolator(AccelerateInterpolator())
+                    .setDuration(150)
                     .setListener(object : Animator.AnimatorListener {
                         override fun onAnimationStart(animation: Animator) {
 

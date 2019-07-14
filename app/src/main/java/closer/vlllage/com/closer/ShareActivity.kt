@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.ViewTreeObserver
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler
 import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler
@@ -24,6 +25,7 @@ class ShareActivity : ListActivity() {
     private var groupMessageId: String? = null
     private var phoneId: String? = null
     private var groupId: String? = null
+    private var eventId: String? = null
     private var groupToShare: Group? = null
     private var data: Uri? = null
 
@@ -57,6 +59,7 @@ class ShareActivity : ListActivity() {
             groupMessageId = intent.getStringExtra(EXTRA_GROUP_MESSAGE_ID)
             phoneId = intent.getStringExtra(EXTRA_INVITE_TO_GROUP_PHONE_ID)
             groupId = intent.getStringExtra(EXTRA_SHARE_GROUP_TO_GROUP_ID)
+            eventId = intent.getStringExtra(EXTRA_EVENT_ID)
 
             searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_to))
 
@@ -114,6 +117,13 @@ class ShareActivity : ListActivity() {
         } else if (groupMessageId != null) {
             on<GroupMessageAttachmentHandler>().shareGroupMessage(group.id!!, groupMessageId)
             finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
+        } else if (eventId != null) {
+            on<DataHandler>().getEvent(eventId!!).subscribe({ event ->
+                on<GroupMessageAttachmentHandler>().shareEvent(event, group)
+                finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
+            }, {
+                on<DefaultAlerts>().thatDidntWork()
+            })
         } else if (data != null) {
             on<ToastHandler>().show(R.string.sending_photo)
             on<PhotoUploadGroupMessageHandler>().upload(data!!) { photoId ->
@@ -131,5 +141,6 @@ class ShareActivity : ListActivity() {
         const val EXTRA_GROUP_MESSAGE_ID = "groupMessageId"
         const val EXTRA_INVITE_TO_GROUP_PHONE_ID = "inviteToGroupPhoneId"
         const val EXTRA_SHARE_GROUP_TO_GROUP_ID = "shareGroupToGroupId"
+        const val EXTRA_EVENT_ID = "eventId"
     }
 }
