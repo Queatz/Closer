@@ -66,6 +66,17 @@ class DataHandler constructor(private val on: On) {
                 .map { GroupResult.from(it) }
     })
 
+    fun getSuggestion(suggestionId: String) =
+            RxQuery.single(on<StoreHandler>().store.box(Suggestion::class).query()
+                    .equal(Suggestion_.id, suggestionId)
+                    .build()).flatMap {
+                if (it.isNotEmpty()) {
+                    Single.just(it.first()).observeOn(AndroidSchedulers.mainThread())
+                } else {
+                    Single.error<Suggestion>(RuntimeException("Not found")).observeOn(AndroidSchedulers.mainThread())
+                }
+            }
+
     private fun <T : BaseObject> chain(local: () -> Query<T>, remote: () -> Single<T>): Single<T> {
         return RxQuery.single(local()).flatMap {
             if (it.isNotEmpty()) {

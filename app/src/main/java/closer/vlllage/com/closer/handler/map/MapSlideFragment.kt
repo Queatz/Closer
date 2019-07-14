@@ -18,6 +18,7 @@ import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
@@ -60,21 +61,7 @@ class MapSlideFragment : PoolFragment() {
                 on<DefaultAlerts>().thatDidntWork()
             }
         }, { mapBubble ->
-            on<SuggestionHandler>().clearSuggestions()
-            on<ShareHandler>().shareTo(mapBubble.latLng!!) { group ->
-                var success = false
-                if (mapBubble.tag is Suggestion) {
-                    val suggestion = mapBubble.tag as Suggestion
-                    success = on<GroupMessageAttachmentHandler>().shareSuggestion(suggestion, group)
-                }
-
-                if (!success) {
-                    on<DefaultAlerts>().thatDidntWork()
-                    return@shareTo
-                }
-
-                on<GroupActivityTransitionHandler>().showGroupMessages(mapBubble.view, group.id)
-            }
+            on<ShareActivityTransitionHandler>().shareSuggestion((mapBubble.tag as Suggestion).id!!)
         }, { mapBubble ->
             val groupId = (mapBubble.tag as Group).id
             on<GroupActivityTransitionHandler>().showGroupMessages(mapBubble.view, groupId)

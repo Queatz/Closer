@@ -26,6 +26,7 @@ class ShareActivity : ListActivity() {
     private var phoneId: String? = null
     private var groupId: String? = null
     private var eventId: String? = null
+    private var suggestionId: String? = null
     private var groupToShare: Group? = null
     private var data: Uri? = null
 
@@ -60,6 +61,7 @@ class ShareActivity : ListActivity() {
             phoneId = intent.getStringExtra(EXTRA_INVITE_TO_GROUP_PHONE_ID)
             groupId = intent.getStringExtra(EXTRA_SHARE_GROUP_TO_GROUP_ID)
             eventId = intent.getStringExtra(EXTRA_EVENT_ID)
+            suggestionId = intent.getStringExtra(EXTRA_SUGGESTION_ID)
 
             searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_to))
 
@@ -113,14 +115,21 @@ class ShareActivity : ListActivity() {
                     }, { on<DefaultAlerts>().thatDidntWork() }))
         } else if (groupToShare != null) {
             on<GroupMessageAttachmentHandler>().shareGroup(groupToShare!!, group)
-            finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
+            open(group)
         } else if (groupMessageId != null) {
             on<GroupMessageAttachmentHandler>().shareGroupMessage(group.id!!, groupMessageId)
-            finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
+            open(group)
+        } else if (suggestionId != null) {
+            on<DataHandler>().getSuggestion(suggestionId!!).subscribe({ suggestion ->
+                on<GroupMessageAttachmentHandler>().shareSuggestion(suggestion, group)
+                open(group)
+            }, {
+                on<DefaultAlerts>().thatDidntWork()
+            })
         } else if (eventId != null) {
             on<DataHandler>().getEvent(eventId!!).subscribe({ event ->
                 on<GroupMessageAttachmentHandler>().shareEvent(event, group)
-                finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
+                open(group)
             }, {
                 on<DefaultAlerts>().thatDidntWork()
             })
@@ -132,9 +141,13 @@ class ShareActivity : ListActivity() {
                     on<DefaultAlerts>().thatDidntWork()
                 }
 
-                finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
+                open(group)
             }
         }
+    }
+
+    private fun open(group: Group) {
+        finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
     }
 
     companion object {
@@ -142,5 +155,6 @@ class ShareActivity : ListActivity() {
         const val EXTRA_INVITE_TO_GROUP_PHONE_ID = "inviteToGroupPhoneId"
         const val EXTRA_SHARE_GROUP_TO_GROUP_ID = "shareGroupToGroupId"
         const val EXTRA_EVENT_ID = "eventId"
+        const val EXTRA_SUGGESTION_ID = "suggestionId"
     }
 }
