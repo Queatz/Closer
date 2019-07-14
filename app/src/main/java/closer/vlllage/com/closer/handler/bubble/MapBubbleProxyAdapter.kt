@@ -17,9 +17,7 @@ import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
-class MapBubbleProxyAdapter(on: On,
-                            private val proxyMapBubble: MapBubble,
-                            private val onClickListener: (MapBubble) -> Unit)
+class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> Unit)
     : PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder>(on) {
 
     var items = mutableListOf<MapBubble>()
@@ -50,7 +48,7 @@ class MapBubbleProxyAdapter(on: On,
 
         when (mapBubble.type) {
             BubbleType.STATUS -> {
-                holder.click.setBackgroundResource(R.drawable.clickable_white_4dp)
+                holder.click.setBackgroundResource(R.drawable.clickable_white_8dp)
                 holder.photo.visibility = View.VISIBLE
                 holder.photo.colorFilter = null
                 holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
@@ -68,8 +66,16 @@ class MapBubbleProxyAdapter(on: On,
                     holder.info.visibility = View.GONE
                 }
             }
+            BubbleType.SUGGESTION -> {
+                holder.click.setBackgroundResource(R.drawable.clickable_blue_light_8dp)
+                holder.photo.visibility = View.VISIBLE
+                holder.photo.colorFilter = null
+                holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
+                holder.photo.setImageResource(R.drawable.ic_edit_location_black_24dp)
+                holder.name.text = mapBubble.status
+            }
             BubbleType.PHYSICAL_GROUP -> {
-                holder.click.setBackgroundResource(R.drawable.clickable_purple_4dp)
+                holder.click.setBackgroundResource(R.drawable.clickable_purple_8dp)
                 holder.photo.visibility = View.VISIBLE
                 holder.info.visibility = View.GONE
 
@@ -92,7 +98,7 @@ class MapBubbleProxyAdapter(on: On,
                 holder.name.text = on<Val>().of((mapBubble.tag as Group).name, on<ResourcesHandler>().resources.getString(R.string.app_name))
             }
             BubbleType.EVENT -> {
-                holder.click.setBackgroundResource(R.drawable.clickable_red_4dp)
+                holder.click.setBackgroundResource(R.drawable.clickable_red_8dp)
                 holder.photo.visibility = View.GONE
                 holder.info.visibility = View.GONE
 

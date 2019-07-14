@@ -14,10 +14,7 @@ import closer.vlllage.com.closer.handler.bubble.*
 import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.event.EventBubbleHandler
 import closer.vlllage.com.closer.handler.event.EventHandler
-import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler
-import closer.vlllage.com.closer.handler.group.PhysicalGroupBubbleHandler
-import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
+import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
@@ -85,6 +82,7 @@ class MapSlideFragment : PoolFragment() {
 
         on<MapHandler>().onMapReadyListener = { map ->
             on<PhysicalGroupBubbleHandler>().attach()
+            on<SuggestionBubbleHandler>().attach()
             on<BubbleHandler>().attach(map)
         }
         on<MapHandler>().onMapChangedListener = {
@@ -92,9 +90,7 @@ class MapSlideFragment : PoolFragment() {
             on<MapZoomHandler>().update(on<MapHandler>().zoom)
         }
         on<MapHandler>().onMapClickedListener = { latLng ->
-            var anyActionTaken: Boolean
-            anyActionTaken = on<SuggestionHandler>().clearSuggestions()
-            anyActionTaken = anyActionTaken || on<BubbleHandler>().remove({ mapBubble -> BubbleType.MENU == mapBubble.type })
+            val anyActionTaken = on<BubbleHandler>().remove { mapBubble -> BubbleType.MENU == mapBubble.type }
 
             if (!anyActionTaken) {
                 showMapMenu(latLng, null)

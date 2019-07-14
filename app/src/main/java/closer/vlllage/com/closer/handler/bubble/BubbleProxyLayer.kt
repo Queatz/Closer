@@ -73,7 +73,7 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
                 mapBubble.inProxy = false
                 if (mapBubble.type == BubbleType.PROXY) {
                     result.preCalculationProxyBubbles.add(mapBubble)
-                } else if (mapBubble.type == BubbleType.STATUS || mapBubble.type == BubbleType.EVENT || mapBubble.type == BubbleType.PHYSICAL_GROUP) {
+                } else if (mapBubble.type in setOf(BubbleType.STATUS, BubbleType.EVENT, BubbleType.PHYSICAL_GROUP, BubbleType.SUGGESTION)) {
                     if (mapBubble.canProxy) {
                         clusterMap.add(mapBubble)
                     }

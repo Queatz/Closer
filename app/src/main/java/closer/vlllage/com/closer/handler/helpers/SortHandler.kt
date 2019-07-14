@@ -1,7 +1,9 @@
 package closer.vlllage.com.closer.handler.helpers
 
+import android.location.Location.distanceBetween
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
+import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import java.util.*
 
@@ -55,5 +57,29 @@ class SortHandler constructor(private val on: On) {
 
     fun sortGroupActions(): Comparator<GroupAction> {
         return Comparator { action, actionOther -> action.name!!.compareTo(actionOther.name!!) }
+    }
+
+    fun sortSuggestions(latLng: LatLng): Comparator<Suggestion> {
+        return kotlin.Comparator { o1, o2 ->
+            val d1 = FloatArray(1)
+            val d2 = FloatArray(1)
+
+            distanceBetween(o1.latitude!!, o1.longitude!!, latLng.latitude, latLng.longitude, d1)
+            distanceBetween(o2.latitude!!, o2.longitude!!, latLng.latitude, latLng.longitude, d2)
+
+            return@Comparator if (d1[0] == d2[0]) 0 else if (d1[0] < d2[0]) -1 else 1
+        }
+    }
+
+    fun sortPhysicalGroups(latLng: LatLng): Comparator<Group> {
+        return kotlin.Comparator { o1, o2 ->
+            val d1 = FloatArray(1)
+            val d2 = FloatArray(1)
+
+            distanceBetween(o1.latitude!!, o1.longitude!!, latLng.latitude, latLng.longitude, d1)
+            distanceBetween(o2.latitude!!, o2.longitude!!, latLng.latitude, latLng.longitude, d2)
+
+            return@Comparator if (d1[0] == d2[0]) 0 else if (d1[0] < d2[0]) -1 else 1
+        }
     }
 }

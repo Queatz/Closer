@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.handler.bubble.BubbleHandler
 import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.group.SuggestionBubbleHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Suggestion
@@ -64,7 +65,6 @@ class SuggestionHandler constructor(private val on: On) {
                 suggestion.longitude!!
         ), on<ResourcesHandler>().resources.getString(R.string.suggestion), suggestion.name)
         suggestionBubble.isPinned = true
-        suggestionBubble.isOnTop = true
         suggestionBubble.type = BubbleType.SUGGESTION
         suggestionBubble.tag = suggestion
         suggestionBubble.action = on<TimeStr>().prettyDate(suggestion.created)
@@ -78,10 +78,10 @@ class SuggestionHandler constructor(private val on: On) {
                 .build().subscribe().single().on(AndroidScheduler.mainThread())
     }
 
-    fun clearSuggestions(): Boolean {
+    fun clearSuggestions() {
+        on<SuggestionBubbleHandler>().clear()
         val anyBubblesRemoved = on<BubbleHandler>().remove { mapBubble -> BubbleType.SUGGESTION == mapBubble.type }
         suggestionBubbles.clear()
-        return anyBubblesRemoved
     }
 
     fun createNewSuggestion(latLng: LatLng) {

@@ -3,9 +3,9 @@ package closer.vlllage.com.closer.handler.bubble
 import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.handler.map.MapHandler
-import com.queatz.on.On
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 
 class BubbleHandler constructor(private val on: On) {
 
@@ -27,6 +27,7 @@ class BubbleHandler constructor(private val on: On) {
                             BubbleType.STATUS -> onClickListener!!.invoke(proxiedMapBubble)
                             BubbleType.EVENT -> onMapBubbleEventClickListener.invoke(proxiedMapBubble)
                             BubbleType.PHYSICAL_GROUP -> onMapBubblePhysicalGroupClickListener.invoke(proxiedMapBubble)
+                            BubbleType.SUGGESTION -> onMapBubbleSuggestionClickListener.invoke(proxiedMapBubble)
                         }
                     }
                     BubbleType.MENU -> on<MapBubbleMenuView>().from(view!!, mapBubble, onMenuItemClickListener)

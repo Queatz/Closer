@@ -17,7 +17,7 @@ class MapBubbleProxyView constructor(private val on: On) {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.bubbleRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
-        adapter = MapBubbleProxyAdapter(on, mapBubble, onClickListener)
+        adapter = MapBubbleProxyAdapter(on, onClickListener)
         recyclerView.adapter = adapter
 
         update(view, mapBubble)
