@@ -7,8 +7,8 @@ import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.handler.phone.PhoneAdapterHeaderAdapter
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
+import closer.vlllage.com.closer.handler.phone.PhoneAdapterHeaderAdapter
 import java.util.*
 
 class PhoneListActivity : ListActivity() {
@@ -18,17 +18,17 @@ class PhoneListActivity : ListActivity() {
 
         val adapter = PhoneAdapterHeaderAdapter(on) { reactionResult ->
             if (reactionResult.from == on<PersistenceHandler>().phoneId) {
-                on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_heart)) { result ->
-                    on<DisposableHandler>().add(on<ApiHandler>().reactToMessage(reactionResult.to!!, "♥", true)
+                on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_x, reactionResult.reaction!!)) { result ->
+                    on<DisposableHandler>().add(on<ApiHandler>().reactToMessage(reactionResult.to!!, reactionResult.reaction!!, true)
                             .subscribe({ successResult ->
                                 if (successResult.success) {
-                                    on<ToastHandler>().show(R.string.heart_removed)
+                                    on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.x_removed, reactionResult.reaction!!))
                                     on<ApplicationHandler>().app.on<RefreshHandler>().refreshGroupMessage(reactionResult.to!!)
                                     finish()
                                 } else {
                                     on<DefaultAlerts>().thatDidntWork()
                                 }
-                            }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                            }, { on<DefaultAlerts>().thatDidntWork() }))
                 }
                 return@PhoneAdapterHeaderAdapter
             }
@@ -48,7 +48,7 @@ class PhoneListActivity : ListActivity() {
             } else {
                 on<DisposableHandler>().add(on<ApiHandler>().groupMessageReactions(groupMessageId)
                         .map { this.sortItems(it) }
-                        .subscribe({ adapter.items = it }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                        .subscribe({ adapter.items = it }, { on<DefaultAlerts>().thatDidntWork() }))
             }
         }
 

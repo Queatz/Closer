@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.handler.bubble
 
 import android.view.View
 import com.google.android.gms.maps.model.LatLng
-import java.util.*
 
 /**
  * Created by jacob on 2/18/18.
@@ -27,7 +26,7 @@ class MapBubble {
     var onItemClickListener: ((position: Int) -> Unit)? = null
     var onViewReadyListener: ((view: View) -> Unit)? = null
     var tag: Any? = null
-    val proxies = ArrayList<MapBubble>()
+    val proxies = mutableListOf<MapBubble>()
 
     constructor(latLng: LatLng?, name: String?, status: String?) {
         this.latLng = latLng

@@ -11,15 +11,13 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.objectbox.reactive.DataSubscription
 import java.util.*
 
 class PinnedMessagesHandler constructor(private val on: On) {
 
     private lateinit var pinnedMessagesRecyclerView: RecyclerView
     private lateinit var groupMessagesAdapter: GroupMessagesAdapter
-    private var groupMessagesSubscription: DataSubscription? = null
-    private var groupMessagesActualSubscription: DataSubscription? = null
+    private var disposableGroup = on<DisposableHandler>().group()
 
     fun attach(pinnedMessagesRecyclerView: RecyclerView) {
         this.pinnedMessagesRecyclerView = pinnedMessagesRecyclerView
@@ -39,17 +37,11 @@ class PinnedMessagesHandler constructor(private val on: On) {
     }
 
     fun show(group: Group) {
-        if (groupMessagesSubscription != null) {
-            on<DisposableHandler>().dispose(groupMessagesSubscription!!)
-        }
-
-        if (groupMessagesActualSubscription != null) {
-            on<DisposableHandler>().dispose(groupMessagesSubscription!!)
-        }
+        disposableGroup.clear()
 
         on<RefreshHandler>().refreshPins(group.id!!)
 
-        groupMessagesSubscription = on<StoreHandler>().store.box(Pin::class).query()
+        on<StoreHandler>().store.box(Pin::class).query()
                 .equal(Pin_.to, group.id!!)
                 .build()
                 .subscribe()
@@ -66,17 +58,15 @@ class PinnedMessagesHandler constructor(private val on: On) {
                         ids.add(pin.from!!)
                     }
 
-                    groupMessagesActualSubscription = on<StoreHandler>().store.box(GroupMessage::class).query()
+                    on<StoreHandler>().store.box(GroupMessage::class).query()
                             .`in`(GroupMessage_.id, ids.toTypedArray())
                             .build()
                             .subscribe()
-                            .single()
                             .on(AndroidScheduler.mainThread())
                             .observer { this.setGroupMessages(it) }
-                    on<DisposableHandler>().add(groupMessagesActualSubscription!!)
+                            .also { disposableGroup.add(it) }
                 }
-
-        on<DisposableHandler>().add(groupMessagesSubscription!!)
+                .also { disposableGroup.add(it) }
     }
 
     private fun setGroupMessages(pinnedMessages: List<GroupMessage>) {

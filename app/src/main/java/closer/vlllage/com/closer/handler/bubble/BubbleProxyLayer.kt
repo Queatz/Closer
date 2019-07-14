@@ -85,7 +85,9 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
             for (cluster in clusters) {
                 val proxyMapBubble = MapBubble(LatLng(0.0, 0.0), BubbleType.PROXY)
                 proxyMapBubble.isPinned = true
-                proxyMapBubble.addProxies(cluster)
+                proxyMapBubble.addProxies(cluster.sortedBy {
+                    it.type.score
+                })
                 var lat = 0f
                 var lng = 0f
                 var num = 0

@@ -287,6 +287,8 @@
     <string name="posts">Posts</string>
     <string name="chat">Chat</string>
     <string name="share_location">Share location</string>
+    <string name="x_removed">%1$s removed</string>
+    <string name="remove_x">Remove %1$s?</string>
 
     <plurals name="review_count">
         <item quantity="one">(%1$s review)</item>
