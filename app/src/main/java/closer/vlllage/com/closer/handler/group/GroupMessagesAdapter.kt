@@ -173,6 +173,17 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             toggleMessageActionLayout(holder)
         }
 
+        holder.messageActionVoteYummy.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE0B", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            toggleMessageActionLayout(holder)
+        }
+
         holder.messageActionVoteKiss.setOnClickListener {
             on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
                     .reactToMessage(groupMessage.id!!, "\uD83D\uDE18", false)
@@ -298,6 +309,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var messageActionPin: TextView
         internal var messageActionVote: TextView
         internal var messageActionVoteLaugh: TextView
+        internal var messageActionVoteYummy: TextView
         internal var messageActionVoteKiss: TextView
         internal var messageActionVoteCool: TextView
         internal var messageActionLayoutRevealAnimator: RevealAnimator? = null
@@ -324,6 +336,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             messageActionPin = itemView.findViewById(R.id.messageActionPin)
             messageActionVote = itemView.findViewById(R.id.messageActionVote)
             messageActionVoteLaugh = itemView.findViewById(R.id.messageActionVoteLaugh)
+            messageActionVoteYummy = itemView.findViewById(R.id.messageActionVoteYummy)
             messageActionVoteKiss = itemView.findViewById(R.id.messageActionVoteKiss)
             messageActionVoteCool = itemView.findViewById(R.id.messageActionVoteCool)
 

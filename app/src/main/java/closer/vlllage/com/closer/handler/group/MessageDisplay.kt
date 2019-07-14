@@ -61,7 +61,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.action.visibility = View.GONE
 
         holder.action.visibility = View.VISIBLE
-        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.reply)
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.profile)
         holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
     }
 
@@ -93,7 +93,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.rating.rating = rating
 
         holder.action.visibility = View.VISIBLE
-        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.reply)
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.profile)
         holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
     }
 

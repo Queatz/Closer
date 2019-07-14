@@ -33,7 +33,7 @@ class EventHandler constructor(private val on: On) {
     fun createNewEvent(latLng: LatLng, isPublic: Boolean, onEventCreatedListener: OnEventCreatedListener) {
         on<AlertHandler>().make().apply {
             theme = R.style.AppTheme_AlertDialog_Red
-            positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_event)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.host_event)
             layoutResId = R.layout.post_event_modal
             onAfterViewCreated = { alertConfig, view ->
                 val viewHolder = CreateEventViewHolder(view)

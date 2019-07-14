@@ -72,8 +72,8 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    R.string.messages,
-                    R.drawable.ic_message_black_24dp,
+                    R.string.posts,
+                    R.drawable.ic_view_day_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_MESSAGES)
                     },

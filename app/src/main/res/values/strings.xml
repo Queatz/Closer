@@ -283,6 +283,8 @@
     <string name="react_laugh">😂</string>
     <string name="react_cool">😎</string>
     <string name="react_kiss">😘</string>
+    <string name="react_yummy">😋</string>
+    <string name="posts">Posts</string>
 
     <plurals name="review_count">
         <item quantity="one">(%1$s review)</item>

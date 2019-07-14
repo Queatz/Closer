@@ -32,7 +32,9 @@ class ReactionAdapter(on: On) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(
         val reaction = items[position]
 
         viewHolder.reaction.text = reaction.reaction + " " + reaction.count
-        viewHolder.reaction.setOnClickListener { v -> on<PhoneListActivityTransitionHandler>().showReactions(groupMessage!!.id!!) }
+        viewHolder.reaction.setOnClickListener {
+            on<PhoneListActivityTransitionHandler>().showReactions(groupMessage!!.id!!)
+        }
 
         viewHolder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             viewHolder.reaction.setTextColor(it.text)
