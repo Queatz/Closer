@@ -43,7 +43,7 @@ class GroupActionHandler constructor(private val on: On) {
                     .on(AndroidScheduler.mainThread())
                     .observer { groupActions ->
                         on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
-                        show(!groupActions.isEmpty(), true)
+                        show(groupActions.isNotEmpty(), true)
                     }
 
             on<DisposableHandler>().add(groupActionsDisposable!!)
@@ -52,15 +52,7 @@ class GroupActionHandler constructor(private val on: On) {
         }
     }
 
-    fun cancelPendingAnimation() {
-        animator!!.cancel()
-    }
-
-    fun show(show: Boolean) {
-        show(show, false)
-    }
-
-    private fun show(show: Boolean, immediate: Boolean) {
+    fun show(show: Boolean, immediate: Boolean = false) {
         var show = show
         if (animator == null) {
             return

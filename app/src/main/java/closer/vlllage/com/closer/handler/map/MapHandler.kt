@@ -76,7 +76,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         onMapReadyListener!!.invoke(map!!)
         map!!.setOnCameraMoveListener { this.mapChanged() }
         map!!.setOnMapClickListener { onMapClickedListener!!.invoke(it) }
-        map!!.setOnMapLongClickListener { onMapLongClickedListener!!.invoke(it) }
+        map!!.setOnMapLongClickListener { onMapLongClickedListener?.invoke(it) }
         map!!.setOnCameraIdleListener {
             on<PersistenceHandler>().lastMapCenter = map!!.cameraPosition.target
             onMapIdleListener!!.invoke(map!!.cameraPosition.target)

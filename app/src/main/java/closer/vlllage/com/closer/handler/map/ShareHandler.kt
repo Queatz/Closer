@@ -5,11 +5,11 @@ import closer.vlllage.com.closer.handler.bubble.*
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.SortHandler
 import closer.vlllage.com.closer.handler.helpers.TimerHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import java.util.*
 
@@ -25,7 +25,7 @@ class ShareHandler constructor(private val on: On) {
                         groupNames.add(MapBubbleMenuItem(group.name!!))
                     }
 
-                    val menuBubble = MapBubble(latLng, BubbleType.MENU)
+                    val menuBubble = MapBubble(latLng, BubbleType.MENU, true, true)
                     menuBubble.isPinned = true
                     menuBubble.isOnTop = true
                     on<TimerHandler>().postDisposable(Runnable {

@@ -100,22 +100,6 @@ class MapSlideFragment : PoolFragment() {
                 showMapMenu(latLng, null)
             }
         }
-        on<MapHandler>().onMapLongClickedListener = { latLng ->
-            on<BubbleHandler>().remove { mapBubble -> BubbleType.MENU == mapBubble.type }
-
-            val menuBubble = MapBubble(latLng, BubbleType.MENU)
-            menuBubble.onItemClickListener = { position ->
-                when (position) {
-                    0 -> on<SuggestionHandler>().createNewSuggestion(menuBubble.latLng!!)
-                }
-            }
-            on<BubbleHandler>().add(menuBubble)
-            menuBubble.onViewReadyListener = {
-                on<MapBubbleMenuView>()
-                        .getMenuAdapter(menuBubble)
-                        .setMenuItems(MapBubbleMenuItem(getString(R.string.add_suggestion_here)))
-            }
-        }
         on<MapHandler>().onMapIdleListener = { latLng ->
             on<DisposableHandler>().add(on<DataHandler>().run {
                 getPhonesNear(latLng)
@@ -175,7 +159,7 @@ class MapSlideFragment : PoolFragment() {
     }
 
     private fun showMapMenu(latLng: LatLng, title: String?) {
-        val menuBubble = MapBubble(latLng, BubbleType.MENU)
+        val menuBubble = MapBubble(latLng, BubbleType.MENU, true, true)
         menuBubble.onItemClickListener = { position ->
             when (position) {
                 0 -> on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!)
@@ -194,6 +178,7 @@ class MapSlideFragment : PoolFragment() {
                             it.longitude!!
                     ))
                 }
+                3 -> on<SuggestionHandler>().createNewSuggestion(menuBubble.latLng!!)
             }
         }
         on<BubbleHandler>().add(menuBubble)
@@ -204,7 +189,8 @@ class MapSlideFragment : PoolFragment() {
                     .setMenuItems(
                             (MapBubbleMenuItem(getString(R.string.talk_here), R.drawable.ic_chat_black_18dp)),
                             (MapBubbleMenuItem(getString(R.string.share_this_location), R.drawable.ic_share_black_18dp)),
-                            (MapBubbleMenuItem(getString(R.string.add_event_here), R.drawable.ic_event_note_black_24dp)))
+                            (MapBubbleMenuItem(getString(R.string.add_event_here), R.drawable.ic_event_note_black_24dp)),
+                            (MapBubbleMenuItem(getString(R.string.add_suggestion_here), R.drawable.ic_edit_location_black_24dp)))
 
             on<MapBubbleMenuView>().setMenuTitle(menuBubble, title)
         }

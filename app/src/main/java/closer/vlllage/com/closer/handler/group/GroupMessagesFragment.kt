@@ -35,8 +35,6 @@ class GroupMessagesFragment : PoolActivityFragment() {
             replyMessage.setBackgroundResource(it.clickableRoundedBackground)
         })
 
-        replyMessage.setOnClickListener { on<GroupActionHandler>().show(false) }
-
         on<GroupHandler> {
             onGroupUpdated(disposableGroup) {
                 on<PinnedMessagesHandler>().show(it)

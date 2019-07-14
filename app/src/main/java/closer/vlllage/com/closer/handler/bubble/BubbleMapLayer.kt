@@ -125,6 +125,10 @@ class BubbleMapLayer {
     }
 
     fun move(mapBubble: MapBubble, targetLatLng: LatLng) {
+        if (mapBubble.inProxy) {
+            return
+        }
+
         if (mapBubbleAnimations.containsKey(mapBubble)) {
             val activeAnimator = mapBubbleAnimations[mapBubble]
             if (activeAnimator!!.isRunning) {

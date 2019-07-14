@@ -35,11 +35,11 @@ class MapBubble {
         this.status = status
     }
 
-    constructor(latLng: LatLng, type: BubbleType) {
+    constructor(latLng: LatLng, type: BubbleType, isPinned: Boolean = false, isOnTop: Boolean = false) {
         this.latLng = latLng
         this.type = type
-        isPinned = true
-        isOnTop = true
+        this.isPinned = isPinned
+        this.isOnTop = isOnTop
     }
 
     fun addProxies(proxiedBubbles: Collection<MapBubble>) {
