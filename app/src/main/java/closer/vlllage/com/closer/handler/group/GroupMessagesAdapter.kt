@@ -232,6 +232,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.messageActionPin.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionVote.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionVoteLaugh.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionVoteYummy.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionVoteKiss.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionVoteCool.setBackgroundResource(it.clickableRoundedBackground)
             holder.message.setTextColor(it.text)
