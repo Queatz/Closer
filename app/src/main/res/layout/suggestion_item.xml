@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/rootView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="220dp"
+    android:layout_height="140dp"
+    android:layout_margin="6dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@drawable/clickable_white_8dp"
+    android:clickable="true"
+    android:elevation="@dimen/elevation">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="0dp"
+        android:clipChildren="true"
+        android:background="@color/black_transparent"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/black_transparent"
+        app:cardCornerRadius="@dimen/imageCorners">
+
+        <ImageView
+            android:id="@+id/backgroundPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:padding="@dimen/padDouble"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/textInverse"
+        tools:text="Climb these rocks to get an epic photo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

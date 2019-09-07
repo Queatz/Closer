@@ -53,11 +53,13 @@
         </LinearLayout>
 
         <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
-            android:contentDescription="@string/share"
             android:id="@+id/directionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/clickable_light_rounded"
+            android:padding="@dimen/padDouble"
             android:minWidth="0dp"
+            android:contentDescription="@string/share"
             android:src="@drawable/ic_share_black_24dp"
             android:tint="@color/text" />
 

@@ -97,6 +97,36 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/suggestionsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padDialog"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:text="@string/local_recommendations"
+                android:textColor="@color/black_50"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
+
+            <closer.vlllage.com.closer.ui.SoftScrollStopper
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/suggestionsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingStart="@dimen/padQuarter"
+                    android:paddingEnd="@dimen/pad"
+                    android:paddingTop="@dimen/pad"
+                    android:paddingBottom="@dimen/pad" />
+
+            </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
+            <TextView
                 android:id="@+id/thingsToDoHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

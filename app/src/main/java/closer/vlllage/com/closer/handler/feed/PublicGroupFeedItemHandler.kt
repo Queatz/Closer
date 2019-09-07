@@ -31,9 +31,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var searchGroups: EditText
     private lateinit var saySomething: EditText
 
+    private lateinit var itemView: View
+
     fun attach(itemView: View) {
+        this.itemView = itemView
         val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
         val actionRecyclerView = itemView.findViewById<RecyclerView>(R.id.groupActionsRecyclerView)
+        val suggestionsRecyclerView = itemView.findViewById<RecyclerView>(R.id.suggestionsRecyclerView)
         searchGroups = itemView.searchGroups
         saySomething = itemView.saySomething
 
@@ -48,6 +52,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 LinearLayoutManager.HORIZONTAL,
                 false
         )
+
+        on<SuggestionsRecyclerViewHandler>().attach(suggestionsRecyclerView)
 
         searchGroups.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -83,9 +89,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                     .single()
                     .observer { groups ->
                         on<SearchGroupHandler>().setGroups(groups)
-                        showGroupActions(itemView.findViewById<RecyclerView>(R.id.thingsToDoHeader), groups)
+                        showGroupActions(itemView.thingsToDoHeader, groups)
                         on<TimerHandler>().post(Runnable { groupsRecyclerView.scrollBy(0, 0) })
                     })
+
+            loadSuggestions(cameraPosition.target)
         }
 
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
@@ -120,6 +128,26 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         itemView.sendSomethingButton.setOnClickListener {
             saySomethingNearby()
         }
+    }
+
+    private fun loadSuggestions(latLng: LatLng) {
+        val distance = .12f
+
+        val queryBuilder = on<StoreHandler>().store.box(Suggestion::class).query()
+                .between(Suggestion_.latitude, latLng.latitude - distance, latLng.latitude + distance)
+                .and()
+                .between(Suggestion_.longitude, latLng.longitude - distance, latLng.longitude + distance)
+
+        on<DisposableHandler>().add(queryBuilder
+                .sort(on<SortHandler>().sortSuggestions(latLng))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { suggestions ->
+                    itemView.suggestionsHeader.visible = suggestions.isNotEmpty()
+                    on<SuggestionsRecyclerViewHandler>().setSuggestions(suggestions)
+                })
     }
 
     private fun saySomethingNearby() {
