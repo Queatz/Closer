@@ -38,6 +38,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
         val actionRecyclerView = itemView.findViewById<RecyclerView>(R.id.groupActionsRecyclerView)
         val suggestionsRecyclerView = itemView.findViewById<RecyclerView>(R.id.suggestionsRecyclerView)
+        val peopleRecyclerView = itemView.findViewById<RecyclerView>(R.id.peopleRecyclerView)
         searchGroups = itemView.searchGroups
         saySomething = itemView.saySomething
 
@@ -54,6 +55,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         )
 
         on<SuggestionsRecyclerViewHandler>().attach(suggestionsRecyclerView)
+        on<PeopleRecyclerViewHandler>().attach(peopleRecyclerView)
 
         searchGroups.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -94,6 +96,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                     })
 
             loadSuggestions(cameraPosition.target)
+            loadPeople(cameraPosition.target)
         }
 
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
@@ -128,6 +131,27 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         itemView.sendSomethingButton.setOnClickListener {
             saySomethingNearby()
         }
+    }
+
+    private fun loadPeople(latLng: LatLng) {
+        val distance = 0.01714 * 7 // 7 miles
+
+        val queryBuilder = on<StoreHandler>().store.box(Phone::class).query()
+                .between(Phone_.latitude, latLng.latitude - distance, latLng.latitude + distance)
+                .and()
+                .between(Phone_.longitude, latLng.longitude - distance, latLng.longitude + distance)
+                .and()
+                .notEqual(Phone_.id, on<PersistenceHandler>().phoneId ?: "")
+
+        on<DisposableHandler>().add(queryBuilder
+                .sort(on<SortHandler>().sortPhones())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { phones ->
+                    on<PeopleRecyclerViewHandler>().setPeople(phones)
+                })
     }
 
     private fun loadSuggestions(latLng: LatLng) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/color_white_rounded_top"
     android:elevation="@dimen/elevation"
     android:clickable="true">
@@ -48,7 +48,7 @@
             android:layout_marginStart="@dimen/pad"
             android:layout_marginEnd="@dimen/pad"
             app:layout_constraintTop_toBottomOf="@+id/saySomethingHeader"
-            app:layout_constraintBottom_toTopOf="@+id/stuff"
+            app:layout_constraintBottom_toTopOf="@+id/peopleContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sendSomethingButton"
             android:background="@drawable/clickable_dark_flat"
@@ -87,11 +87,36 @@
             android:src="@drawable/ic_camera_black_24dp"
             android:contentDescription="@string/send_message" />
 
+        <closer.vlllage.com.closer.ui.SoftScrollStopper
+            android:id="@+id/peopleContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/saySomething"
+            app:layout_constraintBottom_toTopOf="@id/stuff"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/peopleRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/padQuarter"
+                android:paddingEnd="@dimen/pad"
+                android:paddingTop="@dimen/pad"
+                android:paddingBottom="@dimen/pad"
+                tools:listitem="@layout/person_item"
+                tools:layoutManager="LinearLayoutManager"
+                tools:orientation="horizontal"/>
+
+        </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
         <LinearLayout
             android:id="@+id/stuff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/saySomething"
+            app:layout_constraintTop_toBottomOf="@+id/peopleContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:orientation="vertical">

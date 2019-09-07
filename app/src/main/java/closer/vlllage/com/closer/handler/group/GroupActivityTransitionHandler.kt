@@ -62,7 +62,7 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
     }
 
     @SuppressLint("CheckResult")
-    fun showGroupForPhone(view: View?, phoneId: String, meet: Boolean) {
+    fun showGroupForPhone(view: View?, phoneId: String, meet: Boolean = false) {
         on<DataHandler>().getGroupForPhone(phoneId).subscribe({
             on<GroupActivityTransitionHandler>().showGroupMessages(view, it.id, isMeet = meet)
         }, {
