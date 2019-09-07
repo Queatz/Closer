@@ -158,6 +158,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { phones ->
+                    itemView.peopleContainer.visible = phones.isNotEmpty()
                     on<PeopleRecyclerViewHandler>().setPeople(phones)
                 })
     }
@@ -178,6 +179,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .single()
                 .observer { suggestions ->
                     itemView.suggestionsHeader.visible = suggestions.isNotEmpty()
+                    itemView.suggestionsRecyclerView.visible = suggestions.isNotEmpty()
                     on<SuggestionsRecyclerViewHandler>().setSuggestions(suggestions)
                 })
     }
