@@ -97,6 +97,14 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
             loadSuggestions(cameraPosition.target)
             loadPeople(cameraPosition.target)
+
+            on<LocalityHelper>().getLocality(cameraPosition.target!!) {
+                saySomething.hint = it?.let {
+                    on<ResourcesHandler>().resources.getString(R.string.say_something_in, it)
+                } ?:let {
+                    on<ResourcesHandler>().resources.getString(R.string.say_something)
+                }
+            }
         }
 
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
@@ -105,7 +113,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         saySomething.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                saySomethingNearby()
+                saySomethingAtMapCenter()
                 true
             } else {
                 false
@@ -129,7 +137,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         })
 
         itemView.sendSomethingButton.setOnClickListener {
-            saySomethingNearby()
+            saySomethingAtMapCenter()
         }
     }
 
@@ -174,11 +182,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 })
     }
 
-    private fun saySomethingNearby() {
-        val text = saySomething.text.toString()
-        saySomething.setText("")
+    private fun saySomethingAtMapCenter() {
+        on<MapHandler>().center?.let {
+            val text = saySomething.text.toString()
+            saySomething.setText("")
 
-        on<LocationHandler>().getCurrentLocation {
             val latLng = LatLng(it.latitude, it.longitude)
             val nearestGroup = on<ProximityHandler>().findGroupsNear(latLng, true).firstOrNull()
 
