@@ -7,6 +7,8 @@ import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
+import closer.vlllage.com.closer.handler.helpers.CameraHandler
+import closer.vlllage.com.closer.handler.media.MediaHandler
 import com.queatz.on.On
 
 open class PoolFragment : Fragment() {
@@ -16,6 +18,11 @@ open class PoolFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         on<ActivityHandler>().activity = activity
+
+        val activityOn = (activity as PoolActivity).on
+        on.use(activityOn<MediaHandler>())
+        on.use(activityOn<CameraHandler>())
+
         on<ApplicationHandler>().app = activity!!.application as App
         on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
     }

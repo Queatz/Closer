@@ -22,6 +22,7 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.HeaderAdapter
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
+import closer.vlllage.com.closer.handler.media.MediaHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
@@ -88,6 +89,8 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         holder.on.use(on<ActivityHandler>())
         holder.on.use(on<ResourcesHandler>())
         holder.on.use(on<StoreHandler>())
+        holder.on.use(on<MediaHandler>())
+        holder.on.use(on<CameraHandler>())
 
         val group = groups[position - HEADER_COUNT]
         holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
@@ -223,6 +226,9 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         holder.on.use(on<SortHandler>())
         holder.on.use(on<KeyboardHandler>())
         holder.on.use(on<GroupMemberHandler>())
+        holder.on.use(on<MediaHandler>())
+        holder.on.use(on<CameraHandler>())
+        holder.on.use(on<ApiHandler>())
         holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView)
     }
 

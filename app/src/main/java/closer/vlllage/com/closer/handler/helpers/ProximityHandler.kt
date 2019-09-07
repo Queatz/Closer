@@ -8,7 +8,7 @@ import com.queatz.on.On
 
 class ProximityHandler constructor(private val on: On) {
 
-    fun findGroupsNear(latLng: LatLng): List<Group> {
+    fun findGroupsNear(latLng: LatLng, includeNonHubs: Boolean = false): List<Group> {
         val distance = 0.01714 * 0.125 // 1/8th of a mile
 
         return on<StoreHandler>().store.box(Group::class).query()
@@ -17,7 +17,12 @@ class ProximityHandler constructor(private val on: On) {
                 .between(Group_.longitude, latLng.longitude - distance, latLng.longitude + distance)
                 .and()
                 .equal(Group_.physical, true)
-                .notEqual(Group_.name, "")
+                .let {
+                    if (!includeNonHubs) {
+                        it.notEqual(Group_.name, "")
+                    }
+                    it
+                }
                 .sort(on<SortHandler>().sortGroups())
                 .build()
                 .find()

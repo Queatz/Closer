@@ -2,15 +2,16 @@ package closer.vlllage.com.closer.handler.group
 
 import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.bubble.MapBubble
+import closer.vlllage.com.closer.handler.data.OnSyncResult
 import closer.vlllage.com.closer.handler.data.SyncHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 
 class PhysicalGroupHandler constructor(private val on: On) {
 
-    fun createPhysicalGroup(latLng: LatLng) {
+    fun createPhysicalGroup(latLng: LatLng, onSyncResult: OnSyncResult? = null) {
         val group = on<StoreHandler>().create(Group::class.java)
         group!!.name = ""
         group.about = ""
@@ -19,7 +20,7 @@ class PhysicalGroupHandler constructor(private val on: On) {
         group.latitude = latLng.latitude
         group.longitude = latLng.longitude
         on<StoreHandler>().store.box(Group::class).put(group)
-        on<SyncHandler>().sync(group, { id ->
+        on<SyncHandler>().sync(group, onSyncResult ?: { id ->
             openGroup(id)
         })
     }
