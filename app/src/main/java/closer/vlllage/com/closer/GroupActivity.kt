@@ -33,6 +33,8 @@ class GroupActivity : CircularRevealActivity() {
             setContent(when (field) {
                 ContentViewType.MESSAGES -> GroupMessagesFragment()
                 ContentViewType.CONTACTS -> GroupContactsFragment()
+                ContentViewType.EVENTS -> GroupEventsFragment()
+                ContentViewType.REVIEWS -> GroupReviewsFragment()
                 ContentViewType.PHONE_MESSAGES -> PhoneMessagesFragment()
                 ContentViewType.PHONE_PHOTOS -> PhonePhotosFragment()
                 ContentViewType.PHONE_GROUPS -> PhoneGroupsFragment()
@@ -43,6 +45,8 @@ class GroupActivity : CircularRevealActivity() {
     enum class ContentViewType {
         MESSAGES,
         CONTACTS,
+        EVENTS,
+        REVIEWS,
         PHONE_ABOUT,
         PHONE_MESSAGES,
         PHONE_PHOTOS,
@@ -140,6 +144,7 @@ class GroupActivity : CircularRevealActivity() {
                 view.profilePhoto.visible = group.hasPhone()
 
                 setGroupBackground(group)
+                setGroupRating(group)
             }
 
             onEventChanged { event ->
@@ -272,7 +277,7 @@ class GroupActivity : CircularRevealActivity() {
         }
 
         view.groupRatingAverage.rating = group.ratingAverage!!.toFloat()
-        view.groupRatingCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count, group.ratingCount!!, group.ratingCount)
+        view.groupRatingCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count_parenthesized, group.ratingCount!!, group.ratingCount)
     }
 
     private fun setGroupBackground(group: Group) {

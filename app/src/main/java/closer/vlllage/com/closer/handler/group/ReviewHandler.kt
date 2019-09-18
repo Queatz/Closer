@@ -30,7 +30,7 @@ class ReviewHandler constructor(private val on: On) {
                 )
             }
             title = on<ResourcesHandler>().resources.getString(R.string.review_place, group.name)
-            positiveButton = on<ResourcesHandler>().resources.getString(R.string.review)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_review)
             buttonClickCallback = {
                 if ((it as ReviewViewHolder).rating.rating < 1f) {
                     on<ToastHandler>().show(R.string.choose_a_rating)

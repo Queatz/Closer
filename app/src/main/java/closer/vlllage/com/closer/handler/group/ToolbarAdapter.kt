@@ -45,7 +45,7 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
                 0, item.icon, 0, 0
         )
 
-        viewHolder.button.setText(item.name)
+        viewHolder.button.text = item.name
 
         viewHolder.button.setOnClickListener {
             item.onClickListener.onClick(it)

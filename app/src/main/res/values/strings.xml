@@ -264,13 +264,13 @@
     <string name="remove_from_group">Remove from group</string>
     <string name="in_x">in %1$s</string>
     <string name="create_event_in_group_instructions">Tap anywhere on the map and choose \"Host Event\"</string>
-    <string name="enter_welcome_message">Welcome message (optional)</string>
+    <string name="enter_welcome_message">Pinned message (optional)</string>
     <string name="occupation_hint">What are your primary occupation(s)?</string>
     <string name="occupations">Occupation(s)</string>
     <string name="edit_your_occupation">Edit your occupations</string>
     <string name="at">at</string>
     <string name="near">near</string>
-    <string name="review">Review</string>
+    <string name="write_review">Write a review</string>
     <string name="write_your_review">How was your experience?</string>
     <string name="review_place">Review %1$s</string>
     <string name="phone_posted_a_review">%1$s posted a review</string>
@@ -295,10 +295,17 @@
     <string name="say_something_in">Say something in %1$s…</string>
     <string name="ends">End time</string>
     <string name="starts">Start time</string>
+    <string name="events">Events</string>
+    <string name="post_review">Post your review</string>
+    <string name="rating">%1$s rating</string>
 
-    <plurals name="review_count">
+    <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
         <item quantity="other">(%1$s reviews)</item>
+    </plurals>
+    <plurals name="review_count">
+        <item quantity="one">%1$s review</item>
+        <item quantity="other">%1$s reviews</item>
     </plurals>
     <plurals name="x_new_people_to_meet">
         <item quantity="one">%1$s new person to meet here</item>

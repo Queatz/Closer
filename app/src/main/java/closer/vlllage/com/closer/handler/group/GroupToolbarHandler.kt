@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.handler.group
 
 import android.view.View
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.GroupActivity
@@ -63,7 +62,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (group.hasPhone()) {
             items.add(ToolbarItem(
-                    R.string.about,
+                    on<ResourcesHandler>().resources.getString(R.string.about),
                     R.drawable.ic_person_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_ABOUT)
@@ -72,7 +71,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    R.string.posts,
+                    on<ResourcesHandler>().resources.getString(R.string.posts),
                     R.drawable.ic_view_day_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_MESSAGES)
@@ -81,7 +80,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    R.string.photos,
+                    on<ResourcesHandler>().resources.getString(R.string.photos),
                     R.drawable.ic_photo_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_PHOTOS)
@@ -90,7 +89,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    R.string.groups,
+                    on<ResourcesHandler>().resources.getString(R.string.groups),
                     R.drawable.ic_group_black_24dp,
                     View.OnClickListener {
                         contentView.onNext(GroupActivity.ContentViewType.PHONE_GROUPS)
@@ -99,7 +98,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    R.string.talk,
+                    on<ResourcesHandler>().resources.getString(R.string.talk),
                     R.drawable.ic_mail_black_24dp,
                     View.OnClickListener {
                         on<ReplyHandler>().reply(group.phoneId!!)
@@ -107,7 +106,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    R.string.invite,
+                    on<ResourcesHandler>().resources.getString(R.string.invite),
                     R.drawable.ic_person_add_black_24dp,
                     View.OnClickListener {
                         on<ShareActivityTransitionHandler>().inviteToGroup(group.phoneId!!)
@@ -115,7 +114,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    R.string.show_on_map,
+                    on<ResourcesHandler>().resources.getString(R.string.show_on_map),
                     R.drawable.ic_my_location_black_24dp,
                     View.OnClickListener {
                         val runnable = { on<MapActivityHandler>().showPhoneOnMap(group.phoneId) }
@@ -128,7 +127,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    R.string.get_directions,
+                    on<ResourcesHandler>().resources.getString(R.string.get_directions),
                     R.drawable.ic_directions_black_24dp,
                     View.OnClickListener {
                         on<DataHandler>().getPhone(group.phoneId!!).subscribe({
@@ -145,8 +144,31 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
+        if (group.physical || (!group.hasEvent() && !group.isPublic)) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.events),
+                    R.drawable.ic_event_available_black_24dp,
+                    View.OnClickListener {
+                        contentView.onNext(GroupActivity.ContentViewType.EVENTS)
+                    },
+                    GroupActivity.ContentViewType.EVENTS
+            ))
+        }
+
+        if (group.ratingCount ?: 0 > 0 && (group.physical || group.hasEvent())) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count, group.ratingCount!!, group.ratingCount!!),
+                    R.drawable.ic_star_black_24dp,
+                    View.OnClickListener {
+                        contentView.onNext(GroupActivity.ContentViewType.REVIEWS)
+                    },
+                    GroupActivity.ContentViewType.REVIEWS
+            ))
+        }
+
         if (event != null) {
-            items.add(ToolbarItem(R.string.share,
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.share),
                     R.drawable.ic_share_black_24dp,
                     View.OnClickListener { shareEvent(event) }
             ))
@@ -154,7 +176,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (event != null || group.physical) {
             items.add(ToolbarItem(
-                    R.string.show_on_map,
+                    on<ResourcesHandler>().resources.getString(R.string.show_on_map),
                     R.drawable.ic_my_location_black_24dp,
                     View.OnClickListener { v ->
                         if (event != null)
@@ -167,7 +189,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (group.physical && isEmptyOrWhitespace(group.name)) {
             items.add(ToolbarItem(
-                    R.string.set_name,
+                    on<ResourcesHandler>().resources.getString(R.string.set_name),
                     R.drawable.ic_edit_location_black_24dp,
                     View.OnClickListener { v ->
                         on<PhysicalGroupUpgradeHandler>().convertToHub(group) { updatedGroup ->
@@ -180,7 +202,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (group.physical && isEmptyOrWhitespace(group.photo)) {
             items.add(ToolbarItem(
-                    R.string.set_background,
+                    on<ResourcesHandler>().resources.getString(R.string.set_background),
                     R.drawable.ic_camera_black_24dp,
                     View.OnClickListener { v ->
                         on<PhysicalGroupUpgradeHandler>().setBackground(group) { updatedGroup ->
@@ -193,7 +215,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if ((event != null || group.physical)) {
             items.add(ToolbarItem(
-                    R.string.get_directions,
+                    on<ResourcesHandler>().resources.getString(R.string.get_directions),
                     R.drawable.ic_directions_black_24dp,
                     View.OnClickListener { v ->
                         on<OutboundHandler>().openDirections(LatLng(
@@ -206,7 +228,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (isEventCancelable(event)) {
             items.add(ToolbarItem(
-                    R.string.cancel,
+                    on<ResourcesHandler>().resources.getString(R.string.cancel),
                     R.drawable.ic_close_black_24dp,
                     View.OnClickListener { v ->
                         on<AlertHandler>().make().apply {
@@ -231,7 +253,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (group.physical || (!group.hasEvent() && !group.isPublic)) {
             items.add(ToolbarItem(
-                    R.string.host_event,
+                    on<ResourcesHandler>().resources.getString(R.string.host_event),
                     R.drawable.ic_event_note_black_24dp,
                     View.OnClickListener {
                         if (group.physical) {
@@ -251,11 +273,22 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (group.physical || group.hasEvent()) {
             items.add(ToolbarItem(
-                    R.string.review,
+                    on<ResourcesHandler>().resources.getString(R.string.write_review),
                     R.drawable.ic_star_half_black_24dp,
                     View.OnClickListener {
                         on<ReviewHandler>().postReview(group)
                     }
+            ))
+        }
+
+        if (!group.hasPhone() && items.isNotEmpty()) {
+            items.add(0, ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.posts),
+                    R.drawable.ic_view_day_black_24dp,
+                    View.OnClickListener {
+                        contentView.onNext(GroupActivity.ContentViewType.MESSAGES)
+                    },
+                    GroupActivity.ContentViewType.MESSAGES
             ))
         }
 
@@ -283,8 +316,8 @@ class GroupToolbarHandler constructor(private val on: On) {
                 .finish { on<MapActivityHandler>().showEventOnMap(event!!) }
     }
 
-    class ToolbarItem(@field:StringRes var name: Int,
-                               @field:DrawableRes var icon: Int,
-                               var onClickListener: View.OnClickListener,
-                               var value: GroupActivity.ContentViewType? = null)
+    class ToolbarItem(var name: String,
+                      @field:DrawableRes var icon: Int,
+                      var onClickListener: View.OnClickListener,
+                      var value: GroupActivity.ContentViewType? = null)
 }
