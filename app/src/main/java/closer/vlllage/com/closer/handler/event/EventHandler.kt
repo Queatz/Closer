@@ -66,6 +66,7 @@ class EventHandler constructor(private val on: On) {
                     viewHolder.endDatePicker.apply { visible = !visible }
                 }
 
+                viewHolder.endDatePicker.minDate = now.timeInMillis
                 viewHolder.endDatePicker.init(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)) { _, year, month, dayOfMonth ->
                     val calendar = Calendar.getInstance(TimeZone.getDefault())
                     calendar.set(year, month, dayOfMonth)
