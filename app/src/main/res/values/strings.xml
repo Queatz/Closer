@@ -130,7 +130,8 @@
     <string name="ends_at">Ends at</string>
     <string name="starts_at">Starts at</string>
     <string name="view">View</string>
-    <string name="event_start_end_time">%1$s - %2$s %3$s</string>
+    <string name="event_start_end_time">%1$s — %2$s %3$s</string>
+    <string name="event_start_end_time_multiday">%1$s %2$s — %3$s %4$s</string>
     <string name="event_price_and_time">%1$s, %2$s</string>
     <string name="event_happening_now">%1$s (Happening Now)</string>
     <string name="cancelled">Cancelled</string>
@@ -292,6 +293,8 @@
     <string name="talk_with_locals">Talk with locals</string>
     <string name="local_recommendations">Local recommendations</string>
     <string name="say_something_in">Say something in %1$s…</string>
+    <string name="ends">End time</string>
+    <string name="starts">Start time</string>
 
     <plurals name="review_count">
         <item quantity="one">(%1$s review)</item>

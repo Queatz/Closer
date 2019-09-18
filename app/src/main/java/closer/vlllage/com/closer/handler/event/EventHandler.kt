@@ -43,7 +43,6 @@ class EventHandler constructor(private val on: On) {
                 viewHolder.startsAtTimePicker.currentMinute = 0
                 viewHolder.endsAtTimePicker.currentHour = (now.get(Calendar.HOUR_OF_DAY) + 4) % 24
                 viewHolder.endsAtTimePicker.currentMinute = 0
-                viewHolder.datePicker.visibility = View.GONE
 
                 viewHolder.datePicker.minDate = now.timeInMillis
                 viewHolder.isPublicSwitch.isChecked = isPublic
@@ -59,7 +58,24 @@ class EventHandler constructor(private val on: On) {
                     viewHolder.changeDateButton.callOnClick()
                 }
 
-                viewHolder.changeDateButton.setOnClickListener { viewHolder.datePicker.visibility = if (viewHolder.datePicker.visibility == View.GONE) View.VISIBLE else View.GONE }
+                viewHolder.changeDateButton.setOnClickListener {
+                    viewHolder.datePicker.apply { visible = !visible }
+                }
+
+                viewHolder.changeEndDateButton.setOnClickListener {
+                    viewHolder.endDatePicker.apply { visible = !visible }
+                }
+
+                viewHolder.endDatePicker.init(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)) { _, year, month, dayOfMonth ->
+                    val calendar = Calendar.getInstance(TimeZone.getDefault())
+                    calendar.set(year, month, dayOfMonth)
+                    viewHolder.endDateTextView.text = DateUtils.getRelativeTimeSpanString(
+                            calendar.timeInMillis,
+                            now.timeInMillis,
+                            DAY_IN_MILLIS
+                    )
+                    viewHolder.changeEndDateButton.callOnClick()
+                }
 
                 on<TaskHandler>().activeTask?.let {
                     if (it.taskType == TaskType.CREATE_EVENT_IN_GROUP) {
@@ -150,12 +166,8 @@ class EventHandler constructor(private val on: On) {
 
         startsAt.set(viewHolder.datePicker.year, viewHolder.datePicker.month, viewHolder.datePicker.dayOfMonth,
                 viewHolder.startsAtTimePicker.currentHour, viewHolder.startsAtTimePicker.currentMinute, 0)
-        endsAt.set(viewHolder.datePicker.year, viewHolder.datePicker.month, viewHolder.datePicker.dayOfMonth,
+        endsAt.set(viewHolder.endDatePicker.year, viewHolder.endDatePicker.month, viewHolder.endDatePicker.dayOfMonth,
                 viewHolder.endsAtTimePicker.currentHour, viewHolder.endsAtTimePicker.currentMinute, 0)
-
-        if (viewHolder.isNextDaySwitch.isChecked) {
-            endsAt.add(Calendar.DATE, 1)
-        }
 
         return CreateEventViewState(startsAt, endsAt)
     }
@@ -220,7 +232,9 @@ class EventHandler constructor(private val on: On) {
 
     private class CreateEventViewHolder internal constructor(view: View) {
         var isPublicSwitch: Switch = view.isPublicSwitch
-        var isNextDaySwitch: Switch = view.isNextDaySwitch
+        var changeEndDateButton: View = view.changeEndDate
+        var endDateTextView: TextView = view.endDateTextView
+        var endDatePicker: DatePicker = view.endsDatePicker
         var startsAtTimePicker: TimePicker = view.startsAt
         var endsAtTimePicker: TimePicker = view.endsAt
         var datePicker: DatePicker = view.datePicker

@@ -5,8 +5,8 @@ import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Event
+import com.queatz.on.On
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,11 +27,19 @@ class EventDetailsHandler constructor(private val on: On) {
                 DAY_IN_MILLIS
         ).toString()
 
+        val endDay = DateUtils.getRelativeTimeSpanString(
+                event.endsAt!!.time,
+                Date().time,
+                DAY_IN_MILLIS
+        ).toString()
+
         val now = Calendar.getInstance().time
         val isHappeningNow = now.after(event.startsAt) && now.before(event.endsAt)
 
-        var eventTimeText = on<ResourcesHandler>().resources
-                .getString(R.string.event_start_end_time, startTime, endTime, day)
+        var eventTimeText = if (day == endDay)
+            on<ResourcesHandler>().resources.getString(R.string.event_start_end_time, startTime, endTime, day)
+        else
+            on<ResourcesHandler>().resources.getString(R.string.event_start_end_time_multiday, startTime, day, endTime, endDay)
 
         if (isHappeningNow) {
             eventTimeText = on<ResourcesHandler>().resources.getString(R.string.event_happening_now, eventTimeText)

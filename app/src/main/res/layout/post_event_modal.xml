@@ -85,7 +85,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
                 android:padding="24dp"
                 android:layout_alignParentLeft="true"
-                android:text="@string/when"/>
+                android:text="@string/starts"/>
 
             <TextView
                 android:id="@+id/dateTextView"
@@ -105,14 +105,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:headerBackground="@color/red"
-            android:calendarTextColor="@color/red" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Large"
-            android:padding="24dp"
-            android:text="@string/starts_at"/>
+            android:calendarTextColor="@color/red"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <TimePicker
             android:id="@+id/startsAt"
@@ -121,12 +116,42 @@
             android:headerBackground="@color/red"
             android:numbersSelectorColor="@color/red" />
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/changeEndDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Large"
-            android:padding="24dp"
-            android:text="@string/ends_at"/>
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:padding="24dp"
+                android:layout_alignParentLeft="true"
+                android:text="@string/ends"/>
+
+            <TextView
+                android:id="@+id/endDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:padding="24dp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/red"
+                android:text="@string/today"/>
+
+        </RelativeLayout>
+
+        <DatePicker
+            android:id="@+id/endsDatePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:headerBackground="@color/red"
+            android:calendarTextColor="@color/red"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <TimePicker
             android:id="@+id/endsAt"
@@ -134,17 +159,6 @@
             android:layout_height="wrap_content"
             android:headerBackground="@color/red"
             android:numbersSelectorColor="@color/red" />
-
-        <Switch
-            android:id="@+id/isNextDaySwitch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingRight="24dp"
-            android:paddingLeft="24dp"
-            android:paddingTop="@dimen/padDouble"
-            android:paddingBottom="@dimen/padDouble"
-            android:text="@string/is_next_day"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
             android:id="@+id/pinnedMessage"
