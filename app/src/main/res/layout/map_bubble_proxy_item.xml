@@ -5,7 +5,8 @@
     android:id="@+id/click"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/padHalf"
+    android:layout_marginTop="@dimen/padQuarter"
+    android:layout_marginBottom="@dimen/padQuarter"
     android:clickable="true"
     android:background="@drawable/clickable_blue_4dp">
 

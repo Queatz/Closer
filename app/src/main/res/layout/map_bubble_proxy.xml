@@ -27,7 +27,10 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/padHalf"
                 android:paddingEnd="@dimen/padHalf"
-                android:paddingBottom="@dimen/padHalf"
+                android:paddingBottom="@dimen/padQuarter"
+                android:paddingTop="@dimen/padQuarter"
+                android:background="@drawable/rounded_transparent_12dp"
+                android:clipToPadding="false"
                 tools:listitem="@layout/map_bubble_proxy_item"/>
 
         </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>

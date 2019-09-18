@@ -19,6 +19,7 @@ class MapBubbleProxyView constructor(private val on: On) {
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         adapter = MapBubbleProxyAdapter(on, onClickListener)
         recyclerView.adapter = adapter
+        recyclerView.clipToOutline = true
 
         update(view, mapBubble)
 
