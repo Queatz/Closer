@@ -62,10 +62,10 @@ play {
 }
 
 dependencies {
-    implementation ('androidx.constraintlayout:constraintlayout:1.1.3') {
+    implementation ('androidx.constraintlayout:constraintlayout:2.0.0-beta2') {
         exclude group: 'com.android.support'
     }
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation ('com.google.android.gms:play-services-maps:15.0.1') {
         exclude group: 'com.android.support'

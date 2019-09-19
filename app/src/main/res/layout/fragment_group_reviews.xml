@@ -6,200 +6,209 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:id="@+id/summaryLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_max="256dp"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintHeight_percent=".5"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/rounded_dim_12dp"
-        android:layout_margin="@dimen/pad"
-        android:padding="@dimen/pad"
-        android:orientation="vertical">
+        android:layout_margin="@dimen/pad">
 
-        <TextView
-            android:id="@+id/reviewSummaryTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="@string/review_summary"
-            android:textStyle="bold"
-            android:textColor="@color/text"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/stars5Button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/pad"
-            android:background="@drawable/clickable_light_50_rounded_512dp">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/stars5"
+                android:id="@+id/reviewSummaryTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padHalf"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:drawableStart="@drawable/ic_star_black_18dp"
-                android:drawableTint="@color/white"
-                android:drawablePadding="@dimen/padHalf"
-                android:textColor="@color/text"
-                android:paddingEnd="@dimen/pad"
-                android:text="5" />
-
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:id="@+id/stars5ProgressBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/stars5"
-                app:layout_constraintTop_toTopOf="@id/stars5"
-                app:layout_constraintBottom_toBottomOf="@id/stars5"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:indeterminate="false"
-                android:progress="0"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/stars4Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/pad"
-            android:background="@drawable/clickable_light_50_rounded_512dp">
-
-            <TextView
-                android:id="@+id/stars4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:drawableStart="@drawable/ic_star_black_18dp"
-                android:drawableTint="@color/white"
-                android:drawablePadding="@dimen/padHalf"
-                android:textColor="@color/text"
-                android:paddingEnd="@dimen/pad"
-                android:text="4" />
+                android:text="@string/review_summary"
+                android:textStyle="bold"
+                android:textColor="@color/text"/>
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:id="@+id/stars4ProgressBar"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/stars5Button"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/stars4"
-                app:layout_constraintTop_toTopOf="@id/stars4"
-                app:layout_constraintBottom_toBottomOf="@id/stars4"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:indeterminate="false"
-                android:progress="0"/>
+                android:padding="@dimen/pad"
+                android:background="@drawable/clickable_light_50_rounded_512dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/stars5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padHalf"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:drawableStart="@drawable/ic_star_black_18dp"
+                    android:drawableTint="@color/white"
+                    android:drawablePadding="@dimen/padHalf"
+                    android:textColor="@color/text"
+                    android:paddingEnd="@dimen/pad"
+                    android:text="5" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/stars3Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/pad"
-            android:background="@drawable/clickable_light_50_rounded_512dp">
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/stars5ProgressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/stars5"
+                    app:layout_constraintTop_toTopOf="@id/stars5"
+                    app:layout_constraintBottom_toBottomOf="@id/stars5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:indeterminate="false"
+                    android:progress="0"/>
 
-            <TextView
-                android:id="@+id/stars3"
-                android:layout_width="wrap_content"
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/stars4Button"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:drawableStart="@drawable/ic_star_black_18dp"
-                android:drawableTint="@color/white"
-                android:drawablePadding="@dimen/padHalf"
-                android:textColor="@color/text"
-                android:paddingEnd="@dimen/pad"
-                android:text="3" />
+                android:padding="@dimen/pad"
+                android:background="@drawable/clickable_light_50_rounded_512dp">
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:id="@+id/stars3ProgressBar"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/stars4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:drawableStart="@drawable/ic_star_black_18dp"
+                    android:drawableTint="@color/white"
+                    android:drawablePadding="@dimen/padHalf"
+                    android:textColor="@color/text"
+                    android:paddingEnd="@dimen/pad"
+                    android:text="4" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/stars4ProgressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/stars4"
+                    app:layout_constraintTop_toTopOf="@id/stars4"
+                    app:layout_constraintBottom_toBottomOf="@id/stars4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:indeterminate="false"
+                    android:progress="0"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/stars3Button"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/stars3"
-                app:layout_constraintTop_toTopOf="@id/stars3"
-                app:layout_constraintBottom_toBottomOf="@id/stars3"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:indeterminate="false"
-                android:progress="0"/>
+                android:padding="@dimen/pad"
+                android:background="@drawable/clickable_light_50_rounded_512dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/stars3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:drawableStart="@drawable/ic_star_black_18dp"
+                    android:drawableTint="@color/white"
+                    android:drawablePadding="@dimen/padHalf"
+                    android:textColor="@color/text"
+                    android:paddingEnd="@dimen/pad"
+                    android:text="3" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/stars2Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/pad"
-            android:background="@drawable/clickable_light_50_rounded_512dp">
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/stars3ProgressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/stars3"
+                    app:layout_constraintTop_toTopOf="@id/stars3"
+                    app:layout_constraintBottom_toBottomOf="@id/stars3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:indeterminate="false"
+                    android:progress="0"/>
 
-            <TextView
-                android:id="@+id/stars2"
-                android:layout_width="wrap_content"
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/stars2Button"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:drawableStart="@drawable/ic_star_black_18dp"
-                android:drawableTint="@color/white"
-                android:drawablePadding="@dimen/padHalf"
-                android:textColor="@color/text"
-                android:paddingEnd="@dimen/pad"
-                android:text="2" />
+                android:padding="@dimen/pad"
+                android:background="@drawable/clickable_light_50_rounded_512dp">
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:id="@+id/stars2ProgressBar"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/stars2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:drawableStart="@drawable/ic_star_black_18dp"
+                    android:drawableTint="@color/white"
+                    android:drawablePadding="@dimen/padHalf"
+                    android:textColor="@color/text"
+                    android:paddingEnd="@dimen/pad"
+                    android:text="2" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/stars2ProgressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/stars2"
+                    app:layout_constraintTop_toTopOf="@id/stars2"
+                    app:layout_constraintBottom_toBottomOf="@id/stars2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:indeterminate="false"
+                    android:progress="0"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/stars1Button"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/stars2"
-                app:layout_constraintTop_toTopOf="@id/stars2"
-                app:layout_constraintBottom_toBottomOf="@id/stars2"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:indeterminate="false"
-                android:progress="0"/>
+                android:padding="@dimen/pad"
+                android:background="@drawable/clickable_light_50_rounded_512dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/stars1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:drawableStart="@drawable/ic_star_black_18dp"
+                    android:drawableTint="@color/white"
+                    android:drawablePadding="@dimen/padHalf"
+                    android:textColor="@color/text"
+                    android:paddingEnd="@dimen/pad"
+                    android:text="1" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/stars1Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/pad"
-            android:background="@drawable/clickable_light_50_rounded_512dp">
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/stars1ProgressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/stars1"
+                    app:layout_constraintTop_toTopOf="@id/stars1"
+                    app:layout_constraintBottom_toBottomOf="@id/stars1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:indeterminate="false"
+                    android:progress="0"/>
 
-            <TextView
-                android:id="@+id/stars1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:drawableStart="@drawable/ic_star_black_18dp"
-                android:drawableTint="@color/white"
-                android:drawablePadding="@dimen/padHalf"
-                android:textColor="@color/text"
-                android:paddingEnd="@dimen/pad"
-                android:text="1" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:id="@+id/stars1ProgressBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/stars1"
-                app:layout_constraintTop_toTopOf="@id/stars1"
-                app:layout_constraintBottom_toBottomOf="@id/stars1"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:indeterminate="false"
-                android:progress="0"/>
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesRecyclerView"
