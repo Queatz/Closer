@@ -9,24 +9,28 @@ import io.reactivex.subjects.BehaviorSubject
 
 class LightDarkHandler constructor(private val on: On) {
 
-    private val DARK = LightDarkColors(
+    private val DARK = LightDarkColors(false,
             on<ResourcesHandler>().resources.getColor(R.color.text),
+            on<ResourcesHandler>().resources.getColor(R.color.white_50),
             on<ResourcesHandler>().resources.getColor(R.color.white_50),
             on<ResourcesHandler>().resources.getColor(R.color.textHint),
         ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.text)),
         ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.white_50)),
             R.drawable.clickable_light_flat,
+            R.drawable.clickable_light_50_rounded_512dp,
             R.drawable.clickable_light_rounded_8dp,
             R.drawable.clickable_light
     )
 
-    private val LIGHT = LightDarkColors(
+    private val LIGHT = LightDarkColors(true,
             on<ResourcesHandler>().resources.getColor(R.color.textInverse),
             on<ResourcesHandler>().resources.getColor(R.color.colorPrimary),
+            on<ResourcesHandler>().resources.getColor(R.color.colorAccentDark),
             on<ResourcesHandler>().resources.getColor(R.color.textHintInverse),
             ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textInverse)),
             ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary)),
             R.drawable.clickable_dark_flat,
+            R.drawable.clickable_dark_50_rounded_512dp,
             R.drawable.clickable_dark_rounded_8dp,
             R.drawable.clickable_accent_flat
     )
@@ -36,15 +40,22 @@ class LightDarkHandler constructor(private val on: On) {
     fun setLight(isLight: Boolean) {
         onLightChanged.onNext(if (isLight) LIGHT else DARK)
     }
+
+    fun get() = onLightChanged.value!!
+
+    fun isLight() = onLightChanged.value == LIGHT
 }
 
 data class LightDarkColors constructor(
+        @ColorInt val light: Boolean,
         @ColorInt val text: Int,
         @ColorInt val selected: Int,
+        @ColorInt val action: Int,
         @ColorInt val hint: Int,
         val tint: ColorStateList,
         val tintSelected: ColorStateList,
         @DrawableRes val clickableRoundedBackground: Int,
+        @DrawableRes val clickableRoundedBackgroundLight: Int,
         @DrawableRes val clickableRoundedBackground8dp: Int,
         @DrawableRes val clickableBackground: Int
 )

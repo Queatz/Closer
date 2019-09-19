@@ -5,7 +5,10 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler
+import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.handler.helpers.SortHandler
+import closer.vlllage.com.closer.handler.settings.SettingsHandler
+import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
@@ -26,6 +29,12 @@ class FeedHandler constructor(private val on: On) {
                 false
         )
         recyclerView.layoutManager = layoutManager
+
+        on<DisposableHandler>().add(on<SettingsHandler>()
+                .observe(UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME)
+                .subscribe {
+                    on<LightDarkHandler>().setLight(it)
+                })
 
         groupPreviewAdapter = GroupPreviewAdapter(on)
         recyclerView.adapter = groupPreviewAdapter

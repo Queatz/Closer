@@ -30,6 +30,7 @@ class GroupMessagesFragment : PoolActivityFragment() {
 
         disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             sendButton.imageTintList = it.tint
+            sendButton.setBackgroundResource(it.clickableRoundedBackground)
             replyMessage.setTextColor(it.text)
             replyMessage.setHintTextColor(it.hint)
             replyMessage.setBackgroundResource(it.clickableRoundedBackground)

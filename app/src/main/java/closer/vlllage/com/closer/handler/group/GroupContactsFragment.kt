@@ -62,6 +62,12 @@ class GroupContactsFragment : PoolActivityFragment() {
                 on<GroupContactsHandler>().attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton)
             }
         }
+
+        disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
+            searchContacts.setTextColor(it.text)
+            searchContacts.setHintTextColor(it.hint)
+            searchContacts.setBackgroundResource(it.clickableRoundedBackground)
+        })
     }
 
     override fun onDestroyView() {

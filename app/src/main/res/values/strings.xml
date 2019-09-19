@@ -299,6 +299,7 @@
     <string name="post_review">Post your review</string>
     <string name="rating">%1$s rating</string>
     <string name="review_summary">Review summary</string>
+    <string name="settings_use_light_theme">Use light theme</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

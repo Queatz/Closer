@@ -1,15 +1,13 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.helpers.DisposableGroup
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.JsonHandler
-import closer.vlllage.com.closer.handler.helpers.SortHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.pool.PoolActivityFragment
 import closer.vlllage.com.closer.store.StoreHandler
@@ -58,6 +56,28 @@ class GroupReviewsFragment : PoolActivityFragment() {
             }
         }
 
+        disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
+            stars1Button.setBackgroundResource(it.clickableRoundedBackgroundLight)
+            stars2Button.setBackgroundResource(it.clickableRoundedBackgroundLight)
+            stars3Button.setBackgroundResource(it.clickableRoundedBackgroundLight)
+            stars4Button.setBackgroundResource(it.clickableRoundedBackgroundLight)
+            stars5Button.setBackgroundResource(it.clickableRoundedBackgroundLight)
+
+            reviewSummaryTitle.setTextColor(it.text)
+            stars1.setTextColor(it.text)
+            stars2.setTextColor(it.text)
+            stars3.setTextColor(it.text)
+            stars4.setTextColor(it.text)
+            stars5.setTextColor(it.text)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                stars1.compoundDrawableTintList = it.tint
+                stars2.compoundDrawableTintList = it.tint
+                stars3.compoundDrawableTintList = it.tint
+                stars4.compoundDrawableTintList = it.tint
+                stars5.compoundDrawableTintList = it.tint
+            }
+        })
     }
 
     private fun observeReviews(group: Group) {
@@ -90,11 +110,11 @@ class GroupReviewsFragment : PoolActivityFragment() {
         selectedRating = if (selectedRating == rating) 0 else rating
         observeReviews(group)
 
-        stars1Button.setBackgroundResource(if (selectedRating == 1) R.drawable.clickable_white_25_512dp else R.drawable.clickable_light_50_rounded_512dp)
-        stars2Button.setBackgroundResource(if (selectedRating == 2) R.drawable.clickable_white_25_512dp else R.drawable.clickable_light_50_rounded_512dp)
-        stars3Button.setBackgroundResource(if (selectedRating == 3) R.drawable.clickable_white_25_512dp else R.drawable.clickable_light_50_rounded_512dp)
-        stars4Button.setBackgroundResource(if (selectedRating == 4) R.drawable.clickable_white_25_512dp else R.drawable.clickable_light_50_rounded_512dp)
-        stars5Button.setBackgroundResource(if (selectedRating == 5) R.drawable.clickable_white_25_512dp else R.drawable.clickable_light_50_rounded_512dp)
+        stars1Button.setBackgroundResource(if (selectedRating == 1) on<LightDarkHandler>().get().clickableRoundedBackground else on<LightDarkHandler>().get().clickableRoundedBackgroundLight)
+        stars2Button.setBackgroundResource(if (selectedRating == 2) on<LightDarkHandler>().get().clickableRoundedBackground else on<LightDarkHandler>().get().clickableRoundedBackgroundLight)
+        stars3Button.setBackgroundResource(if (selectedRating == 3) on<LightDarkHandler>().get().clickableRoundedBackground else on<LightDarkHandler>().get().clickableRoundedBackgroundLight)
+        stars4Button.setBackgroundResource(if (selectedRating == 4) on<LightDarkHandler>().get().clickableRoundedBackground else on<LightDarkHandler>().get().clickableRoundedBackgroundLight)
+        stars5Button.setBackgroundResource(if (selectedRating == 5) on<LightDarkHandler>().get().clickableRoundedBackground else on<LightDarkHandler>().get().clickableRoundedBackgroundLight)
     }
 
     private fun refreshSummary(groupMessages: List<GroupMessage>) {

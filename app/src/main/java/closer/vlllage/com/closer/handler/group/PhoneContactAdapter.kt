@@ -8,12 +8,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.helpers.DisposableGroup
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupInvite
 import com.queatz.on.On
+import kotlinx.android.synthetic.main.phone_contact_item.view.*
 import java.util.*
 
 class PhoneContactAdapter(on: On,
@@ -33,7 +37,9 @@ class PhoneContactAdapter(on: On,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhoneContactViewHolder {
         return PhoneContactViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.phone_contact_item, parent, false))
+                .inflate(R.layout.phone_contact_item, parent, false)).also {
+            it.disposableGroup = on<DisposableHandler>().group()
+        }
     }
 
     override fun onBindViewHolder(holder: PhoneContactViewHolder, position: Int) {
@@ -81,6 +87,18 @@ class PhoneContactAdapter(on: On,
         holder.itemView.setOnClickListener {
             onPhoneContactClickListener?.invoke(contact)
         }
+
+        holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
+            holder.itemView.setBackgroundResource(it.clickableBackground)
+            holder.name.setTextColor(it.text)
+            holder.number.setTextColor(it.text)
+            holder.action.setTextColor(it.action)
+            holder.phoneIcon.imageTintList = it.tint
+        })
+    }
+
+    override fun onViewRecycled(holder: PhoneContactViewHolder) {
+        holder.disposableGroup.clear()
     }
 
     override fun getItemCount(): Int {
@@ -115,10 +133,10 @@ class PhoneContactAdapter(on: On,
     }
 
     inner class PhoneContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var name: TextView = itemView.findViewById(R.id.name)
-        var number: TextView = itemView.findViewById(R.id.number)
-        var action: TextView = itemView.findViewById(R.id.action)
-        var phoneIcon: ImageView = itemView.findViewById(R.id.phoneIcon)
-
+        var name: TextView = itemView.name
+        var number: TextView = itemView.number
+        var action: TextView = itemView.action
+        var phoneIcon: ImageView = itemView.phoneIcon
+        lateinit var disposableGroup: DisposableGroup
     }
 }

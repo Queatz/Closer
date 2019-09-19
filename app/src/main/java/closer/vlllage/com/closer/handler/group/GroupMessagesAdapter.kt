@@ -49,7 +49,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
 
         if (pinned) {
             holder.itemView.setPadding(0, 0, 0, 0)
-            holder.itemView.setBackgroundResource(R.color.white_15)
+            holder.itemView.setBackgroundResource(R.color.dim)
             holder.messageLayout.background = null
             val pad = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
             holder.messageActionLayout.setPadding(

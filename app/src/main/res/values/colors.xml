@@ -16,7 +16,8 @@
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorPrimaryLight">#64B5F6</color>
     <color name="colorAccent_50">#7FFFB300</color>
-        <color name="colorAccent">#FFB300</color>
+    <color name="colorAccent">#FFB300</color>
+    <color name="colorAccentDark">#CC8F00</color>
     <color name="colorAccentLight">#FFC107</color>
     <color name="blue200">#90CAF9</color>
     <color name="blue200_transparent">#0090CAF9</color>

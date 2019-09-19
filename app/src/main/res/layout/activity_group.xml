@@ -12,7 +12,7 @@
         android:id="@+id/backgroundColor"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/color_primary_rounded"
+        android:background="@drawable/color_white_rounded"
         android:clickable="true"
         android:elevation="@dimen/padDouble"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -75,13 +75,13 @@
 
         <RatingBar style="?android:attr/ratingBarStyleSmall"
             android:id="@+id/groupRatingAverage"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/pad"
             android:layout_marginTop="@dimen/padHalf"
             app:layout_constraintWidth_default="wrap"
-            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintVertical_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/groupRatingCount"
@@ -96,7 +96,7 @@
 
         <TextView
             android:id="@+id/groupRatingCount"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:clickable="true"

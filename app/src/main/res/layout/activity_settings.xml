@@ -47,6 +47,20 @@
                 android:text="@string/public_notifications_switch_description" />
 
             <Switch
+                android:id="@+id/lightThemeSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/settings_use_light_theme" />
+
+            <Switch
                 android:id="@+id/openGroupsExpandedSettingsSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

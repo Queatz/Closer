@@ -6,10 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,9 +24,9 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import closer.vlllage.com.closer.ui.CombinedRecyclerAdapter
-import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import kotlinx.android.synthetic.main.group_preview_item.view.*
 import java.lang.Math.max
 import java.lang.Math.min
 import java.util.*
@@ -70,7 +66,9 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
             1 -> HeaderViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.feed_item_public_groups, parent, false))
             else -> ViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.group_preview_item, parent, false))
+                    .inflate(R.layout.group_preview_item, parent, false)).also {
+                it.disposableGroup = on<DisposableHandler>().group()
+            }
         }
     }
 
@@ -91,6 +89,7 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         holder.on.use(on<StoreHandler>())
         holder.on.use(on<MediaHandler>())
         holder.on.use(on<CameraHandler>())
+        holder.on.use(on<LightDarkHandler>())
 
         val group = groups[position - HEADER_COUNT]
         holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
@@ -183,7 +182,6 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
             on<KeyboardHandler>().showKeyboard(view, false)
         }
 
-        holder.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
 
         on<ImageHandler>().get().cancelRequest(holder.backgroundPhoto)
         if (group.photo != null) {
@@ -195,6 +193,32 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         }
 
         on<GroupScopeHandler>().setup(group, holder.scopeIndicatorButton)
+
+        holder.disposableGroup.add(holder.on<LightDarkHandler>().onLightChanged.subscribe {
+            holder.groupName.setTextColor(it.text)
+            holder.sendButton.imageTintList = it.tint
+            holder.sendButton.setBackgroundResource(it.clickableRoundedBackground)
+            holder.replyMessage.setTextColor(it.text)
+            holder.replyMessage.setHintTextColor(it.hint)
+            holder.replyMessage.setBackgroundResource(it.clickableRoundedBackground)
+            holder.scopeIndicatorButton.imageTintList = it.tint
+            holder.goToGroup.imageTintList = it.tint
+
+            if (it.light) {
+                holder.backgroundPhoto.alpha = .15f
+                holder.backgroundColor.setBackgroundResource(R.drawable.color_white_rounded)
+            } else {
+                holder.backgroundPhoto.alpha = 1f
+                holder.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
+            }
+
+            holder.groupName.setBackgroundResource(it.clickableRoundedBackground8dp)
+        })
+
+//        holder.mentionSuggestionRecyclerView
+//        holder.messagesRecyclerView
+//        holder.pinnedMessagesRecyclerView
+
     }
 
     override fun getItemViewType(position: Int) = when (position) {
@@ -206,7 +230,10 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         super.onViewRecycled(holder)
         when (holder) {
             is HeaderViewHolder -> holder.on.off()
-            is ViewHolder -> holder.on.off()
+            is ViewHolder -> {
+                holder.disposableGroup.clear()
+                holder.on.off()
+            }
         }
     }
 
@@ -229,6 +256,7 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         holder.on.use(on<MediaHandler>())
         holder.on.use(on<CameraHandler>())
         holder.on.use(on<ApiHandler>())
+        holder.on.use(on<LightDarkHandler>())
         holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView)
     }
 
@@ -239,17 +267,19 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         lateinit var on: On
-        var groupName: TextView = itemView.findViewById(R.id.groupName)
-        var messagesRecyclerView: RecyclerView = itemView.findViewById(R.id.messagesRecyclerView)
-        var pinnedMessagesRecyclerView: RecyclerView = itemView.findViewById(R.id.pinnedMessagesRecyclerView)
-        var sendButton: ImageButton = itemView.findViewById(R.id.sendButton)
-        var replyMessage: EditText = itemView.findViewById(R.id.replyMessage)
-        var backgroundPhoto: ImageView = itemView.findViewById(R.id.backgroundPhoto)
-        var scopeIndicatorButton: ImageButton = itemView.findViewById(R.id.scopeIndicatorButton)
-        var mentionSuggestionsLayout: MaxSizeFrameLayout = itemView.findViewById(R.id.mentionSuggestionsLayout)
-        var mentionSuggestionRecyclerView: RecyclerView = itemView.findViewById(R.id.mentionSuggestionRecyclerView)
-        var backgroundColor: View = itemView.findViewById(R.id.backgroundColor)
+        var groupName = itemView.groupName!!
+        var messagesRecyclerView = itemView.messagesRecyclerView!!
+        var pinnedMessagesRecyclerView = itemView.pinnedMessagesRecyclerView!!
+        var sendButton = itemView.sendButton!!
+        var replyMessage = itemView.replyMessage!!
+        var backgroundPhoto = itemView.backgroundPhoto!!
+        var scopeIndicatorButton = itemView.scopeIndicatorButton!!
+        var goToGroup = itemView.goToGroup!!
+        var mentionSuggestionsLayout = itemView.mentionSuggestionsLayout!!
+        var mentionSuggestionRecyclerView = itemView.mentionSuggestionRecyclerView!!
+        var backgroundColor = itemView.backgroundColor!!
         var textWatcher: TextWatcher? = null
+        lateinit var disposableGroup: DisposableGroup
     }
 
     companion object {
