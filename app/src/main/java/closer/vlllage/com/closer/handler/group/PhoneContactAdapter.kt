@@ -46,6 +46,14 @@ class PhoneContactAdapter(on: On,
         var position = position
         val contact: PhoneContact
 
+        holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
+            holder.itemView.setBackgroundResource(it.clickableBackground)
+            holder.name.setTextColor(it.text)
+            holder.number.setTextColor(it.text)
+            holder.action.setTextColor(it.action)
+            holder.phoneIcon.imageTintList = it.tint
+        })
+
         if (position < memberAndInviteCount) {
             if (phoneNumber != null) {
                 contact = PhoneContact(null, phoneNumber)
@@ -87,14 +95,6 @@ class PhoneContactAdapter(on: On,
         holder.itemView.setOnClickListener {
             onPhoneContactClickListener?.invoke(contact)
         }
-
-        holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
-            holder.itemView.setBackgroundResource(it.clickableBackground)
-            holder.name.setTextColor(it.text)
-            holder.number.setTextColor(it.text)
-            holder.action.setTextColor(it.action)
-            holder.phoneIcon.imageTintList = it.tint
-        })
     }
 
     override fun onViewRecycled(holder: PhoneContactViewHolder) {

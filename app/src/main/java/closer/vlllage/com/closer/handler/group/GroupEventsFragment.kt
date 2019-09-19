@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.helpers.DisposableGroup
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.SortHandler
+import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.pool.PoolActivityFragment
 import closer.vlllage.com.closer.store.StoreHandler
@@ -43,6 +42,10 @@ class GroupEventsFragment : PoolActivityFragment() {
             onGroupChanged(disposableGroup) { group ->
                 groupDisposableGroup.clear()
 
+                hostEvent.setOnClickListener {
+                    on<HostEventHelper>().hostEvent(group)
+                }
+
                 val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
                 groupDisposableGroup.add(queryBuilder
                         .sort(on<SortHandler>().sortGroupMessages())
@@ -52,10 +55,18 @@ class GroupEventsFragment : PoolActivityFragment() {
                         .subscribe()
                         .on(AndroidScheduler.mainThread())
                         .observer { groupMessages ->
+                            emptyText.visible = groupMessages.isEmpty()
+                            hostEvent.visible = groupMessages.isEmpty()
+
                             groupMessagesAdapter.setGroupMessages(groupMessages)
                         })
             }
         }
+
+        on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
+            emptyText.setTextColor(it.text)
+            hostEvent.setTextColor(it.text)
+        })
     }
 
     override fun onDestroyView() {

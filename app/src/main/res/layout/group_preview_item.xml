@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:elevation="@dimen/elevation"
+    android:clipToPadding="false"
     android:clickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout

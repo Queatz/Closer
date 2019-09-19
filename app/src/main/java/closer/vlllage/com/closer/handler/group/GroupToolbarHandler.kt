@@ -6,17 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.TaskDefinition
-import closer.vlllage.com.closer.handler.TaskHandler
-import closer.vlllage.com.closer.handler.TaskType
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
-import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.Event
@@ -256,17 +251,7 @@ class GroupToolbarHandler constructor(private val on: On) {
                     on<ResourcesHandler>().resources.getString(R.string.host_event),
                     R.drawable.ic_event_note_black_24dp,
                     View.OnClickListener {
-                        if (group.physical) {
-                            on<EventHandler>().createNewEvent(LatLng(
-                                    group.latitude!!,
-                                    group.longitude!!
-                            ), group.isPublic) {
-                                showEventOnMap(it)
-                            }
-                        } else {
-                            on<TaskHandler>().activeTask = TaskDefinition(TaskType.CREATE_EVENT_IN_GROUP, group)
-                            on<NavigationHandler>().showMap(on<ResourcesHandler>().resources.getString(R.string.create_event_in_group_instructions))
-                        }
+                        on<HostEventHelper>().hostEvent(group)
                     }
             ))
         }
@@ -311,6 +296,7 @@ class GroupToolbarHandler constructor(private val on: On) {
         (on<ActivityHandler>().activity as CircularRevealActivity)
                 .finish { on<MapActivityHandler>().showGroupOnMap(group!!) }
     }
+
     private fun showEventOnMap(event: Event?) {
         (on<ActivityHandler>().activity as CircularRevealActivity)
                 .finish { on<MapActivityHandler>().showEventOnMap(event!!) }

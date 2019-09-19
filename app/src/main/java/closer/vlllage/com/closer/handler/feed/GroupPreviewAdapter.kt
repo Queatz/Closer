@@ -206,19 +206,16 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
 
             if (it.light) {
                 holder.backgroundPhoto.alpha = .15f
+                holder.itemView.setBackgroundResource(R.color.offwhite)
                 holder.backgroundColor.setBackgroundResource(R.drawable.color_white_rounded)
             } else {
                 holder.backgroundPhoto.alpha = 1f
+                holder.itemView.setBackgroundResource(R.color.white)
                 holder.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
             }
 
             holder.groupName.setBackgroundResource(it.clickableRoundedBackground8dp)
         })
-
-//        holder.mentionSuggestionRecyclerView
-//        holder.messagesRecyclerView
-//        holder.pinnedMessagesRecyclerView
-
     }
 
     override fun getItemViewType(position: Int) = when (position) {
