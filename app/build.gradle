@@ -1,8 +1,12 @@
+
+plugins {
+    id 'com.github.triplet.play' version '2.4.1'
+}
+
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.github.triplet.play'
 apply plugin: 'io.objectbox'
 
 android {
