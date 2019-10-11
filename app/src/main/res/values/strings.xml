@@ -301,6 +301,7 @@
     <string name="review_summary">Review summary</string>
     <string name="settings_use_light_theme">Use light theme</string>
     <string name="no_events_yet_be_the_first_to_host_one">No events yet. Be the first to host one!</string>
+    <string name="members">Members</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

@@ -373,7 +373,7 @@ class GroupActivity : CircularRevealActivity() {
     override val backgroundId = R.id.background
 
     private fun toggleContactsView() {
-        contentView = if (contentView == ContentViewType.CONTACTS) ContentViewType.MESSAGES else ContentViewType.CONTACTS
+        on<GroupToolbarHandler>().contentView.onNext(if (on<GroupToolbarHandler>().contentView.value == ContentViewType.CONTACTS) ContentViewType.MESSAGES else ContentViewType.CONTACTS)
     }
 
     private fun setContent(fragment: Fragment) {

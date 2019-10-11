@@ -204,6 +204,7 @@ interface Backend {
     fun updateGroupMember(@Path("group") groupId: String, @Query("muted") muted: Boolean, @Query("subscribed") subscribed: Boolean): Single<CreateResult>
 
     companion object {
+//        const val BASE_URL = "http://10.0.2.2:8080/closer/"
         const val BASE_URL = "https://closer.vlllage.com/"
     }
 }
