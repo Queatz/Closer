@@ -8,15 +8,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.helpers.DisposableGroup
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
+import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupInvite
+import closer.vlllage.com.closer.store.models.Phone
+import closer.vlllage.com.closer.store.models.Phone_
 import com.queatz.on.On
+import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.phone_contact_item.view.*
 import java.util.*
 
@@ -46,12 +47,18 @@ class PhoneContactAdapter(on: On,
         var position = position
         val contact: PhoneContact
 
+        holder.phoneIconIsPhoto = false
+        holder.phoneIcon.alpha = .75f
+
         holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             holder.itemView.setBackgroundResource(it.clickableBackground)
             holder.name.setTextColor(it.text)
             holder.number.setTextColor(it.text)
             holder.action.setTextColor(it.action)
-            holder.phoneIcon.imageTintList = it.tint
+
+            if (!holder.phoneIconIsPhoto) {
+                holder.phoneIcon.imageTintList = it.tint
+            }
         })
 
         if (position < memberAndInviteCount) {
@@ -61,7 +68,29 @@ class PhoneContactAdapter(on: On,
                 if (position < groupContacts.size) {
                     val groupContact = groupContacts[position]
 
-                    holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
+                    holder.phoneIcon.setImageDrawable(null)
+
+                    holder.disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
+                            .equal(Phone_.id, groupContact.contactId!!)
+                            .build()
+                            .subscribe()
+                            .on(AndroidScheduler.mainThread())
+                            .single()
+                            .observer {
+                                it.firstOrNull()?.let { phone ->
+                                    if (phone.photo != null) {
+                                        holder.phoneIconIsPhoto = true
+                                        holder.phoneIcon.imageTintList = null
+                                        holder.phoneIcon.alpha = 1f
+                                        on<PhotoHelper>().loadCircle(holder.phoneIcon, phone.photo!!)
+                                    } else {
+                                        holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
+                                    }
+                                } ?: let {
+                                    holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
+                                }
+                            })
+
                     val isMe = on<PersistenceHandler>().phoneId == groupContact.contactId
                     holder.name.text = on<NameHandler>().getName(groupContact)
                     holder.action.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.options else R.string.profile)
@@ -137,6 +166,7 @@ class PhoneContactAdapter(on: On,
         var number: TextView = itemView.number
         var action: TextView = itemView.action
         var phoneIcon: ImageView = itemView.phoneIcon
+        var phoneIconIsPhoto = false
         lateinit var disposableGroup: DisposableGroup
     }
 }
