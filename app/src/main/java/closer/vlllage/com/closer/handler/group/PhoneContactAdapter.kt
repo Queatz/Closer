@@ -68,7 +68,7 @@ class PhoneContactAdapter(on: On,
                 if (position < groupContacts.size) {
                     val groupContact = groupContacts[position]
 
-                    holder.phoneIcon.setImageDrawable(null)
+                    holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
 
                     holder.disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
                             .equal(Phone_.id, groupContact.contactId!!)
@@ -82,12 +82,8 @@ class PhoneContactAdapter(on: On,
                                         holder.phoneIconIsPhoto = true
                                         holder.phoneIcon.imageTintList = null
                                         holder.phoneIcon.alpha = 1f
-                                        on<PhotoHelper>().loadCircle(holder.phoneIcon, phone.photo!!)
-                                    } else {
-                                        holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
+                                        on<PhotoHelper>().loadCircle(holder.phoneIcon, phone.photo!!, R.dimen.profilePhotoSmall)
                                     }
-                                } ?: let {
-                                    holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
                                 }
                             })
 

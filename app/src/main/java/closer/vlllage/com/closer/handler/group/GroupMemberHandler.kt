@@ -49,7 +49,21 @@ class GroupMemberHandler constructor(private val on: On) {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) { on<GroupActionHandler>().addActionToGroup(group) },
                     MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) },
-                    MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) { on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> } })
+                    MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) { on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> } },
+                    MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.edit_about_group) {
+                        on<AlertHandler>().make().apply {
+                            title = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
+                            layoutResId = R.layout.create_public_group_modal
+                            textViewId = R.id.input
+                            onTextViewSubmitCallback = { about -> on<PhysicalGroupUpgradeHandler>().setAbout(group, about) { updateGroup -> } }
+                            onAfterViewCreated = { alert, view ->
+                                view.findViewById<EditText>(alert.textViewId!!).setText(group.about
+                                        ?: "")
+                            }
+                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.edit_about_group)
+                            show()
+                        }
+                    })
         }
     }
 

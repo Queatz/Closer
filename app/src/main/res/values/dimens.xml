@@ -7,6 +7,7 @@
     <dimen name="padQuadruple">32dp</dimen>
     <dimen name="padDialog">24dp</dimen>
     <dimen name="profilePhotoCollapsedHeight">84dp</dimen>
+    <dimen name="profilePhotoSmall">32dp</dimen>
     <dimen name="miniWindowHeight">350dp</dimen>
     <dimen name="miniWindowTopMargin">84dp</dimen>
     <dimen name="miniWindowMinTopMargin">0dp</dimen>

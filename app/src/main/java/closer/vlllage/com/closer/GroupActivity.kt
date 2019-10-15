@@ -126,6 +126,7 @@ class GroupActivity : CircularRevealActivity() {
             onGroupUpdated { group ->
                 setGroupBackground(group)
                 setGroupRating(group)
+                setGroupAbout(group)
             }
 
             onContactInfoChanged { redrawContacts(it) }
@@ -133,16 +134,6 @@ class GroupActivity : CircularRevealActivity() {
             onGroupChanged { group ->
                 if (!on<SettingsHandler>().get(UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME)) {
                     on<LightDarkHandler>().setLight(group.hasPhone())
-                }
-
-                showGroupName(group)
-                view.peopleInGroup.text = ""
-
-                if (on<Val>().isEmpty(group.about)) {
-                    view.groupAbout.visible = false
-                } else {
-                    view.groupAbout.visible = true
-                    view.groupAbout.text = group.about
                 }
 
                 on<GroupToolbarHandler>().contentView.onNext(if (group.hasPhone())
@@ -174,12 +165,7 @@ class GroupActivity : CircularRevealActivity() {
                 view.groupDetails.text = ""
                 view.peopleInGroup.text = ""
 
-                if (on<Val>().isEmpty(group.about)) {
-                    view.groupAbout.visible = false
-                } else {
-                    view.groupAbout.visible = true
-                    view.groupAbout.text = group.about
-                }
+                setGroupAbout(group)
 
                 on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
 
@@ -269,6 +255,15 @@ class GroupActivity : CircularRevealActivity() {
 
         view.groupRatingAverage.rating = group.ratingAverage!!.toFloat()
         view.groupRatingCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count_parenthesized, group.ratingCount!!, group.ratingCount)
+    }
+
+    private fun setGroupAbout(group: Group) {
+        if (on<Val>().isEmpty(group.about)) {
+            view.groupAbout.visible = false
+        } else {
+            view.groupAbout.visible = true
+            view.groupAbout.text = group.about
+        }
     }
 
     private fun setGroupBackground(group: Group) {
