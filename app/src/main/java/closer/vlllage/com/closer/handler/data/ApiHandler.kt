@@ -288,6 +288,15 @@ class ApiHandler constructor(private val on: On) {
                 .map { responseBody -> id }
     }
 
+    fun getRecentlyActivePhones(limit: Int): Single<List<PhoneResult>> {
+        return uiThread(api.backend.getRecentlyActivePhones(limit))
+    }
+
+    fun getRecentlyActiveGroups(limit: Int): Single<List<GroupResult>> {
+        return uiThread(api.backend.getRecentlyActiveGroups(limit))
+    }
+
+
     fun privacy(): Single<String> {
         return uiThread(api.contentBackend.privacy()).map { it.string() }
     }

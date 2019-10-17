@@ -26,6 +26,28 @@ class DataHandler constructor(private val on: On) {
                 result
             }
 
+    fun getRecentlyActivePhones(limit: Int = 100) = on<ApiHandler>().getRecentlyActivePhones(limit)
+            .doOnSuccess { phoneResults -> on<RefreshHandler>().handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
+                    { PhoneResult.from(it) },
+                    { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) }) }
+            .map { phoneResults ->
+                val result = ArrayList<Phone>(phoneResults.size)
+                for (phoneResult in phoneResults) {
+                    result.add(PhoneResult.from(phoneResult))
+                }
+                result
+            }
+
+    fun getRecentlyActiveGroups(limit: Int = 100) = on<ApiHandler>().getRecentlyActiveGroups(limit)
+            .doOnSuccess { groupResults -> on<RefreshHandler>().handleGroups(groupResults, false) }
+            .map { groupResults ->
+                val result = ArrayList<Group>(groupResults.size)
+                for (groupResult in groupResults) {
+                    result.add(GroupResult.from(groupResult))
+                }
+                result
+            }
+
     fun getGroup(groupId: String) = chain({
         on<StoreHandler>().store.box(Group::class).query()
                 .equal(Group_.id, groupId)

@@ -48,6 +48,8 @@ class MapsActivity : PoolActivity() {
     }
 
     override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
         if (intent.hasExtra(EXTRA_PROMPT)) {
             on<DefaultAlerts>().message(intent.getStringExtra(EXTRA_PROMPT))
         }

@@ -203,6 +203,14 @@ interface Backend {
     @POST("member/of/{group}")
     fun updateGroupMember(@Path("group") groupId: String, @Query("muted") muted: Boolean, @Query("subscribed") subscribed: Boolean): Single<CreateResult>
 
+    // World
+
+    @GET("world/phones")
+    fun getRecentlyActivePhones(@Query("limit") limit: Int): Single<List<PhoneResult>>
+
+    @GET("world/groups")
+    fun getRecentlyActiveGroups(@Query("limit") limit: Int): Single<List<GroupResult>>
+
     companion object {
 //        const val BASE_URL = "http://10.0.2.2:8080/closer/"
         const val BASE_URL = "https://closer.vlllage.com/"

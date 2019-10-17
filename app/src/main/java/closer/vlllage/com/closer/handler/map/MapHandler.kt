@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import android.view.View
-import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.LocationHandler
 import closer.vlllage.com.closer.handler.data.PermissionHandler
@@ -22,6 +21,7 @@ import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
+
 class MapHandler constructor(private val on: On) : OnMapReadyCallback {
 
     private var map: GoogleMap? = null
@@ -34,6 +34,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
     var onMapIdleListener: ((LatLng) -> Unit)? = null
 
     private val onMapIdleObservable = BehaviorSubject.create<CameraPosition>()
+    private val onMapReadyObservable = BehaviorSubject.create<GoogleMap>()
 
     val center: LatLng?
         get() = if (map == null) {
@@ -65,6 +66,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        onMapReadyObservable.onNext(map!!)
 
         if (on<PersistenceHandler>().lastMapCenter != null) {
             map!!.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(
@@ -122,10 +124,10 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
             if (map!!.mapType != GoogleMap.MAP_TYPE_SATELLITE) {
                 map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
             }
-        } else if (map!!.cameraPosition.zoom <= 3) {
-            if (map!!.mapType != GoogleMap.MAP_TYPE_SATELLITE) {
-                map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
-            }
+//        } else if (map!!.cameraPosition.zoom <= 3) {
+//            if (map!!.mapType != GoogleMap.MAP_TYPE_SATELLITE) {
+//                map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
+//            }
         } else {
             if (map!!.mapType != GoogleMap.MAP_TYPE_NORMAL) {
                 map!!.mapType = GoogleMap.MAP_TYPE_NORMAL
@@ -148,7 +150,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
         if (on<NightDayHandler>().isNight(Date(), location)) {
-            map!!.setMapStyle(MapStyleOptions.loadRawResourceStyle(on<ApplicationHandler>().app, R.raw.google_maps_night_mode))
+            map!!.setMapStyle(MapStyleOptions.loadRawResourceStyle(on<ApplicationHandler>().app, closer.vlllage.com.closer.R.raw.google_maps_night_mode))
         }
 
         on<RefreshHandler>().refreshGroupActions(LatLng(location.latitude, location.longitude))
@@ -179,6 +181,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
     }
 
     fun onMapIdleObservable() = onMapIdleObservable
+    fun onMapReadyObservable() = onMapReadyObservable
 
     companion object {
         private const val DEFAULT_ZOOM = 15f

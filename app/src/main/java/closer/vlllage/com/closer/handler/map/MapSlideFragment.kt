@@ -139,6 +139,22 @@ class MapSlideFragment : PoolFragment() {
             pendingRunnable!!.run()
             pendingRunnable = null
         }
+
+        if("I am a super god being".isNotBlank()) {
+            on<DataVisualsHandler>().attach()
+
+            on<DisposableHandler>().add(on<DataHandler>().getRecentlyActivePhones(1000).subscribe { phones ->
+                on<DataVisualsHandler>().setPhones(phones
+                        .filter { it.latitude != null && it.longitude != null }
+                        .map { LatLng(it.latitude!!, it.longitude!!) })
+            })
+
+            on<DisposableHandler>().add(on<DataHandler>().getRecentlyActiveGroups(1000).subscribe { phones ->
+                on<DataVisualsHandler>().setGroups(phones
+                        .filter { it.latitude != null && it.longitude != null }
+                        .map { LatLng(it.latitude!!, it.longitude!!) })
+            })
+        }
     }
 
     private fun showMapMenu(latLng: LatLng, title: String?) {

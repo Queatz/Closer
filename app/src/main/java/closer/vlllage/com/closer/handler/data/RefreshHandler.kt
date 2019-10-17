@@ -253,7 +253,7 @@ class RefreshHandler constructor(private val on: On) {
         }
     }
 
-    private fun handleGroups(groups: List<GroupResult>, deleteLocal: Boolean = false) {
+    fun handleGroups(groups: List<GroupResult>, deleteLocal: Boolean = false) {
         handleFullListResult(groups, Group::class.java, Group_.id, deleteLocal, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) })
     }
 
