@@ -161,14 +161,16 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        items.add(ToolbarItem(
-                on<ResourcesHandler>().resources.getString(R.string.members),
-                R.drawable.ic_group_black_24dp,
-                View.OnClickListener {
-                    contentView.onNext(GroupActivity.ContentViewType.CONTACTS)
-                },
-                GroupActivity.ContentViewType.CONTACTS
-        ))
+        if (!group.hasPhone()) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.members),
+                    R.drawable.ic_group_black_24dp,
+                    View.OnClickListener {
+                        contentView.onNext(GroupActivity.ContentViewType.CONTACTS)
+                    },
+                    GroupActivity.ContentViewType.CONTACTS
+            ))
+        }
 
         if (event != null) {
             items.add(ToolbarItem(
