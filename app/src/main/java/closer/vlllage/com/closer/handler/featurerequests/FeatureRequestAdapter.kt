@@ -1,0 +1,61 @@
+package closer.vlllage.com.closer.handler.featurerequests
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.api.models.FeatureRequestResult
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import com.queatz.on.On
+import kotlinx.android.synthetic.main.item_feature_request.view.*
+
+class FeatureRequestAdapter constructor(private val on: On) : RecyclerView.Adapter<FeatureRequestViewHolder>() {
+
+    var items = mutableListOf<FeatureRequestResult>()
+        set(value) {
+            val diffUtil = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = field[oldItemPosition].id == value[newItemPosition].id
+
+                override fun getOldListSize() = field.size
+                override fun getNewListSize() = value.size
+
+                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                        field[oldItemPosition].voted == value[newItemPosition].voted &&
+                        field[oldItemPosition].votes == value[newItemPosition].votes
+            })
+
+            field.clear()
+            field.addAll(value)
+
+            diffUtil.dispatchUpdatesTo(this)
+        }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            FeatureRequestViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_feature_request, parent, false))
+
+    override fun getItemCount() = items.size
+
+    override fun onBindViewHolder(holder: FeatureRequestViewHolder, position: Int) {
+        val item = items[position]
+
+        holder.name.text = item.name
+        holder.description.text = item.description
+        holder.voteCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.votes, item.votes, item.votes)
+
+        holder.voteButton.text = on<ResourcesHandler>().resources.getString(
+                if (item.voted) R.string.you_voted else R.string.vote
+        )
+        holder.voteButton.setOnClickListener {
+            on<FeatureRequestsHandler>().vote(item.id!!, !item.voted)
+        }
+    }
+}
+
+class FeatureRequestViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    val name = view.name!!
+    val description = view.description!!
+    val voteCount = view.voteCount!!
+    val voteButton = view.voteButton!!
+}

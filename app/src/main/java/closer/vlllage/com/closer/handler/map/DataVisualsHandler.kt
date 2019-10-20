@@ -37,21 +37,21 @@ class DataVisualsHandler constructor(private val on: On) {
             heatmaps[layer] = heatmap
             heatmap.tileProvider = HeatmapTileProvider.Builder()
                     .gradient(gradient(layer))
+                    .radius(30)
                     .data(list)
                     .build()
 
             on<DisposableHandler>().add(on<MapHandler>().onMapReadyObservable()
                     .subscribe { map ->
                         heatmap.overlay?.remove()
-                        heatmap.overlay = map.addTileOverlay(TileOverlayOptions()
-                                .tileProvider(heatmap.tileProvider))
+                        heatmap.overlay = map.addTileOverlay(TileOverlayOptions().tileProvider(heatmap.tileProvider))
                     })
         }
     }
 
     private fun gradient(layer: Layer) = when (layer) {
-        Layer.PHONE -> Gradient(intArrayOf(Color.rgb(102, 102, 225), Color.rgb(255, 255, 255)), floatArrayOf(0.2f, 1.0f))
-        Layer.GROUP -> Gradient(intArrayOf(Color.rgb(102, 225, 0), Color.rgb(255, 255, 255)), floatArrayOf(0.2f, 1.0f))
+        Layer.PHONE -> Gradient(intArrayOf(Color.rgb(0, 102, 225), Color.rgb(255, 255, 255)), floatArrayOf(0.1f, 1.0f))
+        Layer.GROUP -> Gradient(intArrayOf(Color.rgb(102, 225, 0), Color.rgb(255, 0, 0)), floatArrayOf(0.1f, 1.0f))
     }
 }
 

@@ -88,6 +88,8 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         onMapChangedListener!!.invoke()
         map!!.setPadding(0, on<WindowHandler>().statusBarHeight, 0, 0)
 
+        map!!.setMinZoomPreference(0.0f)
+
         if (centerOnMapLoad == null) {
             locateMe()
         } else {

@@ -104,8 +104,9 @@ class MapSlideFragment : PoolFragment() {
         on<MyGroupsLayoutHandler>().setContainerView(view.findViewById(R.id.bottomContainer))
 
         on<KeyboardVisibilityHandler>().attach(view.findViewById(R.id.contentView))
+
         on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe({ isVisible -> on<MyGroupsLayoutHandler>().showBottomPadding(!isVisible) }, { it.printStackTrace() }))
 
         val verifiedNumber = on<PersistenceHandler>().isVerified
@@ -114,7 +115,7 @@ class MapSlideFragment : PoolFragment() {
             on<DisposableHandler>().add(on<ApiHandler>().isVerified.subscribe({ verified ->
                 on<PersistenceHandler>().isVerified = verified
                 on<MyGroupsLayoutActionsHandler>().showVerifyMyNumber(!verified)
-            }, { this.networkError(it) }))
+            }, { networkError(it) }))
         }
 
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(activity as FragmentActivity) { instanceIdResult ->
@@ -208,6 +209,7 @@ class MapSlideFragment : PoolFragment() {
 
         val isNotificationsPaused = on<PersistenceHandler>().isNotificationsPaused
         on<MyGroupsLayoutActionsHandler>().showUnmuteNotifications(isNotificationsPaused)
+        on<MyGroupsLayoutActionsHandler>().showFeatureRequests(true)
         on<MyGroupsLayoutActionsHandler>().showSetMyName(on<Val>().isEmpty(on<AccountHandler>().name))
 
         if (locationPermissionGranted && locationPermissionWasDenied) {

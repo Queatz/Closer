@@ -15,10 +15,10 @@ import closer.vlllage.com.closer.handler.helpers.AlertHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.SortHandler
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
+import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import java.util.*
 

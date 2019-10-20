@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingTop="@dimen/pad">
+
+    <EditText
+        android:id="@+id/inputOne"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusedByDefault="true"
+        android:selectAllOnFocus="true"
+        android:imeOptions="actionGo"
+        android:paddingTop="@dimen/padDouble"
+        android:paddingStart="@dimen/padDialog"
+        android:paddingEnd="@dimen/padDialog"
+        android:hint="@string/say_something"
+        android:background="@null"
+        android:inputType="textShortMessage|textCapSentences"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/inputTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusedByDefault="true"
+        android:selectAllOnFocus="true"
+        android:imeOptions="actionGo"
+        android:paddingTop="@dimen/padDouble"
+        android:paddingStart="@dimen/padDialog"
+        android:paddingEnd="@dimen/padDialog"
+        android:hint="@string/say_something"
+        android:background="@null"
+        android:inputType="textShortMessage|textCapSentences|textMultiLine" />
+
+</LinearLayout>

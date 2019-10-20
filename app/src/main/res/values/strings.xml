@@ -302,6 +302,14 @@
     <string name="settings_use_light_theme">Use light theme</string>
     <string name="no_events_yet_be_the_first_to_host_one">No events yet. Be the first to host one!</string>
     <string name="members">Members</string>
+    <string name="feature_requests">Top Feature Requests</string>
+    <string name="vote">Vote</string>
+    <string name="you_voted">☑ Voted</string>
+    <string name="beta_message">Welcome to Closer Beta! Tell us what you would like to see next in Closer.</string>
+    <string name="add_feature_request">Add a feature request</string>
+    <string name="feature_request_name">Feature request name</string>
+    <string name="details">Details</string>
+    <string name="create">Create</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
@@ -314,5 +322,9 @@
     <plurals name="x_new_people_to_meet">
         <item quantity="one">%1$s new person to meet here</item>
         <item quantity="other">%1$s new people to meet here</item>
+    </plurals>
+    <plurals name="votes">
+        <item quantity="one">%1$s vote</item>
+        <item quantity="other">%1$s votes</item>
     </plurals>
 </resources>

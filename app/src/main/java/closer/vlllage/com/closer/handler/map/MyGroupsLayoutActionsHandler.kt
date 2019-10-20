@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.map
 import android.view.View
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
 import closer.vlllage.com.closer.handler.group.GroupActionBarButton
 import closer.vlllage.com.closer.handler.group.MyGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
@@ -17,6 +18,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     private val actions = ArrayList<GroupActionBarButton>()
 
     private var meetPeopleButton: GroupActionBarButton? = null
+    private var featureRequestsButton: GroupActionBarButton? = null
     private var verifyYourNumberButton: GroupActionBarButton? = null
     private var allowPermissionsButton: GroupActionBarButton? = null
     private var unmuteNotificationsButton: GroupActionBarButton? = null
@@ -36,6 +38,21 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
         override fun get() = meetPeopleButton
         override fun unset() {
             meetPeopleButton = null
+        }
+    }
+
+    private val featureRequestsHandle = object : GroupActionBarButtonHandle {
+        override fun set() {
+            featureRequestsButton = GroupActionBarButton(on<ResourcesHandler>().resources.getString(R.string.feature_requests), View.OnClickListener { on<FeatureRequestsHandler>().show() },
+                    backgroundDrawableRes = R.drawable.clickable_red,
+                    textColorRes = R.color.text).also {
+                it.icon = R.drawable.ic_star_black_24dp
+            }
+        }
+
+        override fun get() = featureRequestsButton
+        override fun unset() {
+            featureRequestsButton = null
         }
     }
 
@@ -152,7 +169,11 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     }
 
     internal fun showMeetPeople(show: Boolean) {
-        show(meetPeopleHandle, show, 0)
+        show(meetPeopleHandle, show, actions.size)
+    }
+
+    fun showFeatureRequests(show: Boolean) {
+        show(featureRequestsHandle, show, 0)
     }
 
     private fun show(handle: GroupActionBarButtonHandle, show: Boolean, position: Int) {

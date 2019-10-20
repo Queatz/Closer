@@ -82,37 +82,27 @@
             android:drawableTint="@color/red"
             android:text="@string/network_down" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <closer.vlllage.com.closer.ui.ScrollStopper
+            android:id="@+id/bottomContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:clipChildren="false"
             android:clipToPadding="false">
 
-            <closer.vlllage.com.closer.ui.ScrollStopper
-                android:id="@+id/bottomContainer"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="vertical"
                 android:clipChildren="false"
                 android:clipToPadding="false">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:clipChildren="false"
-                    android:clipToPadding="false">
+                <include layout="@layout/my_groups_layout" />
 
-                    <include layout="@layout/my_groups_layout" />
+            </LinearLayout>
 
-                </LinearLayout>
+        </closer.vlllage.com.closer.ui.ScrollStopper>
 
-            </closer.vlllage.com.closer.ui.ScrollStopper>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout>
 
     <closer.vlllage.com.closer.ui.FloatingRecyclerView

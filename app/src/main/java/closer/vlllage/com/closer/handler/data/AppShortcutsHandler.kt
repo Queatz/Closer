@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.data
 
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Icon
@@ -43,7 +44,7 @@ class AppShortcutsHandler constructor(private val on: On) {
             )
 
             val shortcut = ShortcutInfo.Builder(on<ApplicationHandler>().app, "group:" + group.id!!)
-                    .setShortLabel(group.name!!)
+                    .setShortLabel(if (group.name.isNullOrBlank()) on<ResourcesHandler>().resources.getString(R.string.app_name) else group.name!!)
                     .setIntent(on<GroupActivityTransitionHandler>().getIntent(group.id!!, false))
                     .setIcon(Icon.createWithBitmap(icon))
                     .build()

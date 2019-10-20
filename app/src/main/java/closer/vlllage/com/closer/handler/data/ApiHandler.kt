@@ -296,6 +296,18 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.getRecentlyActiveGroups(limit))
     }
 
+    fun getFeatureRequests(): Single<List<FeatureRequestResult>> {
+        return uiThread(api.backend.getFeatureRequests())
+    }
+
+    fun addFeatureRequest(name: String, description: String): Single<SuccessResult> {
+        return uiThread(api.backend.addFeatureRequest(name, description))
+    }
+
+    fun voteForFeatureRequest(featureRequestId: String, vote: Boolean): Single<SuccessResult> {
+        return uiThread(api.backend.voteForFeatureRequest(featureRequestId, vote))
+    }
+
 
     fun privacy(): Single<String> {
         return uiThread(api.contentBackend.privacy()).map { it.string() }

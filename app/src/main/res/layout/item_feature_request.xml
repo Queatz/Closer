@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padDouble"
+        android:layout_marginEnd="@dimen/padDouble"
+        android:layout_marginBottom="@dimen/padDouble"
+        app:cardCornerRadius="@dimen/cornerRadiusHalf">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padDouble"
+                android:layout_marginStart="@dimen/padDouble"
+                android:layout_marginEnd="@dimen/padDouble"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textStyle="bold"
+                tools:text="Reply directly to messages"
+                android:textSize="22sp"
+                android:textColor="@color/textInverse" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name"
+                android:layout_marginTop="@dimen/pad"
+                android:layout_marginStart="@dimen/padDouble"
+                android:layout_marginEnd="@dimen/padDouble"
+                tools:text="I'd like to be able to reply directly to an message, and start a new chat thread there."
+                android:textSize="@dimen/groupActionLargeTextSize"
+                android:textColor="@color/textInverse" />
+            <TextView
+                android:id="@+id/voteCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/voteButton"
+                android:layout_marginTop="@dimen/pad"
+                android:layout_marginStart="@dimen/padDouble"
+                android:layout_marginEnd="@dimen/padDouble"
+                tools:text="17 votes"
+                android:textSize="@dimen/groupActionLargeTextSize"
+                android:textColor="@color/textHintInverse" />
+
+            <Button
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:id="@+id/voteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad"
+                app:layout_constraintTop_toBottomOf="@+id/description"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="@string/vote" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

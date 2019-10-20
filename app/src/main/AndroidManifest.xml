@@ -103,6 +103,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".FeatureRequestsActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Translucent.Red"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="standard" />
+
         <receiver android:name=".Background" android:exported="false" />
 
         <service

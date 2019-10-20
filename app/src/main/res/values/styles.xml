@@ -28,11 +28,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.AlertDialog.Red" parent="AppTheme.AlertDialog">
+    <style name="AppTheme.AlertDialog.Red">
         <item name="colorAccent">@color/red</item>
     </style>
 
-    <style name="AppTheme.Red" parent="AppTheme">
+    <style name="AppTheme.Red">
+        <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="AppTheme.Translucent.Red">
         <item name="colorAccent">@color/red</item>
     </style>
 

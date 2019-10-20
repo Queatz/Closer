@@ -211,6 +211,17 @@ interface Backend {
     @GET("world/groups")
     fun getRecentlyActiveGroups(@Query("limit") limit: Int): Single<List<GroupResult>>
 
+    // Feature Requests
+
+    @GET("feature-requests")
+    fun getFeatureRequests(): Single<List<FeatureRequestResult>>
+
+    @POST("feature-requests")
+    fun addFeatureRequest(@Query("name") name: String, @Query("description") description: String): Single<SuccessResult>
+
+    @POST("feature-requests/{id}")
+    fun voteForFeatureRequest(@Path("id") featureRequestId: String, @Query("vote") vote: Boolean): Single<SuccessResult>
+
     companion object {
 //        const val BASE_URL = "http://10.0.2.2:8080/closer/"
         const val BASE_URL = "https://closer.vlllage.com/"
