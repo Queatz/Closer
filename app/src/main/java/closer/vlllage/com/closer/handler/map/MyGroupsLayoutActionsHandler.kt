@@ -7,6 +7,7 @@ import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
 import closer.vlllage.com.closer.handler.group.GroupActionBarButton
 import closer.vlllage.com.closer.handler.group.MyGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.settings.HelpHandler
 import com.queatz.on.On
 import java.util.*
@@ -132,10 +133,13 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
                     override fun onNameModified(name: String?) {
                         if (!on<Val>().isEmpty(name)) {
                             showSetMyName(false)
+                            on<NavigationHandler>().showProfile(on<PersistenceHandler>().phoneId!!)
                         }
                     }
                 }, false)
-            })
+            }).also {
+                it.icon = R.drawable.ic_person_black_24dp
+            }
         }
 
         override fun get() = setMyName
@@ -177,17 +181,23 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     }
 
     private fun show(handle: GroupActionBarButtonHandle, show: Boolean, position: Int) {
+        var newPosition = position
+
         if (show) {
-            if (handle.get() != null) {
+            val oldPosition = actions.indexOf(handle.get())
+            if (oldPosition != -1) {
                 actions.remove(handle.get()!!)
+                if (position > oldPosition) {
+                    newPosition -= 1
+                }
             }
 
             handle.set()
 
-            if (position < 0) {
+            if (newPosition < 0) {
                 actions.add(handle.get()!!)
             } else {
-                actions.add(position, handle.get()!!)
+                actions.add(newPosition, handle.get()!!)
             }
         } else {
             if (handle.get() == null) {

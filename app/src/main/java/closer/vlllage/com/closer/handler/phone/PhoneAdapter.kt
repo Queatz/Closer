@@ -30,7 +30,7 @@ open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionRe
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val reaction = this.items[position]
 
-        viewHolder.name.text = reaction.phone!!.name
+        viewHolder.name.text = on<NameHandler>().getName(reaction.phone!!.id!!)
         viewHolder.reaction.text = reaction.reaction
 
         if (on<Val>().isEmpty(reaction.phone?.photo)) {

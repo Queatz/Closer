@@ -7,6 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.helpers.DisposableGroup
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
@@ -17,8 +20,17 @@ class MentionAdapter(on: On, private val onMentionClickListener: ((Phone) -> Uni
     private val items = ArrayList<Phone>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context)
+        val holder = ViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.group_action_item, parent, false))
+
+        holder.disposableGroup = on<DisposableHandler>().group()
+
+        holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
+            holder.mentionName.setBackgroundResource(it.clickableRoundedBackground)
+            holder.mentionName.setTextColor(it.text)
+        })
+
+        return holder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -60,6 +72,7 @@ class MentionAdapter(on: On, private val onMentionClickListener: ((Phone) -> Uni
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var mentionName: TextView
+        lateinit var disposableGroup: DisposableGroup
 
         init {
             itemView.clipToOutline = true

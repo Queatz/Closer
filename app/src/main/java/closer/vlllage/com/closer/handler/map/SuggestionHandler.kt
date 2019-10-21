@@ -26,8 +26,6 @@ class SuggestionHandler constructor(private val on: On) {
         on<BubbleHandler>().remove { mapBubble -> BubbleType.MENU == mapBubble.type }
         clearSuggestions()
 
-        val nextBubbles = HashSet<MapBubble>()
-
         getRandomSuggestions(on<MapHandler>().visibleRegion!!.latLngBounds).observer { suggestions ->
             if (suggestions.isEmpty()) {
                 on<ToastHandler>().show(R.string.no_suggestions_here)
@@ -44,19 +42,24 @@ class SuggestionHandler constructor(private val on: On) {
                 }
 
                 suggested.add(suggestion)
-
-                val suggestionBubble = suggestionBubbleFrom(suggestion)
-
-                on<TimerHandler>().postDisposable(Runnable {
-                    on<BubbleHandler>().add(suggestionBubble)
-                    suggestionBubbles.add(suggestionBubble)
-                }, (225 * 2 + i * 95).toLong())
-
-                nextBubbles.add(suggestionBubble)
             }
 
-            on<MapHandler>().centerOn(nextBubbles)
+            showSuggestions(suggestions)
         }
+    }
+
+    fun showSuggestions(suggestions: Collection<Suggestion>) {
+        val bubbles = suggestions.map(this::suggestionBubbleFrom)
+
+        bubbles.forEachIndexed { index, bubble ->
+            on<TimerHandler>().postDisposable(Runnable {
+                on<BubbleHandler>().add(bubble)
+                suggestionBubbles.add(bubble)
+            }, (225 * 2 + index * 95).toLong())
+        }
+
+
+        on<MapHandler>().centerOn(bubbles)
     }
 
     fun suggestionBubbleFrom(suggestion: Suggestion): MapBubble {

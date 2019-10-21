@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.data
 
 import closer.vlllage.com.closer.api.ApiService
+import closer.vlllage.com.closer.api.GeoJsonResponse
 import closer.vlllage.com.closer.api.models.*
 import closer.vlllage.com.closer.handler.helpers.DateFormatter
 import closer.vlllage.com.closer.handler.helpers.HttpEncode
@@ -311,6 +312,10 @@ class ApiHandler constructor(private val on: On) {
 
     fun privacy(): Single<String> {
         return uiThread(api.contentBackend.privacy()).map { it.string() }
+    }
+
+    fun getPlaces(query: String, bias: LatLng, limit: Int = 5): Single<GeoJsonResponse> {
+        return uiThread(api.placesBackend.query(query, bias.latitude, bias.longitude, limit))
     }
 
     private fun <T> uiThread(observable: Single<T>): Single<T> {

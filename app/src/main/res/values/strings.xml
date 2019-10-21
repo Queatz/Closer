@@ -160,7 +160,7 @@
     <string name="on_map">On the map</string>
     <string name="near_here">Somewhere</string>
     <string name="share_to">Share to</string>
-    <string name="set_my_name">Set your name</string>
+    <string name="set_my_name">Update your profile</string>
     <string name="add_an_action">Add an activity</string>
     <string name="add_action">Add activity</string>
     <string name="action_name">Activity name</string>
@@ -310,6 +310,7 @@
     <string name="feature_request_name">Feature request name</string>
     <string name="details">Details</string>
     <string name="create">Create</string>
+    <string name="search_map_hint">Search for places</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

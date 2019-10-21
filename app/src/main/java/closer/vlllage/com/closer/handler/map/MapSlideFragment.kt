@@ -3,11 +3,11 @@ package closer.vlllage.com.closer.handler.map
 import android.Manifest
 import android.content.Intent
 import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.FragmentActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.*
@@ -27,9 +27,8 @@ import closer.vlllage.com.closer.store.models.Suggestion
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.iid.FirebaseInstanceId
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_maps.view.*
 import java.util.*
 
 
@@ -106,7 +105,7 @@ class MapSlideFragment : PoolFragment() {
         on<KeyboardVisibilityHandler>().attach(view.findViewById(R.id.contentView))
 
         on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ isVisible -> on<MyGroupsLayoutHandler>().showBottomPadding(!isVisible) }, { it.printStackTrace() }))
 
         val verifiedNumber = on<PersistenceHandler>().isVerified
@@ -129,7 +128,7 @@ class MapSlideFragment : PoolFragment() {
         on<MyGroupsLayoutActionsHandler>().showHelpButton(!on<PersistenceHandler>().isHelpHidden)
 
         on<EventBubbleHandler>().attach()
-        on<FeedHandler>().attach(view.findViewById(R.id.feed))
+        on<FeedHandler>().attach(view.feed)
 
         on<DisposableHandler>().add(on<MeetHandler>().total
                 .subscribe {
@@ -144,18 +143,41 @@ class MapSlideFragment : PoolFragment() {
         if("I am a super god being".isNotBlank()) {
             on<DataVisualsHandler>().attach()
 
-            on<DisposableHandler>().add(on<DataHandler>().getRecentlyActivePhones(1000).subscribe { phones ->
+            on<DisposableHandler>().add(on<DataHandler>().getRecentlyActivePhones(500).subscribe { phones ->
                 on<DataVisualsHandler>().setPhones(phones
                         .filter { it.latitude != null && it.longitude != null }
                         .map { LatLng(it.latitude!!, it.longitude!!) })
             })
 
-            on<DisposableHandler>().add(on<DataHandler>().getRecentlyActiveGroups(1000).subscribe { phones ->
+            on<DisposableHandler>().add(on<DataHandler>().getRecentlyActiveGroups(500).subscribe { phones ->
                 on<DataVisualsHandler>().setGroups(phones
                         .filter { it.latitude != null && it.longitude != null }
                         .map { LatLng(it.latitude!!, it.longitude!!) })
             })
         }
+
+        view.searchMap.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                search(view.searchMap.text.toString())
+                false
+            }
+
+            true
+        }
+    }
+
+    private fun search(query: String) {
+        on<DisposableHandler>().add(on<PlacesHandler>().findPlace(query).subscribe({
+            on<SuggestionHandler>().showSuggestions(it.map {
+                Suggestion().apply {
+                    name = it.properties.name
+                    latitude = it.geometry.coordinates[1]
+                    longitude = it.geometry.coordinates[0]
+                }
+            })
+        }, {
+            networkError(it)
+        }))
     }
 
     private fun showMapMenu(latLng: LatLng, title: String?) {
@@ -261,15 +283,14 @@ class MapSlideFragment : PoolFragment() {
             val address = intent.getStringExtra(Intent.EXTRA_TEXT)
 
             if (address != null) {
-                on<DisposableHandler>().add(Single.fromCallable { Geocoder(activity, Locale.getDefault()).getFromLocationName(address, 1) }.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                on<DisposableHandler>().add(on<PlacesHandler>().findAddress(address, 1)
                         .subscribe({ addresses ->
                             if (addresses.isEmpty()) {
                                 on<DefaultAlerts>().thatDidntWork()
                             } else {
                                 showAddressOnMap(name, addresses[0])
                             }
-                        }, { this.networkError(it) }))
+                        }, { networkError(it) }))
 
             }
         }

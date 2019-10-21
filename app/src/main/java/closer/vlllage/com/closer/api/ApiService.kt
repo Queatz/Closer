@@ -13,6 +13,7 @@ class ApiService {
     val backend: Backend
     val photoUploadBackend: PhotoUploadBackend
     val contentBackend: ContentBackend
+    val placesBackend: PlacesBackend
     lateinit var authorization: String
 
     init {
@@ -69,6 +70,13 @@ class ApiService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(ContentBackend::class.java)
+
+        placesBackend = Retrofit.Builder()
+                .baseUrl(PlacesBackend.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat(DateFormat.FULL).create()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build()
+                .create(PlacesBackend::class.java)
     }
 
     companion object {
