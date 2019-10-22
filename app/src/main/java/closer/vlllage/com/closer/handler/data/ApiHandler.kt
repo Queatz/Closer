@@ -8,6 +8,7 @@ import closer.vlllage.com.closer.handler.helpers.HttpEncode
 import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.Val
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.queatz.on.On
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

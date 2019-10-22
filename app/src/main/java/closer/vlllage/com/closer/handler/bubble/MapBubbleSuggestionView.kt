@@ -17,7 +17,11 @@ class MapBubbleSuggestionView constructor(private val on: On) {
         update(view, mapBubble)
 
         view.findViewById<View>(R.id.directionsButton).setOnClickListener {
-            on<ShareActivityTransitionHandler>().shareSuggestion((mapBubble.tag as Suggestion).id!!)
+            val suggestion = mapBubble.tag as Suggestion
+
+            if (suggestion.id != null) {
+                on<ShareActivityTransitionHandler>().shareSuggestion(suggestion.id!!)
+            }
         }
 
         return view

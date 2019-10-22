@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.FeatureRequestResult
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.item_feature_request.view.*
 
@@ -44,6 +46,8 @@ class FeatureRequestAdapter constructor(private val on: On) : RecyclerView.Adapt
         holder.description.text = item.description
         holder.voteCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.votes, item.votes, item.votes)
 
+        holder.badge.visible = item.created?.after(on<TimeAgo>().oneDayAgo()) ?: false
+
         holder.voteButton.text = on<ResourcesHandler>().resources.getString(
                 if (item.voted) R.string.you_voted else R.string.vote
         )
@@ -56,6 +60,7 @@ class FeatureRequestAdapter constructor(private val on: On) : RecyclerView.Adapt
 class FeatureRequestViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val name = view.name!!
     val description = view.description!!
+    val badge = view.badge!!
     val voteCount = view.voteCount!!
     val voteButton = view.voteButton!!
 }

@@ -33,12 +33,34 @@
                 android:textColor="@color/textInverse" />
 
             <TextView
+                android:id="@+id/badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name"
+                android:layout_marginTop="@dimen/pad"
+                android:layout_marginStart="@dimen/padDouble"
+                android:layout_marginEnd="@dimen/padDouble"
+                android:text="@string/new_request"
+                android:background="@drawable/clickable_red_light"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingTop="@dimen/padHalf"
+                android:paddingBottom="@dimen/padHalf"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="@dimen/groupActionSmallTextSize"
+                android:textColor="@color/text"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
                 android:id="@+id/description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/badge"
                 android:layout_marginTop="@dimen/pad"
                 android:layout_marginStart="@dimen/padDouble"
                 android:layout_marginEnd="@dimen/padDouble"

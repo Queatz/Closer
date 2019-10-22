@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface PlacesBackend {
     @GET("api")
-    fun query(@Query("q") query: String, @Query("lat") latitude: Double, @Query("lon") longitude: Double, @Query("limit") limit: Int): Single<GeoJsonResponse>
+    fun query(@Query("q") query: String, @Query("lat") latitude: Double, @Query("lon") longitude: Double, @Query("limit") limit: Int, @Query("location_bias_scale") locationBiasScale: Int = 10): Single<GeoJsonResponse>
 
     companion object {
         const val BASE_URL = "https://photon.komoot.de/"

@@ -8,6 +8,7 @@ import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestAdapter
 import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler
+import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_feature_requests.*
@@ -38,7 +39,7 @@ class FeatureRequestsActivity : CircularRevealActivity() {
         on<DisposableHandler>().add(on<FeatureRequestsHandler>().featureRequestsObservable
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-            adapter.items = it.toMutableList()
+            adapter.items = it.sortedByDescending { it.created?.after(on<TimeAgo>().oneDayAgo()) ?: false }.toMutableList()
         })
 
         on<MiniWindowHandler>().attach(windowTitle, backgroundColor) { finish() }

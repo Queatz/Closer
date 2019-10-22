@@ -6,7 +6,6 @@ import java.util.*
 class SuggestionResult : ModelResult() {
     var geo: List<Double>? = null
     var name: String? = null
-    var created: Date? = null
 
     companion object {
 

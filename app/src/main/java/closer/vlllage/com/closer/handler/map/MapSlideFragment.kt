@@ -60,7 +60,10 @@ class MapSlideFragment : PoolFragment() {
                 on<DefaultAlerts>().thatDidntWork()
             }
         }, { mapBubble ->
-            on<ShareActivityTransitionHandler>().shareSuggestion((mapBubble.tag as Suggestion).id!!)
+            val suggestion = mapBubble.tag as Suggestion
+            if (suggestion.id != null) {
+                on<ShareActivityTransitionHandler>().shareSuggestion(suggestion.id!!)
+            }
         }, { mapBubble ->
             val groupId = (mapBubble.tag as Group).id
             on<GroupActivityTransitionHandler>().showGroupMessages(mapBubble.view, groupId)
