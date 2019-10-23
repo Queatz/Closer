@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.FeatureRequestResult
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.helpers.MenuHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import com.queatz.on.On
@@ -25,7 +26,8 @@ class FeatureRequestAdapter constructor(private val on: On) : RecyclerView.Adapt
 
                 override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
                         field[oldItemPosition].voted == value[newItemPosition].voted &&
-                        field[oldItemPosition].votes == value[newItemPosition].votes
+                        field[oldItemPosition].votes == value[newItemPosition].votes &&
+                        field[oldItemPosition].completed == value[newItemPosition].completed
             })
 
             field.clear()
@@ -46,7 +48,24 @@ class FeatureRequestAdapter constructor(private val on: On) : RecyclerView.Adapt
         holder.description.text = item.description
         holder.voteCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.votes, item.votes, item.votes)
 
-        holder.badge.visible = item.created?.after(on<TimeAgo>().oneDayAgo()) ?: false
+        holder.card.setOnLongClickListener {
+            on<MenuHandler>().show(
+                    MenuHandler.MenuOption(R.drawable.ic_check_black_24dp, if (item.completed) R.string.unmark_as_completed else R.string.mark_as_completed) {
+                        on<FeatureRequestsHandler>().complete(item.id!!, !item.completed)
+                    }
+            )
+            return@setOnLongClickListener false
+        }
+
+        holder.badge.visible = item.completed || item.created?.after(on<TimeAgo>().oneDayAgo()) ?: false
+
+        if (item.completed) {
+            holder.badge.setText(R.string.completed_request)
+            holder.badge.setBackgroundResource(R.drawable.clickable_green_light)
+        } else {
+            holder.badge.setBackgroundResource(R.drawable.clickable_red_light)
+            holder.badge.setText(R.string.new_request)
+        }
 
         holder.voteButton.text = on<ResourcesHandler>().resources.getString(
                 if (item.voted) R.string.you_voted else R.string.vote
@@ -58,6 +77,7 @@ class FeatureRequestAdapter constructor(private val on: On) : RecyclerView.Adapt
 }
 
 class FeatureRequestViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    val card = view.card!!
     val name = view.name!!
     val description = view.description!!
     val badge = view.badge!!

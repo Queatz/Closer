@@ -20,7 +20,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="1.0"
+        android:animateLayoutChanges="true">
 
         <TextView
             android:id="@+id/windowTitle"
@@ -61,9 +62,11 @@
             android:id="@+id/betaMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/clickable_green_light_fill"
+            android:background="@drawable/clickable_red_8dp"
             android:gravity="center_horizontal"
             android:padding="@dimen/padDouble"
+            android:layout_marginStart="@dimen/pad"
+            android:layout_marginEnd="@dimen/pad"
             android:textColor="@color/text"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -83,6 +86,7 @@
         android:paddingTop="@dimen/padDouble"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:scrollbars="vertical"
         tools:listitem="@layout/item_feature_request" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

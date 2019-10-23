@@ -305,13 +305,20 @@
     <string name="feature_requests">Top Feature Requests</string>
     <string name="vote">Vote</string>
     <string name="you_voted">☑ Voted</string>
-    <string name="beta_message">Welcome to Closer Beta! Tell us what you would like to see next in Closer.</string>
+    <string name="beta_message">Welcome to Closer Beta! Tell us what you would like to see next.\n\nTogether, we can make the best local small groups app on Earth! 😍</string>
     <string name="add_feature_request">Add a feature request</string>
     <string name="feature_request_name">Feature request name</string>
     <string name="details">Details</string>
     <string name="create">Create</string>
     <string name="search_map_hint">Search for places</string>
     <string name="new_request">New request</string>
+    <string name="feature_request_name_missing">Add a name for your feature request.</string>
+    <string name="feature_request_description_missing">Add details about your feature request.</string>
+    <string name="your_vote_has_been_added">Your vote has been added</string>
+    <string name="your_vote_has_been_removed">Your vote has been removed</string>
+    <string name="mark_as_completed">Mark as completed</string>
+    <string name="unmark_as_completed">Unmark as completed</string>
+    <string name="completed_request">Completed request</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

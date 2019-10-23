@@ -8,7 +8,6 @@ import closer.vlllage.com.closer.handler.helpers.HttpEncode
 import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.Val
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.queatz.on.On
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -310,6 +309,9 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.voteForFeatureRequest(featureRequestId, vote))
     }
 
+    fun completeFeatureRequest(featureRequestId: String, completed: Boolean): Single<SuccessResult> {
+        return uiThread(api.backend.completeFeatureRequest(featureRequestId, completed))
+    }
 
     fun privacy(): Single<String> {
         return uiThread(api.contentBackend.privacy()).map { it.string() }
@@ -318,7 +320,6 @@ class ApiHandler constructor(private val on: On) {
     fun getPlaces(query: String, bias: LatLng, limit: Int = 5): Single<GeoJsonResponse> {
         return uiThread(api.placesBackend.query(query, bias.latitude, bias.longitude, limit))
     }
-
     private fun <T> uiThread(observable: Single<T>): Single<T> {
         return observable.observeOn(AndroidSchedulers.mainThread())
     }

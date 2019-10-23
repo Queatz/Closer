@@ -6,11 +6,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padDouble"
         android:layout_marginEnd="@dimen/padDouble"
         android:layout_marginBottom="@dimen/padDouble"
+        android:foreground="?selectableItemBackgroundBorderless"
         app:cardCornerRadius="@dimen/cornerRadiusHalf">
 
         <androidx.constraintlayout.widget.ConstraintLayout

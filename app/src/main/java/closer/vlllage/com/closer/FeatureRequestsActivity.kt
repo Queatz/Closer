@@ -3,6 +3,7 @@ package closer.vlllage.com.closer
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestAdapter
 import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
@@ -36,10 +37,23 @@ class FeatureRequestsActivity : CircularRevealActivity() {
             it.adapter = adapter
         }
 
+        featureRequestsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    if (betaMessage.visible) {
+                        betaMessage.visible = false
+                    }
+                }
+            }
+        })
+
         on<DisposableHandler>().add(on<FeatureRequestsHandler>().featureRequestsObservable
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-            adapter.items = it.sortedByDescending { it.created?.after(on<TimeAgo>().oneDayAgo()) ?: false }.toMutableList()
+            adapter.items = it
+                    .sortedByDescending { it.created?.after(on<TimeAgo>().oneDayAgo()) ?: false }
+                    .sortedByDescending { !it.completed }
+                    .toMutableList()
         })
 
         on<MiniWindowHandler>().attach(windowTitle, backgroundColor) { finish() }

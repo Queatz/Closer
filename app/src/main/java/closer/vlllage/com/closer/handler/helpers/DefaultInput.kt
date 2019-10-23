@@ -35,7 +35,8 @@ class DefaultInput constructor(private val on: On) {
              @StringRes button: Int = R.string.ok,
              prefill: String? = null,
              prefillTwo: String? = null,
-             callback: (String, String) -> Unit) {
+             callback: (String, String) -> Unit,
+             buttonCallback: ((String, String) -> Boolean)?) {
         on<AlertHandler>().make().apply {
             layoutResId = R.layout.simple_two_input_modal
             onAfterViewCreated = { _, view ->
@@ -53,6 +54,14 @@ class DefaultInput constructor(private val on: On) {
                             inputOne.text.toString(),
                             inputTwo.text.toString()
                     )
+                }
+            }
+            buttonClickCallback = {
+                (it as ViewGroup).let { alertResult ->
+                    buttonCallback?.invoke(
+                            alertResult.inputOne.text.toString(),
+                            alertResult.inputTwo.text.toString()
+                    ) ?: true
                 }
             }
             title = on<ResourcesHandler>().resources.getString(titleRes)

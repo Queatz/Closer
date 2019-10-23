@@ -5,4 +5,5 @@ class FeatureRequestResult : ModelResult() {
     var description: String? = null
     var votes: Int = 0
     var voted: Boolean = false
+    var completed: Boolean = false
 }
