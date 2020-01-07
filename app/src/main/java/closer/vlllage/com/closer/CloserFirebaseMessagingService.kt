@@ -13,12 +13,12 @@ import com.google.firebase.messaging.RemoteMessage
 
 class CloserFirebaseMessagingService : FirebaseMessagingService() {
 
-    override fun onNewToken(p0: String?) {
+    override fun onNewToken(p0: String) {
         val deviceToken = FirebaseInstanceId.getInstance().token
         (application as App).on<AccountHandler>().updateDeviceToken(deviceToken!!)
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val app = application as App
         val data = remoteMessage!!.data
         if (data.isNotEmpty()) {
