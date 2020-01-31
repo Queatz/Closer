@@ -319,6 +319,7 @@
     <string name="mark_as_completed">Mark as completed</string>
     <string name="unmark_as_completed">Unmark as completed</string>
     <string name="completed_request">Completed request</string>
+    <string name="search_feature_requests">Search feature requests</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

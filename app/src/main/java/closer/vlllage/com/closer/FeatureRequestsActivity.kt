@@ -2,6 +2,8 @@ package closer.vlllage.com.closer
 
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.extensions.visible
@@ -12,11 +14,13 @@ import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler
 import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.activity_feature_requests.*
 
 class FeatureRequestsActivity : CircularRevealActivity() {
 
     private lateinit var adapter: FeatureRequestAdapter
+    private val searchString = BehaviorSubject.createDefault("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,15 +52,28 @@ class FeatureRequestsActivity : CircularRevealActivity() {
         })
 
         on<DisposableHandler>().add(on<FeatureRequestsHandler>().featureRequestsObservable
+                .flatMap { features -> searchString.map { features.filter { feature ->
+                    it.isBlank() || feature.name!!.contains(Regex(it)) || feature.description!!.contains(Regex(it))
+                } } }
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe {
             adapter.items = it
-                    .sortedByDescending { it.created?.after(on<TimeAgo>().oneDayAgo()) ?: false }
+                    .sortedByDescending { it.created?.after(on<TimeAgo>().daysAgo(3)) ?: false }
                     .sortedByDescending { !it.completed }
                     .toMutableList()
         })
 
         on<MiniWindowHandler>().attach(windowTitle, backgroundColor) { finish() }
+
+        search.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                searchString.onNext(s.toString())
+            }
+        })
     }
 
     override val backgroundId = R.id.activityLayout

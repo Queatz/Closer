@@ -57,7 +57,7 @@ class FeatureRequestAdapter constructor(private val on: On) : RecyclerView.Adapt
             return@setOnLongClickListener false
         }
 
-        holder.badge.visible = item.completed || item.created?.after(on<TimeAgo>().oneDayAgo()) ?: false
+        holder.badge.visible = item.completed || item.created?.after(on<TimeAgo>().daysAgo(3)) ?: false
 
         if (item.completed) {
             holder.badge.setText(R.string.completed_request)

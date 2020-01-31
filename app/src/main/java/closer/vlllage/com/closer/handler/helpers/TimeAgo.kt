@@ -35,4 +35,10 @@ class TimeAgo constructor(private val on: On) {
         oneDayAgo.time = oneDayAgo.time - DAY_IN_MILLIS
         return oneDayAgo
     }
+
+    fun daysAgo(days: Int = 1): Date {
+        val oneDayAgo = Date()
+        oneDayAgo.time = oneDayAgo.time - (DAY_IN_MILLIS * days)
+        return oneDayAgo
+    }
 }
