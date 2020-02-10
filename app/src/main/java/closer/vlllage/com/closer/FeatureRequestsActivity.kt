@@ -53,7 +53,7 @@ class FeatureRequestsActivity : CircularRevealActivity() {
 
         on<DisposableHandler>().add(on<FeatureRequestsHandler>().featureRequestsObservable
                 .flatMap { features -> searchString.map { features.filter { feature ->
-                    it.isBlank() || feature.name!!.contains(Regex(it)) || feature.description!!.contains(Regex(it))
+                    it.isBlank() || feature.name!!.contains(Regex(it)) || feature.description!!.contains(Regex(it, RegexOption.IGNORE_CASE))
                 } } }
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe {
