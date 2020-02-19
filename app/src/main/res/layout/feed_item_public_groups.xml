@@ -188,6 +188,58 @@
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
                 android:paddingBottom="@dimen/pad"
+                android:text="@string/events_around_here"
+                android:textColor="@color/black_50"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
+
+            <closer.vlllage.com.closer.ui.SoftScrollStopper
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/publicEventsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padHalf"
+                    android:paddingRight="@dimen/padHalf"
+                    android:clipToPadding="false" />
+
+            </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padDialog"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:text="@string/places_around_here"
+                android:textColor="@color/black_50"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
+
+            <closer.vlllage.com.closer.ui.SoftScrollStopper
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/publicHubsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padHalf"
+                    android:paddingRight="@dimen/padHalf"
+                    android:clipToPadding="false" />
+
+            </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padDialog"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
                 android:text="@string/groups_around_here"
                 android:textColor="@color/black_50"
                 android:textStyle="bold"

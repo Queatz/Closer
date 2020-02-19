@@ -27,7 +27,7 @@ open class SearchGroupsAdapter constructor(
        private val onCreateGroupClickListener: ((groupName: String) -> Unit)?
 ) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
-    private var createPublicGroupName: String? = null
+    private var createPublicGroupName: String = ""
     private val groups = ArrayList<Group>()
     private var actionText: String? = null
     @LayoutRes
@@ -62,12 +62,12 @@ open class SearchGroupsAdapter constructor(
 
                 if (position >= itemCount - createGroupCount) {
                     holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
-                    holder.name.text = createPublicGroupName ?: "+"
+                    holder.name.text = if (createPublicGroupName.isBlank()) "+" else createPublicGroupName
                     holder.about.text = on<ResourcesHandler>().resources.getString(R.string.add_new_public_group)
                     holder.backgroundPhoto.visibility = View.GONE
                     holder.actionRecyclerView.visibility = View.GONE
                     holder.cardView.setOnClickListener {
-                        onCreateGroupClickListener?.invoke(createPublicGroupName ?: "")
+                        onCreateGroupClickListener?.invoke(createPublicGroupName)
                     }
                     holder.cardView.setOnLongClickListener(null)
                     holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
@@ -157,7 +157,7 @@ open class SearchGroupsAdapter constructor(
 
     override fun getItemCount() = groups.size + createGroupCount
 
-    fun setCreatePublicGroupName(createPublicGroupName: String?) {
+    fun setCreatePublicGroupName(createPublicGroupName: String) {
         this.createPublicGroupName = createPublicGroupName
         notifyDataSetChanged()
     }

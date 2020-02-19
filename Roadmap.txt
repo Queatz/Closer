@@ -1,10 +1,19 @@
 
-TODO
+ACTION PLAN
 ====
 
- [x] Search feature requests
+ [X] Split private groups, events, public groups into different rows (allow configure?) [show ? next to each?]
+ [ ] Show latest message on the map for people and hubs and suggestions
+ [ ] Show number of upcoming events and member count ON group cards!
+ [ ] Scrollability indicators (left and right, up on feed)
+ [ ] Text contrast is still a problem...make light mode the default
  [ ] ToS no censorship / just no violence of any kind
+ [ ] Slow down the map bubbles coming and going
  [ ] Release to AppGallery
+
+ [ ]
+ [ ]
+ [ ]
 
 
 Private groups only mode

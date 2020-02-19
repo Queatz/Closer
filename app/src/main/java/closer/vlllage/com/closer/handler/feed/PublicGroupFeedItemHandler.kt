@@ -36,6 +36,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     fun attach(itemView: View) {
         this.itemView = itemView
         val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
+        val eventsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicEventsRecyclerView)
+        val hubsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicHubsRecyclerView)
         val actionRecyclerView = itemView.findViewById<RecyclerView>(R.id.groupActionsRecyclerView)
         val suggestionsRecyclerView = itemView.findViewById<RecyclerView>(R.id.suggestionsRecyclerView)
         val peopleRecyclerView = itemView.findViewById<RecyclerView>(R.id.peopleRecyclerView)
@@ -54,6 +56,26 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 false
         )
 
+        val searchEventsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        searchEventsAdapter.setLayoutResId(R.layout.search_groups_card_item)
+
+        eventsRecyclerView.adapter = searchEventsAdapter
+        eventsRecyclerView.layoutManager = LinearLayoutManager(
+                eventsRecyclerView.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+        )
+
+        val searchHubsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        searchHubsAdapter.setLayoutResId(R.layout.search_groups_card_item)
+
+        hubsRecyclerView.adapter = searchHubsAdapter
+        hubsRecyclerView.layoutManager = LinearLayoutManager(
+                hubsRecyclerView.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+        )
+
         on<SuggestionsRecyclerViewHandler>().attach(suggestionsRecyclerView)
         on<PeopleRecyclerViewHandler>().attach(peopleRecyclerView)
 
@@ -63,7 +85,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter, searchGroups.text.toString())
+                on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
             }
 
             override fun afterTextChanged(s: Editable) {
@@ -71,7 +93,17 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
         })
 
-        on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter, searchGroups.text.toString())
+        on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
+
+        on<DisposableHandler>().add(on<SearchGroupHandler>().groups.subscribe { groups ->
+            searchGroupsAdapter.setGroups(groups.filter { !it.hasEvent() && !it.physical })
+            searchEventsAdapter.setGroups(groups.filter { it.hasEvent() })
+            searchHubsAdapter.setGroups(groups.filter { it.hub })
+        })
+
+        on<DisposableHandler>().add(on<SearchGroupHandler>().createGroupName.subscribe {
+            searchGroupsAdapter.setCreatePublicGroupName(it)
+        })
 
         val distance = .12f
 
@@ -80,8 +112,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                     .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                     .and()
                     .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
-                    .or()
-                    .equal(Group_.isPublic, false)
 
             on<DisposableHandler>().add(queryBuilder
                     .sort(on<SortHandler>().sortGroups(false))

@@ -114,7 +114,7 @@
     <string name="you_hid_the_help_bubble">Congrats, you hid the help bubble!</string>
     <string name="search_public_groups">Public groups</string>
     <string name="public_groups">Public groups</string>
-    <string name="search_public_groups_hint">Search for groups and events</string>
+    <string name="search_public_groups_hint">Search for groups</string>
     <string name="search_groups">Search groups</string>
     <string name="open_group">Open group</string>
     <string name="tell_more_about_group">This group is about…</string>
@@ -279,8 +279,9 @@
     <string name="yes">Yeah</string>
     <string name="pass">Pass</string>
     <string name="things_to_do_around_here">Things to do</string>
-    <string name="groups_around_here">Groups &amp; Events</string>
-    <string name="conversations_around_here">Local Conversations</string>
+    <string name="groups_around_here">Groups near you</string>
+    <string name="events_around_here">Events near you</string>
+    <string name="conversations_around_here">Conversations near you</string>
     <string name="react_laugh">😂</string>
     <string name="react_cool">😎</string>
     <string name="react_kiss">😘</string>
@@ -320,6 +321,7 @@
     <string name="unmark_as_completed">Unmark as completed</string>
     <string name="completed_request">Completed request</string>
     <string name="search_feature_requests">Search feature requests</string>
+    <string name="places_around_here">Places near you</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

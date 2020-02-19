@@ -33,11 +33,9 @@ class ShareActivity : ListActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        on<SearchGroupHandler>().hideCreateGroupOption()
-
         searchGroupsAdapter = SearchGroupsHeaderAdapter(on, { group, _ -> onGroupSelected(group) }, null, object : SearchGroupsHeaderAdapter.OnQueryChangedListener {
             override fun onQueryChanged(query: String) {
-                on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter!!, query)
+                on<SearchGroupHandler>().showGroupsForQuery(query)
             }
         }).apply {
             setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
@@ -45,7 +43,11 @@ class ShareActivity : ListActivity() {
             setBackgroundResId(R.drawable.clickable_green_flat)
         }
 
-        on<SearchGroupHandler>().showGroupsForQuery(searchGroupsAdapter!!, "")
+        on<SearchGroupHandler>().showGroupsForQuery("")
+
+        on<DisposableHandler>().add(on<SearchGroupHandler>().groups.subscribe {
+            searchGroupsAdapter?.setGroups(it)
+        })
 
         val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
         on<DisposableHandler>().add(queryBuilder

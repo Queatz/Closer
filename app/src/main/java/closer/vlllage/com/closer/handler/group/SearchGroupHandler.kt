@@ -1,31 +1,28 @@
 package closer.vlllage.com.closer.handler.group
 
 import closer.vlllage.com.closer.handler.helpers.Val
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
+import com.queatz.on.On
+import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
 class SearchGroupHandler constructor(private val on: On) {
 
     private var searchQuery = ""
-    private var searchGroupsAdapter: SearchGroupsAdapter? = null
     private var groupsCache: List<Group>? = null
-    private var hideCreateGroupOption: Boolean = false
 
-    fun showGroupsForQuery(searchGroupsAdapter: SearchGroupsAdapter, searchQuery: String) {
+    val groups = BehaviorSubject.create<List<Group>>()
+    val createGroupName = BehaviorSubject.createDefault<String>("")
+
+    fun showGroupsForQuery(searchQuery: String) {
         this.searchQuery = searchQuery.toLowerCase()
-        this.searchGroupsAdapter = searchGroupsAdapter
 
-        if (!hideCreateGroupOption) {
-            searchGroupsAdapter.setCreatePublicGroupName(if (searchQuery.isBlank()) null else searchQuery)
-        }
+        createGroupName.onNext(if (searchQuery.isBlank()) "" else searchQuery)
 
-        if (this.groupsCache != null) {
-            setGroups(this.groupsCache!!)
-        }
+        groupsCache?.let { setGroups(it) }
     }
 
     fun setGroups(allGroups: List<Group>) {
@@ -42,7 +39,7 @@ class SearchGroupHandler constructor(private val on: On) {
             }
         }
 
-        searchGroupsAdapter!!.setGroups(groups)
+        this.groups.onNext(groups)
     }
 
     private fun groupActionNamesContains(group: Group, searchQuery: String): Boolean {
@@ -56,9 +53,5 @@ class SearchGroupHandler constructor(private val on: On) {
         }
 
         return false
-    }
-
-    fun hideCreateGroupOption() {
-        this.hideCreateGroupOption = true
     }
 }
