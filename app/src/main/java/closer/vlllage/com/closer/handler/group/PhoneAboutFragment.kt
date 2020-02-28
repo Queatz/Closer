@@ -34,6 +34,9 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
         on<GroupHandler> {
             onPhoneChanged(disposableGroup) { phone ->
+
+                activeTextView.text = on<ResourcesHandler>().resources.getString(R.string.last_active, on<TimeStr>().approx(phone.updated))
+
                 val nothing = on<ResourcesHandler>().resources.getString(R.string.nothing_here)
                 introductionTextView.text = phone.introduction ?: nothing
                 offtimeTextView.text = phone.offtime ?: nothing

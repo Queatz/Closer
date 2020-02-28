@@ -321,6 +321,12 @@
     <string name="completed_request">Completed request</string>
     <string name="search_feature_requests">Search feature requests</string>
     <string name="places_around_here">Places near you</string>
+    <string name="date_tiny_minutes">%1$sm</string>
+    <string name="date_tiny_hours">%1$sh</string>
+    <string name="date_tiny_weeks">%1$sw</string>
+    <string name="date_tiny_days">%1$sd</string>
+    <string name="date_tiny_years">%1$sy</string>
+    <string name="last_active">Last active %1$s ago</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
@@ -337,5 +343,26 @@
     <plurals name="votes">
         <item quantity="one">%1$s vote</item>
         <item quantity="other">%1$s votes</item>
+    </plurals>
+
+    <plurals name="date_approx_minutes">
+        <item quantity="one">%1$s minute</item>
+        <item quantity="other">%1$s minutes</item>
+    </plurals>
+    <plurals name="date_approx_hours">
+        <item quantity="one">%1$s hour</item>
+        <item quantity="other">%1$s hours</item>
+    </plurals>
+    <plurals name="date_approx_weeks">
+        <item quantity="one">%1$s week</item>
+        <item quantity="other">%1$s weeks</item>
+    </plurals>
+    <plurals name="date_approx_days">
+        <item quantity="one">%1$s day</item>
+        <item quantity="other">%1$s days</item>
+    </plurals>
+    <plurals name="date_approx_years">
+        <item quantity="one">%1$s year</item>
+        <item quantity="other">%1$s years</item>
     </plurals>
 </resources>

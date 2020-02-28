@@ -1,6 +1,5 @@
 package closer.vlllage.com.closer.handler.bubble
 
-import android.text.format.DateUtils
 import closer.vlllage.com.closer.handler.map.ClusterMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
@@ -10,13 +9,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Math.abs
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val mapViewportCallback: () -> VisibleRegion?) {
 
     private val mapBubbles = HashSet<MapBubble>()
     private var lastClusterSize: Double = 0.toDouble()
     private var mergeBubblesDisposable: Disposable? = null
-    private var lastRecalculation = Date(0)
 
     private val clusterSize: Double
         get() = if (mapViewportCallback.invoke() == null) {
@@ -24,18 +23,12 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
         } else abs(mapViewportCallback.invoke()!!.latLngBounds.southwest.longitude - mapViewportCallback.invoke()!!.latLngBounds.northeast.longitude) / MERGE_RESOLUTION
 
     private fun recalculate() {
-        if (lastRecalculation.after(Date().apply {
-                    time -= DateUtils.SECOND_IN_MILLIS
-        })) {
-            return
-        }
-
-        lastRecalculation = Date()
         lastClusterSize = clusterSize
 
         mergeBubblesDisposable?.dispose()
 
         mergeBubblesDisposable = mergeBubbles(HashSet(mapBubbles), lastClusterSize)
+                .delay(150, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->

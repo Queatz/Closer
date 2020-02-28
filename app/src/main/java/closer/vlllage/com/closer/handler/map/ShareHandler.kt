@@ -22,7 +22,8 @@ class ShareHandler constructor(private val on: On) {
                 .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groups ->
                     val groupNames = ArrayList<MapBubbleMenuItem>()
                     for (group in groups) {
-                        groupNames.add(MapBubbleMenuItem(group.name!!))
+                        group.name ?: continue
+                        groupNames.add(MapBubbleMenuItem(group.name!!, if (group.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_lock_black_18dp))
                     }
 
                     val menuBubble = MapBubble(latLng, BubbleType.MENU, true, true)

@@ -124,7 +124,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.visibility = View.GONE
         holder.messageLayout.visibility = View.GONE
         holder.eventMessage.visibility = View.VISIBLE
-        holder.eventMessage.text = jsonObject.get("message").asString
+        holder.eventMessage.text = on<GroupMessageParseHandler>().parseText(jsonObject.get("message").asString)
         holder.itemView.setOnClickListener(null)
         holder.action.visibility = View.GONE
     }

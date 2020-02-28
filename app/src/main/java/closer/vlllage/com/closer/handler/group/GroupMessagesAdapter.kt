@@ -208,6 +208,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
 
         holder.messageActionLayout.visibility = View.GONE
         holder.time.movementMethod = LinkMovementMethod.getInstance()
+        holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()
 
         on<MessageDisplay>().pinned = pinned
         on<MessageDisplay>().global = global
@@ -240,7 +241,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.time.setTextColor(it.text)
             holder.group.setTextColor(it.text)
             holder.action.setTextColor(it.text)
-            holder.eventMessage.setTextColor(it.text)
+            holder.eventMessage.setTextColor(it.hint)
             holder.pinnedIndicator.imageTintList = it.tint
         })
     }

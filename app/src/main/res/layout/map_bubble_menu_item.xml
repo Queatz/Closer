@@ -14,7 +14,7 @@
         android:textColor="@color/textInverse"
         android:textStyle="bold"
         android:padding="12dp"
-        android:drawablePadding="@dimen/padDouble"
+        android:drawablePadding="@dimen/pad"
         android:drawableTint="@color/textInverse"
         tools:text="Add a suggestion..." />
 

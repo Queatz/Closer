@@ -18,11 +18,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="12sp"
-        android:textColor="@color/text"
+        android:textColor="@color/textHint"
         android:gravity="center_horizontal"
         android:visibility="visible"
         tools:visibility="visible"
-        android:alpha=".5"
         tools:text="Where are we going this weekend?" />
 
     <LinearLayout

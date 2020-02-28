@@ -179,6 +179,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .and()
                 .between(Phone_.longitude, latLng.longitude - distance, latLng.longitude + distance)
                 .and()
+                .greater(Phone_.updated, on<TimeAgo>().fifteenDaysAgo())
                 .notEqual(Phone_.id, on<PersistenceHandler>().phoneId ?: "")
 
         on<DisposableHandler>().add(queryBuilder

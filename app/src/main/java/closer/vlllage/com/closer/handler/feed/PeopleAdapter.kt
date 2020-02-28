@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
+import closer.vlllage.com.closer.handler.helpers.TimeStr
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
@@ -45,6 +46,7 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
         val person = people[position]
 
         holder.itemView.name.text = on<NameHandler>().getName(person)
+        holder.itemView.active.text = on<TimeStr>().tiny(person.updated)
 
         if (person.photo == null) {
             holder.itemView.photo.setImageResource(R.drawable.ic_person_black_24dp)

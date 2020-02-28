@@ -33,7 +33,8 @@
         <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:maxHeight="200dp">
+            app:maxHeight="200dp"
+            app:maxWidth="200dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/menuRecyclerView"
