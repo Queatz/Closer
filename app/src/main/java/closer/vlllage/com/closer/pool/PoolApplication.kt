@@ -1,9 +1,9 @@
 package closer.vlllage.com.closer.pool
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 import com.queatz.on.On
 
-abstract class PoolApplication : Application() {
+abstract class PoolApplication : MultiDexApplication() {
 
     internal val on = On()
 

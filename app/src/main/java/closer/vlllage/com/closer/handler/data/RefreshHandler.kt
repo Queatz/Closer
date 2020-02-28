@@ -220,10 +220,7 @@ class RefreshHandler constructor(private val on: On) {
             deleteLocalNotReturnedFromServer: Boolean,
             createTransformer: (R) -> T,
             updateTransformer: ((T, R) -> T)?) {
-        val serverIdList = HashSet<String>()
-        for (obj in results!!) {
-            serverIdList.add(obj.id!!)
-        }
+        val serverIdList = results!!.map { it.id!! }.toSet()
 
         on<StoreHandler>().findAll(clazz, idProperty, serverIdList).observer { existingObjs ->
             val existingObjsMap = HashMap<String, T>()
@@ -245,11 +242,18 @@ class RefreshHandler constructor(private val on: On) {
                 }
             }
 
-            on<StoreHandler>().store.box(clazz).put(objsToAdd)
+            on<StoreHandler>().store.tx({
+                on<StoreHandler>().store.box(clazz).query()
+                        .`in`(idProperty, objsToAdd.map { it.id!! }.toTypedArray())
+                        .build()
+                        .remove()
 
-            if (deleteLocalNotReturnedFromServer) {
-                on<StoreHandler>().removeAllExcept(clazz, idProperty, serverIdList)
-            }
+                if (deleteLocalNotReturnedFromServer) {
+                    on<StoreHandler>().removeAllExcept(clazz, idProperty, serverIdList, false)
+                }
+
+                on<StoreHandler>().store.box(clazz).put(objsToAdd)
+            })
         }
     }
 

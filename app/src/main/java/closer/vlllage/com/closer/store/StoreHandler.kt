@@ -39,7 +39,7 @@ class StoreHandler constructor(private val on: On) : OnLifecycle {
         return null
     }
 
-    fun <T : BaseObject> removeAllExcept(clazz: Class<T>, idProperty: Property<T>, idsToKeep: Collection<String>) {
+    fun <T : BaseObject> removeAllExcept(clazz: Class<T>, idProperty: Property<T>, idsToKeep: Collection<String>, async: Boolean = true) {
         val query = store.box(clazz).query()
 
         var isNotFirst = false
@@ -53,7 +53,11 @@ class StoreHandler constructor(private val on: On) : OnLifecycle {
             query.notEqual(idProperty, idToKeep)
         }
 
-        query.build().subscribe().single().on(AndroidScheduler.mainThread()).observer { toDelete -> store.box(clazz).remove(toDelete) }
+        if (async) {
+            query.build().subscribe().single().on(AndroidScheduler.mainThread()).observer { toDelete -> store.box(clazz).remove(toDelete) }
+        } else {
+            query.build().remove()
+        }
     }
 
     fun <T : BaseObject> findAll(clazz: Class<T>, idProperty: Property<T>, ids: Collection<String>): SubscriptionBuilder<List<T>> {

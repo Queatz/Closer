@@ -29,8 +29,8 @@ class SettingsSlideFragment : PoolFragment() {
         openGroupsExpandedSettingsSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED]
         openGroupsExpandedSettingsSwitch.setOnCheckedChangeListener { v, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED] = checked }
 
-        lightThemeSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME]
-        lightThemeSwitch.setOnCheckedChangeListener { v, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME] = checked }
+        lightThemeSwitch.isChecked = !on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME]
+        lightThemeSwitch.setOnCheckedChangeListener { v, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME] = !checked }
 
         showCloseButtonSettingsSwitch.isChecked = !on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON]
         showCloseButtonSettingsSwitch.setOnCheckedChangeListener { v, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON] = !checked }

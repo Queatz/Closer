@@ -14,6 +14,6 @@ class LocalityHelper constructor(private val on: On) {
             geocoder.getFromLocation(latLng.latitude, latLng.longitude, 5)
         }.subscribe({ addresses ->
             callback.invoke(addresses?.firstOrNull { it.locality != null }?.locality)
-        }) { on<DefaultAlerts>().syncError() })
+        }) { })
     }
 }

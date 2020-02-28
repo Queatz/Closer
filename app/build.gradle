@@ -10,14 +10,15 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.objectbox'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId 'closer.vlllage.com.closer'
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode readVersionCode()
         versionName '1.0'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        multiDexEnabled true
     }
     signingConfigs {
         release {
@@ -62,15 +63,16 @@ play {
 }
 
 dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation ('androidx.constraintlayout:constraintlayout:1.1.3') {
         exclude group: 'com.android.support'
     }
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation ('com.google.android.gms:play-services-maps:15.0.1') {
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation ('com.google.android.gms:play-services-maps:17.0.0') {
         exclude group: 'com.android.support'
     }
-    implementation ('com.google.android.gms:play-services-location:15.0.1') {
+    implementation ('com.google.android.gms:play-services-location:17.0.0') {
         exclude group: 'com.android.support'
     }
     implementation group: 'com.google.maps.android', name: 'android-maps-utils', version: '0.6.1'
@@ -79,8 +81,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
-    implementation 'com.google.firebase:firebase-core:17.2.1'
-    implementation 'com.google.firebase:firebase-messaging:20.0.1'
+    implementation 'com.google.firebase:firebase-core:17.2.3'
+    implementation 'com.google.firebase:firebase-messaging:20.1.1'
     implementation ('com.github.chrisbanes:PhotoView:2.1.3') {
         exclude group: 'com.android.support'
     }

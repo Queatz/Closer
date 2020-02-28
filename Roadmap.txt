@@ -2,39 +2,65 @@
 ACTION PLAN
 ====
 
- [X] Split private groups, events, public groups into different rows (allow configure?) [show ? next to each?]
- [ ] Show latest message on the map for people and hubs and suggestions
- [ ] Show number of upcoming events and member count ON group cards!
- [ ] Scrollability indicators (left and right, up on feed)
- [ ] Text contrast is still a problem...make light mode the default
- [ ] ToS no censorship / just no violence of any kind
- [ ] Slow down the map bubbles coming and going
- [ ] Release to AppGallery
-
- [ ]
- [ ]
- [ ]
 
 
-Private groups only mode
+ [ ] P0 Make Closer invite only (yes, do it)
+
+ [ ] P1 Create private event should have lock icon
+ [ ] P1 Private EVENTS should show up in the list
+ [ ] P1 Fix overlapping OPEN GROUP text
+ [ ] P1 Private hubs!
+
+ [ ] P2 Show tiny arrows when content can scroll
+ [ ] P2 Show last active on profiles and at top of feed
+ [ ] P2 Show all private groups in feed
+ [ ] P2 Bring back search but just for Closer data
+    [ ] Remove OSM
+
+ [ ] P3 Post "Group created by @jacob" in groups
+
+ ---
+
+ [ ] P0 Show latest message on the map for people and hubs and suggestions
+ [ ] P0 Be more aggressive about hiding stale content
+
+ [ ] P1 Private groups only mode
+
+ [ ] P2 Show number of upcoming events and member count ON group cards!
+ [x] P2 Text contrast is still a problem...make light mode the default
+ [ ] P2 Slow down the map bubbles coming and going
+
+ [ ] P3 ToS no censorship / just no violence of any kind
+ [ ] P3 Release to AppGallery
+
+
+
+
+VISION
+======
+
+Ultra connected local populations
+
+MISSION
+=======
+
+To build the platform that enables people to get to know more about everyone else in their surroundings.
+
+
+
+-------
+
+Handle deleted objects endpoints
+
+-------
+
+
+OTHER COOL STUFF
+===== ==== =====
 
 Bubbles with pulsing while live
     Low battery!
     Need food!
-
-
-angles closer
-
-spiritual partner finder app
-
-best / worst of each day
-
-vlllage chat good for austin
-
-
-----
-
-advertise closer in suburbs
 
 Jacob to run challenges that test the limits of Closer (i.e. number of likes)
 
