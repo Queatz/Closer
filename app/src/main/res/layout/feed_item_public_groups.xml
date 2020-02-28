@@ -182,6 +182,7 @@
             </closer.vlllage.com.closer.ui.SoftScrollStopper>
 
             <TextView
+                android:id="@+id/eventsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/padDialog"
@@ -208,6 +209,7 @@
             </closer.vlllage.com.closer.ui.SoftScrollStopper>
 
             <TextView
+                android:id="@+id/placesHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/padDialog"

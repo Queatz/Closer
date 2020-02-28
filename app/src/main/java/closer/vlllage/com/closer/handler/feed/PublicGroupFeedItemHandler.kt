@@ -97,8 +97,14 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         on<DisposableHandler>().add(on<SearchGroupHandler>().groups.subscribe { groups ->
             searchGroupsAdapter.setGroups(groups.filter { !it.hasEvent() && !it.physical })
-            searchEventsAdapter.setGroups(groups.filter { it.hasEvent() })
-            searchHubsAdapter.setGroups(groups.filter { it.hub })
+
+            searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
+                itemView.eventsHeader.visible = it.isNotEmpty()
+            })
+
+            searchHubsAdapter.setGroups(groups.filter { it.hub }.also {
+                itemView.placesHeader.visible = it.isNotEmpty()
+            })
         })
 
         on<DisposableHandler>().add(on<SearchGroupHandler>().createGroupName.subscribe {
@@ -109,8 +115,12 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         val cameraPositionCallback = { cameraPosition: CameraPosition ->
             val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
-                    .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
+                    .notNull(Group_.eventId)
                     .and()
+                    .greater(Group_.updated, on<TimeAgo>().oneMonthAgo())
+                    .or()
+                    .isNull(Group_.eventId)
+                    .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                     .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
 
             on<DisposableHandler>().add(queryBuilder

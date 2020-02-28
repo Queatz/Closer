@@ -11,9 +11,8 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
-import closer.vlllage.com.closer.store.models.Event
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.Phone
+import closer.vlllage.com.closer.store.StoreHandler
+import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
@@ -92,7 +91,10 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                     }
                 }
 
-                holder.name.text = on<Val>().of((mapBubble.tag as Group).name, on<ResourcesHandler>().resources.getString(R.string.app_name))
+                holder.name.text = on<Val>().of((mapBubble.tag as Group).name, on<StoreHandler>().store.box(GroupMessage::class).query()
+                        .equal(GroupMessage_.to, (mapBubble.tag as Group).id ?: "")
+                        .order(GroupMessage_.updated)
+                        .build().findFirst()?.text?.let { "\"${it}\"" } ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
             }
             BubbleType.EVENT -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_red_8dp)

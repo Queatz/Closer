@@ -86,6 +86,23 @@ class NameHandler constructor(private val on: On) {
 
     companion object {
 
-        private val fallbackNames = arrayOf("Random Armadillo", "Random Aardvark", "Random Kangaroo", "Random Gorilla", "Random Chimpanzee", "Random Anaconda", "Random Parakeet", "Random Rhino", "Random Muskrat", "Random Bumblebee", "Random Tiger", "Random Ocelot", "Random Capybara", "Random Sloth", "Random Lemur", "Random Baboon")
+        private val fallbackNames = arrayOf(
+                "Random Armadillo",
+                "Random Aardvark",
+                "Random Kangaroo",
+                "Random Gorilla",
+                "Random Chimpanzee",
+                "Random Anaconda",
+                "Random Parakeet",
+                "Random Rhino",
+                "Random Muskrat",
+                "Random Bumblebee",
+                "Random Tiger",
+                "Random Ocelot",
+                "Random Capybara",
+                "Random Sloth",
+                "Random Lemur",
+                "Random Baboon"
+        )
     }
 }
