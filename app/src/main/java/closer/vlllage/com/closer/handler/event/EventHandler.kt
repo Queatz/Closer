@@ -85,6 +85,9 @@ class EventHandler constructor(private val on: On) {
                         viewHolder.postEventInContainer.visible = true
                         viewHolder.postEventIn.text = on<ResourcesHandler>().resources.getString(R.string.in_x,
                                 it.group.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
+
+                        viewHolder.postEventIn.setCompoundDrawablesRelativeWithIntrinsicBounds(if (it.group.isPublic) R.drawable.ic_public_black_24dp else R.drawable.ic_lock_black_24dp, 0, 0, 0)
+
                         viewHolder.removeGroupFromEvent.setOnClickListener {
                             on<TaskHandler>().activeTask = null
                             viewHolder.postEventInContainer.visible = false

@@ -28,8 +28,13 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/removeGroupFromEvent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:drawableStart="@drawable/ic_lock_black_18dp"
+                android:drawablePadding="@dimen/pad"
+                android:textColor="@color/textInverse"
                 android:padding="24dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 tools:text="in Mermaid Sea Club" />
 
             <ImageButton
@@ -42,7 +47,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
-                android:tint="@color/textHint"
+                android:tint="@color/red"
                 android:background="?selectableItemBackground"
                 android:src="@drawable/ic_close_black_24dp"/>
 

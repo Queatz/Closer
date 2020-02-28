@@ -44,7 +44,6 @@
     <string name="make_suggestion">Make suggestion…</string>
     <string name="add_suggestion">Add suggestion</string>
     <string name="make_a_suggestion">Make a suggestion…</string>
-    <string name="share_with">Share with…</string>
     <string name="add_new_private_group">Create a private group</string>
     <string name="add_new_public_group">Create a public group</string>
     <string name="verify_your_number">Verify your number</string>
@@ -263,7 +262,7 @@
     <string name="goal">Goal</string>
     <string name="remove_from_group">Remove from group</string>
     <string name="in_x">in %1$s</string>
-    <string name="create_event_in_group_instructions">Tap anywhere on the map and choose \"Host Event\"</string>
+    <string name="create_event_in_group_instructions">Tap anywhere on the map and choose \"Host event\"</string>
     <string name="enter_welcome_message">Pinned message (optional)</string>
     <string name="occupation_hint">What are your primary occupation(s)?</string>
     <string name="occupations">Occupation(s)</string>

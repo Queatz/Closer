@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.bubble
 
+import android.text.format.DateUtils
 import closer.vlllage.com.closer.handler.map.ClusterMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
@@ -15,6 +16,7 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
     private val mapBubbles = HashSet<MapBubble>()
     private var lastClusterSize: Double = 0.toDouble()
     private var mergeBubblesDisposable: Disposable? = null
+    private var lastRecalculation = Date(0)
 
     private val clusterSize: Double
         get() = if (mapViewportCallback.invoke() == null) {
@@ -22,6 +24,13 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
         } else abs(mapViewportCallback.invoke()!!.latLngBounds.southwest.longitude - mapViewportCallback.invoke()!!.latLngBounds.northeast.longitude) / MERGE_RESOLUTION
 
     private fun recalculate() {
+        if (lastRecalculation.after(Date().apply {
+                    time -= DateUtils.SECOND_IN_MILLIS
+        })) {
+            return
+        }
+
+        lastRecalculation = Date()
         lastClusterSize = clusterSize
 
         mergeBubblesDisposable?.dispose()

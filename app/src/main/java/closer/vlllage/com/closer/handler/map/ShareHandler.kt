@@ -31,7 +31,7 @@ class ShareHandler constructor(private val on: On) {
                     on<TimerHandler>().postDisposable(Runnable {
                         on<BubbleHandler>().add(menuBubble)
                         menuBubble.onViewReadyListener = {
-                            on<MapBubbleMenuView>().setMenuTitle(menuBubble, on<ResourcesHandler>().resources.getString(R.string.share_with))
+                            on<MapBubbleMenuView>().setMenuTitle(menuBubble, on<ResourcesHandler>().resources.getString(R.string.share))
                             on<MapBubbleMenuView>().getMenuAdapter(menuBubble).setMenuItems(groupNames)
                             menuBubble.onItemClickListener = { position ->
                                     onGroupSelectedListener.invoke(groups[position])

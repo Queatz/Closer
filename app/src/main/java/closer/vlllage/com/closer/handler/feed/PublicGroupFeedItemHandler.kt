@@ -114,7 +114,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                     .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
 
             on<DisposableHandler>().add(queryBuilder
-                    .sort(on<SortHandler>().sortGroups(false))
+                    .sort(on<SortHandler>().sortGroups(true))
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())

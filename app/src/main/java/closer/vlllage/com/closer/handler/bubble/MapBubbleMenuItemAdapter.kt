@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.handler.bubble
 
+import android.content.res.ColorStateList
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuItemAdapter.MenuItemViewHolder
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
 import java.util.*
@@ -29,6 +32,10 @@ class MapBubbleMenuItemAdapter(on: On,
 
         holder.menuItemTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(menuItem.iconRes ?: 0, 0, 0, 0)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            holder.menuItemTitle.compoundDrawableTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(menuItem.iconTintRes ?: R.color.textInverse))
+        }
+
         holder.itemView.setOnClickListener { view -> onClickListener.invoke(mapBubble, position) }
     }
 
@@ -42,7 +49,7 @@ class MapBubbleMenuItemAdapter(on: On,
 
     fun setMenuItems(vararg menuItems: MapBubbleMenuItem) {
         this.menuItems.clear()
-        this.menuItems.addAll(Arrays.asList(*menuItems))
+        this.menuItems.addAll(listOf(*menuItems))
         notifyDataSetChanged()
     }
 

@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/clickable_blue_light_8dp"
+        android:background="@drawable/clickable_white_8dp"
         android:elevation="4dp">
 
         <TextView
@@ -23,7 +23,7 @@
             android:gravity="center_horizontal"
             android:padding="8dp"
             android:textSize="12sp"
-            android:textColor="@color/text"
+            android:textColor="@color/textHintInverse"
             android:textAllCaps="true"
             android:textStyle="bold"
             android:visibility="gone"
@@ -53,6 +53,6 @@
         android:layout_weight="1"
         android:elevation="4dp"
         android:rotation="45"
-        android:background="@drawable/map_bubble_knob_blue_light"/>
+        android:background="@drawable/map_bubble_knob_map_ambient_fuzzy"/>
 
 </LinearLayout>
