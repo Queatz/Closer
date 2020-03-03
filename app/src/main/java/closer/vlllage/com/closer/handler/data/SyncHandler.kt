@@ -130,20 +130,18 @@ class SyncHandler constructor(private val on: On) {
         group.localOnly = true
         on<StoreHandler>().store.box(Group::class).put(group)
 
-        val createApiRequest: Single<CreateResult>
-
-        if (group.physical) {
-            createApiRequest = on<ApiHandler>().createPhysicalGroup(LatLng(
+        val createApiRequest: Single<CreateResult> = if (group.physical) {
+            on<ApiHandler>().createPhysicalGroup(group.name ?: "", group.about ?: "", group.isPublic, LatLng(
                     group.latitude!!,
                     group.longitude!!
             ))
         } else if (group.isPublic) {
-            createApiRequest = on<ApiHandler>().createPublicGroup(group.name!!, group.about!!, LatLng(
+            on<ApiHandler>().createPublicGroup(group.name!!, group.about!!, LatLng(
                     group.latitude!!,
                     group.longitude!!
             ))
         } else {
-            createApiRequest = on<ApiHandler>().createGroup(group.name!!)
+            on<ApiHandler>().createGroup(group.name!!)
         }
 
         on<ApplicationHandler>().app.on<DisposableHandler>().add(createApiRequest.subscribe({ createResult ->

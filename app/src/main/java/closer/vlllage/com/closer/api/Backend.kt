@@ -128,7 +128,7 @@ interface Backend {
     fun createPublicGroup(@Query("name") groupName: String, @Query("about") about: String, @Query("geo") geo: String, @Query("public") isPublic: Boolean): Single<CreateResult>
 
     @POST("group")
-    fun createPhysicalGroup(@Query("geo") geo: String, @Query("physical") physical: Boolean): Single<CreateResult>
+    fun createPhysicalGroup(@Query("name") groupName: String, @Query("about") about: String, @Query("geo") geo: String, @Query("public") isPublic: Boolean, @Query("physical") physical: Boolean): Single<CreateResult>
 
     @GET("group")
     fun getPhysicalGroups(@Query("geo") latLng: String, @Query("kind") kind: String): Single<List<GroupResult>>

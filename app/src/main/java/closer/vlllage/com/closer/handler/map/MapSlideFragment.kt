@@ -204,6 +204,11 @@ class MapSlideFragment : PoolFragment() {
                     }
                 }
                 3 -> on<SuggestionHandler>().createNewSuggestion(menuBubble.latLng!!)
+                4 -> {
+                    on<DefaultInput>().show(R.string.add_new_private_group, R.string.enter_group_name, R.string.create_group) {
+                        on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!, isPublic = false, name = it)
+                    }
+                }
             }
         }
         on<BubbleHandler>().add(menuBubble)
@@ -215,7 +220,8 @@ class MapSlideFragment : PoolFragment() {
                             (MapBubbleMenuItem(getString(R.string.chat), R.drawable.ic_chat_black_18dp, R.color.purple)),
                             (MapBubbleMenuItem(getString(R.string.host_event), R.drawable.ic_event_note_black_18dp, R.color.red)),
                             (MapBubbleMenuItem(getString(R.string.share_location), R.drawable.ic_share_black_18dp, R.color.colorAccent)),
-                            (MapBubbleMenuItem(getString(R.string.add_suggestion), R.drawable.ic_edit_location_black_18dp, R.color.colorPrimary)))
+                            (MapBubbleMenuItem(getString(R.string.add_suggestion), R.drawable.ic_edit_location_black_18dp, R.color.colorPrimary)),
+                            (MapBubbleMenuItem(getString(R.string.add_new_private_group), R.drawable.ic_group_add_black_18dp, R.color.black)))
 
             on<MapBubbleMenuView>().setMenuTitle(menuBubble, title)
         }

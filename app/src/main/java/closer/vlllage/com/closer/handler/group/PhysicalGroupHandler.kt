@@ -11,11 +11,11 @@ import com.queatz.on.On
 
 class PhysicalGroupHandler constructor(private val on: On) {
 
-    fun createPhysicalGroup(latLng: LatLng, onSyncResult: OnSyncResult? = null) {
+    fun createPhysicalGroup(latLng: LatLng, isPublic: Boolean = true, name: String = "", onSyncResult: OnSyncResult? = null) {
         val group = on<StoreHandler>().create(Group::class.java)
-        group!!.name = ""
+        group!!.name = name
         group.about = ""
-        group.isPublic = true
+        group.isPublic = isPublic
         group.physical = true
         group.latitude = latLng.latitude
         group.longitude = latLng.longitude
