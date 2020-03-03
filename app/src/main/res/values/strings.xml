@@ -327,6 +327,8 @@
     <string name="date_tiny_days">%1$sd</string>
     <string name="date_tiny_years">%1$sy</string>
     <string name="last_active">Last active %1$s ago</string>
+    <string name="settings_private_mode">Private mode</string>
+    <string name="private_mode_switch_description">Private mode is on.  You\'ll only see your private groups and events.</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

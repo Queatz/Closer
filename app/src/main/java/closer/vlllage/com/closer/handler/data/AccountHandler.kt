@@ -25,6 +25,7 @@ class AccountHandler constructor(private val on: On) {
     }
 
     val privateMode get() = on<PersistenceHandler>().privateMode
+    val privateOnly get() = on<PersistenceHandler>().privateOnly
 
     fun updatePhone(token: String) {
         on<PersistenceHandler>().phone = token
@@ -66,6 +67,11 @@ class AccountHandler constructor(private val on: On) {
         accountChanges.onNext(AccountChange(ACCOUNT_FIELD_NOTIFICATIONS, privateMode))
         on<DisposableHandler>().add(on<ApiHandler>().updatePhonePrivateMode(privateMode)
                 .subscribe({}, { this.onError(it) }))
+    }
+
+    fun updatePrivateOnly(privateOnly: Boolean) {
+        on<PersistenceHandler>().privateOnly = privateOnly
+        accountChanges.onNext(AccountChange(ACCOUNT_FIELD_PRIVATE, privateOnly))
     }
 
     private fun onError(throwable: Throwable) {
@@ -115,6 +121,7 @@ class AccountHandler constructor(private val on: On) {
         const val ACCOUNT_FIELD_GEO = "geo"
         const val ACCOUNT_FIELD_ACTIVE = "active"
         const val ACCOUNT_FIELD_NOTIFICATIONS = "notifications"
+        const val ACCOUNT_FIELD_PRIVATE = "private"
 
         private val accountChanges = PublishSubject.create<AccountChange>()
     }

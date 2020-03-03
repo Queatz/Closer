@@ -188,7 +188,13 @@ class MapSlideFragment : PoolFragment() {
         menuBubble.onItemClickListener = { position ->
             when (position) {
                 0 -> on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!)
-                1 -> on<ShareHandler>().shareTo(menuBubble.latLng!!) { group ->
+                1 -> on<EventHandler>().createNewEvent(menuBubble.latLng!!, true) {
+                    on<MapHandler>().centerMap(LatLng(
+                            it.latitude!!,
+                            it.longitude!!
+                    ))
+                }
+                2 -> on<ShareHandler>().shareTo(menuBubble.latLng!!) { group ->
                     val success = on<GroupMessageAttachmentHandler>().shareLocation(menuBubble.latLng!!, group)
 
                     if (!success) {
@@ -196,12 +202,6 @@ class MapSlideFragment : PoolFragment() {
                     } else {
                         on<GroupActivityTransitionHandler>().showGroupMessages(menuBubble.view, group.id)
                     }
-                }
-                2 -> on<EventHandler>().createNewEvent(menuBubble.latLng!!, true) {
-                    on<MapHandler>().centerMap(LatLng(
-                            it.latitude!!,
-                            it.longitude!!
-                    ))
                 }
                 3 -> on<SuggestionHandler>().createNewSuggestion(menuBubble.latLng!!)
             }
@@ -213,8 +213,8 @@ class MapSlideFragment : PoolFragment() {
                     .getMenuAdapter(menuBubble)
                     .setMenuItems(
                             (MapBubbleMenuItem(getString(R.string.chat), R.drawable.ic_chat_black_18dp, R.color.purple)),
-                            (MapBubbleMenuItem(getString(R.string.share_location), R.drawable.ic_share_black_18dp, R.color.colorAccent)),
                             (MapBubbleMenuItem(getString(R.string.host_event), R.drawable.ic_event_note_black_18dp, R.color.red)),
+                            (MapBubbleMenuItem(getString(R.string.share_location), R.drawable.ic_share_black_18dp, R.color.colorAccent)),
                             (MapBubbleMenuItem(getString(R.string.add_suggestion), R.drawable.ic_edit_location_black_18dp, R.color.colorPrimary)))
 
             on<MapBubbleMenuView>().setMenuTitle(menuBubble, title)

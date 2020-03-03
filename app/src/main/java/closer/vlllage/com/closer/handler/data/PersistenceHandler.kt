@@ -89,6 +89,13 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
             sharedPreferences.edit().putBoolean(PREFERENCE_MY_PRIVATE_MODE, privateMode).commit()
         }
 
+    var privateOnly: Boolean
+        get() = sharedPreferences.getBoolean(PREFERENCE_MY_PRIVATE_ONLY, false)
+        @SuppressLint("ApplySharedPref")
+        set(privateOnly) {
+            sharedPreferences.edit().putBoolean(PREFERENCE_MY_PRIVATE_ONLY, privateOnly).commit()
+        }
+
     var lastMapCenter: LatLng?
         get() {
             val result = sharedPreferences.getString(PREFERENCE_LAST_MAP_CENTER, null)
@@ -119,6 +126,7 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
         private const val PREFERENCE_MY_ACTIVE = "closer.me.active"
         private const val PREFERENCE_MY_PHOTO = "closer.me.photo"
         private const val PREFERENCE_MY_PRIVATE_MODE = "closer.me.private-mode"
+        private const val PREFERENCE_MY_PRIVATE_ONLY = "closer.me.private-only"
         private const val PREFERENCE_DEVICE_TOKEN = "closer.device-token"
         private const val PREFERENCE_PHONE = "closer.phone"
         private const val PREFERENCE_VERIFIED = "closer.verified"

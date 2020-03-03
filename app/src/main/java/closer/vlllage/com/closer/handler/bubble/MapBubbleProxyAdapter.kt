@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
+import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.StoreHandler
@@ -94,7 +95,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                 holder.name.text = on<Val>().of((mapBubble.tag as Group).name, on<StoreHandler>().store.box(GroupMessage::class).query()
                         .equal(GroupMessage_.to, (mapBubble.tag as Group).id ?: "")
                         .order(GroupMessage_.updated)
-                        .build().findFirst()?.text?.let { "\"${it}\"" } ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
+                        .build().findFirst()?.text?.let { on<GroupMessageParseHandler>().parseString(it) }?.let { "\"${it}\"" } ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
             }
             BubbleType.EVENT -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_red_8dp)
