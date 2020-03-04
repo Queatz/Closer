@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MeetHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
+import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
@@ -333,19 +334,23 @@ class GroupActivity : CircularRevealActivity() {
         intent ?: return
 
         if (intent.hasExtra(EXTRA_GROUP_ID)) {
-            groupId = intent.getStringExtra(EXTRA_GROUP_ID)
+            groupId = intent.getStringExtra(EXTRA_GROUP_ID)!!
             on<GroupHandler>().setGroupById(groupId)
+
+            if (intent.hasExtra(EXTRA_RESPOND)) {
+                on<GroupMessagesHandler>().setIsRespond()
+            }
         } else if (intent.hasExtra(EXTRA_PHONE_ID)) {
-            on<DisposableHandler>().add(on<DataHandler>().getGroupForPhone(intent.getStringExtra(EXTRA_PHONE_ID)).subscribe({
+            on<DisposableHandler>().add(on<DataHandler>().getGroupForPhone(intent.getStringExtra(EXTRA_PHONE_ID)!!).subscribe({
                 groupId = it.id!!
                 on<GroupHandler>().setGroupById(groupId)
+
+                if (intent.hasExtra(EXTRA_RESPOND) && it.phoneId != null) {
+                    on<ReplyHandler>().reply(it.phoneId!!)
+                }
             }, {
                 on<DefaultAlerts>().thatDidntWork()
             }))
-        }
-
-        if (intent.hasExtra(EXTRA_RESPOND)) {
-            on<GroupMessagesHandler>().setIsRespond()
         }
 
         if (intent.hasExtra(EXTRA_MEET)) {
