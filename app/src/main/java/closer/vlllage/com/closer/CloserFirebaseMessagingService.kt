@@ -47,6 +47,17 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
 
                         app.on<RefreshHandler>().refreshGroupMessages(data["groupId"]!!)
                     }
+                    "group.message.reaction" -> {
+                        if (!app.on<TopHandler>().isGroupActive(data["groupId"]!!)) {
+                            app.on<NotificationHandler>().showGroupMessageReactionNotification(
+                                    data["reactionFrom"]!!,
+                                    data["reaction"]!!,
+                                    data["groupId"]!!,
+                                    data["passive"])
+                        }
+
+                        app.on<RefreshHandler>().refreshGroupMessages(data["groupId"]!!)
+                    }
                     "refresh" -> if (data.containsKey("what")) {
                         when (data["what"]!!) {
                             "groups" -> app.on<RefreshHandler>().refreshMyGroups()

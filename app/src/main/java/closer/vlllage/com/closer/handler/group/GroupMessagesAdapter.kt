@@ -97,22 +97,22 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             true
         }
 
-        holder.messageActionReply.text = on<ResourcesHandler>().resources.getString(
+        holder.messageActionProfile.text = on<ResourcesHandler>().resources.getString(
                 if (global) R.string.group else R.string.profile
         )
 
         holder.messageActionShare.visible = groupMessage.from != null
         holder.messageActionPin.visible = groupMessage.from != null
 
-        holder.messageActionReply.visible = global || groupMessage.from != null
+        holder.messageActionProfile.visible = global || groupMessage.from != null
 
         if (global) {
-            holder.messageActionReply.setOnClickListener {
+            holder.messageActionProfile.setOnClickListener {
                 on<NavigationHandler>().showGroup(groupMessage.to!!)
                 toggleMessageActionLayout(holder)
             }
         } else if (groupMessage.from != null) {
-            holder.messageActionReply.setOnClickListener {
+            holder.messageActionProfile.setOnClickListener {
                 on<NavigationHandler>().showProfile(groupMessage.from!!)
                 toggleMessageActionLayout(holder)
             }
@@ -124,6 +124,16 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         }
 
         holder.messageActionRemind.setOnClickListener {
+            on<DefaultAlerts>().message("That doesn't work yet!")
+            toggleMessageActionLayout(holder)
+        }
+
+        holder.messageActionReply.setOnClickListener {
+            on<DefaultAlerts>().message("That doesn't work yet!")
+            toggleMessageActionLayout(holder)
+        }
+
+        holder.messageActionDelete.setOnClickListener {
             on<DefaultAlerts>().message("That doesn't work yet!")
             toggleMessageActionLayout(holder)
         }
@@ -223,11 +233,13 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         }
 
         holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
-            holder.messageActionReply.setTextColor(it.text)
+            holder.messageActionProfile.setTextColor(it.text)
             holder.messageActionShare.setTextColor(it.text)
             holder.messageActionRemind.setTextColor(it.text)
             holder.messageActionPin.setTextColor(it.text)
-            holder.messageActionReply.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionReply.setTextColor(it.text)
+            holder.messageActionDelete.setTextColor(it.text)
+            holder.messageActionProfile.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionShare.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionRemind.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionPin.setBackgroundResource(it.clickableRoundedBackground)
@@ -236,6 +248,8 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.messageActionVoteYummy.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionVoteKiss.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionVoteCool.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionReply.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionDelete.setBackgroundResource(it.clickableRoundedBackground)
             holder.message.setTextColor(it.text)
             holder.name.setTextColor(it.text)
             holder.time.setTextColor(it.text)
@@ -305,9 +319,11 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var rating: RatingBar
         internal var pinnedIndicator: ImageView
         internal var messageActionLayout: MaxSizeFrameLayout
-        internal var messageActionReply: TextView
+        internal var messageActionProfile: TextView
         internal var messageActionShare: TextView
         internal var messageActionRemind: TextView
+        internal var messageActionReply: TextView
+        internal var messageActionDelete: TextView
         internal var messageActionPin: TextView
         internal var messageActionVote: TextView
         internal var messageActionVoteLaugh: TextView
@@ -332,9 +348,11 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             pinnedIndicator = itemView.findViewById(R.id.pinnedIndicator)
             reactionsRecyclerView = itemView.findViewById(R.id.reactionsRecyclerView)
             messageActionLayout = itemView.findViewById(R.id.messageActionLayout)
-            messageActionReply = itemView.findViewById(R.id.messageActionReply)
+            messageActionProfile = itemView.findViewById(R.id.messageActionProfile)
             messageActionShare = itemView.findViewById(R.id.messageActionShare)
-            messageActionRemind = itemView.findViewById(R.id.messageActionReminder)
+            messageActionRemind = itemView.findViewById(R.id.messageActionRemind)
+            messageActionReply = itemView.findViewById(R.id.messageActionReply)
+            messageActionDelete = itemView.findViewById(R.id.messageActionDelete)
             messageActionPin = itemView.findViewById(R.id.messageActionPin)
             messageActionVote = itemView.findViewById(R.id.messageActionVote)
             messageActionVoteLaugh = itemView.findViewById(R.id.messageActionVoteLaugh)

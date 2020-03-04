@@ -109,6 +109,27 @@ class NotificationHandler constructor(private val on: On) {
                 "$groupId/message", !java.lang.Boolean.valueOf(isPassive))
     }
 
+    fun showGroupMessageReactionNotification(from: String, reaction: String, groupId: String, isPassive: String?) {
+        val context = on<ApplicationHandler>().app
+
+        val intent = Intent(context, GroupActivity::class.java)
+        intent.action = Intent.ACTION_VIEW
+
+        intent.putExtra(EXTRA_GROUP_ID, groupId)
+
+        val contentIntent = PendingIntent.getActivity(
+                context,
+                REQUEST_CODE_NOTIFICATION,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        show(contentIntent, null, null,
+                on<ResourcesHandler>().resources.getString(R.string.group_message_reaction_notification, from),
+                reaction,
+                "$groupId/message/reaction", !java.lang.Boolean.valueOf(isPassive))
+    }
+
     fun showEventNotification(event: Event) {
         val context = on<ApplicationHandler>().app
 

@@ -196,7 +196,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/messageActionReply"
+                    android:id="@+id/messageActionProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/groupActionHeight"
                     android:layout_marginEnd="@dimen/pad"
@@ -232,7 +232,7 @@
                     android:focusable="true" />
 
                 <TextView
-                    android:id="@+id/messageActionReminder"
+                    android:id="@+id/messageActionRemind"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/groupActionHeight"
                     android:layout_marginEnd="@dimen/pad"
@@ -246,7 +246,7 @@
                     android:textColor="@color/text"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:text="@string/reminder"
+                    android:text="@string/remind"
                     android:visibility="gone"
                     android:focusable="true" />
 
@@ -266,6 +266,44 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:text="@string/pin"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/messageActionReply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="@string/reply"
+                    android:visibility="gone"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/messageActionDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="@string/delete"
+                    android:visibility="gone"
                     android:focusable="true" />
 
             </LinearLayout>

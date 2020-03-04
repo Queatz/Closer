@@ -83,6 +83,7 @@
     <string name="skip">Skip</string>
     <string name="invited_to_group_notification">%1$s added you to %2$s</string>
     <string name="group_message_notification">%1$s (%2$s)</string>
+    <string name="group_message_reaction_notification">%1$s reacted to your message</string>
     <string name="invited">Invited</string>
     <string name="cancel_invite">Cancel invite</string>
     <string name="confirm_cancel_invite">Cancel %1$s\'s invite?</string>
@@ -332,6 +333,8 @@
     <string name="add_location">Add location</string>
     <string name="your_groups">Your groups</string>
     <string name="conversations">Conversations</string>
+    <string name="delete">Delete</string>
+    <string name="remind">Remind</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
