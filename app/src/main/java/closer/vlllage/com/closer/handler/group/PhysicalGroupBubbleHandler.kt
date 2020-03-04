@@ -2,6 +2,8 @@ package closer.vlllage.com.closer.handler.group
 
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler
 import closer.vlllage.com.closer.handler.bubble.BubbleType
+import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.SortHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
@@ -28,13 +30,19 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
             disposableGroup.add(on<StoreHandler>().store.box(Group::class).query()
                     .equal(Group_.physical, true)
                     .between(Group_.latitude, latLng.latitude - distance, latLng.latitude + distance)
-                    .between(Group_.longitude, latLng.longitude - distance, latLng.longitude + distance)
+                    .between(Group_.longitude, latLng.longitude - distance, latLng.longitude + distance).apply {
+                        if (on<AccountHandler>().privateOnly) {
+                            equal(Group_.isPublic, false)
+                        }
+                    }
                     .sort(on<SortHandler>().sortPhysicalGroups(latLng))
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .observer { groups ->
-                        for (group in groups.take(5)) {
+                        val showGroups = groups.take(5)
+
+                        for (group in showGroups) {
                             if (!visiblePublicGroups.contains(group.id)) {
                                 val mapBubble = on<PhysicalGroupHandler>().physicalGroupBubbleFrom(group)
 
@@ -45,7 +53,7 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
                         }
 
                         visiblePublicGroups.clear()
-                        for (group in groups.take(5)) {
+                        for (group in showGroups) {
                             if (group.id == null) {
                                 continue
                             }
@@ -58,6 +66,10 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
 
     fun attach() {
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable().subscribe {
+            update()
+        })
+
+        on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE).subscribe {
             update()
         })
 

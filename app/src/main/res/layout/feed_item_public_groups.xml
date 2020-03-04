@@ -236,6 +236,7 @@
             </closer.vlllage.com.closer.ui.SoftScrollStopper>
 
             <TextView
+                android:id="@+id/publicGroupsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/padDialog"

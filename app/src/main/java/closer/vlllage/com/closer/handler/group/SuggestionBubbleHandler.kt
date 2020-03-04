@@ -2,6 +2,8 @@ package closer.vlllage.com.closer.handler.group
 
 import closer.vlllage.com.closer.handler.bubble.BubbleHandler
 import closer.vlllage.com.closer.handler.bubble.BubbleType
+import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.SortHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
@@ -24,6 +26,12 @@ class SuggestionBubbleHandler constructor(private val on: On) {
         val distance = .12f
 
         disposableGroup.clear()
+
+        if (on<AccountHandler>().privateOnly) {
+            visibleSuggestions.clear()
+            clearBubbles()
+            return
+        }
 
         disposableGroup.add(on<MapHandler>().onMapIdleObservable().subscribe {
                 val queryBuilder = on<StoreHandler>().store.box(Suggestion::class).query()
@@ -61,6 +69,9 @@ class SuggestionBubbleHandler constructor(private val on: On) {
         }
 
     fun attach() {
+        on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE).subscribe {
+            update()
+        })
         on<DisposableHandler>().add(on<MapZoomHandler>().onZoomGreaterThanChanged(GEO_SUGGESTIONS_ZOOM).subscribe(
                 { zoomIsGreaterThan15 ->
                     if (zoomIsGreaterThan15) {

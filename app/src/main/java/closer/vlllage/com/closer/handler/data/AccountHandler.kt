@@ -109,7 +109,9 @@ class AccountHandler constructor(private val on: On) {
         }, { this.onError(it) }))
     }
 
-    fun changes() = accountChanges
+    fun changes(prop: String? = null) = accountChanges.let { changes ->
+        prop?.let { prop -> changes.filter { it.prop == prop } } ?: changes
+    }
 
     class AccountChange(val prop: String, val value: Any)
 

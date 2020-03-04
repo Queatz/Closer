@@ -68,12 +68,6 @@ class MyGroupsLayoutHandler constructor(private val on: On) {
                 }, null,
                 R.drawable.clickable_blue_light).also { it.icon = R.drawable.ic_group_add_black_24dp })
         endActions.add(GroupActionBarButton(
-                on<ResourcesHandler>().resources.getString(R.string.random_suggestion),
-                View.OnClickListener { view -> on<SuggestionHandler>().shuffle() }, null,
-                R.drawable.clickable_green_light
-
-        ).also { it.icon = R.drawable.ic_shuffle_black_24dp })
-        endActions.add(GroupActionBarButton(
                 on<ResourcesHandler>().resources.getString(R.string.settings),
                 View.OnClickListener { view -> on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_SETTINGS) }, null,
                 R.drawable.clickable_accent

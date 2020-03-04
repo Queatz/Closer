@@ -3,12 +3,17 @@ package closer.vlllage.com.closer.handler.feed
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.data.LocationHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
@@ -30,12 +35,19 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     private lateinit var searchGroups: EditText
     private lateinit var saySomething: EditText
+    private lateinit var saySomethingHeader: TextView
+    private lateinit var searchGroupsAdapter: SearchGroupsAdapter
+    private lateinit var groupsHeader: TextView
+    private lateinit var groupsRecyclerView: RecyclerView
+    private lateinit var sendSomethingButton: ImageButton
+    private lateinit var peopleContainer: ViewGroup
 
     private lateinit var itemView: View
 
     fun attach(itemView: View) {
         this.itemView = itemView
-        val groupsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicGroupsRecyclerView)
+        groupsRecyclerView = itemView.publicGroupsRecyclerView
+        groupsHeader = itemView.publicGroupsHeader
         val eventsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicEventsRecyclerView)
         val hubsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicHubsRecyclerView)
         val actionRecyclerView = itemView.findViewById<RecyclerView>(R.id.groupActionsRecyclerView)
@@ -43,10 +55,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         val peopleRecyclerView = itemView.findViewById<RecyclerView>(R.id.peopleRecyclerView)
         searchGroups = itemView.searchGroups
         saySomething = itemView.saySomething
+        saySomethingHeader = itemView.saySomethingHeader
+        sendSomethingButton = itemView.sendSomethingButton
+        peopleContainer = itemView.peopleContainer
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO)
 
-        val searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         groupsRecyclerView.adapter = searchGroupsAdapter
@@ -111,30 +126,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             searchGroupsAdapter.setCreatePublicGroupName(it)
         })
 
-        val distance = .12f
-
         val cameraPositionCallback = { cameraPosition: CameraPosition ->
-            val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
-                    .notNull(Group_.eventId)
-                    .and()
-                    .greater(Group_.updated, on<TimeAgo>().oneMonthAgo())
-                    .or()
-                    .isNull(Group_.eventId)
-                    .between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
-                    .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
-
-            on<DisposableHandler>().add(queryBuilder
-                    .sort(on<SortHandler>().sortGroups(true))
-                    .build()
-                    .subscribe()
-                    .on(AndroidScheduler.mainThread())
-                    .single()
-                    .observer { groups ->
-                        on<SearchGroupHandler>().setGroups(groups)
-                        showGroupActions(itemView.thingsToDoHeader, groups)
-                        on<TimerHandler>().post(Runnable { groupsRecyclerView.scrollBy(0, 0) })
-                    })
-
+            loadGroups(cameraPosition.target)
             loadSuggestions(cameraPosition.target)
             loadPeople(cameraPosition.target)
 
@@ -146,6 +139,15 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 }
             }
         }
+
+        on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE).subscribe {
+            loadGroups(on<MapHandler>().center!!)
+            loadSuggestions(on<MapHandler>().center!!)
+            loadPeople(on<MapHandler>().center!!)
+            updatePrivateOnly()
+        })
+
+        updatePrivateOnly()
 
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -163,9 +165,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         saySomething.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s.isNullOrBlank()) {
-                    itemView.sendSomethingButton.setImageResource(R.drawable.ic_camera_black_24dp)
+                    sendSomethingButton.setImageResource(R.drawable.ic_camera_black_24dp)
                 } else {
-                    itemView.sendSomethingButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
+                    sendSomethingButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
                 }
             }
 
@@ -176,9 +178,51 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
         })
 
-        itemView.sendSomethingButton.setOnClickListener {
+        sendSomethingButton.setOnClickListener {
             saySomethingAtMapCenter()
         }
+    }
+
+    private fun updatePrivateOnly() {
+        val showPublic = on<AccountHandler>().privateOnly.not()
+        saySomethingHeader.visible = showPublic
+        saySomething.visible = showPublic
+        sendSomethingButton.visible = showPublic
+        peopleContainer.visible = showPublic
+        groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
+        itemView.feedText.setText(if (showPublic) R.string.conversations_around_here else R.string.conversations)
+        searchGroupsAdapter.showCreateOption(showPublic)
+    }
+
+    private fun loadGroups(target: LatLng) {
+        val distance = .12f
+
+        val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
+                .notNull(Group_.eventId)
+                .and()
+                .greater(Group_.updated, on<TimeAgo>().oneMonthAgo()).apply {
+                    if (on<AccountHandler>().privateOnly) {
+                        or()
+                        equal(Group_.isPublic, false)
+                    } else {
+                        or()
+                        isNull(Group_.eventId)
+                        between(Group_.latitude, target.latitude - distance, target.latitude + distance)
+                        between(Group_.longitude, target.longitude - distance, target.longitude + distance)
+                    }
+                }
+
+        on<DisposableHandler>().add(queryBuilder
+                .sort(on<SortHandler>().sortGroups(true))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { groups ->
+                    on<SearchGroupHandler>().setGroups(groups)
+                    showGroupActions(itemView.groupActionsRecyclerView, itemView.thingsToDoHeader, groups)
+                    on<TimerHandler>().post(Runnable { groupsRecyclerView.scrollBy(0, 0) })
+                })
     }
 
     private fun loadPeople(latLng: LatLng) {
@@ -199,7 +243,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { phones ->
-                    itemView.peopleContainer.visible = phones.isNotEmpty()
+                    peopleContainer.visible = phones.isNotEmpty() && on<AccountHandler>().privateOnly.not()
                     on<PeopleRecyclerViewHandler>().setPeople(phones)
                 })
     }
@@ -219,8 +263,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { suggestions ->
-                    itemView.suggestionsHeader.visible = suggestions.isNotEmpty()
-                    itemView.suggestionsRecyclerView.visible = suggestions.isNotEmpty()
+                    itemView.suggestionsHeader.visible = suggestions.isNotEmpty() && on<AccountHandler>().privateOnly.not()
+                    itemView.suggestionsRecyclerView.visible = suggestions.isNotEmpty() && on<AccountHandler>().privateOnly.not()
                     on<SuggestionsRecyclerViewHandler>().setSuggestions(suggestions)
                 })
     }
@@ -271,7 +315,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         }
     }
 
-    private fun showGroupActions(header: View, groups: List<Group>) {
+    private fun showGroupActions(groupActionsRecyclerView: RecyclerView, header: View, groups: List<Group>) {
         on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
                 .`in`(GroupAction_.group, groups
                         .filter { it.id != null }
@@ -284,6 +328,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .single()
                 .observer { groupActions ->
                     header.visible = groupActions.isNotEmpty()
+                    groupActionsRecyclerView.visible = groupActions.isNotEmpty()
                     on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
                 })
     }

@@ -23,7 +23,7 @@ class GroupActionRecyclerViewHandler constructor(private val on: On) {
     var onGroupActionRepliedListener: OnGroupActionRepliedListener? = null
 
     fun attach(actionRecyclerView: RecyclerView, layout: GroupActionAdapter.Layout) {
-        this.recyclerView = actionRecyclerView
+        recyclerView = actionRecyclerView
         actionRecyclerView.layoutManager = LinearLayoutManager(
                 on<ActivityHandler>().activity,
                 LinearLayoutManager.HORIZONTAL,

@@ -22,9 +22,9 @@ import java.util.*
 
 open class SearchGroupsAdapter constructor(
         on: On,
-       private val showCreateGroup: Boolean,
-       private val onGroupClickListener: ((group: Group, view: View) -> Unit)?,
-       private val onCreateGroupClickListener: ((groupName: String) -> Unit)?
+        private var showCreateGroup: Boolean,
+        private val onGroupClickListener: ((group: Group, view: View) -> Unit)?,
+        private val onCreateGroupClickListener: ((groupName: String) -> Unit)?
 ) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
     private var createPublicGroupName: String = ""
@@ -38,7 +38,7 @@ open class SearchGroupsAdapter constructor(
     private var isNoAnimation: Boolean = false
     var flat: Boolean = false
 
-    private val createGroupCount = if (showCreateGroup) 1 else 0
+    private val createGroupCount get() = if (showCreateGroup) 1 else 0
 
     fun setLayoutResId(layoutResId: Int): SearchGroupsAdapter {
         this.layoutResId = layoutResId
@@ -162,11 +162,16 @@ open class SearchGroupsAdapter constructor(
         notifyDataSetChanged()
     }
 
+    fun showCreateOption(showCreate: Boolean) {
+        showCreateGroup = showCreate
+        notifyDataSetChanged()
+    }
+
     fun setGroups(groups: List<Group>) {
         if (isNoAnimation || this.groups.isEmpty()) {
             this.groups.clear()
             this.groups.addAll(groups)
-            this.notifyDataSetChanged()
+            notifyDataSetChanged()
         }
 
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {

@@ -42,7 +42,7 @@ class MapSlideFragment : PoolFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        on<NetworkConnectionViewHandler>().attach(view.findViewById(R.id.connectionError))
+        on<NetworkConnectionViewHandler>().attach(view.connectionError)
         on<TimerHandler>().postDisposable(Runnable { on<SyncHandler>().syncAll() }, 1325)
         on<TimerHandler>().postDisposable(Runnable { on<RefreshHandler>().refreshAll() }, 1625)
 
@@ -88,6 +88,7 @@ class MapSlideFragment : PoolFragment() {
         on<MapHandler>().onMapIdleListener = { latLng ->
             on<DisposableHandler>().add(on<DataHandler>().run {
                 getPhonesNear(latLng)
+                        .filter { on<AccountHandler>().privateOnly.not() }
                         .map { mapBubbleFrom(it) }.subscribe({ mapBubbles -> on<BubbleHandler>().replace(mapBubbles) }, { networkError(it) })
             })
 
@@ -135,7 +136,7 @@ class MapSlideFragment : PoolFragment() {
 
         on<DisposableHandler>().add(on<MeetHandler>().total
                 .subscribe {
-            on<MyGroupsLayoutActionsHandler>().showMeetPeople(it > 0)
+            on<MyGroupsLayoutActionsHandler>().showMeetPeople(it > 0 && on<AccountHandler>().privateOnly.not())
         })
 
         if (pendingRunnable != null) {
@@ -147,13 +148,17 @@ class MapSlideFragment : PoolFragment() {
             on<DataVisualsHandler>().attach()
 
             on<DisposableHandler>().add(on<DataHandler>().getRecentlyActivePhones(100).map {
-                it.filter { it.latitude != null && it.longitude != null }.map { LatLng(it.latitude!!, it.longitude!!) }
+                it.filter { on<AccountHandler>().privateOnly.not() }
+                        .filter { it.latitude != null && it.longitude != null }
+                        .map { LatLng(it.latitude!!, it.longitude!!) }
             }.subscribe { phones ->
                 on<DataVisualsHandler>().setPhones(phones)
             })
 
             on<DisposableHandler>().add(on<DataHandler>().getRecentlyActiveGroups(100).map {
-                it.filter { it.latitude != null && it.longitude != null }.map { LatLng(it.latitude!!, it.longitude!!) }
+                it.filter { on<AccountHandler>().privateOnly.not() }
+                        .filter { it.latitude != null && it.longitude != null }
+                        .map { LatLng(it.latitude!!, it.longitude!!) }
             }.subscribe { phones ->
                 on<DataVisualsHandler>().setGroups(phones)
             })
@@ -240,7 +245,7 @@ class MapSlideFragment : PoolFragment() {
 
         val isNotificationsPaused = on<PersistenceHandler>().isNotificationsPaused
         on<MyGroupsLayoutActionsHandler>().showUnmuteNotifications(isNotificationsPaused)
-        on<MyGroupsLayoutActionsHandler>().showFeatureRequests(true)
+        on<MyGroupsLayoutActionsHandler>().showFeatureRequests(on<AccountHandler>().privateOnly.not())
         on<MyGroupsLayoutActionsHandler>().showSetMyName(on<Val>().isEmpty(on<AccountHandler>().name))
 
         if (locationPermissionGranted && locationPermissionWasDenied) {
