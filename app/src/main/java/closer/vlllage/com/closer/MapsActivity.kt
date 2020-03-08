@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import closer.vlllage.com.closer.handler.PersonalSlideFragment
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
+import closer.vlllage.com.closer.handler.helpers.ScanQrCodeHandler
 import closer.vlllage.com.closer.handler.map.MapViewHandler
 import closer.vlllage.com.closer.handler.settings.SettingsSlideFragment
 import closer.vlllage.com.closer.pool.PoolActivity
@@ -49,6 +50,12 @@ class MapsActivity : PoolActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+
+        if (intent.action == Intent.ACTION_VIEW && intent.categories.contains(Intent.CATEGORY_BROWSABLE)) {
+            intent.data?.let {
+                on<ScanQrCodeHandler>().handleResult(it)
+            } ?: run { on<DefaultAlerts>().thatDidntWork() }
+        }
 
         if (intent.hasExtra(EXTRA_PROMPT)) {
             on<DefaultAlerts>().message(intent.getStringExtra(EXTRA_PROMPT))

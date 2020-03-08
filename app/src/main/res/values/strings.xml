@@ -342,6 +342,8 @@
     <string name="failed_to_generate_qr_code">Failed to generate QR Code</string>
     <string name="youre_a_member">Welcome! You are now a member of %1$s</string>
     <string name="generic_group">this group</string>
+    <string name="invite_by_shareable_link">Invite by shareable link</string>
+    <string name="copy">Copy</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

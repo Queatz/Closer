@@ -22,18 +22,22 @@ class ScanQrCodeHandler constructor(private val on: On) {
         }
     }
 
-    private fun handleResult(qrCode: String) {
-        Uri.parse(qrCode).path?.let {
-            on<ApiHandler>().useInviteCode(it.split('/').last()).subscribe({ result: UseInviteCodeResult ->
-                if (result.success) {
-                    on<ApiHandler>().getGroup(result.group!!).subscribe({ group ->
-                        on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id, isNewMember = true)
-                    }, { on<DefaultAlerts>().thatDidntWork() })
-                } else {
-                    on<DefaultAlerts>().thatDidntWork(result.error)
-                }
-            }) { on<DefaultAlerts>().thatDidntWork()}
-        }
+    fun handleResult(qrCode: String) {
+        handleResult(Uri.parse(qrCode))
+    }
+
+    fun handleResult(url: Uri) {
+        url.path ?: return
+
+        on<DisposableHandler>().add(on<ApiHandler>().useInviteCode(url.path!!.split('/').last()).subscribe({ result: UseInviteCodeResult ->
+            if (result.success) {
+                on<ApiHandler>().getGroup(result.group!!).subscribe({ group ->
+                    on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id, isNewMember = true)
+                }, { on<DefaultAlerts>().thatDidntWork() })
+            } else {
+                on<DefaultAlerts>().thatDidntWork(result.error)
+            }
+        }) { on<DefaultAlerts>().thatDidntWork()})
     }
 
     fun scan() {

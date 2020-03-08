@@ -79,9 +79,15 @@ class GroupContactsFragment : PoolActivityFragment() {
             searchContacts.setHintTextColor(it.hint)
             inviteByQRCodeButton.imageTintList = it.tint
             inviteByQRCodeButton.setBackgroundResource(it.clickableRoundedBackground)
+            inviteByLinkButton.imageTintList = it.tint
+            inviteByLinkButton.setBackgroundResource(it.clickableRoundedBackground)
             qrCodeDescription.setTextColor(it.hint)
             searchContacts.setBackgroundResource(it.clickableRoundedBackground)
         })
+
+        inviteByLinkButton.setOnClickListener {
+            generateShareableLink()
+        }
 
         inviteByQRCodeButton.setOnClickListener {
             val show = qrCodeLayout.visible.not()
@@ -97,6 +103,16 @@ class GroupContactsFragment : PoolActivityFragment() {
         }
     }
 
+    private fun generateShareableLink() {
+        on<GroupHandler>().group?.id?.let {
+            on<DisposableHandler>().add(on<ApiHandler>().createInviteCode(it).subscribe({ inviteCodeResult: InviteCodeResult ->
+                on<DefaultInput>().show(R.string.invite_by_shareable_link, button = R.string.copy, prefill = urlFromInviteCode(inviteCodeResult.code!!)) { link ->
+                    on<CopyPaste>().copy(link)
+                }
+            }, { on<DefaultAlerts>().thatDidntWork() }))
+        }
+    }
+
     private fun generateQrCode() {
         qrCode.setImageDrawable(null)
 
@@ -105,7 +121,7 @@ class GroupContactsFragment : PoolActivityFragment() {
                 try {
                     val s = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.qr_code)
                     val barcodeEncoder = BarcodeEncoder()
-                    val bitmap = barcodeEncoder.encodeBitmap("https://closer.group/invite/${inviteCodeResult.code}", BarcodeFormat.QR_CODE, s, s)
+                    val bitmap = barcodeEncoder.encodeBitmap(urlFromInviteCode(inviteCodeResult.code!!), BarcodeFormat.QR_CODE, s, s)
                     qrCode.setImageBitmap(bitmap)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -114,6 +130,8 @@ class GroupContactsFragment : PoolActivityFragment() {
             }, { on<DefaultAlerts>().thatDidntWork() }))
         }
     }
+
+    private fun urlFromInviteCode(code: String) = "https://closer.group/invite/${code}"
 
     private fun updateQrCode(group: Group) {
         qrCodeDescription.text = on<ResourcesHandler>().resources.getString(R.string.scan_this_qr_code_to_join, group.name ?: on<ResourcesHandler>().resources.getString(R.string.generic_group))

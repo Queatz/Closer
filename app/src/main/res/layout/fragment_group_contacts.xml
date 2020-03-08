@@ -51,7 +51,7 @@
         android:layout_marginRight="@dimen/pad"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/inviteByQRCodeButton"
+        app:layout_constraintEnd_toStartOf="@+id/inviteByLinkButton"
         android:background="@drawable/clickable_light_flat"
         android:focusedByDefault="false"
         android:hint="@string/phone_number_or_name"
@@ -81,6 +81,20 @@
         android:tint="@color/text"
         android:src="@drawable/ic_qr_code_black_24dp"
         android:contentDescription="@string/invite_by_qr_code" />
+
+    <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/inviteByLinkButton"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="@dimen/pad"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/inviteByQRCodeButton"
+        android:minWidth="0dp"
+        android:background="@drawable/clickable_light_flat"
+        android:padding="@dimen/pad"
+        android:tint="@color/text"
+        android:src="@drawable/ic_link_black_24dp"
+        android:contentDescription="@string/invite_by_shareable_link" />
 
     <Button style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/showPhoneContactsButton"
