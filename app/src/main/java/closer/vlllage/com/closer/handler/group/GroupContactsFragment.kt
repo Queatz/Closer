@@ -116,8 +116,8 @@ class GroupContactsFragment : PoolActivityFragment() {
     private fun generateQrCode() {
         qrCode.setImageDrawable(null)
 
-        on<GroupHandler>().group?.id?.let {
-            on<DisposableHandler>().add(on<ApiHandler>().createInviteCode(it).subscribe({ inviteCodeResult: InviteCodeResult ->
+        on<GroupHandler>().group?.let {
+            on<DisposableHandler>().add(on<ApiHandler>().createInviteCode(it.id!!, !it.isPublic).subscribe({ inviteCodeResult: InviteCodeResult ->
                 try {
                     val s = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.qr_code)
                     val barcodeEncoder = BarcodeEncoder()

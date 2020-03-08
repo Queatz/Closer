@@ -51,10 +51,10 @@ class MapsActivity : PoolActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
-        if (intent.action == Intent.ACTION_VIEW && intent.categories.contains(Intent.CATEGORY_BROWSABLE)) {
+        if (intent.action == Intent.ACTION_VIEW) {
             intent.data?.let {
-                on<ScanQrCodeHandler>().handleResult(it)
-            } ?: run { on<DefaultAlerts>().thatDidntWork() }
+                if (it.host == "closer.group") on<ScanQrCodeHandler>().handleResult(it)
+            }
         }
 
         if (intent.hasExtra(EXTRA_PROMPT)) {
