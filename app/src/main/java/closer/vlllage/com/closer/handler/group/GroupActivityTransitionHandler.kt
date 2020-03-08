@@ -7,6 +7,7 @@ import android.view.View
 import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_GROUP_ID
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_MEET
+import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_NEW_MEMBER
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_RESPOND
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
@@ -18,13 +19,13 @@ import com.queatz.on.On
 class GroupActivityTransitionHandler constructor(private val on: On) {
 
     @JvmOverloads
-    fun showGroupMessages(view: View?, groupId: String?, isRespond: Boolean = false, isMeet: Boolean = false) {
+    fun showGroupMessages(view: View?, groupId: String?, isRespond: Boolean = false, isMeet: Boolean = false, isNewMember: Boolean = false) {
         if (groupId == null) {
             on<DefaultAlerts>().thatDidntWork()
             return
         }
 
-        val intent = getIntent(groupId, isRespond, isMeet)
+        val intent = getIntent(groupId, isRespond, isMeet, isNewMember)
 
         if (view != null) {
             val bounds = Rect()
@@ -36,7 +37,7 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
         on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
-    fun getIntent(groupId: String, isRespond: Boolean, isMeet: Boolean = false): Intent {
+    fun getIntent(groupId: String, isRespond: Boolean, isMeet: Boolean = false, isNewMember: Boolean = false): Intent {
         val intent = Intent(on<ApplicationHandler>().app, GroupActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_GROUP_ID, groupId)
@@ -47,6 +48,10 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
 
         if (isMeet) {
             intent.putExtra(EXTRA_MEET, true)
+        }
+
+        if (isNewMember) {
+            intent.putExtra(EXTRA_NEW_MEMBER, true)
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)

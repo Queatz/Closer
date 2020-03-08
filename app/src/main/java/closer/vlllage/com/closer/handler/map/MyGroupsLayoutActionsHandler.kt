@@ -9,6 +9,7 @@ import closer.vlllage.com.closer.handler.group.MyGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.settings.HelpHandler
+import com.google.zxing.integration.android.IntentIntegrator
 import com.queatz.on.On
 import java.util.*
 
@@ -20,6 +21,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     private var meetPeopleButton: GroupActionBarButton? = null
     private var featureRequestsButton: GroupActionBarButton? = null
+    private var scanInviteButton: GroupActionBarButton? = null
     private var verifyYourNumberButton: GroupActionBarButton? = null
     private var allowPermissionsButton: GroupActionBarButton? = null
     private var unmuteNotificationsButton: GroupActionBarButton? = null
@@ -57,10 +59,27 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
         }
     }
 
+    private val scanInviteHandle = object : GroupActionBarButtonHandle {
+        override fun set() {
+            scanInviteButton = GroupActionBarButton(on<ResourcesHandler>().resources.getString(R.string.scan_invite), View.OnClickListener { on<ScanQrCodeHandler>().scan() },
+                    backgroundDrawableRes = R.drawable.clickable_accent,
+                    textColorRes = R.color.text).also {
+                it.icon = R.drawable.ic_qr_code_black_24dp
+            }
+        }
+
+        override fun get() = scanInviteButton
+        override fun unset() {
+            scanInviteButton = null
+        }
+    }
+
     private val verifyYourNumberButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.verify_your_number)
-            verifyYourNumberButton = GroupActionBarButton(action, View.OnClickListener { on<VerifyNumberHandler>().verify() })
+            verifyYourNumberButton = GroupActionBarButton(action, View.OnClickListener { on<VerifyNumberHandler>().verify() }).also {
+                it.icon = R.drawable.ic_smartphone_black_24dp
+            }
         }
 
         override fun get() = verifyYourNumberButton
@@ -178,6 +197,10 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     fun showFeatureRequests(show: Boolean) {
         show(featureRequestsHandle, show, 0)
+    }
+
+    fun showInviteCard(show: Boolean) {
+        show(scanInviteHandle, show, 0)
     }
 
     private fun show(handle: GroupActionBarButtonHandle, show: Boolean, position: Int) {

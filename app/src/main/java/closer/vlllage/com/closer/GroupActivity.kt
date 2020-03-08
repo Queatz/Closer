@@ -340,6 +340,14 @@ class GroupActivity : CircularRevealActivity() {
             if (intent.hasExtra(EXTRA_RESPOND)) {
                 on<GroupMessagesHandler>().setIsRespond()
             }
+
+            if (intent.hasExtra(EXTRA_NEW_MEMBER)) {
+                val disposableGroup = on<DisposableHandler>().group()
+                on<GroupHandler>().onGroupChanged(disposableGroup) {
+                    disposableGroup.dispose()
+                    on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.youre_a_member, it.name ?: on<ResourcesHandler>().resources.getString(R.string.generic_group)))
+                }
+            }
         } else if (intent.hasExtra(EXTRA_PHONE_ID)) {
             on<DisposableHandler>().add(on<DataHandler>().getGroupForPhone(intent.getStringExtra(EXTRA_PHONE_ID)!!).subscribe({
                 groupId = it.id!!
@@ -388,5 +396,6 @@ class GroupActivity : CircularRevealActivity() {
         const val EXTRA_PHONE_ID = "phoneId"
         const val EXTRA_RESPOND = "respond"
         const val EXTRA_MEET = "meet"
+        const val EXTRA_NEW_MEMBER = "newMember"
     }
 }

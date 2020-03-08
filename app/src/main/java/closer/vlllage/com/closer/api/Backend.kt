@@ -225,6 +225,17 @@ interface Backend {
     @POST("feature-requests/{id}")
     fun completeFeatureRequest(@Path("id") featureRequestId: String, @Query("completed") completed: Boolean): Single<SuccessResult>
 
+    // Invite Codes
+
+    @GET("invite-code")
+    fun getInviteCode(@Query("code") code: String): Single<InviteCodeResult>
+
+    @POST("invite-code")
+    fun createInviteCode(@Query("group") group: String, @Query("single") singleUse: Boolean = true, @Query("code") code: String? = null, @Query("name") name: String? = null): Single<InviteCodeResult>
+
+    @POST("invite-code")
+    fun useInviteCode(@Query("use") code: String): Single<UseInviteCodeResult>
+
     companion object {
 //        const val BASE_URL = "http://10.0.2.2:8080/closer/"
         const val BASE_URL = "https://closer.vlllage.com/"

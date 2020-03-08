@@ -320,6 +320,20 @@ class ApiHandler constructor(private val on: On) {
     fun getPlaces(query: String, bias: LatLng, limit: Int = 5): Single<GeoJsonResponse> {
         return uiThread(api.placesBackend.query(query, bias.latitude, bias.longitude, limit))
     }
+
+    fun getInviteCode(code: String): Single<InviteCodeResult> {
+        return uiThread(api.backend.getInviteCode(code))
+    }
+
+    fun createInviteCode(groupId: String, singleUse: Boolean = true): Single<InviteCodeResult> {
+        return uiThread(api.backend.createInviteCode(groupId, singleUse))
+    }
+
+    fun useInviteCode(code: String): Single<UseInviteCodeResult> {
+        return uiThread(api.backend.useInviteCode(code))
+    }
+
+
     private fun <T> uiThread(observable: Single<T>): Single<T> {
         return observable.observeOn(AndroidSchedulers.mainThread())
     }

@@ -1,19 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
+        android:id="@+id/qrCodeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/contactsRecyclerView"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/qrCode"
+                android:contentDescription="@string/qr_code"
+                android:layout_width="@dimen/qr_code"
+                android:layout_height="@dimen/qr_code"
+                android:layout_margin="@dimen/pad"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/qrCodeDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@color/textHint"
+                android:textSize="14sp"
+                android:paddingBottom="@dimen/padDouble"
+                android:text="@string/scan_this_qr_code_to_join"/>
+
+        </LinearLayout>
+
+    </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
+
     <EditText
         android:id="@+id/searchContacts"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/pad"
         android:layout_marginTop="@dimen/pad"
         android:layout_marginRight="@dimen/pad"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/inviteByQRCodeButton"
         android:background="@drawable/clickable_light_flat"
         android:focusedByDefault="false"
         android:hint="@string/phone_number_or_name"
@@ -29,6 +67,20 @@
         android:textColorHint="@color/textHint"
         android:textColorHighlight="@color/colorAccent_50"
         android:textSize="12sp" />
+
+    <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/inviteByQRCodeButton"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="@dimen/pad"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:minWidth="0dp"
+        android:background="@drawable/clickable_light_flat"
+        android:padding="@dimen/pad"
+        android:tint="@color/text"
+        android:src="@drawable/ic_qr_code_black_24dp"
+        android:contentDescription="@string/invite_by_qr_code" />
 
     <Button style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/showPhoneContactsButton"
@@ -52,6 +104,6 @@
         app:layout_constraintBottom_toTopOf="@+id/showPhoneContactsButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/qrCodeLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

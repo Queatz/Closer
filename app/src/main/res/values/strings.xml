@@ -335,6 +335,13 @@
     <string name="conversations">Conversations</string>
     <string name="delete">Delete</string>
     <string name="remind">Remind</string>
+    <string name="scan_invite">Scan invite</string>
+    <string name="qr_code">QR Code</string>
+    <string name="invite_by_qr_code">Invite by QR Code</string>
+    <string name="scan_this_qr_code_to_join">Open Closer and scan this QR Code to join %1$s</string>
+    <string name="failed_to_generate_qr_code">Failed to generate QR Code</string>
+    <string name="youre_a_member">Welcome! You are now a member of %1$s</string>
+    <string name="generic_group">this group</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

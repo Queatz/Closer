@@ -31,4 +31,5 @@
     <dimen name="groupToolbarTextSize">12sp</dimen>
     <dimen name="iconSizeSm">18dp</dimen>
     <dimen name="cornerRadiusHalf">12dp</dimen>
+    <dimen name="qr_code">180dp</dimen>
 </resources>

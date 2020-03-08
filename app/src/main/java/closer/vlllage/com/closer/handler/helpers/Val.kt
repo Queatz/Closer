@@ -7,7 +7,7 @@ import java.util.*
 class Val constructor(private val on: On) {
     fun rndId(): String {
         val random = Random()
-        return java.lang.Long.toString(random.nextLong()) +
+        return random.nextLong().toString() +
                 random.nextLong() +
                 random.nextLong()
     }

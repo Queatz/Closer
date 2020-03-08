@@ -16,12 +16,16 @@ import java.lang.Math.max
 
 class MiniWindowHandler constructor(private val on: On) {
 
-    fun attach(toggleView: View, windowView: View, miniWindowEventListener: (() -> Unit)?) {
+    lateinit var windowView: View
+    lateinit var params: ConstraintLayout.LayoutParams
 
-        val miniWindowHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowHeight)
-        val params = windowView.layoutParams as ConstraintLayout.LayoutParams
-        val miniWindowMinTopMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowMinTopMargin)
-        val miniWindowTopMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowTopMargin)
+    val miniWindowHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowHeight)
+    val miniWindowMinTopMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowMinTopMargin)
+    val miniWindowTopMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowTopMargin)
+
+    fun attach(toggleView: View, windowView: View, miniWindowEventListener: (() -> Unit)?) {
+        this.windowView = windowView
+        params = windowView.layoutParams as ConstraintLayout.LayoutParams
 
         windowView.clipToOutline = true
 
@@ -92,25 +96,29 @@ class MiniWindowHandler constructor(private val on: On) {
         })
 
         if (on<SettingsHandler>()[CLOSER_SETTINGS_OPEN_GROUP_EXPANDED]) {
-            val startMaxHeight = params.matchConstraintMaxHeight
-            val startTopMargin = params.topMargin
+            expand()
+        }
+    }
 
-            val animation = object : Animation() {
-                override fun willChangeBounds(): Boolean {
-                    return true
-                }
+    fun expand() {
+        val startMaxHeight = params.matchConstraintMaxHeight
+        val startTopMargin = params.topMargin
 
-                override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
-                    params.matchConstraintMaxHeight = mix(startMaxHeight.toFloat(), (miniWindowHeight * 3).toFloat(), interpolatedTime).toInt()
-                    params.topMargin = mix(startTopMargin.toFloat(), miniWindowMinTopMargin.toFloat(), interpolatedTime).toInt()
-                    windowView.layoutParams = params
-                }
+        val animation = object : Animation() {
+            override fun willChangeBounds(): Boolean {
+                return true
             }
 
-            animation.duration = 225
-            animation.interpolator = AccelerateDecelerateInterpolator()
-            windowView.startAnimation(animation)
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+                params.matchConstraintMaxHeight = mix(startMaxHeight.toFloat(), (miniWindowHeight * 3).toFloat(), interpolatedTime).toInt()
+                params.topMargin = mix(startTopMargin.toFloat(), miniWindowMinTopMargin.toFloat(), interpolatedTime).toInt()
+                windowView.layoutParams = params
+            }
         }
+
+        animation.duration = 225
+        animation.interpolator = AccelerateDecelerateInterpolator()
+        windowView.startAnimation(animation)
     }
 
     private fun mix(a: Float, b: Float, v: Float) = a * (1 - v) + b * v

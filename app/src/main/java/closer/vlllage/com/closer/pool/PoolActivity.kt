@@ -11,6 +11,7 @@ import closer.vlllage.com.closer.handler.data.PermissionHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.CameraHandler
+import closer.vlllage.com.closer.handler.helpers.ScanQrCodeHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
 import com.queatz.on.On
 
@@ -35,7 +36,9 @@ abstract class PoolActivity : FragmentActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         on<CameraHandler>().onActivityResult(requestCode, resultCode, data)
         on<MediaHandler>().onActivityResult(requestCode, resultCode, data)
+        on<ScanQrCodeHandler>().onActivityResult(requestCode, resultCode, data)
     }
 }

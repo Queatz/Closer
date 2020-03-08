@@ -246,6 +246,7 @@ class MapSlideFragment : PoolFragment() {
         val isNotificationsPaused = on<PersistenceHandler>().isNotificationsPaused
         on<MyGroupsLayoutActionsHandler>().showUnmuteNotifications(isNotificationsPaused)
         on<MyGroupsLayoutActionsHandler>().showFeatureRequests(on<AccountHandler>().privateOnly.not())
+        on<MyGroupsLayoutActionsHandler>().showInviteCard(true)
         on<MyGroupsLayoutActionsHandler>().showSetMyName(on<Val>().isEmpty(on<AccountHandler>().name))
 
         if (locationPermissionGranted && locationPermissionWasDenied) {
