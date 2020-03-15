@@ -2,8 +2,6 @@ package closer.vlllage.com.closer.handler.helpers
 
 import android.content.Intent
 import android.net.Uri
-import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.api.models.SuccessResult
 import closer.vlllage.com.closer.api.models.UseInviteCodeResult
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
@@ -27,7 +25,10 @@ class ScanQrCodeHandler constructor(private val on: On) {
     }
 
     fun handleResult(url: Uri) {
-        url.path ?: return
+        if (url.host != "closer.group" || url.path == null) {
+            on<DefaultAlerts>().thatDidntWork("This is not a Closer invite code")
+            return
+        }
 
         on<DisposableHandler>().add(on<ApiHandler>().useInviteCode(url.path!!.split('/').last()).subscribe({ result: UseInviteCodeResult ->
             if (result.success) {
@@ -45,6 +46,6 @@ class ScanQrCodeHandler constructor(private val on: On) {
             setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
             setPrompt("Scan an invite QR Code")
             setBeepEnabled(false)
-        }.initiateScan();
+        }.initiateScan()
     }
 }
