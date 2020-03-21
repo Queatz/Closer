@@ -32,7 +32,8 @@ class MenuHandler constructor(private val on: On) {
     }
 
     class MenuOption(@DrawableRes internal var iconRes: Int,
-                     @StringRes internal var titleRes: Int,
+                     @StringRes internal var titleRes: Int? = null,
+                     internal var title: String? = null,
                      internal var callback: () -> Unit) {
         internal var visible = true
 

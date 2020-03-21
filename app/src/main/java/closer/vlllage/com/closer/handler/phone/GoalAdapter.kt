@@ -42,9 +42,6 @@ class GoalAdapter constructor(private val on: On, private val callback: (String)
 
         holder.itemView.type.text = type
         holder.itemView.goalName.text = item
-        holder.itemView.cheerButton.text = if (isRemove)
-            on<ResourcesHandler>().resources.getString(R.string.remove)
-        else
-            on<ResourcesHandler>().resources.getString(R.string.cheer_them, name)
+        holder.itemView.cheerButton.text = on<ResourcesHandler>().resources.getString(R.string.tap_for_options)
     }
 }

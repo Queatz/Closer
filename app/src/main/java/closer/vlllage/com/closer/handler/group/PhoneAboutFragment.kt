@@ -70,14 +70,31 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 val goalAdapter = GoalAdapter(on) {
                     if (editable) {
-                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_goal)) { _ ->
-                            disposableGroup.add(on<ApiHandler>().addGoal(it, true)
-                                    .subscribe({
-                                        on<RefreshHandler>().refreshPhone(phone.id!!)
-                                    }, { on<DefaultAlerts>().thatDidntWork() }))
-                        }
+                        on<MenuHandler>().show(
+                                MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_goal) {
+                                    on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_goal)) { _ ->
+                                        disposableGroup.add(on<ApiHandler>().addGoal(it, true)
+                                                .subscribe({
+                                                    on<RefreshHandler>().refreshPhone(phone.id!!)
+                                                }, { on<DefaultAlerts>().thatDidntWork() }))
+                                    }
+                                },
+                                MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, R.string.see_people_with_goal) {
+                                    on<PhoneListActivityTransitionHandler>().showPhonesForGoal(it)
+                                }
+                        )
                     } else {
-                        on<ReplyHandler>().reply(phone.id!!)
+                        on<MenuHandler>().show(
+                                MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_this_goal) {
+                                    addGoal(it, phone.id!!)
+                                },
+                                MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, R.string.see_people_with_goal) {
+                                    on<PhoneListActivityTransitionHandler>().showPhonesForGoal(it)
+                                },
+                                MenuHandler.MenuOption(R.drawable.ic_message_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.cheer_them, on<NameHandler>().getName(phone))) {
+                                    on<ReplyHandler>().reply(phone.id!!)
+                                }
+                        )
                     }
                 }
 
@@ -91,14 +108,31 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 val lifestyleAdapter = GoalAdapter(on) {
                     if (editable) {
-                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_lifestyle)) { _ ->
-                            disposableGroup.add(on<ApiHandler>().addLifestyle(it, true)
-                                    .subscribe({
-                                        on<RefreshHandler>().refreshPhone(phone.id!!)
-                                    }, { on<DefaultAlerts>().thatDidntWork() }))
-                        }
+                        on<MenuHandler>().show(
+                                MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.remove_lifestyle) {
+                                    on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_lifestyle)) { _ ->
+                                        disposableGroup.add(on<ApiHandler>().addLifestyle(it, true)
+                                                .subscribe({
+                                                    on<RefreshHandler>().refreshPhone(phone.id!!)
+                                                }, { on<DefaultAlerts>().thatDidntWork() }))
+                                    }
+                                },
+                                MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, R.string.see_people_with_lifestyle) {
+                                    on<PhoneListActivityTransitionHandler>().showPhonesForLifestyle(it)
+                                }
+                        )
                     } else {
-                        on<ReplyHandler>().reply(phone.id!!)
+                        on<MenuHandler>().show(
+                                MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_this_lifestyle) {
+                                    addLifestyle(it, phone.id!!)
+                                },
+                                MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, R.string.see_people_with_lifestyle) {
+                                    on<PhoneListActivityTransitionHandler>().showPhonesForLifestyle(it)
+                                },
+                                MenuHandler.MenuOption(R.drawable.ic_message_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.cheer_them, on<NameHandler>().getName(phone))) {
+                                    on<ReplyHandler>().reply(phone.id!!)
+                                }
+                        )
                     }
                 }
 
@@ -129,19 +163,13 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                     actionAddGoal.setOnClickListener {
                         on<DefaultInput>().show(R.string.add_a_goal) {
-                            disposableGroup.add(on<ApiHandler>().addGoal(it)
-                                    .subscribe({
-                                        on<RefreshHandler>().refreshPhone(phone.id!!)
-                                    }, { on<DefaultAlerts>().thatDidntWork() }))
+                            addGoal(it, phone.id!!)
                         }
                     }
 
                     actionAddLifestyle.setOnClickListener {
                         on<DefaultInput>().show(R.string.add_a_lifestyle) {
-                            disposableGroup.add(on<ApiHandler>().addLifestyle(it)
-                                    .subscribe({
-                                        on<RefreshHandler>().refreshPhone(phone.id!!)
-                                    }, { on<DefaultAlerts>().thatDidntWork() }))
+                            addLifestyle(it, phone.id!!)
                         }
                     }
 
@@ -172,6 +200,22 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 }
             }
         }
+    }
+
+    private fun addGoal(name: String, phoneId: String) {
+        disposableGroup.add(on<ApiHandler>().addGoal(name)
+                .subscribe({
+                    on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.added_goal, name))
+                    on<RefreshHandler>().refreshPhone(phoneId)
+                }, { on<DefaultAlerts>().thatDidntWork() }))
+    }
+
+    private fun addLifestyle(name: String, phoneId: String) {
+        disposableGroup.add(on<ApiHandler>().addLifestyle(name)
+                .subscribe({
+                    on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.added_lifestyle, name))
+                    on<RefreshHandler>().refreshPhone(phoneId)
+                }, { on<DefaultAlerts>().thatDidntWork() }))
     }
 
     override fun onDestroyView() {

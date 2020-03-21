@@ -112,6 +112,14 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.addLifestyle(lifestyleName, remove))
     }
 
+    fun phonesForGoal(goalName: String): Single<GoalResult> {
+        return uiThread(api.backend.phonesForGoal(goalName))
+    }
+
+    fun phonesForLifestyle(lifestyleName: String): Single<LifestyleResult> {
+        return uiThread(api.backend.phonesForLifestyle(lifestyleName))
+    }
+
     fun getNewPhonesToMeetNear(latLng: LatLng): Single<MeetResult> {
         return uiThread(api.backend.getNewPhonesToMeetNear(on<LatLngStr>().from(latLng)))
     }

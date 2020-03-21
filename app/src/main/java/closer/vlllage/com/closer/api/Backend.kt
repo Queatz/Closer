@@ -83,10 +83,16 @@ interface Backend {
     @POST("goal")
     fun addGoal(@Query("name") goalName: String, @Query("remove") remove: Boolean?): Single<SuccessResult>
 
+    @GET("goal")
+    fun phonesForGoal(@Query("name") goalName: String): Single<GoalResult>
+
     // Lifestyle
 
     @POST("lifestyle")
     fun addLifestyle(@Query("name") lifestyleName: String, @Query("remove") remove: Boolean?): Single<SuccessResult>
+
+    @GET("lifestyle")
+    fun phonesForLifestyle(@Query("name") lifestyleName: String): Single<LifestyleResult>
 
     // Suggestion
 

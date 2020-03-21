@@ -171,6 +171,8 @@ class ShareActivity : ListActivity() {
 
     companion object {
         const val EXTRA_GROUP_MESSAGE_ID = "groupMessageId"
+        const val EXTRA_GOAL_NAME = "goal"
+        const val EXTRA_LIFESTYLE_NAME = "lifestyle"
         const val EXTRA_INVITE_TO_GROUP_PHONE_ID = "inviteToGroupPhoneId"
         const val EXTRA_SHARE_GROUP_TO_GROUP_ID = "shareGroupToGroupId"
         const val EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID = "shareGroupActionToGroupId"

@@ -17,7 +17,8 @@ internal class MenuOptionAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val menuOption = menuOptions[position]
-        viewHolder.name.setText(menuOption.titleRes)
+        menuOption.titleRes?.let { viewHolder.name.setText(it) }
+        menuOption.title?.let { viewHolder.name.text = it }
         viewHolder.name.setCompoundDrawablesWithIntrinsicBounds(menuOption.iconRes, 0, 0, 0)
         viewHolder.itemView.setOnClickListener { onMenuOptionClickListener.invoke(menuOption) }
     }
