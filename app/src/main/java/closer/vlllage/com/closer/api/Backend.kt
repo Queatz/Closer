@@ -113,6 +113,9 @@ interface Backend {
     @POST("message/{id}")
     fun reactToMessage(@Path("id") messageId: String, @Query("react") text: String, @Query("remove") remove: Boolean): Single<SuccessResult>
 
+    @POST("message/{id}")
+    fun deleteGroupMessage(@Path("id") messageId: String, @Query("delete") delete: Boolean): Single<SuccessResult>
+
     @GET("message/{id}/reactions")
     fun groupMessageReactions(@Path("id") messageId: String): Single<List<ReactionResult>>
 

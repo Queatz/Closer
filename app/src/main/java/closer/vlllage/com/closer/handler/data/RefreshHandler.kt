@@ -32,7 +32,13 @@ class RefreshHandler constructor(private val on: On) {
         }, connectionError))
     }
 
-    fun refreshMyMessages() {
+    fun refreshMyMessages(groupId: String? = null) {
+        groupId?.let {
+            on<DisposableHandler>().add(on<ApiHandler>().getGroupMessages(it).subscribe({ groupMessages ->
+                this.handleMessages(groupMessages)
+            }, connectionError))
+        }
+
         on<LocationHandler>().getCurrentLocation { location ->
             on<DisposableHandler>().add(on<ApiHandler>().myMessages(LatLng(
                     location.latitude,
@@ -204,9 +210,15 @@ class RefreshHandler constructor(private val on: On) {
                         } else {
                             val existing = existingObjsMap[message.id]
 
-                            if (existing != null && !on<ListEqual>().isEqual(message.reactions, existing.reactions)) {
-                                existing.reactions = message.reactions
-                                groupMessageBox.put(existing)
+                            if (existing != null && (
+                                    !on<ListEqual>().isEqual(message.reactions, existing.reactions)) ||
+                                    existing?.text != message.text ||
+                                    existing?.attachment != message.attachment
+                            ) {
+                                existing!!.reactions = message.reactions
+                                existing!!.text = message.text
+                                existing!!.attachment = message.attachment
+                                groupMessageBox.put(existing!!)
                             }
                         }
                     }

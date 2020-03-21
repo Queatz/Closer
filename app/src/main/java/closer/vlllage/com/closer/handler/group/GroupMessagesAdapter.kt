@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
@@ -103,6 +105,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
 
         holder.messageActionShare.visible = groupMessage.from != null
         holder.messageActionPin.visible = groupMessage.from != null
+        holder.messageActionDelete.visible = groupMessage.from == on<PersistenceHandler>().phoneId
 
         holder.messageActionProfile.visible = global || groupMessage.from != null
 
@@ -134,8 +137,22 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         }
 
         holder.messageActionDelete.setOnClickListener {
-            on<DefaultAlerts>().message("That doesn't work yet!")
-            toggleMessageActionLayout(holder)
+            on<AlertHandler>().make().apply {
+                message = on<ResourcesHandler>().resources.getString(R.string.delete_message_confirm)
+                negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+                positiveButton = on<ResourcesHandler>().resources.getString(R.string.yes_delete)
+                positiveButtonCallback = {
+                    on<ApiHandler>().deleteGroupMessage(groupMessage.id!!).subscribe({
+                        if (!it.success) {
+                            on<DefaultAlerts>().thatDidntWork()
+                        } else {
+                            on<ToastHandler>().show(R.string.message_deleted)
+                        }
+                    }, { on<DefaultAlerts>().thatDidntWork() })
+                    toggleMessageActionLayout(holder)
+                }
+                show()
+            }
         }
 
         holder.messageActionPin.setOnClickListener {

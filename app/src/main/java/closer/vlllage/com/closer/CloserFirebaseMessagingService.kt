@@ -61,7 +61,7 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
                     "refresh" -> if (data.containsKey("what")) {
                         when (data["what"]!!) {
                             "groups" -> app.on<RefreshHandler>().refreshMyGroups()
-                            "messages" -> app.on<RefreshHandler>().refreshMyMessages()
+                            "messages" -> app.on<RefreshHandler>().refreshMyMessages(data["groupId"])
                         }
                     }
                     "message" -> {

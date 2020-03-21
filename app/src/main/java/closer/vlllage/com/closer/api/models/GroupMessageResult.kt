@@ -12,8 +12,6 @@ class GroupMessageResult : ModelResult() {
     var reactions: List<ReactionCount> = listOf()
 
     companion object {
-
-
         fun from(result: GroupMessageResult): GroupMessage {
             val groupMessage = GroupMessage()
             groupMessage.id = result.id

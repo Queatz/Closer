@@ -132,6 +132,10 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.sendGroupMessage(groupId, text, attachment))
     }
 
+    fun deleteGroupMessage(messageId: String): Single<SuccessResult> {
+        return uiThread(api.backend.deleteGroupMessage(messageId, true))
+    }
+
     fun reactToMessage(messageId: String, reaction: String, removeReaction: Boolean): Single<SuccessResult> {
         return uiThread(api.backend.reactToMessage(messageId, reaction, removeReaction))
     }
