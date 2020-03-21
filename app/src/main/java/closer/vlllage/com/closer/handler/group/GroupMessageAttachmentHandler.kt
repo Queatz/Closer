@@ -48,6 +48,15 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
         return true
     }
 
+    fun shareGroupAction(groupActionToShare: GroupAction, group: Group): Boolean {
+        val jsonObject = JsonObject()
+        jsonObject.add("activity", on<JsonHandler>().toJsonTree(groupActionToShare))
+
+        saveMessageWithAttachment(group.id, null, jsonObject)
+
+        return true
+    }
+
     fun sharePhoto(photoUrl: String, groupId: String): Boolean {
         val jsonObject = JsonObject()
         jsonObject.add("photo", JsonPrimitive(photoUrl))

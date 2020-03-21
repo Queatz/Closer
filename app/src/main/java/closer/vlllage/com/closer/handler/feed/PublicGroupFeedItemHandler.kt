@@ -59,7 +59,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         sendSomethingButton = itemView.sendSomethingButton
         peopleContainer = itemView.peopleContainer
 
-        on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO)
+        on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
 
         searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item)

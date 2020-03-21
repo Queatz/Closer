@@ -29,7 +29,7 @@ class GroupActionHandler constructor(private val on: On) {
     fun attach(container: MaxSizeFrameLayout, actionRecyclerView: RecyclerView) {
         animator = RevealAnimator(container, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
 
-        on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionAdapter.Layout.PHOTO)
+        on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
 
         on<GroupHandler>().onGroupChanged { group ->
             if (groupActionsDisposable != null) {

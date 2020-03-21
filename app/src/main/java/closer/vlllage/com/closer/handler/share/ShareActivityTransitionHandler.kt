@@ -5,6 +5,7 @@ import closer.vlllage.com.closer.ShareActivity
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_EVENT_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_GROUP_MESSAGE_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_INVITE_TO_GROUP_PHONE_ID
+import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SHARE_GROUP_TO_GROUP_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SUGGESTION_ID
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
@@ -40,6 +41,14 @@ class ShareActivityTransitionHandler constructor(private val on: On) {
         val intent = Intent(on<ApplicationHandler>().app, ShareActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_EVENT_ID, eventId)
+
+        on<ActivityHandler>().activity!!.startActivity(intent)
+    }
+
+    fun shareGroupActionToGroup(groupActionId: String) {
+        val intent = Intent(on<ApplicationHandler>().app, ShareActivity::class.java)
+        intent.action = Intent.ACTION_VIEW
+        intent.putExtra(EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID, groupActionId)
 
         on<ActivityHandler>().activity!!.startActivity(intent)
     }

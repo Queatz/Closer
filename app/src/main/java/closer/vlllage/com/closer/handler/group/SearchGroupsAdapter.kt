@@ -120,10 +120,7 @@ open class SearchGroupsAdapter constructor(
                     holder.on.use(on<ActivityHandler>())
                     holder.on.use(on<ApiHandler>())
                     holder.on.use(on<StoreHandler>())
-                    holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionAdapter.Layout.TEXT)
-                    holder.on<GroupActionRecyclerViewHandler>().onGroupActionRepliedListener = { groupAction ->
-                        on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, groupAction.group)
-                    }
+                    holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionDisplay.Layout.TEXT)
                     holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
                             .equal(GroupAction_.group, group.id!!)
                             .build().subscribe().single()

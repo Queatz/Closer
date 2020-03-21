@@ -15,6 +15,8 @@ import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.share.SearchGroupsHeaderAdapter
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.GroupAction
+import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.store.models.Group_
 import io.objectbox.android.AndroidScheduler
 
@@ -25,9 +27,11 @@ class ShareActivity : ListActivity() {
     private var groupMessageId: String? = null
     private var phoneId: String? = null
     private var groupId: String? = null
+    private var groupActionId: String? = null
     private var eventId: String? = null
     private var suggestionId: String? = null
     private var groupToShare: Group? = null
+    private var groupActionToShare: GroupAction? = null
     private var data: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +66,7 @@ class ShareActivity : ListActivity() {
             groupMessageId = intent.getStringExtra(EXTRA_GROUP_MESSAGE_ID)
             phoneId = intent.getStringExtra(EXTRA_INVITE_TO_GROUP_PHONE_ID)
             groupId = intent.getStringExtra(EXTRA_SHARE_GROUP_TO_GROUP_ID)
+            groupActionId = intent.getStringExtra(EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID)
             eventId = intent.getStringExtra(EXTRA_EVENT_ID)
             suggestionId = intent.getStringExtra(EXTRA_SUGGESTION_ID)
 
@@ -78,13 +83,22 @@ class ShareActivity : ListActivity() {
                     searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.add_person_to, on<NameHandler>().getName(phoneId!!)))
                     searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.add))
                 } else if (groupId != null) {
-
                     groupToShare = on<StoreHandler>().store.box(Group::class).query()
                             .equal(Group_.id, groupId!!)
                             .build().findFirst()
 
                     searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
                             groupToShare?.name, on<ResourcesHandler>().resources.getString(R.string.group)
+                    )))
+
+                    searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
+                } else if (groupActionId != null) {
+                    groupActionToShare = on<StoreHandler>().store.box(GroupAction::class).query()
+                            .equal(GroupAction_.id, groupActionId!!)
+                            .build().findFirst()
+
+                    searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
+                            groupActionToShare?.name, on<ResourcesHandler>().resources.getString(R.string.activity)
                     )))
 
                     searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
@@ -117,6 +131,9 @@ class ShareActivity : ListActivity() {
                     }, { on<DefaultAlerts>().thatDidntWork() }))
         } else if (groupToShare != null) {
             on<GroupMessageAttachmentHandler>().shareGroup(groupToShare!!, group)
+            open(group)
+        } else if (groupActionToShare != null) {
+            on<GroupMessageAttachmentHandler>().shareGroupAction(groupActionToShare!!, group)
             open(group)
         } else if (groupMessageId != null) {
             on<GroupMessageAttachmentHandler>().shareGroupMessage(group.id!!, groupMessageId)
@@ -156,6 +173,7 @@ class ShareActivity : ListActivity() {
         const val EXTRA_GROUP_MESSAGE_ID = "groupMessageId"
         const val EXTRA_INVITE_TO_GROUP_PHONE_ID = "inviteToGroupPhoneId"
         const val EXTRA_SHARE_GROUP_TO_GROUP_ID = "shareGroupToGroupId"
+        const val EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID = "shareGroupActionToGroupId"
         const val EXTRA_EVENT_ID = "eventId"
         const val EXTRA_SUGGESTION_ID = "suggestionId"
     }

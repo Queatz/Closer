@@ -4,9 +4,11 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,10 +20,7 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
-import closer.vlllage.com.closer.store.models.Event
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.GroupMessage
-import closer.vlllage.com.closer.store.models.Suggestion
+import closer.vlllage.com.closer.store.models.*
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 import closer.vlllage.com.closer.ui.RevealAnimator
 import com.queatz.on.On
@@ -76,8 +75,9 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.reactionsRecyclerView.layoutParams = params
         }
 
-        holder.photo.visibility = View.GONE
-        holder.rating.visibility = View.GONE
+        holder.photo.visible = false
+        holder.rating.visible = false
+        holder.custom.visible = false
 
         holder.itemView.setOnClickListener {
             if (onMessageClickListener != null) {
@@ -216,7 +216,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             toggleMessageActionLayout(holder)
         }
 
-        holder.messageActionLayout.visibility = View.GONE
+        holder.messageActionLayout.visible = false
         holder.time.movementMethod = LinkMovementMethod.getInstance()
         holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()
 
@@ -225,9 +225,9 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 
         if (groupMessage.reactions.isNullOrEmpty()) {
-            holder.reactionsRecyclerView.visibility = View.GONE
+            holder.reactionsRecyclerView.visible = false
         } else {
-            holder.reactionsRecyclerView.visibility = View.VISIBLE
+            holder.reactionsRecyclerView.visible = true
             holder.reactionAdapter.setItems(groupMessage.reactions)
             holder.reactionAdapter.setGroupMessage(groupMessage)
         }
@@ -317,6 +317,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var group: TextView
         internal var photo: ImageView
         internal var rating: RatingBar
+        internal var custom: ConstraintLayout
         internal var pinnedIndicator: ImageView
         internal var messageActionLayout: MaxSizeFrameLayout
         internal var messageActionProfile: TextView
@@ -345,6 +346,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             group = itemView.findViewById(R.id.group)
             photo = itemView.findViewById(R.id.photo)
             rating = itemView.findViewById(R.id.rating)
+            custom = itemView.findViewById(R.id.custom)
             pinnedIndicator = itemView.findViewById(R.id.pinnedIndicator)
             reactionsRecyclerView = itemView.findViewById(R.id.reactionsRecyclerView)
             messageActionLayout = itemView.findViewById(R.id.messageActionLayout)

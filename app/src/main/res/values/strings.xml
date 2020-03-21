@@ -223,6 +223,7 @@
     <string name="join_group_message">Join this group to let others know you\'re here.</string>
     <string name="group">Group</string>
     <string name="share_group">Share this group…</string>
+    <string name="share_group_activity">Share this activity…</string>
     <string name="pinned_message">Pinned message</string>
     <string name="unpin">Unpin</string>
     <string name="pin">Pin</string>
@@ -344,6 +345,7 @@
     <string name="generic_group">this group</string>
     <string name="invite_by_shareable_link">Invite by shareable link</string>
     <string name="copy">Copy</string>
+    <string name="phone_shared_a_group_action">%1$s shared an activity</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
