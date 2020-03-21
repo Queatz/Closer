@@ -260,6 +260,8 @@
     <string name="remove">Remove</string>
     <string name="remove_lifestyle">Remove lifestyle…</string>
     <string name="remove_goal">Remove goal…</string>
+    <string name="remove_lifestyle_confirm">Remove this lifestyle?</string>
+    <string name="remove_goal_confirm">Remove this goal?</string>
     <string name="view_profile">View your profile</string>
     <string name="goal">Goal</string>
     <string name="remove_from_group">Remove from group</string>
@@ -347,12 +349,14 @@
     <string name="copy">Copy</string>
     <string name="phone_shared_a_group_action">%1$s shared an activity</string>
     <string name="add_this_goal">Make this your goal</string>
-    <string name="add_this_lifestyle">Add this lifestyle</string>
+    <string name="add_this_lifestyle">Make this your lifestyle</string>
     <string name="see_people_with_goal">See everyone with this goal</string>
     <string name="see_people_with_lifestyle">See everyone with this lifestyle</string>
     <string name="tap_for_options">Tap for options</string>
-    <string name="added_goal">Added \"%1$s\" goal</string>
-    <string name="added_lifestyle">Added \"%1$s\" lifestyle</string>
+    <string name="added_goal">Added \"%1$s\" as your goal</string>
+    <string name="added_lifestyle">Added \"%1$s\" as your lifestyle</string>
+    <string name="lifestyle_removed">Lifestyle removed</string>
+    <string name="goal_removed">Goal removed</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

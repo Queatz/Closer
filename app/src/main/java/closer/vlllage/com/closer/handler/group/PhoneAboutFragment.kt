@@ -72,9 +72,10 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     if (editable) {
                         on<MenuHandler>().show(
                                 MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_goal) {
-                                    on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_goal)) { _ ->
+                                    on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_goal_confirm)) { _ ->
                                         disposableGroup.add(on<ApiHandler>().addGoal(it, true)
                                                 .subscribe({
+                                                    on<ToastHandler>().show(R.string.goal_removed)
                                                     on<RefreshHandler>().refreshPhone(phone.id!!)
                                                 }, { on<DefaultAlerts>().thatDidntWork() }))
                                     }
@@ -109,10 +110,11 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 val lifestyleAdapter = GoalAdapter(on) {
                     if (editable) {
                         on<MenuHandler>().show(
-                                MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.remove_lifestyle) {
-                                    on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_lifestyle)) { _ ->
+                                MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_lifestyle) {
+                                    on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.remove_lifestyle_confirm)) { _ ->
                                         disposableGroup.add(on<ApiHandler>().addLifestyle(it, true)
                                                 .subscribe({
+                                                    on<ToastHandler>().show(R.string.lifestyle_removed)
                                                     on<RefreshHandler>().refreshPhone(phone.id!!)
                                                 }, { on<DefaultAlerts>().thatDidntWork() }))
                                     }
