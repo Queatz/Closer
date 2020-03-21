@@ -1,6 +1,5 @@
 package closer.vlllage.com.closer.handler.event
 
-import android.os.Build
 import android.text.format.DateUtils
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.view.View
@@ -30,7 +29,13 @@ import java.util.*
 
 class EventHandler constructor(private val on: On) {
 
-    fun createNewEvent(latLng: LatLng, isPublic: Boolean, onEventCreatedListener: OnEventCreatedListener) {
+    fun createNewEvent(latLng: LatLng,
+                       isPublic: Boolean,
+                       name: String? = null,
+                       price: String? = null,
+                       startsAt: Date? = null,
+                       endsAt: Date? = null,
+                       onEventCreatedListener: OnEventCreatedListener) {
         on<AlertHandler>().make().apply {
             theme = R.style.AppTheme_AlertDialog_Red
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.host_event)
@@ -39,24 +44,46 @@ class EventHandler constructor(private val on: On) {
                 val viewHolder = CreateEventViewHolder(view)
 
                 val now = Calendar.getInstance(TimeZone.getDefault())
-                viewHolder.startsAtTimePicker.currentHour = (now.get(Calendar.HOUR_OF_DAY) + 1) % 24
-                viewHolder.startsAtTimePicker.currentMinute = 0
-                viewHolder.endsAtTimePicker.currentHour = (now.get(Calendar.HOUR_OF_DAY) + 4) % 24
-                viewHolder.endsAtTimePicker.currentMinute = 0
+
+                val startCal = Calendar.getInstance(TimeZone.getDefault()).apply {
+                    if (startsAt != null) {
+                        time = startsAt
+                    } else {
+                        add(Calendar.HOUR_OF_DAY, 1)
+                        set(Calendar.MINUTE, 0)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+                }
+
+                val endCal = Calendar.getInstance(TimeZone.getDefault()).apply {
+                    if (endsAt != null) {
+                        time = endsAt
+                    } else {
+                        add(Calendar.HOUR_OF_DAY, 4)
+                        set(Calendar.MINUTE, 0)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+                }
+
+                viewHolder.startsAtTimePicker.currentHour = startCal.get(Calendar.HOUR_OF_DAY)
+                viewHolder.startsAtTimePicker.currentMinute = startCal.get(Calendar.MINUTE)
+                viewHolder.endsAtTimePicker.currentHour = endCal.get(Calendar.HOUR_OF_DAY)
+                viewHolder.endsAtTimePicker.currentMinute = endCal.get(Calendar.MINUTE)
 
                 viewHolder.datePicker.minDate = now.timeInMillis
                 viewHolder.isPublicSwitch.isChecked = isPublic
 
-                viewHolder.datePicker.init(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)) { _, year, month, dayOfMonth ->
-                    val calendar = Calendar.getInstance(TimeZone.getDefault())
-                    calendar.set(year, month, dayOfMonth)
-                    viewHolder.dateTextView.text = DateUtils.getRelativeTimeSpanString(
-                            calendar.timeInMillis,
-                            now.timeInMillis,
-                            DAY_IN_MILLIS
-                    )
+                name?.let { viewHolder.eventName.setText(it) }
+                price?.let { viewHolder.eventPrice.setText(it) }
+
+                viewHolder.datePicker.init(startCal.get(Calendar.YEAR), startCal.get(Calendar.MONTH), startCal.get(Calendar.DAY_OF_MONTH)) { _, year, month, dayOfMonth ->
+                    updateDateButtonText(viewHolder.dateTextView, year, month, dayOfMonth)
                     viewHolder.changeDateButton.callOnClick()
                 }
+
+                updateDateButtonText(viewHolder.dateTextView, startCal.get(Calendar.YEAR), startCal.get(Calendar.MONTH), startCal.get(Calendar.DAY_OF_MONTH))
 
                 viewHolder.changeDateButton.setOnClickListener {
                     viewHolder.datePicker.apply { visible = !visible }
@@ -67,16 +94,12 @@ class EventHandler constructor(private val on: On) {
                 }
 
                 viewHolder.endDatePicker.minDate = now.timeInMillis
-                viewHolder.endDatePicker.init(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)) { _, year, month, dayOfMonth ->
-                    val calendar = Calendar.getInstance(TimeZone.getDefault())
-                    calendar.set(year, month, dayOfMonth)
-                    viewHolder.endDateTextView.text = DateUtils.getRelativeTimeSpanString(
-                            calendar.timeInMillis,
-                            now.timeInMillis,
-                            DAY_IN_MILLIS
-                    )
+                viewHolder.endDatePicker.init(endCal.get(Calendar.YEAR), endCal.get(Calendar.MONTH), endCal.get(Calendar.DAY_OF_MONTH)) { _, year, month, dayOfMonth ->
+                    updateDateButtonText(viewHolder.endDateTextView, year, month, dayOfMonth)
                     viewHolder.changeEndDateButton.callOnClick()
                 }
+
+                updateDateButtonText(viewHolder.endDateTextView, endCal.get(Calendar.YEAR), endCal.get(Calendar.MONTH), endCal.get(Calendar.DAY_OF_MONTH))
 
                 on<TaskHandler>().activeTask?.let {
                     if (it.taskType == TaskType.CREATE_EVENT_IN_GROUP) {
@@ -96,29 +119,27 @@ class EventHandler constructor(private val on: On) {
                     }
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    viewHolder.scrollView.setOnInterceptTouchListener(View.OnTouchListener { _, _ ->
-                        if (viewHolder.eventName.hasFocus()) {
-                            viewHolder.eventName.clearFocus()
-                            viewHolder.scrollView.requestFocus()
-                            on<KeyboardHandler>().showKeyboard(viewHolder.eventName, false)
-                        }
+                viewHolder.scrollView.setOnInterceptTouchListener(View.OnTouchListener { _, _ ->
+                    if (viewHolder.eventName.hasFocus()) {
+                        viewHolder.eventName.clearFocus()
+                        viewHolder.scrollView.requestFocus()
+                        on<KeyboardHandler>().showKeyboard(viewHolder.eventName, false)
+                    }
 
-                        if (viewHolder.eventPrice.hasFocus()) {
-                            viewHolder.eventPrice.clearFocus()
-                            viewHolder.scrollView.requestFocus()
-                            on<KeyboardHandler>().showKeyboard(viewHolder.eventPrice, false)
-                        }
+                    if (viewHolder.eventPrice.hasFocus()) {
+                        viewHolder.eventPrice.clearFocus()
+                        viewHolder.scrollView.requestFocus()
+                        on<KeyboardHandler>().showKeyboard(viewHolder.eventPrice, false)
+                    }
 
-                        if (viewHolder.pinnedMessage.hasFocus()) {
-                            viewHolder.pinnedMessage.clearFocus()
-                            viewHolder.scrollView.requestFocus()
-                            on<KeyboardHandler>().showKeyboard(viewHolder.pinnedMessage, false)
-                        }
+                    if (viewHolder.pinnedMessage.hasFocus()) {
+                        viewHolder.pinnedMessage.clearFocus()
+                        viewHolder.scrollView.requestFocus()
+                        on<KeyboardHandler>().showKeyboard(viewHolder.pinnedMessage, false)
+                    }
 
-                        false
-                    })
-                }
+                    false
+                })
 
                 alertConfig.alertResult = viewHolder
             }
@@ -162,6 +183,16 @@ class EventHandler constructor(private val on: On) {
             title = on<ResourcesHandler>().resources.getString(R.string.host_event)
             show()
         }
+    }
+
+    private fun updateDateButtonText(dateTextView: TextView, year: Int, month: Int, dayOfMonth: Int) {
+        val calendar = Calendar.getInstance(TimeZone.getDefault())
+        calendar.set(year, month, dayOfMonth)
+        dateTextView.text = DateUtils.getRelativeTimeSpanString(
+                calendar.timeInMillis,
+                Calendar.getInstance(TimeZone.getDefault()).timeInMillis,
+                DAY_IN_MILLIS
+        )
     }
 
     private fun getViewState(viewHolder: CreateEventViewHolder): CreateEventViewState {

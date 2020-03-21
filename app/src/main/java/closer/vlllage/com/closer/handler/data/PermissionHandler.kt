@@ -28,14 +28,9 @@ class PermissionHandler constructor(private val on: On) {
 
         if (has(*permissions)) {
             check = LocationCheck(true)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        } else {
             check = LocationCheck(arrayOf(*permissions))
             on<ActivityHandler>().activity!!.requestPermissions(permissions, REQUEST_CODE_PERMISSION)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            check = LocationCheck(arrayOf(*permissions))
-            ActivityCompat.requestPermissions(on<ActivityHandler>().activity!!, permissions, REQUEST_CODE_PERMISSION)
-        } else {
-            check = LocationCheck(has(*permissions))
         }
 
         return check

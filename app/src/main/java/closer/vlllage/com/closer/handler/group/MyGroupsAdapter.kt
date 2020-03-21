@@ -35,11 +35,9 @@ class MyGroupsAdapter(on: On) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewH
             groupName.setBackgroundResource(actionBarButton.backgroundDrawableRes)
             groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(actionBarButton.icon, 0, 0, 0)
             groupName.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                groupName.compoundDrawableTintList = ColorStateList.valueOf(
-                        on<ResourcesHandler>().resources.getColor(actionBarButton.textColorRes, on<ActivityHandler>().activity!!.theme)
-                )
-            }
+            groupName.compoundDrawableTintList = ColorStateList.valueOf(
+                    on<ResourcesHandler>().resources.getColor(actionBarButton.textColorRes, on<ActivityHandler>().activity!!.theme)
+            )
             groupName.text = actionBarButton.name!!
             groupName.setTextColor(on<ResourcesHandler>().resources.getColor(actionBarButton.textColorRes))
             groupName.setOnClickListener(actionBarButton.onClick!!)
@@ -64,11 +62,9 @@ class MyGroupsAdapter(on: On) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewH
             groupName.setBackgroundResource(actionBarButton.backgroundDrawableRes)
             groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(actionBarButton.icon, 0, 0, 0)
             groupName.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                groupName.compoundDrawableTintList = ColorStateList.valueOf(
-                        on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)
-                )
-            }
+            groupName.compoundDrawableTintList = ColorStateList.valueOf(
+                    on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)
+            )
             groupName.text = actionBarButton.name
             groupName.setOnClickListener(actionBarButton.onClick)
             groupName.setOnLongClickListener { view ->
@@ -87,11 +83,9 @@ class MyGroupsAdapter(on: On) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewH
         groupName.setBackgroundResource(on<GroupColorHandler>().getColorClickable(group))
         groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0)
         groupName.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            groupName.compoundDrawableTintList = ColorStateList.valueOf(
-                    on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)
-            )
-        }
+        groupName.compoundDrawableTintList = ColorStateList.valueOf(
+                on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)
+        )
         groupName.text = group.name
 
         groupName.setOnClickListener { view -> on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, group.id) }

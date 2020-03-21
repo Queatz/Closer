@@ -63,10 +63,7 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
     }
 
     private fun recolor(item: GroupToolbarHandler.ToolbarItem, button: Button, colors: LightDarkColors, selected: GroupActivity.ContentViewType?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            button.compoundDrawableTintList = if (item.value == selected) colors.tintSelected else colors.tint
-        }
-
+        button.compoundDrawableTintList = if (item.value == selected) colors.tintSelected else colors.tint
         button.setTextColor(if (item.value == selected) colors.selected else colors.text)
         button.setBackgroundResource(colors.clickableRoundedBackground8dp)
     }

@@ -10,6 +10,7 @@ import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
+import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.phone.ReplyHandler
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class GroupToolbarHandler constructor(private val on: On) {
 
@@ -172,6 +174,35 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
+        if (isEventEnded(event)) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.host_again),
+                    R.drawable.ic_refresh_black_24dp,
+                    View.OnClickListener {
+                        event?.let {
+                            val daysAgo = TimeUnit.MILLISECONDS.toDays(Date().time - event.startsAt!!.time).toInt()
+
+                            on<EventHandler>().createNewEvent(
+                                    LatLng(it.latitude!!, it.longitude!!),
+                                    it.isPublic,
+                                    event.name,
+                                    event.about,
+                                    event.startsAt!!.let { Calendar.getInstance(TimeZone.getDefault()).apply {
+                                        time = it
+                                        add(Calendar.DATE, daysAgo)
+                                    } }.time,
+                                    event.endsAt!!.let { Calendar.getInstance(TimeZone.getDefault()).apply {
+                                        time = it
+                                        add(Calendar.DATE, daysAgo)
+                                    } }.time
+                            ) {
+                                on<GroupActivityTransitionHandler>().showGroupForEvent(null, it)
+                            }
+                        }
+                    }
+            ))
+        }
+
         if (event != null) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.share),
@@ -232,31 +263,6 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (isEventCancelable(event)) {
-            items.add(ToolbarItem(
-                    on<ResourcesHandler>().resources.getString(R.string.cancel),
-                    R.drawable.ic_close_black_24dp,
-                    View.OnClickListener { v ->
-                        on<AlertHandler>().make().apply {
-                            title = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
-                            message = on<ResourcesHandler>().resources.getString(R.string.event_will_be_cancelled, event!!.name)
-                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
-                            positiveButtonCallback = { result ->
-                                on<DisposableHandler>().add(on<ApiHandler>().cancelEvent(event.id!!).subscribe({ successResult ->
-                                    if (successResult.success) {
-                                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.event_cancelled, event.name))
-                                        on<RefreshHandler>().refreshEvents(LatLng(event.latitude!!, event.longitude!!))
-                                    } else {
-                                        on<DefaultAlerts>().thatDidntWork()
-                                    }
-                                }, { on<DefaultAlerts>().thatDidntWork() }))
-                            }
-                            show()
-                        }
-                    }
-            ))
-        }
-
         if (group.physical || (!group.hasEvent() && !group.isPublic)) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.host_event),
@@ -288,6 +294,31 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
+        if (isEventCancelable(event)) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.cancel),
+                    R.drawable.ic_close_black_24dp,
+                    View.OnClickListener {
+                        on<AlertHandler>().make().apply {
+                            title = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
+                            message = on<ResourcesHandler>().resources.getString(R.string.event_will_be_cancelled, event!!.name)
+                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.cancel_event)
+                            positiveButtonCallback = { result ->
+                                on<DisposableHandler>().add(on<ApiHandler>().cancelEvent(event.id!!).subscribe({ successResult ->
+                                    if (successResult.success) {
+                                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.event_cancelled, event.name))
+                                        on<RefreshHandler>().refreshEvents(LatLng(event.latitude!!, event.longitude!!))
+                                    } else {
+                                        on<DefaultAlerts>().thatDidntWork()
+                                    }
+                                }, { on<DefaultAlerts>().thatDidntWork() }))
+                            }
+                            show()
+                        }
+                    }
+            ))
+        }
+
         adapter.items = items
     }
 
@@ -295,13 +326,14 @@ class GroupToolbarHandler constructor(private val on: On) {
         on<ShareActivityTransitionHandler>().shareEvent(event.id!!)
     }
 
-
     private fun isEventCancelable(event: Event?): Boolean {
         return event != null && on<PersistenceHandler>().phoneId != null &&
                 !event.cancelled && event.creator != null &&
                 Date().before(event.endsAt) &&
                 event.creator == on<PersistenceHandler>().phoneId
     }
+
+    private fun isEventEnded(event: Event?) = event != null && Date().after(event.endsAt)
 
     private fun showGroupOnMap(group: Group?) {
         (on<ActivityHandler>().activity as CircularRevealActivity)

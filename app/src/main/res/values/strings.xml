@@ -357,6 +357,8 @@
     <string name="added_lifestyle">Added \"%1$s\" as your lifestyle</string>
     <string name="lifestyle_removed">Lifestyle removed</string>
     <string name="goal_removed">Goal removed</string>
+    <string name="failed_to_load_photo">Failed to load photo</string>
+    <string name="host_again">Host again</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

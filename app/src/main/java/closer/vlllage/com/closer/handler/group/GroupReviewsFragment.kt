@@ -70,13 +70,11 @@ class GroupReviewsFragment : PoolActivityFragment() {
             stars4.setTextColor(it.text)
             stars5.setTextColor(it.text)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                stars1.compoundDrawableTintList = it.tint
-                stars2.compoundDrawableTintList = it.tint
-                stars3.compoundDrawableTintList = it.tint
-                stars4.compoundDrawableTintList = it.tint
-                stars5.compoundDrawableTintList = it.tint
-            }
+            stars1.compoundDrawableTintList = it.tint
+            stars2.compoundDrawableTintList = it.tint
+            stars3.compoundDrawableTintList = it.tint
+            stars4.compoundDrawableTintList = it.tint
+            stars5.compoundDrawableTintList = it.tint
         })
     }
 

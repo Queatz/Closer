@@ -12,6 +12,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
+import kotlin.math.abs
 
 class PhotoActivity : CircularRevealActivity() {
 
@@ -26,18 +27,29 @@ class PhotoActivity : CircularRevealActivity() {
         photo = findViewById(R.id.photo)
         photo.maximumScale = 8f
 
+        photo.setOnViewDragListener { dx, dy ->
+            if (photo.scale != 1f) {
+                return@setOnViewDragListener
+            }
+
+            if (abs(dx) > SLOP_RADIUS || abs(dy) > SLOP_RADIUS) {
+                finish()
+            }
+        }
+
         enterAnimationCompleteObservable.onNext(true)
 
         if (intent != null) {
-            val photoUrl = intent.getStringExtra(EXTRA_PHOTO)
+            val photoUrl = intent.getStringExtra(EXTRA_PHOTO)!!
             on<ImageHandler>().get().load(photoUrl)
-                    .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners), 0))
                     .into(photo, object : Callback {
                         override fun onSuccess() {
                             on<DisposableHandler>().add(enterAnimationCompleteObservable
                                     .subscribeOn(Schedulers.computation())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe({ loadFullRes(photoUrl) }, { it.printStackTrace() }))
+                                    .subscribe({ loadFullRes(photoUrl) }, {
+                                        on<ToastHandler>().show(R.string.failed_to_load_photo)
+                                    }))
                         }
 
                         override fun onError(e: Exception) {
@@ -46,9 +58,9 @@ class PhotoActivity : CircularRevealActivity() {
                     })
         }
 
-        photo.setOnClickListener { view -> finish() }
+        photo.setOnClickListener { finish() }
 
-        findViewById<View>(R.id.actionShare).setOnClickListener { view ->
+        findViewById<View>(R.id.actionShare).setOnClickListener {
             if (photo.drawable is BitmapDrawable) {
                 on<SystemShareHandler>().share((photo.drawable as BitmapDrawable).bitmap)
             } else {
@@ -62,11 +74,11 @@ class PhotoActivity : CircularRevealActivity() {
     private fun loadFullRes(photoUrl: String) {
         on<ImageHandler>().get().load(photoUrl.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=1600")
                 .noPlaceholder()
-                .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners), 0))
                 .into(photo)
     }
 
     companion object {
         const val EXTRA_PHOTO = "photo"
+        private const val SLOP_RADIUS = 32
     }
 }

@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver
 import android.view.animation.AccelerateInterpolator
 
 import closer.vlllage.com.closer.pool.PoolActivity
+import kotlin.math.hypot
 
 abstract class CircularRevealActivity : PoolActivity() {
     private var sourceBounds: Rect? = null
@@ -84,10 +85,16 @@ abstract class CircularRevealActivity : PoolActivity() {
             return
         }
 
-        finishAnimator = ViewAnimationUtils.createCircularReveal(findViewById(backgroundId),
+        val view = findViewById<View>(backgroundId)
+
+        if (view.isAttachedToWindow.not()) {
+            return
+        }
+
+        finishAnimator = ViewAnimationUtils.createCircularReveal(view,
                 sourceBounds!!.centerX(),
                 sourceBounds!!.centerY(),
-                Math.hypot(window.decorView.width.toDouble(), window.decorView.height.toDouble()).toFloat(),
+                hypot(window.decorView.width.toDouble(), window.decorView.height.toDouble()).toFloat(),
                 0f
         )
         finishAnimator!!.duration = 195

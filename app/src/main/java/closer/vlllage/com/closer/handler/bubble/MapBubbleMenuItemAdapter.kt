@@ -32,9 +32,7 @@ class MapBubbleMenuItemAdapter(on: On,
 
         holder.menuItemTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(menuItem.iconRes ?: 0, 0, 0, 0)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            holder.menuItemTitle.compoundDrawableTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(menuItem.iconTintRes ?: R.color.textInverse))
-        }
+        holder.menuItemTitle.compoundDrawableTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(menuItem.iconTintRes ?: R.color.textInverse))
 
         holder.itemView.setOnClickListener { view -> onClickListener.invoke(mapBubble, position) }
     }

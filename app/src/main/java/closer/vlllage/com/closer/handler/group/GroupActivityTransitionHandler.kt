@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.store.models.Event
 import com.queatz.on.On
 
@@ -61,6 +62,17 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
     fun showGroupForEvent(view: View?, event: Event) {
         if (event.groupId != null) {
             on<GroupActivityTransitionHandler>().showGroupMessages(view, event.groupId)
+        } else if (event.id != null) {
+            on<DisposableHandler>().add(on<DataHandler>().getEvent(event.id!!)
+                    .subscribe({
+                        if (it.groupId != null) {
+                            on<GroupActivityTransitionHandler>().showGroupMessages(view, event.groupId)
+                        } else {
+                            on<DefaultAlerts>().thatDidntWork()
+                        }
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
         } else {
             on<DefaultAlerts>().thatDidntWork()
         }
