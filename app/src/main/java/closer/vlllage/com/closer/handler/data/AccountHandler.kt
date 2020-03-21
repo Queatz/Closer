@@ -110,10 +110,21 @@ class AccountHandler constructor(private val on: On) {
     }
 
     fun changes(prop: String? = null) = accountChanges.let { changes ->
-        prop?.let { prop -> changes.filter { it.prop == prop } } ?: changes
+        prop?.let { prop -> changes.startWith(AccountChange(prop, get(prop))).filter { it.prop == prop } } ?: changes
     }
 
-    class AccountChange(val prop: String, val value: Any)
+    fun get(prop: String): Any? = when (prop) {
+        ACCOUNT_FIELD_STATUS -> status
+        ACCOUNT_FIELD_NAME -> name
+        ACCOUNT_FIELD_PHOTO -> on<PersistenceHandler>().myPhoto
+        ACCOUNT_FIELD_GEO -> on<LocationHandler>().lastKnownLocation?.let { LatLng(it.latitude, it.latitude) }
+        ACCOUNT_FIELD_ACTIVE -> active
+        ACCOUNT_FIELD_NOTIFICATIONS -> privateMode
+        ACCOUNT_FIELD_PRIVATE -> privateOnly
+        else -> null
+    }
+
+    class AccountChange(val prop: String = "", val value: Any? = null)
 
     companion object {
 

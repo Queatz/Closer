@@ -141,9 +141,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         }
 
         on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE).subscribe {
-            loadGroups(on<MapHandler>().center!!)
-            loadSuggestions(on<MapHandler>().center!!)
-            loadPeople(on<MapHandler>().center!!)
+            on<MapHandler>().center?.let { center ->
+                loadGroups(center)
+                loadSuggestions(center)
+                loadPeople(center)
+            }
             updatePrivateOnly()
         })
 

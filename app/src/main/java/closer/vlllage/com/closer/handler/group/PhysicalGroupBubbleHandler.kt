@@ -25,7 +25,7 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
 
             val distance = 0.12f
 
-            val latLng = on<MapHandler>().center!!
+            val latLng = on<MapHandler>().center ?: return
 
             disposableGroup.add(on<StoreHandler>().store.box(Group::class).query()
                     .equal(Group_.physical, true)
