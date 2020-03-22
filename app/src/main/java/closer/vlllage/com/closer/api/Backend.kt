@@ -122,6 +122,9 @@ interface Backend {
     @GET("message/{id}")
     fun getGroupMessage(@Path("id") groupMessageId: String): Single<GroupMessageResult>
 
+    @GET("message/{id}/group")
+    fun getGroupForGroupMessage(@Path("id") groupMessageId: String): Single<GroupResult>
+
     @GET("group/{id}/messages")
     fun getGroupMessages(@Path("id") groupId: String): Single<List<GroupMessageResult>>
 

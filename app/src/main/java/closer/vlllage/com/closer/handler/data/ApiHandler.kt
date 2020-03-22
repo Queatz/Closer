@@ -236,6 +236,10 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.getGroupForPhone(phoneId))
     }
 
+    fun getGroupForGroupMessage(groupMessageId: String): Single<GroupResult> {
+        return uiThread(api.backend.getGroupForGroupMessage(groupMessageId))
+    }
+
     fun getMessagesForPhone(phoneId: String): Single<List<GroupMessageResult>> {
         return uiThread(api.backend.getMessagesForPhone(phoneId))
     }

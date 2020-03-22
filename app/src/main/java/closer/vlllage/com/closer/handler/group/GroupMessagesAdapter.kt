@@ -132,7 +132,11 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         }
 
         holder.messageActionReply.setOnClickListener {
-            on<DefaultAlerts>().message("That doesn't work yet!")
+            on<DisposableHandler>().add(on<ApiHandler>().getGroupForGroupMessage(groupMessage.id!!).subscribe({ group ->
+                on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id, true)
+            }, {
+                on<DefaultAlerts>().thatDidntWork()
+            }))
             toggleMessageActionLayout(holder)
         }
 

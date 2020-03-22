@@ -13,10 +13,12 @@ class Group : BaseObject() {
     var physical: Boolean = false
     var eventId: String? = null
     var phoneId: String? = null
+    var groupMessageId: String? = null
     var latitude: Double? = null
     var longitude: Double? = null
     var photo: String? = null
 
     fun hasEvent() = eventId != null
     fun hasPhone() = phoneId != null
+    fun hasGroupMessage() = groupMessageId != null
 }

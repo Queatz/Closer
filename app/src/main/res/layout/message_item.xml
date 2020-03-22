@@ -290,7 +290,6 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:text="@string/reply"
-                    android:visibility="gone"
                     android:focusable="true" />
 
                 <TextView

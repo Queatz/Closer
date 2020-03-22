@@ -77,7 +77,7 @@
     },
     {
       "id": "2:9013209487586608073",
-      "lastPropertyId": "17:3952317341358278360",
+      "lastPropertyId": "18:7683497940893377796",
       "name": "Group",
       "properties": [
         {
@@ -168,6 +168,11 @@
           "name": "ratingCount",
           "type": 5,
           "flags": 2
+        },
+        {
+          "id": "18:7683497940893377796",
+          "name": "groupMessageId",
+          "type": 9
         }
       ],
       "relations": []

@@ -13,6 +13,7 @@ class GroupResult : ModelResult() {
     var hub: Boolean? = null
     var eventId: String? = null
     var phoneId: String? = null
+    var groupMessageId: String? = null
     var ratingAverage: Double? = null
     var ratingCount: Int? = null
     var geo: List<Double>? = null
@@ -38,6 +39,7 @@ class GroupResult : ModelResult() {
             group.hub = TRUE == groupResult.hub
             group.eventId = groupResult.eventId
             group.phoneId = groupResult.phoneId
+            group.groupMessageId = groupResult.groupMessageId
             group.photo = groupResult.photo
 
             if (groupResult.geo != null && !groupResult.geo!!.isEmpty()) {
