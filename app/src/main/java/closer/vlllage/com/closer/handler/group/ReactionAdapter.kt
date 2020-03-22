@@ -18,7 +18,7 @@ import java.util.*
 
 class ReactionAdapter(on: On) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(on) {
 
-    private var items: List<ReactionCount> = ArrayList()
+    private var items: List<ReactionCount> = listOf()
     private var groupMessage: GroupMessage? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {

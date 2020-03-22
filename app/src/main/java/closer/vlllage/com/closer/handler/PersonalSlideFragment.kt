@@ -53,7 +53,7 @@ class PersonalSlideFragment : PoolFragment() {
                 .observer { groupMembers ->
                     if (groupMembers.isEmpty()) {
                         youveSubscribedEmpty.visibility = View.VISIBLE
-                        searchGroupsAdapter.setGroups(ArrayList())
+                        searchGroupsAdapter.setGroups(listOf())
                     } else {
                         youveSubscribedEmpty.visibility = View.GONE
 

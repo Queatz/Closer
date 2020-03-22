@@ -34,7 +34,7 @@ class PhoneContacts constructor(private val on: On) {
                 }
             }
 
-            ArrayList()
+            listOf()
         }.subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread())
 
     fun forceReload() {

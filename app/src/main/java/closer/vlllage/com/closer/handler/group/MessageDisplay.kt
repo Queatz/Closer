@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
-import closer.vlllage.com.closer.store.Store
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
+import closer.vlllage.com.closer.ui.RevealAnimator
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
@@ -20,22 +21,27 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 class MessageDisplay constructor(private val on: On) {
 
-    var pinned: Boolean = false
-    var global: Boolean = false
-
     private fun displayShare(holder: GroupMessagesAdapter.GroupMessageViewHolder,
                              jsonObject: JsonObject,
                              groupMessage: GroupMessage,
                              onEventClickListener: (Event) -> Unit,
                              onGroupClickListener: (Group) -> Unit,
                              onSuggestionClickListener: (Suggestion) -> Unit) {
-        val sharedGroupMessage = on<StoreHandler>().store.box(GroupMessage::class).query().equal(GroupMessage_.id, jsonObject.get("share").asString).build().findFirst()
+        displayFallback(holder, groupMessage)
 
-        if (sharedGroupMessage != null) {
+        holder.disposableGroup.add(on<DataHandler>().getGroupMessage(jsonObject.get("share").asString).subscribe({ sharedGroupMessage ->
             display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
-        } else {
-            displayFallback(holder, groupMessage)
-        }
+            holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.time), "@" + groupMessage.from!!))
+
+            holder.messageActionProfile.setText(R.string.group)
+            holder.messageActionProfile.setOnClickListener {
+                on<NavigationHandler>().showGroup(sharedGroupMessage.to!!)
+                toggleMessageActionLayout(holder)
+            }
+        }, {
+            holder.message.setText(R.string.unavailable_message)
+            holder.message.visible = true
+        }))
 
         holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.time), "@" + groupMessage.from!!))
     }
@@ -79,27 +85,37 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.time)
 
-        holder.custom.removeAllViews()
-        holder.custom.visible = true
-
-        on<StoreHandler>().store.box(GroupAction::class).query()
-                .equal(GroupAction_.id, activity.getAsJsonPrimitive("id").asString)
-                .build().findFirst()?.let { groupAction ->
-                    View.inflate(holder.custom.context, R.layout.group_action_photo_item, holder.custom)
-                    val rootView = holder.custom.findViewById<ViewGroup>(R.id.rootView)
-                    (rootView.layoutParams as ConstraintLayout.LayoutParams).apply {
-                        topMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
-                        marginStart = 0
-                        startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                        endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                        topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                        bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                    }
-                    on<GroupActionDisplay>().display(rootView, groupAction, GroupActionDisplay.Layout.PHOTO)
-                }
-
         holder.message.visible = false
         holder.action.visible = false
+
+        holder.disposableGroup.add(on<DataHandler>().getGroupAction(activity.getAsJsonPrimitive("id").asString).subscribe({ groupAction ->
+            holder.custom.removeAllViews()
+            holder.custom.visible = true
+            View.inflate(holder.custom.context, R.layout.group_action_photo_item, holder.custom)
+            val rootView = holder.custom.findViewById<ViewGroup>(R.id.rootView)
+            (rootView.layoutParams as ConstraintLayout.LayoutParams).apply {
+                topMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
+                marginStart = 0
+                startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            }
+            on<GroupActionDisplay>().display(rootView, groupAction, GroupActionDisplay.Layout.PHOTO)
+        }, {
+            holder.custom.removeAllViews()
+            holder.custom.visible = true
+            View.inflate(holder.custom.context, R.layout.group_action_photo_unavailable, holder.custom)
+            val rootView = holder.custom.findViewById<ViewGroup>(R.id.rootView)
+            (rootView.layoutParams as ConstraintLayout.LayoutParams).apply {
+                topMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
+                marginStart = 0
+                startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            }
+        }))
     }
 
     private fun displayReview(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -288,7 +304,8 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.text = on<TimeStr>().pretty(groupMessage.time)
     }
 
-    fun display(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage,
+    fun display(holder: GroupMessagesAdapter.GroupMessageViewHolder,
+                groupMessage: GroupMessage,
                 onEventClickListener: (Event) -> Unit,
                 onGroupClickListener: (Group) -> Unit,
                 onSuggestionClickListener: (Suggestion) -> Unit) {
@@ -311,21 +328,28 @@ class MessageDisplay constructor(private val on: On) {
                 displayFallback(holder, groupMessage)
                 e.printStackTrace()
             }
-
         } else {
             displayGroupMessage(holder, groupMessage)
         }
 
-        if (pinned) {
+        if (holder.pinned) {
             holder.time.visible = false
             holder.pinnedIndicator.visible = true
             holder.messageActionPin.setText(R.string.unpin)
         }
 
-        if (global) {
+        if (holder.global) {
             holder.group.visible = true
             holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, groupMessage.to?.let { getGroup(it) }?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
         }
+    }
+
+    fun toggleMessageActionLayout(holder: GroupMessagesAdapter.GroupMessageViewHolder) {
+        if (holder.messageActionLayoutRevealAnimator == null) {
+            holder.messageActionLayoutRevealAnimator = RevealAnimator(holder.messageActionLayout, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
+        }
+
+        holder.messageActionLayoutRevealAnimator!!.show(holder.messageActionLayout.visible.not())
     }
 
     private fun getPhone(phoneId: String?): Phone? {

@@ -362,6 +362,7 @@
     <string name="message_deleted">Message deleted</string>
     <string name="delete_message_confirm">Do you want to delete this message?</string>
     <string name="yes_delete">Yes, delete</string>
+    <string name="unavailable_message">This messge is private or unavailable</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

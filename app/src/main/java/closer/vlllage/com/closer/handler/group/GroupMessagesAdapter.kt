@@ -34,7 +34,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
     var onSuggestionClickListener: ((Suggestion) -> Unit)? = null
     var onEventClickListener: ((Event) -> Unit)? = null
     var onGroupClickListener: ((Group) -> Unit)? = null
-    private var groupMessages: List<GroupMessage> = ArrayList()
+    private var groupMessages: List<GroupMessage> = listOf()
     var pinned: Boolean = false
     var global: Boolean = false
 
@@ -85,17 +85,17 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             if (onMessageClickListener != null) {
                 onMessageClickListener!!.invoke(groupMessages[position])
             } else {
-                toggleMessageActionLayout(holder)
+                on<MessageDisplay>().toggleMessageActionLayout(holder)
             }
         }
 
         holder.itemView.setOnLongClickListener {
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
             true
         }
 
         holder.photo.setOnLongClickListener {
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
             true
         }
 
@@ -112,23 +112,23 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         if (global) {
             holder.messageActionProfile.setOnClickListener {
                 on<NavigationHandler>().showGroup(groupMessage.to!!)
-                toggleMessageActionLayout(holder)
+                on<MessageDisplay>().toggleMessageActionLayout(holder)
             }
         } else if (groupMessage.from != null) {
             holder.messageActionProfile.setOnClickListener {
                 on<NavigationHandler>().showProfile(groupMessage.from!!)
-                toggleMessageActionLayout(holder)
+                on<MessageDisplay>().toggleMessageActionLayout(holder)
             }
         }
 
         holder.messageActionShare.setOnClickListener {
             on<ShareActivityTransitionHandler>().shareGroupMessage(groupMessage.id!!)
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionRemind.setOnClickListener {
             on<DefaultAlerts>().message("That doesn't work yet!")
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionReply.setOnClickListener {
@@ -137,7 +137,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             }, {
                 on<DefaultAlerts>().thatDidntWork()
             }))
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionDelete.setOnClickListener {
@@ -153,7 +153,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                             on<ToastHandler>().show(R.string.message_deleted)
                         }
                     }, { on<DefaultAlerts>().thatDidntWork() })
-                    toggleMessageActionLayout(holder)
+                    on<MessageDisplay>().toggleMessageActionLayout(holder)
                 }
                 show()
             }
@@ -179,7 +179,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                             }
                         }, { on<DefaultAlerts>().thatDidntWork() }))
             }
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionVote.setOnClickListener {
@@ -190,7 +190,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                     }, {
                         on<DefaultAlerts>().thatDidntWork()
                     }))
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionVoteLaugh.setOnClickListener {
@@ -201,7 +201,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                     }, {
                         on<DefaultAlerts>().thatDidntWork()
                     }))
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionVoteYummy.setOnClickListener {
@@ -212,7 +212,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                     }, {
                         on<DefaultAlerts>().thatDidntWork()
                     }))
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionVoteKiss.setOnClickListener {
@@ -223,7 +223,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                     }, {
                         on<DefaultAlerts>().thatDidntWork()
                     }))
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionVoteCool.setOnClickListener {
@@ -234,15 +234,15 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
                     }, {
                         on<DefaultAlerts>().thatDidntWork()
                     }))
-            toggleMessageActionLayout(holder)
+            on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
         holder.messageActionLayout.visible = false
         holder.time.movementMethod = LinkMovementMethod.getInstance()
         holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()
 
-        on<MessageDisplay>().pinned = pinned
-        on<MessageDisplay>().global = global
+        holder.pinned = pinned
+        holder.global = global
         on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 
         if (groupMessage.reactions.isNullOrEmpty()) {
@@ -279,18 +279,6 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.eventMessage.setTextColor(it.hint)
             holder.pinnedIndicator.imageTintList = it.tint
         })
-    }
-
-    private fun toggleMessageActionLayout(holder: GroupMessageViewHolder) {
-        if (holder.messageActionLayoutRevealAnimator == null) {
-            holder.messageActionLayoutRevealAnimator = RevealAnimator(holder.messageActionLayout, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
-        }
-
-        if (holder.messageActionLayout.visibility == View.VISIBLE) {
-            holder.messageActionLayoutRevealAnimator!!.show(false)
-        } else {
-            holder.messageActionLayoutRevealAnimator!!.show(true)
-        }
     }
 
     override fun onViewRecycled(holder: GroupMessageViewHolder) {
@@ -356,6 +344,8 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var reactionsRecyclerView: RecyclerView
         internal var reactionAdapter: ReactionAdapter
         internal lateinit var disposableGroup: DisposableGroup
+        internal var pinned: Boolean = false
+        internal var global: Boolean = false
 
         init {
             name = itemView.findViewById(R.id.name)

@@ -48,7 +48,7 @@ class PinnedMessagesHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .observer { pins ->
                     if (pins.isEmpty()) {
-                        setGroupMessages(ArrayList())
+                        setGroupMessages(listOf())
                         return@observer
                     }
 

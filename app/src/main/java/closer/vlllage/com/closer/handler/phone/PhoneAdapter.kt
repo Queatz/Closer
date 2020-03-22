@@ -13,10 +13,9 @@ import closer.vlllage.com.closer.handler.helpers.PhotoHelper
 import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
-import java.util.*
 
 open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionResult) -> Unit) : PoolRecyclerAdapter<PhoneAdapter.ViewHolder>(on) {
-    var items: List<ReactionResult> = ArrayList()
+    var items: List<ReactionResult> = listOf()
         set(items) {
             field = items
             notifyDataSetChanged()

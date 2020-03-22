@@ -162,8 +162,13 @@ class GroupActivity : CircularRevealActivity() {
                 }
 
                 showGroupName(group)
-                view.groupDetails.visible = false
-                view.groupDetails.text = ""
+
+
+                if (!group.hasEvent()) {
+                    view.groupDetails.visible = false
+                    view.groupDetails.text = ""
+                }
+
                 view.peopleInGroup.text = ""
 
                 setGroupAbout(group)
@@ -182,20 +187,12 @@ class GroupActivity : CircularRevealActivity() {
                 view.groupDetails.text = on<EventDetailsHandler>().formatEventDetails(event)
             }
 
-            onContactInfoChanged { redrawContacts(it) }
-
-            onEventChanged { event ->
-                view.groupDetails.visible = true
-                view.groupDetails.text = on<EventDetailsHandler>().formatEventDetails(event)
-            }
-
             onPhoneChanged { phone ->
                 setGroupBackground(phone)
                 view.groupDetails.visible = false
                 view.groupDetails.text = ""
                 view.groupAbout.visible = !phone.status.isNullOrBlank()
                 view.groupAbout.text = phone.status ?: ""
-
 
                 if (on<MatchHandler>().active) {
                     view.meetLayout.visible = true
@@ -259,6 +256,10 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun setGroupAbout(group: Group) {
+        if (group.hasEvent()) {
+            return
+        }
+
         if (on<Val>().isEmpty(group.about)) {
             view.groupAbout.visible = false
         } else {
@@ -268,7 +269,6 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun setGroupBackground(group: Group) {
-        view.groupDetails.visible = false
         if (group.photo != null) {
             view.profilePhoto.visible = true
             on<ImageHandler>().get().load(group.photo + "?s=512")
@@ -287,7 +287,6 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun setGroupBackground(phone: Phone) {
-        view.groupDetails.visible = false
         if (phone.photo != null) {
             view.profilePhoto.visible = true
             on<ImageHandler>().get().load(phone.photo + "?s=512")

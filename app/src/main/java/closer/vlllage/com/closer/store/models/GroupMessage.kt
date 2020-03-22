@@ -16,5 +16,5 @@ class GroupMessage : BaseObject() {
     var longitude: Double? = null
 
     @Convert(converter = ReactionCountListJsonConverter::class, dbType = String::class)
-    var reactions: List<ReactionCount> = ArrayList()
+    var reactions: List<ReactionCount> = listOf()
 }

@@ -188,6 +188,10 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.createGroupAction(groupId, name, intent))
     }
 
+    fun getGroupAction(groupActionId: String): Single<GroupActionResult> {
+        return uiThread(api.backend.getGroupAction(groupActionId))
+    }
+
     fun getGroupActions(groupId: String): Single<List<GroupActionResult>> {
         return uiThread(api.backend.getGroupActions(groupId))
     }

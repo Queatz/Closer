@@ -204,7 +204,7 @@ class GroupContactsHandler constructor(private val on: On) {
         phoneContactAdapter.setIsFiltered(!originalQuery.isEmpty())
 
         if (!on<PermissionHandler>().has(READ_CONTACTS)) {
-            showPhoneContacts(ArrayList(), query)
+            showPhoneContacts(listOf(), query)
             return
         }
 

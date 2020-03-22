@@ -37,7 +37,7 @@ class ApiService {
             } else if (response.body()!!.contentLength() < 0) {
                 Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: (no content) " + response.request().url())
             } else {
-                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: " + response.request().url() + " " + response.peekBody(response.body()!!.contentLength()).string())
+                Logger.getAnonymousLogger().warning("NETWORK: RESPONSE: (" + response.code() + ") " + response.request().url() + " " + response.peekBody(response.body()!!.contentLength()).string())
             }
 
             response

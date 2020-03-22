@@ -1,8 +1,6 @@
 package closer.vlllage.com.closer.handler.data
 
-import closer.vlllage.com.closer.api.models.EventResult
-import closer.vlllage.com.closer.api.models.GroupResult
-import closer.vlllage.com.closer.api.models.PhoneResult
+import closer.vlllage.com.closer.api.models.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
@@ -56,6 +54,26 @@ class DataHandler constructor(private val on: On) {
         on<ApiHandler>()
                 .getGroup(groupId)
                 .map { GroupResult.from(it) }
+    })
+
+    fun getGroupMessage(groupMessageId: String) = chain({
+        on<StoreHandler>().store.box(GroupMessage::class).query()
+                .equal(GroupMessage_.id, groupMessageId)
+                .build()
+    }, {
+        on<ApiHandler>()
+                .getGroupMessage(groupMessageId)
+                .map { GroupMessageResult.from(it) }
+    })
+
+    fun getGroupAction(groupActionId: String) = chain({
+        on<StoreHandler>().store.box(GroupAction::class).query()
+                .equal(GroupAction_.id, groupActionId)
+                .build()
+    }, {
+        on<ApiHandler>()
+                .getGroupAction(groupActionId)
+                .map { GroupActionResult.from(it) }
     })
 
     fun getEvent(eventId: String) = chain({

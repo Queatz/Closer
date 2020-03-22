@@ -53,7 +53,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             return
         }
 
-        val event = on<GroupHandler>().event
+        val event = if (group.hasEvent()) on<GroupHandler>().event else null
 
         val items = ArrayList<ToolbarItem>()
 
