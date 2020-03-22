@@ -181,20 +181,28 @@ class GroupToolbarHandler constructor(private val on: On) {
                     View.OnClickListener {
                         event?.let {
                             val daysAgo = TimeUnit.MILLISECONDS.toDays(Date().time - event.startsAt!!.time).toInt()
+                            val now = Calendar.getInstance(TimeZone.getDefault())
+                            val startsAt = event.startsAt!!.let { Calendar.getInstance(TimeZone.getDefault()).apply {
+                                time = it
+                                add(Calendar.DATE, daysAgo)
+                            } }
+                            val endsAt = event.endsAt!!.let { Calendar.getInstance(TimeZone.getDefault()).apply {
+                                time = it
+                                add(Calendar.DATE, daysAgo)
+                            } }
+
+                            if (startsAt.before(now)) {
+                                startsAt.add(Calendar.DATE, 1)
+                                endsAt.add(Calendar.DATE, 1)
+                            }
 
                             on<EventHandler>().createNewEvent(
                                     LatLng(it.latitude!!, it.longitude!!),
                                     it.isPublic,
                                     event.name,
                                     event.about,
-                                    event.startsAt!!.let { Calendar.getInstance(TimeZone.getDefault()).apply {
-                                        time = it
-                                        add(Calendar.DATE, daysAgo)
-                                    } }.time,
-                                    event.endsAt!!.let { Calendar.getInstance(TimeZone.getDefault()).apply {
-                                        time = it
-                                        add(Calendar.DATE, daysAgo)
-                                    } }.time
+                                    startsAt.time,
+                                    endsAt.time
                             ) {
                                 on<GroupActivityTransitionHandler>().showGroupForEvent(null, it)
                             }
