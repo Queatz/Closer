@@ -133,7 +133,7 @@ class GroupContactsHandler constructor(private val on: On) {
     }
 
     private fun cancelInvite(groupInvite: GroupInvite) {
-        on<DisposableHandler>().add(on<ApiHandler>().cancelInvite(groupInvite.group!!, groupInvite.id!!).subscribe { successResult ->
+        on<DisposableHandler>().add(on<ApiHandler>().cancelInvite(groupInvite.group!!, groupInvite.id!!).subscribe({ successResult ->
             if (successResult.success) {
                 on<AlertHandler>().make().apply {
                     message = on<ResourcesHandler>().resources.getString(R.string.invite_cancelled)
@@ -144,7 +144,7 @@ class GroupContactsHandler constructor(private val on: On) {
             } else {
                 on<DefaultAlerts>().thatDidntWork(successResult.error)
             }
-        })
+        }) { on<DefaultAlerts>().thatDidntWork((it as? ApiError)?.error) })
     }
 
     private fun inviteToGroup(group: Group, phoneContact: PhoneContact) {
@@ -181,7 +181,7 @@ class GroupContactsHandler constructor(private val on: On) {
             } else {
                 on<DefaultAlerts>().thatDidntWork(successResult.error)
             }
-        }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+        }, { on<DefaultAlerts>().thatDidntWork((it as? ApiError)?.error) }))
     }
 
     fun showContactsForQuery(originalQuery: String) {

@@ -2,11 +2,14 @@ package closer.vlllage.com.closer.handler.helpers
 
 import android.content.Intent
 import android.net.Uri
+import closer.vlllage.com.closer.api.models.GroupResult
 import closer.vlllage.com.closer.api.models.UseInviteCodeResult
+import closer.vlllage.com.closer.handler.data.ApiError
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import com.google.zxing.integration.android.IntentIntegrator
 import com.queatz.on.On
+import retrofit2.HttpException
 
 
 class ScanQrCodeHandler constructor(private val on: On) {
@@ -38,7 +41,7 @@ class ScanQrCodeHandler constructor(private val on: On) {
             } else {
                 on<DefaultAlerts>().thatDidntWork(result.error)
             }
-        }) { on<DefaultAlerts>().thatDidntWork()})
+        }) { on<DefaultAlerts>().thatDidntWork((it as? ApiError)?.error) })
     }
 
     fun scan() {
