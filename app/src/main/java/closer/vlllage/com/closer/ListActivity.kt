@@ -29,6 +29,7 @@ abstract class ListActivity : PoolActivity() {
         setContentView(R.layout.activity_share)
 
         background = findViewById(R.id.background)
+        background.clipToOutline = true
         recyclerView = findViewById(R.id.shareRecyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(this)

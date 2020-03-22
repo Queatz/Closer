@@ -14,33 +14,37 @@ import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
 
-open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionResult) -> Unit) : PoolRecyclerAdapter<PhoneAdapter.ViewHolder>(on) {
+open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionResult) -> Unit) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
     var items: List<ReactionResult> = listOf()
         set(items) {
             field = items
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(LayoutInflater.from(viewGroup.context)
                 .inflate(R.layout.phone_item, viewGroup, false))
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val reaction = this.items[position]
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+        when (viewHolder) {
+            is ViewHolder -> {
+                val reaction = this.items[position]
 
-        viewHolder.name.text = on<NameHandler>().getName(reaction.phone!!.id!!)
-        viewHolder.reaction.text = reaction.reaction
+                viewHolder.name.text = on<NameHandler>().getName(reaction.phone!!.id!!)
+                viewHolder.reaction.text = reaction.reaction
 
-        if (on<Val>().isEmpty(reaction.phone?.photo)) {
-            viewHolder.photo.visibility = View.GONE
-        } else {
-            viewHolder.photo.visibility = View.VISIBLE
-            on<PhotoHelper>().loadCircle(viewHolder.photo, reaction.phone!!.photo!!)
-            viewHolder.photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(viewHolder.photo, reaction.phone!!.photo!!) }
+                if (on<Val>().isEmpty(reaction.phone?.photo)) {
+                    viewHolder.photo.visibility = View.GONE
+                } else {
+                    viewHolder.photo.visibility = View.VISIBLE
+                    on<PhotoHelper>().loadCircle(viewHolder.photo, reaction.phone!!.photo!!)
+                    viewHolder.photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(viewHolder.photo, reaction.phone!!.photo!!) }
+                }
+
+                viewHolder.itemView.setOnClickListener { v -> onReactionClickListener.invoke(reaction) }
+            }
         }
-
-        viewHolder.itemView.setOnClickListener { v -> onReactionClickListener.invoke(reaction) }
     }
 
     override fun getItemCount() = items.size

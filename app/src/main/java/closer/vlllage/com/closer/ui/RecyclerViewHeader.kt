@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.ui
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.max
 
 class RecyclerViewHeader {
 
@@ -15,9 +16,11 @@ class RecyclerViewHeader {
     private var originalHeaderPadding: Int = 0
     private var originalFooterPadding: Int = 0
 
-    fun onBind(holder: RecyclerView.ViewHolder, position: Int) {
-        var dirty = false
+    private val layoutChangeListener = View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        setHeaderMargin()
+    }
 
+    fun onBind(holder: RecyclerView.ViewHolder, position: Int) {
         if (position == recyclerView!!.adapter!!.itemCount - 1) {
             originalFooterPadding = holder.itemView.paddingBottom
 
@@ -29,7 +32,8 @@ class RecyclerViewHeader {
             )
 
             footerViewHolder = holder
-            dirty = true
+            footerViewHolder?.itemView?.addOnLayoutChangeListener(layoutChangeListener)
+            setHeaderMargin()
         }
 
         if (position == 0) {
@@ -43,17 +47,14 @@ class RecyclerViewHeader {
             )
 
             headerViewHolder = holder
-            dirty = true
-        }
-
-        if (dirty) {
+            headerViewHolder?.itemView?.addOnLayoutChangeListener(layoutChangeListener)
             setHeaderMargin()
-            recyclerView!!.post { this.setHeaderMargin() }
         }
     }
 
     fun onRecycled(holder: RecyclerView.ViewHolder) {
         if (holder === headerViewHolder) {
+            headerViewHolder?.itemView?.removeOnLayoutChangeListener(layoutChangeListener)
             holder.itemView.setPaddingRelative(
                     holder.itemView.paddingStart,
                     originalHeaderPadding,
@@ -68,6 +69,7 @@ class RecyclerViewHeader {
         }
 
         if (holder === footerViewHolder) {
+            footerViewHolder?.itemView?.removeOnLayoutChangeListener(layoutChangeListener)
             holder.itemView.setPaddingRelative(
                     holder.itemView.paddingStart,
                     holder.itemView.paddingTop,
@@ -111,7 +113,8 @@ class RecyclerViewHeader {
             return 0
         }
 
-        lastGoodExtend = Math.max(lastGoodExtend, recyclerView!!.height - footerViewHolder!!.itemView.bottom)
+        lastGoodExtend = max(lastGoodExtend, recyclerView!!.height - footerViewHolder!!.itemView.bottom)
+
         return lastGoodExtend
     }
 }

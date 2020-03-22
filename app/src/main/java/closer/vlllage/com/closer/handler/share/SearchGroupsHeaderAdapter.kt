@@ -22,7 +22,6 @@ class SearchGroupsHeaderAdapter constructor(on: On,
     : SearchGroupsAdapter(on, false, onGroupClickListener, onCreateGroupClickListener) {
 
     private val header = RecyclerViewHeader()
-
     private var headerText: String? = null
 
     init {
@@ -93,7 +92,6 @@ class SearchGroupsHeaderAdapter constructor(on: On,
     }
 
     companion object {
-
         private const val HEADER_VIEW_TYPE = -1
     }
 

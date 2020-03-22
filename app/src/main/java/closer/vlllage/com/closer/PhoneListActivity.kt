@@ -50,20 +50,33 @@ class PhoneListActivity : ListActivity() {
             val lifestyleName = intent.getStringExtra(EXTRA_LIFESTYLE_NAME)
 
             if (lifestyleName != null) {
+                adapter.setHeaderText(getString(R.string.people))
                 on<DisposableHandler>().add(on<ApiHandler>().phonesForLifestyle(lifestyleName)
-                        .subscribe({ adapter.items = it.phones!!.map { ReactionResult().apply {
-                            from = it.id
-                            phone = it
-                            reaction = ""
-                        } } }, { on<DefaultAlerts>().thatDidntWork() }))
+                        .subscribe({
+                            adapter.setHeaderText(it.name!!)
+                            adapter.items = it.phones!!.map {
+                                ReactionResult().apply {
+                                    from = it.id
+                                    phone = it
+                                    reaction = ""
+                                }
+                            }
+                        }, { on<DefaultAlerts>().thatDidntWork() }))
             } else if (goalName != null) {
+                adapter.setHeaderText(getString(R.string.people))
                 on<DisposableHandler>().add(on<ApiHandler>().phonesForGoal(goalName)
-                        .subscribe({ adapter.items = it.phones!!.map { ReactionResult().apply {
-                            from = it.id
-                            phone = it
-                            reaction = ""
-                        } } }, { on<DefaultAlerts>().thatDidntWork() }))
+                        .subscribe({
+                            adapter.setHeaderText(it.name!!)
+                            adapter.items = it.phones!!.map {
+                                ReactionResult().apply {
+                                    from = it.id
+                                    phone = it
+                                    reaction = ""
+                                }
+                            }
+                        }, { on<DefaultAlerts>().thatDidntWork() }))
             } else if (groupMessageId != null) {
+                adapter.setHeaderText(getString(R.string.reactions))
                 isReactions = true
                 on<DisposableHandler>().add(on<ApiHandler>().groupMessageReactions(groupMessageId)
                         .map { this.sortItems(it) }

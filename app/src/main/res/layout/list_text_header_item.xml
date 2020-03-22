@@ -5,10 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@drawable/rounded_white_8dp_top"
     android:clickable="true"
     android:elevation="@dimen/elevation">
-
 
     <TextView
         android:id="@+id/name"
