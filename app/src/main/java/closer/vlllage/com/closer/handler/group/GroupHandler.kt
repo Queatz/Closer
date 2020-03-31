@@ -25,41 +25,46 @@ class GroupHandler constructor(private val on: On) {
 
     var group: Group? = null
         set(group) {
-            field = group
+            if (group?.id == field?.id) {
+                return
+            }
 
+            field = group
             disposableGroup.clear()
 
-            if (group != null) {
-                onGroupSet(group)
-                groupChanged.onNext(group)
-                setEventById(group.eventId)
-                setPhoneById(group.phoneId)
-                on<RefreshHandler>().refreshGroupMessages(group.id!!)
-                on<RefreshHandler>().refreshGroupContacts(group.id!!)
+            if (group == null) {
+                return
+            }
 
-                disposableGroup.add(on<StoreHandler>().store.box(Group::class).query()
-                        .equal(Group_.id, group.id!!)
+            onGroupSet(group)
+            groupChanged.onNext(group)
+            setEventById(group.eventId)
+            setPhoneById(group.phoneId)
+            on<RefreshHandler>().refreshGroupMessages(group.id!!)
+            on<RefreshHandler>().refreshGroupContacts(group.id!!)
+
+            disposableGroup.add(on<StoreHandler>().store.box(Group::class).query()
+                    .equal(Group_.id, group.id!!)
+                    .build()
+                    .subscribe()
+                    .onlyChanges()
+                    .on(AndroidScheduler.mainThread())
+                    .observer { groups ->
+                        if (groups.isEmpty()) return@observer
+                        groupUpdated.onNext(groups[0])
+                        on<RefreshHandler>().refreshGroupContacts(group.id!!)
+                    })
+
+            on<PersistenceHandler>().phoneId?.let { phoneId ->
+                disposableGroup.add(on<StoreHandler>().store.box(GroupMember::class).query()
+                        .equal(GroupMember_.group, group.id!!)
+                        .equal(GroupMember_.phone, phoneId)
                         .build()
                         .subscribe()
-                        .onlyChanges()
                         .on(AndroidScheduler.mainThread())
-                        .observer { groups ->
-                            if (groups.isEmpty()) return@observer
-                            groupUpdated.onNext(groups[0])
-                            on<RefreshHandler>().refreshGroupContacts(group.id!!)
+                        .observer { groupMembers ->
+                            groupMemberChanged.onNext(if (groupMembers.isEmpty()) GroupMember() else groupMembers[0])
                         })
-
-                on<PersistenceHandler>().phoneId?.let { phoneId ->
-                    disposableGroup.add(on<StoreHandler>().store.box(GroupMember::class).query()
-                            .equal(GroupMember_.group, group.id!!)
-                            .equal(GroupMember_.phone, phoneId)
-                            .build()
-                            .subscribe()
-                            .on(AndroidScheduler.mainThread())
-                            .observer { groupMembers ->
-                                groupMemberChanged.onNext(if (groupMembers.isEmpty()) GroupMember() else groupMembers[0])
-                            })
-                }
             }
         }
 
@@ -77,6 +82,7 @@ class GroupHandler constructor(private val on: On) {
     private val groupUpdated = PublishSubject.create<Group>()
     private val eventChanged = BehaviorSubject.create<Event>()
     private val phoneChanged = BehaviorSubject.create<Phone>()
+    private val phoneUpdated = PublishSubject.create<Phone>()
     private val contactInfoChanged = BehaviorSubject.create<ContactInfo>()
     private val groupMemberChanged = BehaviorSubject.create<GroupMember>()
     private val contactInfo = ContactInfo()
@@ -147,9 +153,18 @@ class GroupHandler constructor(private val on: On) {
                 .equal(Phone_.id, phoneId)
                 .build()
                 .subscribe()
+                .single()
                 .on(AndroidScheduler.mainThread())
                 .observer {
-                    if (it.isNotEmpty()) phoneChanged.onNext(it.first())
+                    if (it.isEmpty()) return@observer
+
+                    val phone = it.first()
+
+                    if (phoneChanged.value?.id != phone?.id) {
+                        phoneChanged.onNext(phone)
+                    }
+
+                    phoneUpdated.onNext(phone)
                 })
     }
 
@@ -157,6 +172,7 @@ class GroupHandler constructor(private val on: On) {
     fun onGroupUpdated(disposableGroup: DisposableGroup? = null, callback: (Group) -> Unit) = onChangeCallback(groupUpdated, callback, disposableGroup)
     fun onEventChanged(disposableGroup: DisposableGroup? = null, callback: (Event) -> Unit) = onChangeCallback(eventChanged, callback, disposableGroup)
     fun onPhoneChanged(disposableGroup: DisposableGroup? = null, callback: (Phone) -> Unit) = onChangeCallback(phoneChanged, callback, disposableGroup)
+    fun onPhoneUpdated(disposableGroup: DisposableGroup? = null, callback: (Phone) -> Unit) = onChangeCallback(phoneUpdated, callback, disposableGroup)
     fun onContactInfoChanged(disposableGroup: DisposableGroup? = null, callback: (ContactInfo) -> Unit) = onChangeCallback(contactInfoChanged, callback, disposableGroup)
     fun onGroupMemberChanged(disposableGroup: DisposableGroup? = null, callback: (GroupMember) -> Unit) = onChangeCallback(groupMemberChanged, callback, disposableGroup)
 

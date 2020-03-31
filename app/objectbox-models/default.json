@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3092013763985517168",
-      "lastPropertyId": "16:3969933109226616959",
+      "lastPropertyId": "17:7638435331816886960",
       "name": "GroupMessage",
       "properties": [
         {
@@ -71,6 +71,12 @@
           "id": "16:3969933109226616959",
           "name": "reactions",
           "type": 9
+        },
+        {
+          "id": "17:7638435331816886960",
+          "name": "replies",
+          "type": 5,
+          "flags": 2
         }
       ],
       "relations": []

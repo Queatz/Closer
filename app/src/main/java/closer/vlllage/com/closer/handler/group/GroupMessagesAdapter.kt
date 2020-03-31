@@ -4,7 +4,6 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
@@ -26,7 +24,6 @@ import closer.vlllage.com.closer.store.models.*
 import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 import closer.vlllage.com.closer.ui.RevealAnimator
 import com.queatz.on.On
-import java.util.*
 
 class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.GroupMessageViewHolder>(on) {
 
@@ -75,6 +72,11 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             params = holder.reactionsRecyclerView.layoutParams as ViewGroup.MarginLayoutParams
             params.topMargin = 0
             holder.reactionsRecyclerView.layoutParams = params
+
+            params = holder.messageRepliesCount.layoutParams as ViewGroup.MarginLayoutParams
+            params.leftMargin = pad
+            params.bottomMargin = pad
+            holder.messageRepliesCount.layoutParams = params
         }
 
         holder.photo.visible = false
@@ -132,11 +134,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         }
 
         holder.messageActionReply.setOnClickListener {
-            on<DisposableHandler>().add(on<ApiHandler>().getGroupForGroupMessage(groupMessage.id!!).subscribe({ group ->
-                on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id, true)
-            }, {
-                on<DefaultAlerts>().thatDidntWork()
-            }))
+            openGroup(groupMessage)
             on<MessageDisplay>().toggleMessageActionLayout(holder)
         }
 
@@ -241,6 +239,14 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         holder.time.movementMethod = LinkMovementMethod.getInstance()
         holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()
 
+        holder.messageRepliesCount.visible = groupMessage.replies ?: 0 > 0
+        if (groupMessage.replies ?: 0 > 0) {
+            holder.messageRepliesCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.x_replies, groupMessage.replies ?: 0, groupMessage.replies ?: 0)
+            holder.messageRepliesCount.setOnClickListener {
+                openGroup(groupMessage)
+            }
+        }
+
         holder.pinned = pinned
         holder.global = global
         on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
@@ -274,11 +280,22 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             holder.message.setTextColor(it.text)
             holder.name.setTextColor(it.text)
             holder.time.setTextColor(it.text)
+            holder.messageRepliesCount.compoundDrawableTintList = it.tint
+            holder.messageRepliesCount.setTextColor(it.text)
+            holder.messageRepliesCount.setBackgroundResource(it.clickableRoundedBackground)
             holder.group.setTextColor(it.text)
             holder.action.setTextColor(it.text)
             holder.eventMessage.setTextColor(it.hint)
             holder.pinnedIndicator.imageTintList = it.tint
         })
+    }
+
+    private fun openGroup(groupMessage: GroupMessage) {
+        on<DisposableHandler>().add(on<ApiHandler>().getGroupForGroupMessage(groupMessage.id!!).subscribe({ group ->
+            on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id, true)
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        }))
     }
 
     override fun onViewRecycled(holder: GroupMessageViewHolder) {
@@ -328,6 +345,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
         internal var rating: RatingBar
         internal var custom: ConstraintLayout
         internal var pinnedIndicator: ImageView
+        internal var messageRepliesCount: TextView
         internal var messageActionLayout: MaxSizeFrameLayout
         internal var messageActionProfile: TextView
         internal var messageActionShare: TextView
@@ -360,6 +378,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessagesAdapter.Gr
             custom = itemView.findViewById(R.id.custom)
             pinnedIndicator = itemView.findViewById(R.id.pinnedIndicator)
             reactionsRecyclerView = itemView.findViewById(R.id.reactionsRecyclerView)
+            messageRepliesCount = itemView.findViewById(R.id.messageRepliesCount)
             messageActionLayout = itemView.findViewById(R.id.messageActionLayout)
             messageActionProfile = itemView.findViewById(R.id.messageActionProfile)
             messageActionShare = itemView.findViewById(R.id.messageActionShare)

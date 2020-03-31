@@ -32,9 +32,8 @@ class PhoneGroupsFragment : PoolActivityFragment() {
         phoneDisposableGroup = disposableGroup.group()
 
         searchGroupsAdapter = SearchGroupsAdapter(on, false, { group, view ->
-            (on<ActivityHandler>().activity as CircularRevealActivity).finish {
                on<GroupActivityTransitionHandler>().showGroupMessages(view, group.id)
-        } }, null).apply {
+        }, null).apply {
             setActionText(on<ResourcesHandler>().resources.getString(R.string.open_group))
             setLayoutResId(R.layout.search_groups_item_light)
             setBackgroundResId(R.drawable.clickable_green_flat)

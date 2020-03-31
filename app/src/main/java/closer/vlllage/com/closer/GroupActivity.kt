@@ -163,7 +163,6 @@ class GroupActivity : CircularRevealActivity() {
 
                 showGroupName(group)
 
-
                 if (!group.hasEvent()) {
                     view.groupDetails.visible = false
                     view.groupDetails.text = ""
@@ -187,7 +186,7 @@ class GroupActivity : CircularRevealActivity() {
                 view.groupDetails.text = on<EventDetailsHandler>().formatEventDetails(event)
             }
 
-            onPhoneChanged { phone ->
+            onPhoneUpdated { phone ->
                 setGroupBackground(phone)
                 view.groupDetails.visible = false
                 view.groupDetails.text = ""

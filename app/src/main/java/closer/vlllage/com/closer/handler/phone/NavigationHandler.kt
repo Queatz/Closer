@@ -9,30 +9,30 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.queatz.on.On
 
 class NavigationHandler constructor(private val on: On) {
-    fun showProfile(phoneId: String, view: View? = null, meet: Boolean = false) {
+    fun showProfile(phoneId: String, view: View? = null, meet: Boolean = false, close: Boolean = false) {
         val runnable = { on<GroupActivityTransitionHandler>().showGroupForPhone(view, phoneId, meet) }
 
-        if (on<ActivityHandler>().activity is CircularRevealActivity) {
+        if (close && on<ActivityHandler>().activity is CircularRevealActivity) {
             (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)
         } else {
             runnable.invoke()
         }
     }
 
-    fun showGroup(groupId: String, view: View? = null) {
+    fun showGroup(groupId: String, view: View? = null, close: Boolean = false) {
         val runnable = { on<GroupActivityTransitionHandler>().showGroupMessages(view, groupId) }
 
-        if (on<ActivityHandler>().activity is CircularRevealActivity) {
+        if (close && on<ActivityHandler>().activity is CircularRevealActivity) {
             (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)
         } else {
             runnable.invoke()
         }
     }
 
-    fun showMap(message: String? = null) {
+    fun showMap(message: String? = null, close: Boolean = true) {
         val runnable = { on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_MAP, message) }
 
-        if (on<ActivityHandler>().activity is CircularRevealActivity) {
+        if (close && on<ActivityHandler>().activity is CircularRevealActivity) {
             (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)
         } else {
             runnable.invoke()

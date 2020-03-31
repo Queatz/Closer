@@ -17,12 +17,26 @@
             android:clipToPadding="false">
 
             <TextView
+                android:id="@+id/phoneVerifiedTextView"
+                android:textColor="@color/textHintInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad"
+                android:drawableStart="@drawable/ic_verified_user_black_24dp"
+                android:drawableTint="@color/green700"
+                android:drawablePadding="@dimen/pad"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:text="@string/phone_verified" />
+
+            <TextView
                 android:id="@+id/activeTextView"
                 android:textColor="@color/textHintInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/padDouble"
-                tools:text="Last active 1 week ago"/>
+                tools:text="Last active 1 week ago" />
 
             <TextView
                 android:textStyle="bold"

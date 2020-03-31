@@ -93,7 +93,7 @@
             android:theme="@style/AppTheme.Translucent"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

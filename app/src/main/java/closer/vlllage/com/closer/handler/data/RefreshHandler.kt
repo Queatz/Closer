@@ -67,7 +67,7 @@ class RefreshHandler constructor(private val on: On) {
     }
 
     fun refreshGroupContacts(groupId: String) {
-        on<DisposableHandler>().add(on<ApiHandler>().getContacts(groupId).subscribe({ this.handleGroupContacts(it, noGroups = true) },
+        on<DisposableHandler>().add(on<ApiHandler>().getContacts(groupId).subscribe({ handleGroupContacts(it, noGroups = true) },
                 connectionError))
     }
 
@@ -213,11 +213,13 @@ class RefreshHandler constructor(private val on: On) {
                             if (existing != null && (
                                     !on<ListEqual>().isEqual(message.reactions, existing.reactions)) ||
                                     existing?.text != message.text ||
-                                    existing?.attachment != message.attachment
+                                    existing?.attachment != message.attachment ||
+                                    existing?.replies != message.replies
                             ) {
                                 existing!!.reactions = message.reactions
                                 existing!!.text = message.text
                                 existing!!.attachment = message.attachment
+                                existing!!.replies = message.replies
                                 groupMessageBox.put(existing!!)
                             }
                         }

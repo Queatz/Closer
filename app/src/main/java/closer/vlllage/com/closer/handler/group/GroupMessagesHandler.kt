@@ -56,8 +56,8 @@ class GroupMessagesHandler constructor(private val on: On) {
         recyclerView.adapter = groupMessagesAdapter
 
         groupMessagesAdapter.onSuggestionClickListener = { suggestion -> (on<ActivityHandler>().activity as CircularRevealActivity).finish { on<MapActivityHandler>().showSuggestionOnMap(suggestion) } }
-        groupMessagesAdapter.onEventClickListener = { event -> (on<ActivityHandler>().activity as CircularRevealActivity).finish { on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) } }
-        groupMessagesAdapter.onGroupClickListener = { group -> (on<ActivityHandler>().activity as CircularRevealActivity).finish { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id) } }
+        groupMessagesAdapter.onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
+        groupMessagesAdapter.onGroupClickListener = { group -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id) }
 
 
         this.replyMessage.setOnEditorActionListener { textView, action, _ ->

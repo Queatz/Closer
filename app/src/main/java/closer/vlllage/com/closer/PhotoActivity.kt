@@ -27,14 +27,17 @@ class PhotoActivity : CircularRevealActivity() {
         photo = findViewById(R.id.photo)
         photo.maximumScale = 8f
 
-        photo.setOnViewDragListener { dx, dy ->
+        photo.setOnSingleFlingListener { _, _, velocityX, velocityY ->
             if (photo.scale != 1f) {
-                return@setOnViewDragListener
+                return@setOnSingleFlingListener false
             }
 
-            if (abs(dx) > SLOP_RADIUS || abs(dy) > SLOP_RADIUS) {
+            if (abs(velocityX) > SLOP_RADIUS || abs(velocityY) > SLOP_RADIUS) {
                 finish()
+                return@setOnSingleFlingListener true
             }
+
+            return@setOnSingleFlingListener false
         }
 
         enterAnimationCompleteObservable.onNext(true)

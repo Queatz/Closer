@@ -10,6 +10,7 @@ class GroupMessageResult : ModelResult() {
     var attachment: String? = null
     var phone: PhoneResult? = null
     var reactions: List<ReactionCount> = listOf()
+    var replies: Int? = null
 
     companion object {
         fun from(result: GroupMessageResult): GroupMessage {
@@ -22,6 +23,7 @@ class GroupMessageResult : ModelResult() {
             groupMessage.updated = result.updated
             groupMessage.attachment = result.attachment
             groupMessage.reactions = result.reactions
+            groupMessage.replies = result.replies
             return groupMessage
         }
     }
