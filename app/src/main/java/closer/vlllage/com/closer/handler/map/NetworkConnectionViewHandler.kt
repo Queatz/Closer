@@ -4,12 +4,13 @@ import android.view.View
 
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import com.queatz.on.On
+import kotlinx.android.synthetic.main.activity_maps.view.*
 
 class NetworkConnectionViewHandler constructor(private val on: On) {
 
-    private var connectionErrorView: View? = null
+    private lateinit var connectionErrorView: View
     private val hideCallback = Runnable {
-        connectionErrorView?.visibility = View.GONE
+        hide()
     }
 
     fun attach(connectionErrorView: View) {
@@ -17,12 +18,18 @@ class NetworkConnectionViewHandler constructor(private val on: On) {
         on<ConnectionErrorHandler>().onConnectionErrorListener = {
             show()
         }
+
+        this.connectionErrorView.setOnClickListener { hide() }
+    }
+
+    fun hide() {
+        connectionErrorView.visibility = View.GONE
     }
 
     private fun show() {
-        connectionErrorView?.visibility = View.VISIBLE
-        connectionErrorView?.removeCallbacks(hideCallback)
-        connectionErrorView?.postDelayed(hideCallback, NETWORK_CONNECTION_ERROR_TIMEOUT_MS)
+        connectionErrorView.visibility = View.VISIBLE
+        connectionErrorView.removeCallbacks(hideCallback)
+        connectionErrorView.postDelayed(hideCallback, NETWORK_CONNECTION_ERROR_TIMEOUT_MS)
     }
 
     companion object {

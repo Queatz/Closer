@@ -19,7 +19,6 @@ import com.queatz.on.On
 
 class GroupActivityTransitionHandler constructor(private val on: On) {
 
-    @JvmOverloads
     fun showGroupMessages(view: View?, groupId: String?, isRespond: Boolean = false, isMeet: Boolean = false, isNewMember: Boolean = false) {
         if (groupId == null) {
             on<DefaultAlerts>().thatDidntWork()
@@ -55,6 +54,7 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
             intent.putExtra(EXTRA_NEW_MEMBER, true)
         }
 
+        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         return intent
     }
@@ -80,10 +80,12 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
 
     @SuppressLint("CheckResult")
     fun showGroupForPhone(view: View?, phoneId: String, meet: Boolean = false) {
-        on<DataHandler>().getGroupForPhone(phoneId).subscribe({
-            on<GroupActivityTransitionHandler>().showGroupMessages(view, it.id, isMeet = meet)
-        }, {
-            on<DefaultAlerts>().thatDidntWork()
-        })
+        on<ApplicationHandler>().app.on<DisposableHandler>().add(
+                on<DataHandler>().getGroupForPhone(phoneId).subscribe({
+                    on<GroupActivityTransitionHandler>().showGroupMessages(view, it.id, isMeet = meet)
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                })
+        )
     }
 }

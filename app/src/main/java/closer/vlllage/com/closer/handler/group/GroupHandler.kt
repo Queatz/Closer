@@ -82,7 +82,7 @@ class GroupHandler constructor(private val on: On) {
     private val groupUpdated = PublishSubject.create<Group>()
     private val eventChanged = BehaviorSubject.create<Event>()
     private val phoneChanged = BehaviorSubject.create<Phone>()
-    private val phoneUpdated = PublishSubject.create<Phone>()
+    private val phoneUpdated = BehaviorSubject.create<Phone>()
     private val contactInfoChanged = BehaviorSubject.create<ContactInfo>()
     private val groupMemberChanged = BehaviorSubject.create<GroupMember>()
     private val contactInfo = ContactInfo()
@@ -153,7 +153,6 @@ class GroupHandler constructor(private val on: On) {
                 .equal(Phone_.id, phoneId)
                 .build()
                 .subscribe()
-                .single()
                 .on(AndroidScheduler.mainThread())
                 .observer {
                     if (it.isEmpty()) return@observer

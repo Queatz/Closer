@@ -80,10 +80,7 @@ abstract class ListActivity : PoolActivity() {
                 overridePendingTransition(0, 0)
                 finishAnimator = null
 
-                if (finishCallback != null) {
-                    finishCallback!!.run()
-                    finishCallback = null
-                }
+                finishCallback?.run()
             }
 
             override fun onAnimationRepeat(animation: Animation) {
