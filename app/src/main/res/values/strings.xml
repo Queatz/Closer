@@ -29,7 +29,7 @@
     <string name="create_public_group">Create public group</string>
     <string name="enter_group_name">Enter group name…</string>
     <string name="wait_for_it">Wait for it…</string>
-    <string name="phone_number_or_name">Phone number or contact</string>
+    <string name="phone_number_or_name">Invite by phone number or name</string>
     <string name="show_contacts">Search phone contacts</string>
     <string name="send_code">Send code</string>
     <string name="enter_your_phone_number">Enter your phone number</string>

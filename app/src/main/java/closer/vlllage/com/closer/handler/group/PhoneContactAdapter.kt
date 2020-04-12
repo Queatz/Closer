@@ -70,11 +70,14 @@ class PhoneContactAdapter(on: On,
 
                     holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
 
+                    holder.phoneIcon.setOnClickListener(null)
+
                     if (groupContact.photo != null) {
                         holder.phoneIconIsPhoto = true
                         holder.phoneIcon.imageTintList = null
                         holder.phoneIcon.alpha = 1f
                         on<PhotoHelper>().loadCircle(holder.phoneIcon, groupContact.photo!!, R.dimen.profilePhotoSmall)
+                        holder.phoneIcon.setOnClickListener { on<PhotoActivityTransitionHandler>().show(holder.phoneIcon, groupContact.photo!!) }
                     } else {
                         holder.disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
                                 .equal(Phone_.id, groupContact.contactId!!)
@@ -89,6 +92,7 @@ class PhoneContactAdapter(on: On,
                                             holder.phoneIcon.imageTintList = null
                                             holder.phoneIcon.alpha = 1f
                                             on<PhotoHelper>().loadCircle(holder.phoneIcon, phone.photo!!, R.dimen.profilePhotoSmall)
+                                            holder.phoneIcon.setOnClickListener { on<PhotoActivityTransitionHandler>().show(holder.phoneIcon, phone.photo!!) }
                                         }
                                     }
                                 })
