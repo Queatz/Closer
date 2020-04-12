@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.content.res.ColorStateList
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,7 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.helpers.DisposableGroup
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.LightDarkColors
-import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
@@ -63,8 +61,8 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
     }
 
     private fun recolor(item: GroupToolbarHandler.ToolbarItem, button: Button, colors: LightDarkColors, selected: GroupActivity.ContentViewType?) {
-        button.compoundDrawableTintList = if (item.value == selected) colors.tintSelected else colors.tint
-        button.setTextColor(if (item.value == selected) colors.selected else colors.text)
+        button.compoundDrawableTintList = if (item.color !== null) ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(item.color!!)) else if (item.value == selected) colors.tintSelected else colors.tint
+        button.setTextColor(if (item.color !== null) on<ResourcesHandler>().resources.getColor(R.color.textHintInverse) else if (item.value == selected) colors.selected else colors.text)
         button.setBackgroundResource(colors.clickableRoundedBackground8dp)
     }
 

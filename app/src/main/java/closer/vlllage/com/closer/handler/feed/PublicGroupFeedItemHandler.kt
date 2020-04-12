@@ -10,15 +10,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
-import closer.vlllage.com.closer.handler.data.LocationHandler
-import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
@@ -38,6 +37,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var saySomethingHeader: TextView
     private lateinit var searchGroupsAdapter: SearchGroupsAdapter
     private lateinit var groupsHeader: TextView
+    private lateinit var eventsHeader: TextView
     private lateinit var groupsRecyclerView: RecyclerView
     private lateinit var sendSomethingButton: ImageButton
     private lateinit var peopleContainer: ViewGroup
@@ -48,6 +48,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         this.itemView = itemView
         groupsRecyclerView = itemView.publicGroupsRecyclerView
         groupsHeader = itemView.publicGroupsHeader
+        eventsHeader = itemView.eventsHeader
         val eventsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicEventsRecyclerView)
         val hubsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicHubsRecyclerView)
         val actionRecyclerView = itemView.findViewById<RecyclerView>(R.id.groupActionsRecyclerView)
@@ -58,6 +59,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         saySomethingHeader = itemView.saySomethingHeader
         sendSomethingButton = itemView.sendSomethingButton
         peopleContainer = itemView.peopleContainer
+
+        setupAppsToolbar(itemView.appsToolbar!!)
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
 
@@ -185,12 +188,59 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         }
     }
 
+    private fun setupAppsToolbar(appsToolbar: RecyclerView) {
+        val adapter = ToolbarAdapter(on, {})
+
+        appsToolbar.layoutManager = LinearLayoutManager(appsToolbar.context, RecyclerView.HORIZONTAL, false)
+        appsToolbar.adapter = adapter
+
+        adapter.items = mutableListOf(
+                GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.explore),
+                        R.drawable.ic_search_black_24dp,
+                        View.OnClickListener {
+                            on<AccountHandler>().updatePrivateOnly(false)
+                        },
+                        color = R.color.green),
+                GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.calendar),
+                        R.drawable.ic_event_note_black_24dp,
+                        View.OnClickListener {
+                            // Show calendar and expand feed to 90%
+                        },
+                        color = R.color.red),
+                GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.groups),
+                        R.drawable.ic_group_black_24dp,
+                        View.OnClickListener {
+                            on<AccountHandler>().updatePrivateOnly(true)
+                        },
+                        color = R.color.colorPrimary),
+                GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.activity),
+                        R.drawable.ic_notifications_black_24dp,
+                        View.OnClickListener {
+                            // Show my notifications
+                            // Show my recent direct messages
+                        },
+                        color = R.color.colorAccent),
+                GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.settings),
+                        R.drawable.ic_settings_black_24dp,
+                        View.OnClickListener {
+                            on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_SETTINGS)
+                        },
+                        color = R.color.dark)
+        )
+    }
+
     private fun updatePrivateOnly() {
         val showPublic = on<AccountHandler>().privateOnly.not()
         saySomethingHeader.visible = showPublic
         saySomething.visible = showPublic
         sendSomethingButton.visible = showPublic
         peopleContainer.visible = showPublic
+        eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
         groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
         itemView.feedText.setText(if (showPublic) R.string.conversations_around_here else R.string.conversations)
         searchGroupsAdapter.showCreateOption(showPublic)

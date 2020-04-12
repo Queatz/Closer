@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.group
 
 import android.view.View
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -353,8 +354,11 @@ class GroupToolbarHandler constructor(private val on: On) {
                 .finish { on<MapActivityHandler>().showEventOnMap(event!!) }
     }
 
-    class ToolbarItem(var name: String,
-                      @field:DrawableRes var icon: Int,
-                      var onClickListener: View.OnClickListener,
-                      var value: GroupActivity.ContentViewType? = null)
+    class ToolbarItem(
+            var name: String,
+            @field:DrawableRes var icon: Int,
+            var onClickListener: View.OnClickListener,
+            var value: GroupActivity.ContentViewType? = null,
+            @field:ColorRes var color: Int? = null
+    )
 }
