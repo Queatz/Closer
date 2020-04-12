@@ -75,6 +75,21 @@ class GroupContactsHandler constructor(private val on: On) {
                         MenuHandler.MenuOption(R.drawable.ic_person_black_24dp, R.string.view_profile) {
                             on<NavigationHandler>().showMyProfile()
                         },
+                        MenuHandler.MenuOption(R.drawable.ic_chat_black_24dp, R.string.change_your_group_status) {
+                            on<DefaultInput>().show(
+                                    R.string.your_group_status,
+                                    button = R.string.update,
+                                    prefill = groupContact.status
+                            ) {
+                                on<GroupContactHandler>().updateGroupStatus(groupContact, it)
+                            }
+                        },
+                        MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.change_your_group_photo) {
+                            on<DefaultMenus>().uploadPhoto { photoId ->
+                                val photo = on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)
+                                on<GroupContactHandler>().updateGroupPhoto(groupContact, photo)
+                            }
+                        },
                         MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.leave_group_action) {
                     on<AlertHandler>().make().apply {
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.leave_group, group.name)

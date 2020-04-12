@@ -70,27 +70,40 @@ class PhoneContactAdapter(on: On,
 
                     holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
 
-                    holder.disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
-                            .equal(Phone_.id, groupContact.contactId!!)
-                            .build()
-                            .subscribe()
-                            .on(AndroidScheduler.mainThread())
-                            .single()
-                            .observer {
-                                it.firstOrNull()?.let { phone ->
-                                    if (phone.photo != null) {
-                                        holder.phoneIconIsPhoto = true
-                                        holder.phoneIcon.imageTintList = null
-                                        holder.phoneIcon.alpha = 1f
-                                        on<PhotoHelper>().loadCircle(holder.phoneIcon, phone.photo!!, R.dimen.profilePhotoSmall)
+                    if (groupContact.photo != null) {
+                        holder.phoneIconIsPhoto = true
+                        holder.phoneIcon.imageTintList = null
+                        holder.phoneIcon.alpha = 1f
+                        on<PhotoHelper>().loadCircle(holder.phoneIcon, groupContact.photo!!, R.dimen.profilePhotoSmall)
+                    } else {
+                        holder.disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
+                                .equal(Phone_.id, groupContact.contactId!!)
+                                .build()
+                                .subscribe()
+                                .on(AndroidScheduler.mainThread())
+                                .single()
+                                .observer {
+                                    it.firstOrNull()?.let { phone ->
+                                        if (phone.photo != null) {
+                                            holder.phoneIconIsPhoto = true
+                                            holder.phoneIcon.imageTintList = null
+                                            holder.phoneIcon.alpha = 1f
+                                            on<PhotoHelper>().loadCircle(holder.phoneIcon, phone.photo!!, R.dimen.profilePhotoSmall)
+                                        }
                                     }
-                                }
-                            })
+                                })
+                    }
 
                     val isMe = on<PersistenceHandler>().phoneId == groupContact.contactId
                     holder.name.text = on<NameHandler>().getName(groupContact)
                     holder.action.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.options else R.string.profile)
-                    holder.number.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.member_you else R.string.member)
+
+                    if (groupContact.status != null) {
+                        holder.number.text = if (isMe) on<ResourcesHandler>().resources.getString(R.string.text_you, groupContact.status) else groupContact.status
+                    } else {
+                        holder.number.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.member_you else R.string.member)
+                    }
+
                     holder.itemView.setOnClickListener {
                         onGroupContactClickListener?.invoke(groupContact)
                     }
@@ -116,7 +129,7 @@ class PhoneContactAdapter(on: On,
         holder.phoneIcon.setImageResource(R.drawable.ic_person_add_black_24dp)
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.invite)
         holder.name.text = if (contact.name == null) on<ResourcesHandler>().resources.getString(R.string.invite_by_phone) else contact.name
-        holder.number.text = if (contact.phoneNumber == null) on<ResourcesHandler>().resources.getString(R.string.no_name) else contact.phoneNumber
+        holder.number.text = if (contact.phoneNumber == null) on<ResourcesHandler>().resources.getString(R.string.no_details) else contact.phoneNumber
         holder.itemView.setOnClickListener {
             onPhoneContactClickListener?.invoke(contact)
         }

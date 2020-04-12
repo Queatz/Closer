@@ -9,4 +9,6 @@ class GroupContact : BaseObject() {
     var contactId: String? = null
     var contactName: String? = null
     var contactActive: Date? = null
+    var status: String? = null
+    var photo: String? = null
 }

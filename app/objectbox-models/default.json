@@ -237,7 +237,7 @@
     },
     {
       "id": "4:5817218640394675404",
-      "lastPropertyId": "9:6571211007072002545",
+      "lastPropertyId": "11:5008869066485327018",
       "name": "GroupContact",
       "properties": [
         {
@@ -281,6 +281,16 @@
           "id": "9:6571211007072002545",
           "name": "contactActive",
           "type": 10
+        },
+        {
+          "id": "10:4172490813054607929",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "11:5008869066485327018",
+          "name": "photo",
+          "type": 9
         }
       ],
       "relations": []

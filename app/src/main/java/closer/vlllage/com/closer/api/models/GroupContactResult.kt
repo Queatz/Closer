@@ -7,6 +7,8 @@ class GroupContactResult : ModelResult() {
     var from: String? = null
     var phone: PhoneResult? = null
     var group: GroupResult? = null
+    var status: String? = null
+    var photo: String? = null
 
     companion object {
 
@@ -18,6 +20,8 @@ class GroupContactResult : ModelResult() {
             groupContact.contactName = groupContactResult.phone!!.name
             groupContact.contactActive = groupContactResult.phone!!.updated
             groupContact.updated = groupContactResult.updated
+            groupContact.status = groupContactResult.status
+            groupContact.photo = groupContactResult.photo
             return groupContact
         }
     }

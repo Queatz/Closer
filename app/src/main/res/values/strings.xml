@@ -368,6 +368,13 @@
     <string name="phone_verified">Phone verified</string>
     <string name="loading">Loading people, please wait…</string>
     <string name="nobody">Nobody</string>
+    <string name="no_details">No details</string>
+    <string name="change_your_group_status">Set your status in this group</string>
+    <string name="change_your_group_photo">Set your photo in this group</string>
+    <string name="your_group_status">Your status in this group</string>
+    <string name="text_you">%1$s (You)</string>
+    <string name="group_status_changed">Group status changed</string>
+    <string name="group_photo_changed">Group photo changed</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

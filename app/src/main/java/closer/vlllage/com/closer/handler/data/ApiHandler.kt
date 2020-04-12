@@ -172,6 +172,14 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.leaveGroup(groupId, true))
     }
 
+    fun updateGroupStatus(groupId: String, status: String): Single<SuccessResult> {
+        return uiThread(api.backend.updateGroupStatus(groupId, status))
+    }
+
+    fun updateGroupPhoto(groupId: String, photo: String): Single<SuccessResult> {
+        return uiThread(api.backend.updateGroupPhoto(groupId, photo))
+    }
+
     fun setGroupPhoto(groupId: String, photo: String): Single<SuccessResult> {
         return uiThread(api.backend.setGroupPhoto(groupId, photo))
     }

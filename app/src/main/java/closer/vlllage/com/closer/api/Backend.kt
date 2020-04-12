@@ -158,6 +158,12 @@ interface Backend {
     fun leaveGroup(@Path("id") groupId: String, @Query("leave") leaveGroup: Boolean): Single<SuccessResult>
 
     @POST("group/{id}")
+    fun updateGroupStatus(@Path("id") groupId: String, @Query("group-status")  status: String): Single<SuccessResult>
+
+    @POST("group/{id}")
+    fun updateGroupPhoto(@Path("id") groupId: String, @Query("group-photo")  photo: String): Single<SuccessResult>
+
+    @POST("group/{id}")
     fun cancelInvite(@Path("id") groupId: String, @Query("cancel-invite") groupInviteId: String): Single<SuccessResult>
 
     @POST("group/{id}")

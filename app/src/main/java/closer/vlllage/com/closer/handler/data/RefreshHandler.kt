@@ -318,6 +318,8 @@ class RefreshHandler constructor(private val on: On) {
                 } else {
                     existingGroupContactsMap[groupContactResult.id]!!.contactName = groupContactResult.phone!!.name
                     existingGroupContactsMap[groupContactResult.id]!!.contactActive = groupContactResult.phone!!.updated
+                    existingGroupContactsMap[groupContactResult.id]!!.photo = groupContactResult.photo
+                    existingGroupContactsMap[groupContactResult.id]!!.status = groupContactResult.status
                     on<StoreHandler>().store.box(GroupContact::class).put(
                             existingGroupContactsMap[groupContactResult.id]!!
                     )
