@@ -116,7 +116,7 @@ class PersonalSlideFragment : PoolFragment() {
         yourName.requestFocus()
 
         actionViewProfile.setOnClickListener {
-            on<NavigationHandler>().showProfile(on<PersistenceHandler>().phoneId!!, actionViewProfile)
+            on<NavigationHandler>().showMyProfile(actionViewProfile)
         }
 
     }

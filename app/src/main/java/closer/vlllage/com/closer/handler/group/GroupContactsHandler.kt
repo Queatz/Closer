@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
+import kotlinx.android.synthetic.main.activity_personal.*
 import java.util.*
 
 class GroupContactsHandler constructor(private val on: On) {
@@ -53,8 +54,10 @@ class GroupContactsHandler constructor(private val on: On) {
             } else {
                 on<AlertHandler>().make().apply {
                     positiveButton = on<ResourcesHandler>().resources.getString(R.string.add_phone_name, phoneContact.firstName)
+                    negativeButton = on<ResourcesHandler>().resources.getString(R.string.profile)
                     message = phoneContact.phoneNumber
-                    positiveButtonCallback = { alertResult -> inviteToGroup(group, phoneContact) }
+                    positiveButtonCallback = { inviteToGroup(group, phoneContact) }
+                    negativeButtonCallback = { on<NavigationHandler>().showProfile(phoneContact.phoneId!!) }
                     title = on<ResourcesHandler>().resources.getString(R.string.add_phone_to_group, phoneContact.firstName, group.name)
                     show()
                 }
@@ -68,7 +71,11 @@ class GroupContactsHandler constructor(private val on: On) {
             }
         }, { groupContact ->
             if (on<PersistenceHandler>().phoneId == groupContact.contactId) {
-                on<MenuHandler>().show(MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.leave_group_action) {
+                on<MenuHandler>().show(
+                        MenuHandler.MenuOption(R.drawable.ic_person_black_24dp, R.string.view_profile) {
+                            on<NavigationHandler>().showMyProfile()
+                        },
+                        MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.leave_group_action) {
                     on<AlertHandler>().make().apply {
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.leave_group, group.name)
                         positiveButtonCallback = { result -> leaveGroup(group) }
