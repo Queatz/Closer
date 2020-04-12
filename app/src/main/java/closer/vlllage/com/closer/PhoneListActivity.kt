@@ -49,40 +49,45 @@ class PhoneListActivity : ListActivity() {
             val goalName = intent.getStringExtra(EXTRA_GOAL_NAME)
             val lifestyleName = intent.getStringExtra(EXTRA_LIFESTYLE_NAME)
 
-            if (lifestyleName != null) {
-                adapter.setHeaderText(getString(R.string.people))
-                on<DisposableHandler>().add(on<ApiHandler>().phonesForLifestyle(lifestyleName)
-                        .subscribe({
-                            adapter.setHeaderText(it.name!!)
-                            adapter.items = it.phones!!.map {
-                                ReactionResult().apply {
-                                    from = it.id
-                                    phone = it
-                                    reaction = ""
+            when {
+                lifestyleName != null -> {
+                    adapter.setHeaderText(getString(R.string.people))
+                    on<DisposableHandler>().add(on<ApiHandler>().phonesForLifestyle(lifestyleName)
+                            .subscribe({
+                                adapter.setHeaderText(it.name!!)
+                                adapter.items = it.phones!!.map {
+                                    ReactionResult().apply {
+                                        from = it.id
+                                        phone = it
+                                        reaction = ""
+                                    }
                                 }
-                            }
-                        }, { on<DefaultAlerts>().thatDidntWork() }))
-            } else if (goalName != null) {
-                adapter.setHeaderText(getString(R.string.people))
-                on<DisposableHandler>().add(on<ApiHandler>().phonesForGoal(goalName)
-                        .subscribe({
-                            adapter.setHeaderText(it.name!!)
-                            adapter.items = it.phones!!.map {
-                                ReactionResult().apply {
-                                    from = it.id
-                                    phone = it
-                                    reaction = ""
+                            }, { on<DefaultAlerts>().thatDidntWork() }))
+                }
+                goalName != null -> {
+                    adapter.setHeaderText(getString(R.string.people))
+                    on<DisposableHandler>().add(on<ApiHandler>().phonesForGoal(goalName)
+                            .subscribe({
+                                adapter.setHeaderText(it.name!!)
+                                adapter.items = it.phones!!.map {
+                                    ReactionResult().apply {
+                                        from = it.id
+                                        phone = it
+                                        reaction = ""
+                                    }
                                 }
-                            }
-                        }, { on<DefaultAlerts>().thatDidntWork() }))
-            } else if (groupMessageId != null) {
-                adapter.setHeaderText(getString(R.string.reactions))
-                isReactions = true
-                on<DisposableHandler>().add(on<ApiHandler>().groupMessageReactions(groupMessageId)
-                        .map { this.sortItems(it) }
-                        .subscribe({ adapter.items = it }, { on<DefaultAlerts>().thatDidntWork() }))
-            } else {
-                on<DefaultAlerts>().thatDidntWork()
+                            }, { on<DefaultAlerts>().thatDidntWork() }))
+                }
+                groupMessageId != null -> {
+                    adapter.setHeaderText(getString(R.string.reactions))
+                    isReactions = true
+                    on<DisposableHandler>().add(on<ApiHandler>().groupMessageReactions(groupMessageId)
+                            .map { this.sortItems(it) }
+                            .subscribe({ adapter.items = it }, { on<DefaultAlerts>().thatDidntWork() }))
+                }
+                else -> {
+                    on<DefaultAlerts>().thatDidntWork()
+                }
             }
         }
 

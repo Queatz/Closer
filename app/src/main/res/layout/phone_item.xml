@@ -12,19 +12,17 @@
 
     <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/photo"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:background="?selectableItemBackgroundBorderless"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginTop="@dimen/pad"
         android:layout_marginBottom="@dimen/pad"
+        android:layout_marginStart="@dimen/pad"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:scaleType="centerInside"
-        android:padding="@dimen/pad"
-        android:src="@drawable/color_black15_rounded"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_person_black_24dp"
+        android:background="@drawable/clickable_dark_flat" />
 
     <TextView
         android:id="@+id/name"

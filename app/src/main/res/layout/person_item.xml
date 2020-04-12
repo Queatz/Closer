@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/pad"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_person_black_24dp"/>
 
     <TextView

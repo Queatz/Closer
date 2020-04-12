@@ -34,6 +34,8 @@ class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult
                 is PhoneHeaderViewHolder -> {
                     headerViewHolder = holder
                     holder.name.text = headerText
+                    holder.loadingText.visible = isLoading || items.isEmpty()
+                    holder.loadingText.setText(if (isLoading) R.string.loading else R.string.nobody)
                     holder.itemView.searchGroups.visible = false
                 }
             }
@@ -75,5 +77,6 @@ class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult
 
     class PhoneHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.name)
+        val loadingText: TextView = view.findViewById(R.id.loadingText)
     }
 }

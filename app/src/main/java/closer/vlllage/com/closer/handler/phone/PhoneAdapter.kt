@@ -13,13 +13,17 @@ import closer.vlllage.com.closer.handler.helpers.PhotoHelper
 import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
+import kotlinx.android.synthetic.main.person_item.view.*
 
 open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionResult) -> Unit) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
     var items: List<ReactionResult> = listOf()
         set(items) {
             field = items
+            isLoading = false
             notifyDataSetChanged()
         }
+
+    var isLoading = true
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(LayoutInflater.from(viewGroup.context)
@@ -34,13 +38,14 @@ open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionRe
                 viewHolder.name.text = on<NameHandler>().getName(reaction.phone!!.id!!)
                 viewHolder.reaction.text = reaction.reaction
 
-                if (on<Val>().isEmpty(reaction.phone?.photo)) {
-                    viewHolder.photo.visibility = View.GONE
+                if (reaction.phone!!.photo == null) {
+                    viewHolder.photo.setImageResource(R.drawable.ic_person_black_24dp)
+                    viewHolder.photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 } else {
-                    viewHolder.photo.visibility = View.VISIBLE
                     on<PhotoHelper>().loadCircle(viewHolder.photo, reaction.phone!!.photo!!)
-                    viewHolder.photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(viewHolder.photo, reaction.phone!!.photo!!) }
+                    viewHolder.photo.scaleType = ImageView.ScaleType.CENTER_CROP
                 }
+                viewHolder.photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(viewHolder.photo, reaction.phone!!.photo!!) }
 
                 viewHolder.itemView.setOnClickListener { v -> onReactionClickListener.invoke(reaction) }
             }

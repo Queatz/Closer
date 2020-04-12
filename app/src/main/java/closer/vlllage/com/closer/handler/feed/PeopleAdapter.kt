@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.feed
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -50,8 +51,10 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
 
         if (person.photo == null) {
             holder.itemView.photo.setImageResource(R.drawable.ic_person_black_24dp)
+            holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
         } else {
             on<PhotoHelper>().loadCircle(holder.itemView.photo, person.photo!!)
+            holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_CROP
         }
 
         holder.itemView.photo.setOnClickListener {

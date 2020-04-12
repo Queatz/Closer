@@ -366,6 +366,8 @@
     <string name="reactions">Reactions</string>
     <string name="people">People</string>
     <string name="phone_verified">Phone verified</string>
+    <string name="loading">Loading people, please wait…</string>
+    <string name="nobody">Nobody</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
