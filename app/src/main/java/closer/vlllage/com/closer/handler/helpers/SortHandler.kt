@@ -60,7 +60,7 @@ class SortHandler constructor(private val on: On) {
     }
 
     fun sortSuggestions(latLng: LatLng): Comparator<Suggestion> {
-        return kotlin.Comparator { o1, o2 ->
+        return Comparator { o1, o2 ->
             val d1 = FloatArray(1)
             val d2 = FloatArray(1)
 
@@ -72,7 +72,7 @@ class SortHandler constructor(private val on: On) {
     }
 
     fun sortPhysicalGroups(latLng: LatLng): Comparator<Group> {
-        return kotlin.Comparator { o1, o2 ->
+        return Comparator { o1, o2 ->
             val d1 = FloatArray(1)
             val d2 = FloatArray(1)
 
@@ -81,5 +81,9 @@ class SortHandler constructor(private val on: On) {
 
             return@Comparator if (d1[0] == d2[0]) 0 else if (d1[0] < d2[0]) -1 else 1
         }
+    }
+
+    fun sortNotifications(): Comparator<Notification> {
+        return Comparator { o1, o2 -> (o2.created ?: Date(0)).compareTo(o1.created ?: Date(0)) }
     }
 }

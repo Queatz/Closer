@@ -2,9 +2,12 @@ package closer.vlllage.com.closer.handler.map
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
-import closer.vlllage.com.closer.handler.feed.GroupPreviewAdapter
+import closer.vlllage.com.closer.handler.feed.FeedContent
+import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
+import closer.vlllage.com.closer.handler.group.GroupToolbarHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler
 import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
@@ -14,6 +17,7 @@ import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
+import closer.vlllage.com.closer.store.models.Notification
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,7 +26,7 @@ import io.reactivex.schedulers.Schedulers
 class FeedHandler constructor(private val on: On) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var groupPreviewAdapter: GroupPreviewAdapter
+    private lateinit var mixedAdapter: MixedHeaderAdapter
 
     fun attach(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
@@ -39,8 +43,15 @@ class FeedHandler constructor(private val on: On) {
                     on<LightDarkHandler>().setLight(it)
                 })
 
-        groupPreviewAdapter = GroupPreviewAdapter(on)
-        recyclerView.adapter = groupPreviewAdapter
+        mixedAdapter = MixedHeaderAdapter(on)
+        recyclerView.adapter = mixedAdapter
+
+        on<DisposableHandler>().add( on<StoreHandler>().store.box(Notification::class).query()
+                .sort(on<SortHandler>().sortNotifications())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .observer { setNotifications(it) })
 
         val distance = .12f
 
@@ -79,7 +90,11 @@ class FeedHandler constructor(private val on: On) {
     }
 
     private fun setGroups(groups: List<Group>) {
-        groupPreviewAdapter.groups = groups.toMutableList()
+        mixedAdapter.groups = groups.toMutableList()
+    }
+
+    private fun setNotifications(notifications: List<Notification>) {
+        mixedAdapter.notifications = notifications.toMutableList()
     }
 
     fun hide() {
@@ -88,5 +103,12 @@ class FeedHandler constructor(private val on: On) {
         }
 
         recyclerView.smoothScrollToPosition(0)
+    }
+
+    fun show(item: GroupToolbarHandler.ToolbarItem) {
+        mixedAdapter.content = when (item.value) {
+            ContentViewType.HOME_ACTIVITY -> FeedContent.NOTIFICATIONS
+            else -> FeedContent.GROUPS
+        }
     }
 }

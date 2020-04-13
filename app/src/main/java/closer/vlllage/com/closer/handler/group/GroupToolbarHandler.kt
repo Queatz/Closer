@@ -5,7 +5,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import closer.vlllage.com.closer.GroupActivity
+import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
@@ -30,7 +30,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ToolbarAdapter
-    val contentView = BehaviorSubject.createDefault(GroupActivity.ContentViewType.MESSAGES)
+    val contentView = BehaviorSubject.createDefault(ContentViewType.MESSAGES)
 
     fun attach(recyclerView: RecyclerView, onToolbarItemSelected: (ToolbarItem) -> Unit) {
         this.recyclerView = recyclerView
@@ -63,36 +63,36 @@ class GroupToolbarHandler constructor(private val on: On) {
                     on<ResourcesHandler>().resources.getString(R.string.about),
                     R.drawable.ic_person_black_24dp,
                     View.OnClickListener {
-                        contentView.onNext(GroupActivity.ContentViewType.PHONE_ABOUT)
+                        contentView.onNext(ContentViewType.PHONE_ABOUT)
                     },
-                    GroupActivity.ContentViewType.PHONE_ABOUT
+                    ContentViewType.PHONE_ABOUT
             ))
 
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.posts),
                     R.drawable.ic_view_day_black_24dp,
                     View.OnClickListener {
-                        contentView.onNext(GroupActivity.ContentViewType.PHONE_MESSAGES)
+                        contentView.onNext(ContentViewType.PHONE_MESSAGES)
                     },
-                    GroupActivity.ContentViewType.PHONE_MESSAGES
+                    ContentViewType.PHONE_MESSAGES
             ))
 
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.photos),
                     R.drawable.ic_photo_black_24dp,
                     View.OnClickListener {
-                        contentView.onNext(GroupActivity.ContentViewType.PHONE_PHOTOS)
+                        contentView.onNext(ContentViewType.PHONE_PHOTOS)
                     },
-                    GroupActivity.ContentViewType.PHONE_PHOTOS
+                    ContentViewType.PHONE_PHOTOS
             ))
 
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.groups),
                     R.drawable.ic_group_black_24dp,
                     View.OnClickListener {
-                        contentView.onNext(GroupActivity.ContentViewType.PHONE_GROUPS)
+                        contentView.onNext(ContentViewType.PHONE_GROUPS)
                     },
-                    GroupActivity.ContentViewType.PHONE_GROUPS
+                    ContentViewType.PHONE_GROUPS
             ))
 
             items.add(ToolbarItem(
@@ -147,9 +147,9 @@ class GroupToolbarHandler constructor(private val on: On) {
                     on<ResourcesHandler>().resources.getString(R.string.events),
                     R.drawable.ic_event_available_black_24dp,
                     View.OnClickListener {
-                        contentView.onNext(GroupActivity.ContentViewType.EVENTS)
+                        contentView.onNext(ContentViewType.EVENTS)
                     },
-                    GroupActivity.ContentViewType.EVENTS
+                    ContentViewType.EVENTS
             ))
         }
 
@@ -158,9 +158,9 @@ class GroupToolbarHandler constructor(private val on: On) {
                     on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count, group.ratingCount!!, group.ratingCount!!),
                     R.drawable.ic_star_black_24dp,
                     View.OnClickListener {
-                        contentView.onNext(GroupActivity.ContentViewType.REVIEWS)
+                        contentView.onNext(ContentViewType.REVIEWS)
                     },
-                    GroupActivity.ContentViewType.REVIEWS
+                    ContentViewType.REVIEWS
             ))
         }
 
@@ -169,9 +169,9 @@ class GroupToolbarHandler constructor(private val on: On) {
                     on<ResourcesHandler>().resources.getString(R.string.members),
                     R.drawable.ic_group_black_24dp,
                     View.OnClickListener {
-                        contentView.onNext(GroupActivity.ContentViewType.CONTACTS)
+                        contentView.onNext(ContentViewType.CONTACTS)
                     },
-                    GroupActivity.ContentViewType.CONTACTS
+                    ContentViewType.CONTACTS
             ))
         }
 
@@ -297,9 +297,9 @@ class GroupToolbarHandler constructor(private val on: On) {
                     on<ResourcesHandler>().resources.getString(R.string.posts),
                     R.drawable.ic_view_day_black_24dp,
                     View.OnClickListener {
-                        contentView.onNext(GroupActivity.ContentViewType.MESSAGES)
+                        contentView.onNext(ContentViewType.MESSAGES)
                     },
-                    GroupActivity.ContentViewType.MESSAGES
+                    ContentViewType.MESSAGES
             ))
         }
 
@@ -358,7 +358,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             var name: String,
             @field:DrawableRes var icon: Int,
             var onClickListener: View.OnClickListener,
-            var value: GroupActivity.ContentViewType? = null,
+            var value: ContentViewType? = null,
             @field:ColorRes var color: Int? = null
     )
 }

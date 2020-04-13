@@ -51,6 +51,7 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
                         if (!app.on<TopHandler>().isGroupActive(data["groupId"]!!)) {
                             app.on<NotificationHandler>().showGroupMessageReactionNotification(
                                     data["reactionFrom"]!!,
+                                    data["groupName"]!!,
                                     data["reaction"]!!,
                                     data["groupId"]!!,
                                     data["passive"])

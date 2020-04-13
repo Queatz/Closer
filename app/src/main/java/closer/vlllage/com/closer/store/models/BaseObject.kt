@@ -10,4 +10,5 @@ open class BaseObject {
     var id: String? = null
     var localOnly: Boolean = false
     var updated: Date? = null
+    var created: Date? = null
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@drawable/clickable_white"
+    android:elevation="@dimen/elevation"
+    android:clipToPadding="false"
+    android:clickable="true"
+    android:padding="@dimen/padDouble">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:importantForAccessibility="no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_notification" />
+
+    <TextView
+        android:id="@+id/notificationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/pad"
+        app:layout_constraintTop_toTopOf="@+id/icon"
+        app:layout_constraintLeft_toRightOf="@+id/icon"
+        android:textSize="14sp"
+        android:textColor="@color/textInverse"
+        android:textStyle="bold"
+        tools:text="Mai Pham" />
+
+    <TextView
+        android:id="@+id/notificationMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/pad"
+        app:layout_constraintLeft_toRightOf="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@+id/notificationName"
+        android:textSize="12sp"
+        android:textColor="@color/textInverse"
+        tools:text="sent you a message" />
+
+    <TextView
+        android:id="@+id/notificationTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/pad"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="12sp"
+        android:textColor="@color/textInverse"
+        android:text="@string/open" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

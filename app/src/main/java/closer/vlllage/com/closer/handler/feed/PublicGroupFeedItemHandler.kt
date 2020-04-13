@@ -8,8 +8,10 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
@@ -39,21 +41,29 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var groupsHeader: TextView
     private lateinit var eventsHeader: TextView
     private lateinit var groupsRecyclerView: RecyclerView
+    private lateinit var eventsRecyclerView: RecyclerView
+    private lateinit var hubsRecyclerView: RecyclerView
+    private lateinit var actionRecyclerView: RecyclerView
+    private lateinit var suggestionsRecyclerView: RecyclerView
+    private lateinit var peopleRecyclerView: RecyclerView
     private lateinit var sendSomethingButton: ImageButton
     private lateinit var peopleContainer: ViewGroup
 
     private lateinit var itemView: View
+    private lateinit var onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit
+    private lateinit var toolbarAdapter: ToolbarAdapter
 
-    fun attach(itemView: View) {
+    fun attach(itemView: View, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
         this.itemView = itemView
+        this.onToolbarItemSelected = onToolbarItemSelected
         groupsRecyclerView = itemView.publicGroupsRecyclerView
         groupsHeader = itemView.publicGroupsHeader
         eventsHeader = itemView.eventsHeader
-        val eventsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicEventsRecyclerView)
-        val hubsRecyclerView = itemView.findViewById<RecyclerView>(R.id.publicHubsRecyclerView)
-        val actionRecyclerView = itemView.findViewById<RecyclerView>(R.id.groupActionsRecyclerView)
-        val suggestionsRecyclerView = itemView.findViewById<RecyclerView>(R.id.suggestionsRecyclerView)
-        val peopleRecyclerView = itemView.findViewById<RecyclerView>(R.id.peopleRecyclerView)
+        eventsRecyclerView = itemView.publicEventsRecyclerView
+        hubsRecyclerView = itemView.publicHubsRecyclerView
+        actionRecyclerView = itemView.groupActionsRecyclerView
+        suggestionsRecyclerView = itemView.suggestionsRecyclerView
+        peopleRecyclerView = itemView.peopleRecyclerView
         searchGroups = itemView.searchGroups
         saySomething = itemView.saySomething
         saySomethingHeader = itemView.saySomethingHeader
@@ -117,11 +127,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             searchGroupsAdapter.setGroups(groups.filter { !it.hasEvent() && !it.physical })
 
             searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
-                itemView.eventsHeader.visible = it.isNotEmpty()
+                itemView.eventsHeader.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITY && it.isNotEmpty()
             })
 
             searchHubsAdapter.setGroups(groups.filter { it.hub }.also {
-                itemView.placesHeader.visible = it.isNotEmpty()
+                itemView.placesHeader.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITY && it.isNotEmpty()
             })
         })
 
@@ -149,10 +159,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 loadSuggestions(center)
                 loadPeople(center)
             }
-            updatePrivateOnly()
+            updateViews()
         })
 
-        updatePrivateOnly()
+        updateViews()
 
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -189,40 +199,53 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun setupAppsToolbar(appsToolbar: RecyclerView) {
-        val adapter = ToolbarAdapter(on, {})
+        toolbarAdapter = ToolbarAdapter(on, onToolbarItemSelected)
 
         appsToolbar.layoutManager = LinearLayoutManager(appsToolbar.context, RecyclerView.HORIZONTAL, false)
-        appsToolbar.adapter = adapter
+        appsToolbar.adapter = toolbarAdapter
+        toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_EXPLORE)
 
-        adapter.items = mutableListOf(
+        on<DisposableHandler>().add(toolbarAdapter.selectedContentView
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { updateViews() })
+
+        toolbarAdapter.items = mutableListOf(
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.explore),
                         R.drawable.ic_search_black_24dp,
                         View.OnClickListener {
+                      toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_EXPLORE)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
+                        value = ContentViewType.HOME_EXPLORE,
                         color = R.color.green),
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.calendar),
                         R.drawable.ic_event_note_black_24dp,
                         View.OnClickListener {
+                      toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CALENDAR)
                             // Show calendar and expand feed to 90%
                         },
+                        value = ContentViewType.HOME_CALENDAR,
                         color = R.color.red),
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.groups),
                         R.drawable.ic_group_black_24dp,
                         View.OnClickListener {
+                      toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_GROUPS)
                             on<AccountHandler>().updatePrivateOnly(true)
                         },
+                        value = ContentViewType.HOME_GROUPS,
                         color = R.color.colorPrimary),
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.activity),
                         R.drawable.ic_notifications_black_24dp,
                         View.OnClickListener {
+                        toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITY)
                             // Show my notifications
                             // Show my recent direct messages
                         },
+                        value = ContentViewType.HOME_ACTIVITY,
                         color = R.color.colorAccent),
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.settings),
@@ -230,20 +253,55 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         View.OnClickListener {
                             on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_SETTINGS)
                         },
+                        value = ContentViewType.EVENTS,
                         color = R.color.dark)
         )
     }
 
-    private fun updatePrivateOnly() {
-        val showPublic = on<AccountHandler>().privateOnly.not()
-        saySomethingHeader.visible = showPublic
-        saySomething.visible = showPublic
-        sendSomethingButton.visible = showPublic
-        peopleContainer.visible = showPublic
-        eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
-        groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
-        itemView.feedText.setText(if (showPublic) R.string.conversations_around_here else R.string.conversations)
-        searchGroupsAdapter.showCreateOption(showPublic)
+    private fun updateViews() {
+        if (toolbarAdapter.selectedContentView.value == ContentViewType.HOME_ACTIVITY) {
+            saySomethingHeader.visible = false
+            saySomething.visible = false
+            sendSomethingButton.visible = false
+            peopleContainer.visible = false
+            eventsHeader.visible = false
+            groupsHeader.visible = false
+            eventsRecyclerView.visible = false
+            hubsRecyclerView.visible = false
+            actionRecyclerView.visible = false
+            suggestionsRecyclerView.visible = false
+            peopleRecyclerView.visible = false
+            groupsRecyclerView.visible = false
+            searchGroups.visible = false
+            itemView.thingsToDoHeader.visible = false
+            itemView.suggestionsHeader.visible = false
+            itemView.placesHeader.visible = false
+            itemView.feedText.setText(R.string.notifications)
+        } else {
+            eventsRecyclerView.visible = true
+            hubsRecyclerView.visible = true
+            actionRecyclerView.visible = true
+            suggestionsRecyclerView.visible = true
+            peopleRecyclerView.visible = true
+            groupsRecyclerView.visible = true
+            eventsHeader.visible = true
+            groupsHeader.visible = true
+            searchGroups.visible = true
+            itemView.thingsToDoHeader.visible = true
+            itemView.suggestionsHeader.visible = true
+            itemView.placesHeader.visible = true
+
+            val showPublic = on<AccountHandler>().privateOnly.not()
+
+            saySomethingHeader.visible = showPublic
+            saySomething.visible = showPublic
+            sendSomethingButton.visible = showPublic
+            peopleContainer.visible = showPublic
+            eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
+            groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
+            itemView.feedText.setText(if (showPublic) R.string.conversations_around_here else R.string.conversations)
+            searchGroupsAdapter.showCreateOption(showPublic)
+        }
     }
 
     private fun loadGroups(target: LatLng) {
@@ -315,8 +373,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { suggestions ->
-                    itemView.suggestionsHeader.visible = suggestions.isNotEmpty() && on<AccountHandler>().privateOnly.not()
-                    itemView.suggestionsRecyclerView.visible = suggestions.isNotEmpty() && on<AccountHandler>().privateOnly.not()
+                    itemView.suggestionsHeader.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITY && suggestions.isNotEmpty() && on<AccountHandler>().privateOnly.not()
+                    itemView.suggestionsRecyclerView.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITY && suggestions.isNotEmpty() && on<AccountHandler>().privateOnly.not()
                     on<SuggestionsRecyclerViewHandler>().setSuggestions(suggestions)
                 })
     }
@@ -379,8 +437,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { groupActions ->
-                    header.visible = groupActions.isNotEmpty()
-                    groupActionsRecyclerView.visible = groupActions.isNotEmpty()
+                    header.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITY && groupActions.isNotEmpty()
+                    groupActionsRecyclerView.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITY && groupActions.isNotEmpty()
                     on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
                 })
     }

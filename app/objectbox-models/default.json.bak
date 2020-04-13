@@ -237,7 +237,7 @@
     },
     {
       "id": "4:5817218640394675404",
-      "lastPropertyId": "9:6571211007072002545",
+      "lastPropertyId": "11:5008869066485327018",
       "name": "GroupContact",
       "properties": [
         {
@@ -281,6 +281,16 @@
           "id": "9:6571211007072002545",
           "name": "contactActive",
           "type": 10
+        },
+        {
+          "id": "10:4172490813054607929",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "11:5008869066485327018",
+          "name": "photo",
+          "type": 9
         }
       ],
       "relations": []
@@ -767,9 +777,64 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "14:7884716220240130593",
+      "lastPropertyId": "9:8543056493752068433",
+      "name": "Notification",
+      "properties": [
+        {
+          "id": "1:965837739793543795",
+          "name": "objectBoxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3985434675620521568",
+          "name": "id",
+          "type": 9
+        },
+        {
+          "id": "3:4897239489651762534",
+          "name": "localOnly",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "4:7143856938105665746",
+          "name": "updated",
+          "type": 10
+        },
+        {
+          "id": "5:6450016529794545377",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "6:4172291114259654614",
+          "name": "message",
+          "type": 9
+        },
+        {
+          "id": "7:4965014871224948179",
+          "name": "intentAction",
+          "type": 9
+        },
+        {
+          "id": "8:5017741968095000876",
+          "name": "intentTarget",
+          "type": 9
+        },
+        {
+          "id": "9:8543056493752068433",
+          "name": "intentBundle",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "13:4594995400673488773",
+  "lastEntityId": "14:7884716220240130593",
   "lastIndexId": "10:9008007724142274179",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

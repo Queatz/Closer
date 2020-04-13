@@ -41,19 +41,9 @@ class GroupActivity : CircularRevealActivity() {
                 ContentViewType.PHONE_PHOTOS -> PhonePhotosFragment()
                 ContentViewType.PHONE_GROUPS -> PhoneGroupsFragment()
                 ContentViewType.PHONE_ABOUT -> PhoneAboutFragment()
+                else -> Fragment()
             })
         }
-
-    enum class ContentViewType {
-        MESSAGES,
-        CONTACTS,
-        EVENTS,
-        REVIEWS,
-        PHONE_ABOUT,
-        PHONE_MESSAGES,
-        PHONE_PHOTOS,
-        PHONE_GROUPS,
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.map.FeedHandler
 import closer.vlllage.com.closer.handler.map.HeaderAdapter
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
@@ -23,37 +25,42 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
-import closer.vlllage.com.closer.ui.CombinedRecyclerAdapter
+import closer.vlllage.com.closer.store.models.Notification
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.group_preview_item.view.*
-import java.lang.Math.max
-import java.lang.Math.min
+import kotlinx.android.synthetic.main.notification_item.view.*
 import java.util.*
+import kotlin.math.min
 
-class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), CombinedRecyclerAdapter.PrioritizedAdapter {
+class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
-    var groups = mutableListOf<Group>()
+    var items = mutableListOf<MixedItem>()
         set(value) {
             val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun getOldListSize() = field.size + HEADER_COUNT
-                override fun getNewListSize() = value.size + HEADER_COUNT
+                override fun getOldListSize() = field.size
+                override fun getNewListSize() = value.size
 
                 override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                    if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT) {
-                        return false
-                    } else if (newPosition < HEADER_COUNT) {
-                        return true
+                    val old = field[oldPosition]
+                    val new = value[newPosition]
+                    return old.type == new.type && when (old) {
+                        is HeaderMixedItem -> true
+                        is GroupMixedItem -> old.group.objectBoxId == (new as GroupMixedItem).group.objectBoxId
+                        is NotificationMixedItem -> old.notification.objectBoxId == (new as NotificationMixedItem).notification.objectBoxId
+                        else -> false
                     }
-
-                    return field[oldPosition - 1].objectBoxId == value[newPosition - 1].objectBoxId
                 }
 
                 override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                    return if (newPosition < HEADER_COUNT != oldPosition < HEADER_COUNT)
-                        false
-                    else
-                        newPosition < HEADER_COUNT
+                    val old = field[oldPosition]
+                    val new = value[newPosition]
+                    return old.type == new.type && when (old) {
+                        is HeaderMixedItem -> true
+                        is GroupMixedItem -> false
+                        is NotificationMixedItem -> true
+                        else -> false
+                    }
                 }
             })
             field.clear()
@@ -61,37 +68,75 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
             diffResult.dispatchUpdatesTo(this)
         }
 
+    var groups = mutableListOf<Group>()
+        set(value) {
+            field = value
+            generate()
+        }
+
+    var notifications = mutableListOf<Notification>()
+        set(value) {
+            field = value
+            generate()
+        }
+
+    var content: FeedContent = FeedContent.GROUPS
+        set(value) {
+            field = value
+            generate()
+        }
+
+    private fun generate() {
+        items = mutableListOf<MixedItem>().apply {
+            add(HeaderMixedItem())
+            when (content) {
+                FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
+                FeedContent.NOTIFICATIONS -> notifications.forEach { add(NotificationMixedItem(it)) }
+            }
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            1 -> HeaderViewHolder(LayoutInflater.from(parent.context)
+            0 -> HeaderViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.feed_item_public_groups, parent, false))
-            else -> ViewHolder(LayoutInflater.from(parent.context)
+            1 -> GroupPreviewViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.group_preview_item, parent, false)).also {
                 it.disposableGroup = on<DisposableHandler>().group()
             }
+            2 -> NotificationViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.notification_item, parent, false)).also {
+                it.disposableGroup = on<DisposableHandler>().group()
+            }
+            else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
         }
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         super.onBindViewHolder(viewHolder, position)
 
-        if (position < HEADER_COUNT) {
-            bindHeader(viewHolder as HeaderViewHolder)
-            return
+        val item = items[position]
+
+        when (viewHolder) {
+            is HeaderViewHolder -> bindHeader(viewHolder)
+            is GroupPreviewViewHolder -> bindGroupPreview(viewHolder, (item as GroupMixedItem).group)
+            is NotificationViewHolder -> bindNotification(viewHolder, (item as NotificationMixedItem).notification)
         }
+    }
 
-        val holder = viewHolder as ViewHolder
-        holder.on = On()
-        holder.on.use(on<ApiHandler>())
-        holder.on.use(on<ApplicationHandler>())
-        holder.on.use(on<ActivityHandler>())
-        holder.on.use(on<ResourcesHandler>())
-        holder.on.use(on<StoreHandler>())
-        holder.on.use(on<MediaHandler>())
-        holder.on.use(on<CameraHandler>())
-        holder.on.use(on<LightDarkHandler>())
+    private fun bindNotification(holder: NotificationViewHolder, notification: Notification) {
+        holder.on = branch()
+        holder.name.text = notification.name ?: ""
+        holder.message.text = notification.message ?: ""
+        holder.time.text = on<TimeStr>().prettyDate(notification.created)
+        holder.itemView.setOnClickListener {
+            on<NotificationHandler>().launch(notification)
+        }
+    }
 
-        val group = groups[position - HEADER_COUNT]
+    private fun bindGroupPreview(holder: GroupPreviewViewHolder, group: Group) {
+        holder.on = branch()
+
         holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
         holder.groupName.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupMessages(holder.groupName, group.id) }
         holder.groupName.setOnLongClickListener {
@@ -182,7 +227,6 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
             on<KeyboardHandler>().showKeyboard(view, false)
         }
 
-
         on<ImageHandler>().get().cancelRequest(holder.backgroundPhoto)
         if (group.photo != null) {
             holder.backgroundPhoto.visibility = View.VISIBLE
@@ -218,50 +262,64 @@ class GroupPreviewAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on), 
         })
     }
 
-    override fun getItemViewType(position: Int) = when (position) {
-        0 -> 1
-        else -> 0
-    }
+    override fun getItemViewType(position: Int) = items[position].type
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
         when (holder) {
             is HeaderViewHolder -> holder.on.off()
-            is ViewHolder -> {
+            is GroupPreviewViewHolder -> {
+                holder.disposableGroup.clear()
+                holder.on.off()
+            }
+            is NotificationViewHolder -> {
                 holder.disposableGroup.clear()
                 holder.on.off()
             }
         }
     }
 
-    override fun getItemCount() = groups.size + HEADER_COUNT
-
-    override fun getItemPriority(position: Int): Int {
-        return max(0, position - if (on<DistanceHandler>().isPhoneNearGroup(groups[position - 1])) 100 else 0)
-    }
+    override fun getItemCount() = items.size
 
     private fun bindHeader(holder: HeaderViewHolder) {
-        holder.on = On()
-        holder.on.use(on<StoreHandler>())
-        holder.on.use(on<SyncHandler>())
-        holder.on.use(on<MapHandler>())
-        holder.on.use(on<ApplicationHandler>())
-        holder.on.use(on<ActivityHandler>())
-        holder.on.use(on<SortHandler>())
-        holder.on.use(on<KeyboardHandler>())
-        holder.on.use(on<GroupMemberHandler>())
-        holder.on.use(on<MediaHandler>())
-        holder.on.use(on<CameraHandler>())
-        holder.on.use(on<ApiHandler>())
-        holder.on.use(on<LightDarkHandler>())
-        holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView)
+        holder.on = branch()
+        holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView) { on<FeedHandler>().show(it) }
     }
+
+    private fun branch() = On().apply {
+        use(on<StoreHandler>())
+        use(on<SyncHandler>())
+        use(on<MapHandler>())
+        use(on<ApplicationHandler>())
+        use(on<ActivityHandler>())
+        use(on<SortHandler>())
+        use(on<KeyboardHandler>())
+        use(on<GroupMemberHandler>())
+        use(on<MediaHandler>())
+        use(on<CameraHandler>())
+        use(on<ApiHandler>())
+        use(on<LightDarkHandler>())
+        use(on<ResourcesHandler>())
+    }
+
+    class HeaderMixedItem : MixedItem(0)
+    class GroupMixedItem(val group: Group) : MixedItem(1)
+    class NotificationMixedItem(val notification: Notification) : MixedItem(2)
+    open class MixedItem(val type: Int)
 
     class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         lateinit var on: On
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        lateinit var on: On
+        lateinit var disposableGroup: DisposableGroup
+        var name = itemView.notificationName!!
+        var message = itemView.notificationMessage!!
+        var time = itemView.notificationTime!!
+    }
+
+    class GroupPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         lateinit var on: On
         var groupName = itemView.groupName!!

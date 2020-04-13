@@ -4,9 +4,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
+import android.os.Parcel
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
@@ -18,14 +21,20 @@ import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_RESPOND
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_LAT_LNG
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_PHONE
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.fromJson
+import closer.vlllage.com.closer.extensions.toJson
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
+import closer.vlllage.com.closer.handler.helpers.JsonHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.Val
+import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
+import closer.vlllage.com.closer.store.models.Group
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
+import java.util.*
 
 class NotificationHandler constructor(private val on: On) {
 
@@ -65,6 +74,17 @@ class NotificationHandler constructor(private val on: On) {
         backgroundIntent.putExtra(EXTRA_PHONE, phone)
         backgroundIntent.putExtra(EXTRA_NOTIFICATION, notificationTag)
 
+        on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
+            created = Date()
+            updated = Date()
+            this.name = name
+            this.message = message
+            intentTarget = intent.component!!.className
+            intentAction = intent.action
+            intentBundle = intent.extras?.toJson(on())
+            on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
+        }!!
+
         show(contentIntent, backgroundIntent, remoteInput, name, message, notificationTag, true)
     }
 
@@ -83,8 +103,19 @@ class NotificationHandler constructor(private val on: On) {
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        show(contentIntent, null, null, on<ResourcesHandler>().resources.getString(R.string.app_name),
-                on<ResourcesHandler>().resources.getString(R.string.invited_to_group_notification, invitedBy, groupName),
+        val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
+            created = Date()
+            updated = Date()
+            name = on<ResourcesHandler>().resources.getString(R.string.app_name)
+            message = on<ResourcesHandler>().resources.getString(R.string.invited_to_group_notification, invitedBy, groupName)
+            intentTarget = intent.component!!.className
+            intentAction = intent.action
+            intentBundle = intent.extras?.toJson(on())
+            on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
+        }!!
+
+        show(contentIntent, null, null, notification.name!!,
+                notification.message!!,
                 "$groupId/invited", true)
     }
 
@@ -103,13 +134,24 @@ class NotificationHandler constructor(private val on: On) {
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
+            created = Date()
+            updated = Date()
+            name = on<ResourcesHandler>().resources.getString(R.string.group_message_notification, messageFrom, groupName)
+            message = on<GroupMessageParseHandler>().parseString(text)
+            intentTarget = intent.component!!.className
+            intentAction = intent.action
+            intentBundle = intent.extras?.toJson(on())
+            on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
+        }!!
+
         show(contentIntent, null, null,
-                on<ResourcesHandler>().resources.getString(R.string.group_message_notification, messageFrom, groupName),
-                on<GroupMessageParseHandler>().parseString(text),
+                notification.name!!,
+                notification.message!!,
                 "$groupId/message", !java.lang.Boolean.valueOf(isPassive))
     }
 
-    fun showGroupMessageReactionNotification(from: String, reaction: String, groupId: String, isPassive: String?) {
+    fun showGroupMessageReactionNotification(from: String, groupName: String, reaction: String, groupId: String, isPassive: String?) {
         val context = on<ApplicationHandler>().app
 
         val intent = Intent(context, GroupActivity::class.java)
@@ -124,9 +166,20 @@ class NotificationHandler constructor(private val on: On) {
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
+            created = Date()
+            updated = Date()
+            name = on<ResourcesHandler>().resources.getString(R.string.group_message_reaction_notification, from, groupName)
+            message = reaction
+            intentTarget = intent.component!!.className
+            intentAction = intent.action
+            intentBundle = intent.extras?.toJson(on())
+            on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
+        }!!
+
         show(contentIntent, null, null,
-                on<ResourcesHandler>().resources.getString(R.string.group_message_reaction_notification, from),
-                reaction,
+                notification.name!!,
+                notification.message!!,
                 "$groupId/message/reaction", !java.lang.Boolean.valueOf(isPassive))
     }
 
@@ -145,15 +198,40 @@ class NotificationHandler constructor(private val on: On) {
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
+            created = Date()
+            updated = Date()
+            name = on<ResourcesHandler>().resources.getString(R.string.event_notification, event.name, on<EventDetailsHandler>().formatRelative(event.startsAt!!))
+            message = on<EventDetailsHandler>().formatEventDetails(event)
+            intentTarget = intent.component!!.className
+            intentAction = intent.action
+            intentBundle = intent.extras?.toJson(on())
+            on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
+        }!!
+
         show(contentIntent, null, null,
-                on<ResourcesHandler>().resources.getString(R.string.event_notification, event.name, on<EventDetailsHandler>().formatRelative(event.startsAt!!)),
-                on<EventDetailsHandler>().formatEventDetails(event),
+                notification.name!!,
+                notification.message!!,
                 event.id!! + "/group", false)
     }
 
     fun hide(notificationTag: String) {
         val notificationManager = NotificationManagerCompat.from(on<ApplicationHandler>().app)
         notificationManager.cancel(notificationTag, NOTIFICATION_ID)
+    }
+
+    fun launch(notification: closer.vlllage.com.closer.store.models.Notification) {
+        val context = on<ApplicationHandler>().app
+
+        val intent = Intent(notification.intentAction)
+        intent.component = ComponentName(
+                context,
+                notification.intentTarget!!
+        )
+        intent.putExtras(Bundle().fromJson(on(), notification.intentBundle!!))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        context.startActivity(intent)
     }
 
     private fun show(contentIntent: PendingIntent, backgroundIntent: Intent?,

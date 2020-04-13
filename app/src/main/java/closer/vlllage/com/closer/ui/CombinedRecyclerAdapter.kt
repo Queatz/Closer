@@ -77,11 +77,10 @@ class CombinedRecyclerAdapter(on: On) : PoolRecyclerAdapter<RecyclerView.ViewHol
                 continue
             }
 
-            val adapterPriority: Int
-            if (adapter is PrioritizedAdapter) {
-                adapterPriority = (adapter as PrioritizedAdapter).getItemPriority(adapterCursors[currentAdapterIndex])
+            val adapterPriority = if (adapter is PrioritizedAdapter) {
+                (adapter as PrioritizedAdapter).getItemPriority(adapterCursors[currentAdapterIndex])
             } else {
-                adapterPriority = adapterCursors[currentAdapterIndex]
+                adapterCursors[currentAdapterIndex]
             }
 
             if (adapterPriority < 0) {
@@ -105,7 +104,7 @@ class CombinedRecyclerAdapter(on: On) : PoolRecyclerAdapter<RecyclerView.ViewHol
         adapterCursors.clear()
         for (ignored in adapters) adapterCursors.add(0)
         adapterItems.clear()
-        on<TimerHandler>().post(Runnable { this.notifyDataSetChanged() })
+        on<TimerHandler>().post(Runnable { notifyDataSetChanged() })
     }
 
     fun notifyAdapterChanged(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
