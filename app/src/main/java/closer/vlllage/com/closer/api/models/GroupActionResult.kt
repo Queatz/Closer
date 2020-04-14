@@ -7,6 +7,7 @@ class GroupActionResult : ModelResult() {
     var name: String? = null
     var intent: String? = null
     var photo: String? = null
+    var flow: String? = null
 
     companion object {
 
@@ -22,6 +23,7 @@ class GroupActionResult : ModelResult() {
             groupAction.intent = groupActionResult.intent
             groupAction.group = groupActionResult.group
             groupAction.photo = groupActionResult.photo
+            groupAction.flow = groupActionResult.flow
             return groupAction
         }
     }

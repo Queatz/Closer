@@ -10,7 +10,7 @@ class StringListJsonConverter : PropertyConverter<List<String>, String> {
     override fun convertToEntityProperty(databaseValue: String?): List<String>? {
         return if (databaseValue == null) {
             null
-        } else gson.fromJson<List<String>>(databaseValue, object : TypeToken<List<String>>() {
+        } else gson.fromJson<List<String>>(databaseValue, object : TypeToken<List<String?>>() {
 
         }.type)
 

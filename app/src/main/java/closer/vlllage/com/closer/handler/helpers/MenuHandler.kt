@@ -5,15 +5,17 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import com.queatz.on.On
+import kotlinx.android.synthetic.main.menu_modal.view.*
 import java.util.*
 
 class MenuHandler constructor(private val on: On) {
-    fun show(vararg menuOptions: MenuOption) {
+    fun show(vararg menuOptions: MenuOption, title: String? = null, button: String? = null, buttonCallback: (() -> Unit)? = null) {
         on<AlertHandler>().make().apply {
             layoutResId = R.layout.menu_modal
             onAfterViewCreated = { alertConfig, view ->
-                val menuRecyclerView = view.findViewById<RecyclerView>(R.id.menuRecyclerView)
+                val menuRecyclerView = view.menuRecyclerView
                 menuRecyclerView.layoutManager = LinearLayoutManager(on<ActivityHandler>().activity, RecyclerView.VERTICAL, false)
                 val options = ArrayList<MenuOption>()
 
@@ -25,8 +27,12 @@ class MenuHandler constructor(private val on: On) {
                     menuOption.callback.invoke()
                     alertConfig.dialog?.dismiss()
                 }
+
+                view.title.visible = title != null
+                view.title.text = title
             }
-            positiveButton = on<ResourcesHandler>().resources.getString(R.string.close)
+            positiveButtonCallback = { buttonCallback?.invoke() }
+            positiveButton = button ?: on<ResourcesHandler>().resources.getString(R.string.close)
             show()
         }
     }

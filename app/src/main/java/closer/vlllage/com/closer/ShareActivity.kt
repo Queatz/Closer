@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.ViewTreeObserver
+import closer.vlllage.com.closer.api.models.GroupResult
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
@@ -22,7 +23,7 @@ import io.objectbox.android.AndroidScheduler
 
 class ShareActivity : ListActivity() {
 
-    private var searchGroupsAdapter: SearchGroupsHeaderAdapter? = null
+    private lateinit var searchGroupsAdapter: SearchGroupsHeaderAdapter
 
     private var groupMessageId: String? = null
     private var phoneId: String? = null
@@ -30,6 +31,7 @@ class ShareActivity : ListActivity() {
     private var groupActionId: String? = null
     private var eventId: String? = null
     private var suggestionId: String? = null
+    private var archeologyLatLngStr: String? = null
     private var groupToShare: Group? = null
     private var groupActionToShare: GroupAction? = null
     private var data: Uri? = null
@@ -49,18 +51,27 @@ class ShareActivity : ListActivity() {
 
         on<SearchGroupHandler>().showGroupsForQuery("")
 
+        archeologyLatLngStr = intent?.getStringExtra(EXTRA_LAT_LNG)
+
         on<DisposableHandler>().add(on<SearchGroupHandler>().groups.subscribe {
-            searchGroupsAdapter?.setGroups(it)
+            searchGroupsAdapter.setGroups(it)
         })
 
-        val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
-        on<DisposableHandler>().add(queryBuilder
-                .sort(on<SortHandler>().sortGroups(false))
-                .build()
-                .subscribe()
-                .single()
-                .on(AndroidScheduler.mainThread())
-                .observer { on<SearchGroupHandler>().setGroups(it) })
+        if (archeologyLatLngStr == null) {
+            val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
+            on<DisposableHandler>().add(queryBuilder
+                    .sort(on<SortHandler>().sortGroups(false))
+                    .build()
+                    .subscribe()
+                    .single()
+                    .on(AndroidScheduler.mainThread())
+                    .observer { on<SearchGroupHandler>().setGroups(it) })
+        } else {
+            val latLng = on<LatLngStr>().to(archeologyLatLngStr!!)
+            on<DisposableHandler>().add(on<ApiHandler>().getInactiveGroups(latLng).subscribe({
+                on<SearchGroupHandler>().setGroups(it.map { GroupResult.from(it) })
+            }, { on<DefaultAlerts>().thatDidntWork() }))
+        }
 
         if (intent != null) {
             groupMessageId = intent.getStringExtra(EXTRA_GROUP_MESSAGE_ID)
@@ -70,7 +81,7 @@ class ShareActivity : ListActivity() {
             eventId = intent.getStringExtra(EXTRA_EVENT_ID)
             suggestionId = intent.getStringExtra(EXTRA_SUGGESTION_ID)
 
-            searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_to))
+            searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_to))
 
             if (Intent.ACTION_SEND == intent.action) {
                 data = intent.data
@@ -79,29 +90,32 @@ class ShareActivity : ListActivity() {
                     data = intent.extras!!.get(Intent.EXTRA_STREAM) as Uri
                 }
             } else if (Intent.ACTION_VIEW == intent.action) {
-                if (phoneId != null) {
-                    searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.add_person_to, on<NameHandler>().getName(phoneId!!)))
-                    searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.add))
+                if (archeologyLatLngStr != null) {
+                    searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.expired_groups))
+                    searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.open_group))
+                } else if (phoneId != null) {
+                    searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.add_person_to, on<NameHandler>().getName(phoneId!!)))
+                    searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.add))
                 } else if (groupId != null) {
                     groupToShare = on<StoreHandler>().store.box(Group::class).query()
                             .equal(Group_.id, groupId!!)
                             .build().findFirst()
 
-                    searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
+                    searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
                             groupToShare?.name, on<ResourcesHandler>().resources.getString(R.string.group)
                     )))
 
-                    searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
+                    searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
                 } else if (groupActionId != null) {
                     groupActionToShare = on<StoreHandler>().store.box(GroupAction::class).query()
                             .equal(GroupAction_.id, groupActionId!!)
                             .build().findFirst()
 
-                    searchGroupsAdapter!!.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
+                    searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
                             groupActionToShare?.name, on<ResourcesHandler>().resources.getString(R.string.activity)
                     )))
 
-                    searchGroupsAdapter!!.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
+                    searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
                 }
             }
         }
@@ -119,7 +133,9 @@ class ShareActivity : ListActivity() {
             return
         }
 
-        if (phoneId != null) {
+        if (archeologyLatLngStr != null) {
+            open(group)
+        } else if (phoneId != null) {
             on<DisposableHandler>().add(on<ApiHandler>().inviteToGroup(group.id!!, phoneId!!).subscribe(
                     { successResult ->
                         if (successResult.success) {
@@ -178,5 +194,6 @@ class ShareActivity : ListActivity() {
         const val EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID = "shareGroupActionToGroupId"
         const val EXTRA_EVENT_ID = "eventId"
         const val EXTRA_SUGGESTION_ID = "suggestionId"
+        const val EXTRA_LAT_LNG = "latLng"
     }
 }

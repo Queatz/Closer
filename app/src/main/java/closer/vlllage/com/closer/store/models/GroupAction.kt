@@ -8,4 +8,5 @@ class GroupAction : BaseObject() {
     var name: String? = null
     var intent: String? = null
     var photo: String? = null
+    var flow: String? = null
 }

@@ -51,5 +51,3 @@ class GroupActionAdapter(on: On,
     inner class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }
 
-typealias OnGroupActionClickListener = (groupAction: GroupAction) -> Unit
-typealias OnGroupActionLongClickListener = (groupAction: GroupAction) -> Unit

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.latLng
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
@@ -21,6 +22,7 @@ import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.CameraPosition
@@ -138,6 +140,23 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         on<DisposableHandler>().add(on<SearchGroupHandler>().createGroupName.subscribe {
             searchGroupsAdapter.setCreatePublicGroupName(it)
         })
+
+        itemView.historyButton.setOnClickListener {
+            on<LocationHandler>().getCurrentLocation({ location ->
+                on<AlertHandler>().make().apply {
+                    this.title = on<ResourcesHandler>().resources.getString(R.string.perform_archeology)
+                    this.message = on<ResourcesHandler>().resources.getString(R.string.perform_archeology_description)
+                    negativeButton = on<ResourcesHandler>().resources.getString(R.string.nevermind)
+                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.lets_go)
+                    positiveButtonCallback = {
+                        on<ShareActivityTransitionHandler>().performArcheology(location)
+                    }
+                    show()
+                }
+            }, {
+                on<DefaultAlerts>().thatDidntWork()
+            })
+        }
 
         val cameraPositionCallback = { cameraPosition: CameraPosition ->
             loadGroups(cameraPosition.target)

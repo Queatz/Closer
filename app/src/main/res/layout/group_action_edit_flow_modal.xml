@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<closer.vlllage.com.closer.ui.InterceptableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/AppTheme.Red">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <CheckBox
+            android:id="@+id/useOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:layout_marginStart="@dimen/pad"
+            android:textColor="@color/textInverse"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:text="@string/use_options" />
+
+        <EditText
+            android:id="@+id/option1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/pad"
+            android:hint="@string/option_1"
+            android:autofillHints="none"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:imeOptions="actionNext"
+            android:padding="@dimen/padDouble"
+            android:background="@null"
+            android:inputType="textShortMessage|textCapSentences" />
+
+        <EditText
+            android:id="@+id/option2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/pad"
+            android:hint="@string/option_2"
+            android:autofillHints="none"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:imeOptions="actionNext"
+            android:padding="@dimen/padDouble"
+            android:background="@null"
+            android:inputType="textShortMessage|textCapSentences" />
+
+        <EditText
+            android:id="@+id/option3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/pad"
+            android:hint="@string/option_3_optional"
+            android:autofillHints="none"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:imeOptions="actionNext"
+            android:padding="@dimen/padDouble"
+            android:background="@null"
+            android:inputType="textShortMessage|textCapSentences" />
+
+        <CheckBox
+            android:id="@+id/skippable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:layout_marginStart="@dimen/pad"
+            android:textColor="@color/textInverse"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:text="@string/skippable"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+    </LinearLayout>
+</closer.vlllage.com.closer.ui.InterceptableScrollView>

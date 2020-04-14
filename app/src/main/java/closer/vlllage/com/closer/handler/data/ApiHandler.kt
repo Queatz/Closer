@@ -17,7 +17,6 @@ import okio.Okio
 import retrofit2.HttpException
 import java.io.IOException
 import java.io.InputStream
-import java.lang.Exception
 import java.lang.RuntimeException
 import java.util.*
 
@@ -196,6 +195,10 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.createGroupAction(groupId, name, intent))
     }
 
+    fun updateGroupActionFlow(groupActionId: String, flow: String): Single<SuccessResult> {
+        return uiThread(api.backend.updateGroupActionFlow(groupActionId, flow))
+    }
+
     fun getGroupAction(groupActionId: String): Single<GroupActionResult> {
         return uiThread(api.backend.getGroupAction(groupActionId))
     }
@@ -284,6 +287,10 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.getPhysicalGroups(on<LatLngStr>().from(latLng), "physical"))
     }
 
+    fun getInactiveGroups(latLng: LatLng): Single<List<GroupResult>> {
+        return uiThread(api.backend.getPhysicalGroups(on<LatLngStr>().from(latLng), "inactive"))
+    }
+
     fun uploadPhoto(photo: InputStream): Single<String> {
         val body = object : RequestBody() {
             override fun contentType(): MediaType? {
@@ -360,7 +367,6 @@ class ApiHandler constructor(private val on: On) {
     fun useInviteCode(code: String): Single<UseInviteCodeResult> {
         return uiThread(api.backend.useInviteCode(code))
     }
-
 
     private fun <T> uiThread(observable: Single<T>): Single<T> {
         return observable.observeOn(AndroidSchedulers.mainThread()).onErrorResumeNext {

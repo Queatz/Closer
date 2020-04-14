@@ -27,22 +27,29 @@
             android:layout_height="wrap_content"
             android:visibility="gone"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/appsToolbar"
+        <closer.vlllage.com.closer.ui.SoftScrollStopper
+            android:id="@+id/appsToolbarContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="@dimen/pad"
             android:layout_marginBottom="@dimen/padDouble"
             app:layout_constraintWidth_default="wrap"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/closerLogoText"
-            android:overScrollMode="never"
-            tools:listitem="@layout/toolbar_item"
-            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:orientation="horizontal" />
+            app:layout_constraintTop_toBottomOf="@+id/closerLogoText">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/appsToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                tools:listitem="@layout/toolbar_item"
+                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:orientation="horizontal" />
+
+        </closer.vlllage.com.closer.ui.SoftScrollStopper>
 
         <TextView
             android:id="@+id/saySomethingHeader"
@@ -52,7 +59,7 @@
             android:paddingEnd="@dimen/padDouble"
             android:paddingBottom="@dimen/pad"
             android:layout_marginTop="@dimen/padDouble"
-            app:layout_constraintTop_toBottomOf="@+id/appsToolbar"
+            app:layout_constraintTop_toBottomOf="@+id/appsToolbarContainer"
             android:text="@string/talk_with_locals"
             android:textColor="@color/black_50"
             android:textStyle="bold"
@@ -285,7 +292,7 @@
 
         <EditText
             android:id="@+id/searchGroups"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/pad"
             android:layout_marginBottom="@dimen/pad"
@@ -294,7 +301,7 @@
             app:layout_constraintTop_toBottomOf="@+id/stuff"
             app:layout_constraintBottom_toTopOf="@+id/feedText"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/historyButton"
             android:background="@drawable/clickable_dark_flat"
             android:drawableStart="@drawable/ic_search_black_24dp"
             android:drawablePadding="@dimen/pad"
@@ -313,6 +320,23 @@
             android:textColorHint="@color/textHintInverse"
             android:textColorHighlight="@color/colorAccent_50"
             android:textSize="14sp" />
+
+        <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/historyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/pad"
+            app:layout_constraintTop_toTopOf="@id/searchGroups"
+            app:layout_constraintBottom_toBottomOf="@id/searchGroups"
+            app:layout_constraintStart_toEndOf="@id/searchGroups"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            android:minWidth="0dp"
+            android:background="@drawable/clickable_dark_flat"
+            android:padding="@dimen/pad"
+            android:tint="@color/textInverse"
+            android:src="@drawable/ic_history_black_24dp"
+            android:contentDescription="@string/perform_archeology" />
 
         <TextView
             android:id="@+id/feedText"

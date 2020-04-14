@@ -186,6 +186,9 @@ interface Backend {
     @POST("action")
     fun createGroupAction(@Query("group") groupId: String, @Query("name") groupActionName: String, @Query("intent") groupActionIntent: String): Single<CreateResult>
 
+    @POST("action/{id}")
+    fun updateGroupActionFlow(@Path("id") groupActionId: String, @Query("flow") flow: String): Single<SuccessResult>
+
     @GET("action/{id}")
     fun getGroupAction(@Path("id") groupActionId: String): Single<GroupActionResult>
 

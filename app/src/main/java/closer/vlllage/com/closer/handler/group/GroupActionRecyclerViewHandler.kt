@@ -26,5 +26,3 @@ class GroupActionRecyclerViewHandler constructor(private val on: On) {
         actionRecyclerView.adapter = adapter
     }
 }
-
-typealias OnGroupActionRepliedListener = (groupAction: GroupAction) -> Unit

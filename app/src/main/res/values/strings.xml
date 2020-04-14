@@ -381,6 +381,19 @@
     <string name="your_events">Your events</string>
     <string name="open">Open</string>
     <string name="notifications">Notifications</string>
+    <string name="perform_archeology">Perform archeology?</string>
+    <string name="lets_go">Let\'s go!</string>
+    <string name="nevermind">Nevermind</string>
+    <string name="perform_archeology_description">Groups expire after they stop receiving attention.  These groups can be revived here.</string>
+    <string name="expired_groups">Expired groups</string>
+    <string name="edit_flow">Edit flow</string>
+    <string name="save">Save</string>
+    <string name="skippable">Include skip option</string>
+    <string name="use_options">Use options</string>
+    <string name="flow_updated">Activity flow updated</string>
+    <string name="option_1">Option 1</string>
+    <string name="option_2">Option 2</string>
+    <string name="option_3_optional">Option 3 (optional)</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

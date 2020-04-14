@@ -1,13 +1,12 @@
 package closer.vlllage.com.closer.handler.group
 
+import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
-import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.handler.helpers.CameraHandler
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.media.MediaHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupAction
+import com.google.gson.JsonArray
 import com.queatz.on.On
 
 class GroupActionUpgradeHandler constructor(private val on: On) {
@@ -50,5 +49,20 @@ class GroupActionUpgradeHandler constructor(private val on: On) {
                         ))
             }
         }
+    }
+
+    fun setFlow(groupAction: GroupAction, flow: JsonArray) {
+        val flowAsString = on<JsonHandler>().to(flow)
+        on<DisposableHandler>().add(on<ApiHandler>().updateGroupActionFlow(groupAction.id!!, flowAsString).subscribe({
+            if (it.success) {
+                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.flow_updated))
+                groupAction.flow = flowAsString
+                on<StoreHandler>().store.box(GroupAction::class).put(groupAction)
+            } else {
+                on<DefaultAlerts>().thatDidntWork()
+            }
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        }))
     }
 }
