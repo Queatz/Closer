@@ -28,9 +28,11 @@ import closer.vlllage.com.closer.store.models.GroupMessage_
 import closer.vlllage.com.closer.store.models.Notification
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import kotlinx.android.synthetic.main.calendar_day_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.*
 import kotlinx.android.synthetic.main.notification_item.view.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.min
 
 class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
@@ -48,6 +50,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is HeaderMixedItem -> true
                         is GroupMixedItem -> old.group.objectBoxId == (new as GroupMixedItem).group.objectBoxId
                         is NotificationMixedItem -> old.notification.objectBoxId == (new as NotificationMixedItem).notification.objectBoxId
+                        is CalendarDayMixedItem -> false
                         else -> false
                     }
                 }
@@ -59,6 +62,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is HeaderMixedItem -> true
                         is GroupMixedItem -> false
                         is NotificationMixedItem -> true
+                        is CalendarDayMixedItem -> true
                         else -> false
                     }
                 }
@@ -92,6 +96,9 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             when (content) {
                 FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
                 FeedContent.NOTIFICATIONS -> notifications.forEach { add(NotificationMixedItem(it)) }
+                FeedContent.CALENDAR -> IntArray(14)
+                        .mapIndexed { i, _ -> i }
+                        .forEach { add(CalendarDayMixedItem(Date(Date().time + TimeUnit.DAYS.toMillis(it.toLong())))) }
             }
         }
     }
@@ -108,6 +115,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     .inflate(R.layout.notification_item, parent, false)).also {
                 it.disposableGroup = on<DisposableHandler>().group()
             }
+            3 -> CalendarDayViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.calendar_day_item, parent, false)).also {
+                it.disposableGroup = on<DisposableHandler>().group()
+            }
             else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
         }
     }
@@ -121,7 +132,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             is HeaderViewHolder -> bindHeader(viewHolder)
             is GroupPreviewViewHolder -> bindGroupPreview(viewHolder, (item as GroupMixedItem).group)
             is NotificationViewHolder -> bindNotification(viewHolder, (item as NotificationMixedItem).notification)
+            is CalendarDayViewHolder -> bindCalendarDay(viewHolder, (item as CalendarDayMixedItem).date)
         }
+    }
+
+    private fun bindCalendarDay(viewHolder: CalendarDayViewHolder, date: Date) {
+        viewHolder.date.text = on<TimeStr>().day(date)
     }
 
     private fun bindNotification(holder: NotificationViewHolder, notification: Notification) {
@@ -305,10 +321,17 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class HeaderMixedItem : MixedItem(0)
     class GroupMixedItem(val group: Group) : MixedItem(1)
     class NotificationMixedItem(val notification: Notification) : MixedItem(2)
+    class CalendarDayMixedItem(val date: Date) : MixedItem(3)
     open class MixedItem(val type: Int)
 
     class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         lateinit var on: On
+    }
+
+    class CalendarDayViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        lateinit var on: On
+        lateinit var disposableGroup: DisposableGroup
+        var date = itemView.date!!
     }
 
     class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -335,9 +358,5 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         var backgroundColor = itemView.backgroundColor!!
         var textWatcher: TextWatcher? = null
         lateinit var disposableGroup: DisposableGroup
-    }
-
-    companion object {
-        private const val HEADER_COUNT = 1
     }
 }

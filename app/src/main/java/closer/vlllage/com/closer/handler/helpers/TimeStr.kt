@@ -3,9 +3,12 @@ package closer.vlllage.com.closer.handler.helpers
 import android.text.format.DateUtils.*
 import closer.vlllage.com.closer.R
 import com.queatz.on.On
+import java.text.SimpleDateFormat
 import java.util.*
 
 class TimeStr constructor(private val on: On) {
+
+    var dateFormat = SimpleDateFormat("EEEE, MMMM d", Locale.ENGLISH)
 
     fun tiny(date: Date?): String {
         if (date == null) {
@@ -73,5 +76,9 @@ class TimeStr constructor(private val on: On) {
                 0
         )
 
+    }
+
+    fun day(date: Date): String {
+        return "${dateFormat.format(date)}${if (isToday(date.time)) " (${on<ResourcesHandler>().resources.getString(R.string.today)})" else ""}"
     }
 }

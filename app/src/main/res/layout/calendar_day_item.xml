@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:elevation="@dimen/elevation"
+    android:clipToPadding="false"
+    android:paddingStart="@dimen/padDouble"
+    android:paddingEnd="@dimen/padDouble"
+    android:clickable="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/day"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="1:1.5">
+
+        <View
+            android:id="@+id/time5am"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias=".208333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/black_15"
+            android:layout_height="1dp" />
+
+        <View
+            android:id="@+id/time8am"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias=".333333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/black_15"
+            android:layout_height="1dp" />
+
+        <View
+            android:id="@+id/timeNoon"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias=".5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/black_15"
+            android:layout_height="1dp" />
+
+        <View
+            android:id="@+id/time5pm"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias=".708333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/black_15"
+            android:layout_height="1dp" />
+
+        <View
+            android:id="@+id/time8pm"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias=".833333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/black_15"
+            android:layout_height="1dp" />
+
+        <View
+            android:id="@+id/timeMidnight"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/black_15"
+            android:layout_height="1dp" />
+
+        <TextView
+            android:id="@+id/time5amLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/time5am"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/textHintInverse"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="5 AM"
+            android:paddingBottom="@dimen/padHalf" />
+
+        <TextView
+            android:id="@+id/time8amLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/time8am"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/textHintInverse"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="8 AM"
+            android:paddingBottom="@dimen/padHalf" />
+
+        <TextView
+            android:id="@+id/timeNoonLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/timeNoon"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/textHintInverse"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="Noon"
+            android:paddingBottom="@dimen/padHalf" />
+
+        <TextView
+            android:id="@+id/time5pmLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/time5pm"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/textHintInverse"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="5 PM"
+            android:paddingBottom="@dimen/padHalf" />
+
+        <TextView
+            android:id="@+id/time8pmLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/time8pm"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/textHintInverse"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="8 AM"
+            android:paddingBottom="@dimen/padHalf" />
+
+        <TextView
+            android:id="@+id/timeMidnightLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/timeMidnight"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/textHintInverse"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="Midnight"
+            android:paddingBottom="@dimen/padHalf" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/textInverse"
+        android:textAppearance="?android:textAppearanceMedium"
+        tools:text="Thursday, May 3rd"
+        android:padding="@dimen/padDouble" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

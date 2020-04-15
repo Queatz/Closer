@@ -108,6 +108,7 @@ class FeedHandler constructor(private val on: On) {
     fun show(item: GroupToolbarHandler.ToolbarItem) {
         mixedAdapter.content = when (item.value) {
             ContentViewType.HOME_ACTIVITY -> FeedContent.NOTIFICATIONS
+            ContentViewType.HOME_CALENDAR -> FeedContent.CALENDAR
             else -> FeedContent.GROUPS
         }
     }

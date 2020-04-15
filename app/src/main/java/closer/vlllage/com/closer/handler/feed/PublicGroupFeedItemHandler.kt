@@ -241,7 +241,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         R.drawable.ic_event_note_black_24dp,
                         View.OnClickListener {
                       toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CALENDAR)
-                            // Show calendar and expand feed to 90%
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CALENDAR)
                         },
                         value = ContentViewType.HOME_CALENDAR,
                         color = R.color.red),
@@ -259,8 +259,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         R.drawable.ic_notifications_black_24dp,
                         View.OnClickListener {
                         toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITY)
-                            // Show my notifications
-                            // Show my recent direct messages
                         },
                         value = ContentViewType.HOME_ACTIVITY,
                         color = R.color.colorAccent),
@@ -295,6 +293,25 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             itemView.suggestionsHeader.visible = false
             itemView.placesHeader.visible = false
             itemView.feedText.setText(R.string.notifications)
+        } else if (toolbarAdapter.selectedContentView.value == ContentViewType.HOME_CALENDAR) {
+            saySomethingHeader.visible = false
+            saySomething.visible = false
+            sendSomethingButton.visible = false
+            peopleContainer.visible = false
+            eventsHeader.visible = false
+            groupsHeader.visible = false
+            eventsRecyclerView.visible = false
+            hubsRecyclerView.visible = false
+            actionRecyclerView.visible = false
+            suggestionsRecyclerView.visible = false
+            peopleRecyclerView.visible = false
+            groupsRecyclerView.visible = false
+            searchGroups.visible = false
+            itemView.historyButton.visible = false
+            itemView.thingsToDoHeader.visible = false
+            itemView.suggestionsHeader.visible = false
+            itemView.placesHeader.visible = false
+            itemView.feedText.visible = false
         } else {
             eventsRecyclerView.visible = true
             hubsRecyclerView.visible = true
