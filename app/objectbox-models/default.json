@@ -247,7 +247,7 @@
     },
     {
       "id": "4:5817218640394675404",
-      "lastPropertyId": "12:6060230222282753807",
+      "lastPropertyId": "13:7508075209586344142",
       "name": "GroupContact",
       "properties": [
         {
@@ -306,6 +306,11 @@
           "id": "12:6060230222282753807",
           "name": "created",
           "type": 10
+        },
+        {
+          "id": "13:7508075209586344142",
+          "name": "inviter",
+          "type": 9
         }
       ],
       "relations": []

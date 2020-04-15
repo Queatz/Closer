@@ -5,6 +5,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import com.queatz.on.On
 
 class AlertHandler constructor(private val on: On) {
@@ -57,7 +58,7 @@ class AlertHandler constructor(private val on: On) {
         }
 
         if (alertConfig.message != null) {
-            dialogBuilder.setMessage(alertConfig.message)
+            dialogBuilder.setMessage(on<GroupMessageParseHandler>().parseString(alertConfig.message!!))
         }
 
         if (alertConfig.title != null) {

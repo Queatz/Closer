@@ -71,6 +71,7 @@ class PhoneContactAdapter(on: On,
                     holder.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
 
                     holder.phoneIcon.setOnClickListener(null)
+                    holder.itemView.setOnLongClickListener(null)
 
                     if (groupContact.photo != null) {
                         holder.phoneIconIsPhoto = true
@@ -110,6 +111,18 @@ class PhoneContactAdapter(on: On,
 
                     holder.itemView.setOnClickListener {
                         onGroupContactClickListener?.invoke(groupContact)
+                    }
+
+                    holder.itemView.setOnLongClickListener {
+                        on<DefaultAlerts>().message(
+                                on<ResourcesHandler>().resources.getString(R.string.information),
+                                "${
+                                on<ResourcesHandler>().resources.getString(R.string.joined_date, on<TimeStr>().prettyDate(groupContact.created))
+                                }${
+                                groupContact.inviter?.let { " ${on<ResourcesHandler>().resources.getString(R.string.by_invite_from, "@$it")}" } ?: ""
+                                }")
+
+                        true
                     }
                 } else {
                     position -= groupContacts.size

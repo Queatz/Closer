@@ -316,13 +316,15 @@ class RefreshHandler constructor(private val on: On) {
                 if (!existingGroupContactsMap.containsKey(groupContactResult.id)) {
                     groupContactsToAdd.add(GroupContactResult.from(groupContactResult))
                 } else {
-                    existingGroupContactsMap[groupContactResult.id]!!.contactName = groupContactResult.phone!!.name
-                    existingGroupContactsMap[groupContactResult.id]!!.contactActive = groupContactResult.phone!!.updated
-                    existingGroupContactsMap[groupContactResult.id]!!.photo = groupContactResult.photo
-                    existingGroupContactsMap[groupContactResult.id]!!.status = groupContactResult.status
-                    on<StoreHandler>().store.box(GroupContact::class).put(
-                            existingGroupContactsMap[groupContactResult.id]!!
-                    )
+                    existingGroupContactsMap[groupContactResult.id]?.let { existing ->
+                        existing.contactName = groupContactResult.phone!!.name
+                        existing.contactActive = groupContactResult.phone!!.updated
+                        existing.photo = groupContactResult.photo
+                        existing.status = groupContactResult.status
+                        existing.inviter = groupContactResult.inviter
+                        existing.created = groupContactResult.created
+                        on<StoreHandler>().store.box(GroupContact::class).put(existing)
+                    }
                 }
             }
 

@@ -8,6 +8,7 @@ class GroupContactResult : ModelResult() {
     var phone: PhoneResult? = null
     var group: GroupResult? = null
     var status: String? = null
+    var inviter: String? = null
     var photo: String? = null
 
     companion object {
@@ -21,6 +22,7 @@ class GroupContactResult : ModelResult() {
             groupContact.contactActive = groupContactResult.phone!!.updated
             groupContact.updated = groupContactResult.updated
             groupContact.status = groupContactResult.status
+            groupContact.inviter = groupContactResult.inviter
             groupContact.photo = groupContactResult.photo
             return groupContact
         }

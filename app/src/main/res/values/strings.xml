@@ -394,6 +394,9 @@
     <string name="option_1">Option 1</string>
     <string name="option_2">Option 2</string>
     <string name="option_3_optional">Option 3 (optional)</string>
+    <string name="information">Information</string>
+    <string name="joined_date">Joined %1$s</string>
+    <string name="by_invite_from">by invite from %1$s</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
