@@ -5,22 +5,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/mapAmbient"
     android:elevation="@dimen/elevation"
     android:clipToPadding="false"
-    android:paddingStart="@dimen/padDouble"
-    android:paddingEnd="@dimen/padDouble"
     android:clickable="true">
+
+    <View
+        android:id="@+id/headerPadding"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/rounded_white_12dp_bottom" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/headerPadding"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/day"
+        android:textColor="@color/textInverse"
+        android:background="@color/mapAmbient"
+        android:gravity="center_horizontal"
+        android:textAppearance="?android:textAppearanceMedium"
+        tools:text="Thursday, May 3rd"
+        android:padding="@dimen/padDouble" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/day"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintDimensionRatio="1:1.5">
+        app:layout_constraintDimensionRatio="1:1.5"
+        android:background="@drawable/rounded_white_8dp"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingEnd="@dimen/padDouble">
 
         <View
             android:id="@+id/time5am"
@@ -31,7 +57,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@color/black_15"
-            android:layout_height="1dp" />
+            android:layout_height="1.5dp" />
 
         <View
             android:id="@+id/time8am"
@@ -42,7 +68,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@color/black_15"
-            android:layout_height="1dp" />
+            android:layout_height="1.5dp" />
 
         <View
             android:id="@+id/timeNoon"
@@ -52,8 +78,8 @@
             app:layout_constraintVertical_bias=".5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@color/black_15"
-            android:layout_height="1dp" />
+            android:background="@color/black_10"
+            android:layout_height="1.5dp" />
 
         <View
             android:id="@+id/time5pm"
@@ -64,7 +90,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@color/black_15"
-            android:layout_height="1dp" />
+            android:layout_height="1.5dp" />
 
         <View
             android:id="@+id/time8pm"
@@ -75,7 +101,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@color/black_15"
-            android:layout_height="1dp" />
+            android:layout_height="1.5dp" />
 
         <View
             android:id="@+id/timeMidnight"
@@ -85,8 +111,18 @@
             app:layout_constraintVertical_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@color/black_15"
-            android:layout_height="1dp" />
+            android:background="@color/black_transparent"
+            android:layout_height="1.5dp" />
+        <View
+            android:id="@+id/timeMidnightBegin"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/black_transparent"
+            android:layout_height="1.5dp" />
 
         <TextView
             android:id="@+id/time5amLabel"
@@ -118,7 +154,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:textColor="@color/textHintInverse"
             android:textAppearance="?android:textAppearanceSmall"
-            android:text="Noon"
+            android:text="@string/noon"
             android:paddingBottom="@dimen/padHalf" />
 
         <TextView
@@ -151,21 +187,19 @@
             app:layout_constraintStart_toStartOf="parent"
             android:textColor="@color/textHintInverse"
             android:textAppearance="?android:textAppearanceSmall"
-            android:text="Midnight"
+            android:text="@string/midnight"
             android:paddingBottom="@dimen/padHalf" />
+        <TextView
+            android:id="@+id/timeMidnightBeginLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/timeMidnightBegin"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/textHintInverse"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="@string/midnight"
+            android:paddingTop="@dimen/padHalf" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textColor="@color/textInverse"
-        android:textAppearance="?android:textAppearanceMedium"
-        tools:text="Thursday, May 3rd"
-        android:padding="@dimen/padDouble" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

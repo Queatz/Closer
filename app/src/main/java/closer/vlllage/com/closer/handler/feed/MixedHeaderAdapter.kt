@@ -6,14 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Guideline
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.FeedHandler
@@ -21,14 +25,13 @@ import closer.vlllage.com.closer.handler.map.HeaderAdapter
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
+import closer.vlllage.com.closer.store.Store
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.GroupMessage
-import closer.vlllage.com.closer.store.models.GroupMessage_
-import closer.vlllage.com.closer.store.models.Notification
+import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.calendar_day_item.view.*
+import kotlinx.android.synthetic.main.calendar_event_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.*
 import kotlinx.android.synthetic.main.notification_item.view.*
 import java.util.*
@@ -98,7 +101,14 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 FeedContent.NOTIFICATIONS -> notifications.forEach { add(NotificationMixedItem(it)) }
                 FeedContent.CALENDAR -> IntArray(14)
                         .mapIndexed { i, _ -> i }
-                        .forEach { add(CalendarDayMixedItem(Date(Date().time + TimeUnit.DAYS.toMillis(it.toLong())))) }
+                        .forEach { add(CalendarDayMixedItem(it, Calendar.getInstance(TimeZone.getDefault()).let { cal ->
+                            cal.set(Calendar.HOUR_OF_DAY, 0)
+                            cal.set(Calendar.MINUTE, 0)
+                            cal.set(Calendar.SECOND, 0)
+                            cal.set(Calendar.MILLISECOND, 0)
+                            cal.add(Calendar.DATE, it)
+                            cal.time
+                        })) }
             }
         }
     }
@@ -118,6 +128,11 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             3 -> CalendarDayViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.calendar_day_item, parent, false)).also {
                 it.disposableGroup = on<DisposableHandler>().group()
+                it.day.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+//                    if (top - bottom != 0 && (oldTop != top || oldBottom != bottom)) {
+//                        setCalendarDayEvents(it)
+//                    }
+                }
             }
             else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
         }
@@ -132,12 +147,75 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             is HeaderViewHolder -> bindHeader(viewHolder)
             is GroupPreviewViewHolder -> bindGroupPreview(viewHolder, (item as GroupMixedItem).group)
             is NotificationViewHolder -> bindNotification(viewHolder, (item as NotificationMixedItem).notification)
-            is CalendarDayViewHolder -> bindCalendarDay(viewHolder, (item as CalendarDayMixedItem).date)
+            is CalendarDayViewHolder -> bindCalendarDay(viewHolder, (item as CalendarDayMixedItem).date, item.position)
         }
     }
 
-    private fun bindCalendarDay(viewHolder: CalendarDayViewHolder, date: Date) {
-        viewHolder.date.text = on<TimeStr>().day(date)
+    private fun bindCalendarDay(holder: CalendarDayViewHolder, date: Date, position: Int) {
+        holder.on = branch()
+
+        holder.date.text = on<TimeStr>().day(date)
+
+        holder.itemView.headerPadding.visible = position == 0
+
+        holder.disposableGroup.add(on<StoreHandler>().store.box(Event::class).query()
+                .between(Event_.startsAt, date, Date(date.time + TimeUnit.DAYS.toMillis(1)))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .observer {
+                    setCalendarDayEvents(holder, it)
+                })
+    }
+
+    private fun setCalendarDayEvents(holder: CalendarDayViewHolder, events: List<Event>? = null) {
+        holder.views.forEach { holder.day.removeView(it) }
+        holder.views.clear()
+
+        if (events != null) {
+            holder.events = events
+        }
+
+        val vH = holder.day.measuredHeight
+
+        if (vH == 0) {
+            holder.itemView.post { setCalendarDayEvents(holder) }
+            return
+        }
+
+        holder.events?.forEach { event ->
+            val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.day, false)
+
+            view.name.text = event.name
+            view.about.text = on<EventDetailsHandler>().formatEventDetails(event)
+            (view.layoutParams as ConstraintLayout.LayoutParams).apply {
+                val h = (event.endsAt!!.time - event.startsAt!!.time).toFloat() / TimeUnit.DAYS.toMillis(1) * vH
+
+                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                topMargin = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
+                    it.time = event.startsAt!!
+                    it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
+                            it.get(Calendar.MINUTE).toFloat() / TimeUnit.DAYS.toMinutes(1).toFloat()
+                }).toInt()
+                height = h.toInt()
+                constrainedHeight = true
+                marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
+            }
+
+            view.name.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_lock_black_18dp, 0, 0, 0
+            )
+
+            view.setBackgroundResource(if (event.isPublic) R.drawable.clickable_red_8dp else R.drawable.clickable_blue_8dp)
+
+            view.setOnClickListener {
+                on<GroupActivityTransitionHandler>().showGroupForEvent(view, event)
+            }
+
+            holder.day.addView(view)
+            holder.views.add(view)
+        }
     }
 
     private fun bindNotification(holder: NotificationViewHolder, notification: Notification) {
@@ -292,6 +370,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 holder.disposableGroup.clear()
                 holder.on.off()
             }
+            is CalendarDayViewHolder -> {
+                holder.disposableGroup.clear()
+                holder.on.off()
+            }
         }
     }
 
@@ -321,7 +403,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class HeaderMixedItem : MixedItem(0)
     class GroupMixedItem(val group: Group) : MixedItem(1)
     class NotificationMixedItem(val notification: Notification) : MixedItem(2)
-    class CalendarDayMixedItem(val date: Date) : MixedItem(3)
+    class CalendarDayMixedItem(val position: Int, val date: Date) : MixedItem(3)
     open class MixedItem(val type: Int)
 
     class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -331,7 +413,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class CalendarDayViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         lateinit var on: On
         lateinit var disposableGroup: DisposableGroup
+        val views = mutableSetOf<View>()
         var date = itemView.date!!
+        var day = itemView.day!!
+        var events: List<Event>? = null
     }
 
     class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

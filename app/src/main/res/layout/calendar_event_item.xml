@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="0dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:background="@drawable/clickable_red_4dp"
+    android:paddingStart="@dimen/padHalf"
+    android:paddingEnd="@dimen/padHalf"
+    android:clickable="true"
+    android:elevation="@dimen/elevationSmall">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintHeight_default="wrap"
+        android:drawableTint="@color/text"
+        android:drawablePadding="@dimen/padHalf"
+        android:padding="@dimen/padHalf"
+        android:gravity="center_horizontal"
+        android:textSize="14sp"
+        android:textColor="@color/text"
+        android:textStyle="bold"
+        tools:text="Mermaid Party" />
+
+    <TextView
+        android:id="@+id/about"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintHeight_default="wrap"
+        android:textSize="11sp"
+        android:textColor="@color/text"
+        android:gravity="center_horizontal"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingStart="@dimen/padHalf"
+        android:paddingEnd="@dimen/padHalf"
+        android:paddingBottom="@dimen/padHalf"
+        tools:text="8 AM - 8 PM" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

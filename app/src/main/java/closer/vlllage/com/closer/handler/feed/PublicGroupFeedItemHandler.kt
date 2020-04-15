@@ -298,9 +298,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             saySomething.visible = false
             sendSomethingButton.visible = false
             peopleContainer.visible = false
-            eventsHeader.visible = false
+            eventsHeader.visible = true
             groupsHeader.visible = false
-            eventsRecyclerView.visible = false
+            eventsRecyclerView.visible = true
             hubsRecyclerView.visible = false
             actionRecyclerView.visible = false
             suggestionsRecyclerView.visible = false
@@ -312,6 +312,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             itemView.suggestionsHeader.visible = false
             itemView.placesHeader.visible = false
             itemView.feedText.visible = false
+
+            val showPublic = on<AccountHandler>().privateOnly.not()
+
+            eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
         } else {
             eventsRecyclerView.visible = true
             hubsRecyclerView.visible = true
@@ -322,6 +326,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             eventsHeader.visible = true
             groupsHeader.visible = true
             searchGroups.visible = true
+            itemView.historyButton.visible = true
             itemView.thingsToDoHeader.visible = true
             itemView.suggestionsHeader.visible = true
             itemView.placesHeader.visible = true
