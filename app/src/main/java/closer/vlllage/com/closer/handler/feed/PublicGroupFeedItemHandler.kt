@@ -18,6 +18,7 @@ import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.map.FeedHandler
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
@@ -220,7 +221,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         appsToolbar.layoutManager = LinearLayoutManager(appsToolbar.context, RecyclerView.HORIZONTAL, false)
         appsToolbar.adapter = toolbarAdapter
-        toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_EXPLORE)
+
+        toolbarAdapter.selectedContentView.onNext(when (on<FeedHandler>().feedContent()) {
+            FeedContent.CALENDAR -> ContentViewType.HOME_CALENDAR
+            FeedContent.NOTIFICATIONS -> ContentViewType.HOME_ACTIVITY
+            FeedContent.GROUPS -> ContentViewType.HOME_EXPLORE
+            else -> ContentViewType.HOME_GROUPS
+        })
 
         on<DisposableHandler>().add(toolbarAdapter.selectedContentView
                 .observeOn(AndroidSchedulers.mainThread())
@@ -240,7 +247,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.calendar),
                         R.drawable.ic_event_note_black_24dp,
                         View.OnClickListener {
-                      toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CALENDAR)
                             toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CALENDAR)
                         },
                         value = ContentViewType.HOME_CALENDAR,
@@ -258,7 +264,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.activity),
                         R.drawable.ic_notifications_black_24dp,
                         View.OnClickListener {
-                        toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITY)
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITY)
                         },
                         value = ContentViewType.HOME_ACTIVITY,
                         color = R.color.colorAccent),
@@ -298,9 +304,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             saySomething.visible = false
             sendSomethingButton.visible = false
             peopleContainer.visible = false
-            eventsHeader.visible = true
+            eventsHeader.visible = false
             groupsHeader.visible = false
-            eventsRecyclerView.visible = true
+            eventsRecyclerView.visible = false
             hubsRecyclerView.visible = false
             actionRecyclerView.visible = false
             suggestionsRecyclerView.visible = false

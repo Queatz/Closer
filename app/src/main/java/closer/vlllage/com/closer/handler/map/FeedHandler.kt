@@ -46,7 +46,7 @@ class FeedHandler constructor(private val on: On) {
         mixedAdapter = MixedHeaderAdapter(on)
         recyclerView.adapter = mixedAdapter
 
-        on<DisposableHandler>().add( on<StoreHandler>().store.box(Notification::class).query()
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Notification::class).query()
                 .sort(on<SortHandler>().sortNotifications())
                 .build()
                 .subscribe()
@@ -104,6 +104,8 @@ class FeedHandler constructor(private val on: On) {
 
         recyclerView.smoothScrollToPosition(0)
     }
+
+    fun feedContent() = mixedAdapter.content
 
     fun show(item: GroupToolbarHandler.ToolbarItem) {
         mixedAdapter.content = when (item.value) {

@@ -5,9 +5,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.inputmethod.EditorInfo
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.Guideline
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,13 +25,11 @@ import closer.vlllage.com.closer.handler.map.HeaderAdapter
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
-import closer.vlllage.com.closer.store.Store
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.calendar_day_item.view.*
-import kotlinx.android.synthetic.main.calendar_event_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.*
 import kotlinx.android.synthetic.main.notification_item.view.*
 import java.util.*
@@ -128,11 +126,6 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             3 -> CalendarDayViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.calendar_day_item, parent, false)).also {
                 it.disposableGroup = on<DisposableHandler>().group()
-                it.day.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-//                    if (top - bottom != 0 && (oldTop != top || oldBottom != bottom)) {
-//                        setCalendarDayEvents(it)
-//                    }
-                }
             }
             else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
         }
@@ -198,8 +191,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
                             it.get(Calendar.MINUTE).toFloat() / TimeUnit.DAYS.toMinutes(1).toFloat()
                 }).toInt()
+                width = MATCH_PARENT
                 height = h.toInt()
                 constrainedHeight = true
+                constrainedWidth = true
                 marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
             }
 
@@ -385,6 +380,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     }
 
     private fun branch() = On().apply {
+        use(on<FeedHandler>())
         use(on<StoreHandler>())
         use(on<SyncHandler>())
         use(on<MapHandler>())

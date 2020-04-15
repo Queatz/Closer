@@ -13,7 +13,7 @@
     <View
         android:id="@+id/headerPadding"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="@dimen/miniWindowCornerRadius"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/date"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintDimensionRatio="1:1.5"
-        android:background="@drawable/rounded_white_8dp"
+        android:background="@drawable/rounded_white_12dp"
         android:paddingStart="@dimen/padDouble"
         android:paddingEnd="@dimen/padDouble">
 
