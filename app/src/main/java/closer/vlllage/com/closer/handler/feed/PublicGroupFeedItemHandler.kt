@@ -8,13 +8,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.extensions.latLng
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
@@ -292,6 +290,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             peopleRecyclerView.visible = false
             groupsRecyclerView.visible = false
             searchGroups.visible = false
+            itemView.historyButton.visible = false
             itemView.thingsToDoHeader.visible = false
             itemView.suggestionsHeader.visible = false
             itemView.placesHeader.visible = false
