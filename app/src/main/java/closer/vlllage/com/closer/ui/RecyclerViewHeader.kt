@@ -1,9 +1,13 @@
 package closer.vlllage.com.closer.ui
 
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import org.slf4j.event.Level
+import java.util.logging.Logger
 import kotlin.math.max
+import kotlin.math.min
 
 class RecyclerViewHeader {
 
@@ -11,7 +15,6 @@ class RecyclerViewHeader {
     private var footerViewHolder: RecyclerView.ViewHolder? = null
     private var recyclerView: RecyclerView? = null
     private var pad: Int = 0
-    private var lastGoodExtend: Int = 0
 
     private var originalHeaderPadding: Int = 0
     private var originalFooterPadding: Int = 0
@@ -93,28 +96,26 @@ class RecyclerViewHeader {
     }
 
     private fun setHeaderMargin() {
-        if (headerViewHolder == null) {
+        if (headerViewHolder == null || recyclerView == null) {
             return
         }
 
+        val r = Rect()
+
+        recyclerView!!.getGlobalVisibleRect(r)
+
         val params = headerViewHolder!!.itemView.layoutParams as ViewGroup.MarginLayoutParams
-        params.topMargin = if (recyclerView == null) 0 else recyclerView!!.height - pad + extend()
-        headerViewHolder!!.itemView.layoutParams = params
+        val m = r.height() - pad
+        params.topMargin = m + (footerViewHolder?.itemView?.bottom?.let { max(0, r.height() - (m + (it - headerViewHolder!!.itemView.top))) } ?: 0)
+        headerViewHolder?.itemView?.layoutParams = params
     }
 
-    private fun extend(): Int {
-        if (footerViewHolder == null) {
-            lastGoodExtend = 0
-            return 0
+
+    private fun extend(height: Int) = max(0, footerViewHolder?.let {
+        it.itemView.let {
+            Logger.getAnonymousLogger().warning("RECTANGLE: $height - ${it.bottom} = ${height - it.bottom}")
+
+            if (it.bottom == 0) 0 else height - it.bottom
         }
-
-        if (footerViewHolder!!.itemView.bottom == 0) {
-            lastGoodExtend = 0
-            return 0
-        }
-
-        lastGoodExtend = max(lastGoodExtend, recyclerView!!.height - footerViewHolder!!.itemView.bottom)
-
-        return lastGoodExtend
-    }
+    } ?: 0)
 }

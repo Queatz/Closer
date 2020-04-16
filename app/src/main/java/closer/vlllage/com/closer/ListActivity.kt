@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.pool.PoolActivity
+import kotlinx.android.synthetic.main.activity_share.*
 
 abstract class ListActivity : PoolActivity() {
 
-    protected lateinit var background: View
     protected lateinit var recyclerView: RecyclerView
 
     private var finishAnimator: TranslateAnimation? = null
@@ -28,9 +28,8 @@ abstract class ListActivity : PoolActivity() {
         overridePendingTransition(0, 0)
         setContentView(R.layout.activity_share)
 
-        background = findViewById(R.id.background)
         background.clipToOutline = true
-        recyclerView = findViewById(R.id.shareRecyclerView)
+        recyclerView = shareRecyclerView
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 

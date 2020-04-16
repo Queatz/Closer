@@ -30,6 +30,7 @@ import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.calendar_day_item.view.*
+import kotlinx.android.synthetic.main.calendar_event_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.*
 import kotlinx.android.synthetic.main.notification_item.view.*
 import java.util.*
@@ -196,6 +197,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 constrainedHeight = true
                 constrainedWidth = true
                 marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
+                marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
             }
 
             view.name.setCompoundDrawablesRelativeWithIntrinsicBounds(

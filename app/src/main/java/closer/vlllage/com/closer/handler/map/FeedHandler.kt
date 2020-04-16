@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.map
 
+import android.graphics.Rect
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
@@ -36,6 +37,7 @@ class FeedHandler constructor(private val on: On) {
                 false
         )
         recyclerView.layoutManager = layoutManager
+        recyclerView.itemAnimator = null
 
         on<DisposableHandler>().add(on<SettingsHandler>()
                 .observe(UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME)
@@ -97,17 +99,30 @@ class FeedHandler constructor(private val on: On) {
         mixedAdapter.notifications = notifications.toMutableList()
     }
 
+    fun feedContent() = mixedAdapter.content
+
     fun hide() {
         if (layoutManager.findFirstVisibleItemPosition() > 2) {
             recyclerView.scrollToPosition(2)
         }
 
-        recyclerView.smoothScrollToPosition(0)
+        if (layoutManager.findFirstVisibleItemPosition() != 0) {
+            recyclerView.smoothScrollToPosition(0)
+        }
     }
 
-    fun feedContent() = mixedAdapter.content
-
     fun show(item: GroupToolbarHandler.ToolbarItem) {
+        recyclerView.findViewHolderForAdapterPosition(0)?.itemView?.let { feedItemView ->
+            val recyclerBounds = Rect().also { recyclerView.getGlobalVisibleRect(it) }
+            val feedBounds = Rect().also { feedItemView.getGlobalVisibleRect(it) }
+            val scroll = feedBounds.top - (recyclerBounds.top + recyclerBounds.bottom) / 3
+            val scrollBuffer = feedBounds.top - (recyclerBounds.top + recyclerBounds.bottom) / 1.5f
+
+            if (scrollBuffer > 0) {
+                recyclerView.smoothScrollBy(0, scroll)
+            }
+        }
+
         mixedAdapter.content = when (item.value) {
             ContentViewType.HOME_ACTIVITY -> FeedContent.NOTIFICATIONS
             ContentViewType.HOME_CALENDAR -> FeedContent.CALENDAR

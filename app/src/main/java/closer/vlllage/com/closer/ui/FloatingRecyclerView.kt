@@ -37,11 +37,9 @@ class FloatingRecyclerView : RecyclerView {
                         isSolidBackground = true
                         animateBackground(recyclerView, R.color.offwhite)
                     }
-                } else {
-                    if (isSolidBackground) {
-                        isSolidBackground = false
-                        animateBackground(recyclerView, R.color.offwhite_transparent)
-                    }
+                } else if (isSolidBackground) {
+                    isSolidBackground = false
+                    animateBackground(recyclerView, R.color.offwhite_transparent)
                 }
             }
         })
