@@ -1,13 +1,16 @@
 package closer.vlllage.com.closer.handler.map
 
 import android.graphics.Rect
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
+import closer.vlllage.com.closer.handler.group.GroupActionRecyclerViewHandler
 import closer.vlllage.com.closer.handler.group.GroupToolbarHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler
@@ -16,9 +19,7 @@ import closer.vlllage.com.closer.handler.helpers.SortHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.Group_
-import closer.vlllage.com.closer.store.models.Notification
+import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -93,6 +94,23 @@ class FeedHandler constructor(private val on: On) {
 
     private fun setGroups(groups: List<Group>) {
         mixedAdapter.groups = groups.toMutableList()
+        setGroupActions(groups)
+    }
+
+    private fun setGroupActions(groups: List<Group>) {
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
+                .`in`(GroupAction_.group, groups
+                        .filter { it.id != null }
+                        .map { it.id }
+                        .toTypedArray())
+                .sort(on<SortHandler>().sortGroupActions())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { groupActions ->
+                    mixedAdapter.groupActions = groupActions.toMutableList()
+                })
     }
 
     private fun setNotifications(notifications: List<Notification>) {
@@ -108,25 +126,32 @@ class FeedHandler constructor(private val on: On) {
 
         if (layoutManager.findFirstVisibleItemPosition() != 0) {
             recyclerView.smoothScrollToPosition(0)
+        } else {
+            reveal(false)
         }
     }
 
     fun show(item: GroupToolbarHandler.ToolbarItem) {
+        reveal(true)
+
+        mixedAdapter.content = when (item.value) {
+            ContentViewType.HOME_NOTIFICATIONS -> FeedContent.NOTIFICATIONS
+            ContentViewType.HOME_CALENDAR -> FeedContent.CALENDAR
+            ContentViewType.HOME_ACTIVITIES -> FeedContent.ACTIVITIES
+            else -> FeedContent.GROUPS
+        }
+    }
+
+    private fun reveal(show: Boolean) {
         recyclerView.findViewHolderForAdapterPosition(0)?.itemView?.let { feedItemView ->
             val recyclerBounds = Rect().also { recyclerView.getGlobalVisibleRect(it) }
             val feedBounds = Rect().also { feedItemView.getGlobalVisibleRect(it) }
             val scroll = feedBounds.top - (recyclerBounds.top + recyclerBounds.bottom) / 3
             val scrollBuffer = feedBounds.top - (recyclerBounds.top + recyclerBounds.bottom) / 1.5f
 
-            if (scrollBuffer > 0) {
-                recyclerView.smoothScrollBy(0, scroll)
+            if ((show && scrollBuffer > 0) || (!show && scroll < 0)) {
+                recyclerView.smoothScrollBy(0, if (show) scroll else scrollBuffer.toInt())
             }
-        }
-
-        mixedAdapter.content = when (item.value) {
-            ContentViewType.HOME_ACTIVITY -> FeedContent.NOTIFICATIONS
-            ContentViewType.HOME_CALENDAR -> FeedContent.CALENDAR
-            else -> FeedContent.GROUPS
         }
     }
 }

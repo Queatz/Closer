@@ -115,11 +115,11 @@ class PhoneContactAdapter(on: On,
 
                     holder.itemView.setOnLongClickListener {
                         on<DefaultAlerts>().message(
-                                on<ResourcesHandler>().resources.getString(R.string.information),
+                                on<ResourcesHandler>().resources.getString(R.string.about),
                                 "${
                                 on<ResourcesHandler>().resources.getString(R.string.joined_date, on<TimeStr>().prettyDate(groupContact.created))
                                 }${
-                                groupContact.inviter?.let { " ${on<ResourcesHandler>().resources.getString(R.string.by_invite_from, "@$it")}" } ?: ""
+                                groupContact.inviter?.let { if(it != groupContact.contactId) " ${on<ResourcesHandler>().resources.getString(R.string.by_invite_from, "@$it")}" else "" } ?: ""
                                 }")
 
                         true

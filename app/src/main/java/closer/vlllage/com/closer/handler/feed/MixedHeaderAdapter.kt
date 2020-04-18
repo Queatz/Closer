@@ -31,7 +31,10 @@ import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.calendar_day_item.view.*
 import kotlinx.android.synthetic.main.calendar_event_item.view.*
+import kotlinx.android.synthetic.main.group_action_photo_item.view.*
+import kotlinx.android.synthetic.main.group_action_photo_large_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.*
+import kotlinx.android.synthetic.main.group_preview_item.view.groupName
 import kotlinx.android.synthetic.main.notification_item.view.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -51,6 +54,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     return old.type == new.type && when (old) {
                         is HeaderMixedItem -> true
                         is GroupMixedItem -> old.group.objectBoxId == (new as GroupMixedItem).group.objectBoxId
+                        is GroupActionMixedItem -> old.groupAction.objectBoxId == (new as GroupActionMixedItem).groupAction.objectBoxId
                         is NotificationMixedItem -> old.notification.objectBoxId == (new as NotificationMixedItem).notification.objectBoxId
                         is CalendarDayMixedItem -> false
                         else -> false
@@ -64,6 +68,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is HeaderMixedItem -> true
                         is GroupMixedItem -> false
                         is NotificationMixedItem -> true
+                        is GroupActionMixedItem -> true
                         is CalendarDayMixedItem -> true
                         else -> false
                     }
@@ -75,6 +80,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         }
 
     var groups = mutableListOf<Group>()
+        set(value) {
+            field = value
+            generate()
+        }
+
+    var groupActions = mutableListOf<GroupAction>()
         set(value) {
             field = value
             generate()
@@ -97,6 +108,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             add(HeaderMixedItem())
             when (content) {
                 FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
+                FeedContent.ACTIVITIES -> groupActions.forEach { add(GroupActionMixedItem(it)) }
                 FeedContent.NOTIFICATIONS -> notifications.forEach { add(NotificationMixedItem(it)) }
                 FeedContent.CALENDAR -> IntArray(14)
                         .mapIndexed { i, _ -> i }
@@ -128,6 +140,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     .inflate(R.layout.calendar_day_item, parent, false)).also {
                 it.disposableGroup = on<DisposableHandler>().group()
             }
+            4 -> GroupActionViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.group_action_photo_large_item, parent, false)).also {
+                it.disposableGroup = on<DisposableHandler>().group()
+            }
             else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
         }
     }
@@ -142,8 +158,14 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             is GroupPreviewViewHolder -> bindGroupPreview(viewHolder, (item as GroupMixedItem).group)
             is NotificationViewHolder -> bindNotification(viewHolder, (item as NotificationMixedItem).notification)
             is CalendarDayViewHolder -> bindCalendarDay(viewHolder, (item as CalendarDayMixedItem).date, item.position)
+            is GroupActionViewHolder -> bindGroupAction(viewHolder, (item as GroupActionMixedItem).groupAction)
         }
     }
+
+    private fun bindGroupAction(holder: GroupActionViewHolder, groupAction: GroupAction) {
+        holder.on = branch()
+        holder.on<GroupActionDisplay>().display(holder.itemView.groupAction, groupAction, GroupActionDisplay.Layout.PHOTO, 1.5f)
+   }
 
     private fun bindCalendarDay(holder: CalendarDayViewHolder, date: Date, position: Int) {
         holder.on = branch()
@@ -371,6 +393,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 holder.disposableGroup.clear()
                 holder.on.off()
             }
+            is GroupActionViewHolder -> {
+                holder.disposableGroup.clear()
+                holder.on.off()
+            }
         }
     }
 
@@ -402,6 +428,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class GroupMixedItem(val group: Group) : MixedItem(1)
     class NotificationMixedItem(val notification: Notification) : MixedItem(2)
     class CalendarDayMixedItem(val position: Int, val date: Date) : MixedItem(3)
+    class GroupActionMixedItem(val groupAction: GroupAction) : MixedItem(4)
     open class MixedItem(val type: Int)
 
     class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -425,8 +452,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         var time = itemView.notificationTime!!
     }
 
-    class GroupPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        lateinit var on: On
+        lateinit var disposableGroup: DisposableGroup
+    }
 
+    class GroupPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var on: On
         var groupName = itemView.groupName!!
         var messagesRecyclerView = itemView.messagesRecyclerView!!

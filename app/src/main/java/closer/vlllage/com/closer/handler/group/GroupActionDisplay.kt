@@ -24,10 +24,9 @@ import com.google.gson.JsonPrimitive
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.group_action_edit_flow_modal.view.*
 import java.util.*
-import java.util.concurrent.atomic.DoubleAccumulator
 
 class GroupActionDisplay constructor(private val on: On) {
-    fun display(view: View, groupAction: GroupAction, layout: Layout) {
+    fun display(view: View, groupAction: GroupAction, layout: Layout, scale: Float = 1f) {
         view.clipToOutline = true
 
         val holder = GroupActionViewHolder(view)
@@ -63,14 +62,14 @@ class GroupActionDisplay constructor(private val on: On) {
             }
 
             if (groupAction.photo != null) {
-                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionSmallTextSize))
+                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionSmallTextSize) * scale)
                 holder.actionName.setBackgroundResource(R.drawable.gradient_shadow_top_rounded_8dp)
                 holder.photo?.setImageDrawable(null)
                 on<ImageHandler>().get().load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=256")
                         .noPlaceholder()
                         .into(holder.photo)
             } else {
-                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionLargeTextSize))
+                holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionLargeTextSize) * scale)
                 holder.actionName.background = null
                 holder.photo?.setImageResource(getRandomBubbleBackgroundResource(groupAction))
             }
