@@ -4,12 +4,14 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 import android.view.View
+import androidx.annotation.ColorRes
 
 import closer.vlllage.com.closer.R
 
 class AlertConfig(private val showCallback: (AlertConfig) -> Unit) {
     var title: String? = null
     var message: String? = null
+    @ColorRes var messageColorResId: Int? = null
     @LayoutRes var layoutResId: Int? = null
     var positiveButton: String? = null
     var positiveButtonCallback: ((alertResult: Any?) -> Unit)? = null

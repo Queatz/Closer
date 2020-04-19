@@ -22,6 +22,8 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.reactive.DataSubscription
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -29,6 +31,8 @@ class FeedHandler constructor(private val on: On) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var mixedAdapter: MixedHeaderAdapter
+
+    private var groupActionsObservable: DataSubscription? = null
 
     fun attach(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
@@ -98,7 +102,9 @@ class FeedHandler constructor(private val on: On) {
     }
 
     private fun setGroupActions(groups: List<Group>) {
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
+        groupActionsObservable?.let { on<DisposableHandler>().dispose(it) }
+
+        groupActionsObservable = on<StoreHandler>().store.box(GroupAction::class).query()
                 .`in`(GroupAction_.group, groups
                         .filter { it.id != null }
                         .map { it.id }
@@ -107,10 +113,11 @@ class FeedHandler constructor(private val on: On) {
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
-                .single()
                 .observer { groupActions ->
                     mixedAdapter.groupActions = groupActions.toMutableList()
-                })
+                }
+
+        on<DisposableHandler>().add(groupActionsObservable!!)
     }
 
     private fun setNotifications(notifications: List<Notification>) {
@@ -134,12 +141,14 @@ class FeedHandler constructor(private val on: On) {
     fun show(item: GroupToolbarHandler.ToolbarItem) {
         reveal(true)
 
-        mixedAdapter.content = when (item.value) {
+        when (item.value) {
             ContentViewType.HOME_NOTIFICATIONS -> FeedContent.NOTIFICATIONS
             ContentViewType.HOME_CALENDAR -> FeedContent.CALENDAR
             ContentViewType.HOME_ACTIVITIES -> FeedContent.ACTIVITIES
-            else -> FeedContent.GROUPS
-        }
+            ContentViewType.HOME_GROUPS -> FeedContent.GROUPS
+            ContentViewType.HOME_EXPLORE -> FeedContent.GROUPS
+            else -> null
+        }?.let { mixedAdapter.content = it }
     }
 
     private fun reveal(show: Boolean) {

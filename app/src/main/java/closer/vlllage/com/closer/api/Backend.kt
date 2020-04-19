@@ -189,6 +189,12 @@ interface Backend {
     @POST("action/{id}")
     fun updateGroupActionFlow(@Path("id") groupActionId: String, @Query("flow") flow: String): Single<SuccessResult>
 
+    @POST("action/{id}")
+    fun updateGroupActionAbout(@Path("id") groupActionId: String, @Query("about") flow: String): Single<SuccessResult>
+
+    @POST("action/{id}")
+    fun usedGroupAction(@Path("id") groupActionId: String, @Query("used") used: Boolean): Single<SuccessResult>
+
     @GET("action/{id}")
     fun getGroupAction(@Path("id") groupActionId: String): Single<GroupActionResult>
 

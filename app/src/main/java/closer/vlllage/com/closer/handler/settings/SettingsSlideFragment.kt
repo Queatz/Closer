@@ -52,15 +52,15 @@ class SettingsSlideFragment : PoolFragment() {
         publicNotificationsSettingsSwitch.isChecked = !on<AccountHandler>().privateMode
         publicNotificationsSettingsSwitchDescription.visible = !publicNotificationsSettingsSwitch.isChecked
 
-        val privateModeSettingsSwitch = view.findViewById<Switch>(R.id.privateModeSettingsSwitch)
-        val privateModeSettingsSwitchDescription = view.findViewById<View>(R.id.privateModeSettingsSwitchDescription)
-
-        privateModeSettingsSwitch.setOnCheckedChangeListener { _, isChecked ->
-            on<Animate>().alpha(privateModeSettingsSwitchDescription, isChecked)
-            on<AccountHandler>().updatePrivateOnly(isChecked)
-        }
-
-        privateModeSettingsSwitch.isChecked = on<AccountHandler>().privateOnly
-        privateModeSettingsSwitchDescription.visible = privateModeSettingsSwitch.isChecked
+//        val privateModeSettingsSwitch = view.findViewById<Switch>(R.id.privateModeSettingsSwitch)
+//        val privateModeSettingsSwitchDescription = view.findViewById<View>(R.id.privateModeSettingsSwitchDescription)
+//
+//        privateModeSettingsSwitch.setOnCheckedChangeListener { _, isChecked ->
+//            on<Animate>().alpha(privateModeSettingsSwitchDescription, isChecked)
+//            on<AccountHandler>().updatePrivateOnly(isChecked)
+//        }
+//
+//        privateModeSettingsSwitch.isChecked = on<AccountHandler>().privateOnly
+//        privateModeSettingsSwitchDescription.visible = privateModeSettingsSwitch.isChecked
     }
 }

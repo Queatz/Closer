@@ -199,6 +199,14 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.backend.updateGroupActionFlow(groupActionId, flow))
     }
 
+    fun updateGroupActionAbout(groupActionId: String, about: String): Single<SuccessResult> {
+        return uiThread(api.backend.updateGroupActionAbout(groupActionId, about))
+    }
+
+    fun usedGroupAction(groupActionId: String): Single<SuccessResult> {
+        return uiThread(api.backend.usedGroupAction(groupActionId, true))
+    }
+
     fun getGroupAction(groupActionId: String): Single<GroupActionResult> {
         return uiThread(api.backend.getGroupAction(groupActionId))
     }

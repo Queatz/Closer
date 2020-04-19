@@ -56,7 +56,10 @@ class SortHandler constructor(private val on: On) {
     }
 
     fun sortGroupActions(): Comparator<GroupAction> {
-        return Comparator { action, actionOther -> action.name!!.compareTo(actionOther.name!!) }
+        return Comparator { o1, o2 ->
+            if (o2.used == null && o1.used == null) o1.name!!.compareTo(o2.name!!)
+            else (o2.used ?: Date(0)).compareTo(o1.used ?: Date(0))
+        }
     }
 
     fun sortSuggestions(latLng: LatLng): Comparator<Suggestion> {

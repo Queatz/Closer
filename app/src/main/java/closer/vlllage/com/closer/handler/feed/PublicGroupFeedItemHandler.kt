@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.create_group_modal.view.*
 import kotlinx.android.synthetic.main.feed_item_public_groups.view.*
 import java.util.*
@@ -53,6 +54,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var itemView: View
     private lateinit var onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit
     private lateinit var toolbarAdapter: ToolbarAdapter
+
+
+    private val state = ViewState()
+
+    private val stateObservable = BehaviorSubject.createDefault(state)
 
     fun attach(itemView: View, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
         this.itemView = itemView
@@ -129,11 +135,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             searchGroupsAdapter.setGroups(groups.filter { !it.hasEvent() && !it.physical })
 
             searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
-                itemView.eventsHeader.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_NOTIFICATIONS && toolbarAdapter.selectedContentView.value != ContentViewType.HOME_CALENDAR && toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITIES && it.isNotEmpty()
+                state.hasEvents = it.isNotEmpty()
+                stateObservable.onNext(state)
             })
 
             searchHubsAdapter.setGroups(groups.filter { it.hub }.also {
-                itemView.placesHeader.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_NOTIFICATIONS && toolbarAdapter.selectedContentView.value != ContentViewType.HOME_CALENDAR && toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITIES && it.isNotEmpty()
+                state.hasPlaces = it.isNotEmpty()
+                stateObservable.onNext(state)
             })
         })
 
@@ -178,10 +186,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 loadSuggestions(center)
                 loadPeople(center)
             }
-            updateViews()
+            state.privateOnly = on<AccountHandler>().privateOnly
+            stateObservable.onNext(state)
         })
-
-        updateViews()
 
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -230,16 +237,14 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             FeedContent.ACTIVITIES -> ContentViewType.HOME_ACTIVITIES
         })
 
-        on<DisposableHandler>().add(toolbarAdapter.selectedContentView
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { updateViews() })
+        updateViews()
 
         toolbarAdapter.items = mutableListOf(
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.explore),
                         R.drawable.ic_search_black_24dp,
                         View.OnClickListener {
-                      toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_EXPLORE)
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_EXPLORE)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_EXPLORE,
@@ -249,6 +254,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         R.drawable.ic_beach_access_black_24dp,
                         View.OnClickListener {
                             toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITIES)
+                            on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_ACTIVITIES,
                         color = R.color.purple),
@@ -257,6 +263,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         R.drawable.ic_event_note_black_24dp,
                         View.OnClickListener {
                             toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CALENDAR)
+                            on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_CALENDAR,
                         color = R.color.red),
@@ -289,100 +296,104 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun updateViews() {
-        when (toolbarAdapter.selectedContentView.value) {
-            ContentViewType.HOME_NOTIFICATIONS -> {
-                saySomethingHeader.visible = false
-                saySomething.visible = false
-                sendSomethingButton.visible = false
-                peopleContainer.visible = false
-                eventsHeader.visible = false
-                groupsHeader.visible = false
-                eventsRecyclerView.visible = false
-                hubsRecyclerView.visible = false
-                actionRecyclerView.visible = false
-                suggestionsRecyclerView.visible = false
-                peopleRecyclerView.visible = false
-                groupsRecyclerView.visible = false
-                searchGroups.visible = false
-                itemView.historyButton.visible = false
-                itemView.thingsToDoHeader.visible = false
-                itemView.suggestionsHeader.visible = false
-                itemView.placesHeader.visible = false
-                itemView.feedText.visible = true
-                itemView.feedText.setText(R.string.notifications)
-            }
-            ContentViewType.HOME_ACTIVITIES -> {
-                saySomethingHeader.visible = false
-                saySomething.visible = false
-                sendSomethingButton.visible = false
-                peopleContainer.visible = false
-                eventsHeader.visible = false
-                groupsHeader.visible = false
-                eventsRecyclerView.visible = false
-                hubsRecyclerView.visible = false
-                actionRecyclerView.visible = false
-                suggestionsRecyclerView.visible = false
-                peopleRecyclerView.visible = false
-                groupsRecyclerView.visible = false
-                searchGroups.visible = false
-                itemView.historyButton.visible = false
-                itemView.thingsToDoHeader.visible = false
-                itemView.suggestionsHeader.visible = false
-                itemView.placesHeader.visible = false
-                itemView.feedText.visible = true
-                itemView.feedText.setText(R.string.things_to_do_around_here)
-            }
-            ContentViewType.HOME_CALENDAR -> {
-                saySomethingHeader.visible = false
-                saySomething.visible = false
-                sendSomethingButton.visible = false
-                peopleContainer.visible = false
-                eventsHeader.visible = false
-                groupsHeader.visible = false
-                eventsRecyclerView.visible = false
-                hubsRecyclerView.visible = false
-                actionRecyclerView.visible = false
-                suggestionsRecyclerView.visible = false
-                peopleRecyclerView.visible = false
-                groupsRecyclerView.visible = false
-                searchGroups.visible = false
-                itemView.historyButton.visible = false
-                itemView.thingsToDoHeader.visible = false
-                itemView.suggestionsHeader.visible = false
-                itemView.placesHeader.visible = false
-                itemView.feedText.visible = false
+        on<DisposableHandler>().apply {
+            add(toolbarAdapter.selectedContentView.flatMap { content -> stateObservable.map { Pair(content, state) } }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        val content = it.first
+                        val state = it.second
 
-                val showPublic = on<AccountHandler>().privateOnly.not()
+                        when (content) {
+                            ContentViewType.HOME_NOTIFICATIONS -> {
+                                saySomethingHeader.visible = false
+                                saySomething.visible = false
+                                sendSomethingButton.visible = false
+                                peopleContainer.visible = false
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = false
+                                actionRecyclerView.visible = false
+                                suggestionsRecyclerView.visible = false
+                                peopleRecyclerView.visible = false
+                                groupsRecyclerView.visible = false
+                                searchGroups.visible = false
+                                itemView.historyButton.visible = false
+                                itemView.thingsToDoHeader.visible = false
+                                itemView.suggestionsHeader.visible = false
+                                itemView.placesHeader.visible = false
+                                itemView.feedText.visible = true
+                                itemView.feedText.setText(R.string.notifications)
+                            }
+                            ContentViewType.HOME_ACTIVITIES -> {
+                                saySomethingHeader.visible = false
+                                saySomething.visible = false
+                                sendSomethingButton.visible = false
+                                peopleContainer.visible = false
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = false
+                                actionRecyclerView.visible = false
+                                suggestionsRecyclerView.visible = false
+                                peopleRecyclerView.visible = false
+                                groupsRecyclerView.visible = false
+                                searchGroups.visible = false
+                                itemView.historyButton.visible = false
+                                itemView.thingsToDoHeader.visible = false
+                                itemView.suggestionsHeader.visible = false
+                                itemView.placesHeader.visible = false
+                                itemView.feedText.visible = false
+                            }
+                            ContentViewType.HOME_CALENDAR -> {
+                                saySomethingHeader.visible = false
+                                saySomething.visible = false
+                                sendSomethingButton.visible = false
+                                peopleContainer.visible = false
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = false
+                                actionRecyclerView.visible = false
+                                suggestionsRecyclerView.visible = false
+                                peopleRecyclerView.visible = false
+                                groupsRecyclerView.visible = false
+                                searchGroups.visible = false
+                                itemView.historyButton.visible = false
+                                itemView.thingsToDoHeader.visible = false
+                                itemView.suggestionsHeader.visible = false
+                                itemView.placesHeader.visible = false
+                                itemView.feedText.visible = false
+                            }
+                            else -> {
+                                eventsRecyclerView.visible = true
+                                hubsRecyclerView.visible = true
+                                actionRecyclerView.visible = true
+                                suggestionsRecyclerView.visible = state.hasSuggestions && content === ContentViewType.HOME_EXPLORE
+                                peopleRecyclerView.visible = true
+                                groupsRecyclerView.visible = true
+                                eventsHeader.visible = state.hasEvents
+                                groupsHeader.visible = true
+                                searchGroups.visible = true
+                                itemView.historyButton.visible = true
+                                itemView.thingsToDoHeader.visible = true
+                                itemView.suggestionsHeader.visible = state.hasSuggestions && content === ContentViewType.HOME_EXPLORE
+                                itemView.placesHeader.visible = state.hasPlaces
+                                itemView.feedText.visible = true
 
-                eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
-            }
-            else -> {
-                eventsRecyclerView.visible = true
-                hubsRecyclerView.visible = true
-                actionRecyclerView.visible = true
-                suggestionsRecyclerView.visible = true
-                peopleRecyclerView.visible = true
-                groupsRecyclerView.visible = true
-                eventsHeader.visible = true
-                groupsHeader.visible = true
-                searchGroups.visible = true
-                itemView.historyButton.visible = true
-                itemView.thingsToDoHeader.visible = true
-                itemView.suggestionsHeader.visible = true
-                itemView.placesHeader.visible = true
-                itemView.feedText.visible = true
+                                val showPublic = state.privateOnly.not()
 
-                val showPublic = on<AccountHandler>().privateOnly.not()
-
-                saySomethingHeader.visible = showPublic
-                saySomething.visible = showPublic
-                sendSomethingButton.visible = showPublic
-                peopleContainer.visible = showPublic
-                eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
-                groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
-                itemView.feedText.setText(if (showPublic) R.string.conversations_around_here else R.string.conversations)
-                searchGroupsAdapter.showCreateOption(showPublic)
-            }
+                                saySomethingHeader.visible = showPublic
+                                saySomething.visible = showPublic
+                                sendSomethingButton.visible = showPublic
+                                peopleContainer.visible = showPublic
+                                eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
+                                groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
+                                itemView.feedText.setText(if (showPublic) R.string.conversations_around_here else R.string.conversations)
+                                searchGroupsAdapter.showCreateOption(showPublic)
+                            }
+                        }
+                    })
         }
     }
 
@@ -455,8 +466,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { suggestions ->
-                    itemView.suggestionsHeader.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_NOTIFICATIONS && toolbarAdapter.selectedContentView.value != ContentViewType.HOME_CALENDAR && toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITIES && suggestions.isNotEmpty() && on<AccountHandler>().privateOnly.not()
-                    itemView.suggestionsRecyclerView.visible = toolbarAdapter.selectedContentView.value != ContentViewType.HOME_NOTIFICATIONS && toolbarAdapter.selectedContentView.value != ContentViewType.HOME_CALENDAR && toolbarAdapter.selectedContentView.value != ContentViewType.HOME_ACTIVITIES && suggestions.isNotEmpty() && on<AccountHandler>().privateOnly.not()
+                    state.hasSuggestions = suggestions.isNotEmpty()
+                    stateObservable.onNext(state)
                     on<SuggestionsRecyclerViewHandler>().setSuggestions(suggestions)
                 })
     }
@@ -579,4 +590,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         on<GroupActivityTransitionHandler>().showGroupMessages(view, groupId)
     }
 
+}
+
+class ViewState {
+    var hasEvents = false
+    var hasPlaces = false
+    var hasSuggestions = false
+    var privateOnly = false
 }

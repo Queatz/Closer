@@ -44,7 +44,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
     var items = mutableListOf<MixedItem>()
         set(value) {
-            val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            val diffResult  = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
                 override fun getOldListSize() = field.size
                 override fun getNewListSize() = value.size
 
@@ -68,7 +68,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is HeaderMixedItem -> true
                         is GroupMixedItem -> false
                         is NotificationMixedItem -> true
-                        is GroupActionMixedItem -> true
+                        is GroupActionMixedItem -> old.groupAction.about == (new as GroupActionMixedItem).groupAction.about
                         is CalendarDayMixedItem -> true
                         else -> false
                     }
@@ -164,7 +164,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
     private fun bindGroupAction(holder: GroupActionViewHolder, groupAction: GroupAction) {
         holder.on = branch()
-        holder.on<GroupActionDisplay>().display(holder.itemView.groupAction, groupAction, GroupActionDisplay.Layout.PHOTO, 1.5f)
+        holder.on<GroupActionDisplay>().display(holder.itemView.groupAction, groupAction, GroupActionDisplay.Layout.PHOTO, holder.itemView.groupActionDescription, 1.5f)
    }
 
     private fun bindCalendarDay(holder: CalendarDayViewHolder, date: Date, position: Int) {

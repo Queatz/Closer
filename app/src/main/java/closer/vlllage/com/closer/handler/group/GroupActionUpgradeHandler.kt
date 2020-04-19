@@ -65,4 +65,18 @@ class GroupActionUpgradeHandler constructor(private val on: On) {
             on<DefaultAlerts>().thatDidntWork()
         }))
     }
+
+    fun setAbout(groupAction: GroupAction, about: String) {
+        on<DisposableHandler>().add(on<ApiHandler>().updateGroupActionAbout(groupAction.id!!, about).subscribe({
+            if (it.success) {
+                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.activity_description_updated))
+                groupAction.about = about
+                on<StoreHandler>().store.box(GroupAction::class).put(groupAction)
+            } else {
+                on<DefaultAlerts>().thatDidntWork()
+            }
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        }))
+    }
 }

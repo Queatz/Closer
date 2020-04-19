@@ -118,6 +118,7 @@
     <string name="search_groups">Search groups</string>
     <string name="open_group">Open group</string>
     <string name="tell_more_about_group">This group is about…</string>
+    <string name="tell_more_about_group_action">More about this activity…</string>
     <string name="group_as_public">%1$s (Public group)</string>
     <string name="location_is_needed">Your phone\'s current location is needed to set public groups.</string>
     <string name="message_sent">Message sent</string>
@@ -201,7 +202,7 @@
     <string name="about_you">About you</string>
     <string name="is_next_day">Next day</string>
     <string name="today">Today</string>
-    <string name="edit_about_group">Update about group</string>
+    <string name="update_description">Update description</string>
     <string name="update_background">Update background</string>
     <string name="private_group">Private group</string>
     <string name="shared_by">%1$s — shared by %2$s</string>
@@ -399,6 +400,8 @@
     <string name="by_invite_from">by invite from %1$s</string>
     <string name="midnight">Midnight</string>
     <string name="noon">Noon</string>
+    <string name="activity_description_updated">Activity description updated</string>
+    <string name="post_in">Post in %1$s</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

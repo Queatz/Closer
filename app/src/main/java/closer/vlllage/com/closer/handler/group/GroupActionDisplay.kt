@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.group
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -26,10 +27,10 @@ import kotlinx.android.synthetic.main.group_action_edit_flow_modal.view.*
 import java.util.*
 
 class GroupActionDisplay constructor(private val on: On) {
-    fun display(view: View, groupAction: GroupAction, layout: Layout, scale: Float = 1f) {
+    fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
         view.clipToOutline = true
 
-        val holder = GroupActionViewHolder(view)
+        val holder = GroupActionViewHolder(view, about)
         holder.actionName.text = groupAction.name
 
         val target: View = when (layout) {
@@ -73,6 +74,9 @@ class GroupActionDisplay constructor(private val on: On) {
                 holder.actionName.background = null
                 holder.photo?.setImageResource(getRandomBubbleBackgroundResource(groupAction))
             }
+
+            holder.about?.text = groupAction.about
+            holder.about?.visible = groupAction.about.isNullOrBlank().not()
         }
     }
 
@@ -119,12 +123,13 @@ class GroupActionDisplay constructor(private val on: On) {
                 if (!success) {
                     on<DefaultAlerts>().thatDidntWork()
                 } else {
+                    on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
                     on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
                 }
             }
             title = on<AccountHandler>().name + " " + groupAction.intent
-            message = "${group.name?.let { on<ResourcesHandler>().resources.getString(R.string.in_x, it) } ?: ""}${selection?.let { if (group.name.isNullOrBlank()) it else "\n\n$it"} ?: ""}"
-            positiveButton = on<ResourcesHandler>().resources.getString(R.string.post)
+            message = "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it"} ?: ""}".let { if (it.isBlank()) null else it }
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_in, group.name ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
             show()
         }
     }
@@ -136,9 +141,24 @@ class GroupActionDisplay constructor(private val on: On) {
                     MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, R.string.share_group_activity) { shareGroupActivity(groupAction) },
                     MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo) { takeGroupActionPhoto(groupAction) },
                     MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo) { uploadGroupActionPhoto(groupAction) },
+                    MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.update_description) { editGroupActionAbout(groupAction) },
                     MenuHandler.MenuOption(R.drawable.ic_poll_black_24dp, R.string.edit_flow) { editGroupActionFlow(groupAction) },
                     MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_action_menu_item) { removeGroupAction(groupAction) }
             )
+        }
+    }
+
+    private fun editGroupActionAbout(groupAction: GroupAction) {
+        on<AlertHandler>().make().apply {
+            title = on<Val>().of(groupAction.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
+            layoutResId = R.layout.group_action_description_modal
+            textViewId = R.id.input
+            onTextViewSubmitCallback = { about -> on<GroupActionUpgradeHandler>().setAbout(groupAction, about) }
+            onAfterViewCreated = { alert, view ->
+                view.findViewById<EditText>(alert.textViewId!!).setText(groupAction.about ?: "")
+            }
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_description)
+            show()
         }
     }
 
@@ -232,7 +252,7 @@ class GroupActionDisplay constructor(private val on: On) {
             groupAction.id!!.hashCode().toLong())
     }
 
-    inner class GroupActionViewHolder(val itemView: View) {
+    inner class GroupActionViewHolder(val itemView: View, val about: TextView? = null) {
 
         var photo: ImageView? = itemView.findViewById(R.id.photo)
         var actionName: TextView = itemView.findViewById(R.id.actionName)
