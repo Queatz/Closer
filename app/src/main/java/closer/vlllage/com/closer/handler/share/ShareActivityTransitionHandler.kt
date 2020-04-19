@@ -27,6 +27,11 @@ class ShareActivityTransitionHandler constructor(private val on: On) {
     }
 
     fun inviteToGroup(phoneId: String) {
+        val intent = Intent(on<ApplicationHandler>().app, ShareActivity::class.java)
+        intent.action = Intent.ACTION_VIEW
+        intent.putExtra(EXTRA_INVITE_TO_GROUP_PHONE_ID, phoneId)
+
+        on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
     fun shareGroupToGroup(groupId: String) {
@@ -62,10 +67,10 @@ class ShareActivityTransitionHandler constructor(private val on: On) {
 
     }
 
-    fun performArcheology(location: Location) {
+    fun performArcheology(latLng: LatLng) {
         val intent = Intent(on<ApplicationHandler>().app, ShareActivity::class.java)
         intent.action = Intent.ACTION_VIEW
-        intent.putExtra(EXTRA_LAT_LNG, on<LatLngStr>().from(location.latLng()))
+        intent.putExtra(EXTRA_LAT_LNG, on<LatLngStr>().from(latLng))
 
         on<ActivityHandler>().activity!!.startActivity(intent)
     }

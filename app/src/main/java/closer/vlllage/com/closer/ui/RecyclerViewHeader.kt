@@ -58,9 +58,7 @@ class RecyclerViewHeader(private val on: On) {
             setHeaderMargin()
         }
 
-        if (headerViewHolder === footerViewHolder && position == 1) {
-            removeFooterView()
-        }
+        if (recyclerView!!.adapter!!.itemCount == 1) setHeaderMargin()
     }
 
     fun onRecycled(holder: RecyclerView.ViewHolder) {
@@ -73,29 +71,28 @@ class RecyclerViewHeader(private val on: On) {
                     holder.itemView.paddingBottom
             )
 
-            headerViewHolder = null
             val params = holder.itemView.layoutParams as ViewGroup.MarginLayoutParams
             params.topMargin = 0
             holder.itemView.layoutParams = params
+
+            headerViewHolder = null
+            setHeaderMargin()
         }
 
         if (holder === footerViewHolder) {
-            removeFooterView()
-        }
-    }
+            footerViewHolder?.apply {
+                itemView.removeOnLayoutChangeListener(footerLayoutChangeListener)
+                itemView.setPaddingRelative(
+                        itemView.paddingStart,
+                        itemView.paddingTop,
+                        itemView.paddingEnd,
+                        originalFooterPadding
+                )
+            }
 
-    private fun removeFooterView() {
-        footerViewHolder?.apply {
-            itemView.removeOnLayoutChangeListener(footerLayoutChangeListener)
-            itemView.setPaddingRelative(
-                    itemView.paddingStart,
-                    itemView.paddingTop,
-                    itemView.paddingEnd,
-                    originalFooterPadding
-            )
+            footerViewHolder = null
+            setHeaderMargin()
         }
-
-        footerViewHolder = null
     }
 
     fun attach(recyclerView: RecyclerView, pad: Int) {
@@ -120,7 +117,7 @@ class RecyclerViewHeader(private val on: On) {
 
         val params = headerViewHolder!!.itemView.layoutParams as ViewGroup.MarginLayoutParams
         val m = r.height() - pad
-        params.topMargin = m + (footerViewHolder?.itemView?.bottom?.let { max(0, r.height() - (m + (it - headerViewHolder!!.itemView.top))) } ?: 0)
+        params.topMargin = m + (if (headerViewHolder === footerViewHolder && recyclerView!!.adapter!!.itemCount > 1) 0 else (footerViewHolder?.itemView?.bottom?.let { max(0, r.height() - (m + (it - headerViewHolder!!.itemView.top))) } ?: 0))
         headerViewHolder?.itemView?.layoutParams = params
 
         recyclerView?.postInvalidate()

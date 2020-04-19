@@ -75,10 +75,10 @@ class FeedHandler constructor(private val on: On) {
                             between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
                                     .and()
                                     .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
-                                    .or()
+                        } else {
+                            equal(Group_.isPublic, false)
                         }
                     }
-                            .equal(Group_.isPublic, false)
                     on<DisposableHandler>().add(groupPreviewQueryBuilder
                             .sort(on<SortHandler>().sortGroups(false))
                             .build()

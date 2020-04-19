@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
@@ -44,25 +45,38 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 occupationTextView.text = phone.occupation ?: nothing
                 historyTextView.text = phone.history ?: nothing
 
-                introductionTextView.setTextColor(if (phone.introduction.isNullOrBlank())
-                    on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
-                else
-                    on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+                with(on<ResourcesHandler>().resources) {
+                    introductionTextView.setTextColor(
+                            if (phone.introduction.isNullOrBlank()) getColor(R.color.textHintInverse)
+                            else getColor(R.color.textInverse)
+                    )
 
-                offtimeTextView.setTextColor(if (phone.offtime.isNullOrBlank())
-                    on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
-                else
-                    on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+                    offtimeTextView.setTextColor(
+                            if (phone.offtime.isNullOrBlank()) getColor(R.color.textHintInverse)
+                            else getColor(R.color.textInverse)
+                    )
 
-                occupationTextView.setTextColor(if (phone.occupation.isNullOrBlank())
-                    on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
-                else
-                    on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+                    occupationTextView.setTextColor(
+                            if (phone.occupation.isNullOrBlank()) getColor(R.color.textHintInverse)
+                            else getColor(R.color.textInverse)
+                    )
 
-                historyTextView.setTextColor(if (phone.history.isNullOrBlank())
-                    on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)
-                else
-                    on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+                    historyTextView.setTextColor(
+                            if (phone.history.isNullOrBlank()) getColor(R.color.textHintInverse)
+                            else getColor(R.color.textInverse)
+                    )
+                }
+
+                with({ tv: TextView, text: String? ->
+                    tv.setTextColor(on<ResourcesHandler>().resources.getColor(
+                            if (text.isNullOrBlank()) R.color.textHintInverse else R.color.textInverse
+                    ))
+                }) {
+                    this(introductionTextView, phone.introduction)
+                    this(offtimeTextView, phone.offtime)
+                    this(occupationTextView, phone.occupation)
+                    this(historyTextView, phone.history)
+                }
 
                 goalsEmptyTextView.visible = phone.goals.isNullOrEmpty()
                 lifestylesEmptyTextView.visible = phone.lifestyles.isNullOrEmpty()
@@ -107,6 +121,11 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 goalsRecyclerView.adapter = goalAdapter
                 goalsRecyclerView.layoutManager = LinearLayoutManager(context)
+//                goalsRecyclerView.layoutManager = object : LinearLayoutManager(context) {
+//                    override fun onMeasure(recycler: RecyclerView.Recycler, state: RecyclerView.State, widthSpec: Int, heightSpec: Int) {
+//                        super.onMeasure(recycler, state, widthSpec, MeasureSpec.makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.AT_MOST))
+//                    }
+//                }
 
                 val lifestyleAdapter = GoalAdapter(on) {
                     if (editable) {
@@ -146,7 +165,6 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 lifestyleRecyclerView.adapter = lifestyleAdapter
                 lifestyleRecyclerView.layoutManager = LinearLayoutManager(context)
-
 
                 actionEditIntroduction.visible = editable
                 actionAddGoal.visible = editable

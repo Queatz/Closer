@@ -17,8 +17,9 @@
         android:paddingTop="@dimen/padDouble"
         android:paddingStart="@dimen/padDialog"
         android:paddingEnd="@dimen/padDialog"
-        android:maxLength="1024"
         android:background="@null"
+        android:singleLine="false"
+        android:scrollHorizontally="false"
         android:inputType="textShortMessage|textCapSentences|textMultiLine"
         android:maxLines="3" />
 

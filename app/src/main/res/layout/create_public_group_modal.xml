@@ -15,11 +15,12 @@
         android:selectAllOnFocus="true"
         android:imeOptions="actionGo"
         android:textAlignment="center"
-        android:paddingTop="16dp"
-        android:padding="8dp"
-        android:maxLength="128"
+        android:paddingTop="@dimen/padDouble"
+        android:padding="@dimen/pad"
         android:background="@null"
-        android:inputType="textShortMessage|textCapSentences"
-        android:maxLines="1" />
+        android:maxLines="3"
+        android:singleLine="false"
+        android:scrollHorizontally="false"
+        android:inputType="textShortMessage|textCapSentences|textMultiLine" />
 
 </LinearLayout>

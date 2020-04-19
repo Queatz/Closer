@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.group_action_photo_large_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.groupName
 import kotlinx.android.synthetic.main.notification_item.view.*
+import kotlinx.android.synthetic.main.text_item.view.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
@@ -57,6 +58,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is GroupActionMixedItem -> old.groupAction.objectBoxId == (new as GroupActionMixedItem).groupAction.objectBoxId
                         is NotificationMixedItem -> old.notification.objectBoxId == (new as NotificationMixedItem).notification.objectBoxId
                         is CalendarDayMixedItem -> false
+                        is TextMixedItem -> false
                         else -> false
                     }
                 }
@@ -69,6 +71,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is GroupMixedItem -> false
                         is NotificationMixedItem -> true
                         is GroupActionMixedItem -> old.groupAction.about == (new as GroupActionMixedItem).groupAction.about
+                        is TextMixedItem -> false
                         is CalendarDayMixedItem -> true
                         else -> false
                     }
@@ -108,7 +111,11 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             add(HeaderMixedItem())
             when (content) {
                 FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
-                FeedContent.ACTIVITIES -> groupActions.forEach { add(GroupActionMixedItem(it)) }
+                FeedContent.ACTIVITIES -> groupActions.apply {
+                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))
+                    else forEach { add(GroupActionMixedItem(it)) }
+
+                }
                 FeedContent.NOTIFICATIONS -> notifications.forEach { add(NotificationMixedItem(it)) }
                 FeedContent.CALENDAR -> IntArray(14)
                         .mapIndexed { i, _ -> i }
@@ -144,6 +151,8 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     .inflate(R.layout.group_action_photo_large_item, parent, false)).also {
                 it.disposableGroup = on<DisposableHandler>().group()
             }
+            5 -> TextViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.text_item, parent, false))
             else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
         }
     }
@@ -159,7 +168,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             is NotificationViewHolder -> bindNotification(viewHolder, (item as NotificationMixedItem).notification)
             is CalendarDayViewHolder -> bindCalendarDay(viewHolder, (item as CalendarDayMixedItem).date, item.position)
             is GroupActionViewHolder -> bindGroupAction(viewHolder, (item as GroupActionMixedItem).groupAction)
+            is TextViewHolder -> bindText(viewHolder, (item as TextMixedItem).text)
         }
+    }
+
+    private fun bindText(holder: TextViewHolder, text: String) {
+        holder.text.text = text
     }
 
     private fun bindGroupAction(holder: GroupActionViewHolder, groupAction: GroupAction) {
@@ -429,6 +443,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class NotificationMixedItem(val notification: Notification) : MixedItem(2)
     class CalendarDayMixedItem(val position: Int, val date: Date) : MixedItem(3)
     class GroupActionMixedItem(val groupAction: GroupAction) : MixedItem(4)
+    class TextMixedItem(val text: String) : MixedItem(5)
     open class MixedItem(val type: Int)
 
     class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -455,6 +470,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var on: On
         lateinit var disposableGroup: DisposableGroup
+    }
+
+    class TextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val text = itemView.text!!
     }
 
     class GroupPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

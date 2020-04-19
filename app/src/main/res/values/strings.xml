@@ -251,7 +251,7 @@
     <string name="edit_your_introduction">Edit your introduction</string>
     <string name="edit_your_history">Edit your history</string>
     <string name="edit_your_offtime">Edit your offtime</string>
-    <string name="add_a_lifestyle">Add a lifestyle</string>
+    <string name="add_a_lifestyle">Join a lifestyle</string>
     <string name="add_a_goal">Add a  goal</string>
     <string name="introduction_hint">What\'s the first thing people might want to know about you?</string>
     <string name="history_hint">Where are you from, what have you done?</string>
@@ -259,9 +259,9 @@
     <string name="them">Them</string>
     <string name="cheer_them">Cheer %1$s</string>
     <string name="remove">Remove</string>
-    <string name="remove_lifestyle">Remove lifestyle…</string>
+    <string name="remove_lifestyle">Leave lifestyle…</string>
     <string name="remove_goal">Remove goal…</string>
-    <string name="remove_lifestyle_confirm">Remove this lifestyle?</string>
+    <string name="remove_lifestyle_confirm">Leave this lifestyle?</string>
     <string name="remove_goal_confirm">Remove this goal?</string>
     <string name="view_profile">View your profile</string>
     <string name="goal">Goal</string>
@@ -350,13 +350,13 @@
     <string name="copy">Copy</string>
     <string name="phone_shared_a_group_action">%1$s shared an activity</string>
     <string name="add_this_goal">Make this your goal</string>
-    <string name="add_this_lifestyle">Make this your lifestyle</string>
-    <string name="see_people_with_goal">See everyone with this goal</string>
-    <string name="see_people_with_lifestyle">See everyone with this lifestyle</string>
+    <string name="add_this_lifestyle">Join this lifestyle</string>
+    <string name="see_people_with_goal">See people with this goal</string>
+    <string name="see_people_with_lifestyle">See people with this lifestyle</string>
     <string name="tap_for_options">Tap for options</string>
     <string name="added_goal">Added \"%1$s\" as your goal</string>
-    <string name="added_lifestyle">Added \"%1$s\" as your lifestyle</string>
-    <string name="lifestyle_removed">Lifestyle removed</string>
+    <string name="added_lifestyle">Joined \"%1$s\" lifestyle</string>
+    <string name="lifestyle_removed">Left lifestyle</string>
     <string name="goal_removed">Goal removed</string>
     <string name="failed_to_load_photo">Failed to load photo</string>
     <string name="host_again">Host again</string>
@@ -402,6 +402,7 @@
     <string name="noon">Noon</string>
     <string name="activity_description_updated">Activity description updated</string>
     <string name="post_in">Post in %1$s</string>
+    <string name="nothing_to_do_around_here">Nothing to do around here.\n\nTry moving the map around.</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

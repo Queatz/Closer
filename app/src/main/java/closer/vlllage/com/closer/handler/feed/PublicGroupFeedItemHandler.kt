@@ -150,20 +150,20 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         })
 
         itemView.historyButton.setOnClickListener {
-            on<LocationHandler>().getCurrentLocation({ location ->
+            on<MapHandler>().center?.let { center ->
                 on<AlertHandler>().make().apply {
                     this.title = on<ResourcesHandler>().resources.getString(R.string.perform_archeology)
                     this.message = on<ResourcesHandler>().resources.getString(R.string.perform_archeology_description)
                     negativeButton = on<ResourcesHandler>().resources.getString(R.string.nevermind)
                     positiveButton = on<ResourcesHandler>().resources.getString(R.string.lets_go)
                     positiveButtonCallback = {
-                        on<ShareActivityTransitionHandler>().performArcheology(location)
+                        on<ShareActivityTransitionHandler>().performArcheology(center)
                     }
                     show()
                 }
-            }, {
+            } ?: run {
                 on<DefaultAlerts>().thatDidntWork()
-            })
+            }
         }
 
         val cameraPositionCallback = { cameraPosition: CameraPosition ->

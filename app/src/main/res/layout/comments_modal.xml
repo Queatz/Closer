@@ -17,9 +17,10 @@
         android:paddingStart="@dimen/padDialog"
         android:paddingEnd="@dimen/padDialog"
         android:hint="@string/add_a_comment"
-        android:maxLength="128"
+        android:maxLines="3"
+        android:singleLine="false"
         android:background="@null"
-        android:inputType="textShortMessage|textCapSentences"
-        android:maxLines="1" />
+        android:scrollHorizontally="false"
+        android:inputType="textShortMessage|textCapSentences|textMultiLine" />
 
 </LinearLayout>
