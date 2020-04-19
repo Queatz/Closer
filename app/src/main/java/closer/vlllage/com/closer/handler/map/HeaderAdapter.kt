@@ -9,7 +9,7 @@ import com.queatz.on.On
 
 abstract class HeaderAdapter<T : RecyclerView.ViewHolder>(on: On) : PoolRecyclerAdapter<T>(on) {
 
-    private val header = RecyclerViewHeader()
+    private val header = RecyclerViewHeader(on)
 
     override fun onBindViewHolder(holder: T, position: Int) {
         header.onBind(holder, position)

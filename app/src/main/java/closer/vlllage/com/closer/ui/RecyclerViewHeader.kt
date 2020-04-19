@@ -4,12 +4,12 @@ import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import org.slf4j.event.Level
-import java.util.logging.Logger
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler
+import com.queatz.on.On
 import kotlin.math.max
-import kotlin.math.min
 
-class RecyclerViewHeader {
+class RecyclerViewHeader(private val on: On) {
 
     private var headerViewHolder: RecyclerView.ViewHolder? = null
     private var footerViewHolder: RecyclerView.ViewHolder? = null
@@ -19,7 +19,11 @@ class RecyclerViewHeader {
     private var originalHeaderPadding: Int = 0
     private var originalFooterPadding: Int = 0
 
-    private val layoutChangeListener = View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+    private val headerLayoutChangeListener = View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        setHeaderMargin()
+    }
+
+    private val footerLayoutChangeListener = View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
         setHeaderMargin()
     }
 
@@ -35,7 +39,7 @@ class RecyclerViewHeader {
             )
 
             footerViewHolder = holder
-            footerViewHolder?.itemView?.addOnLayoutChangeListener(layoutChangeListener)
+            footerViewHolder?.itemView?.addOnLayoutChangeListener(footerLayoutChangeListener)
             setHeaderMargin()
         }
 
@@ -50,14 +54,18 @@ class RecyclerViewHeader {
             )
 
             headerViewHolder = holder
-            headerViewHolder?.itemView?.addOnLayoutChangeListener(layoutChangeListener)
+            headerViewHolder?.itemView?.addOnLayoutChangeListener(headerLayoutChangeListener)
             setHeaderMargin()
+        }
+
+        if (headerViewHolder === footerViewHolder && position == 1) {
+            removeFooterView()
         }
     }
 
     fun onRecycled(holder: RecyclerView.ViewHolder) {
         if (holder === headerViewHolder) {
-            headerViewHolder?.itemView?.removeOnLayoutChangeListener(layoutChangeListener)
+            headerViewHolder?.itemView?.removeOnLayoutChangeListener(headerLayoutChangeListener)
             holder.itemView.setPaddingRelative(
                     holder.itemView.paddingStart,
                     originalHeaderPadding,
@@ -72,16 +80,22 @@ class RecyclerViewHeader {
         }
 
         if (holder === footerViewHolder) {
-            footerViewHolder?.itemView?.removeOnLayoutChangeListener(layoutChangeListener)
-            holder.itemView.setPaddingRelative(
-                    holder.itemView.paddingStart,
-                    holder.itemView.paddingTop,
-                    holder.itemView.paddingEnd,
+            removeFooterView()
+        }
+    }
+
+    private fun removeFooterView() {
+        footerViewHolder?.apply {
+            itemView.removeOnLayoutChangeListener(footerLayoutChangeListener)
+            itemView.setPaddingRelative(
+                    itemView.paddingStart,
+                    itemView.paddingTop,
+                    itemView.paddingEnd,
                     originalFooterPadding
             )
-
-            footerViewHolder = null
         }
+
+        footerViewHolder = null
     }
 
     fun attach(recyclerView: RecyclerView, pad: Int) {
@@ -102,20 +116,14 @@ class RecyclerViewHeader {
 
         val r = Rect()
 
-        recyclerView!!.getGlobalVisibleRect(r)
+        recyclerView?.getGlobalVisibleRect(r)
 
         val params = headerViewHolder!!.itemView.layoutParams as ViewGroup.MarginLayoutParams
         val m = r.height() - pad
         params.topMargin = m + (footerViewHolder?.itemView?.bottom?.let { max(0, r.height() - (m + (it - headerViewHolder!!.itemView.top))) } ?: 0)
         headerViewHolder?.itemView?.layoutParams = params
+
+        recyclerView?.postInvalidate()
+        headerViewHolder?.itemView?.postInvalidate()
     }
-
-
-    private fun extend(height: Int) = max(0, footerViewHolder?.let {
-        it.itemView.let {
-            Logger.getAnonymousLogger().warning("RECTANGLE: $height - ${it.bottom} = ${height - it.bottom}")
-
-            if (it.bottom == 0) 0 else height - it.bottom
-        }
-    } ?: 0)
 }

@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.list_text_header_item.view.*
 
 class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult) -> Unit) : PhoneAdapter(on, onReactionClickListener) {
 
-    private val header = RecyclerViewHeader()
+    private val header = RecyclerViewHeader(on)
     private var headerViewHolder: PhoneHeaderViewHolder? = null
     private var headerText: String? = null
 

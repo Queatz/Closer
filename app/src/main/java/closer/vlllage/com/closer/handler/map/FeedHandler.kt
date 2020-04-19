@@ -52,6 +52,7 @@ class FeedHandler constructor(private val on: On) {
 
         mixedAdapter = MixedHeaderAdapter(on)
         recyclerView.adapter = mixedAdapter
+        mixedAdapter.content = FeedContent.GROUPS
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(Notification::class).query()
                 .sort(on<SortHandler>().sortNotifications())
@@ -87,11 +88,17 @@ class FeedHandler constructor(private val on: On) {
                             .observer { setGroups(it) })
                 })
 
-        on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible.subscribe { visible ->
+        on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { visible ->
             if (visible) {
                 recyclerView.setPadding(0, 0, 0, on<KeyboardVisibilityHandler>().lastKeyboardHeight)
+                recyclerView.requestLayout()
+                recyclerView.postInvalidate()
             } else {
                 recyclerView.setPadding(0, 0, 0, 0)
+                recyclerView.requestLayout()
+                recyclerView.postInvalidate()
             }
         })
     }
