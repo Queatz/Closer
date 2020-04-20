@@ -55,7 +55,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit
     private lateinit var toolbarAdapter: ToolbarAdapter
 
-
     private val state = ViewState()
 
     private val stateObservable = BehaviorSubject.createDefault(state)
@@ -375,7 +374,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 eventsHeader.visible = state.hasEvents
                                 groupsHeader.visible = true
                                 searchGroups.visible = true
-                                itemView.historyButton.visible = true
+                                itemView.historyButton.visible = content === ContentViewType.HOME_EXPLORE
                                 itemView.thingsToDoHeader.visible = true
                                 itemView.suggestionsHeader.visible = state.hasSuggestions && content === ContentViewType.HOME_EXPLORE
                                 itemView.placesHeader.visible = state.hasPlaces
