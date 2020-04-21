@@ -119,7 +119,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             add(HeaderMixedItem())
             when (content) {
                 FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
-                FeedContent.POSTS -> groupMessages.forEach { add(GroupMessageMixedItem(it)) } // TODO
+                FeedContent.POSTS -> groupMessages.apply {
+                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))
+                    else forEach { add(GroupMessageMixedItem(it)) }
+                }
                 FeedContent.ACTIVITIES -> groupActions.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))
                     else forEach { add(GroupActionMixedItem(it)) }

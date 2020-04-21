@@ -402,7 +402,7 @@
     <string name="noon">Noon</string>
     <string name="activity_description_updated">Activity description updated</string>
     <string name="post_in">Post in %1$s</string>
-    <string name="nothing_to_do_around_here">Nothing to do around here.\n\nTry moving the map around.</string>
+    <string name="nothing_to_do_around_here">Nothing around here.\n\nTry moving the map around.</string>
     <string name="hot">Hawt stuff</string>
     <string name="top_posts">Top posts</string>
 
