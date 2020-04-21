@@ -1,6 +1,5 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,10 +35,10 @@ class GroupReviewsFragment : PoolActivityFragment() {
         groupDisposableGroup = disposableGroup.group()
 
         groupMessagesAdapter = GroupMessagesAdapter(on)
-        groupMessagesAdapter.global = true
-        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
-        groupMessagesAdapter.onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(view, event) }
-        groupMessagesAdapter.onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(view, group1.id) }
+        on<GroupMessageHelper>().global = true
+        on<GroupMessageHelper>().onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
+        on<GroupMessageHelper>().onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(view, event) }
+        on<GroupMessageHelper>().onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(view, group1.id) }
 
         messagesRecyclerView.layoutManager = LinearLayoutManager(messagesRecyclerView.context)
         messagesRecyclerView.adapter = groupMessagesAdapter

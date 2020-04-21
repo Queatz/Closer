@@ -4,5 +4,6 @@ enum class FeedContent {
     GROUPS,
     NOTIFICATIONS,
     CALENDAR,
-    ACTIVITIES
+    ACTIVITIES,
+    POSTS
 }

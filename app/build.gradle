@@ -97,13 +97,13 @@ dependencies {
     implementation 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
     implementation 'com.github.Queatz:Android-UX-Extras-Slide-Screen:0.2'
-    implementation 'com.github.Queatz:On:0.1.4'
+    implementation 'com.github.Queatz:On:0.1.6.4'
     implementation group: 'com.github.haifengl', name: 'smile-core', version: '1.5.2'
     implementation "io.objectbox:objectbox-rxjava:$objectboxVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

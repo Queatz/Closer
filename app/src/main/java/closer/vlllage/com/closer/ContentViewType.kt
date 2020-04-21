@@ -10,6 +10,7 @@ enum class ContentViewType {
     PHONE_PHOTOS,
     PHONE_GROUPS,
     HOME_EXPLORE,
+    HOME_POSTS,
     HOME_ACTIVITIES,
     HOME_CALENDAR,
     HOME_GROUPS,

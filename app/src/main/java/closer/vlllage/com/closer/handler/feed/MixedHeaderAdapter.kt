@@ -59,6 +59,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is NotificationMixedItem -> old.notification.objectBoxId == (new as NotificationMixedItem).notification.objectBoxId
                         is CalendarDayMixedItem -> false
                         is TextMixedItem -> false
+                        is GroupMessageMixedItem -> on<GroupMessageHelper>().areItemsTheSame(old.groupMessage, (new as GroupMessageMixedItem).groupMessage)
                         else -> false
                     }
                 }
@@ -73,6 +74,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is GroupActionMixedItem -> old.groupAction.about == (new as GroupActionMixedItem).groupAction.about
                         is TextMixedItem -> false
                         is CalendarDayMixedItem -> true
+                        is GroupMessageMixedItem -> on<GroupMessageHelper>().areContentsTheSame(old.groupMessage, (new as GroupMessageMixedItem).groupMessage)
                         else -> false
                     }
                 }
@@ -89,6 +91,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         }
 
     var groupActions = mutableListOf<GroupAction>()
+        set(value) {
+            field = value
+            generate()
+        }
+
+    var groupMessages = mutableListOf<GroupMessage>()
         set(value) {
             field = value
             generate()
@@ -111,6 +119,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             add(HeaderMixedItem())
             when (content) {
                 FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
+                FeedContent.POSTS -> groupMessages.forEach { add(GroupMessageMixedItem(it)) } // TODO
                 FeedContent.ACTIVITIES -> groupActions.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))
                     else forEach { add(GroupActionMixedItem(it)) }
@@ -153,6 +162,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             }
             5 -> TextViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.text_item, parent, false))
+            6 -> on<GroupMessageHelper>().createViewHolder(parent)
             else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
         }
     }
@@ -168,8 +178,22 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             is NotificationViewHolder -> bindNotification(viewHolder, (item as NotificationMixedItem).notification)
             is CalendarDayViewHolder -> bindCalendarDay(viewHolder, (item as CalendarDayMixedItem).date, item.position)
             is GroupActionViewHolder -> bindGroupAction(viewHolder, (item as GroupActionMixedItem).groupAction)
+            is GroupMessageViewHolder -> bindGroupMessage(viewHolder, (item as GroupMessageMixedItem).groupMessage)
             is TextViewHolder -> bindText(viewHolder, (item as TextMixedItem).text)
         }
+    }
+
+    private fun bindGroupMessage(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
+        On(on).apply {
+            use<LightDarkHandler>().setLight(true)
+            use<GroupMessageHelper> {
+                global = true
+                inFeed = true
+                onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
+                onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
+                onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
+            }
+        }<GroupMessageHelper>().onBind(groupMessage, holder)
     }
 
     private fun bindText(holder: TextViewHolder, text: String) {
@@ -271,10 +295,13 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             true
         }
 
-        val groupMessagesAdapter = GroupMessagesAdapter(on)
-        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
-        groupMessagesAdapter.onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event) }
-        groupMessagesAdapter.onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, group1.id) }
+        val groupMessagesAdapter = GroupMessagesAdapter(On(on).apply {
+            use<GroupMessageHelper> {
+                onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
+                onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event) }
+                onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, group1.id) }
+            }
+        })
 
         val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
         holder.on<DisposableHandler>().add(queryBuilder
@@ -411,6 +438,9 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 holder.disposableGroup.clear()
                 holder.on.off()
             }
+            is GroupMessageViewHolder -> {
+                on<GroupMessageHelper>().recycleViewHolder(holder)
+            }
         }
     }
 
@@ -440,6 +470,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
     class HeaderMixedItem : MixedItem(0)
     class GroupMixedItem(val group: Group) : MixedItem(1)
+    class GroupMessageMixedItem(val groupMessage: GroupMessage) : MixedItem(6)
     class NotificationMixedItem(val notification: Notification) : MixedItem(2)
     class CalendarDayMixedItem(val position: Int, val date: Date) : MixedItem(3)
     class GroupActionMixedItem(val groupAction: GroupAction) : MixedItem(4)

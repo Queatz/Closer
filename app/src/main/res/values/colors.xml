@@ -26,6 +26,7 @@
     <color name="green_transparent">#008BC34A</color>
     <color name="greenLight">#AED581</color>
     <color name="green200">#C5E1A5</color>
+    <color name="orange">#FF5722</color>
     <color name="red">#f44336</color>
     <color name="redLight">#E57373</color>
     <color name="red200">#EF9A9A</color>

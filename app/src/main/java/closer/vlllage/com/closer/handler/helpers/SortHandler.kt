@@ -27,8 +27,19 @@ class SortHandler constructor(private val on: On) {
         }
     }
 
-    fun sortGroupMessages(): Comparator<GroupMessage> {
-        return Comparator { groupMessage, groupMessageOther -> if (groupMessage.time == null || groupMessageOther.time == null) 0 else groupMessageOther.time!!.compareTo(groupMessage.time) }
+    fun sortGroupMessages(useReactions: Boolean = false): Comparator<GroupMessage> {
+        return Comparator { groupMessage, groupMessageOther ->
+
+            if (useReactions) {
+                val reactions = groupMessage.reactions.map { it.count }.sum()
+                val reactionsOther = groupMessageOther.reactions.map { it.count }.sum()
+
+                if (reactions < reactionsOther) return@Comparator 1
+                if (reactions > reactionsOther) return@Comparator -1
+            }
+
+            if (groupMessage.time == null || groupMessageOther.time == null) 0
+            else groupMessageOther.time!!.compareTo(groupMessage.time) }
     }
 
     fun sortPhones(): Comparator<Phone> {

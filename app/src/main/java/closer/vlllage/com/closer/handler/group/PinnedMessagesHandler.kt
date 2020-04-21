@@ -28,12 +28,16 @@ class PinnedMessagesHandler constructor(private val on: On) {
                 true
         )
 
-        groupMessagesAdapter = GroupMessagesAdapter(on)
-        groupMessagesAdapter.pinned = true
+        groupMessagesAdapter = GroupMessagesAdapter(On(on).apply {
+            use<GroupMessageHelper> {
+                pinned = true
+                onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
+                onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
+                onGroupClickListener =  { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
+            }
+        })
+
         pinnedMessagesRecyclerView.adapter = groupMessagesAdapter
-        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
-        groupMessagesAdapter.onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
-        groupMessagesAdapter.onGroupClickListener =  { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
     }
 
     fun show(group: Group) {

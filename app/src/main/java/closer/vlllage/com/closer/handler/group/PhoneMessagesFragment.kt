@@ -32,10 +32,10 @@ class PhoneMessagesFragment : PoolActivityFragment() {
         phoneDisposableGroup = disposableGroup.group()
 
         val groupMessagesAdapter = GroupMessagesAdapter(on)
-        groupMessagesAdapter.global = true
-        groupMessagesAdapter.onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
-        groupMessagesAdapter.onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(view, event) }
-        groupMessagesAdapter.onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(view, group1.id) }
+        on<GroupMessageHelper>().global = true
+        on<GroupMessageHelper>().onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
+        on<GroupMessageHelper>().onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(view, event) }
+        on<GroupMessageHelper>().onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(view, group1.id) }
 
         messagesRecyclerView.layoutManager = LinearLayoutManager(messagesRecyclerView.context)
         messagesRecyclerView.adapter = groupMessagesAdapter

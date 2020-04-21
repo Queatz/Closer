@@ -21,7 +21,7 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 class MessageDisplay constructor(private val on: On) {
 
-    private fun displayShare(holder: GroupMessagesAdapter.GroupMessageViewHolder,
+    private fun displayShare(holder: GroupMessageViewHolder,
                              jsonObject: JsonObject,
                              groupMessage: GroupMessage,
                              onEventClickListener: (Event) -> Unit,
@@ -46,7 +46,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.time), "@" + groupMessage.from!!))
     }
 
-    private fun displayAction(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+    private fun displayAction(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -72,7 +72,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
     }
 
-    private fun displayGroupAction(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+    private fun displayGroupAction(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -118,7 +118,7 @@ class MessageDisplay constructor(private val on: On) {
         }))
     }
 
-    private fun displayReview(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+    private fun displayReview(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -150,7 +150,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
     }
 
-    private fun displayGroupMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
+    private fun displayGroupMessage(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -172,7 +172,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.message.text = on<GroupMessageParseHandler>().parseText(groupMessage.text!!)
     }
 
-    private fun displayMessage(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+    private fun displayMessage(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.name.visible = false
         holder.time.visible = false
         holder.messageLayout.visible = false
@@ -182,7 +182,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.action.visible = false
     }
 
-    private fun displayEvent(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onEventClickListener: (Event) -> Unit) {
+    private fun displayEvent(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onEventClickListener: (Event) -> Unit) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -211,7 +211,7 @@ class MessageDisplay constructor(private val on: On) {
         }
     }
 
-    private fun displayGroup(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onGroupClickListener: (Group) -> Unit) {
+    private fun displayGroup(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onGroupClickListener: (Group) -> Unit) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -238,7 +238,7 @@ class MessageDisplay constructor(private val on: On) {
         }
     }
 
-    private fun displaySuggestion(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onSuggestionClickListener: ((Suggestion) -> Unit)?) {
+    private fun displaySuggestion(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onSuggestionClickListener: ((Suggestion) -> Unit)?) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -274,7 +274,7 @@ class MessageDisplay constructor(private val on: On) {
         }
     }
 
-    private fun displayPhoto(holder: GroupMessagesAdapter.GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+    private fun displayPhoto(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -294,7 +294,7 @@ class MessageDisplay constructor(private val on: On) {
         on<ImageHandler>().get().load(photo).transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners), 0)).into(holder.photo)
     }
 
-    private fun displayFallback(holder: GroupMessagesAdapter.GroupMessageViewHolder, groupMessage: GroupMessage) {
+    private fun displayFallback(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
@@ -304,7 +304,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.text = on<TimeStr>().pretty(groupMessage.time)
     }
 
-    fun display(holder: GroupMessagesAdapter.GroupMessageViewHolder,
+    fun display(holder: GroupMessageViewHolder,
                 groupMessage: GroupMessage,
                 onEventClickListener: (Event) -> Unit,
                 onGroupClickListener: (Group) -> Unit,
@@ -344,7 +344,7 @@ class MessageDisplay constructor(private val on: On) {
         }
     }
 
-    fun toggleMessageActionLayout(holder: GroupMessagesAdapter.GroupMessageViewHolder) {
+    fun toggleMessageActionLayout(holder: GroupMessageViewHolder) {
         if (holder.messageActionLayoutRevealAnimator == null) {
             holder.messageActionLayoutRevealAnimator = RevealAnimator(holder.messageActionLayout, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
         }

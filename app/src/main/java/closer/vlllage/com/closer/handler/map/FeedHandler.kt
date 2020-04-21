@@ -1,21 +1,17 @@
 package closer.vlllage.com.closer.handler.map
 
 import android.graphics.Rect
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
-import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
-import closer.vlllage.com.closer.handler.group.GroupActionRecyclerViewHandler
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
+import closer.vlllage.com.closer.handler.group.GroupMessageHelper
 import closer.vlllage.com.closer.handler.group.GroupToolbarHandler
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler
-import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
-import closer.vlllage.com.closer.handler.helpers.SortHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.StoreHandler
@@ -23,7 +19,6 @@ import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -50,7 +45,14 @@ class FeedHandler constructor(private val on: On) {
                     on<LightDarkHandler>().setLight(it)
                 })
 
-        mixedAdapter = MixedHeaderAdapter(on)
+        mixedAdapter = MixedHeaderAdapter(On(on).apply {
+            use<GroupMessageHelper> {
+                onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
+                onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
+                onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
+            }
+        })
+
         recyclerView.adapter = mixedAdapter
         mixedAdapter.content = FeedContent.GROUPS
 
@@ -101,11 +103,23 @@ class FeedHandler constructor(private val on: On) {
                 recyclerView.postInvalidate()
             }
         })
+
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMessage::class).query()
+                .greater(GroupMessage_.updated, on<TimeAgo>().fifteenDaysAgo())
+                .sort(on<SortHandler>().sortGroupMessages(true))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .observer { setGroupMessages(it) })
     }
 
     private fun setGroups(groups: List<Group>) {
         mixedAdapter.groups = groups.toMutableList()
         setGroupActions(groups)
+    }
+
+    private fun setGroupMessages(groupMessages: List<GroupMessage>) {
+        mixedAdapter.groupMessages = groupMessages.toMutableList()
     }
 
     private fun setGroupActions(groups: List<Group>) {
@@ -154,6 +168,7 @@ class FeedHandler constructor(private val on: On) {
             ContentViewType.HOME_ACTIVITIES -> FeedContent.ACTIVITIES
             ContentViewType.HOME_GROUPS -> FeedContent.GROUPS
             ContentViewType.HOME_EXPLORE -> FeedContent.GROUPS
+            ContentViewType.HOME_POSTS -> FeedContent.POSTS
             else -> null
         }?.let { mixedAdapter.content = it }
     }
