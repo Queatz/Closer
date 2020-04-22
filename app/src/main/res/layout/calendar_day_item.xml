@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/mapAmbient"
+    android:background="@color/white"
     android:elevation="@dimen/elevation"
     android:clipToPadding="false"
     android:clickable="true">
@@ -18,7 +18,8 @@
         app:layout_constraintBottom_toTopOf="@+id/date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/rounded_white_12dp_bottom" />
+        android:background="@drawable/rounded_white_12dp_bottom"
+        android:foreground="@drawable/gradient_shadow_inverse_12dp_bottom"/>
 
     <TextView
         android:id="@+id/date"
@@ -29,11 +30,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/day"
         android:textColor="@color/textInverse"
-        android:background="@color/mapAmbient"
         android:gravity="center_horizontal"
         android:textAppearance="?android:textAppearanceMedium"
         tools:text="Thursday, May 3rd"
-        android:padding="@dimen/padDouble" />
+        android:padding="@dimen/padDialog" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/day"
@@ -45,8 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintDimensionRatio="1:1.5"
         android:background="@drawable/rounded_white_12dp"
-        android:paddingStart="@dimen/padDouble"
-        android:paddingEnd="@dimen/padDouble">
+        android:isScrollContainer="true">
 
         <View
             android:id="@+id/time5am"
@@ -199,6 +198,22 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:text="@string/midnight"
             android:paddingTop="@dimen/padHalf" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:elevation="@dimen/elevation"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleX="12"
+            android:src="@drawable/gradient_shadow" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:elevation="@dimen/elevation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:scaleX="12"
+            android:src="@drawable/gradient_shadow_inverse" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

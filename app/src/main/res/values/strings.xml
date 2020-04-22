@@ -217,11 +217,14 @@
     <string name="public_notifications_switch_description">Public notifications are off. You\'ll only get notifications from private groups and direct messages.</string>
     <string name="remove_heart">Remove heart?</string>
     <string name="heart_removed">Heart removed</string>
-    <string name="join">Join this group…</string>
+    <string name="join_this_group">Join this group…</string>
+    <string name="join_this_event">Join this event…</string>
     <string name="you_joined_group">You joined %1$s</string>
-    <string name="join_group">Yes, join!</string>
+    <string name="yes_join">Yes, join!</string>
+    <string name="join">Join</string>
     <string name="join_group_title">Join %1$s</string>
     <string name="join_group_message">Join this group to let others know you\'re here.</string>
+    <string name="join_event_message">Join this event to let others know you\'re here.</string>
     <string name="group">Group</string>
     <string name="share_group">Share this group…</string>
     <string name="share_group_activity">Share this activity…</string>
@@ -405,6 +408,10 @@
     <string name="nothing_to_do_around_here">Nothing around here.\n\nTry moving the map around.</string>
     <string name="hot">Hawt stuff</string>
     <string name="top_posts">Top posts</string>
+    <string name="sent_at">Sent %1$s</string>
+    <string name="join_event">Join event</string>
+    <string name="join_group">Join group</string>
+    <string name="search_for_things_to_do">Search for things to do</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

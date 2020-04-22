@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import android.text.format.DateUtils.DAY_IN_MILLIS
-import android.text.format.DateUtils.HOUR_IN_MILLIS
+import android.text.format.DateUtils.*
 import com.queatz.on.On
 import java.util.*
 
@@ -41,4 +40,18 @@ class TimeAgo constructor(private val on: On) {
         oneDayAgo.time = oneDayAgo.time - (DAY_IN_MILLIS * days)
         return oneDayAgo
     }
+
+    fun fifteenMinutesAgo(): Date {
+        val ago = Date()
+        ago.time = ago.time - MINUTE_IN_MILLIS * 15
+        return ago
+    }
+
+    fun startOfToday(offsetInDays: Int = 0) = Calendar.getInstance(TimeZone.getDefault()).apply {
+        add(Calendar.DATE, offsetInDays)
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.time
 }

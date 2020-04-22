@@ -9,10 +9,13 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.toolbar_item.view.*
 
 class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(on) {
 
@@ -58,6 +61,11 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
         viewHolder.disposableGroup.add(selectedContentView.subscribe {
             recolor(item, viewHolder.button, on<LightDarkHandler>().onLightChanged.value!!, it)
         })
+
+        item.indicator?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { viewHolder.indicator.visible = it }?.also {
+                    viewHolder.disposableGroup.add(it)
+                }
     }
 
     private fun recolor(item: GroupToolbarHandler.ToolbarItem, button: Button, colors: LightDarkColors, selected: ContentViewType?) {
@@ -80,7 +88,8 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
     override fun getItemCount() = items.size
 
     class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val button: Button = itemView.findViewById(R.id.button)
+        val indicator: View = itemView.indicator
+        val button: Button = itemView.button
         lateinit var disposableGroup: DisposableGroup
     }
 }

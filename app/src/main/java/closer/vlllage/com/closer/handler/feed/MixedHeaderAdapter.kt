@@ -31,7 +31,6 @@ import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.calendar_day_item.view.*
 import kotlinx.android.synthetic.main.calendar_event_item.view.*
-import kotlinx.android.synthetic.main.group_action_photo_item.view.*
 import kotlinx.android.synthetic.main.group_action_photo_large_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.groupName
@@ -214,18 +213,23 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         holder.date.text = on<TimeStr>().day(date)
 
         holder.itemView.headerPadding.visible = position == 0
+        holder.itemView.headerPadding.clipToOutline = true
+
+        holder.day.clipToOutline = true
 
         holder.disposableGroup.add(on<StoreHandler>().store.box(Event::class).query()
                 .between(Event_.startsAt, date, Date(date.time + TimeUnit.DAYS.toMillis(1)))
+                .or()
+                .between(Event_.endsAt, date, Date(date.time + TimeUnit.DAYS.toMillis(1)))
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer {
-                    setCalendarDayEvents(holder, it)
+                    setCalendarDayEvents(holder, date, it)
                 })
     }
 
-    private fun setCalendarDayEvents(holder: CalendarDayViewHolder, events: List<Event>? = null) {
+    private fun setCalendarDayEvents(holder: CalendarDayViewHolder, date: Date, events: List<Event>? = null) {
         holder.views.forEach { holder.day.removeView(it) }
         holder.views.clear()
 
@@ -236,8 +240,13 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         val vH = holder.day.measuredHeight
 
         if (vH == 0) {
-            holder.itemView.post { setCalendarDayEvents(holder) }
+            holder.itemView.post { setCalendarDayEvents(holder, date, events) }
             return
+        }
+
+        val dayOfYear = Calendar.getInstance(TimeZone.getDefault()).let {
+            it.time = date
+            it.get(Calendar.DAY_OF_YEAR)
         }
 
         holder.events?.forEach { event ->
@@ -250,11 +259,6 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
                 topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                 startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                topMargin = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
-                    it.time = event.startsAt!!
-                    it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
-                            it.get(Calendar.MINUTE).toFloat() / TimeUnit.DAYS.toMinutes(1).toFloat()
-                }).toInt()
                 width = MATCH_PARENT
                 height = h.toInt()
                 constrainedHeight = true
@@ -262,6 +266,13 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
                 marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
             }
+
+            view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
+                it.time = event.startsAt!!
+                (it.get(Calendar.DAY_OF_YEAR) - dayOfYear).toFloat() +
+                        it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
+                        it.get(Calendar.MINUTE).toFloat() / TimeUnit.DAYS.toMinutes(1).toFloat()
+            })
 
             view.name.setCompoundDrawablesRelativeWithIntrinsicBounds(
                     if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_lock_black_18dp, 0, 0, 0
@@ -285,6 +296,11 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         holder.time.text = on<TimeStr>().prettyDate(notification.created)
         holder.itemView.setOnClickListener {
             on<NotificationHandler>().launch(notification)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.sent_at, on<TimeStr>().pretty(notification.created)))
+            true
         }
     }
 

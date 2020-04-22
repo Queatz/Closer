@@ -18,6 +18,9 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.kotlin.oneOf
+import io.objectbox.kotlin.or
+import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -28,6 +31,8 @@ class FeedHandler constructor(private val on: On) {
     private lateinit var mixedAdapter: MixedHeaderAdapter
 
     private var groupActionsObservable: DataSubscription? = null
+    private var groupActionsQueryString = ""
+    private var groupActionsGroups = listOf<Group>()
 
     fun attach(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
@@ -113,6 +118,11 @@ class FeedHandler constructor(private val on: On) {
                 .observer { setGroupMessages(it) })
     }
 
+    fun searchGroupActions(queryString: String) {
+        groupActionsQueryString = queryString
+        setGroupActions(groupActionsGroups)
+    }
+
     private fun setGroups(groups: List<Group>) {
         mixedAdapter.groups = groups.toMutableList()
         setGroupActions(groups)
@@ -123,13 +133,20 @@ class FeedHandler constructor(private val on: On) {
     }
 
     private fun setGroupActions(groups: List<Group>) {
+        groupActionsGroups = groups
         groupActionsObservable?.let { on<DisposableHandler>().dispose(it) }
 
-        groupActionsObservable = on<StoreHandler>().store.box(GroupAction::class).query()
-                .`in`(GroupAction_.group, groups
+        groupActionsObservable = on<StoreHandler>().store.box(GroupAction::class).query(
+                GroupAction_.group.oneOf(groups
                         .filter { it.id != null }
                         .map { it.id }
-                        .toTypedArray())
+                        .toTypedArray()
+                ).and(
+                        GroupAction_.about.contains(groupActionsQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE) or
+                        GroupAction_.name.contains(groupActionsQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE) or
+                        GroupAction_.flow.contains(groupActionsQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE)
+                )
+        )
                 .sort(on<SortHandler>().sortGroupActions())
                 .build()
                 .subscribe()

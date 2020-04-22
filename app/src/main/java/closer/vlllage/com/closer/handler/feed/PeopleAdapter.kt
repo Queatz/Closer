@@ -7,8 +7,10 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
+import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.handler.helpers.TimeStr
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Phone
@@ -48,6 +50,7 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
 
         holder.itemView.name.text = on<NameHandler>().getName(person)
         holder.itemView.active.text = on<TimeStr>().tiny(person.updated)
+        holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(person.updated)
 
         if (person.photo == null) {
             holder.itemView.photo.setImageResource(R.drawable.ic_person_black_24dp)

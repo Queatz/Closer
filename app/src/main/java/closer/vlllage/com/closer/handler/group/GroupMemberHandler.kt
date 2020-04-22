@@ -22,48 +22,52 @@ class GroupMemberHandler constructor(private val on: On) {
             return
         }
 
-        if (group.hasPhone()) {
-            on<MenuHandler>().run {
-                show(
-                        MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) }
-                )
+        when {
+            group.hasPhone() -> {
+                on<MenuHandler>().run {
+                    show(
+                            MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) }
+                    )
+                }
             }
-        } else if (group.isPublic) {
-            on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
-                    .equal(GroupMember_.group, group.id!!)
-                    .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
-                    .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groupMembers ->
-                        if (groupMembers.isEmpty()) {
-                            on<DisposableHandler>().add(on<ApiHandler>().getGroupMember(group.id!!)
-                                    .map { GroupMemberResult.from(it) }
-                                    .doOnSuccess { on<StoreHandler>().store.box(GroupMember::class).put(it) }
-                                    .subscribe(
-                                            { groupMember -> setupGroupMember(group, groupMember) },
-                                            { error -> setupGroupMember(group, null) }
-                                    ))
-                        } else {
-                            setupGroupMember(group, groupMembers[0])
-                        }
-                    })
-        } else {
-            on<MenuHandler>().show(
-                    MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) { on<GroupActionHandler>().addActionToGroup(group) },
-                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) },
-                    MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) { on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> } },
-                    MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.update_description) {
-                        on<AlertHandler>().make().apply {
-                            title = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
-                            layoutResId = R.layout.create_public_group_modal
-                            textViewId = R.id.input
-                            onTextViewSubmitCallback = { about -> on<PhysicalGroupUpgradeHandler>().setAbout(group, about) { updateGroup -> } }
-                            onAfterViewCreated = { alert, view ->
-                                view.findViewById<EditText>(alert.textViewId!!).setText(group.about
-                                        ?: "")
+            group.isPublic -> {
+                on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
+                        .equal(GroupMember_.group, group.id!!)
+                        .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
+                        .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groupMembers ->
+                            if (groupMembers.isEmpty()) {
+                                on<DisposableHandler>().add(on<ApiHandler>().getGroupMember(group.id!!)
+                                        .map { GroupMemberResult.from(it) }
+                                        .doOnSuccess { on<StoreHandler>().store.box(GroupMember::class).put(it) }
+                                        .subscribe(
+                                                { groupMember -> setupGroupMember(group, groupMember) },
+                                                { error -> setupGroupMember(group, null) }
+                                        ))
+                            } else {
+                                setupGroupMember(group, groupMembers[0])
                             }
-                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_description)
-                            show()
-                        }
-                    })
+                        })
+            }
+            else -> {
+                on<MenuHandler>().show(
+                        MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) { on<GroupActionHandler>().addActionToGroup(group) },
+                        MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) },
+                        MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) { on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> } },
+                        MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.update_description) {
+                            on<AlertHandler>().make().apply {
+                                title = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
+                                layoutResId = R.layout.create_public_group_modal
+                                textViewId = R.id.input
+                                onTextViewSubmitCallback = { about -> on<PhysicalGroupUpgradeHandler>().setAbout(group, about) { updateGroup -> } }
+                                onAfterViewCreated = { alert, view ->
+                                    view.findViewById<EditText>(alert.textViewId!!).setText(group.about
+                                            ?: "")
+                                }
+                                positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_description)
+                                show()
+                            }
+                        })
+            }
         }
     }
 
@@ -90,16 +94,9 @@ class GroupMemberHandler constructor(private val on: On) {
                     updatedGroupMember.muted = !updatedGroupMember.muted
                     on<SyncHandler>().sync(updatedGroupMember)
                 },
-                MenuHandler.MenuOption(R.drawable.ic_person_add_black_24dp, R.string.join) {
+                MenuHandler.MenuOption(R.drawable.ic_person_add_black_24dp, if (group?.hasEvent() == true) R.string.join_this_event else R.string.join_this_group) {
                     if (group != null) {
-                        on<AlertHandler>().make().apply {
-                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.join_group)
-                            positiveButtonCallback = { result -> on<GroupActionHandler>().joinGroup(group) }
-                            title = on<ResourcesHandler>().resources.getString(R.string.join_group_title, group.name)
-                            message = on<ResourcesHandler>().resources.getString(R.string.join_group_message)
-                            show()
-                        }
-
+                        join(group)
                     }
                 }.visible(!isCurrentUserMemberOf(group)),
                 MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, R.string.share_group) {
@@ -138,7 +135,17 @@ class GroupMemberHandler constructor(private val on: On) {
         )
     }
 
-    private fun isCurrentUserMemberOf(group: Group?): Boolean {
+    fun join(group: Group) {
+        on<AlertHandler>().make().apply {
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.yes_join)
+            positiveButtonCallback = { result -> on<GroupActionHandler>().joinGroup(group) }
+            title = on<ResourcesHandler>().resources.getString(R.string.join_group_title, group.name)
+            message = on<ResourcesHandler>().resources.getString(if (group.hasEvent()) R.string.join_event_message else R.string.join_group_message)
+            show()
+        }
+    }
+
+    fun isCurrentUserMemberOf(group: Group?): Boolean {
         return if (group == null) false else on<StoreHandler>().store.box(GroupContact::class).query()
                 .equal(GroupContact_.groupId, group.id!!)
                 .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)

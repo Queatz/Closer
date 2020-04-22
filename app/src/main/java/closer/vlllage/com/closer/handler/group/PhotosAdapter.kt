@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.JsonHandler
+import closer.vlllage.com.closer.handler.helpers.MenuHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoLoader
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupMessage
@@ -38,6 +39,14 @@ class PhotosAdapter(on: On) : PoolRecyclerAdapter<PhotoViewHolder>(on) {
         on<PhotoLoader>().softLoad(photo, holder.photo)
 
         holder.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, photo) }
+        holder.photo.setOnLongClickListener { view ->
+            on<MenuHandler>().show(
+                    MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, R.string.open_group) {
+                        on<GroupActivityTransitionHandler>().showGroupMessages(view, groupMessage.to!!)
+
+                    })
+            true
+        }
 
     }
 }

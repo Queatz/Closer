@@ -58,6 +58,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private val state = ViewState()
 
     private val stateObservable = BehaviorSubject.createDefault(state)
+    private val showCalendarIndicator = BehaviorSubject.createDefault(false)
 
     fun attach(itemView: View, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
         this.itemView = itemView
@@ -120,7 +121,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
+                on<FeedHandler>().searchGroupActions(s.toString())
+                on<SearchGroupHandler>().showGroupsForQuery(s.toString())
             }
 
             override fun afterTextChanged(s: Editable) {
@@ -165,16 +167,23 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
         }
 
-        val cameraPositionCallback = { cameraPosition: CameraPosition ->
+        val cameraPositionCallback: (CameraPosition) -> Unit = { cameraPosition: CameraPosition ->
             loadGroups(cameraPosition.target)
             loadSuggestions(cameraPosition.target)
             loadPeople(cameraPosition.target)
+            loadEvents(cameraPosition.target)
 
-            on<LocalityHelper>().getLocality(cameraPosition.target!!) {
-                saySomething.hint = it?.let {
-                    on<ResourcesHandler>().resources.getString(R.string.say_something_in, it)
-                } ?:let {
-                    on<ResourcesHandler>().resources.getString(R.string.say_something)
+            val nearestGroupName = on<ProximityHandler>().findGroupsNear(cameraPosition.target, true).firstOrNull()?.name
+
+            if (nearestGroupName.isNullOrBlank().not()) {
+                saySomething.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, nearestGroupName)
+            } else {
+                on<LocalityHelper>().getLocality(cameraPosition.target!!) {
+                    saySomething.hint = it?.let {
+                        on<ResourcesHandler>().resources.getString(R.string.say_something_in, it)
+                    } ?: let {
+                        on<ResourcesHandler>().resources.getString(R.string.say_something)
+                    }
                 }
             }
         }
@@ -266,7 +275,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_CALENDAR,
-                        color = R.color.red),
+                        color = R.color.red,
+                        indicator = showCalendarIndicator),
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.things_to_do_around_here),
                         R.drawable.ic_beach_access_black_24dp,
@@ -368,7 +378,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 suggestionsRecyclerView.visible = false
                                 peopleRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
-                                searchGroups.visible = false
+                                searchGroups.visible = true
+                                on<ResourcesHandler>().resources.getString(R.string.search_for_things_to_do).let { hint ->
+                                    if (searchGroups.hint != hint) searchGroups.hint = hint
+                                }
                                 itemView.historyButton.visible = false
                                 itemView.thingsToDoHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
@@ -406,6 +419,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 eventsHeader.visible = state.hasEvents
                                 groupsHeader.visible = true
                                 searchGroups.visible = true
+                                on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint).let { hint ->
+                                    if (searchGroups.hint != hint) searchGroups.hint = hint
+                                }
                                 itemView.historyButton.visible = explore
                                 itemView.thingsToDoHeader.visible = state.hasGroupActions
                                 itemView.suggestionsHeader.visible = state.hasSuggestions && explore
@@ -426,6 +442,20 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         }
                     })
         }
+    }
+
+    private fun loadEvents(target: LatLng) {
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Event::class).query()
+                .less(Event_.startsAt, on<TimeAgo>().startOfToday(1))
+                .and()
+                .greater(Event_.endsAt, on<TimeAgo>().startOfToday())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer {
+                    showCalendarIndicator.onNext(it.isNotEmpty())
+                })
     }
 
     private fun loadGroups(target: LatLng) {

@@ -175,6 +175,16 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
+        if (!group.hasPhone() && group.isPublic && on<GroupMemberHandler>().isCurrentUserMemberOf(group).not()) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(if (group.hasEvent()) R.string.join_event else R.string.join_group),
+                    R.drawable.ic_person_add_black_24dp,
+                    View.OnClickListener {
+                        on<GroupMemberHandler>().join(group)
+                    }
+            ))
+        }
+
         if (isEventEnded(event)) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.host_again),
@@ -359,6 +369,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             @field:DrawableRes var icon: Int,
             var onClickListener: View.OnClickListener,
             var value: ContentViewType? = null,
-            @field:ColorRes var color: Int? = null
+            @field:ColorRes var color: Int? = null,
+            val indicator: BehaviorSubject<Boolean>? = null
     )
 }

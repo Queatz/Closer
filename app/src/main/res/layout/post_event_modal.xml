@@ -183,7 +183,7 @@
             android:hint="@string/enter_event_price"
             android:imeOptions="actionGo"
             android:padding="24dp"
-            android:maxLength="5"
+            android:maxLength="12"
             android:background="@null"
             android:inputType="textShortMessage" />
 

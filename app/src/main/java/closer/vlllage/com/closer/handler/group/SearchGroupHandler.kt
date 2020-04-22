@@ -15,7 +15,7 @@ class SearchGroupHandler constructor(private val on: On) {
     private var groupsCache: List<Group>? = null
 
     val groups = BehaviorSubject.create<List<Group>>()
-    val createGroupName = BehaviorSubject.createDefault<String>("")
+    val createGroupName = BehaviorSubject.createDefault("")
 
     fun showGroupsForQuery(searchQuery: String) {
         this.searchQuery = searchQuery.toLowerCase()

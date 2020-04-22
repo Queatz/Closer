@@ -40,6 +40,7 @@
     <color name="white_50">#88ffffff</color>
     <color name="white_75">#aaffffff</color>
     <color name="white_95">#ddffffff</color>
+    <color name="black_2">#02000000</color>
     <color name="black_5">#11000000</color>
     <color name="black_10">#22000000</color>
     <color name="black_15">#33000000</color>

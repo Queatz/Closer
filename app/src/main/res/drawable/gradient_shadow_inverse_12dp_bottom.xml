@@ -2,10 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
+            <corners android:bottomLeftRadius="@dimen/miniWindowCornerRadius" android:bottomRightRadius="@dimen/miniWindowCornerRadius" />
             <gradient android:startColor="@color/black_5"
                 android:centerColor="@color/black_2"
                 android:endColor="@color/black_transparent"
-                android:angle="270" />
+                android:angle="90" />
         </shape>
     </item>
 </selector>
