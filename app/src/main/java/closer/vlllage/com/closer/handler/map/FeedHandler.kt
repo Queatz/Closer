@@ -32,6 +32,7 @@ class FeedHandler constructor(private val on: On) {
     private lateinit var mixedAdapter: MixedHeaderAdapter
 
     private var groupActionsObservable: DataSubscription? = null
+    private var groupMessagesObservable: DataSubscription? = null
     private var groupActionsQueryString = ""
     private var groupActionsGroups = listOf<Group>()
 
@@ -110,14 +111,6 @@ class FeedHandler constructor(private val on: On) {
                 recyclerView.postInvalidate()
             }
         })
-
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMessage::class).query()
-                .greater(GroupMessage_.updated, on<TimeAgo>().fifteenDaysAgo())
-                .sort(on<SortHandler>().sortGroupMessages(true))
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .observer { setGroupMessages(it) })
     }
 
     fun searchGroupActions(queryString: String) {
@@ -127,11 +120,28 @@ class FeedHandler constructor(private val on: On) {
 
     private fun setGroups(groups: List<Group>) {
         mixedAdapter.groups = groups.toMutableList()
+        setGroupMessages(groups)
         setGroupActions(groups)
     }
 
-    private fun setGroupMessages(groupMessages: List<GroupMessage>) {
-        mixedAdapter.groupMessages = groupMessages.toMutableList()
+    private fun setGroupMessages(groups: List<Group>) {
+        groupMessagesObservable?.let { on<DisposableHandler>().dispose(it) }
+
+        groupMessagesObservable = on<StoreHandler>().store.box(GroupMessage::class).query()
+                .greater(GroupMessage_.updated, on<TimeAgo>().weeksAgo())
+                .`in`(GroupMessage_.to, groups
+                        .filter { it.id != null }
+                        .map { it.id }
+                        .toTypedArray())
+                .sort(on<SortHandler>().sortGroupMessages(true))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .observer {
+                    mixedAdapter.groupMessages = it.filter { it.attachment?.contains("\"message\":") != true }.toMutableList()
+                }
+
+        on<DisposableHandler>().add(groupMessagesObservable!!)
     }
 
     private fun setGroupActions(groups: List<Group>) {

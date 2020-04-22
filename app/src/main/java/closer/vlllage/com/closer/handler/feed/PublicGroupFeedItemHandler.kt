@@ -260,7 +260,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_EXPLORE,
                         color = R.color.green),
                 GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.posts),
+                        on<ResourcesHandler>().resources.getString(R.string.top_posts),
                         R.drawable.ic_whatshot_black_24dp,
                         View.OnClickListener {
                             toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_POSTS)
@@ -363,8 +363,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 itemView.thingsToDoHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
-                                itemView.feedText.visible = true
-                                itemView.feedText.setText(R.string.top_posts)
+                                itemView.feedText.visible = false
                             }
                             ContentViewType.HOME_ACTIVITIES -> {
                                 saySomethingHeader.visible = false
