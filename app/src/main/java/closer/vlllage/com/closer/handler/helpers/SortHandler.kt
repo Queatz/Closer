@@ -38,8 +38,8 @@ class SortHandler constructor(private val on: On) {
                 if (reactions > reactionsOther) return@Comparator -1
             }
 
-            if (groupMessage.time == null || groupMessageOther.time == null) 0
-            else groupMessageOther.time!!.compareTo(groupMessage.time) }
+            if (groupMessage.created == null || groupMessageOther.created == null) 0
+            else groupMessageOther.created!!.compareTo(groupMessage.created) }
     }
 
     fun sortPhones(): Comparator<Phone> {

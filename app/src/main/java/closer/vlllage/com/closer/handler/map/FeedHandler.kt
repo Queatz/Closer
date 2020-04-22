@@ -58,7 +58,7 @@ class FeedHandler constructor(private val on: On) {
                 onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
                 onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
             }
-        })
+        }) {}
 
         mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.EXPLORE
 
@@ -128,10 +128,10 @@ class FeedHandler constructor(private val on: On) {
         groupMessagesObservable?.let { on<DisposableHandler>().dispose(it) }
 
         groupMessagesObservable = on<StoreHandler>().store.box(GroupMessage::class).query()
-                .greater(GroupMessage_.updated, on<TimeAgo>().weeksAgo())
+                .greater(GroupMessage_.created, on<TimeAgo>().weeksAgo())
                 .`in`(GroupMessage_.to, groups
-                        .filter { it.id != null }
                         .map { it.id }
+                        .filterNotNull()
                         .toTypedArray())
                 .sort(on<SortHandler>().sortGroupMessages(true))
                 .build()
@@ -150,8 +150,8 @@ class FeedHandler constructor(private val on: On) {
 
         groupActionsObservable = on<StoreHandler>().store.box(GroupAction::class).query(
                 GroupAction_.group.oneOf(groups
-                        .filter { it.id != null }
                         .map { it.id }
+                        .filterNotNull()
                         .toTypedArray()
                 ).and(
                         GroupAction_.about.contains(groupActionsQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE) or

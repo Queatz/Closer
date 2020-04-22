@@ -31,7 +31,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.disposableGroup.add(on<DataHandler>().getGroupMessage(jsonObject.get("share").asString).subscribe({ sharedGroupMessage ->
             display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
-            holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.time), "@" + groupMessage.from!!))
+            holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
 
             holder.messageActionProfile.setText(R.string.group)
             holder.messageActionProfile.setOnClickListener {
@@ -43,7 +43,7 @@ class MessageDisplay constructor(private val on: On) {
             holder.message.visible = true
         }))
 
-        holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.time), "@" + groupMessage.from!!))
+        holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
     }
 
     private fun displayAction(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -57,7 +57,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.name.visible = true
         holder.name.text = contactName + " " + action.get("intent").asString
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
         val comment = action.get("comment").asString
         if (on<Val>().isEmpty(comment)) {
@@ -83,7 +83,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.name.visible = true
         holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_group_action, contactName)
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
         holder.message.visible = false
         holder.action.visible = false
@@ -129,7 +129,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.name.visible = true
         holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_posted_a_review, contactName)
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
         val rating = review.get("rating").asFloat
         val comment = review.get("comment").asString
@@ -160,7 +160,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.message.gravity = Gravity.START
 
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
         var phone: Phone? = null
 
@@ -190,7 +190,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.name.visible = true
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
         val phone = getPhone(groupMessage.from)
 
@@ -219,7 +219,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.name.visible = true
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
         val phone = getPhone(groupMessage.from)
 
@@ -247,7 +247,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.name.visible = true
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
         val phone = getPhone(groupMessage.from)
 
@@ -285,7 +285,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.name.visible = true
         holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_photo, contactName)
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
         holder.message.visible = false
         holder.action.visible = false // or Share / save photo?
         holder.photo.visible = true
@@ -301,7 +301,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.name.text = on<ResourcesHandler>().resources.getString(R.string.unknown)
         holder.message.text = ""
         holder.time.visible = true
-        holder.time.text = on<TimeStr>().pretty(groupMessage.time)
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
     }
 
     fun display(holder: GroupMessageViewHolder,

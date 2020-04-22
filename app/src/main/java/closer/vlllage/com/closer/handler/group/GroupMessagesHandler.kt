@@ -236,7 +236,7 @@ class GroupMessagesHandler constructor(private val on: On) {
         groupMessage.text = text
         groupMessage.to = on<GroupHandler>().group!!.id
         groupMessage.from = on<PersistenceHandler>().phoneId
-        groupMessage.time = Date()
+        groupMessage.created = Date()
         on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
         on<SyncHandler>().sync(groupMessage)
 

@@ -214,9 +214,13 @@ class RefreshHandler constructor(private val on: On) {
                                     !on<ListEqual>().isEqual(message.reactions, existing.reactions)) ||
                                     existing?.text != message.text ||
                                     existing?.attachment != message.attachment ||
-                                    existing?.replies != message.replies
+                                    existing?.replies != message.replies ||
+                                    existing?.created != message.created ||
+                                    existing?.updated != message.updated
                             ) {
                                 existing!!.reactions = message.reactions
+                                existing!!.created = message.created
+                                existing!!.updated = message.updated
                                 existing!!.text = message.text
                                 existing!!.attachment = message.attachment
                                 existing!!.replies = message.replies

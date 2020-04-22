@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 
 class SettingsHandler constructor(private val on: On) : OnLifecycle {
@@ -36,6 +37,7 @@ class SettingsHandler constructor(private val on: On) : OnLifecycle {
             .filter { it.setting == setting }
             .map { it.value }
             .startWith(get(setting))
+            .observeOn(AndroidSchedulers.mainThread())
 }
 
 data class SettingsChange constructor(

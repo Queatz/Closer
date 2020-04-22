@@ -18,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.queatz.on.On
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
@@ -182,8 +183,8 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
 
     }
 
-    fun onMapIdleObservable() = onMapIdleObservable
-    fun onMapReadyObservable() = onMapReadyObservable
+    fun onMapIdleObservable() = onMapIdleObservable.observeOn(AndroidSchedulers.mainThread())!!
+    fun onMapReadyObservable() = onMapReadyObservable.observeOn(AndroidSchedulers.mainThread())!!
 
     companion object {
         private const val DEFAULT_ZOOM = 15f

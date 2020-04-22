@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
 
 class PhysicalGroupBubbleHandler constructor(private val on: On) {
@@ -65,15 +66,15 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
         }
 
     fun attach() {
-        on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable().subscribe {
+        on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable().observeOn(AndroidSchedulers.mainThread()).subscribe {
             update()
         })
 
-        on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE).subscribe {
+        on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE).observeOn(AndroidSchedulers.mainThread()).subscribe {
             update()
         })
 
-        on<DisposableHandler>().add(on<MapZoomHandler>().onZoomGreaterThanChanged(GEO_GROUPS_ZOOM).subscribe(
+        on<DisposableHandler>().add(on<MapZoomHandler>().onZoomGreaterThanChanged(GEO_GROUPS_ZOOM).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 { zoomIsGreaterThan14 ->
                     if (zoomIsGreaterThan14) {
                         update()

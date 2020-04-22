@@ -29,6 +29,8 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.reactive.DataSubscription
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.calendar_day_item.view.*
 import kotlinx.android.synthetic.main.calendar_event_item.view.*
 import kotlinx.android.synthetic.main.group_action_photo_large_item.view.*
@@ -40,7 +42,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 
-class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
+class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
     var items = mutableListOf<MixedItem>()
         set(value) {
@@ -72,7 +74,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                         is NotificationMixedItem -> true
                         is GroupActionMixedItem -> old.groupAction.about == (new as GroupActionMixedItem).groupAction.about
                         is TextMixedItem -> false
-                        is CalendarDayMixedItem -> true
+                        is CalendarDayMixedItem -> false
                         is GroupMessageMixedItem -> on<GroupMessageHelper>().areContentsTheSame(old.groupMessage, (new as GroupMessageMixedItem).groupMessage)
                         else -> false
                     }
@@ -81,6 +83,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             field.clear()
             field.addAll(value)
             diffResult.dispatchUpdatesTo(this)
+            changed()
         }
 
     var groups = mutableListOf<Group>()
@@ -121,7 +124,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
                 FeedContent.POSTS -> groupMessages.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))
-                    else forEach { add(GroupMessageMixedItem(it)) }
+                    else {
+                        forEach { add(GroupMessageMixedItem(it)) }
+                        add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_conversations)))
+                    }
                 }
                 FeedContent.ACTIVITIES -> groupActions.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))
@@ -213,21 +219,35 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
         holder.date.text = on<TimeStr>().day(date)
 
-        holder.itemView.headerPadding.visible = position == 0
+        holder.itemView.headerPadding.visible = false && position == 0
         holder.itemView.headerPadding.clipToOutline = true
 
         holder.day.clipToOutline = true
 
-        holder.disposableGroup.add(on<StoreHandler>().store.box(Event::class).query()
-                .between(Event_.startsAt, date, Date(date.time + TimeUnit.DAYS.toMillis(1)))
-                .or()
-                .between(Event_.endsAt, date, Date(date.time + TimeUnit.DAYS.toMillis(1)))
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .observer {
-                    setCalendarDayEvents(holder, date, it)
-                })
+        val distance = .12f
+
+        holder.disposableGroup.add(on<MapHandler>().onMapIdleObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { cameraPosition ->
+            holder.eventsObservable?.let { holder.disposableGroup.dispose(it) }
+            holder.eventsObservable = on<StoreHandler>().store.box(Event::class).query(
+                    Event_.startsAt.between(date, Date(date.time + TimeUnit.DAYS.toMillis(1))).or(
+                            Event_.endsAt.between(date, Date(date.time + TimeUnit.DAYS.toMillis(1)))
+                    ).and(
+                            Event_.latitude.between(cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance).and(
+                                    Event_.longitude.between(cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
+                            ).or(
+                                    Event_.isPublic.equal(false)
+                            )
+                    )
+            )
+                    .build()
+                    .subscribe()
+                    .on(AndroidScheduler.mainThread())
+                    .observer { setCalendarDayEvents(holder, date, it) }.also {
+                        holder.disposableGroup.add(it)
+                    }
+        })
     }
 
     private fun setCalendarDayEvents(holder: CalendarDayViewHolder, date: Date, events: List<Event>? = null) {
@@ -393,7 +413,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             groupMessage.text = message
             groupMessage.from = on<PersistenceHandler>().phoneId
             groupMessage.to = group.id
-            groupMessage.time = Date()
+            groupMessage.created = Date()
             on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
             on<SyncHandler>().sync(groupMessage)
 
@@ -412,28 +432,30 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
         on<GroupScopeHandler>().setup(group, holder.scopeIndicatorButton)
 
-        holder.disposableGroup.add(holder.on<LightDarkHandler>().onLightChanged.subscribe {
-            holder.groupName.setTextColor(it.text)
-            holder.sendButton.imageTintList = it.tint
-            holder.sendButton.setBackgroundResource(it.clickableRoundedBackground)
-            holder.replyMessage.setTextColor(it.text)
-            holder.replyMessage.setHintTextColor(it.hint)
-            holder.replyMessage.setBackgroundResource(it.clickableRoundedBackground)
-            holder.scopeIndicatorButton.imageTintList = it.tint
-            holder.goToGroup.imageTintList = it.tint
+        holder.disposableGroup.add(holder.on<LightDarkHandler>().onLightChanged
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    holder.groupName.setTextColor(it.text)
+                    holder.sendButton.imageTintList = it.tint
+                    holder.sendButton.setBackgroundResource(it.clickableRoundedBackground)
+                    holder.replyMessage.setTextColor(it.text)
+                    holder.replyMessage.setHintTextColor(it.hint)
+                    holder.replyMessage.setBackgroundResource(it.clickableRoundedBackground)
+                    holder.scopeIndicatorButton.imageTintList = it.tint
+                    holder.goToGroup.imageTintList = it.tint
 
-            if (it.light) {
-                holder.backgroundPhoto.alpha = .15f
-                holder.itemView.setBackgroundResource(R.color.offwhite)
-                holder.backgroundColor.setBackgroundResource(R.drawable.color_white_rounded)
-            } else {
-                holder.backgroundPhoto.alpha = 1f
-                holder.itemView.setBackgroundResource(R.color.white)
-                holder.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
-            }
+                    if (it.light) {
+                        holder.backgroundPhoto.alpha = .15f
+                        holder.itemView.setBackgroundResource(R.color.offwhite)
+                        holder.backgroundColor.setBackgroundResource(R.drawable.color_white_rounded)
+                    } else {
+                        holder.backgroundPhoto.alpha = 1f
+                        holder.itemView.setBackgroundResource(R.color.white)
+                        holder.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
+                    }
 
-            holder.groupName.setBackgroundResource(it.clickableRoundedBackground8dp)
-        })
+                    holder.groupName.setBackgroundResource(it.clickableRoundedBackground8dp)
+                })
     }
 
     override fun getItemViewType(position: Int) = items[position].type
@@ -504,6 +526,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class CalendarDayViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         lateinit var on: On
         lateinit var disposableGroup: DisposableGroup
+        var eventsObservable: DataSubscription? = null
         val views = mutableSetOf<View>()
         var date = itemView.date!!
         var day = itemView.day!!

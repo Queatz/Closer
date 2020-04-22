@@ -58,7 +58,7 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
             recolor(item, viewHolder.button, it, selectedContentView.value)
         })
 
-        viewHolder.disposableGroup.add(selectedContentView.subscribe {
+        viewHolder.disposableGroup.add(selectedContentView.distinctUntilChanged().subscribe {
             recolor(item, viewHolder.button, on<LightDarkHandler>().onLightChanged.value!!, it)
             scrollTo(it)
         })

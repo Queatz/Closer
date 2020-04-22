@@ -240,7 +240,7 @@ class EventHandler constructor(private val on: On) {
                     groupMessage.text = pinnedMessage
                     groupMessage.from = on<PersistenceHandler>().phoneId
                     groupMessage.to = it.groupId
-                    groupMessage.time = Date()
+                    groupMessage.created = Date()
 
                     val eventGroupId = it.groupId!!
 

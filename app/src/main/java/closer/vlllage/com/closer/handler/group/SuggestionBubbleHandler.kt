@@ -14,6 +14,7 @@ import closer.vlllage.com.closer.store.models.Suggestion
 import closer.vlllage.com.closer.store.models.Suggestion_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
 
 
@@ -33,7 +34,7 @@ class SuggestionBubbleHandler constructor(private val on: On) {
             return
         }
 
-        disposableGroup.add(on<MapHandler>().onMapIdleObservable().subscribe {
+        disposableGroup.add(on<MapHandler>().onMapIdleObservable().observeOn(AndroidSchedulers.mainThread()).subscribe {
                 val queryBuilder = on<StoreHandler>().store.box(Suggestion::class).query()
                         .between(Suggestion_.latitude, it.target.latitude - distance, it.target.latitude + distance)
                         .and()

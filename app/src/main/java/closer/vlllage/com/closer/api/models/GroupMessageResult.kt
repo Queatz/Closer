@@ -19,7 +19,7 @@ class GroupMessageResult : ModelResult() {
             groupMessage.from = result.from
             groupMessage.to = result.to
             groupMessage.text = result.text
-            groupMessage.time = result.created
+            groupMessage.created = result.created
             groupMessage.updated = result.updated
             groupMessage.attachment = result.attachment
             groupMessage.reactions = result.reactions

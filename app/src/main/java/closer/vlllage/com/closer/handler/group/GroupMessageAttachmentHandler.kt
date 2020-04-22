@@ -1,10 +1,8 @@
 package closer.vlllage.com.closer.handler.group
 
-import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.JsonHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
@@ -104,7 +102,7 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
         }
 
         groupMessage.from = on<PersistenceHandler>().phoneId
-        groupMessage.time = Date()
+        groupMessage.created = Date()
         on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
         on<SyncHandler>().sync(groupMessage)
     }

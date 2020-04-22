@@ -448,7 +448,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         on<DisposableHandler>().add(on<StoreHandler>().store.box(Event::class).query()
                 .less(Event_.startsAt, on<TimeAgo>().startOfToday(1))
                 .and()
-                .greater(Event_.endsAt, on<TimeAgo>().startOfToday())
+                .greater(Event_.endsAt, Date())
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
@@ -572,7 +572,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             groupMessage.text = text
             groupMessage.from = on<PersistenceHandler>().phoneId
             groupMessage.to = groupId
-            groupMessage.time = Date()
+            groupMessage.created = Date()
             on<SyncHandler>().sync(groupMessage) {
                 on<GroupActivityTransitionHandler>().showGroupMessages(null, groupId)
             }

@@ -46,16 +46,13 @@ class GroupMessageParseHandler constructor(private val on: On) {
 
     @JvmOverloads
     fun parseString(groupMessage: String, mentionConverter: MentionConverter = defaultMentionConverter): String {
-        val builder = StringBuilder()
-        builder.append(groupMessage)
-
         val matcher = mentionPattern.matcher(groupMessage)
 
+        val builder = StringBuffer()
         while (matcher.find()) {
-            val match = matcher.group()
-            val mention = match.substring(1)
-            builder.replace(matcher.start(), matcher.end(), "@" + mentionConverter.invoke(mention))
+            matcher.appendReplacement(builder, "@${mentionConverter.invoke(matcher.group().substring(1))}")
         }
+        matcher.appendTail(builder)
 
         return builder.toString()
     }
