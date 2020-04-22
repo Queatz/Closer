@@ -42,7 +42,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 
-class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
+class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
     var items = mutableListOf<MixedItem>()
         set(value) {
@@ -83,7 +83,6 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
             field.clear()
             field.addAll(value)
             diffResult.dispatchUpdatesTo(this)
-            changed()
         }
 
     var groups = mutableListOf<Group>()
@@ -193,7 +192,7 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
     }
 
     private fun bindGroupMessage(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
-        On(on).apply {
+        holder.on = On(on).apply {
             use<LightDarkHandler>().setLight(true)
             use<GroupMessageHelper> {
                 global = true
@@ -202,7 +201,8 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
                 onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
                 onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
             }
-        }<GroupMessageHelper>().onBind(groupMessage, holder)
+        }
+        holder.on<GroupMessageHelper>().onBind(groupMessage, holder)
     }
 
     private fun bindText(holder: TextViewHolder, text: String) {
@@ -210,12 +210,12 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
     }
 
     private fun bindGroupAction(holder: GroupActionViewHolder, groupAction: GroupAction) {
-        holder.on = branch()
+        holder.on = On(on)
         holder.on<GroupActionDisplay>().display(holder.itemView.groupAction, groupAction, GroupActionDisplay.Layout.PHOTO, holder.itemView.groupActionDescription, 1.5f)
    }
 
     private fun bindCalendarDay(holder: CalendarDayViewHolder, date: Date, position: Int) {
-        holder.on = branch()
+        holder.on = On(on)
 
         holder.date.text = on<TimeStr>().day(date)
 
@@ -311,7 +311,7 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
     }
 
     private fun bindNotification(holder: NotificationViewHolder, notification: Notification) {
-        holder.on = branch()
+        holder.on = On(on)
         holder.name.text = notification.name ?: ""
         holder.message.text = notification.message ?: ""
         holder.time.text = on<TimeStr>().prettyDate(notification.created)
@@ -326,7 +326,7 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
     }
 
     private fun bindGroupPreview(holder: GroupPreviewViewHolder, group: Group) {
-        holder.on = branch()
+        holder.on = On(on)
 
         holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
         holder.groupName.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupMessages(holder.groupName, group.id) }
@@ -335,7 +335,7 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
             true
         }
 
-        val groupMessagesAdapter = GroupMessagesAdapter(On(on).apply {
+        val groupMessagesAdapter = GroupMessagesAdapter(On(holder.on).apply {
             use<GroupMessageHelper> {
                 onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
                 onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event) }
@@ -482,6 +482,7 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
             }
             is GroupMessageViewHolder -> {
                 on<GroupMessageHelper>().recycleViewHolder(holder)
+                holder.on.off()
             }
         }
     }
@@ -489,25 +490,8 @@ class MixedHeaderAdapter(on: On, private val changed: () -> Unit) : HeaderAdapte
     override fun getItemCount() = items.size
 
     private fun bindHeader(holder: HeaderViewHolder) {
-        holder.on = branch()
+        holder.on = On(on)
         holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView) { on<FeedHandler>().show(it) }
-    }
-
-    private fun branch() = On().apply {
-        use(on<FeedHandler>())
-        use(on<StoreHandler>())
-        use(on<SyncHandler>())
-        use(on<MapHandler>())
-        use(on<ApplicationHandler>())
-        use(on<ActivityHandler>())
-        use(on<SortHandler>())
-        use(on<KeyboardHandler>())
-        use(on<GroupMemberHandler>())
-        use(on<MediaHandler>())
-        use(on<CameraHandler>())
-        use(on<ApiHandler>())
-        use(on<LightDarkHandler>())
-        use(on<ResourcesHandler>())
     }
 
     class HeaderMixedItem : MixedItem(0)

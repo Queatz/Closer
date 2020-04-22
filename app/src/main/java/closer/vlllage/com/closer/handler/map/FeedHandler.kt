@@ -58,7 +58,7 @@ class FeedHandler constructor(private val on: On) {
                 onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
                 onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
             }
-        }) {}
+        })
 
         mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.EXPLORE
 

@@ -320,6 +320,7 @@ class GroupMessageHelper constructor(private val on: On) {
 }
 
 class GroupMessageViewHolder(on: On, itemView: View) : RecyclerView.ViewHolder(itemView) {
+    lateinit var on: On
 
     internal var name: TextView
     internal var eventMessage: TextView
