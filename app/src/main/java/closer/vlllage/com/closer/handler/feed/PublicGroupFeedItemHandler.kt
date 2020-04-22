@@ -241,7 +241,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         toolbarAdapter.selectedContentView.onNext(when (on<FeedHandler>().feedContent()) {
             FeedContent.CALENDAR -> ContentViewType.HOME_CALENDAR
             FeedContent.NOTIFICATIONS -> ContentViewType.HOME_NOTIFICATIONS
-            FeedContent.GROUPS -> ContentViewType.HOME_EXPLORE
+            FeedContent.EXPLORE -> ContentViewType.HOME_EXPLORE
+            FeedContent.GROUPS -> ContentViewType.HOME_GROUPS
             FeedContent.POSTS -> ContentViewType.HOME_POSTS
             FeedContent.ACTIVITIES -> ContentViewType.HOME_ACTIVITIES
         })

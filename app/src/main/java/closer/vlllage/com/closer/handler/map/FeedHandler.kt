@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
@@ -58,8 +59,9 @@ class FeedHandler constructor(private val on: On) {
             }
         })
 
+        mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.EXPLORE
+
         recyclerView.adapter = mixedAdapter
-        mixedAdapter.content = FeedContent.GROUPS
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(Notification::class).query()
                 .sort(on<SortHandler>().sortNotifications())
@@ -184,10 +186,13 @@ class FeedHandler constructor(private val on: On) {
             ContentViewType.HOME_CALENDAR -> FeedContent.CALENDAR
             ContentViewType.HOME_ACTIVITIES -> FeedContent.ACTIVITIES
             ContentViewType.HOME_GROUPS -> FeedContent.GROUPS
-            ContentViewType.HOME_EXPLORE -> FeedContent.GROUPS
+            ContentViewType.HOME_EXPLORE -> FeedContent.EXPLORE
             ContentViewType.HOME_POSTS -> FeedContent.POSTS
             else -> null
-        }?.let { mixedAdapter.content = it }
+        }?.let {
+            mixedAdapter.content = it
+            on<PersistenceHandler>().lastFeedTab = it
+        }
     }
 
     private fun reveal(show: Boolean) {

@@ -107,7 +107,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             generate()
         }
 
-    var content: FeedContent = FeedContent.GROUPS
+    var content: FeedContent = FeedContent.EXPLORE
         set(value) {
             field = value
             generate()
@@ -117,6 +117,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         items = mutableListOf<MixedItem>().apply {
             add(HeaderMixedItem())
             when (content) {
+                FeedContent.EXPLORE -> groups.forEach { add(GroupMixedItem(it)) }
                 FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
                 FeedContent.POSTS -> groupMessages.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))

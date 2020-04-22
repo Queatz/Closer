@@ -1,9 +1,10 @@
 package closer.vlllage.com.closer.handler.feed
 
 enum class FeedContent {
-    GROUPS,
-    NOTIFICATIONS,
+    EXPLORE,
+    POSTS,
     CALENDAR,
     ACTIVITIES,
-    POSTS
+    GROUPS,
+    NOTIFICATIONS,
 }

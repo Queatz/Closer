@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
@@ -113,6 +114,14 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
             sharedPreferences.edit().putString(PREFERENCE_LAST_MAP_CENTER, latLng!!.latitude.toString() + "," + latLng!!.longitude).commit()
         }
 
+    var lastFeedTab: FeedContent?
+        get() = sharedPreferences.getString(PREFERENCE_LAST_FEED_CONTENT, null)?.let { FeedContent.valueOf(it) }
+        @SuppressLint("ApplySharedPref")
+        set(feedContent) {
+            sharedPreferences.edit().putString(PREFERENCE_LAST_FEED_CONTENT, feedContent?.name).commit()
+        }
+
+
     override fun on() {
         sharedPreferences = on<ApplicationHandler>().app.getSharedPreferences(
                 SHARED_PREFERENCES, Context.MODE_PRIVATE
@@ -134,5 +143,6 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
         private const val PREFERENCE_HELP_IS_HIDDEN = "closer.state.help-is-hidden"
         private const val PREFERENCE_NOTIFICATIONS_PAUSED = "closer.notifications.paused"
         private const val PREFERENCE_LAST_MAP_CENTER = "closer.map.center"
+        private const val PREFERENCE_LAST_FEED_CONTENT = "closer.feed.content"
     }
 }
