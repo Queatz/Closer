@@ -58,21 +58,14 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
             recolor(item, viewHolder.button, it, selectedContentView.value)
         })
 
-        viewHolder.disposableGroup.add(selectedContentView.distinctUntilChanged().subscribe {
+        selectedContentView.subscribe {
             recolor(item, viewHolder.button, on<LightDarkHandler>().onLightChanged.value!!, it)
-            scrollTo(it)
-        })
+        }.also { viewHolder.disposableGroup.add(it) }
 
         item.indicator?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe { viewHolder.indicator.visible = it }?.also {
                     viewHolder.disposableGroup.add(it)
                 }
-    }
-
-    private fun scrollTo(content: ContentViewType) {
-        items.indexOfFirst { it.value == content }.takeIf { it >= 0 }?.let { index ->
-            recyclerView?.smoothScrollToPosition(index)
-        }
     }
 
     private fun recolor(item: GroupToolbarHandler.ToolbarItem, button: Button, colors: LightDarkColors, selected: ContentViewType?) {

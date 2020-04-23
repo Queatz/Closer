@@ -30,7 +30,8 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
                 override fun getNewListSize() = value.size
 
                 override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return field[oldItemPosition].photo == value[newItemPosition].photo
+                    return field[oldItemPosition].photo == value[newItemPosition].photo &&
+                            field[oldItemPosition].updated == value[newItemPosition].updated
                 }
             })
             field.clear()

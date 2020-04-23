@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.feed
 
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var peopleRecyclerView: RecyclerView
     private lateinit var sendSomethingButton: ImageButton
     private lateinit var peopleContainer: ViewGroup
+    private lateinit var appsToolbar: RecyclerView
 
     private lateinit var itemView: View
     private lateinit var onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit
@@ -77,8 +79,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         saySomethingHeader = itemView.saySomethingHeader
         sendSomethingButton = itemView.sendSomethingButton
         peopleContainer = itemView.peopleContainer
+        appsToolbar = itemView.appsToolbar
 
-        setupAppsToolbar(itemView.appsToolbar!!)
+        setupAppsToolbar(appsToolbar)
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
 
@@ -315,9 +318,18 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         )
     }
 
+    private fun scrollToolbarTo(content: ContentViewType) {
+        toolbarAdapter.items.indexOfFirst { it.value == content }.takeIf { it >= 0 }?.let { index ->
+            appsToolbar.smoothScrollToPosition(index)
+        }
+    }
+
     private fun updateViews() {
         on<DisposableHandler>().apply {
-            add(toolbarAdapter.selectedContentView.flatMap { content -> stateObservable.map { Pair(content, state) } }
+            add(toolbarAdapter.selectedContentView.distinctUntilChanged()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext { scrollToolbarTo(it) }
+                    .switchMap { content -> stateObservable.map { Pair(content, state) } }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         val content = it.first
@@ -378,7 +390,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 suggestionsRecyclerView.visible = false
                                 peopleRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
-                                searchGroups.visible = true
+                                if (searchGroups.visible.not()) {
+                                    searchGroups.visible = true
+                                }
                                 on<ResourcesHandler>().resources.getString(R.string.search_for_things_to_do).let { hint ->
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }
@@ -418,7 +432,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsRecyclerView.visible = true
                                 eventsHeader.visible = state.hasEvents
                                 groupsHeader.visible = true
-                                searchGroups.visible = true
+                                if (searchGroups.visible.not()) {
+                                    searchGroups.visible = true
+                                }
                                 on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint).let { hint ->
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }

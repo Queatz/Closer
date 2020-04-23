@@ -22,6 +22,7 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.google.android.gms.common.util.Strings.isEmptyOrWhitespace
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -43,10 +44,25 @@ class GroupToolbarHandler constructor(private val on: On) {
             show(on<GroupHandler>().group)
             adapter.selectedContentView.onNext(it)
         })
+
+        adapter.selectedContentView.distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+            scrollToolbarTo(it)
+        }.also {
+            on<DisposableHandler>().add(it)
+        }
+
         on<GroupHandler>().onGroupUpdated { show(it) }
         on<GroupHandler>().onGroupChanged { show(it) }
         on<GroupHandler>().onEventChanged { show(on<GroupHandler>().group) }
         on<GroupHandler>().onPhoneChanged { show(on<GroupHandler>().group) }
+    }
+
+    private fun scrollToolbarTo(content: ContentViewType) {
+        adapter.items.indexOfFirst { it.value == content }.takeIf { it >= 0 }?.let { index ->
+            recyclerView.smoothScrollToPosition(index)
+        }
     }
 
     private fun show(group: Group?) {

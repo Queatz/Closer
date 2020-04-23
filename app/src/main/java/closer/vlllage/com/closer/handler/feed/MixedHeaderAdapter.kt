@@ -193,6 +193,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
     private fun bindGroupMessage(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
         holder.on = On(on).apply {
+            use<DisposableHandler>()
             use<LightDarkHandler>().setLight(true)
             use<GroupMessageHelper> {
                 global = true
@@ -210,12 +211,16 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     }
 
     private fun bindGroupAction(holder: GroupActionViewHolder, groupAction: GroupAction) {
-        holder.on = On(on)
+        holder.on = On(on).apply {
+            use<DisposableHandler>()
+        }
         holder.on<GroupActionDisplay>().display(holder.itemView.groupAction, groupAction, GroupActionDisplay.Layout.PHOTO, holder.itemView.groupActionDescription, 1.5f)
    }
 
     private fun bindCalendarDay(holder: CalendarDayViewHolder, date: Date, position: Int) {
-        holder.on = On(on)
+        holder.on = On(on).apply {
+            use<DisposableHandler>()
+        }
 
         holder.date.text = on<TimeStr>().day(date)
 
@@ -311,7 +316,9 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     }
 
     private fun bindNotification(holder: NotificationViewHolder, notification: Notification) {
-        holder.on = On(on)
+        holder.on = On(on).apply {
+            use<DisposableHandler>()
+        }
         holder.name.text = notification.name ?: ""
         holder.message.text = notification.message ?: ""
         holder.time.text = on<TimeStr>().prettyDate(notification.created)
@@ -326,7 +333,14 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     }
 
     private fun bindGroupPreview(holder: GroupPreviewViewHolder, group: Group) {
-        holder.on = On(on)
+        holder.on = On(on).apply {
+            use<DisposableHandler>()
+            use<GroupMessageHelper> {
+                onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
+                onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event) }
+                onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, group1.id) }
+            }
+        }
 
         holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
         holder.groupName.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupMessages(holder.groupName, group.id) }
@@ -335,13 +349,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             true
         }
 
-        val groupMessagesAdapter = GroupMessagesAdapter(On(holder.on).apply {
-            use<GroupMessageHelper> {
-                onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
-                onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event) }
-                onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, group1.id) }
-            }
-        })
+        val groupMessagesAdapter = GroupMessagesAdapter(holder.on)
 
         val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
         holder.on<DisposableHandler>().add(queryBuilder
@@ -490,7 +498,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     override fun getItemCount() = items.size
 
     private fun bindHeader(holder: HeaderViewHolder) {
-        holder.on = On(on)
+        holder.on = On(on).apply { use<DisposableHandler>() }
         holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView) { on<FeedHandler>().show(it) }
     }
 

@@ -20,7 +20,7 @@
     <string name="get_directions">Get directions</string>
     <string name="go_out_with">Go out with…</string>
     <string name="close_messages">Close messages</string>
-    <string name="say_something">Say something…</string>
+    <string name="say_something">Talk…</string>
     <string name="share">Share</string>
     <string name="cancel">Cancel</string>
     <string name="enter_code">Enter the code…</string>
@@ -300,7 +300,7 @@
     <string name="remove_x">Remove %1$s?</string>
     <string name="talk_with_locals">Talk with locals</string>
     <string name="local_recommendations">Local recommendations</string>
-    <string name="say_something_in">Say something in %1$s…</string>
+    <string name="say_something_in">Talk in %1$s…</string>
     <string name="ends">End time</string>
     <string name="starts">Start time</string>
     <string name="events">Events</string>
