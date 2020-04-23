@@ -204,28 +204,26 @@ class RefreshHandler constructor(private val on: On) {
                     }
 
                     val groupMessageBox = on<StoreHandler>().store.box(GroupMessage::class)
-                    for (message in messages) {
-                        if (!existingObjsMap.containsKey(message.id)) {
-                            groupMessageBox.put(GroupMessageResult.from(message))
-                        } else {
-                            val existing = existingObjsMap[message.id]
 
-                            if (existing != null && (
-                                    !on<ListEqual>().isEqual(message.reactions, existing.reactions)) ||
-                                    existing?.text != message.text ||
-                                    existing?.attachment != message.attachment ||
-                                    existing?.replies != message.replies ||
-                                    existing?.created != message.created ||
-                                    existing?.updated != message.updated
+                    for (message in messages) {
+                        existingObjsMap[message.id]?.let { existing ->
+                            if (!on<ListEqual>().isEqual(message.reactions, existing.reactions) ||
+                                    existing.text != message.text ||
+                                    existing.attachment != message.attachment ||
+                                    existing.replies != message.replies ||
+                                    existing.created != message.created ||
+                                    existing.updated != message.updated
                             ) {
-                                existing!!.reactions = message.reactions
-                                existing!!.created = message.created
-                                existing!!.updated = message.updated
-                                existing!!.text = message.text
-                                existing!!.attachment = message.attachment
-                                existing!!.replies = message.replies
-                                groupMessageBox.put(existing!!)
+                                existing.reactions = message.reactions
+                                existing.created = message.created
+                                existing.updated = message.updated
+                                existing.text = message.text
+                                existing.attachment = message.attachment
+                                existing.replies = message.replies
+                                groupMessageBox.put(existing)
                             }
+                        } ?: run {
+                            groupMessageBox.put(GroupMessageResult.from(message))
                         }
                     }
                 }
