@@ -11,6 +11,7 @@ import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
@@ -176,7 +177,7 @@ class GroupHandler constructor(private val on: On) {
     fun onGroupMemberChanged(disposableGroup: DisposableGroup? = null, callback: (GroupMember) -> Unit) = onChangeCallback(groupMemberChanged, callback, disposableGroup)
 
     private fun <T> onChangeCallback(observable: Observable<T>, callback: (T) -> Unit, disposableGroup: DisposableGroup? = null) {
-        (disposableGroup ?: on<DisposableHandler>().self()).add(observable.subscribe({ callback.invoke(it) }, connectionError))
+        (disposableGroup ?: on<DisposableHandler>().self()).add(observable.observeOn(AndroidSchedulers.mainThread()).subscribe({ callback.invoke(it) }, connectionError))
     }
 }
 

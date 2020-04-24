@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.CircularRevealActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_group.view.*
 import org.greenrobot.essentials.StringUtils
 
@@ -87,6 +88,7 @@ class GroupActivity : CircularRevealActivity() {
         }
 
         on<DisposableHandler>().add(on<GroupToolbarHandler>().contentView
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { contentView = it })
 
         on<MiniWindowHandler>().attach(view.groupName, view.backgroundColor) { finish() }

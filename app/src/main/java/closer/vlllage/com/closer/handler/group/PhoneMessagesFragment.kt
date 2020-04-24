@@ -22,6 +22,7 @@ class PhoneMessagesFragment : PoolActivityFragment() {
 
     private lateinit var disposableGroup: DisposableGroup
     private lateinit var phoneDisposableGroup: DisposableGroup
+    private lateinit var groupMessagesAdapter: GroupMessagesAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_phone_messages, container, false)
@@ -31,7 +32,7 @@ class PhoneMessagesFragment : PoolActivityFragment() {
         disposableGroup = on<DisposableHandler>().group()
         phoneDisposableGroup = disposableGroup.group()
 
-        val groupMessagesAdapter = GroupMessagesAdapter(on)
+        groupMessagesAdapter = GroupMessagesAdapter(on)
         on<GroupMessageHelper>().global = true
         on<GroupMessageHelper>().onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
         on<GroupMessageHelper>().onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(view, event) }
@@ -46,16 +47,14 @@ class PhoneMessagesFragment : PoolActivityFragment() {
 
                 on<RefreshHandler>().refreshGroupMessagesForPhone(phone.id!!)
 
-                val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
-                phoneDisposableGroup.add(queryBuilder
-                        .sort(on<SortHandler>().sortGroupMessages())
+                on<StoreHandler>().store.box(GroupMessage::class).query()
                         .equal(GroupMessage_.from, phone.id!!)
+                        .sort(on<SortHandler>().sortGroupMessages())
                         .build()
                         .subscribe()
                         .on(AndroidScheduler.mainThread())
-                        .observer { groupMessages ->
-                            groupMessagesAdapter.setGroupMessages(groupMessages)
-                        })
+                        .observer { groupMessagesAdapter.setGroupMessages(it) }
+                        .also { phoneDisposableGroup.add(it) }
             }
         }
     }

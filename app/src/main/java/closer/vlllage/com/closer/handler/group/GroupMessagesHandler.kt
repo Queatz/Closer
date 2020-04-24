@@ -165,8 +165,9 @@ class GroupMessagesHandler constructor(private val on: On) {
                     .equal(GroupMessage_.to, group.id!!)
                     .sort(on<SortHandler>().sortGroupMessages())
                     .build()
-                    .subscribe().on(AndroidScheduler.mainThread())
-                    .observer { this.setGroupMessages(it) }
+                    .subscribe()
+                    .on(AndroidScheduler.mainThread())
+                    .observer { setGroupMessages(it) }
 
             on<DisposableHandler>().add(groupMessagesSubscription!!)
         }
