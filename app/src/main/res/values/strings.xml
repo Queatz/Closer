@@ -285,10 +285,11 @@
     <string name="want_to_meet_phone">Want to meet %1$s?</string>
     <string name="yes">Yeah</string>
     <string name="pass">Pass</string>
-    <string name="things_to_do_around_here">Things to do</string>
-    <string name="groups_around_here">Groups near you</string>
-    <string name="events_around_here">Events near you</string>
-    <string name="conversations_around_here">Conversations near you</string>
+    <string name="things_to_do_around_here">Local activities</string>
+    <string name="groups_around_here">Local groups</string>
+    <string name="events_around_here">Local events</string>
+    <string name="conversations_around_here">Local conversations</string>
+    <string name="places_around_here">Local places</string>
     <string name="react_laugh">😂</string>
     <string name="react_cool">😎</string>
     <string name="react_kiss">😘</string>
@@ -328,7 +329,6 @@
     <string name="unmark_as_completed">Unmark as completed</string>
     <string name="completed_request">Completed request</string>
     <string name="search_feature_requests">Search feature requests</string>
-    <string name="places_around_here">Places near you</string>
     <string name="date_tiny_minutes">%1$sm</string>
     <string name="date_tiny_hours">%1$sh</string>
     <string name="date_tiny_weeks">%1$sw</string>
@@ -405,12 +405,13 @@
     <string name="noon">Noon</string>
     <string name="activity_description_updated">Activity description updated</string>
     <string name="post_in">Post in %1$s</string>
-    <string name="nothing_to_do_around_here">Nothing around here.\n\nTry moving the map around.</string>
+    <string name="nothing_around_here">Nothing around here.\n\nTry moving the map around.</string>
     <string name="top_posts">Top posts</string>
     <string name="sent_at">Sent %1$s</string>
     <string name="join_event">Join event</string>
     <string name="join_group">Join group</string>
-    <string name="search_for_things_to_do">Search for things to do</string>
+    <string name="search_for_things_to_do">Search for activities</string>
+    <string name="things_to_do">Activities</string>
     <string name="view_more_conversations">View more conversations in the Explore tab.</string>
 
     <plurals name="review_count_parenthesized">

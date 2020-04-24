@@ -282,7 +282,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         color = R.color.red,
                         indicator = showCalendarIndicator),
                 GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.things_to_do_around_here),
+                        on<ResourcesHandler>().resources.getString(R.string.things_to_do),
                         R.drawable.ic_beach_access_black_24dp,
                         View.OnClickListener {
                             toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITIES)

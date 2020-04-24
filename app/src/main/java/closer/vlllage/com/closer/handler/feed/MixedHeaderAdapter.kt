@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
@@ -24,7 +23,6 @@ import closer.vlllage.com.closer.handler.map.FeedHandler
 import closer.vlllage.com.closer.handler.map.HeaderAdapter
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
-import closer.vlllage.com.closer.handler.media.MediaHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
@@ -119,17 +117,22 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         items = mutableListOf<MixedItem>().apply {
             add(HeaderMixedItem())
             when (content) {
-                FeedContent.EXPLORE -> groups.forEach { add(GroupMixedItem(it)) }
+                FeedContent.EXPLORE -> groups.apply {
+                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                    else {
+                        forEach { add(GroupMixedItem(it)) }
+                    }
+                }
                 FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
                 FeedContent.POSTS -> groupMessages.apply {
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))
+                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else {
                         forEach { add(GroupMessageMixedItem(it)) }
                         add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_conversations)))
                     }
                 }
                 FeedContent.ACTIVITIES -> groupActions.apply {
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_to_do_around_here)))
+                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else forEach { add(GroupActionMixedItem(it)) }
 
                 }

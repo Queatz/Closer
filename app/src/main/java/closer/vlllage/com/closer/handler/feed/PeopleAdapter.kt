@@ -40,8 +40,7 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeopleViewHolder {
-        return PeopleViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.person_item, parent, false))
+        return PeopleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.person_item, parent, false))
     }
 
     override fun getItemCount() = people.size

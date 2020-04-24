@@ -40,7 +40,7 @@ class MeetHandler constructor(private val on: On) {
     }
 
     fun next() = nextPhone()?.let {
-        on<NavigationHandler>().showProfile(it.id!!, meet = true)
+        on<NavigationHandler>().showProfile(it.id!!, meet = true, close = true)
         true
     } ?: false
 
