@@ -161,6 +161,12 @@ class GroupMessagesHandler constructor(private val on: On) {
                 on<DisposableHandler>().dispose(groupMessagesSubscription!!)
             }
 
+            if (group.name.isNullOrBlank()) {
+                replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.say_something)
+            } else {
+                replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, group.name)
+            }
+
             groupMessagesSubscription = on<StoreHandler>().store.box(GroupMessage::class).query()
                     .equal(GroupMessage_.to, group.id!!)
                     .sort(on<SortHandler>().sortGroupMessages())

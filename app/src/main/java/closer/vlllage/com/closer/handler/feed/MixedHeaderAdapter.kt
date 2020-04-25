@@ -399,6 +399,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             }
         }
 
+        if (group.name.isNullOrBlank()) {
+            holder.replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.say_something)
+        } else {
+            holder.replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, group.name)
+        }
+
         holder.replyMessage.addTextChangedListener(holder.textWatcher)
 
         holder.on<GroupMessageMentionHandler>().attach(holder.mentionSuggestionsLayout, holder.mentionSuggestionRecyclerView) {

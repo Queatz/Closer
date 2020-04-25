@@ -134,7 +134,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@+id/sendMoreButton"
         app:layout_constraintBottom_toBottomOf="@+id/sendMoreButton"
-        app:layout_constraintRight_toLeftOf="@+id/sendMoreButton"
+        app:layout_constraintEnd_toStartOf="@+id/sendMoreButton"
         android:orientation="horizontal"
         android:layoutDirection="rtl"
         android:visibility="gone"

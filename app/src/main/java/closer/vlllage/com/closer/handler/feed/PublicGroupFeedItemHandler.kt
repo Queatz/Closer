@@ -41,6 +41,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var saySomething: EditText
     private lateinit var saySomethingHeader: TextView
     private lateinit var searchGroupsAdapter: SearchGroupsAdapter
+    private lateinit var actionHeader: TextView
     private lateinit var groupsHeader: TextView
     private lateinit var eventsHeader: TextView
     private lateinit var groupsRecyclerView: RecyclerView
@@ -68,6 +69,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         groupsRecyclerView = itemView.publicGroupsRecyclerView
         groupsHeader = itemView.publicGroupsHeader
+        actionHeader = itemView.thingsToDoHeader
         eventsHeader = itemView.eventsHeader
         eventsRecyclerView = itemView.publicEventsRecyclerView
         hubsRecyclerView = itemView.publicHubsRecyclerView
@@ -351,7 +353,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
                                 itemView.historyButton.visible = false
-                                itemView.thingsToDoHeader.visible = false
+                                actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = true
@@ -372,7 +374,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
                                 itemView.historyButton.visible = false
-                                itemView.thingsToDoHeader.visible = false
+                                actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = false
@@ -397,7 +399,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }
                                 itemView.historyButton.visible = false
-                                itemView.thingsToDoHeader.visible = false
+                                actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = false
@@ -417,7 +419,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
                                 itemView.historyButton.visible = false
-                                itemView.thingsToDoHeader.visible = false
+                                actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = false
@@ -439,7 +441,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }
                                 itemView.historyButton.visible = explore
-                                itemView.thingsToDoHeader.visible = state.hasGroupActions
+                                actionHeader.visible = state.hasGroupActions
                                 itemView.suggestionsHeader.visible = state.hasSuggestions && explore
                                 itemView.placesHeader.visible = state.hasPlaces
                                 itemView.feedText.visible = true
@@ -450,6 +452,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 saySomething.visible = showPublic
                                 sendSomethingButton.visible = showPublic
                                 peopleContainer.visible = showPublic
+                                actionHeader.setText(if (showPublic) R.string.things_to_do_around_here else R.string.your_things_to_do)
                                 eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
                                 groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
                                 itemView.feedText.setText(if (showPublic) R.string.conversations_around_here else R.string.conversations)
