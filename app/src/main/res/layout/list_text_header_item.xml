@@ -62,6 +62,8 @@
         android:textSize="14sp"
         android:textColor="@color/textHintInverse"
         android:padding="12dp"
+        android:visibility="gone"
+        tools:visibility="visible"
         tools:text="@string/loading"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
