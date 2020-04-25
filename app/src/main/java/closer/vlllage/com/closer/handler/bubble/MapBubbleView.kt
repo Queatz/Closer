@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.PhoneDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
@@ -36,7 +37,7 @@ class MapBubbleView constructor(private val on: On) {
         val photo = view.findViewById<ImageView>(R.id.photo)
 
         if (mapBubble.inProxy) {
-            name.visibility = View.VISIBLE
+            name.visible = true
             name.text = mapBubble.name + on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)
 
             if (info != null) {
@@ -44,9 +45,9 @@ class MapBubbleView constructor(private val on: On) {
             }
         } else {
             if (mapBubble.name!!.isEmpty()) {
-                name.visibility = View.GONE
+                name.visible = false
             } else {
-                name.visibility = View.VISIBLE
+                name.visible = true
                 name.text = mapBubble.name + on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)
             }
 

@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/nothing_here"/>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/goalsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/nothing_here"/>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/lifestyleRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

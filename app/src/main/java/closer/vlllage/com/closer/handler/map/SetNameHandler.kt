@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.map
 import android.view.View
 import android.widget.TextView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.helpers.AlertHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
@@ -29,7 +30,7 @@ class SetNameHandler constructor(private val on: On) {
                     (view.findViewById(R.id.input) as TextView).text = on<AccountHandler>().name
 
                     if (allowSkip) {
-                        view.findViewById<View>(R.id.optionalText).visibility = View.VISIBLE
+                        view.findViewById<View>(R.id.optionalText).visible = true
                     }
 
                 }

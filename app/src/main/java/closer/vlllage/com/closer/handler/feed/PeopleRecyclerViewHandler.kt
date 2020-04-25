@@ -23,6 +23,5 @@ class PeopleRecyclerViewHandler constructor(private val on: On) {
 
     fun setPeople(people: MutableList<Phone>) {
         peopleAdapter.people = people
-        on<TimerHandler>().post(Runnable { peopleRecyclerView.scrollBy(0, 0) })
     }
 }

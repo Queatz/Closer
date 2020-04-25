@@ -36,7 +36,7 @@
             app:maxHeight="200dp"
             app:maxWidth="200dp">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/menuRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

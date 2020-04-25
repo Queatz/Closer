@@ -71,7 +71,7 @@
         android:textStyle="bold"
         android:text="@string/open_group" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/actionRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

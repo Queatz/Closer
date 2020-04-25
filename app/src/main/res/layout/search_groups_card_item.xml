@@ -95,7 +95,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
             android:id="@+id/actionRecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -13,24 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 
 
-class FloatingRecyclerView : RecyclerView {
+class FloatingRecyclerView : FixedUpRecyclerView {
     private var isScrolling: Boolean = false
     private var colorAnimation: ValueAnimator? = null
     private var isSolidBackground: Boolean = false
 
-    private var mRequestedLayout = false
-
-    constructor(context: Context) : super(context) {
-        init()
-    }
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init()
-    }
-
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
-        init()
-    }
+    constructor(context: Context) : super(context) { init() }
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) { init() }
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) { init() }
 
     private fun init() {
         setBackgroundResource(android.R.color.transparent)
@@ -67,21 +57,6 @@ class FloatingRecyclerView : RecyclerView {
 
     override fun onScrollStateChanged(state: Int) {
         isScrolling = state != SCROLL_STATE_IDLE
-    }
-
-    @SuppressLint("WrongCall")
-    override fun requestLayout() {
-        super.requestLayout()
-        // We need to intercept this method because if we don't our children will never update
-        // Check https://stackoverflow.com/questions/49371866/recyclerview-wont-update-child-until-i-scroll
-        if (!mRequestedLayout) {
-            mRequestedLayout = true
-            post {
-                mRequestedLayout = false
-                layout(left, top, right, bottom)
-                onLayout(false, left, top, right, bottom)
-            }
-        }
     }
 
     private fun animateBackground(recyclerView: RecyclerView, @ColorRes color: Int) {

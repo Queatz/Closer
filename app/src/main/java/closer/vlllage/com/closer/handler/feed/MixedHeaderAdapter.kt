@@ -440,11 +440,11 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
         on<ImageHandler>().get().cancelRequest(holder.backgroundPhoto)
         if (group.photo != null) {
-            holder.backgroundPhoto.visibility = View.VISIBLE
+            holder.backgroundPhoto.visible = true
             holder.backgroundPhoto.setImageDrawable(null)
             on<PhotoLoader>().softLoad(group.photo!!, holder.backgroundPhoto)
         } else {
-            holder.backgroundPhoto.visibility = View.GONE
+            holder.backgroundPhoto.visible = false
         }
 
         on<GroupScopeHandler>().setup(group, holder.scopeIndicatorButton)

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
@@ -52,10 +53,10 @@ class PersonalSlideFragment : PoolFragment() {
                 .on(AndroidScheduler.mainThread())
                 .observer { groupMembers ->
                     if (groupMembers.isEmpty()) {
-                        youveSubscribedEmpty.visibility = View.VISIBLE
+                        youveSubscribedEmpty.visible = true
                         searchGroupsAdapter.setGroups(listOf())
                     } else {
-                        youveSubscribedEmpty.visibility = View.GONE
+                        youveSubscribedEmpty.visible = false
 
                         val ids = HashSet<String>()
                         for (groupMember in groupMembers) {

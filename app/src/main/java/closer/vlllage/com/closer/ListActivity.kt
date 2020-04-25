@@ -9,6 +9,7 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.TranslateAnimation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.pool.PoolActivity
 import kotlinx.android.synthetic.main.activity_share.*
@@ -75,7 +76,7 @@ abstract class ListActivity : PoolActivity() {
 
             override fun onAnimationEnd(animation: Animation) {
                 super@ListActivity.finish()
-                window.decorView.visibility = View.GONE
+                window.decorView.visible = false
                 overridePendingTransition(0, 0)
                 finishAnimator = null
 

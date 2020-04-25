@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateInterpolator
+import closer.vlllage.com.closer.extensions.visible
 
 import closer.vlllage.com.closer.pool.PoolActivity
 import kotlin.math.hypot
@@ -106,7 +107,7 @@ abstract class CircularRevealActivity : PoolActivity() {
 
             override fun onAnimationEnd(animator: Animator) {
                 super@CircularRevealActivity.finish()
-                window.decorView.visibility = View.GONE
+                window.decorView.visible = false
                 overridePendingTransition(0, 0)
 
                 finishCallback?.invoke()
@@ -114,7 +115,7 @@ abstract class CircularRevealActivity : PoolActivity() {
 
             override fun onAnimationCancel(animator: Animator) {
                 super@CircularRevealActivity.finish()
-                window.decorView.visibility = View.GONE
+                window.decorView.visible = false
                 overridePendingTransition(0, 0)
 
                 finishCallback?.invoke()

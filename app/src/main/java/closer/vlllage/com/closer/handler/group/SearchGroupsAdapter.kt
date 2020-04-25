@@ -10,6 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
@@ -64,8 +65,8 @@ open class SearchGroupsAdapter constructor(
                     holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
                     holder.name.text = if (createPublicGroupName.isBlank()) "+" else createPublicGroupName
                     holder.about.text = on<ResourcesHandler>().resources.getString(R.string.add_new_public_group)
-                    holder.backgroundPhoto.visibility = View.GONE
-                    holder.actionRecyclerView.visibility = View.GONE
+                    holder.backgroundPhoto.visible = false
+                    holder.actionRecyclerView.visible = false
                     holder.cardView.setOnClickListener {
                         onCreateGroupClickListener?.invoke(createPublicGroupName)
                     }
@@ -90,7 +91,8 @@ open class SearchGroupsAdapter constructor(
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_event)
                     val event = on<StoreHandler>().store.box(Event::class).query()
                             .equal(Event_.id, group.eventId!!)
-                            .build().findFirst()
+                            .build()
+                            .findFirst()
                     holder.about.text = if (event != null)
                         on<EventDetailsHandler>().formatEventDetails(event)
                     else
@@ -113,9 +115,9 @@ open class SearchGroupsAdapter constructor(
                 }
 
                 if (isSmall) {
-                    holder.actionRecyclerView.visibility = View.GONE
+                    holder.actionRecyclerView.visible = false
                 } else {
-                    holder.actionRecyclerView.visibility = View.VISIBLE
+                    holder.actionRecyclerView.visible = true
                     holder.on.use(on<ApplicationHandler>())
                     holder.on.use(on<ActivityHandler>())
                     holder.on.use(on<ApiHandler>())
@@ -132,11 +134,11 @@ open class SearchGroupsAdapter constructor(
 
                     on<ImageHandler>().get().cancelRequest(holder.backgroundPhoto)
                     if (group.photo != null) {
-                        holder.backgroundPhoto.visibility = View.VISIBLE
+                        holder.backgroundPhoto.visible = true
                         holder.backgroundPhoto.setImageDrawable(null)
                         on<PhotoLoader>().softLoad(group.photo!!, holder.backgroundPhoto)
                     } else {
-                        holder.backgroundPhoto.visibility = View.GONE
+                        holder.backgroundPhoto.visible = false
                     }
                 }
 

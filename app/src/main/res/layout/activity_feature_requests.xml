@@ -106,7 +106,7 @@
             android:textColorHighlight="@color/colorAccent_50"
             android:textSize="14sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/featureRequestsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

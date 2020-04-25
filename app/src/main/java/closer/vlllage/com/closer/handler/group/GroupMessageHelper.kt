@@ -126,7 +126,7 @@ class GroupMessageHelper constructor(private val on: On) {
         )
 
         holder.messageActionShare.visible = groupMessage.from != null
-        holder.messageActionPin.visible = groupMessage.from != null
+        holder.messageActionPin.visible = groupMessage.from != null && !global && !inFeed
         holder.messageActionDelete.visible = groupMessage.from == on<PersistenceHandler>().phoneId
 
         holder.messageActionProfile.visible = global || groupMessage.from != null

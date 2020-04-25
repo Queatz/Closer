@@ -317,7 +317,7 @@
 
     </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/reactionsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

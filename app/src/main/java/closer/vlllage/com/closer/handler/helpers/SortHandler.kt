@@ -43,7 +43,7 @@ class SortHandler constructor(private val on: On) {
     }
 
     fun sortPhones(): Comparator<Phone> {
-        return Comparator { phone, phoneOther -> if (phone.updated == null || phoneOther.updated == null) 0 else phoneOther.updated!!.compareTo(phone.updated) }
+        return Comparator { phone, phoneOther -> (phoneOther.updated ?: Date(0)).compareTo(phone.updated ?: Date(0)) }
     }
 
     fun sortGroupContacts(): Comparator<GroupContact> {

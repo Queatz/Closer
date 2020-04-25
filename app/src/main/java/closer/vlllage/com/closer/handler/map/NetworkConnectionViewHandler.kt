@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.map
 
 import android.view.View
+import closer.vlllage.com.closer.extensions.visible
 
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import com.queatz.on.On
@@ -23,11 +24,11 @@ class NetworkConnectionViewHandler constructor(private val on: On) {
     }
 
     fun hide() {
-        connectionErrorView.visibility = View.GONE
+        connectionErrorView.visible = false
     }
 
     private fun show() {
-        connectionErrorView.visibility = View.VISIBLE
+        connectionErrorView.visible = true
         connectionErrorView.removeCallbacks(hideCallback)
         connectionErrorView.postDelayed(hideCallback, NETWORK_CONNECTION_ERROR_TIMEOUT_MS)
     }

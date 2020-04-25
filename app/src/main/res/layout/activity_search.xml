@@ -82,7 +82,7 @@
             android:textColorHighlight="@color/colorAccent_50"
             android:textSize="12sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
             android:id="@+id/groupsRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"

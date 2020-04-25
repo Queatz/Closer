@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import com.queatz.on.On
 
 class MapBubbleMenuView constructor(private val on: On) {
@@ -33,10 +34,10 @@ class MapBubbleMenuView constructor(private val on: On) {
     fun setMenuTitle(mapBubble: MapBubble, title: String?) {
         val menuTitle = mapBubble.view!!.findViewById<TextView>(R.id.menuTitle)
         if (title?.isNotEmpty() == true) {
-            menuTitle.visibility = View.VISIBLE
+            menuTitle.visible = true
             menuTitle.text = title
         } else {
-            menuTitle.visibility = View.GONE
+            menuTitle.visible = false
         }
     }
 

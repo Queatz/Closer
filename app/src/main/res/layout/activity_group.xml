@@ -254,7 +254,7 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
             android:id="@+id/eventToolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

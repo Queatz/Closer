@@ -110,7 +110,7 @@
         android:textColor="@color/text"
         android:text="@string/show_contacts" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/contactsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -210,7 +210,7 @@
 
     </ScrollView>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/messagesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"

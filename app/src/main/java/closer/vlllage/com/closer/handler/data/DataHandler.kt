@@ -79,6 +79,7 @@ class DataHandler constructor(private val on: On) {
     fun getEvent(eventId: String) = chain({
         on<StoreHandler>().store.box(Event::class).query()
                 .equal(Event_.id, eventId)
+                .notNull(Event_.groupId)
                 .build()
     }, {
         on<ApiHandler>()

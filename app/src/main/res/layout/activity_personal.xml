@@ -139,7 +139,7 @@
         android:gravity="start"
         android:text="@string/you_havent_subscribed" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/subscribedGroupsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"

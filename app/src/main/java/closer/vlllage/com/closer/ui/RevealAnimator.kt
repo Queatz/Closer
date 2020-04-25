@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import closer.vlllage.com.closer.extensions.visible
 
 import java.lang.Math.max
 
@@ -54,7 +55,7 @@ class RevealAnimator(private val container: MaxSizeFrameLayout, private var init
                 private var cancelled: Boolean = false
 
                 override fun onAnimationStart(animation: Animator) {
-                    container.visibility = View.VISIBLE
+                    container.visible = true
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
@@ -82,11 +83,11 @@ class RevealAnimator(private val container: MaxSizeFrameLayout, private var init
             }
             animator!!.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
-                    container.visibility = View.VISIBLE
+                    container.visible = true
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    container.visibility = View.GONE
+                    container.visible = false
                 }
 
                 override fun onAnimationCancel(animation: Animator) {}

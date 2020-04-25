@@ -190,10 +190,10 @@ class GroupMessagesHandler constructor(private val on: On) {
     fun showSendMoreOptions(show: Boolean) {
         if (show) {
             sendMoreButton.setImageResource(R.drawable.ic_close_black_24dp)
-            sendMoreLayout.visibility = View.VISIBLE
+            sendMoreLayout.visible = true
         } else {
             sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
-            sendMoreLayout.visibility = View.GONE
+            sendMoreLayout.visible = false
         }
     }
 
@@ -204,12 +204,12 @@ class GroupMessagesHandler constructor(private val on: On) {
     private fun updateSendButton() {
         if (replyMessage.text.toString().isBlank()) {
             sendButton.setImageResource(R.drawable.ic_camera_black_24dp)
-            sendMoreButton.visibility = View.VISIBLE
+            sendMoreButton.visible = true
             on<GroupActionHandler>().show(true)
         } else {
             sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
-            sendMoreButton.visibility = View.GONE
-            sendMoreLayout.visibility = View.GONE
+            sendMoreButton.visible = false
+            sendMoreLayout.visible = false
             sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
             on<GroupActionHandler>().show(false)
         }

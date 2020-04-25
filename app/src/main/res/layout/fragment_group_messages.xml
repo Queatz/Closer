@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/pinnedMessagesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
             android:id="@+id/actionRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
             android:id="@+id/mentionSuggestionRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -201,7 +201,7 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/messagesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"

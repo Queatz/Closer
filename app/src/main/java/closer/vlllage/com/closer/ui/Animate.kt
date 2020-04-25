@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.ui
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import closer.vlllage.com.closer.extensions.visible
 
 import com.queatz.on.On
 
@@ -15,7 +16,7 @@ class Animate constructor(private val on: On) {
                 val animation = AlphaAnimation(0f, 1f)
                 animation.duration = 195
                 view.startAnimation(animation)
-                view.visibility = View.VISIBLE
+                view.visible = true
             } else {
                 val animation = AlphaAnimation(view.alpha, 1f)
                 animation.duration = 195
@@ -33,7 +34,7 @@ class Animate constructor(private val on: On) {
                     }
 
                     override fun onAnimationEnd(animation: Animation) {
-                        view.visibility = View.GONE
+                        view.visible = false
                     }
 
                     override fun onAnimationRepeat(animation: Animation) {

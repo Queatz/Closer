@@ -3,12 +3,13 @@ package closer.vlllage.com.closer.handler.helpers
 import android.view.View
 import android.widget.ImageButton
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
 
 class GroupScopeHandler constructor(private val on: On) {
     fun setup(group: Group, imageButton: ImageButton) {
-        imageButton.visibility = View.VISIBLE
+        imageButton.visible = true
 
         if (group.hasPhone()) {
             imageButton.setImageResource(R.drawable.ic_person_black_24dp)

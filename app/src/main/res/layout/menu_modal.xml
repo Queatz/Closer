@@ -26,7 +26,7 @@
         app:layout_constraintBottom_toTopOf="@+id/menuRecyclerView"
         tools:text="1618 Friends" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/menuRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

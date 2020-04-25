@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import closer.vlllage.com.closer.handler.helpers.*
@@ -49,12 +50,12 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
         when (mapBubble.type) {
             BubbleType.STATUS -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_white_8dp)
-                holder.photo.visibility = View.VISIBLE
+                holder.photo.visible = true
                 holder.photo.colorFilter = null
                 holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
                 holder.name.text = mapBubble.name + (on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone, true)) + "\n" + mapBubble.status
-                holder.info.visibility = View.GONE
+                holder.info.visible = false
 
                 if (mapBubble.tag is Phone) {
                     val phone = mapBubble.tag as Phone
@@ -65,7 +66,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
             }
             BubbleType.SUGGESTION -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_blue_light_8dp)
-                holder.photo.visibility = View.VISIBLE
+                holder.photo.visible = true
                 holder.photo.colorFilter = null
                 holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
                 holder.photo.setImageResource(R.drawable.ic_edit_location_black_24dp)
@@ -73,8 +74,8 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
             }
             BubbleType.PHYSICAL_GROUP -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_purple_8dp)
-                holder.photo.visibility = View.VISIBLE
-                holder.info.visibility = View.GONE
+                holder.photo.visible = true
+                holder.info.visible = false
 
                 if ((mapBubble.tag != null) and (mapBubble.tag is Group)) {
                     val group = mapBubble.tag as Group
@@ -99,8 +100,8 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
             }
             BubbleType.EVENT -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_red_8dp)
-                holder.photo.visibility = View.GONE
-                holder.info.visibility = View.GONE
+                holder.photo.visible = false
+                holder.info.visible = false
 
                 val event = mapBubble.tag as Event
 
