@@ -25,9 +25,10 @@ class DataHandler constructor(private val on: On) {
             }
 
     fun getRecentlyActivePhones(limit: Int = 100) = on<ApiHandler>().getRecentlyActivePhones(limit)
-            .doOnSuccess { phoneResults -> on<RefreshHandler>().handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
-                    { PhoneResult.from(it) },
-                    { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) }) }
+//            TODO these cause problems
+//            .doOnSuccess { phoneResults -> on<RefreshHandler>().handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
+//                    { PhoneResult.from(it) },
+//                    { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) }) }
             .map { phoneResults ->
                 val result = ArrayList<Phone>(phoneResults.size)
                 for (phoneResult in phoneResults) {
@@ -37,14 +38,9 @@ class DataHandler constructor(private val on: On) {
             }
 
     fun getRecentlyActiveGroups(limit: Int = 100) = on<ApiHandler>().getRecentlyActiveGroups(limit)
-            .doOnSuccess { groupResults -> on<RefreshHandler>().handleGroups(groupResults, false) }
-            .map { groupResults ->
-                val result = ArrayList<Group>(groupResults.size)
-                for (groupResult in groupResults) {
-                    result.add(GroupResult.from(groupResult))
-                }
-                result
-            }
+//            TODO these cause problems
+//            .doOnSuccess { groupResults -> on<RefreshHandler>().handleGroups(groupResults, false) }
+            .map { groupResults -> groupResults.map { GroupResult.from(it) } }
 
     fun getGroup(groupId: String) = chain({
         on<StoreHandler>().store.box(Group::class).query()

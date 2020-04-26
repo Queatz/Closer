@@ -20,9 +20,7 @@ class PhysicalGroupHandler constructor(private val on: On) {
         group.latitude = latLng.latitude
         group.longitude = latLng.longitude
         on<StoreHandler>().store.box(Group::class).put(group)
-        on<SyncHandler>().sync(group, onSyncResult ?: { id ->
-            openGroup(id)
-        })
+        on<SyncHandler>().sync(group, onSyncResult ?: { id -> openGroup(id) })
     }
 
     private fun openGroup(groupId: String) {

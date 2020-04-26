@@ -81,7 +81,8 @@ open class SearchGroupsAdapter constructor(
                     backgroundResId else on<GroupColorHandler>().getColorClickable4dp(group))
 
                 holder.name.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
-                if (!group.hasEvent() && !group.isPublic) {
+
+                if (!group.hasEvent() && !group.isPublic && !group.physical) {
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
                     holder.about.text = on<ResourcesHandler>().resources.getString(R.string.private_group)
                 } else if (group.physical) {

@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.api.models
 
 import closer.vlllage.com.closer.store.models.Group
 import com.google.gson.annotations.SerializedName
-import java.lang.Boolean.TRUE
 
 class GroupResult : ModelResult() {
     var name: String? = null
@@ -34,9 +33,9 @@ class GroupResult : ModelResult() {
             group.about = groupResult.about
             group.ratingAverage = groupResult.ratingAverage
             group.ratingCount = groupResult.ratingCount
-            group.isPublic = TRUE == groupResult.isPublic
-            group.physical = TRUE == groupResult.physical
-            group.hub = TRUE == groupResult.hub
+            group.isPublic = true == groupResult.isPublic
+            group.physical = true == groupResult.physical
+            group.hub = true == groupResult.hub
             group.eventId = groupResult.eventId
             group.phoneId = groupResult.phoneId
             group.groupMessageId = groupResult.groupMessageId

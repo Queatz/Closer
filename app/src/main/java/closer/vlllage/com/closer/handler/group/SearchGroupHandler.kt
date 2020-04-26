@@ -28,7 +28,7 @@ class SearchGroupHandler constructor(private val on: On) {
     fun setGroups(allGroups: List<Group>) {
         this.groupsCache = allGroups
 
-        val groups = ArrayList<Group>()
+        val groups = mutableListOf<Group>()
         for (group in allGroups) {
             if (group.name != null) {
                 if (group.name!!.toLowerCase().contains(searchQuery) ||
