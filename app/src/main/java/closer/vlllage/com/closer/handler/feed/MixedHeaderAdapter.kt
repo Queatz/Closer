@@ -537,6 +537,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var on: On
         lateinit var disposableGroup: DisposableGroup
+        var icon = itemView.icon!!
         var name = itemView.notificationName!!
         var message = itemView.notificationMessage!!
         var time = itemView.notificationTime!!

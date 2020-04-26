@@ -131,6 +131,7 @@ class GroupMessagesHandler constructor(private val on: On) {
         val sendMoreActionVideo = this.sendMoreLayout.sendMoreActionVideo
         val sendMoreActionFile = this.sendMoreLayout.sendMoreActionFile
         val sendMoreActionPhoto = this.sendMoreLayout.sendMoreActionPhoto
+        val sendMoreActionPost = this.sendMoreLayout.sendMoreActionPost
 
         sendMoreActionAudio.setOnClickListener {
             this.sendMoreButton.callOnClick()
@@ -141,6 +142,10 @@ class GroupMessagesHandler constructor(private val on: On) {
             on<DefaultAlerts>().message("Woah matey!")
         }
         sendMoreActionFile.setOnClickListener {
+            this.sendMoreButton.callOnClick()
+            on<DefaultAlerts>().message("Woah matey!")
+        }
+        sendMoreActionPost.setOnClickListener {
             this.sendMoreButton.callOnClick()
             on<DefaultAlerts>().message("Woah matey!")
         }
@@ -178,13 +183,16 @@ class GroupMessagesHandler constructor(private val on: On) {
             on<DisposableHandler>().add(groupMessagesSubscription!!)
         }
 
-        on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
-            sendMoreButton.imageTintList = it.tint
-            sendMoreActionAudio.imageTintList = it.tint
-            sendMoreActionVideo.imageTintList = it.tint
-            sendMoreActionFile.imageTintList = it.tint
-            sendMoreActionPhoto.imageTintList = it.tint
-        })
+        on<DisposableHandler>().add(
+                on<LightDarkHandler>().onLightChanged.subscribe {
+                    sendMoreButton.imageTintList = it.tint
+                    sendMoreActionAudio.imageTintList = it.tint
+                    sendMoreActionVideo.imageTintList = it.tint
+                    sendMoreActionFile.imageTintList = it.tint
+                    sendMoreActionPhoto.imageTintList = it.tint
+                    sendMoreActionPost.imageTintList = it.tint
+                }
+        )
     }
 
     fun showSendMoreOptions(show: Boolean) {

@@ -7,9 +7,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.lang.Math.abs
-import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val mapViewportCallback: () -> VisibleRegion?) {
 
@@ -18,9 +17,9 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
     private var mergeBubblesDisposable: Disposable? = null
 
     private val clusterSize: Double
-        get() = if (mapViewportCallback.invoke() == null) {
-            1.0
-        } else abs(mapViewportCallback.invoke()!!.latLngBounds.southwest.longitude - mapViewportCallback.invoke()!!.latLngBounds.northeast.longitude) / MERGE_RESOLUTION
+        get() = mapViewportCallback.invoke()?.let {
+            abs(it.latLngBounds.southwest.longitude - it.latLngBounds.northeast.longitude) / MERGE_RESOLUTION
+        } ?: 1.0
 
     private fun recalculate() {
         lastClusterSize = clusterSize

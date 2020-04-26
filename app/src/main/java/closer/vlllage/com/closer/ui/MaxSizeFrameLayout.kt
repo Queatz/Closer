@@ -65,9 +65,7 @@ class MaxSizeFrameLayout : FrameLayout {
     }
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
-        if (parent != null) {
-            parent.requestDisallowInterceptTouchEvent(true)
-        }
+        parent?.requestDisallowInterceptTouchEvent(true)
 
         return false
     }

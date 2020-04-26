@@ -147,6 +147,7 @@
             app:layout_constraintTop_toBottomOf="@+id/peopleContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:isScrollContainer="true"
             android:orientation="vertical">
 
             <TextView
