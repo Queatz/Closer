@@ -21,6 +21,7 @@ import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
+import closer.vlllage.com.closer.ui.TextImageSpan
 import com.queatz.on.On
 import java.util.regex.Pattern
 
@@ -88,7 +89,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
         }
 
         editText.text.replace(editText.selectionStart - replaceString.length, editText.selectionStart, "@" + mention.id!!)
-        editText.text.setSpan(makeImageSpan(mention.name, editText),
+        editText.text.setSpan(makeImageSpan(mention.name!!, editText),
                 editText.selectionStart - mention.id!!.length - 1, editText.selectionStart,
                 SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -117,11 +118,11 @@ class GroupMessageParseHandler constructor(private val on: On) {
         return true
     }
 
-    fun makeImageSpan(name: String?, editText: TextView): ImageSpan {
+    fun makeImageSpan(name: String, editText: TextView): ImageSpan {
         val textView = createContactTextView(name, editText)
         val bitmapDrawable = convertViewToDrawable(textView)
         bitmapDrawable.setBounds(0, 0, bitmapDrawable.intrinsicWidth, bitmapDrawable.intrinsicHeight)
-        return ImageSpan(bitmapDrawable)
+        return TextImageSpan(bitmapDrawable)
     }
 
     fun extractName(text: Editable, position: Int): CharSequence? {
@@ -138,18 +139,20 @@ class GroupMessageParseHandler constructor(private val on: On) {
         return null
     }
 
-    private fun createContactTextView(text: String?, editText: TextView): TextView {
+    private fun createContactTextView(text: String, editText: TextView): TextView {
         val textView = TextView(on<ActivityHandler>().activity)
-        textView.text = "@" + text!!
+        textView.text = "@${text}"
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, editText.textSize)
+        textView.setLineSpacing(editText.lineSpacingExtra, editText.lineSpacingMultiplier)
         textView.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorAccentLight))
         textView.setTypeface(textView.typeface, Typeface.BOLD)
         return textView
     }
 
-    private fun convertViewToDrawable(view: View): BitmapDrawable {
-        val spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        view.measure(spec, spec)
+    private fun convertViewToDrawable(view: TextView): BitmapDrawable {
+        val w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        val h = View.MeasureSpec.makeMeasureSpec(view.lineHeight, View.MeasureSpec.EXACTLY)
+        view.measure(w, h)
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
         val b = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight,
                 Bitmap.Config.ARGB_8888)

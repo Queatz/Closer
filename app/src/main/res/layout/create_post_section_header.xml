@@ -21,7 +21,6 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/textInverse"
-        android:maxLines="3"
         android:singleLine="false"
         android:inputType="textShortMessage|textCapSentences|textMultiLine" />
 

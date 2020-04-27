@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.group.GroupMessageMentionHandler
-import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
-import closer.vlllage.com.closer.handler.group.MessageSections
+import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.DisposableGroup
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
@@ -100,12 +98,25 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                 item.attachment.has("header") -> {
                     val view = LayoutInflater.from(context).inflate(R.layout.create_post_section_header, content, false)
                     view.input.setText(on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("header").asJsonObject.get("text").asString))
+
                     view.input.addTextChangedListener(object : TextWatcher {
+
+                        private var isDeleteMention: Boolean = false
+                        private var shouldDeleteMention: Boolean = false
+
                         override fun afterTextChanged(text: Editable) {
                             on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
+
+                            if (shouldDeleteMention) {
+                                isDeleteMention = true
+                                on<GroupMessageParseHandler>().deleteMention(view.input)
+                            }
                         }
 
-                        override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {}
+                        override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
+                            shouldDeleteMention = !isDeleteMention && after == 0 && on<GroupMessageParseHandler>().isMentionSelected(view.input)
+                            isDeleteMention = false
+                        }
 
                         override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
                             item.attachment.get("header").asJsonObject.add("text", JsonPrimitive(text.toString()))
@@ -122,11 +133,23 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                     val view = LayoutInflater.from(context).inflate(R.layout.create_post_section_text, content, false)
                     view.input.setText(on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("text").asJsonObject.get("text").asString))
                     view.input.addTextChangedListener(object : TextWatcher {
+
+                        private var isDeleteMention: Boolean = false
+                        private var shouldDeleteMention: Boolean = false
+
                         override fun afterTextChanged(text: Editable) {
                             on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
+
+                            if (shouldDeleteMention) {
+                                isDeleteMention = true
+                                on<GroupMessageParseHandler>().deleteMention(view.input)
+                            }
                         }
 
-                        override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {}
+                        override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
+                            shouldDeleteMention = !isDeleteMention && after == 0 && on<GroupMessageParseHandler>().isMentionSelected(view.input)
+                            isDeleteMention = false
+                        }
 
                         override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
                             item.attachment.get("text").asJsonObject.add("text", JsonPrimitive(text.toString()))
