@@ -3,6 +3,10 @@ package closer.vlllage.com.closer.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -14,7 +18,19 @@ open class FixedUpRecyclerView : RecyclerView {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
-    init { viewTreeObserver.addOnGlobalLayoutListener { requestLayout() } }
+    init {
+        @Suppress("LeakingThis") setOnHierarchyChangeListener(object : OnHierarchyChangeListener {
+            override fun onChildViewRemoved(parent: View, child: View) {
+                if ((layoutManager as? LinearLayoutManager)?.orientation != HORIZONTAL) return
+                if (child.height == 0 || parent.height >= child.height) post { requestLayout() }
+            }
+
+            override fun onChildViewAdded(parent: View, child: View) {
+                if ((layoutManager as? LinearLayoutManager)?.orientation != HORIZONTAL) return
+                if (child.height == 0 || parent.height <= child.height) post { requestLayout() }
+            }
+        })
+    }
 
     @SuppressLint("WrongCall")
     override fun requestLayout() {

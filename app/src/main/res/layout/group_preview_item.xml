@@ -53,6 +53,7 @@
             android:paddingRight="16dp"
             android:paddingBottom="4dp"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/pinnedMessagesRecyclerView"
             android:textAllCaps="true"
             android:textColor="@color/text"
             android:textSize="12sp"
