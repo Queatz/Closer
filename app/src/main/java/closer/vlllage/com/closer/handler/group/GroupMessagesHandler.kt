@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
 import closer.vlllage.com.closer.handler.post.CreatePostActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
+import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import closer.vlllage.com.closer.store.models.Phone
@@ -116,8 +117,11 @@ class GroupMessagesHandler constructor(private val on: On) {
 
             override fun afterTextChanged(text: Editable) {
                 updateSendButton()
-                on<GroupDraftHandler>().saveDraft(on<GroupHandler>().group!!, text.toString())
-                on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, replyMessage.selectionStart))
+
+                on<GroupHandler>().group?.let { group ->
+                    on<GroupDraftHandler>().saveDraft(group, text.toString())
+                    on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, replyMessage.selectionStart))
+                }
 
                 if (shouldDeleteMention) {
                     isDeleteMention = true

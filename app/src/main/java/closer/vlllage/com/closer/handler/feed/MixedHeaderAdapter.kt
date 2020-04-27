@@ -130,31 +130,6 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 FeedContent.POSTS -> groupMessages.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else {
-                        add(GroupMessageMixedItem(GroupMessage().apply {
-                            val copy = get(0)
-                            from = copy.from
-                            to = copy.to
-                            text = copy.text
-                            attachment = on<JsonHandler>().to(JsonObject().also { root ->
-                                root.add("post", JsonObject().apply {
-                                    add("cta", JsonPrimitive("Join the ❤ Pink Girl Club ❤"))
-                                    add("sections", JsonArray().apply {
-                                        add(on<JsonHandler>().from("{\"header\":{\"text\":\"Join our pink adventures! \uD83D\uDC95\"}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"photo\":{\"photo\":\"http://closer-files.vlllage.com/737013581031472732014121805312591773602404407874284505932\",\"large\":true}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"text\":{\"text\":\"We are cute group of cute girls with SUPER CUTE PINK HAIR! We all live in Austin and love to go out together.  Currently, we are 4 girls, but we are looking to grow in size to 6!  So come and join us :)))))\"}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"activity\":{\"group\":\"120582344\",\"intent\":\"has gone shirtless \uD83D\uDEAB\uD83D\uDC55\",\"name\":\"\uD83D\uDEAB\uD83D\uDC55 Go shirtless\",\"used\":\"2020-04-25T15:42:22Z\",\"id\":\"120582510\",\"localOnly\":false,\"objectBoxId\":27}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"text\":{\"text\":\"We are cute group of cute girls with SUPER CUTE PINK HAIR! We all live in Austin and love to go out together.  Currently, we are 4 girls, but we are looking to grow in size to 6!  So come and join us :)))))\"}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"photo\":{\"photo\":\"http://closer-files.vlllage.com/737013581031472732014121805312591773602404407874284505932\",\"large\":false}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"text\":{\"text\":\"We are cute group of cute girls with SUPER CUTE PINK HAIR! We all live in Austin and love to go out together.  Currently, we are 4 girls, but we are looking to grow in size to 6!  So come and join us :)))))\"}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"text\":{\"text\":\"We are cute group of cute girls with SUPER CUTE PINK HAIR! We all live in Austin and love to go out together.  Currently, we are 4 girls, but we are looking to grow in size to 6!  So come and join us :)))))\"}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"activity\":{\"group\":\"120582344\",\"intent\":\"has gone shirtless \uD83D\uDEAB\uD83D\uDC55\",\"name\":\"\uD83D\uDEAB\uD83D\uDC55 Go shirtless\",\"used\":\"2020-04-25T15:42:22Z\",\"id\":\"120582510\",\"localOnly\":false,\"objectBoxId\":27}}", JsonObject::class.java))
-                                        add(on<JsonHandler>().from("{\"text\":{\"text\":\"Come join us in the Pink Girl Club!\"}}", JsonObject::class.java))
-                                    })
-                                })
-                            })
-                            reactions = get(0).reactions
-                            created = get(0).created
-                        }))
                         forEach { add(GroupMessageMixedItem(it)) }
                         add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_conversations)))
                     }
