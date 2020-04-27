@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
+import closer.vlllage.com.closer.handler.post.CreatePostActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
@@ -147,7 +148,7 @@ class GroupMessagesHandler constructor(private val on: On) {
         }
         sendMoreActionPost.setOnClickListener {
             this.sendMoreButton.callOnClick()
-            on<DefaultAlerts>().message("Woah matey!")
+            on<CreatePostActivityTransitionHandler>().show(on<GroupHandler>().group!!.id!!)
         }
         sendMoreActionPhoto.setOnClickListener {
             this.sendMoreButton.callOnClick()

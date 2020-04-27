@@ -38,6 +38,11 @@ class MessageSections constructor(private val on: On) {
         }
     }
 
+    fun isFullWidth(jsonObject: JsonObject) = when {
+        jsonObject.has("photo") -> jsonObject.get("photo").asJsonObject.get("large")?.asBoolean == true
+        else -> false
+    }
+
     fun renderPhotoSection(photo: JsonObject, parent: ViewGroup) = Single.just(LayoutInflater.from(parent.context).inflate(R.layout.group_photo_item, parent, false).also { rootView ->
         val isFullWidth = photo.get("large")?.asBoolean == true
         val url = photo.get("photo").asString + "?s=500"

@@ -7,6 +7,7 @@ import closer.vlllage.com.closer.handler.helpers.JsonHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
@@ -123,6 +124,16 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
         action.add("rating", JsonPrimitive(rating))
         action.add("comment", JsonPrimitive(review))
         jsonObject.add("review", action)
+        saveMessageWithAttachment(groupId, null, jsonObject)
+    }
+
+    fun sharePost(groupId: String, sections: List<JsonObject>) {
+        val jsonObject = JsonObject()
+        val post = JsonObject()
+        post.add("sections", JsonArray().also {
+            sections.forEach { section -> it.add(section) }
+        })
+        jsonObject.add("post", post)
         saveMessageWithAttachment(groupId, null, jsonObject)
     }
 }

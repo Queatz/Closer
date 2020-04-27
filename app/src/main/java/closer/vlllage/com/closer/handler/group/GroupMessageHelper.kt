@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -258,6 +259,9 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.messageActionLayout.visible = false
         holder.time.movementMethod = LinkMovementMethod.getInstance()
         holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()
+
+        holder.messageLayout.updateLayoutParams { width = ViewGroup.LayoutParams.WRAP_CONTENT }
+        holder.custom.updateLayoutParams { width = ViewGroup.LayoutParams.WRAP_CONTENT }
 
         holder.messageRepliesCount.visible = groupMessage.replies ?: 0 > 0
         if (groupMessage.replies ?: 0 > 0) {

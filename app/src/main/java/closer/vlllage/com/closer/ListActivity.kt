@@ -1,6 +1,9 @@
 package closer.vlllage.com.closer
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -21,6 +24,8 @@ abstract class ListActivity : PoolActivity() {
     private var finishAnimator: TranslateAnimation? = null
     private var finishCallback: Runnable? = null
 
+    protected var closeCallback: (() -> Boolean)? = null
+
     protected val isDone: Boolean
         get() = finishAnimator != null
 
@@ -35,9 +40,13 @@ abstract class ListActivity : PoolActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         background.setOnTouchListener { view, motionEvent ->
-            background.setOnTouchListener(null)
-            finish()
-            true
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                if (closeCallback?.invoke() != false) {
+                    background.setOnTouchListener(null)
+                    finish()
+                }
+                true
+            } else false
         }
 
         val viewTreeObserver = background.viewTreeObserver
@@ -48,6 +57,11 @@ abstract class ListActivity : PoolActivity() {
             }
 
             private fun reveal() {
+                val colorAnim = ObjectAnimator.ofInt(background, "backgroundColor", getColor(R.color.black_transparent), getColor(R.color.black_10))
+                colorAnim.duration = 225
+                colorAnim.setEvaluator(ArgbEvaluator())
+                colorAnim.start()
+
                 val yPercent = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeight) * 2 / recyclerView.measuredHeight.toFloat()
                 val animation = TranslateAnimation(
                         Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, yPercent, Animation.RELATIVE_TO_PARENT, 0f
@@ -63,6 +77,11 @@ abstract class ListActivity : PoolActivity() {
         if (finishAnimator != null) {
             return
         }
+
+        val colorAnim = ObjectAnimator.ofInt(background, "backgroundColor", getColor(R.color.black_10), getColor(R.color.black_transparent))
+        colorAnim.duration = 195
+        colorAnim.setEvaluator(ArgbEvaluator())
+        colorAnim.start()
 
         finishAnimator = TranslateAnimation(
                 Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 1f

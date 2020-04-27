@@ -26,7 +26,6 @@ import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
 import io.reactivex.Single
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
-import kotlinx.android.synthetic.main.create_post_options.view.*
 import java.lang.RuntimeException
 
 class MessageDisplay constructor(private val on: On) {
@@ -70,11 +69,18 @@ class MessageDisplay constructor(private val on: On) {
 
         val post = jsonObject.get("post").asJsonObject
         val sections = post.get("sections").asJsonArray
+
         holder.message.visible = false
         holder.name.visible = true
         holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_post, contactName)
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
+        holder.action.visible = false
+
+        if (sections.any { on<MessageSections>().isFullWidth(it.asJsonObject) }) {
+            holder.messageLayout.updateLayoutParams { width = MATCH_PARENT }
+            holder.custom.updateLayoutParams { width = MATCH_PARENT }
+        }
 
         holder.custom.removeAllViews()
 
