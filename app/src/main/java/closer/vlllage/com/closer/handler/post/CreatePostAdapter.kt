@@ -5,20 +5,22 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.group.*
-import closer.vlllage.com.closer.handler.helpers.DisposableGroup
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.store.StoreHandler
+import closer.vlllage.com.closer.store.models.GroupAction
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
+import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.create_post_item.view.*
 import kotlinx.android.synthetic.main.create_post_section_header.view.input
 import kotlinx.android.synthetic.main.create_post_section_text.view.*
+import kotlinx.android.synthetic.main.create_post_select_group_action.view.*
 
 open class CreatePostAdapter(protected val on: On, private val action: (CreatePostAction) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -47,6 +49,9 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         (viewHolder as? CreatePostViewHolder)?.let { holder ->
             holder.disposableGroup = on<DisposableHandler>().group()
+            holder.on = On(on).apply {
+                use<GroupMessageMentionHandler>() // They each need their own
+            }
 
             val item = items[position]
 
@@ -54,6 +59,7 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                 actionAddHeading.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddHeading, position)) }
                 actionAddText.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddText, position)) }
                 actionAddPhoto.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddPhoto, position)) }
+                actionAddActivity.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddGroupAction, position)) }
                 actionDelete.setOnClickListener { action(CreatePostAction(CreatePostActionType.Delete, position)) }
 
                 actionPhotoOptions.visible = item.attachment.has("photo")
@@ -73,16 +79,19 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                     actionAddHeading.setTextColor(it.text)
                     actionAddText.setTextColor(it.text)
                     actionAddPhoto.setTextColor(it.text)
+                    actionAddActivity.setTextColor(it.text)
                     actionPhotoOptions.setTextColor(it.text)
                     actionDelete.setTextColor(it.text)
                     actionAddHeading.compoundDrawableTintList = it.tint
                     actionAddText.compoundDrawableTintList = it.tint
                     actionAddPhoto.compoundDrawableTintList = it.tint
+                    actionAddActivity.compoundDrawableTintList = it.tint
                     actionPhotoOptions.compoundDrawableTintList = it.tint
                     actionDelete.compoundDrawableTintList = it.tint
                     actionAddHeading.setBackgroundResource(it.clickableRoundedBackground)
                     actionAddText.setBackgroundResource(it.clickableRoundedBackground)
                     actionAddPhoto.setBackgroundResource(it.clickableRoundedBackground)
+                    actionAddActivity.setBackgroundResource(it.clickableRoundedBackground)
                     actionPhotoOptions.setBackgroundResource(it.clickableRoundedBackground)
                     actionDelete.setBackgroundResource(it.clickableRoundedBackground)
                 }
@@ -97,7 +106,7 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
             when {
                 item.attachment.has("header") -> {
                     val view = LayoutInflater.from(context).inflate(R.layout.create_post_section_header, content, false)
-                    view.input.setText(on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("header").asJsonObject.get("text").asString))
+                    view.input.setText(holder.on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("header").asJsonObject.get("text").asString))
 
                     view.input.addTextChangedListener(object : TextWatcher {
 
@@ -105,16 +114,16 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                         private var shouldDeleteMention: Boolean = false
 
                         override fun afterTextChanged(text: Editable) {
-                            on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
+                            holder.on<GroupMessageMentionHandler>().showSuggestionsForName(holder.on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
 
                             if (shouldDeleteMention) {
                                 isDeleteMention = true
-                                on<GroupMessageParseHandler>().deleteMention(view.input)
+                                holder.on<GroupMessageParseHandler>().deleteMention(view.input)
                             }
                         }
 
                         override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
-                            shouldDeleteMention = !isDeleteMention && after == 0 && on<GroupMessageParseHandler>().isMentionSelected(view.input)
+                            shouldDeleteMention = !isDeleteMention && after == 0 && holder.on<GroupMessageParseHandler>().isMentionSelected(view.input)
                             isDeleteMention = false
                         }
 
@@ -123,31 +132,31 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                         }
                     })
 
-                    on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
-                        mention -> on<GroupMessageParseHandler>().insertMention(view.input, mention)
+                    holder.on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
+                        mention -> holder.on<GroupMessageParseHandler>().insertMention(view.input, mention)
                     }
 
                     content.addView(view)
                 }
                 item.attachment.has("text") -> {
                     val view = LayoutInflater.from(context).inflate(R.layout.create_post_section_text, content, false)
-                    view.input.setText(on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("text").asJsonObject.get("text").asString))
+                    view.input.setText(holder.on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("text").asJsonObject.get("text").asString))
                     view.input.addTextChangedListener(object : TextWatcher {
 
                         private var isDeleteMention: Boolean = false
                         private var shouldDeleteMention: Boolean = false
 
                         override fun afterTextChanged(text: Editable) {
-                            on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
+                            holder.on<GroupMessageMentionHandler>().showSuggestionsForName(holder.on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
 
                             if (shouldDeleteMention) {
                                 isDeleteMention = true
-                                on<GroupMessageParseHandler>().deleteMention(view.input)
+                                holder.on<GroupMessageParseHandler>().deleteMention(view.input)
                             }
                         }
 
                         override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
-                            shouldDeleteMention = !isDeleteMention && after == 0 && on<GroupMessageParseHandler>().isMentionSelected(view.input)
+                            shouldDeleteMention = !isDeleteMention && after == 0 && holder.on<GroupMessageParseHandler>().isMentionSelected(view.input)
                             isDeleteMention = false
                         }
 
@@ -156,8 +165,8 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                         }
                     })
 
-                    on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
-                        mention -> on<GroupMessageParseHandler>().insertMention(view.input, mention)
+                    holder.on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
+                        mention -> holder.on<GroupMessageParseHandler>().insertMention(view.input, mention)
                     }
 
                     content.addView(view)
@@ -165,10 +174,38 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                 item.attachment.has("photo") -> {
                     on<MessageSections>().renderPhotoSection(item.attachment.get("photo").asJsonObject, content).subscribe { view ->
                         content.addView(view)
-                    }
+                    }.also { holder.disposableGroup.add(it) }
                 }
                 item.attachment.has("activity") -> {
+                    val activity = item.attachment.get("activity")
 
+                    if (activity.isJsonObject) {
+                        on<MessageSections>().renderGroupActionSection(item.attachment.get("activity").asJsonObject, content).subscribe { view ->
+                            content.addView(view)
+                        }.also { holder.disposableGroup.add(it) }
+                    } else {
+                        val view = LayoutInflater.from(context).inflate(R.layout.create_post_select_group_action, content, false)
+
+                        val adapter = GroupActionAdapter(holder.on, GroupActionDisplay.Layout.PHOTO) {
+                            item.attachment.add("activity", on<JsonHandler>().toJsonTree(it))
+                            notifyDataSetChanged()
+                        }
+                        view.actionRecyclerView.adapter = adapter
+                        view.actionRecyclerView.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
+
+                        on<StoreHandler>().store.box(GroupAction::class).query()
+                                .sort(on<SortHandler>().sortGroupActions())
+                                .build()
+                                .subscribe()
+                                .single()
+                                .on(AndroidScheduler.mainThread())
+                                .observer {
+                                    adapter.setGroupActions(it)
+                                }.also { holder.disposableGroup.add(it) }
+
+                        content.addView(view)
+
+                    }
                 }
                 else -> {}
             }
@@ -176,7 +213,10 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        (holder as? CreatePostViewHolder)?.apply { disposableGroup.clear() }
+        (holder as? CreatePostViewHolder)?.apply {
+            disposableGroup.clear()
+            on.off()
+        }
     }
 
     override fun getItemCount() = items.size
@@ -189,4 +229,5 @@ data class PostSection constructor(
 
 class CreatePostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     lateinit var disposableGroup: DisposableGroup
+    lateinit var on: On
 }

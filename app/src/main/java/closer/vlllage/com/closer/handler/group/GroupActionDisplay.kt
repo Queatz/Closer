@@ -27,6 +27,9 @@ import kotlinx.android.synthetic.main.group_action_edit_flow_modal.view.*
 import java.util.*
 
 class GroupActionDisplay constructor(private val on: On) {
+
+    var onGroupActionClickListener: ((GroupAction) -> Unit)? = null
+
     fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
         view.clipToOutline = true
 
@@ -81,7 +84,12 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     fun onGroupActionClick(groupAction: GroupAction, view: View?) {
-        startGroupActionFlow(groupAction, view, groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) } ?: JsonArray(0))
+        onGroupActionClickListener?.let {
+            it(groupAction)
+        } ?: run {
+            startGroupActionFlow(groupAction, view, groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }
+                    ?: JsonArray(0))
+        }
     }
 
     private fun startGroupActionFlow(groupAction: GroupAction, view: View?, flowRemaining: JsonArray, accumulator: String? = null) {

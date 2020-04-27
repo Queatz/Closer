@@ -95,6 +95,7 @@ class MessageSections constructor(private val on: On) {
                     endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
                     topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                     bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                    horizontalBias = 0f
                 }
                 on<GroupActionDisplay>().display(rootView, groupAction, GroupActionDisplay.Layout.PHOTO)
                 return@map rootView
@@ -108,6 +109,7 @@ class MessageSections constructor(private val on: On) {
                     endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
                     topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                     bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                    horizontalBias = 0f
                 }
                 return@onErrorReturn rootView
             }

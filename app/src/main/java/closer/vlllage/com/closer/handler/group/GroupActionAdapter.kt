@@ -14,8 +14,13 @@ import java.util.*
 
 
 class GroupActionAdapter(on: On,
-                         private val layout: GroupActionDisplay.Layout)
+                         private val layout: GroupActionDisplay.Layout,
+                         onGroupActionClickListener: ((GroupAction) -> Unit)? = null)
     : PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder>(on) {
+
+    init {
+        on<GroupActionDisplay>().onGroupActionClickListener = onGroupActionClickListener
+    }
 
     private val groupActions = ArrayList<GroupAction>()
 

@@ -56,6 +56,9 @@ class CreatePostActivity : ListActivity() {
                         addSection(it.position, on<JsonHandler>().from("{\"photo\":{\"photo\":\"${on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)}\"}}", JsonObject::class.java))
                     }
                 }
+                CreatePostActionType.AddGroupAction -> {
+                    addSection(it.position, on<JsonHandler>().from("{\"activity\":null}", JsonObject::class.java))
+                }
                 CreatePostActionType.Delete -> {
                     if (adapter.items.size == 1) {
                         on<DefaultAlerts>().message(getString(R.string.cannot_delete_last_message))
@@ -108,7 +111,7 @@ class CreatePostActivity : ListActivity() {
             it.attachment.has("header") -> it.attachment.get("header").asJsonObject.get("text").asString.isNullOrBlank().not()
             it.attachment.has("text") -> it.attachment.get("text").asJsonObject.get("text").asString.isNullOrBlank().not()
             it.attachment.has("photo") -> it.attachment.get("photo").asJsonObject.get("photo").asString.isNullOrBlank().not()
-            it.attachment.has("activity") -> it.attachment.get("activity").asJsonObject.getAsJsonPrimitive("id").asString.isNullOrBlank().not()
+            it.attachment.has("activity") -> it.attachment.get("activity").isJsonObject
             else -> false
         }
     }
