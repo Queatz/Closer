@@ -1,9 +1,15 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.util.AttributeSet
 import android.view.Gravity
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.DataHandler
@@ -13,11 +19,15 @@ import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
+import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 import closer.vlllage.com.closer.ui.RevealAnimator
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
+import io.reactivex.Single
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
+import kotlinx.android.synthetic.main.create_post_options.view.*
+import java.lang.RuntimeException
 
 class MessageDisplay constructor(private val on: On) {
 
@@ -44,6 +54,44 @@ class MessageDisplay constructor(private val on: On) {
         }))
 
         holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
+    }
+    private fun displayPost(holder: GroupMessageViewHolder,
+                             jsonObject: JsonObject,
+                             groupMessage: GroupMessage,
+                             onEventClickListener: (Event) -> Unit,
+                             onGroupClickListener: (Group) -> Unit,
+                             onSuggestionClickListener: (Suggestion) -> Unit) {
+        displayFallback(holder, groupMessage)
+
+        holder.eventMessage.visible = false
+        holder.messageLayout.visible = true
+
+        val contactName = on<NameHandler>().getName(getPhone(groupMessage.from))
+
+        val post = jsonObject.get("post").asJsonObject
+        val sections = post.get("sections").asJsonArray
+        holder.message.visible = false
+        holder.name.visible = true
+        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_post, contactName)
+        holder.time.visible = true
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
+
+        holder.custom.removeAllViews()
+
+        val layout = LinearLayout(holder.custom.context).also {
+            it.orientation = LinearLayout.VERTICAL
+            it.layoutParams = ConstraintLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+                topToTop = PARENT_ID
+                bottomToBottom = PARENT_ID
+                startToStart = PARENT_ID
+                endToEnd = PARENT_ID
+            }
+        }
+
+        holder.disposableGroup.add(Single.concat(sections.map { on<MessageSections>().renderSection(it.asJsonObject, holder.custom) }).doOnComplete {
+            holder.custom.addView(layout)
+            holder.custom.visible = true
+        }.subscribe { layout.addView(it) })
     }
 
     private fun displayAction(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -79,7 +127,6 @@ class MessageDisplay constructor(private val on: On) {
         val phone = getPhone(groupMessage.from)
         val contactName = on<NameHandler>().getName(phone)
 
-        val activity = jsonObject.get("activity").asJsonObject
         holder.name.visible = true
         holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_group_action, contactName)
         holder.time.visible = true
@@ -88,34 +135,11 @@ class MessageDisplay constructor(private val on: On) {
         holder.message.visible = false
         holder.action.visible = false
 
-        holder.disposableGroup.add(on<DataHandler>().getGroupAction(activity.getAsJsonPrimitive("id").asString).subscribe({ groupAction ->
+        holder.disposableGroup.add(on<MessageSections>().renderSection(jsonObject, holder.custom).subscribe { view ->
             holder.custom.removeAllViews()
+            holder.custom.addView(view)
             holder.custom.visible = true
-            View.inflate(holder.custom.context, R.layout.group_action_photo_item, holder.custom)
-            val rootView = holder.custom.findViewById<ViewGroup>(R.id.rootView)
-            (rootView.layoutParams as ConstraintLayout.LayoutParams).apply {
-                topMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
-                marginStart = 0
-                startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-            }
-            on<GroupActionDisplay>().display(rootView, groupAction, GroupActionDisplay.Layout.PHOTO)
-        }, {
-            holder.custom.removeAllViews()
-            holder.custom.visible = true
-            View.inflate(holder.custom.context, R.layout.group_action_photo_unavailable, holder.custom)
-            val rootView = holder.custom.findViewById<ViewGroup>(R.id.rootView)
-            (rootView.layoutParams as ConstraintLayout.LayoutParams).apply {
-                topMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
-                marginStart = 0
-                startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-            }
-        }))
+        })
     }
 
     private fun displayReview(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -200,13 +224,11 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.message.visible = true
         holder.message.gravity = Gravity.START
-        holder.message.text = (if (event.name == null) on<ResourcesHandler>().resources.getString(R.string.unknown) else event.name) +
-                "\n" +
-                on<EventDetailsHandler>().formatEventDetails(event)
+        holder.message.text = "${if (event.name == null) on<ResourcesHandler>().resources.getString(R.string.unknown) else event.name}\n${on<EventDetailsHandler>().formatEventDetails(event)}"
 
         holder.action.visible = true
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.open_event)
-        holder.action.setOnClickListener { view ->
+        holder.action.setOnClickListener {
             onEventClickListener.invoke(event)
         }
     }
@@ -229,12 +251,12 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.message.visible = true
         holder.message.gravity = Gravity.START
-        holder.message.text = (if (group.name == null) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name) + if (group.about != null) "\n" + group.about!! else ""
+        holder.message.text = "${if (group.name == null) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name}${if (group.about != null) "\n" + group.about!! else ""}"
 
         holder.action.visible = true
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.open_group)
         holder.action.setOnClickListener { view ->
-            onGroupClickListener?.invoke(group)
+            onGroupClickListener.invoke(group)
         }
     }
 
@@ -322,6 +344,7 @@ class MessageDisplay constructor(private val on: On) {
                     jsonObject.has("suggestion") -> displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener)
                     jsonObject.has("photo") -> displayPhoto(holder, jsonObject, groupMessage)
                     jsonObject.has("share") -> displayShare(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
+                    jsonObject.has("post") -> displayPost(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
                     else -> displayFallback(holder, groupMessage)
                 }
             } catch (e: JsonSyntaxException) {

@@ -96,6 +96,7 @@
     <string name="phone_shared_a_group">%1$s shared a group</string>
     <string name="phone_shared_a_location">%1$s shared a location</string>
     <string name="phone_shared_a_photo">%1$s shared a photo</string>
+    <string name="phone_shared_a_post">%1$s shared a post</string>
     <string name="just_now">Just now</string>
     <string name="use_your_location">Use your location</string>
     <string name="enable_location_permission">Enable location permission</string>
@@ -419,6 +420,8 @@
     <string name="send_video">Send video</string>
     <string name="send_photo">Send photo</string>
     <string name="send_post">Post</string>
+    <string name="text">Text</string>
+    <string name="heading">Heading</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

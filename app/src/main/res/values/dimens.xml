@@ -33,4 +33,5 @@
     <dimen name="iconSizeSm">18dp</dimen>
     <dimen name="cornerRadiusHalf">12dp</dimen>
     <dimen name="qr_code">180dp</dimen>
+    <dimen name="maxPhotoHeight">256dp</dimen>
 </resources>
