@@ -65,7 +65,7 @@ class MessageSections constructor(private val on: On) {
     })
 
     fun renderHeaderSection(header: JsonObject, parent: ViewGroup) = LayoutInflater.from(parent.context).inflate(R.layout.group_header_item, parent, false).let { rootView ->
-        rootView.message.text = header.getAsJsonPrimitive("text").asString
+        rootView.message.text = on<GroupMessageParseHandler>().parseText(rootView.message, header.getAsJsonPrimitive("text").asString)
 
         on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
             rootView.message.setTextColor(it.text)
@@ -75,7 +75,7 @@ class MessageSections constructor(private val on: On) {
     }
 
     fun renderTextSection(text: JsonObject, parent: ViewGroup) = LayoutInflater.from(parent.context).inflate(R.layout.group_text_item, parent, false).let { rootView ->
-        rootView.message.text = text.getAsJsonPrimitive("text").asString
+        rootView.message.text = on<GroupMessageParseHandler>().parseText(rootView.message, text.getAsJsonPrimitive("text").asString)
 
         on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
             rootView.message.setTextColor(it.text)

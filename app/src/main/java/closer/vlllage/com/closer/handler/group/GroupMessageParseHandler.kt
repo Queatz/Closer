@@ -58,7 +58,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
     }
 
     @JvmOverloads
-    fun parseText(groupMessage: String, mentionConverter: MentionConverter = defaultMentionConverter, onMentionClickListener: OnMentionClickListener = defaultMentionClickListener): CharSequence {
+    fun parseText(editText: TextView, groupMessage: String, mentionConverter: MentionConverter = defaultMentionConverter, onMentionClickListener: OnMentionClickListener = defaultMentionClickListener): CharSequence {
         val builder = SpannableStringBuilder()
         builder.append(groupMessage)
 
@@ -67,7 +67,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
         while (matcher.find()) {
             val match = matcher.group()
             val mention = match.substring(1)
-            val span = makeImageSpan(mentionConverter.invoke(mention))
+            val span = makeImageSpan(mentionConverter.invoke(mention), editText)
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
                     onMentionClickListener.invoke(mention)
@@ -88,7 +88,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
         }
 
         editText.text.replace(editText.selectionStart - replaceString.length, editText.selectionStart, "@" + mention.id!!)
-        editText.text.setSpan(makeImageSpan(mention.name),
+        editText.text.setSpan(makeImageSpan(mention.name, editText),
                 editText.selectionStart - mention.id!!.length - 1, editText.selectionStart,
                 SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -117,8 +117,8 @@ class GroupMessageParseHandler constructor(private val on: On) {
         return true
     }
 
-    fun makeImageSpan(name: String?): ImageSpan {
-        val textView = createContactTextView(name)
+    fun makeImageSpan(name: String?, editText: TextView): ImageSpan {
+        val textView = createContactTextView(name, editText)
         val bitmapDrawable = convertViewToDrawable(textView)
         bitmapDrawable.setBounds(0, 0, bitmapDrawable.intrinsicWidth, bitmapDrawable.intrinsicHeight)
         return ImageSpan(bitmapDrawable)
@@ -138,10 +138,10 @@ class GroupMessageParseHandler constructor(private val on: On) {
         return null
     }
 
-    private fun createContactTextView(text: String?): TextView {
+    private fun createContactTextView(text: String?, editText: TextView): TextView {
         val textView = TextView(on<ActivityHandler>().activity)
         textView.text = "@" + text!!
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupMessageMentionTextSize))
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, editText.textSize)
         textView.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorAccentLight))
         textView.setTypeface(textView.typeface, Typeface.BOLD)
         return textView

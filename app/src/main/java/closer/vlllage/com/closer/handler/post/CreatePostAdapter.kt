@@ -8,13 +8,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.group.GroupMessageMentionHandler
+import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import closer.vlllage.com.closer.handler.group.MessageSections
-import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.helpers.DisposableGroup
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.create_post_item.view.*
-import kotlinx.android.synthetic.main.create_post_section_header.view.*
+import kotlinx.android.synthetic.main.create_post_section_header.view.input
+import kotlinx.android.synthetic.main.create_post_section_text.view.*
 
 open class CreatePostAdapter(protected val on: On, private val action: (CreatePostAction) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -93,30 +99,44 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
             when {
                 item.attachment.has("header") -> {
                     val view = LayoutInflater.from(context).inflate(R.layout.create_post_section_header, content, false)
-                    view.input.setText(item.attachment.get("header").asJsonObject.get("text").asString)
+                    view.input.setText(on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("header").asJsonObject.get("text").asString))
                     view.input.addTextChangedListener(object : TextWatcher {
-                        override fun afterTextChanged(s: Editable) {}
+                        override fun afterTextChanged(text: Editable) {
+                            on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
+                        }
 
-                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                        override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {}
 
-                        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                            item.attachment.get("header").asJsonObject.add("text", JsonPrimitive(s.toString()))
+                        override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
+                            item.attachment.get("header").asJsonObject.add("text", JsonPrimitive(text.toString()))
                         }
                     })
+
+                    on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
+                        mention -> on<GroupMessageParseHandler>().insertMention(view.input, mention)
+                    }
+
                     content.addView(view)
                 }
                 item.attachment.has("text") -> {
                     val view = LayoutInflater.from(context).inflate(R.layout.create_post_section_text, content, false)
-                    view.input.setText(item.attachment.get("text").asJsonObject.get("text").asString)
+                    view.input.setText(on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("text").asJsonObject.get("text").asString))
                     view.input.addTextChangedListener(object : TextWatcher {
-                        override fun afterTextChanged(s: Editable) {}
+                        override fun afterTextChanged(text: Editable) {
+                            on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
+                        }
 
-                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                        override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {}
 
-                        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                            item.attachment.get("text").asJsonObject.add("text", JsonPrimitive(s.toString()))
+                        override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
+                            item.attachment.get("text").asJsonObject.add("text", JsonPrimitive(text.toString()))
                         }
                     })
+
+                    on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
+                        mention -> on<GroupMessageParseHandler>().insertMention(view.input, mention)
+                    }
+
                     content.addView(view)
                 }
                 item.attachment.has("photo") -> {

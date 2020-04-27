@@ -377,7 +377,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             holder.replyMessage.removeTextChangedListener(holder.textWatcher)
         }
 
-        holder.replyMessage.setText(on<GroupMessageParseHandler>().parseText(on<GroupDraftHandler>().getDraft(group)!!))
+        holder.replyMessage.setText(on<GroupMessageParseHandler>().parseText(holder.replyMessage, on<GroupDraftHandler>().getDraft(group)!!))
 
         holder.textWatcher = object : TextWatcher {
 

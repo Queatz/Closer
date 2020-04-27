@@ -99,7 +99,7 @@ class GroupMessagesHandler constructor(private val on: On) {
 
         updateSendButton()
         on<GroupHandler>().onGroupChanged { group ->
-            replyMessage.setText(on<GroupMessageParseHandler>().parseText(on<GroupDraftHandler>().getDraft(group)!!))
+            replyMessage.setText(on<GroupMessageParseHandler>().parseText(replyMessage, on<GroupDraftHandler>().getDraft(group)!!))
             updateSendButton()
         }
 

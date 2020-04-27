@@ -40,7 +40,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.disposableGroup.add(on<DataHandler>().getGroupMessage(jsonObject.get("share").asString).subscribe({ sharedGroupMessage ->
             display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
-            holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
+            holder.time.text = on<GroupMessageParseHandler>().parseText(holder.time, on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
 
             holder.messageActionProfile.setText(R.string.group)
             holder.messageActionProfile.setOnClickListener {
@@ -52,7 +52,7 @@ class MessageDisplay constructor(private val on: On) {
             holder.message.visible = true
         }))
 
-        holder.time.text = on<GroupMessageParseHandler>().parseText(on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
+        holder.time.text = on<GroupMessageParseHandler>().parseText(holder.time, on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
     }
     private fun displayPost(holder: GroupMessageViewHolder,
                              jsonObject: JsonObject,
@@ -199,7 +199,7 @@ class MessageDisplay constructor(private val on: On) {
         }
 
         holder.name.text = on<NameHandler>().getName(phone)
-        holder.message.text = on<GroupMessageParseHandler>().parseText(groupMessage.text!!)
+        holder.message.text = on<GroupMessageParseHandler>().parseText(holder.message, groupMessage.text!!)
     }
 
     private fun displayMessage(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -207,7 +207,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.visible = false
         holder.messageLayout.visible = false
         holder.eventMessage.visible = true
-        holder.eventMessage.text = on<GroupMessageParseHandler>().parseText(jsonObject.get("message").asString)
+        holder.eventMessage.text = on<GroupMessageParseHandler>().parseText(holder.eventMessage, jsonObject.get("message").asString)
         holder.itemView.setOnClickListener(null)
         holder.action.visible = false
     }
