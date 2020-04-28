@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
@@ -115,30 +116,28 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
-        val group = on<StoreHandler>().store.box(Group::class).query()
-                .equal(Group_.id, groupAction.group!!).build().findFirst()
-
-        if (group == null) {
-            on<DefaultAlerts>().thatDidntWork()
-            return
-        }
-
-        on<AlertHandler>().make().apply {
-            layoutResId = R.layout.comments_modal
-            textViewId = R.id.input
-            onTextViewSubmitCallback = { comment ->
-                val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, "${selection?.let { if (comment.isBlank()) it else "$it\n\n" } ?: ""}${comment}")
-                if (!success) {
-                    on<DefaultAlerts>().thatDidntWork()
-                } else {
-                    on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
-                    on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
+        on<DataHandler>().getGroup(groupAction.group!!).subscribe({ group ->
+            on<AlertHandler>().make().apply {
+                layoutResId = R.layout.comments_modal
+                textViewId = R.id.input
+                onTextViewSubmitCallback = { comment ->
+                    val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, "${selection?.let { if (comment.isBlank()) it else "$it\n\n" } ?: ""}${comment}")
+                    if (!success) {
+                        on<DefaultAlerts>().thatDidntWork()
+                    } else {
+                        on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
+                        on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
+                    }
                 }
+                title = on<AccountHandler>().name + " " + groupAction.intent
+                message = "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it"} ?: ""}".let { if (it.isBlank()) null else it }
+                positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_in, group.name ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
+                show()
             }
-            title = on<AccountHandler>().name + " " + groupAction.intent
-            message = "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it"} ?: ""}".let { if (it.isBlank()) null else it }
-            positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_in, group.name ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
-            show()
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        }).also {
+            on<DisposableHandler>().add(it)
         }
     }
 
