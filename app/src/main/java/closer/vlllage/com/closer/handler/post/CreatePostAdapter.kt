@@ -51,6 +51,7 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
             holder.disposableGroup = on<DisposableHandler>().group()
             holder.on = On(on).apply {
                 use<GroupMessageMentionHandler>() // They each need their own
+                use<GroupActionDisplay>()
             }
 
             val item = items[position]
@@ -204,7 +205,6 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                                 }.also { holder.disposableGroup.add(it) }
 
                         content.addView(view)
-
                     }
                 }
                 else -> {}

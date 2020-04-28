@@ -27,7 +27,7 @@ class AppShortcutsHandler constructor(private val on: On) {
         val shortcutManager = on<ApplicationHandler>().app.getSystemService(ShortcutManager::class.java)
                 ?: return
 
-        val shortcuts = ArrayList<ShortcutInfo>()
+        val shortcuts = mutableListOf<ShortcutInfo>()
         val bitmaps = HashSet<Bitmap>()
 
         for (group in groups) {

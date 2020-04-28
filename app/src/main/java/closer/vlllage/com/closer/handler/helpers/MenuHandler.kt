@@ -17,7 +17,7 @@ class MenuHandler constructor(private val on: On) {
             onAfterViewCreated = { alertConfig, view ->
                 val menuRecyclerView = view.menuRecyclerView
                 menuRecyclerView.layoutManager = LinearLayoutManager(on<ActivityHandler>().activity, RecyclerView.VERTICAL, false)
-                val options = ArrayList<MenuOption>()
+                val options = mutableListOf<MenuOption>()
 
                 for (option in menuOptions) {
                     if (option.visible) options.add(option)

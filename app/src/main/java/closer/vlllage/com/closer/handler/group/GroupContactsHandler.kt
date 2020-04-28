@@ -245,7 +245,7 @@ class GroupContactsHandler constructor(private val on: On) {
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer { closerContacts ->
-                    val allContacts = ArrayList<PhoneContact>()
+                    val allContacts = mutableListOf<PhoneContact>()
 
                     if (phoneContacts != null) {
                         allContacts.addAll(phoneContacts)
@@ -268,7 +268,7 @@ class GroupContactsHandler constructor(private val on: On) {
 
                     val queryPhone = query.replace("[^0-9]".toRegex(), "")
 
-                    val contacts = ArrayList<PhoneContact>()
+                    val contacts = mutableListOf<PhoneContact>()
                     for (contact in allContacts) {
                         if (contact.name != null) {
                             if (contact.name!!.toLowerCase().contains(query)) {

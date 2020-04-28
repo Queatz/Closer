@@ -258,7 +258,7 @@ class MapSlideFragment : PoolFragment() {
     }
 
     fun mapBubbleFrom(phoneList: List<Phone>): List<MapBubble> {
-        val mapBubbles = ArrayList<MapBubble>()
+        val mapBubbles = mutableListOf<MapBubble>()
 
         for (phone in phoneList) {
             if (phone.latitude == null || phone.longitude == null) {

@@ -2,8 +2,10 @@ package closer.vlllage.com.closer.handler.group
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.DisposableGroup
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
@@ -27,6 +29,15 @@ class GroupMessagesFragment : PoolActivityFragment() {
         on<GroupMessageMentionHandler>().attach(mentionSuggestionsLayout, mentionSuggestionRecyclerView) {
             mention -> on<GroupMessagesHandler>().insertMention(mention)
         }
+
+        messagesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_DRAGGING -> on<GroupActionHandler>().show(false)
+                    RecyclerView.SCROLL_STATE_IDLE -> on<GroupActionHandler>().show(true)
+                }
+            }
+        })
 
         disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             sendButton.imageTintList = it.tint

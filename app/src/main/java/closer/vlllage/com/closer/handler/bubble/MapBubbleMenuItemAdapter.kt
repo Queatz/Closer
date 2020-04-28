@@ -19,7 +19,7 @@ class MapBubbleMenuItemAdapter(on: On,
                                private val onClickListener: OnMapBubbleMenuItemClickListener)
     : PoolRecyclerAdapter<MenuItemViewHolder>(on) {
 
-    private val menuItems = ArrayList<MapBubbleMenuItem>()
+    private val menuItems = mutableListOf<MapBubbleMenuItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuItemViewHolder {
         return MenuItemViewHolder(LayoutInflater.from(parent.context)

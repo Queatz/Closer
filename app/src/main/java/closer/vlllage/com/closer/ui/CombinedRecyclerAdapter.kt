@@ -9,9 +9,9 @@ import java.util.*
 
 class CombinedRecyclerAdapter(on: On) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
-    private val adapters = ArrayList<RecyclerView.Adapter<RecyclerView.ViewHolder>>()
-    private val adapterCursors = ArrayList<Int>()
-    private val adapterItems = ArrayList<PriorityAdapterItem>()
+    private val adapters = mutableListOf<RecyclerView.Adapter<RecyclerView.ViewHolder>>()
+    private val adapterCursors = mutableListOf<Int>()
+    private val adapterItems = mutableListOf<PriorityAdapterItem>()
 
     fun addAdapter(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
         adapters.add(adapter)

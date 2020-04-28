@@ -20,7 +20,7 @@ class PhoneContacts constructor(private val on: On) {
 
             contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)!!.use { cursor ->
                 if (cursor.moveToFirst()) {
-                    val contactsList = ArrayList<PhoneContact>()
+                    val contactsList = mutableListOf<PhoneContact>()
 
                     do {
                         val contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))

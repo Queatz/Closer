@@ -137,9 +137,9 @@ class GroupMemberHandler constructor(private val on: On) {
 
     fun join(group: Group) {
         on<AlertHandler>().make().apply {
-            positiveButton = on<ResourcesHandler>().resources.getString(R.string.yes_join)
-            positiveButtonCallback = { result -> on<GroupActionHandler>().joinGroup(group) }
-            title = on<ResourcesHandler>().resources.getString(R.string.join_group_title, group.name)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.join_group_title, group.name)
+            positiveButtonCallback = { on<GroupActionHandler>().joinGroup(group) }
+            title = on<ResourcesHandler>().resources.getString(if (group.hasEvent()) R.string.join_event else R.string.join_group)
             message = on<ResourcesHandler>().resources.getString(if (group.hasEvent()) R.string.join_event_message else R.string.join_group_message)
             show()
         }

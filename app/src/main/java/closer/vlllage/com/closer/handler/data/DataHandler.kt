@@ -17,7 +17,7 @@ class DataHandler constructor(private val on: On) {
                     { PhoneResult.from(it) },
                     { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) }) }
             .map { phoneResults ->
-                val result = ArrayList<Phone>(phoneResults.size)
+                val result = mutableListOf<Phone>()
                 for (phoneResult in phoneResults) {
                     result.add(PhoneResult.from(phoneResult))
                 }
@@ -30,7 +30,7 @@ class DataHandler constructor(private val on: On) {
 //                    { PhoneResult.from(it) },
 //                    { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) }) }
             .map { phoneResults ->
-                val result = ArrayList<Phone>(phoneResults.size)
+                val result = mutableListOf<Phone>()
                 for (phoneResult in phoneResults) {
                     result.add(PhoneResult.from(phoneResult))
                 }

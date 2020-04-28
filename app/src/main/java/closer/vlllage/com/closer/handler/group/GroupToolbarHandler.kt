@@ -72,7 +72,7 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         val event = if (group.hasEvent()) on<GroupHandler>().event else null
 
-        val items = ArrayList<ToolbarItem>()
+        val items = mutableListOf<ToolbarItem>()
 
         if (group.hasPhone()) {
             items.add(ToolbarItem(

@@ -29,9 +29,9 @@ class PhoneContactAdapter(on: On,
 
     private var phoneNumber: String? = null
     private var isFiltered: Boolean = false
-    private val invites = ArrayList<GroupInvite>()
-    private val groupContacts = ArrayList<GroupContact>()
-    private val contacts = ArrayList<PhoneContact>()
+    private val invites = mutableListOf<GroupInvite>()
+    private val groupContacts = mutableListOf<GroupContact>()
+    private val contacts = mutableListOf<PhoneContact>()
 
     private val memberAndInviteCount: Int
         get() = if (isFiltered) if (phoneNumber == null) 0 else 1 else groupContacts.size + invites.size

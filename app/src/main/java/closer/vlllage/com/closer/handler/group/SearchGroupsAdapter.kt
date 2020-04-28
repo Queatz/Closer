@@ -29,7 +29,7 @@ open class SearchGroupsAdapter constructor(
 ) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
     private var createPublicGroupName: String = ""
-    private val groups = ArrayList<Group>()
+    private val groups = mutableListOf<Group>()
     private var actionText: String? = null
     @LayoutRes
     private var layoutResId = R.layout.search_groups_item

@@ -20,7 +20,7 @@ class ShareHandler constructor(private val on: On) {
                 .notEqual(Group_.physical, true)
                 .sort(on<SortHandler>().sortGroups(false))
                 .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groups ->
-                    val groupNames = ArrayList<MapBubbleMenuItem>()
+                    val groupNames = mutableListOf<MapBubbleMenuItem>()
                     for (group in groups) {
                         group.name ?: continue
                         groupNames.add(MapBubbleMenuItem(group.name!!, if (group.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_lock_black_18dp))

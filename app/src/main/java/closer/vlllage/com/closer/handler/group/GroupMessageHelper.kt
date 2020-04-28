@@ -263,9 +263,11 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.messageLayout.updateLayoutParams { width = ViewGroup.LayoutParams.WRAP_CONTENT }
         holder.custom.updateLayoutParams { width = ViewGroup.LayoutParams.WRAP_CONTENT }
 
-        holder.messageRepliesCount.visible = groupMessage.replies ?: 0 > 0
-        if (groupMessage.replies ?: 0 > 0) {
-            holder.messageRepliesCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.x_replies, groupMessage.replies ?: 0, groupMessage.replies ?: 0)
+        val replyCount = groupMessage.replies?.let { it - 1 } ?: 0
+
+        holder.messageRepliesCount.visible = replyCount > 0
+        if (replyCount > 0) {
+            holder.messageRepliesCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.x_replies, replyCount, replyCount)
             holder.messageRepliesCount.setOnClickListener {
                 openGroup(groupMessage)
             }

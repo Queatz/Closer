@@ -100,8 +100,7 @@ class MessageSections constructor(private val on: On) {
                 on<GroupActionDisplay>().display(rootView, groupAction, GroupActionDisplay.Layout.PHOTO)
                 return@map rootView
             }.onErrorReturn {
-                View.inflate(parent.context, R.layout.group_action_photo_unavailable, parent)
-                val rootView = LayoutInflater.from(parent.context).inflate(R.layout.group_action_photo_item, parent, false)
+                val rootView = LayoutInflater.from(parent.context).inflate(R.layout.group_action_photo_unavailable, parent, false)
                 (rootView.layoutParams as ConstraintLayout.LayoutParams).apply {
                     topMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
                     marginStart = 0

@@ -13,20 +13,20 @@ import java.util.*
  * 2) Keep adding the nearest neighbor until distance from cluster center is greater than the max allowed
  */
 class ClusterMap(private val maxDistance: Double) {
-    private val mapBubbles = ArrayList<MapBubble>()
+    private val mapBubbles = mutableListOf<MapBubble>()
 
     fun add(mapBubble: MapBubble) {
         mapBubbles.add(mapBubble)
     }
 
     fun generateClusters(): List<Set<MapBubble>> {
-        val result = ArrayList<Set<MapBubble>>()
+        val result = mutableListOf<Set<MapBubble>>()
 
         if (mapBubbles.isEmpty() || maxDistance == 0.0) {
             return result
         }
 
-        val keys = ArrayList<DoubleArray>()
+        val keys = mutableListOf<DoubleArray>()
         for (mapBubble in mapBubbles) {
             keys.add(ll(mapBubble))
         }
@@ -37,7 +37,7 @@ class ClusterMap(private val maxDistance: Double) {
             val cluster = HashSet<MapBubble>()
             cluster.add(mapBubble)
             val clusterCenter = ll(mapBubble)
-            val nearbyMapBubbles = ArrayList<Neighbor<DoubleArray, MapBubble>>()
+            val nearbyMapBubbles = mutableListOf<Neighbor<DoubleArray, MapBubble>>()
             kdTree.range(clusterCenter, maxDistance, nearbyMapBubbles)
 
             for (neighbor in nearbyMapBubbles) {

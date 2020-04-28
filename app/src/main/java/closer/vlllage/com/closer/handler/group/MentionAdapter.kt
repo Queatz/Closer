@@ -17,7 +17,7 @@ import java.util.*
 
 class MentionAdapter(on: On, private val onMentionClickListener: ((Phone) -> Unit)?) : PoolRecyclerAdapter<MentionAdapter.ViewHolder>(on) {
 
-    private val items = ArrayList<Phone>()
+    private val items = mutableListOf<Phone>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val holder = ViewHolder(LayoutInflater.from(parent.context)

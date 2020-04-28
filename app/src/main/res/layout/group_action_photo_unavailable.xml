@@ -25,6 +25,7 @@
         android:maxLines="3"
         android:textSize="@dimen/groupActionSmallTextSize"
         android:textStyle="bold"
+        android:clickable="true"
         android:text="This activity is private or unavailable" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

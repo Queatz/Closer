@@ -22,7 +22,7 @@ class GroupActionAdapter(on: On,
         on<GroupActionDisplay>().onGroupActionClickListener = onGroupActionClickListener
     }
 
-    private val groupActions = ArrayList<GroupAction>()
+    private val groupActions = mutableListOf<GroupAction>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupActionViewHolder {
         return GroupActionViewHolder(LayoutInflater.from(parent.context)

@@ -104,7 +104,7 @@ class RefreshHandler constructor(private val on: On) {
 
     fun refreshPins(groupId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getPins(groupId).subscribe({ pinResults ->
-            val groupMessageResults = ArrayList<GroupMessageResult>()
+            val groupMessageResults = mutableListOf<GroupMessageResult>()
 
             for (pinResult in pinResults) {
                 groupMessageResults.add(pinResult.message!!)
@@ -174,7 +174,7 @@ class RefreshHandler constructor(private val on: On) {
     }
 
     private fun handleMessages(messages: List<GroupMessageResult>) {
-        val phoneResults = ArrayList<PhoneResult>()
+        val phoneResults = mutableListOf<PhoneResult>()
         for (groupMessageResult in messages) {
             if (groupMessageResult.phone != null) {
                 phoneResults.add(groupMessageResult.phone!!)
@@ -244,7 +244,7 @@ class RefreshHandler constructor(private val on: On) {
                 existingObjsMap[existingObj.id!!] = existingObj
             }
 
-            val objsToAdd = ArrayList<T>()
+            val objsToAdd = mutableListOf<T>()
             val idsToAdd = mutableSetOf<String>()
 
             for (result in results) {
@@ -281,7 +281,7 @@ class RefreshHandler constructor(private val on: On) {
         val allMyGroupContactIds = HashSet<String>()
 
         if (!noPhones) {
-            val phoneResults = ArrayList<PhoneResult>()
+            val phoneResults = mutableListOf<PhoneResult>()
             for (groupContactResult in groupContacts) {
                 allMyGroupContactIds.add(groupContactResult.id!!)
 
@@ -294,7 +294,7 @@ class RefreshHandler constructor(private val on: On) {
         }
 
         if (!noGroups) {
-            val groupResults = ArrayList<GroupResult>()
+            val groupResults = mutableListOf<GroupResult>()
             for (groupContactResult in groupContacts) {
                 allMyGroupContactIds.add(groupContactResult.id!!)
 
@@ -312,7 +312,7 @@ class RefreshHandler constructor(private val on: On) {
                 existingGroupContactsMap[existingGroupContact.id!!] = existingGroupContact
             }
 
-            val groupContactsToAdd = ArrayList<GroupContact>()
+            val groupContactsToAdd = mutableListOf<GroupContact>()
 
             for (groupContactResult in groupContacts) {
                 if (!existingGroupContactsMap.containsKey(groupContactResult.id)) {

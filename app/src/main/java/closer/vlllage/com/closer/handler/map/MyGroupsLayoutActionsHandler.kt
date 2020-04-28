@@ -17,7 +17,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     private var myGroupsAdapter: MyGroupsAdapter? = null
 
-    private val actions = ArrayList<GroupActionBarButton>()
+    private val actions = mutableListOf<GroupActionBarButton>()
 
     private var meetPeopleButton: GroupActionBarButton? = null
     private var featureRequestsButton: GroupActionBarButton? = null

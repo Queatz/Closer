@@ -56,7 +56,7 @@ class PinnedMessagesHandler constructor(private val on: On) {
                         return@observer
                     }
 
-                    val ids = ArrayList<String>()
+                    val ids = mutableListOf<String>()
 
                     for (pin in pins) {
                         ids.add(pin.from!!)

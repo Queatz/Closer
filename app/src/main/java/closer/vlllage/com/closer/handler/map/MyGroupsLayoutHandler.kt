@@ -53,7 +53,7 @@ class MyGroupsLayoutHandler constructor(private val on: On) {
                 .observer { this.setGroups(it) })
 
 
-        val endActions = ArrayList<GroupActionBarButton>()
+        val endActions = mutableListOf<GroupActionBarButton>()
         endActions.add(GroupActionBarButton(
                 on<ResourcesHandler>().resources.getString(R.string.add_new_private_group),
                 View.OnClickListener { view ->
