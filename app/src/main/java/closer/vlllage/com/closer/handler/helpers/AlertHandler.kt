@@ -58,7 +58,7 @@ class AlertHandler constructor(private val on: On) {
         }
 
         if (alertConfig.message != null) {
-            dialogBuilder.setMessage(on<GroupMessageParseHandler>().parseString(alertConfig.message!!))
+            dialogBuilder.setMessage(on<GroupMessageParseHandler>().parseString(alertConfig.message!!, prefix = ""))
         }
 
         if (alertConfig.title != null) {

@@ -48,7 +48,7 @@ class GroupActionDisplay constructor(private val on: On) {
 
         target.setOnLongClickListener {
             onGroupActionLongClick(groupAction)
-            return@setOnLongClickListener true
+            true
         }
 
         if (layout == Layout.PHOTO) {

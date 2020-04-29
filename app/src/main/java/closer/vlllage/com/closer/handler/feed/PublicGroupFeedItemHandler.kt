@@ -641,28 +641,30 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private fun addGroupDescription(groupName: String) {
         searchGroups.setText("")
 
-        on<LocationHandler>().getCurrentLocation({ location ->
-            on<AlertHandler>().make().apply {
-                title = on<ResourcesHandler>().resources.getString(R.string.group_as_public, groupName)
-                layoutResId = R.layout.create_public_group_modal
-                textViewId = R.id.input
-                onTextViewSubmitCallback = { about ->
-                    val group = on<StoreHandler>().create(Group::class.java)
-                    group!!.name = groupName
-                    group.about = about
-                    group.isPublic = true
-                    group.latitude = location.latitude
-                    group.longitude = location.longitude
-                    on<StoreHandler>().store.box(Group::class).put(group)
-                    on<SyncHandler>().sync(group, { groupId ->
-                        openGroup(groupId, null)
-                    })
+        on<MapHandler>().center?.let { latLng ->
+            on<LocalityHelper>().getLocality(on<MapHandler>().center!!) { locality ->
+                on<AlertHandler>().make().apply {
+                    title = groupName
+                    message = locality?.let { on<ResourcesHandler>().resources.getString(R.string.public_group_in_x, it) } ?: on<ResourcesHandler>().resources.getString(R.string.public_group)
+                    layoutResId = R.layout.create_public_group_modal
+                    textViewId = R.id.input
+                    onTextViewSubmitCallback = { about ->
+                        val group = on<StoreHandler>().create(Group::class.java)
+                        group!!.name = groupName
+                        group.about = about
+                        group.isPublic = true
+                        group.latitude = latLng.latitude
+                        group.longitude = latLng.longitude
+                        on<StoreHandler>().store.box(Group::class).put(group)
+                        on<SyncHandler>().sync(group, { groupId ->
+                            openGroup(groupId, null)
+                        })
+                    }
+                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_public_group)
+                    show()
                 }
-                positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_public_group)
-                show()
             }
-
-        }, { on<DefaultAlerts>().thatDidntWork(on<ResourcesHandler>().resources.getString(R.string.location_is_needed)) })
+        } ?: run { on<DefaultAlerts>().thatDidntWork() }
     }
 
     fun openGroup(groupId: String?, view: View?) {

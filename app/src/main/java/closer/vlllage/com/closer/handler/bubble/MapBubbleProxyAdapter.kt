@@ -39,11 +39,11 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
         when (mapBubble.type) {
             BubbleType.STATUS -> {
                 holder.name.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textInverse))
-                holder.info.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textInverse))
+                holder.info.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
             }
             else -> {
                 holder.name.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.text))
-                holder.info.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.text))
+                holder.info.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHint))
             }
         }
 
@@ -54,8 +54,9 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                 holder.photo.colorFilter = null
                 holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
-                holder.name.text = mapBubble.name + (on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone, true)) + "\n" + mapBubble.status
-                holder.info.visible = false
+                holder.name.text = "${mapBubble.name}${on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)}\n${mapBubble.status}"
+                holder.info.visible = true
+                holder.info.text = on<TimeStr>().pretty((mapBubble.tag as Phone).updated)
 
                 if (mapBubble.tag is Phone) {
                     val phone = mapBubble.tag as Phone
@@ -71,6 +72,8 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                 holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
                 holder.photo.setImageResource(R.drawable.ic_edit_location_black_24dp)
                 holder.name.text = mapBubble.status
+                holder.info.visible = true
+                holder.info.text = on<TimeStr>().prettyDate((mapBubble.tag as Suggestion).created)
             }
             BubbleType.PHYSICAL_GROUP -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_purple_8dp)
@@ -105,7 +108,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
 
                 val event = mapBubble.tag as Event
 
-                holder.name.text = event.name + "\n" + on<EventDetailsHandler>().formatEventDetails(event)
+                holder.name.text = "${event.name}\n${on<EventDetailsHandler>().formatEventDetails(event)}"
 
                 if (event.isPublic) {
                     holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)

@@ -219,6 +219,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     private fun bindGroupAction(holder: GroupActionViewHolder, groupAction: GroupAction) {
         holder.on = On(on).apply {
             use<DisposableHandler>()
+            use<GroupActionDisplay>()
         }
         holder.on<GroupActionDisplay>().display(holder.itemView.groupAction, groupAction, GroupActionDisplay.Layout.PHOTO, holder.itemView.groupActionDescription, 1.5f)
    }
