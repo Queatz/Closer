@@ -261,7 +261,7 @@ interface Backend {
     fun getInviteCode(@Query("code") code: String): Single<InviteCodeResult>
 
     @POST("invite-code")
-    fun createInviteCode(@Query("group") group: String, @Query("single") singleUse: Boolean = true, @Query("code") code: String? = null, @Query("name") name: String? = null): Single<InviteCodeResult>
+    fun createInviteCode(@Query("group") group: String, @Query("single") singleUse: Boolean = true, @Query("code") code: String? = null, @Query("name") name: String? = null, @Query("about") about: String? = null): Single<InviteCodeResult>
 
     @POST("invite-code")
     fun useInviteCode(@Query("use") code: String): Single<UseInviteCodeResult>
