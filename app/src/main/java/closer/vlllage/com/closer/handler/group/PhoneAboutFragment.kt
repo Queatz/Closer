@@ -183,13 +183,13 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
 
                     actionAddGoal.setOnClickListener {
-                        on<DefaultInput>().show(R.string.add_a_goal) {
+                        on<DefaultInput>().show(R.string.add_a_goal, hintRes = R.string.goal_hint) {
                             addGoal(it, phone.id!!)
                         }
                     }
 
                     actionAddLifestyle.setOnClickListener {
-                        on<DefaultInput>().show(R.string.add_a_lifestyle) {
+                        on<DefaultInput>().show(R.string.add_a_lifestyle, hintRes = R.string.lifestyle_hint) {
                             addLifestyle(it, phone.id!!)
                         }
                     }

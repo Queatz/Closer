@@ -1,9 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
-import android.util.AttributeSet
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
@@ -19,14 +16,13 @@ import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
 import closer.vlllage.com.closer.ui.RevealAnimator
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
 import io.reactivex.Single
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
-import java.lang.RuntimeException
+import java.util.*
 
 class MessageDisplay constructor(private val on: On) {
 
@@ -55,11 +51,11 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.text = on<GroupMessageParseHandler>().parseText(holder.time, on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
     }
     private fun displayPost(holder: GroupMessageViewHolder,
-                             jsonObject: JsonObject,
-                             groupMessage: GroupMessage,
-                             onEventClickListener: (Event) -> Unit,
-                             onGroupClickListener: (Group) -> Unit,
-                             onSuggestionClickListener: (Suggestion) -> Unit) {
+                            jsonObject: JsonObject,
+                            groupMessage: GroupMessage,
+                            onEventClickListener: (Event) -> Unit,
+                            onGroupClickListener: (Group) -> Unit,
+                            onSuggestionClickListener: (Suggestion) -> Unit) {
         displayFallback(holder, groupMessage)
 
         holder.eventMessage.visible = false
@@ -98,6 +94,10 @@ class MessageDisplay constructor(private val on: On) {
             holder.custom.addView(layout)
             holder.custom.visible = true
         }.subscribe { layout.addView(it) })
+
+        if (!holder.pinned) {
+            toggleMessageActionLayout(holder, true)
+        }
     }
 
     private fun displayAction(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -371,14 +371,18 @@ class MessageDisplay constructor(private val on: On) {
             holder.group.visible = true
             holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, groupMessage.to?.let { getGroup(it) }?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
         }
+
+        if (!holder.pinned && (groupMessage.created ?: Date(0)).after(on<TimeAgo>().minutesAgo(5))) {
+            toggleMessageActionLayout(holder, true)
+        }
     }
 
-    fun toggleMessageActionLayout(holder: GroupMessageViewHolder) {
+    fun toggleMessageActionLayout(holder: GroupMessageViewHolder, show: Boolean? = null) {
         if (holder.messageActionLayoutRevealAnimator == null) {
             holder.messageActionLayoutRevealAnimator = RevealAnimator(holder.messageActionLayout, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
         }
 
-        holder.messageActionLayoutRevealAnimator!!.show(holder.messageActionLayout.visible.not())
+        holder.messageActionLayoutRevealAnimator!!.show(show?.let { it } ?: holder.messageActionLayout.visible.not())
     }
 
     private fun getPhone(phoneId: String?): Phone? {
