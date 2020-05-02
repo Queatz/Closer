@@ -15,6 +15,8 @@ import com.queatz.on.On
 
 class HostEventHelper constructor(private val on: On) {
     fun hostEvent(group: Group) {
+        on<TaskHandler>().activeTask = TaskDefinition(TaskType.CREATE_EVENT_IN_GROUP, group)
+
         if (group.physical) {
             on<EventHandler>().createNewEvent(LatLng(
                     group.latitude!!,
@@ -23,7 +25,6 @@ class HostEventHelper constructor(private val on: On) {
                 showEventOnMap(it)
             }
         } else {
-            on<TaskHandler>().activeTask = TaskDefinition(TaskType.CREATE_EVENT_IN_GROUP, group)
             on<NavigationHandler>().showMap(on<ResourcesHandler>().resources.getString(R.string.create_event_in_group_instructions))
         }
     }
