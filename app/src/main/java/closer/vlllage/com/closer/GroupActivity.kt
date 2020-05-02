@@ -103,6 +103,7 @@ class GroupActivity : CircularRevealActivity() {
             view.groupDetails.setTextColor(it.text)
             view.groupRatingCount.setTextColor(it.text)
             view.peopleInGroup.setTextColor(it.text)
+            view.backgroundPhoto.alpha = if (it.light) .15f else 1f
         })
     }
 
@@ -136,22 +137,9 @@ class GroupActivity : CircularRevealActivity() {
 
                 view.peopleInGroup.isSelected = true
 
-                view.profilePhoto.visible = group.hasPhone()
 
                 setGroupBackground(group)
                 setGroupRating(group)
-
-                if (group.photo != null) {
-                    view.profilePhoto.visible = true
-                    on<ImageHandler>().get().load(group.photo + "?s=512")
-                            .into(view.profilePhoto)
-                    view.profilePhoto.setOnClickListener {
-                        on<PhotoActivityTransitionHandler>().show(view.profilePhoto, group.photo!!)
-                    }
-
-                } else {
-                    view.profilePhoto.visible = false
-                }
 
                 showGroupName(group)
 
@@ -179,7 +167,7 @@ class GroupActivity : CircularRevealActivity() {
             }
 
             onPhoneUpdated { phone ->
-                setGroupBackground(phone)
+                setGroupProfilePhoto(phone.photo)
                 view.groupDetails.visible = false
                 view.groupDetails.text = ""
                 view.groupAbout.visible = !phone.status.isNullOrBlank()
@@ -260,14 +248,15 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun setGroupBackground(group: Group) {
+        view.profilePhoto.visible = false
+
         if (group.photo != null) {
-            view.profilePhoto.visible = true
-            on<ImageHandler>().get().load(group.photo + "?s=512")
-                    .into(view.profilePhoto)
-            view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, group.photo!!) }
+            view.backgroundPhoto.visible = true
+            on<ImageHandler>().get().load(group.photo + "?s=512").into(view.backgroundPhoto)
+            view.backgroundPhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.backgroundPhoto, group.photo!!) }
 
         } else {
-            view.profilePhoto.visible = false
+            view.backgroundPhoto.visible = false
         }
 
         if (on<LightDarkHandler>().isLight()) {
@@ -277,12 +266,14 @@ class GroupActivity : CircularRevealActivity() {
         }
     }
 
-    private fun setGroupBackground(phone: Phone) {
-        if (phone.photo != null) {
+    private fun setGroupProfilePhoto(photo: String?) {
+        view.backgroundPhoto.visible = false
+
+        if (photo != null) {
             view.profilePhoto.visible = true
-            on<ImageHandler>().get().load(phone.photo + "?s=512")
+            on<ImageHandler>().get().load("$photo?s=512")
                     .into(view.profilePhoto)
-            view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, phone.photo!!) }
+            view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, photo!!) }
 
         } else {
             view.profilePhoto.visible = false

@@ -102,7 +102,6 @@ open class SearchGroupsAdapter constructor(
                         on<ResourcesHandler>().resources.getString(R.string.event)
                 } else {
                     holder.about.text = group.about
-                    holder.action.visible = recentActivity
                     holder.action.text = if (actionText != null) actionText else if (recentActivity) on<TimeStr>().active(group.updated) else on<ResourcesHandler>().resources.getString(R.string.open_group)
                 }
 
