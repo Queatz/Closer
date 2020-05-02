@@ -203,6 +203,23 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/messageActionShorthand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/groupActionHeight"
+                    android:layout_marginEnd="@dimen/pad"
+                    android:background="@drawable/clickable_light_flat"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableStart="@drawable/ic_chevron_right_black_18dp"
+                    android:contentDescription="@string/show_more"
+                    android:textColor="@color/text"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:id="@+id/messageActionProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/groupActionHeight"

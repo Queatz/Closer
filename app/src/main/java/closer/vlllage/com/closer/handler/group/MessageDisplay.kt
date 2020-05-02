@@ -9,11 +9,15 @@ import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
 import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import closer.vlllage.com.closer.ui.RevealAnimator
@@ -41,7 +45,7 @@ class MessageDisplay constructor(private val on: On) {
             holder.messageActionProfile.setText(R.string.group)
             holder.messageActionProfile.setOnClickListener {
                 on<NavigationHandler>().showGroup(sharedGroupMessage.to!!)
-                toggleMessageActionLayout(holder)
+                toggleMessageActionLayout(groupMessage, holder)
             }
         }, {
             holder.message.setText(R.string.unavailable_message)
@@ -96,7 +100,7 @@ class MessageDisplay constructor(private val on: On) {
         }.subscribe { layout.addView(it) })
 
         if (!holder.pinned) {
-            toggleMessageActionLayout(holder, true)
+            toggleMessageActionLayout(groupMessage, holder, true)
         }
     }
 
@@ -372,17 +376,184 @@ class MessageDisplay constructor(private val on: On) {
             holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, groupMessage.to?.let { getGroup(it) }?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
         }
 
-        if (!holder.pinned && (groupMessage.created ?: Date(0)).after(on<TimeAgo>().minutesAgo(5))) {
-            toggleMessageActionLayout(holder, true)
+        if (
+                groupMessage.from != on<PersistenceHandler>().phoneId &&
+                !holder.pinned &&
+                (groupMessage.created ?: Date(0)).after(on<TimeAgo>().minutesAgo(5))
+        ) {
+            toggleMessageActionLayout(groupMessage, holder, true, shorthand = true)
         }
     }
 
-    fun toggleMessageActionLayout(holder: GroupMessageViewHolder, show: Boolean? = null) {
+    fun toggleMessageActionLayout(groupMessage: GroupMessage, holder: GroupMessageViewHolder, show: Boolean? = null, shorthand: Boolean = false) {
         if (holder.messageActionLayoutRevealAnimator == null) {
             holder.messageActionLayoutRevealAnimator = RevealAnimator(holder.messageActionLayout, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
         }
 
-        holder.messageActionLayoutRevealAnimator!!.show(show?.let { it } ?: holder.messageActionLayout.visible.not())
+        val visible = show?.let { it } ?: holder.messageActionLayout.visible.not()
+
+        holder.messageActionLayoutRevealAnimator!!.show(visible)
+
+        if (visible) { renderMessageActionLayout(groupMessage, holder, shorthand) }
+    }
+
+    private fun renderMessageActionLayout(groupMessage: GroupMessage, holder: GroupMessageViewHolder, shorthand: Boolean) {
+        if (shorthand) {
+            listOf(
+                    holder.messageRepliesCount,
+                    holder.messageActionLayout,
+                    holder.messageActionProfile,
+                    holder.messageActionShare,
+                    holder.messageActionRemind,
+                    holder.messageActionReply,
+                    holder.messageActionDelete,
+                    holder.messageActionPin
+            ).forEach { it.visible = false }
+
+            holder.messageActionShorthand.visible = true
+
+            holder.messageActionShorthand.setOnClickListener {
+                renderMessageActionLayout(groupMessage, holder, false)
+            }
+
+            return
+        }
+
+        holder.messageActionShorthand.visible = false
+
+        holder.messageActionProfile.text = on<ResourcesHandler>().resources.getString(
+                if (holder.global) R.string.group else R.string.profile
+        )
+
+        holder.messageActionShare.visible = groupMessage.from != null
+        holder.messageActionPin.visible = groupMessage.from != null && !holder.global && !holder.inFeed
+        holder.messageActionDelete.visible = groupMessage.from == on<PersistenceHandler>().phoneId
+
+        holder.messageActionProfile.visible = holder.global || groupMessage.from != null
+
+        if (holder.global) {
+            holder.messageActionProfile.setOnClickListener {
+                on<NavigationHandler>().showGroup(groupMessage.to!!)
+                on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+            }
+        } else if (groupMessage.from != null) {
+            holder.messageActionProfile.setOnClickListener {
+                on<NavigationHandler>().showProfile(groupMessage.from!!)
+                on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+            }
+        }
+
+        holder.messageActionShare.setOnClickListener {
+            on<ShareActivityTransitionHandler>().shareGroupMessage(groupMessage.id!!)
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionRemind.setOnClickListener {
+            on<DefaultAlerts>().message("That doesn't work yet!")
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionReply.setOnClickListener {
+            openGroup(groupMessage)
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionDelete.setOnClickListener {
+            on<AlertHandler>().make().apply {
+                message = on<ResourcesHandler>().resources.getString(R.string.delete_message_confirm)
+                negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+                positiveButton = on<ResourcesHandler>().resources.getString(R.string.yes_delete)
+                positiveButtonCallback = {
+                    on<ApiHandler>().deleteGroupMessage(groupMessage.id!!).subscribe({
+                        if (!it.success) {
+                            on<DefaultAlerts>().thatDidntWork()
+                        } else {
+                            on<ToastHandler>().show(R.string.message_deleted)
+                        }
+                    }, { on<DefaultAlerts>().thatDidntWork() })
+                    on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+                }
+                show()
+            }
+        }
+
+        holder.messageActionPin.setOnClickListener {
+            if (holder.pinned) {
+                on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().removePin(groupMessage.id!!, groupMessage.to!!)
+                        .subscribe({ successResult ->
+                            if (!successResult.success) {
+                                on<DefaultAlerts>().thatDidntWork()
+                            } else {
+                                on<RefreshHandler>().refreshPins(groupMessage.to!!)
+                            }
+                        }, { on<DefaultAlerts>().thatDidntWork() }))
+            } else {
+                on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().addPin(groupMessage.id!!, groupMessage.to!!)
+                        .subscribe({ successResult ->
+                            if (!successResult.success) {
+                                on<DefaultAlerts>().thatDidntWork()
+                            } else {
+                                on<RefreshHandler>().refreshPins(groupMessage.to!!)
+                            }
+                        }, { on<DefaultAlerts>().thatDidntWork() }))
+            }
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVote.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "♥", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVoteLaugh.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE02", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVoteYummy.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE0B", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVoteKiss.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE18", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVoteCool.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE0E", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
     }
 
     private fun getPhone(phoneId: String?): Phone? {
@@ -401,5 +572,13 @@ class MessageDisplay constructor(private val on: On) {
                 .equal(Group_.id, groupId)
                 .build()
                 .findFirst()
+    }
+
+    fun openGroup(groupMessage: GroupMessage) {
+        on<DisposableHandler>().add(on<ApiHandler>().getGroupForGroupMessage(groupMessage.id!!).subscribe({ group ->
+            on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id, true)
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        }))
     }
 }
