@@ -398,6 +398,62 @@ class MessageDisplay constructor(private val on: On) {
     }
 
     private fun renderMessageActionLayout(groupMessage: GroupMessage, holder: GroupMessageViewHolder, shorthand: Boolean) {
+
+        holder.messageActionVote.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "♥", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVoteLaugh.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE02", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVoteYummy.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE0B", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVoteKiss.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE18", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.messageActionVoteCool.setOnClickListener {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
+                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE0E", false)
+                    .subscribe({
+                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
         if (shorthand) {
             listOf(
                     holder.messageRepliesCount,
@@ -497,61 +553,6 @@ class MessageDisplay constructor(private val on: On) {
                             }
                         }, { on<DefaultAlerts>().thatDidntWork() }))
             }
-            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
-        }
-
-        holder.messageActionVote.setOnClickListener {
-            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
-                    .reactToMessage(groupMessage.id!!, "♥", false)
-                    .subscribe({
-                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
-                    }, {
-                        on<DefaultAlerts>().thatDidntWork()
-                    }))
-            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
-        }
-
-        holder.messageActionVoteLaugh.setOnClickListener {
-            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
-                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE02", false)
-                    .subscribe({
-                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
-                    }, {
-                        on<DefaultAlerts>().thatDidntWork()
-                    }))
-            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
-        }
-
-        holder.messageActionVoteYummy.setOnClickListener {
-            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
-                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE0B", false)
-                    .subscribe({
-                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
-                    }, {
-                        on<DefaultAlerts>().thatDidntWork()
-                    }))
-            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
-        }
-
-        holder.messageActionVoteKiss.setOnClickListener {
-            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
-                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE18", false)
-                    .subscribe({
-                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
-                    }, {
-                        on<DefaultAlerts>().thatDidntWork()
-                    }))
-            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
-        }
-
-        holder.messageActionVoteCool.setOnClickListener {
-            on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
-                    .reactToMessage(groupMessage.id!!, "\uD83D\uDE0E", false)
-                    .subscribe({
-                        on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
-                    }, {
-                        on<DefaultAlerts>().thatDidntWork()
-                    }))
             on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
         }
     }

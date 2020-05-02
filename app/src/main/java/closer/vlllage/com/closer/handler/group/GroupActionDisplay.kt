@@ -112,12 +112,8 @@ class GroupActionDisplay constructor(private val on: On) {
                             flowRemaining.remove(0)
                             startGroupActionFlow(groupAction, view, flowRemaining, accumulator)
                         })
-            } else {
-                onGroupActionSelection(groupAction, view, accumulator)
-            }
-        } else {
-            onGroupActionSelection(groupAction, view, accumulator)
-        }
+            } else onGroupActionSelection(groupAction, view, accumulator)
+        } else onGroupActionSelection(groupAction, view, accumulator)
     }
 
     fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
@@ -132,6 +128,16 @@ class GroupActionDisplay constructor(private val on: On) {
                     textViewId = R.id.input
                     onTextViewSubmitCallback = { comment ->
                         val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, "${selection?.let { if (comment.isBlank()) it else "$it\n\n" } ?: ""}${comment}")
+                        if (!success) {
+                            on<DefaultAlerts>().thatDidntWork()
+                        } else {
+                            on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
+                            on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
+                        }
+                    }
+                } else {
+                    positiveButtonCallback = {
+                        val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, selection ?: "")
                         if (!success) {
                             on<DefaultAlerts>().thatDidntWork()
                         } else {
