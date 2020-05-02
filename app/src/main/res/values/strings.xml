@@ -148,7 +148,7 @@
     <string name="enable_contacts_permission">Enable contacts permission</string>
     <string name="photo">Photo</string>
     <string name="talk">Talk</string>
-    <string name="talk_here">Talk here…</string>
+    <string name="talk_here">Talk here</string>
     <string name="settings">Settings</string>
     <string name="event_must_not_end_before_it_starts">Event must not end before it starts</string>
     <string name="set_background">Set background</string>
@@ -297,7 +297,6 @@
     <string name="react_kiss">😘</string>
     <string name="react_yummy">😋</string>
     <string name="posts">Posts</string>
-    <string name="chat">Chat</string>
     <string name="share_location">Share location</string>
     <string name="x_removed">%1$s removed</string>
     <string name="remove_x">Remove %1$s?</string>
@@ -336,6 +335,7 @@
     <string name="date_tiny_weeks">%1$sw</string>
     <string name="date_tiny_days">%1$sd</string>
     <string name="date_tiny_years">%1$sy</string>
+    <string name="active">Active %1$s ago</string>
     <string name="last_active">Last active %1$s ago</string>
     <string name="settings_private_mode">Private mode</string>
     <string name="private_mode_switch_description">Private mode is on.  You\'ll only see your private groups and events.</string>

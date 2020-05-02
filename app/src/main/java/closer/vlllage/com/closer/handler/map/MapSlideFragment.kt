@@ -221,7 +221,7 @@ class MapSlideFragment : PoolFragment() {
             on<MapBubbleMenuView>()
                     .getMenuAdapter(menuBubble)
                     .setMenuItems(
-                            (MapBubbleMenuItem(getString(R.string.chat), R.drawable.ic_chat_black_18dp, R.color.purple)),
+                            (MapBubbleMenuItem(getString(R.string.talk_here), R.drawable.ic_chat_black_18dp, R.color.purple)),
                             (MapBubbleMenuItem(getString(R.string.host_event), R.drawable.ic_event_note_black_18dp, R.color.red)),
                             (MapBubbleMenuItem(getString(R.string.share_location), R.drawable.ic_share_black_18dp, R.color.colorAccent)),
                             (MapBubbleMenuItem(getString(R.string.add_suggestion), R.drawable.ic_edit_location_black_18dp, R.color.colorPrimary)),

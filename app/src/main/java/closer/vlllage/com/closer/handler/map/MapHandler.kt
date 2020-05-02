@@ -70,10 +70,11 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         onMapReadyObservable.onNext(map!!)
 
         if (on<PersistenceHandler>().lastMapCenter != null) {
-            map!!.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(
-                    on<PersistenceHandler>().lastMapCenter!!,
-                    DEFAULT_ZOOM
-            )))
+            map!!.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.Builder()
+                    .target(on<PersistenceHandler>().lastMapCenter!!)
+                    .tilt(DEFAULT_TILT)
+                    .zoom(DEFAULT_ZOOM)
+                    .build()))
         }
 
         onMapReadyListener!!.invoke(map!!)
@@ -127,10 +128,10 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
             if (map!!.mapType != GoogleMap.MAP_TYPE_SATELLITE) {
                 map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
             }
-//        } else if (map!!.cameraPosition.zoom <= 3) {
-//            if (map!!.mapType != GoogleMap.MAP_TYPE_SATELLITE) {
-//                map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
-//            }
+        } else if (map!!.cameraPosition.zoom <= 3) {
+            if (map!!.mapType != GoogleMap.MAP_TYPE_SATELLITE) {
+                map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
+            }
         } else {
             if (map!!.mapType != GoogleMap.MAP_TYPE_NORMAL) {
                 map!!.mapType = GoogleMap.MAP_TYPE_NORMAL
@@ -187,7 +188,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
     fun onMapReadyObservable() = onMapReadyObservable.observeOn(AndroidSchedulers.mainThread())!!
 
     companion object {
-        private const val DEFAULT_ZOOM = 15f
-        private const val DEFAULT_TILT = 15f
+        private const val DEFAULT_ZOOM = 18f
+        private const val DEFAULT_TILT = 45f
     }
 }

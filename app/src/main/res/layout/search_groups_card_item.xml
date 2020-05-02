@@ -23,6 +23,7 @@
         android:clipChildren="true"
         android:background="@color/black_transparent"
         app:cardElevation="0dp"
+        tools:visibility="gone"
         app:cardBackgroundColor="@color/black_transparent"
         app:cardCornerRadius="@dimen/imageCorners">
 

@@ -46,7 +46,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
         }
 
     @JvmOverloads
-    fun parseString(groupMessage: String, mentionConverter: MentionConverter = defaultMentionConverter, prefix: String = "@"): String {
+    fun parseString(groupMessage: String, mentionConverter: MentionConverter = defaultMentionConverter, prefix: String = ""): String {
         val matcher = mentionPattern.matcher(groupMessage)
 
         val builder = StringBuffer()
@@ -141,7 +141,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
 
     private fun createContactTextView(text: String, editText: TextView): TextView {
         val textView = TextView(on<ActivityHandler>().activity)
-        textView.text = "@${text}"
+        textView.text = text
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, editText.textSize)
         textView.setLineSpacing(editText.lineSpacingExtra, editText.lineSpacingMultiplier)
         textView.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorAccentLight))

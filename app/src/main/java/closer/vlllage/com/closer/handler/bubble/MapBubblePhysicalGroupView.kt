@@ -10,6 +10,7 @@ import closer.vlllage.com.closer.handler.helpers.ImageHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 class MapBubblePhysicalGroupView constructor(private val on: On) {
@@ -34,9 +35,8 @@ class MapBubblePhysicalGroupView constructor(private val on: On) {
                 photo.colorFilter = null
                 photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 on<ImageHandler>().get()
-                        .load(group.photo!! + "?s=32")
-                        .fit()
-                        .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
+                        .load(group.photo!! + "?s=128")
+                        .transform(CropCircleTransformation())
                         .into(photo)
             } else {
                 photo.setImageResource(R.drawable.ic_chat_black_24dp)

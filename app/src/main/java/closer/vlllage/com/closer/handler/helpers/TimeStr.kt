@@ -81,4 +81,7 @@ class TimeStr constructor(private val on: On) {
     fun day(date: Date): String {
         return "${dateFormat.format(date)}${if (isToday(date.time)) " (${on<ResourcesHandler>().resources.getString(R.string.today)})" else ""}"
     }
+
+    fun active(date: Date?) = on<ResourcesHandler>().resources.getString(R.string.active, approx(date))
+    fun lastActive(date: Date?) = on<ResourcesHandler>().resources.getString(R.string.last_active, approx(date))
 }
