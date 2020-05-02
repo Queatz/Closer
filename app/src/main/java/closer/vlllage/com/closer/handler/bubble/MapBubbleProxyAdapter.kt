@@ -30,7 +30,9 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProxyMapBubbleViewHolder {
         return ProxyMapBubbleViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.map_bubble_proxy_item, parent, false))
+                .inflate(R.layout.map_bubble_proxy_item, parent, false).apply {
+                    clipToOutline = true
+                })
     }
 
     override fun onBindViewHolder(holder: ProxyMapBubbleViewHolder, position: Int) {
@@ -46,6 +48,8 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                 holder.info.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHint))
             }
         }
+
+        holder.background.visible = false
 
         when (mapBubble.type) {
             BubbleType.STATUS -> {
@@ -82,18 +86,17 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
 
                 if ((mapBubble.tag != null) and (mapBubble.tag is Group)) {
                     val group = mapBubble.tag as Group
+
                     if (group.photo != null) {
-                        holder.photo.colorFilter = null
-                        holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
+                        holder.background.setImageDrawable(null)
+                        holder.background.visible = true
                         on<ImageHandler>().get()
-                                .load(group.photo!! + "?s=32")
-                                .fit()
-                                .transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupCorners), 0))
-                                .into(holder.photo)
-                    } else {
-                        holder.photo.setImageResource(R.drawable.ic_chat_black_24dp)
-                        holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
+                                .load(group.photo!! + "?s=128")
+                                .into(holder.background)
                     }
+
+                    holder.photo.setImageResource(R.drawable.ic_chat_black_24dp)
+                    holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
                 }
 
                 holder.name.text = on<Val>().of((mapBubble.tag as Group).name, on<StoreHandler>().store.box(GroupMessage::class).query()
@@ -116,6 +119,10 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                     holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0)
                 }
             }
+            else -> {
+                holder.name.visible = true
+                holder.name.text = on<ResourcesHandler>().resources.getString(R.string.unknown)
+            }
         }
 
         holder.itemView.setOnClickListener { view ->
@@ -129,6 +136,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
     inner class ProxyMapBubbleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var click: View = itemView.findViewById(R.id.click)
         var photo: ImageView = itemView.findViewById(R.id.photo)
+        var background: ImageView = itemView.findViewById(R.id.background)
         var name: TextView = itemView.findViewById(R.id.name)
         var info: TextView = itemView.findViewById(R.id.info)
     }
