@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.ui.RevealAnimator
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
+import kotlinx.android.synthetic.main.add_action_modal.view.*
 
 class GroupActionHandler constructor(private val on: On) {
 
@@ -82,6 +83,8 @@ class GroupActionHandler constructor(private val on: On) {
                 val intent = view.findViewById<EditText>(R.id.intent)
                 val model = AddToGroupModalModel()
                 alertConfig.alertResult = model
+
+                view.intentPrefix.setOnClickListener { intent.requestFocus() }
 
                 name.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {

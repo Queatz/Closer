@@ -285,6 +285,16 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
+        if (!group.hasPhone() && !group.hasEvent()) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.add_action),
+                    R.drawable.ic_add_black_24dp,
+                    View.OnClickListener {
+                        on<GroupActionHandler>().addActionToGroup(group)
+                    }
+            ))
+        }
+
         if ((event != null || group.physical)) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.get_directions),

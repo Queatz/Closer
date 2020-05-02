@@ -45,6 +45,7 @@
     <string name="add_suggestion">Add suggestion</string>
     <string name="make_a_suggestion">Make a suggestion…</string>
     <string name="add_new_private_group">Create a private group</string>
+    <string name="add_new_private_place">Create a private place</string>
     <string name="add_new_public_group">Create a public group</string>
     <string name="verify_your_number">Verify your number</string>
     <string name="not_found">Not found</string>
@@ -166,9 +167,9 @@
     <string name="add_an_action">Add an activity</string>
     <string name="add_action">Add activity</string>
     <string name="action_name">Activity name</string>
-    <string name="action_intent">Notify people that someone…</string>
-    <string name="action_intent_hint">i.e. needs a room tonight</string>
-    <string name="action_name_hint">i.e. Get a room</string>
+    <string name="action_intent">Add message text</string>
+    <string name="action_intent_hint">ex. went inside the castle</string>
+    <string name="action_name_hint">Activity name</string>
     <string name="enter_a_name_and_intent">Enter a name and intent</string>
     <string name="remove_action">Remove this activity</string>
     <string name="remove_action_message">Remove \"%1$s\" from this group?</string>
@@ -432,6 +433,10 @@
     <string name="public_group_in_x">Public group in %1$s</string>
     <string name="goal_hint">Enter a life goal</string>
     <string name="lifestyle_hint">Enter a lifestyle</string>
+    <string name="create_place">Create place</string>
+    <string name="sample_name">Samantha</string>
+    <string name="activity_name_info">Activities help people better understand the most common things to do in this group.</string>
+    <string name="activity_intent_info">This is the message that gets posted when someone taps on this activity.  For example if Samantha tapped \"Go into the cave\", then \"Samantha went into the cave\" might be what gets posted to the group.</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
