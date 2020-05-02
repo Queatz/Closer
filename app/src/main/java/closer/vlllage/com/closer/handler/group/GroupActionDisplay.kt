@@ -95,21 +95,26 @@ class GroupActionDisplay constructor(private val on: On) {
 
     private fun startGroupActionFlow(groupAction: GroupAction, view: View?, flowRemaining: JsonArray, accumulator: String? = null) {
         if (flowRemaining.size() > 0) {
-            val skippable = flowRemaining.first().asJsonObject.has("skippable") && flowRemaining.first().asJsonObject["skippable"].asBoolean
+            if (flowRemaining.first().asJsonObject.get("options")?.asJsonArray?.size() ?: 0 > 0) {
+                val skippable = flowRemaining.first().asJsonObject.has("skippable") && flowRemaining.first().asJsonObject["skippable"].asBoolean
 
-            on<MenuHandler>().show(
-                    *flowRemaining.first().asJsonObject["options"].asJsonArray.map { option ->
-                        MenuHandler.MenuOption(0, title = option.asString) {
+                on<MenuHandler>().show(
+                        *flowRemaining.first().asJsonObject["options"].asJsonArray.map { option ->
+                            MenuHandler.MenuOption(0, title = option.asString) {
+                                flowRemaining.remove(0)
+                                startGroupActionFlow(groupAction, view, flowRemaining, accumulator?.let { "$accumulator\n☑ ${option.asString}" }
+                                        ?: "☑ ${option.asString}")
+                            }
+                        }.toTypedArray(),
+                        title = groupAction.name,
+                        button = if (skippable) on<ResourcesHandler>().resources.getString(R.string.skip) else "",
+                        buttonCallback = {
                             flowRemaining.remove(0)
-                            startGroupActionFlow(groupAction, view, flowRemaining, accumulator?.let { "$accumulator\n☑ ${option.asString}" } ?: "☑ ${option.asString}")
-                        }
-                    }.toTypedArray(),
-                    title = groupAction.name,
-                    button = if (skippable) on<ResourcesHandler>().resources.getString(R.string.skip) else "",
-                    buttonCallback = {
-                        flowRemaining.remove(0)
-                        startGroupActionFlow(groupAction, view, flowRemaining, accumulator)
-                    })
+                            startGroupActionFlow(groupAction, view, flowRemaining, accumulator)
+                        })
+            } else {
+                onGroupActionSelection(groupAction, view, accumulator)
+            }
         } else {
             onGroupActionSelection(groupAction, view, accumulator)
         }
@@ -118,17 +123,24 @@ class GroupActionDisplay constructor(private val on: On) {
     fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
         on<DataHandler>().getGroup(groupAction.group!!).subscribe({ group ->
             on<AlertHandler>().make().apply {
-                layoutResId = R.layout.comments_modal
-                textViewId = R.id.input
-                onTextViewSubmitCallback = { comment ->
-                    val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, "${selection?.let { if (comment.isBlank()) it else "$it\n\n" } ?: ""}${comment}")
-                    if (!success) {
-                        on<DefaultAlerts>().thatDidntWork()
-                    } else {
-                        on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
-                        on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
+                val noComment = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.firstOrNull()?.asJsonObject?.let {
+                    if (it.has("noComment")) it["noComment"].asBoolean else false
+                } ?: false
+
+                if (!noComment) {
+                    layoutResId = R.layout.comments_modal
+                    textViewId = R.id.input
+                    onTextViewSubmitCallback = { comment ->
+                        val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, "${selection?.let { if (comment.isBlank()) it else "$it\n\n" } ?: ""}${comment}")
+                        if (!success) {
+                            on<DefaultAlerts>().thatDidntWork()
+                        } else {
+                            on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
+                            on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
+                        }
                     }
                 }
+
                 title = on<AccountHandler>().name + " " + groupAction.intent
                 message = "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it"} ?: ""}".let { if (it.isBlank()) null else it }
                 positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_in, group.name ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
@@ -170,7 +182,7 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     private fun editGroupActionFlow(groupAction: GroupAction) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().make()?.apply {
             theme = R.style.AppTheme_AlertDialog
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.save)
             positiveButtonCallback = { result ->
@@ -185,8 +197,17 @@ class GroupActionDisplay constructor(private val on: On) {
                         flow.add(JsonObject().apply {
                             add("options", JsonArray().apply { options.forEach { add(JsonPrimitive(it)) } })
                             add("skippable", JsonPrimitive(view.skippable.isChecked))
+                            add("noComment", JsonPrimitive(view.noComment.isChecked))
+                        })
+                    } else if (view.noComment.isChecked) {
+                        flow.add(JsonObject().apply {
+                            add("noComment", JsonPrimitive(true))
                         })
                     }
+                } else if (view.noComment.isChecked) {
+                    flow.add(JsonObject().apply {
+                        add("noComment", JsonPrimitive(true))
+                    })
                 }
 
                 on<GroupActionUpgradeHandler>().setFlow(groupAction, flow)
@@ -206,13 +227,16 @@ class GroupActionDisplay constructor(private val on: On) {
                 val flowArray = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }
 
                 flowArray?.firstOrNull()?.let { step ->
-                    step.asJsonObject["options"].asJsonArray.take(options.size).forEachIndexed { index, stepOption ->
-                        options[index].setText(stepOption.asString)
+                    step.asJsonObject["options"]?.apply {
+                        asJsonArray.take(options.size).forEachIndexed { index, stepOption ->
+                            options[index].setText(stepOption.asString)
+                        }
                     }
                     view.skippable.isChecked = step.asJsonObject["skippable"]?.asBoolean ?: false
+                    view.noComment.isChecked = step.asJsonObject["noComment"]?.asBoolean ?: false
                 }
 
-                view.useOptions.isChecked = flowArray?.size() ?: 0 > 0
+                view.useOptions.isChecked = flowArray?.firstOrNull()?.asJsonObject?.get("options")?.asJsonArray?.size() ?: 0 > 0
             }
             title = on<ResourcesHandler>().resources.getString(R.string.edit_flow)
             show()

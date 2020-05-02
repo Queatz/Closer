@@ -4,8 +4,11 @@ import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.OnSyncResult
 import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.GroupMessage
+import closer.vlllage.com.closer.store.models.GroupMessage_
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 
@@ -23,10 +26,6 @@ class PhysicalGroupHandler constructor(private val on: On) {
         on<SyncHandler>().sync(group, onSyncResult ?: { id -> openGroup(id) })
     }
 
-    private fun openGroup(groupId: String) {
-        on<GroupActivityTransitionHandler>().showGroupMessages(null, groupId, true)
-    }
-
     fun physicalGroupBubbleFrom(group: Group): MapBubble? {
         if (group.latitude == null || group.longitude == null) {
             return null
@@ -36,5 +35,14 @@ class PhysicalGroupHandler constructor(private val on: On) {
         mapBubble.isPinned = true
         mapBubble.tag = group
         return mapBubble
+    }
+
+    fun physicalGroupName(group: Group) = on<Val>().of(group.name, on<StoreHandler>().store.box(GroupMessage::class).query()
+            .equal(GroupMessage_.to, group.id ?: "")
+            .order(GroupMessage_.updated)
+            .build().findFirst()?.text?.let { on<GroupMessageParseHandler>().parseString(it) }?.let { "\"${it}\"" } ?: "")
+
+    private fun openGroup(groupId: String) {
+        on<GroupActivityTransitionHandler>().showGroupMessages(null, groupId, true)
     }
 }

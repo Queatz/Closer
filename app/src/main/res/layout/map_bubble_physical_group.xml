@@ -3,7 +3,22 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textColor="@color/text"
+        android:shadowColor="@color/black"
+        android:shadowRadius="6"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:padding="@dimen/padHalf"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:id="@+id/click"
@@ -13,6 +28,7 @@
         android:background="@drawable/clickable_purple"
         android:clickable="true"
         android:elevation="2dp">
+
         <ImageView
             android:id="@+id/photo"
             android:layout_width="24dp"

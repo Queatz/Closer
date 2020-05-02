@@ -76,5 +76,15 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
+        <CheckBox
+            android:id="@+id/noComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:layout_marginStart="@dimen/pad"
+            android:textColor="@color/textInverse"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:text="@string/no_comment" />
+
     </LinearLayout>
 </closer.vlllage.com.closer.ui.InterceptableScrollView>
