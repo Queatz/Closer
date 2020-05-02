@@ -46,7 +46,7 @@ class PersonalSlideFragment : PoolFragment() {
         subscribedGroupsRecyclerView.layoutManager = LinearLayoutManager(subscribedGroupsRecyclerView.context)
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
-                .equal(GroupMember_.phone, on<Val>().of(on<PersistenceHandler>().phoneId))
+                .equal(GroupMember_.phone, on<Val>().trimmed(on<PersistenceHandler>().phoneId))
                 .equal(GroupMember_.subscribed, true)
                 .build()
                 .subscribe()
@@ -93,7 +93,7 @@ class PersonalSlideFragment : PoolFragment() {
             }
         }
 
-        if (!on<Val>().isEmpty(on<PersistenceHandler>().myPhoto)) {
+        if (!on<PersistenceHandler>().myPhoto.isBlank()) {
             on<ImageHandler>().get().load(on<PersistenceHandler>().myPhoto + "?s=128")
                     .noPlaceholder()
                     .transform(CropCircleTransformation())

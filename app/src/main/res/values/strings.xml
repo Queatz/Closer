@@ -170,7 +170,7 @@
     <string name="action_intent">Add message text</string>
     <string name="action_intent_hint">ex. went inside the castle</string>
     <string name="action_name_hint">Activity name</string>
-    <string name="enter_a_name_and_intent">Enter a name and intent</string>
+    <string name="enter_a_name_and_intent">Missing name or message text</string>
     <string name="remove_action">Remove this activity</string>
     <string name="remove_action_message">Remove \"%1$s\" from this group?</string>
     <string name="add_a_comment">Add a comment…</string>

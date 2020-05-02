@@ -246,7 +246,7 @@ class MapSlideFragment : PoolFragment() {
         on<MyGroupsLayoutActionsHandler>().showUnmuteNotifications(isNotificationsPaused)
         on<MyGroupsLayoutActionsHandler>().showFeatureRequests(on<AccountHandler>().privateOnly.not())
         on<MyGroupsLayoutActionsHandler>().showInviteCard(true)
-        on<MyGroupsLayoutActionsHandler>().showSetMyName(on<Val>().isEmpty(on<AccountHandler>().name))
+        on<MyGroupsLayoutActionsHandler>().showSetMyName(on<AccountHandler>().name.isBlank())
 
         if (locationPermissionGranted && locationPermissionWasDenied) {
             on<MapHandler>().updateMyLocationEnabled()

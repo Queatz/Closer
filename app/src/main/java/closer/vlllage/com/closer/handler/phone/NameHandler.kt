@@ -26,7 +26,7 @@ class NameHandler constructor(private val on: On) {
             return noName()
         }
 
-        val name = if (on<Val>().isEmpty(phone.name))
+        val name = if (phone.name.isNullOrBlank())
             fallbackName(phone.id)
         else
             phone.name
@@ -43,7 +43,7 @@ class NameHandler constructor(private val on: On) {
             return noName()
         }
 
-        val name = if (on<Val>().isEmpty(groupContact.contactName))
+        val name = if (groupContact.contactName.isNullOrBlank())
             fallbackName(groupContact.contactId)
         else
             groupContact.contactName
@@ -60,7 +60,7 @@ class NameHandler constructor(private val on: On) {
             return noName()
         }
 
-        return if (on<Val>().isEmpty(groupInvite.name)) noName() else groupInvite.name
+        return if (groupInvite.name.isNullOrBlank()) noName() else groupInvite.name
     }
 
     private fun fallbackName(phoneId: String?): String {

@@ -150,7 +150,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
             setMyName = GroupActionBarButton(action, View.OnClickListener {
                 on<SetNameHandler>().modifyName(object : SetNameHandler.OnNameModifiedCallback {
                     override fun onNameModified(name: String?) {
-                        if (!on<Val>().isEmpty(name)) {
+                        if (!name.isNullOrBlank()) {
                             showSetMyName(false)
                             on<NavigationHandler>().showProfile(on<PersistenceHandler>().phoneId!!)
                         }

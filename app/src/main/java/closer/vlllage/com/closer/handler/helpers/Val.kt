@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.helpers
 
 import com.queatz.on.On
-import com.google.android.gms.common.util.Strings.isEmptyOrWhitespace
 import java.util.*
 
 class Val constructor(private val on: On) {
@@ -12,15 +11,11 @@ class Val constructor(private val on: On) {
                 random.nextLong()
     }
 
-    fun of(string: String?): String {
-        return string?.trim() ?: ""
+    fun trimmed(string: String?): String {
+        return of(string?.trim(), "")
     }
 
     fun of(string: String?, stringWhenEmpty: String): String {
-        return if (isEmpty(string)) stringWhenEmpty else string!!
-    }
-
-    fun isEmpty(string: String?): Boolean {
-        return isEmptyOrWhitespace(string)
+        return if (string.isNullOrBlank()) stringWhenEmpty else string
     }
 }

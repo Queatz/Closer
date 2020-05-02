@@ -19,7 +19,6 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import java.util.*
 
 open class SearchGroupsAdapter constructor(
         on: On,
@@ -87,7 +86,7 @@ open class SearchGroupsAdapter constructor(
                     holder.about.text = on<ResourcesHandler>().resources.getString(R.string.private_group)
                 } else if (group.physical) {
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
-                    holder.about.text = on<Val>().of(group.about)
+                    holder.about.text = on<Val>().trimmed(group.about)
                 } else if (group.hasEvent()) {
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_event)
                     val event = on<StoreHandler>().store.box(Event::class).query()
@@ -100,7 +99,7 @@ open class SearchGroupsAdapter constructor(
                         on<ResourcesHandler>().resources.getString(R.string.event)
                 } else {
                     holder.action.text = if (actionText != null) actionText else on<ResourcesHandler>().resources.getString(R.string.open_group)
-                    holder.about.text = on<Val>().of(group.about)
+                    holder.about.text = on<Val>().trimmed(group.about)
                 }
 
                 if (flat) {

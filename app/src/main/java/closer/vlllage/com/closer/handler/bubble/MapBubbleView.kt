@@ -51,7 +51,7 @@ class MapBubbleView constructor(private val on: On) {
                 name.text = mapBubble.name + on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)
             }
 
-            (view.findViewById<View>(R.id.status) as? TextView)?.text = on<Val>().of(mapBubble.status)
+            (view.findViewById<View>(R.id.status) as? TextView)?.text = on<Val>().trimmed(mapBubble.status)
 
             if (mapBubble.action != null && action != null) {
                 action.text = mapBubble.action
@@ -63,7 +63,7 @@ class MapBubbleView constructor(private val on: On) {
                 }
 
                 if (photo != null) {
-                    if (!on<Val>().isEmpty(phone.photo)) {
+                    if (!phone.photo.isNullOrBlank()) {
                         on<PhotoHelper>().loadCircle(photo, phone.photo!!)
                         photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(photo, phone.photo!!) }
                     }

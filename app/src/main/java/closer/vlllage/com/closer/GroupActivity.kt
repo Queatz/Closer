@@ -251,7 +251,7 @@ class GroupActivity : CircularRevealActivity() {
             return
         }
 
-        if (on<Val>().isEmpty(group.about)) {
+        if (group.about.isNullOrBlank()) {
             view.groupAbout.visible = false
         } else {
             view.groupAbout.visible = true

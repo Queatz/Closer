@@ -117,7 +117,7 @@ class GroupActionHandler constructor(private val on: On) {
             positiveButtonCallback = { alertResult ->
                     val model = alertResult as AddToGroupModalModel
 
-                    if (on<Val>().isEmpty(model.name) || on<Val>().isEmpty(model.name)) {
+                    if (model.name.isNullOrBlank() || model.intent.isNullOrBlank()) {
                         on<DefaultAlerts>().message(R.string.enter_a_name_and_intent)
                     } else {
                         createGroupAction(group, model.name, model.intent)

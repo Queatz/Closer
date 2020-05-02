@@ -20,7 +20,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
-import kotlinx.android.synthetic.main.activity_personal.*
 import java.util.*
 
 class GroupContactsHandler constructor(private val on: On) {
@@ -238,7 +237,7 @@ class GroupContactsHandler constructor(private val on: On) {
             on<DisposableHandler>().dispose(dataSubscription!!)
         }
         dataSubscription = on<StoreHandler>().store.box(Phone::class).query()
-                .contains(Phone_.name, on<Val>().of(query))
+                .contains(Phone_.name, on<Val>().trimmed(query))
                 .notNull(Phone_.id)
                 .greater(Phone_.updated, on<TimeAgo>().fifteenDaysAgo())
                 .build()

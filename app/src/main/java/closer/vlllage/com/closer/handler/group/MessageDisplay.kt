@@ -114,7 +114,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
         val comment = action.get("comment").asString
-        if (on<Val>().isEmpty(comment)) {
+        if (comment.isNullOrBlank()) {
             holder.message.visible = false
         } else {
             holder.message.visible = true
@@ -164,7 +164,7 @@ class MessageDisplay constructor(private val on: On) {
         val rating = review.get("rating").asFloat
         val comment = review.get("comment").asString
 
-        if (on<Val>().isEmpty(comment)) {
+        if (comment.isNullOrBlank()) {
             holder.message.visible = false
         } else {
             holder.message.visible = true

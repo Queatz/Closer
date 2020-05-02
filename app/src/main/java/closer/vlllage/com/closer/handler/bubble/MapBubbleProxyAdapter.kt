@@ -64,7 +64,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
 
                 if (mapBubble.tag is Phone) {
                     val phone = mapBubble.tag as Phone
-                    if (!on<Val>().isEmpty(phone.photo)) {
+                    if (!phone.photo.isNullOrBlank()) {
                         on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!)
                     }
                 }
