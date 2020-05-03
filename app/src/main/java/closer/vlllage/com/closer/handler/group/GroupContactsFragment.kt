@@ -76,12 +76,14 @@ class GroupContactsFragment : PoolActivityFragment() {
 
         disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             searchContacts.setTextColor(it.text)
+            showPhoneContactsButton.setTextColor(it.hint)
             searchContacts.setHintTextColor(it.hint)
             inviteByQRCodeButton.imageTintList = it.tint
             inviteByQRCodeButton.setBackgroundResource(it.clickableRoundedBackground)
             inviteByLinkButton.imageTintList = it.tint
             inviteByLinkButton.setBackgroundResource(it.clickableRoundedBackground)
             qrCodeDescription.setTextColor(it.hint)
+            showPhoneContactsButton.setBackgroundResource(it.clickableRoundedBackgroundLight)
             searchContacts.setBackgroundResource(it.clickableRoundedBackground)
         })
 
@@ -106,7 +108,7 @@ class GroupContactsFragment : PoolActivityFragment() {
     private fun generateShareableLink() {
         on<GroupHandler>().group?.let {
             on<DisposableHandler>().add(on<ApiHandler>().createInviteCode(it.id!!, !it.isPublic).subscribe({ inviteCodeResult: InviteCodeResult ->
-                on<DefaultInput>().show(R.string.invite_by_shareable_link, button = R.string.copy, prefill = urlFromInviteCode(inviteCodeResult.code!!)) { link ->
+                on<DefaultInput>().show(R.string.invite_by_shareable_link, buttonRes = R.string.copy, prefill = urlFromInviteCode(inviteCodeResult.code!!)) { link ->
                     on<CopyPaste>().copy(link)
                 }
             }, { on<DefaultAlerts>().thatDidntWork() }))

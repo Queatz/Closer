@@ -19,11 +19,13 @@ import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
+import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.store.models.Group_
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
+import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.group_action_edit_flow_modal.view.*
 import java.util.*
 
@@ -32,9 +34,21 @@ class GroupActionDisplay constructor(private val on: On) {
     var onGroupActionClickListener: ((GroupAction) -> Unit)? = null
 
     fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
-        view.clipToOutline = true
+        render(GroupActionViewHolder(view, about), groupAction, layout, scale)
 
-        val holder = GroupActionViewHolder(view, about)
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query(GroupAction_.id.equal(groupAction.id!!))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .onlyChanges()
+                .observer {
+                    render(GroupActionViewHolder(view, about), groupAction, layout, scale)
+                })
+    }
+
+    private fun render(holder: GroupActionViewHolder, groupAction: GroupAction, layout: Layout, scale: Float = 1f) {
+        holder.itemView.clipToOutline = true
+
         holder.actionName.text = groupAction.name
 
         val target: View = when (layout) {
@@ -43,7 +57,7 @@ class GroupActionDisplay constructor(private val on: On) {
         }
 
         target.setOnClickListener {
-            onGroupActionClick(groupAction, view)
+            onGroupActionClick(groupAction, holder.itemView)
         }
 
         target.setOnLongClickListener {
@@ -70,7 +84,7 @@ class GroupActionDisplay constructor(private val on: On) {
                 holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.groupActionSmallTextSize) * scale)
                 holder.actionName.setBackgroundResource(R.drawable.gradient_shadow_top_rounded_8dp)
                 holder.photo?.setImageDrawable(null)
-                on<ImageHandler>().get().load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=256")
+                on<ImageHandler>().get().load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=512")
                         .noPlaceholder()
                         .into(holder.photo)
             } else {
@@ -84,7 +98,7 @@ class GroupActionDisplay constructor(private val on: On) {
         }
     }
 
-    fun onGroupActionClick(groupAction: GroupAction, view: View?) {
+    private fun onGroupActionClick(groupAction: GroupAction, view: View?) {
         onGroupActionClickListener?.let {
             it(groupAction)
         } ?: run {
@@ -116,7 +130,7 @@ class GroupActionDisplay constructor(private val on: On) {
         } else onGroupActionSelection(groupAction, view, accumulator)
     }
 
-    fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
+    private fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
         on<DataHandler>().getGroup(groupAction.group!!).subscribe({ group ->
             on<AlertHandler>().make().apply {
                 val noComment = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.firstOrNull()?.asJsonObject?.let {
@@ -159,7 +173,7 @@ class GroupActionDisplay constructor(private val on: On) {
         }
     }
 
-    fun onGroupActionLongClick(groupAction: GroupAction) {
+    private fun onGroupActionLongClick(groupAction: GroupAction) {
         if (on<FeatureHandler>().has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_open_in_new_black_24dp, R.string.open_group) { on<GroupActivityTransitionHandler>().showGroupMessages(null, groupAction.group) },

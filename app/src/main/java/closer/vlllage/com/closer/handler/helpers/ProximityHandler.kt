@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.helpers
 
+import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
@@ -26,5 +27,21 @@ class ProximityHandler constructor(private val on: On) {
                 .sort(on<SortHandler>().sortGroups())
                 .build()
                 .find()
+    }
+
+    fun locationFromLatLng(latLng: LatLng, callback: (String?) -> Unit) {
+        val nearestGroupName = on<ProximityHandler>().findGroupsNear(latLng, true).firstOrNull()?.name
+
+        if (nearestGroupName.isNullOrBlank().not()) {
+            callback("${on<ResourcesHandler>().resources.getString(R.string.at)} $nearestGroupName")
+        } else {
+            on<LocalityHelper>().getLocality(latLng) {
+                if (it != null) {
+                    callback("${on<ResourcesHandler>().resources.getString(R.string.near)} $it")
+                } else {
+                    callback(null)
+                }
+            }
+        }
     }
 }

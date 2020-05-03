@@ -5,8 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/padDouble"
-    android:paddingRight="@dimen/padDouble"
     android:elevation="@dimen/elevation"
     android:background="@color/white"
     android:clickable="true">
@@ -15,6 +13,8 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingEnd="@dimen/padDouble"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,7 +36,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padDouble"
-            android:paddingBottom="@dimen/padDouble">
+            android:paddingBottom="@dimen/padDouble"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/pad">
 
             <TextView
                 android:id="@+id/actionAddHeading"
@@ -167,8 +170,7 @@
         android:id="@+id/postButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/pad"
-        android:layout_marginBottom="@dimen/pad"
+        android:layout_margin="@dimen/pad"
         app:layout_constraintTop_toBottomOf="@+id/optionsLayout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -7,28 +7,7 @@ Incoming
 ❤ Next ❤
 ========
 
-Small
-    [ ] Closer Share to new group
-        [ ] How to know group location if public / hub
-    [ ] Closer group background covers all of group in light theme
 
-Med
-    [ ] Closer [just] show top posts on public groups / default group setup not in code!
-
-Large
-    [ ] Closer lifestyles and goals attached to groups (same as attached to people.)
-    [ ] Closer groups in groups / private public secret
-        [ ] Closer links to groups from other groups
-    [ ] Closer activities that bring you to other groups and post the activity to both groups (entered, exited)
-
-Adventure
-    [ ] Closer Adventure = multiplayer text adventures / as if everyone is there
-    [ ] Closer text based Adventure game
-        [ ] Bun jumped in the pool
-        [ ] Jacob entered the cave
-        [ ] Mai is here
-        [ ] Allen climbed the tree
-    [ ] Textual awareness
 
 TBD
 ===
@@ -42,7 +21,6 @@ TBD
     [ ] Closer welcome messages for passersby / more visible description?
     [ ] Closer default public notifications off ? if coming from invite?
 
-
 Headspace
 =========
 
@@ -55,6 +33,12 @@ Headspace
     [ ] Closer how to present one door at a time
     [ ] Closer forking flows, Nate
 
+    [ ] Closer text based Adventure game
+        [ ] Bun jumped in the pool
+        [ ] Jacob entered the cave
+        [ ] Mai is here
+        [ ] Allen climbed the tree
+    [ ] Textual awareness
 Strategy
 ========
 

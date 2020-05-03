@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.phone.GoalAdapter
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.pool.PoolActivityFragment
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_phone_about.*
 
 
@@ -38,6 +39,21 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 activeTextView.text = on<TimeStr>().lastActive(phone.updated)
                 phoneVerifiedTextView.visible = phone.verified ?: false
+
+                (phone.latitude != null && phone.longitude != null).let { hasLocation ->
+                    location.visible = hasLocation
+                    if (hasLocation) {
+                        on<ProximityHandler>().locationFromLatLng(LatLng(phone.latitude!!, phone.longitude!!)) {
+                            location.text = it
+                        }
+                    }
+                }
+
+                sendDirectMessageButton.visible = phone.id != on<PersistenceHandler>().phoneId
+
+                sendDirectMessageButton.setOnClickListener {
+                    on<ReplyHandler>().reply(phone)
+                }
 
                 val nothing = on<ResourcesHandler>().resources.getString(R.string.nothing_here)
                 introductionTextView.text = phone.introduction ?: nothing
@@ -108,7 +124,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                                     on<PhoneListActivityTransitionHandler>().showPhonesForGoal(it)
                                 },
                                 MenuHandler.MenuOption(R.drawable.ic_message_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.cheer_them, on<NameHandler>().getName(phone))) {
-                                    on<ReplyHandler>().reply(phone.id!!)
+                                    on<ReplyHandler>().reply(phone)
                                 }
                         )
                     }
@@ -152,7 +168,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                                     on<PhoneListActivityTransitionHandler>().showPhonesForLifestyle(it)
                                 },
                                 MenuHandler.MenuOption(R.drawable.ic_message_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.cheer_them, on<NameHandler>().getName(phone))) {
-                                    on<ReplyHandler>().reply(phone.id!!)
+                                    on<ReplyHandler>().reply(phone)
                                 }
                         )
                     }
@@ -175,7 +191,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 if (editable) {
                     actionEditIntroduction.setOnClickListener {
-                        on<DefaultInput>().show(R.string.introduction_hint, prefill = phone.introduction) {
+                        on<DefaultInput>().show(R.string.introduction_hint, hintRes = R.string.write_here, prefill = phone.introduction) {
                             on<AccountHandler>().updateAbout(introduction = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }
@@ -195,7 +211,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
 
                     actionEditOfftime.setOnClickListener {
-                        on<DefaultInput>().show(R.string.offtime_hint, prefill = phone.offtime) {
+                        on<DefaultInput>().show(R.string.offtime_hint, hintRes = R.string.write_here, prefill = phone.offtime) {
                             on<AccountHandler>().updateAbout(offtime = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }
@@ -203,7 +219,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
 
                     actionEditOccupation.setOnClickListener {
-                        on<DefaultInput>().show(R.string.occupation_hint, prefill = phone.occupation) {
+                        on<DefaultInput>().show(R.string.occupation_hint, hintRes = R.string.write_here, prefill = phone.occupation) {
                             on<AccountHandler>().updateAbout(occupation = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }
@@ -211,7 +227,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
 
                     actionEditHistory.setOnClickListener {
-                        on<DefaultInput>().show(R.string.history_hint, prefill = phone.history) {
+                        on<DefaultInput>().show(R.string.history_hint, hintRes = R.string.write_here, prefill = phone.history) {
                             on<AccountHandler>().updateAbout(history = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }

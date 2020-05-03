@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.create_group_modal.view.*
@@ -61,6 +62,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     private val stateObservable = BehaviorSubject.createDefault(state)
     private val showCalendarIndicator = BehaviorSubject.createDefault(false)
+
+    private var groupActionsDisposable: DataSubscription? = null
 
     fun attach(itemView: View, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
         this.itemView = itemView
@@ -598,7 +601,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun showGroupActions(groups: List<Group>) {
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
+        groupActionsDisposable?.let { on<DisposableHandler>().dispose(it) }
+
+        groupActionsDisposable = on<StoreHandler>().store.box(GroupAction::class).query()
                 .`in`(GroupAction_.group, groups
                         .filter { it.id != null }
                         .map { it.id }
@@ -607,12 +612,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
-                .single()
                 .observer { groupActions ->
                     state.hasGroupActions = groupActions.isNotEmpty()
                     stateObservable.onNext(state)
                     on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
-                })
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
     }
 
     private fun createGroup(groupName: String?) {

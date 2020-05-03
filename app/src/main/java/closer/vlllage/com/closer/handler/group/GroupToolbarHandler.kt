@@ -112,14 +112,6 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
 
             items.add(ToolbarItem(
-                    on<ResourcesHandler>().resources.getString(R.string.talk),
-                    R.drawable.ic_mail_black_24dp,
-                    View.OnClickListener {
-                        on<ReplyHandler>().reply(group.phoneId!!)
-                    }
-            ))
-
-            items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.invite),
                     R.drawable.ic_person_add_black_24dp,
                     View.OnClickListener {

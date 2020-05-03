@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/clickable_light_rounded_8dp"
+    android:layout_marginEnd="@dimen/pad"
     android:paddingTop="@dimen/padHalf"
     android:paddingBottom="@dimen/padHalf"
-    android:paddingEnd="@dimen/pad"
+    android:background="@drawable/clickable_accent_rounded"
     android:textColor="@color/text"
     android:textSize="14sp"
     tools:text="♥"/>

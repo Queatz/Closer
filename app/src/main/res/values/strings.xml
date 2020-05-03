@@ -6,7 +6,7 @@
     <string name="update">Update</string>
     <string name="update_status">Update status</string>
     <string name="closer_notifications">Closer notifications</string>
-    <string name="what_s_up">Your public status</string>
+    <string name="what_s_up">Your public status message</string>
     <string name="public_status">Public status</string>
     <string name="off">Off</string>
     <string name="update_your_name">Update your name</string>
@@ -200,7 +200,7 @@
     <string name="is_public">Public</string>
     <string name="options">Options</string>
     <string name="host_event">Host event</string>
-    <string name="share_your_location">Share your location</string>
+    <string name="share_your_location">Show me on the map</string>
     <string name="about_you">About you</string>
     <string name="is_next_day">Next day</string>
     <string name="today">Today</string>
@@ -440,6 +440,8 @@
     <string name="show_more">Show more</string>
     <string name="chevron_right">›</string>
     <string name="no_comment">Don\'t show comment box</string>
+    <string name="direct_message">Direct message</string>
+    <string name="talk_to">Talk to %1$s</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
@@ -39,7 +40,7 @@ class GroupMessageHelper constructor(private val on: On) {
 
     fun areContentsTheSame(oldGroupMessage: GroupMessage, newGroupMessage: GroupMessage): Boolean {
         return oldGroupMessage.id == newGroupMessage.id &&
-                on<ListEqual>().isEqual(oldGroupMessage.reactions, newGroupMessage.reactions) &&
+                oldGroupMessage.reactions == newGroupMessage.reactions &&
                 oldGroupMessage.attachment == newGroupMessage.attachment &&
                 oldGroupMessage.from == newGroupMessage.from &&
                 oldGroupMessage.text == newGroupMessage.text
@@ -162,11 +163,11 @@ class GroupMessageHelper constructor(private val on: On) {
             holder.messageActionPin.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionReply.setBackgroundResource(it.clickableRoundedBackground)
             holder.messageActionDelete.setBackgroundResource(it.clickableRoundedBackground)
-            holder.messageActionVote.setBackgroundResource(it.clickableRoundedBackground)
-            holder.messageActionVoteLaugh.setBackgroundResource(it.clickableRoundedBackground)
-            holder.messageActionVoteYummy.setBackgroundResource(it.clickableRoundedBackground)
-            holder.messageActionVoteKiss.setBackgroundResource(it.clickableRoundedBackground)
-            holder.messageActionVoteCool.setBackgroundResource(it.clickableRoundedBackground)
+            holder.messageActionVote.setBackgroundResource(voteBkg(holder.messageActionVote, groupMessage, it))
+            holder.messageActionVoteLaugh.setBackgroundResource(voteBkg(holder.messageActionVoteLaugh, groupMessage, it))
+            holder.messageActionVoteYummy.setBackgroundResource(voteBkg(holder.messageActionVoteYummy, groupMessage, it))
+            holder.messageActionVoteKiss.setBackgroundResource(voteBkg(holder.messageActionVoteKiss, groupMessage, it))
+            holder.messageActionVoteCool.setBackgroundResource(voteBkg(holder.messageActionVoteCool, groupMessage, it))
             holder.messageActionShorthand.compoundDrawableTintList = it.tint
             holder.message.setTextColor(it.text)
             holder.name.setTextColor(it.text)
@@ -179,6 +180,10 @@ class GroupMessageHelper constructor(private val on: On) {
             holder.eventMessage.setTextColor(it.hint)
             holder.pinnedIndicator.imageTintList = it.tint
         })
+    }
+
+    private fun voteBkg(button: TextView, groupMessage: GroupMessage, lightDarkColors: LightDarkColors): Int {
+        return if (on<MessageDisplay>().hasMyReaction(groupMessage, button.text.toString())) lightDarkColors.clickableRoundedBackgroundAccent else lightDarkColors.clickableRoundedBackground
     }
 }
 

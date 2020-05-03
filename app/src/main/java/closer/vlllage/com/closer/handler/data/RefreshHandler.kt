@@ -3,7 +3,6 @@ package closer.vlllage.com.closer.handler.data
 import closer.vlllage.com.closer.api.models.*
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.ListEqual
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
@@ -207,7 +206,7 @@ class RefreshHandler constructor(private val on: On) {
 
                     for (message in messages) {
                         existingObjsMap[message.id]?.let { existing ->
-                            if (!on<ListEqual>().isEqual(message.reactions, existing.reactions) ||
+                            if (message.reactions != existing.reactions ||
                                     existing.text != message.text ||
                                     existing.attachment != message.attachment ||
                                     existing.replies != message.replies ||

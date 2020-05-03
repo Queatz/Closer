@@ -31,14 +31,14 @@ class ReactionAdapter(on: On) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val reaction = items[position]
 
-        viewHolder.reaction.text = reaction.reaction + (if (reaction.count < 2) "" else " " + reaction.count)
+        viewHolder.reaction.text = "${reaction.reaction}${if (reaction.count < 2) "" else " ${reaction.count}"}"
         viewHolder.reaction.setOnClickListener {
             on<PhoneListActivityTransitionHandler>().showReactions(groupMessage!!.id!!)
         }
 
         viewHolder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             viewHolder.reaction.setTextColor(it.text)
-            viewHolder.reaction.setBackgroundResource(it.clickableRoundedBackground8dp)
+            viewHolder.reaction.setBackgroundResource(it.clickableRoundedBackgroundBorderless)
         })
     }
 

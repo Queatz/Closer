@@ -77,7 +77,7 @@ class GroupContactsHandler constructor(private val on: On) {
                         MenuHandler.MenuOption(R.drawable.ic_chat_black_24dp, R.string.change_your_group_status) {
                             on<DefaultInput>().show(
                                     R.string.your_group_status,
-                                    button = R.string.update,
+                                    buttonRes = R.string.update,
                                     prefill = groupContact.status
                             ) {
                                 on<GroupContactHandler>().updateGroupStatus(groupContact, it)

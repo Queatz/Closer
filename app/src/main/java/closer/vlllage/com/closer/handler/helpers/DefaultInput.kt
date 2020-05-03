@@ -11,7 +11,21 @@ import kotlinx.android.synthetic.main.simple_two_input_modal.view.*
 class DefaultInput constructor(private val on: On) {
     fun show(@StringRes titleRes: Int,
              @StringRes hintRes: Int = R.string.say_something,
-             @StringRes button: Int = R.string.ok,
+             @StringRes buttonRes: Int = R.string.ok,
+             prefill: String? = null,
+             callback: (String) -> Unit) {
+        show(
+                on<ResourcesHandler>().resources.getString(titleRes),
+                on<ResourcesHandler>().resources.getString(hintRes),
+                on<ResourcesHandler>().resources.getString(buttonRes),
+                prefill,
+                callback
+        )
+    }
+
+    fun show(titleString: String,
+             hint: String? = null,
+             button: String? = null,
              prefill: String? = null,
              callback: (String) -> Unit) {
         on<AlertHandler>().make().apply {
@@ -19,15 +33,17 @@ class DefaultInput constructor(private val on: On) {
             textViewId = R.id.input
             onAfterViewCreated = { _, view ->
                 val input: TextView = view.input
-                input.setHint(hintRes)
+                input.hint = hint
                 input.text = prefill ?: ""
             }
             onTextViewSubmitCallback = callback
-            title = on<ResourcesHandler>().resources.getString(titleRes)
-            positiveButton = on<ResourcesHandler>().resources.getString(button)
+            title = titleString
+            positiveButton = button
             show()
         }
     }
+
+
 
     fun showWithDesc(@StringRes titleRes: Int,
              @StringRes hintRes: Int = R.string.say_something,

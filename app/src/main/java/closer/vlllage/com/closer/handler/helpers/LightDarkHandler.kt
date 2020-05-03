@@ -19,7 +19,9 @@ class LightDarkHandler constructor(private val on: On) {
             R.drawable.clickable_light_flat,
             R.drawable.clickable_light_50_rounded_512dp,
             R.drawable.clickable_light_rounded_8dp,
-            R.drawable.clickable_light
+            R.drawable.clickable_light,
+            R.drawable.clickable_accent_rounded,
+            R.drawable.clickable_borderless_light
     )
 
     private val LIGHT = LightDarkColors(true,
@@ -32,7 +34,9 @@ class LightDarkHandler constructor(private val on: On) {
             R.drawable.clickable_dark_flat,
             R.drawable.clickable_dark_50_rounded_512dp,
             R.drawable.clickable_dark_rounded_8dp,
-            R.drawable.clickable_accent_flat
+            R.drawable.clickable_accent_flat,
+            R.drawable.clickable_accent_rounded,
+            R.drawable.clickable_borderless_dark
     )
 
     val onLightChanged = BehaviorSubject.createDefault(DARK)
@@ -47,7 +51,7 @@ class LightDarkHandler constructor(private val on: On) {
 }
 
 data class LightDarkColors constructor(
-        @ColorInt val light: Boolean,
+        val light: Boolean,
         @ColorInt val text: Int,
         @ColorInt val selected: Int,
         @ColorInt val action: Int,
@@ -57,5 +61,7 @@ data class LightDarkColors constructor(
         @DrawableRes val clickableRoundedBackground: Int,
         @DrawableRes val clickableRoundedBackgroundLight: Int,
         @DrawableRes val clickableRoundedBackground8dp: Int,
-        @DrawableRes val clickableBackground: Int
+        @DrawableRes val clickableBackground: Int,
+        @DrawableRes val clickableRoundedBackgroundAccent: Int,
+        @DrawableRes val clickableRoundedBackgroundBorderless: Int
 )
