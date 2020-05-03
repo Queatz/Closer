@@ -20,7 +20,6 @@
     <dimen name="elevation">4dp</dimen>
     <dimen name="elevationHigh">8dp</dimen>
     <dimen name="elevationSky">16dp</dimen>
-    <dimen name="groupActionHeight">28dp</dimen>
     <dimen name="miniWindowCornerRadius">12dp</dimen>
     <dimen name="groupActionCombinedWidth">138dp</dimen>
     <dimen name="groupActionCombinedHeight">84dp</dimen>
@@ -34,4 +33,6 @@
     <dimen name="cornerRadiusHalf">12dp</dimen>
     <dimen name="qr_code">180dp</dimen>
     <dimen name="maxPhotoHeight">256dp</dimen>
+    <dimen name="textSize">12sp</dimen>
+    <dimen name="textSizeEmoji">24sp</dimen>
 </resources>

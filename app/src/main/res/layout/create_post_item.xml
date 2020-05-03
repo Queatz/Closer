@@ -44,7 +44,7 @@
             <TextView
                 android:id="@+id/actionAddHeading"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/pad"
                 android:background="@drawable/clickable_light_flat"
                 android:clickable="true"
@@ -64,7 +64,7 @@
             <TextView
                 android:id="@+id/actionAddText"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/pad"
                 android:background="@drawable/clickable_light_flat"
                 android:clickable="true"
@@ -84,7 +84,7 @@
             <TextView
                 android:id="@+id/actionAddPhoto"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/pad"
                 android:background="@drawable/clickable_light_flat"
                 android:clickable="true"
@@ -104,7 +104,7 @@
             <TextView
                 android:id="@+id/actionAddActivity"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/pad"
                 android:background="@drawable/clickable_light_flat"
                 android:clickable="true"
@@ -124,7 +124,7 @@
             <TextView
                 android:id="@+id/actionPhotoOptions"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/pad"
                 android:background="@drawable/clickable_light_flat"
                 android:clickable="true"
@@ -145,7 +145,7 @@
             <TextView
                 android:id="@+id/actionDelete"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/groupActionHeight"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/pad"
                 android:background="@drawable/clickable_light_flat"
                 android:clickable="true"

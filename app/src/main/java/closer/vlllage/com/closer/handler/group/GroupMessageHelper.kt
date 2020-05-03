@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.group
 
 import android.text.method.LinkMovementMethod
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -128,6 +129,7 @@ class GroupMessageHelper constructor(private val on: On) {
         val replyCount = groupMessage.replies?.let { it - 1 } ?: 0
 
         holder.messageRepliesCount.visible = replyCount > 0
+
         if (replyCount > 0) {
             holder.messageRepliesCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.x_replies, replyCount, replyCount)
             holder.messageRepliesCount.setOnClickListener {
@@ -138,6 +140,9 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.pinned = pinned
         holder.global = global
         holder.inFeed = inFeed
+
+        holder.message.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.textSize))
+
         on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 
         if (groupMessage.reactions.isNullOrEmpty()) {

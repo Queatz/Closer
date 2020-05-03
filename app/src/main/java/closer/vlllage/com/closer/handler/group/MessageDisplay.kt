@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -24,6 +25,8 @@ import closer.vlllage.com.closer.ui.RevealAnimator
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
+import com.vdurmont.emoji.EmojiManager
+import com.vdurmont.emoji.EmojiParser
 import io.reactivex.Single
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import java.util.*
@@ -209,6 +212,10 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.name.text = on<NameHandler>().getName(phone)
         holder.message.text = on<GroupMessageParseHandler>().parseText(holder.message, groupMessage.text!!)
+
+        if (EmojiManager.isOnlyEmojis(groupMessage.text)) {
+            holder.message.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.textSizeEmoji))
+        }
     }
 
     private fun displayMessage(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
@@ -406,7 +413,7 @@ class MessageDisplay constructor(private val on: On) {
     private fun renderMessageActionLayout(groupMessage: GroupMessage, holder: GroupMessageViewHolder, shorthand: Boolean) {
         holder.messageActionVote.setOnClickListener { react(holder, groupMessage, "♥") }
         holder.messageActionVoteLaugh.setOnClickListener { react(holder, groupMessage, "\uD83D\uDE02")}
-        holder.messageActionVoteYummy.setOnClickListener { react(holder, groupMessage, "\uD83D\uDE0B") }
+        holder.messageActionVoteYummy.setOnClickListener { react(holder, groupMessage, "\uD83D\uDE2F") }
         holder.messageActionVoteKiss.setOnClickListener { react(holder, groupMessage, "\uD83D\uDE18") }
         holder.messageActionVoteCool.setOnClickListener { react(holder, groupMessage, "\uD83D\uDE0E") }
 
