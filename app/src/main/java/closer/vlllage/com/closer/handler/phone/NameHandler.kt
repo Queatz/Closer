@@ -2,8 +2,6 @@ package closer.vlllage.com.closer.handler.phone
 
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.TimeAgo
-import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupInvite
@@ -31,11 +29,7 @@ class NameHandler constructor(private val on: On) {
         else
             phone.name
 
-        return if (isInactive(phone)) {
-            on<ResourcesHandler>().resources.getString(R.string.contact_inactive_inline, name)
-        } else {
-            name!!
-        }
+        return name!!
     }
 
     fun getName(groupContact: GroupContact?): String {
@@ -48,11 +42,7 @@ class NameHandler constructor(private val on: On) {
         else
             groupContact.contactName
 
-        return if (isInactive(groupContact)) {
-            on<ResourcesHandler>().resources.getString(R.string.contact_inactive_inline, name)
-        } else {
-            name!!
-        }
+        return name!!
     }
 
     fun getName(groupInvite: GroupInvite?): String? {
@@ -74,14 +64,6 @@ class NameHandler constructor(private val on: On) {
 
     private fun noName(): String {
         return on<ResourcesHandler>().resources.getString(R.string.no_name)
-    }
-
-    private fun isInactive(groupContact: GroupContact): Boolean {
-        return if (true) false else groupContact.contactActive!!.before(on<TimeAgo>().fifteenDaysAgo()) // XXX TODO Restore this after server IDs are fixed!
-    }
-
-    private fun isInactive(phone: Phone): Boolean {
-        return if (true) false else phone.updated!!.before(on<TimeAgo>().fifteenDaysAgo()) // XXX TODO Restore this after server IDs are fixed!
     }
 
     companion object {
