@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.map
 
 import closer.vlllage.com.closer.api.models.PhoneResult
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.ApiModelHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
@@ -48,7 +49,7 @@ class MeetHandler constructor(private val on: On) {
         return phones.value!!.firstOrNull()?.let {
             phones.value!!.removeAt(0)
             total.onNext(phones.value!!.size)
-            PhoneResult.from(it)
+            on<ApiModelHandler>().from(it)
         }
     }
 }

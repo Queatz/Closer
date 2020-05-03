@@ -907,9 +907,101 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "15:9194081929264717625",
+      "lastPropertyId": "7:4071424007190924360",
+      "name": "Goal",
+      "properties": [
+        {
+          "id": "1:8571646150887803549",
+          "name": "objectBoxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:518484081477652209",
+          "name": "id",
+          "type": 9
+        },
+        {
+          "id": "3:2892306395730667836",
+          "name": "localOnly",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "4:2090113075430569836",
+          "name": "updated",
+          "type": 10
+        },
+        {
+          "id": "5:5901816719858150309",
+          "name": "created",
+          "type": 10
+        },
+        {
+          "id": "6:1358519199727728074",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "7:4071424007190924360",
+          "name": "phonesCount",
+          "type": 5,
+          "flags": 2
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "16:3669213234492223739",
+      "lastPropertyId": "7:6233686268220072021",
+      "name": "Lifestyle",
+      "properties": [
+        {
+          "id": "1:7338450908512005800",
+          "name": "objectBoxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6510574459640349379",
+          "name": "id",
+          "type": 9
+        },
+        {
+          "id": "3:4919808017771461631",
+          "name": "localOnly",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "4:6394107825326873861",
+          "name": "updated",
+          "type": 10
+        },
+        {
+          "id": "5:8223996127558850962",
+          "name": "created",
+          "type": 10
+        },
+        {
+          "id": "6:9173213612146168411",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "7:6233686268220072021",
+          "name": "phonesCount",
+          "type": 5,
+          "flags": 2
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "14:7884716220240130593",
+  "lastEntityId": "16:3669213234492223739",
   "lastIndexId": "10:9008007724142274179",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

@@ -10,15 +10,16 @@
     android:foreground="?selectableItemBackgroundBorderless"
     android:clickable="true">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/goalName"
             android:textColor="@color/pink500"
             android:textSize="12sp"
             android:paddingStart="@dimen/padDouble"
@@ -29,9 +30,29 @@
             tools:text="Goal"/>
 
         <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/textHintInverse"
+            android:textSize="12sp"
+            android:gravity="center_vertical"
+            android:drawablePadding="@dimen/padHalf"
+            android:drawableTint="@color/textHintInverse"
+            android:drawableEnd="@drawable/ic_group_black_16dp"
+            android:padding="@dimen/padDouble"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="7" />
+
+        <TextView
             android:id="@+id/goalName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/type"
+            app:layout_constraintBottom_toTopOf="@+id/cheerButton"
             tools:text="Goal #1"
             android:paddingStart="@dimen/padDouble"
             android:paddingEnd="@dimen/padDouble"
@@ -43,6 +64,8 @@
             android:id="@+id/cheerButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/goalName"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="@color/pink500"
             android:gravity="center_horizontal"
             android:textSize="12sp"
@@ -51,6 +74,6 @@
             android:textStyle="bold"
             tools:text="Cheer Amanda"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

@@ -99,7 +99,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 val editable = phone.id == on<PersistenceHandler>().phoneId
 
-                val goalAdapter = GoalAdapter(on) {
+                val goalAdapter = GoalAdapter(on, false) {
                     if (editable) {
                         on<MenuHandler>().show(
                                 MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_goal) {
@@ -143,7 +143,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
 //                    }
 //                }
 
-                val lifestyleAdapter = GoalAdapter(on) {
+                val lifestyleAdapter = GoalAdapter(on, true) {
                     if (editable) {
                         on<MenuHandler>().show(
                                 MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_lifestyle) {

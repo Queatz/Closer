@@ -214,7 +214,7 @@ class GroupContactsHandler constructor(private val on: On) {
                     on<LocationHandler>().lastKnownLocation!!.longitude
             ), query).subscribe({ phoneResults ->
                 for (phoneResult in phoneResults) {
-                    on<RefreshHandler>().refresh(PhoneResult.from(phoneResult))
+                    on<RefreshHandler>().refresh(on<ApiModelHandler>().from(phoneResult))
                 }
             }, { error -> on<DefaultAlerts>().thatDidntWork() }))
         }

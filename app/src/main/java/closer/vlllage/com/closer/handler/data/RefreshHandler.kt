@@ -27,7 +27,7 @@ class RefreshHandler constructor(private val on: On) {
 
     fun refreshMe() {
         on<DisposableHandler>().add(on<ApiHandler>().phone().subscribe({
-            refresh(PhoneResult.from(it))
+            refresh(on<ApiModelHandler>().from(it))
         }, connectionError))
     }
 
@@ -118,7 +118,7 @@ class RefreshHandler constructor(private val on: On) {
 
     fun refreshPhone(phoneId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getPhone(phoneId)
-                .subscribe({ this.refresh(PhoneResult.from(it)) }, connectionError))
+                .subscribe({ this.refresh(on<ApiModelHandler>().from(it)) }, connectionError))
     }
 
     fun refreshGroupMessages(groupId: String) {
@@ -235,7 +235,9 @@ class RefreshHandler constructor(private val on: On) {
             deleteLocalNotReturnedFromServer: Boolean,
             createTransformer: (R) -> T,
             updateTransformer: ((T, R) -> T)?) {
-        val serverIdList = results!!.map { it.id!! }.toSet()
+        results ?: return
+
+        val serverIdList = results.map { it.id!! }.toSet()
 
         on<StoreHandler>().findAll(clazz, idProperty, serverIdList).observer { existingObjs ->
             val existingObjsMap = HashMap<String, T>()
@@ -272,7 +274,12 @@ class RefreshHandler constructor(private val on: On) {
         }
     }
 
-    fun handleGroups(groups: List<GroupResult>, deleteLocal: Boolean = false) {
+    fun handleLifestylesAndGoals(phoneResult: PhoneResult) {
+        handleFullListResult(phoneResult.goals, Goal::class.java, Goal_.id, false, { on<ApiModelHandler>().from(it) }, { goal, goalResult -> on<ApiModelHandler>().updateFrom(goal, goalResult) })
+        handleFullListResult(phoneResult.lifestyles, Lifestyle::class.java, Lifestyle_.id, false, { on<ApiModelHandler>().from(it) }, { lifestyle, lifestyleResult -> on<ApiModelHandler>().updateFrom(lifestyle, lifestyleResult) })
+    }
+
+    private fun handleGroups(groups: List<GroupResult>, deleteLocal: Boolean = false) {
         handleFullListResult(groups, Group::class.java, Group_.id, deleteLocal, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) })
     }
 
@@ -335,6 +342,6 @@ class RefreshHandler constructor(private val on: On) {
     }
 
     private fun handlePhones(phoneResults: List<PhoneResult>) {
-        handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false, { PhoneResult.from(it) }, { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) })
+        handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false, { on<ApiModelHandler>().from(it) }, { phone, phoneResult -> on<ApiModelHandler>().updateFrom(phone, phoneResult) })
     }
 }

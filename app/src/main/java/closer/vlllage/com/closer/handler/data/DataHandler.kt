@@ -14,12 +14,12 @@ import java.util.*
 class DataHandler constructor(private val on: On) {
     fun getPhonesNear(latLng: LatLng) = on<ApiHandler>().getPhonesNear(latLng)
             .doOnSuccess { phoneResults -> on<RefreshHandler>().handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
-                    { PhoneResult.from(it) },
-                    { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) }) }
+                    { on<ApiModelHandler>().from(it) },
+                    { phone, phoneResult -> on<ApiModelHandler>().updateFrom(phone, phoneResult) }) }
             .map { phoneResults ->
                 val result = mutableListOf<Phone>()
                 for (phoneResult in phoneResults) {
-                    result.add(PhoneResult.from(phoneResult))
+                    result.add(on<ApiModelHandler>().from(phoneResult))
                 }
                 result
             }
@@ -27,12 +27,12 @@ class DataHandler constructor(private val on: On) {
     fun getRecentlyActivePhones(limit: Int = 100) = on<ApiHandler>().getRecentlyActivePhones(limit)
 //            TODO these cause problems
 //            .doOnSuccess { phoneResults -> on<RefreshHandler>().handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
-//                    { PhoneResult.from(it) },
+//                    { on<_root_ide_package_.closer.vlllage.com.closer.handler.data.ApiModelHandler>().from(it) },
 //                    { phone, phoneResult -> PhoneResult.updateFrom(phone, phoneResult) }) }
             .map { phoneResults ->
                 val result = mutableListOf<Phone>()
                 for (phoneResult in phoneResults) {
-                    result.add(PhoneResult.from(phoneResult))
+                    result.add(on<ApiModelHandler>().from(phoneResult))
                 }
                 result
             }
@@ -90,7 +90,7 @@ class DataHandler constructor(private val on: On) {
     }, {
         on<ApiHandler>()
                 .getPhone(phoneId)
-                .map { PhoneResult.from(it) }
+                .map { on<ApiModelHandler>().from(it) }
     })
 
     fun getGroupForPhone(phoneId: String) = chain({

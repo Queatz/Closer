@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.api.models
 
-class GoalResult {
+class GoalResult : ModelResult() {
     var name: String? = null
-    var phonesCount: Int = 0
+    var phonesCount: Int? = null
     var phones: List<PhoneResult>? = null
 }

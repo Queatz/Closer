@@ -31,9 +31,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProxyMapBubbleViewHolder {
         return ProxyMapBubbleViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.map_bubble_proxy_item, parent, false).apply {
-
-                })
+                .inflate(R.layout.map_bubble_proxy_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: ProxyMapBubbleViewHolder, position: Int) {
