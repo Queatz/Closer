@@ -19,6 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/rounded_white_8dp"
         android:visibility="gone"
         android:foreground="@color/black_25"
         android:scaleType="centerCrop"/>
