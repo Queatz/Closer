@@ -29,8 +29,12 @@ class GroupContactsFragment : PoolActivityFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
 
-        val group = on<GroupHandler>().group!!
+        on<GroupHandler>().onGroupChanged { group ->
+            showForGroup(group)
+        }
+    }
 
+    private fun showForGroup(group: Group) {
         on<GroupContactsHandler>().attach(group, contactsRecyclerView, searchContacts, showPhoneContactsButton)
 
         showPhoneContactsButton.setOnClickListener {
