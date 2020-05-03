@@ -436,7 +436,7 @@
     <string name="create_place">Create place</string>
     <string name="sample_name">Samantha</string>
     <string name="activity_name_info">Activities help people better understand the most common things to do in this group.</string>
-    <string name="activity_intent_info">This is the message that gets posted when someone taps on this activity.  For example if Samantha tapped \"Go into the cave\", then \"Samantha went into the cave\" might be what gets posted to the group.</string>
+    <string name="activity_intent_info">This is the message that gets posted when someone taps on this activity.  For example, if Samantha tapped \"Go into the cave\", then \"Samantha went into the cave\" might be what gets posted to the group.</string>
     <string name="show_more">Show more</string>
     <string name="chevron_right">›</string>
     <string name="no_comment">Don\'t show comment box</string>

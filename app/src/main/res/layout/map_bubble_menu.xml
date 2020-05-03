@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/clickable_white_8dp"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        app:maxHeight="240dp"
+        app:maxWidth="240dp">
 
         <TextView
             android:id="@+id/menuTitle"
@@ -32,9 +34,7 @@
 
         <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:maxHeight="200dp"
-            app:maxWidth="200dp">
+            android:layout_height="wrap_content">
 
             <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/menuRecyclerView"

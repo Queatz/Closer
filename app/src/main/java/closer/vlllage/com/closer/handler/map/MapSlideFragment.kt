@@ -302,7 +302,7 @@ class MapSlideFragment : PoolFragment() {
                             if (addresses.isEmpty()) {
                                 on<DefaultAlerts>().thatDidntWork()
                             } else {
-                                showAddressOnMap(name, addresses[0])
+                                showAddressOnMap(name ?: on<ResourcesHandler>().resources.getString(R.string.shared_location), addresses[0])
                             }
                         }, { networkError(it) }))
 
@@ -310,7 +310,7 @@ class MapSlideFragment : PoolFragment() {
         }
     }
 
-    private fun showAddressOnMap(name: String, address: Address) {
+    private fun showAddressOnMap(name: String?, address: Address) {
         val latLng = LatLng(address.latitude, address.longitude)
         showMapMenu(latLng, name)
         on<MapHandler>().centerMap(latLng)
