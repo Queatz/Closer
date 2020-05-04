@@ -7,12 +7,9 @@ import io.objectbox.converter.PropertyConverter
 
 class ReactionCountListJsonConverter : PropertyConverter<List<ReactionCount>, String> {
 
-    override fun convertToEntityProperty(databaseValue: String?): List<ReactionCount>? {
-        return if (databaseValue == null) {
-            null
-        } else gson.fromJson<List<ReactionCount>>(databaseValue, object : TypeToken<List<ReactionCount>>() {
-
-        }.type)
+    override fun convertToEntityProperty(databaseValue: String?): List<ReactionCount> {
+        return if (databaseValue == null) listOf()
+        else gson.fromJson(databaseValue, object : TypeToken<List<ReactionCount>>() {}.type)
 
     }
 
