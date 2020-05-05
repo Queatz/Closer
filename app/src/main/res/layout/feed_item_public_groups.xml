@@ -134,6 +134,7 @@
                 android:paddingEnd="@dimen/pad"
                 android:paddingTop="@dimen/pad"
                 android:paddingBottom="@dimen/pad"
+                android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/person_item"
                 tools:layoutManager="LinearLayoutManager"
                 tools:orientation="horizontal" />

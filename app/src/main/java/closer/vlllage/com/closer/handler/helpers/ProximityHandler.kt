@@ -39,7 +39,9 @@ class ProximityHandler constructor(private val on: On) {
                 if (it != null) {
                     callback("${on<ResourcesHandler>().resources.getString(R.string.near)} $it")
                 } else {
-                    callback(null)
+                    on<LocalityHelper>().getName(latLng) {
+                        callback(it?.let { "${on<ResourcesHandler>().resources.getString(R.string.near)} $it" })
+                    }
                 }
             }
         }

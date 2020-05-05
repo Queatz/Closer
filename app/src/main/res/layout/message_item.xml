@@ -100,7 +100,7 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
-    <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messageActionLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -115,6 +115,8 @@
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:scrollbars="none"
             android:overScrollMode="never">
 
@@ -345,7 +347,7 @@
 
         </HorizontalScrollView>
 
-    </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/reactionsRecyclerView"

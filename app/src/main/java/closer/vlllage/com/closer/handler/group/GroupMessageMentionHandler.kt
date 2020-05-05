@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.group
 
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -10,22 +11,24 @@ import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
-import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
-import closer.vlllage.com.closer.ui.RevealAnimator
+import closer.vlllage.com.closer.ui.RevealAnimatorForConstraintLayout
 import com.queatz.on.On
 import io.objectbox.query.QueryBuilder
 
 class GroupMessageMentionHandler constructor(private val on: On) {
-    private var animator: RevealAnimator? = null
+    private var animator: RevealAnimatorForConstraintLayout? = null
     private lateinit var adapter: MentionAdapter
-    private lateinit var container: MaxSizeFrameLayout
+    private lateinit var container: ConstraintLayout
 
-    fun attach(container: MaxSizeFrameLayout, recyclerView: RecyclerView, onMentionClickListener: (Phone) -> Unit) {
+    fun attach(container: ConstraintLayout, recyclerView: RecyclerView, onMentionClickListener: (Phone) -> Unit) {
         this.container = container
-        animator = RevealAnimator(container, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
+        animator = RevealAnimatorForConstraintLayout(container, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
         adapter = MentionAdapter(on, onMentionClickListener)
 
-        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, RecyclerView.HORIZONTAL, false)
+        recyclerView.layoutManager = object : LinearLayoutManager(recyclerView.context, RecyclerView.HORIZONTAL, false) {
+            init {
+            }
+        }
         recyclerView.adapter = adapter
     }
 

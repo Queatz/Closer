@@ -1,6 +1,8 @@
 package closer.vlllage.com.closer.handler.helpers
 
+import android.text.InputType
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
@@ -14,12 +16,14 @@ class DefaultInput constructor(private val on: On) {
              @StringRes hintRes: Int = R.string.say_something,
              @StringRes buttonRes: Int = R.string.ok,
              prefill: String? = null,
+             inputType: Int? = null,
              callback: (String) -> Unit) {
         show(
                 on<ResourcesHandler>().resources.getString(titleRes),
                 on<ResourcesHandler>().resources.getString(hintRes),
                 on<ResourcesHandler>().resources.getString(buttonRes),
                 prefill,
+                inputType,
                 callback
         )
     }
@@ -28,6 +32,7 @@ class DefaultInput constructor(private val on: On) {
              hint: String? = null,
              button: String? = null,
              prefill: String? = null,
+             inputType: Int? = null,
              callback: (String) -> Unit) {
         on<AlertHandler>().make().apply {
             layoutResId = R.layout.simple_input_modal
@@ -36,6 +41,7 @@ class DefaultInput constructor(private val on: On) {
                 val input: TextView = view.input
                 input.hint = hint
                 input.text = prefill ?: ""
+                inputType?.let { input.inputType = it }
             }
             onTextViewSubmitCallback = callback
             title = titleString

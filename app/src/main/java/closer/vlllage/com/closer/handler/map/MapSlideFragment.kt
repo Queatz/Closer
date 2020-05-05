@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.location.Address
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -209,12 +210,12 @@ class MapSlideFragment : PoolFragment() {
                 }
                 3 -> on<SuggestionHandler>().createNewSuggestion(menuBubble.latLng!!)
                 4 -> {
-                    on<DefaultInput>().show(R.string.add_new_public_place, R.string.enter_place_name, R.string.create_place, prefill = menuBubble.status) {
+                    on<DefaultInput>().show(R.string.add_new_public_place, R.string.enter_place_name, R.string.create_place, inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS, prefill = menuBubble.status) {
                         on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!, isPublic = false, name = it)
                     }
                 }
                 5 -> {
-                    on<DefaultInput>().show(R.string.add_new_private_place, R.string.enter_place_name, R.string.create_place) {
+                    on<DefaultInput>().show(R.string.add_new_private_place, R.string.enter_place_name, R.string.create_place, inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS) {
                         on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!, isPublic = false, name = it)
                     }
                 }
@@ -229,7 +230,7 @@ class MapSlideFragment : PoolFragment() {
                             (MapBubbleMenuItem(getString(R.string.talk_here), R.drawable.ic_chat_black_18dp, R.color.purple)),
                             (MapBubbleMenuItem(getString(R.string.host_event), R.drawable.ic_event_note_black_18dp, R.color.red)),
                             (MapBubbleMenuItem(getString(R.string.share_location), R.drawable.ic_share_black_18dp, R.color.colorAccent)),
-                            (MapBubbleMenuItem(getString(R.string.add_suggestion), R.drawable.ic_edit_location_black_18dp, R.color.colorPrimaryLight)),
+                            (MapBubbleMenuItem(getString(R.string.add_a_suggestion), R.drawable.ic_edit_location_black_18dp, R.color.colorPrimaryLight)),
                             (MapBubbleMenuItem(getString(R.string.add_new_public_place), R.drawable.ic_add_black_18dp, R.color.purple)),
                             (MapBubbleMenuItem(getString(R.string.add_new_private_place), R.drawable.ic_group_add_black_18dp, R.color.colorPrimary)))
 

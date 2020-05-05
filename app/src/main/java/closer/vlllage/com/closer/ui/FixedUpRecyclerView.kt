@@ -28,6 +28,7 @@ open class FixedUpRecyclerView : RecyclerView {
             override fun onChildViewAdded(parent: View, child: View) {
                 if ((layoutManager as? LinearLayoutManager)?.orientation != HORIZONTAL) return
                 if (child.height == 0 || parent.height <= child.height) post { requestLayout() }
+                if (child.height == 0) child.post { child.requestLayout() }
             }
         })
     }

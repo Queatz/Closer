@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.group
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
@@ -14,8 +15,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
-import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
-import closer.vlllage.com.closer.ui.RevealAnimator
+import closer.vlllage.com.closer.ui.RevealAnimatorForConstraintLayout
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
@@ -23,12 +23,12 @@ import kotlinx.android.synthetic.main.add_action_modal.view.*
 
 class GroupActionHandler constructor(private val on: On) {
 
-    private var animator: RevealAnimator? = null
+    private var animator: RevealAnimatorForConstraintLayout? = null
     private var groupActionsDisposable: DataSubscription? = null
     private var isShowing: Boolean = false
 
-    fun attach(container: MaxSizeFrameLayout, actionRecyclerView: RecyclerView) {
-        animator = RevealAnimator(container, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
+    fun attach(container: ConstraintLayout, actionRecyclerView: RecyclerView) {
+        animator = RevealAnimatorForConstraintLayout(container, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
 

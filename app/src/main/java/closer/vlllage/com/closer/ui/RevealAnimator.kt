@@ -5,11 +5,12 @@ import android.animation.ValueAnimator
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
 import closer.vlllage.com.closer.extensions.visible
 
 import java.lang.Math.max
 
-class RevealAnimator(private val container: MaxSizeFrameLayout, private var initialHeight: Int) {
+class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout, private var initialHeight: Int) {
     private var animator: ValueAnimator? = null
     private var attachListener: View.OnAttachStateChangeListener? = null
 
@@ -62,7 +63,7 @@ class RevealAnimator(private val container: MaxSizeFrameLayout, private var init
                     if (cancelled) {
                         return
                     }
-                    container.maxHeight = MaxSizeFrameLayout.UNSPECIFIED
+                    container.maxHeight = Int.MAX_VALUE
                 }
 
                 override fun onAnimationCancel(animation: Animator) {

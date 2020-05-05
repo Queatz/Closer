@@ -15,8 +15,8 @@
         android:orientation="vertical"
         android:background="@drawable/clickable_white_8dp"
         android:elevation="4dp"
-        app:maxHeight="240dp"
-        app:maxWidth="240dp">
+        android:maxHeight="240dp"
+        android:maxWidth="240dp">
 
         <TextView
             android:id="@+id/menuTitle"
@@ -33,18 +33,19 @@
             android:animateLayoutChanges="false"
             tools:text="@string/go_out_with" />
 
-        <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:maxHeight="240dp"
-            app:maxWidth="240dp">
+            android:maxHeight="240dp"
+            android:maxWidth="240dp">
 
             <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/menuRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

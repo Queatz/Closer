@@ -21,7 +21,7 @@ import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import closer.vlllage.com.closer.ui.RevealAnimator
+import closer.vlllage.com.closer.ui.RevealAnimatorForConstraintLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
@@ -403,7 +403,7 @@ class MessageDisplay constructor(private val on: On) {
 
     fun toggleMessageActionLayout(groupMessage: GroupMessage, holder: GroupMessageViewHolder, show: Boolean? = null, shorthand: Boolean = false) {
         if (holder.messageActionLayoutRevealAnimator == null) {
-            holder.messageActionLayoutRevealAnimator = RevealAnimator(holder.messageActionLayout, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
+            holder.messageActionLayoutRevealAnimator = RevealAnimatorForConstraintLayout(holder.messageActionLayout, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
         }
 
         val visible = show?.let { it } ?: holder.messageActionLayout.visible.not()

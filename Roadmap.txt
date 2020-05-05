@@ -2,24 +2,32 @@
 Incoming
 ========
 
- [ ] Check content server memory and disk load
- [ ] Suggestion -> note ?
+    [X] Closer KISHOR location is blank
+    [X] Closer Add new place should cap words when entering name
+    [ ] Closer @ mention suggestions start off with no height
+    [ ] Closer show your places section when you have private places
+    [ ] Closer fix jumpiness when searching for public groups
+    [ ] Closer wrong window opens when opening reactions
 
 ❤ Next ❤
 ========
 
+    [ ] Closer quantize location if not shared on map
     [ ] need to present groups individually and better
-
+    [ ] Check content server memory and disk load
     [ ] Closer notification: Alexander boosted a post
         [ ] On Group Message: Boosted by Alexandar, Samantha + 4 others
 
 TBD
 ===
 
+    [ ] Suggestion -> note ?
     [ ] show who will get you message / who's at this group now + last seen / if they choose "show me on the map"
     [ ] toggle public post access for non verified accounts
     [ ] Closer intro tut?
     [ ] Jacob-only Closer thinkation: what are parts of closer that people *must* have
+
+    [ ] Think of Closer is a castle / rooms / doors / common areas / share stories
 
     [ ] Closer show dim circle on map 7 miles
     [ ] Closer who's here right now in groups on group cards

@@ -14,14 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.Suggestion
-import closer.vlllage.com.closer.ui.MaxSizeFrameLayout
-import closer.vlllage.com.closer.ui.RevealAnimator
+import closer.vlllage.com.closer.ui.RevealAnimatorForConstraintLayout
 import com.queatz.on.On
 
 class GroupMessageHelper constructor(private val on: On) {
@@ -207,7 +205,7 @@ class GroupMessageViewHolder(on: On, itemView: View) : RecyclerView.ViewHolder(i
     internal var custom: ConstraintLayout
     internal var pinnedIndicator: ImageView
     internal var messageRepliesCount: TextView
-    internal var messageActionLayout: MaxSizeFrameLayout
+    internal var messageActionLayout: ConstraintLayout
     internal var messageActionProfile: TextView
     internal var messageActionShare: TextView
     internal var messageActionRemind: TextView
@@ -220,7 +218,7 @@ class GroupMessageViewHolder(on: On, itemView: View) : RecyclerView.ViewHolder(i
     internal var messageActionVoteYummy: TextView
     internal var messageActionVoteKiss: TextView
     internal var messageActionVoteCool: TextView
-    internal var messageActionLayoutRevealAnimator: RevealAnimator? = null
+    internal var messageActionLayoutRevealAnimator: RevealAnimatorForConstraintLayout? = null
     internal var reactionsRecyclerView: RecyclerView
     internal var reactionAdapter: ReactionAdapter
     internal lateinit var disposableGroup: DisposableGroup

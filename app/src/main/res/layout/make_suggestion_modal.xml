@@ -10,7 +10,7 @@
         android:id="@+id/input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/make_a_suggestion"
+        android:hint="@string/make_suggestion"
         android:focusedByDefault="true"
         android:selectAllOnFocus="true"
         android:imeOptions="actionGo"

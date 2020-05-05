@@ -23,7 +23,7 @@
         android:singleLine="false"
         android:inputType="textShortMessage|textCapSentences|textMultiLine" />
 
-    <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mentionSuggestionsLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -40,12 +40,13 @@
             android:id="@+id/mentionSuggestionRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             android:paddingEnd="@dimen/pad"
             android:clipToPadding="false"
             tools:listitem="@layout/group_action_item"
             tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             tools:orientation="horizontal"/>
 
-    </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

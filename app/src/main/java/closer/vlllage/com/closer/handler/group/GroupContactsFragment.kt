@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.handler.data.PermissionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolActivityFragment
 import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.ui.RevealAnimator
+import closer.vlllage.com.closer.ui.RevealAnimatorForConstraintLayout
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.synthetic.main.fragment_group_contacts.*
@@ -99,7 +99,7 @@ class GroupContactsFragment : PoolActivityFragment() {
             val show = qrCodeLayout.visible.not()
             val s = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.qr_code) +
                     on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padQuadruple) * 3
-            RevealAnimator(qrCodeLayout, s).show(show)
+            RevealAnimatorForConstraintLayout(qrCodeLayout, s).show(show)
 
             if (show) on<MiniWindowHandler>().expand()
 

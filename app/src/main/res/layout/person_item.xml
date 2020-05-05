@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="84dp"
     android:layout_height="wrap_content"
+    app:layout_constrainedHeight="true"
     android:maxWidth="84dp">
 
     <ImageButton style="@style/Widget.AppCompat.Button.Borderless"

@@ -119,7 +119,7 @@
             android:overScrollMode="never"
             tools:listitem="@layout/message_item"/>
 
-        <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mentionSuggestionsLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -137,10 +137,11 @@
                 android:id="@+id/mentionSuggestionRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
                 android:paddingRight="@dimen/pad"
                 android:clipToPadding="false" />
 
-        </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/sendButton"

@@ -44,7 +44,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     if (hasLocation) {
                         on<ProximityHandler>().locationFromLatLng(LatLng(phone.latitude!!, phone.longitude!!)) {
                             location.text = it
-                            location.visible = hasLocation
+                            location.visible = it.isNullOrBlank().not()
                         }
                     }
                 }

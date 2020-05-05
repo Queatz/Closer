@@ -41,10 +41,9 @@
     <string name="set_group_name">Set group name</string>
     <string name="unknown">Unknown</string>
     <string name="add_to_group">Add to group</string>
-    <string name="add_suggestion_here">Add suggestion here…</string>
-    <string name="make_suggestion">Make suggestion…</string>
+    <string name="make_suggestion">Describe the suggestion</string>
+    <string name="add_a_suggestion">Add a suggestion</string>
     <string name="add_suggestion">Add suggestion</string>
-    <string name="make_a_suggestion">Make a suggestion…</string>
     <string name="add_new_private_group">Add a friends group</string>
     <string name="add_new_public_place">Add a place</string>
     <string name="add_new_private_place">Add a friends place</string>

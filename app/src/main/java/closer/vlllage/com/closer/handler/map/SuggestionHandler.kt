@@ -89,7 +89,7 @@ class SuggestionHandler constructor(private val on: On) {
 
     fun createNewSuggestion(latLng: LatLng) {
         on<AlertHandler>().make().apply {
-            title = on<ResourcesHandler>().resources.getString(R.string.add_suggestion_here)
+            title = on<ResourcesHandler>().resources.getString(R.string.add_a_suggestion)
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.add_suggestion)
             layoutResId = R.layout.make_suggestion_modal
             textViewId = R.id.input

@@ -63,7 +63,7 @@
         android:textSize="12sp"
         tools:text="Hey guys let's go out" />
 
-    <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/actionFrameLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -81,6 +81,7 @@
             android:id="@+id/actionRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             android:paddingEnd="@dimen/pad"
             android:clipToPadding="false"
             android:clipChildren="false"
@@ -88,9 +89,9 @@
             tools:listitem="@layout/group_action_photo_item"
             tools:orientation="horizontal" />
 
-    </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mentionSuggestionsLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -99,6 +100,7 @@
         app:layout_constraintBottom_toTopOf="@+id/replyMessage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:isScrollContainer="true"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -106,13 +108,14 @@
             android:id="@+id/mentionSuggestionRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             android:paddingEnd="@dimen/pad"
             android:clipToPadding="false"
             tools:listitem="@layout/group_action_item"
             tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             tools:orientation="horizontal"/>
 
-    </closer.vlllage.com.closer.ui.MaxSizeFrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/sendMoreButton"
