@@ -442,6 +442,8 @@
     <string name="no_comment">Don\'t show comment box</string>
     <string name="direct_message">Direct message</string>
     <string name="talk_to">Talk to %1$s</string>
+    <string name="subscribed_message">You will always get notifications from \"%1$s\"</string>
+    <string name="unsubscribed_message">You will on get notifications from \"%1$s\" when you are close by</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
