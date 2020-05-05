@@ -2,15 +2,12 @@
 Incoming
 ========
 
-    [ ] explain sub unsub feature better...
-    [ ] max length on action intent is too short
-    [ ] Always show group on shared message time text line
-    [ ] Remove recommendations from the Explore tab
-    [ ] Scope events to mine only on You tab
-    [ ] rename Groups -> You
-    [ ] hide past events everywhere except feed conversations
-    [ ] tap on place on Google map and get name -> just adds to talk here menu title
-    [ ] Bug: People list renders white / missing
+    [ ] Closer Group events tab -> calendar
+    [ ] Closer Activity long press -> show photo
+    [ ] Closer Host event from group should prefill group name like for private groups
+    [ ] Closer group nearest you
+    [ ] Closer you will on get notifications -> only
+    [ ] Closer Locations are now saying suggestion -.-
 
 ❤ Next ❤
 ========

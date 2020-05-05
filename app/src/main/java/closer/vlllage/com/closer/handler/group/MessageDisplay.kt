@@ -26,7 +26,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
 import com.vdurmont.emoji.EmojiManager
-import com.vdurmont.emoji.EmojiParser
 import io.reactivex.Single
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import java.util.*
@@ -301,7 +300,7 @@ class MessageDisplay constructor(private val on: On) {
 
         val contactName = on<NameHandler>().getName(phone)
 
-        if (suggestionHasNoName) {
+        if (suggestion.id.isNullOrBlank()) {
             holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_location, contactName)
         } else {
             holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_suggestion, contactName)
