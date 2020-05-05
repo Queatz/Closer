@@ -168,7 +168,7 @@
     <string name="add_action">Add activity</string>
     <string name="action_name">Activity name</string>
     <string name="action_intent">Add message text</string>
-    <string name="action_intent_hint">ex. went inside the castle</string>
+    <string name="action_intent_hint">went into the cave</string>
     <string name="action_name_hint">Activity name</string>
     <string name="enter_a_name_and_intent">Missing name or message text</string>
     <string name="remove_action">Remove this activity</string>

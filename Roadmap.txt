@@ -2,24 +2,37 @@
 Incoming
 ========
 
-
+    [ ] explain sub unsub feature better...
+    [ ] max length on action intent is too short
+    [ ] Always show group on shared message time text line
+    [ ] Remove recommendations from the Explore tab
+    [ ] Scope events to mine only on You tab
+    [ ] rename Groups -> You
+    [ ] hide past events everywhere except feed conversations
+    [ ] tap on place on Google map and get name -> just adds to talk here menu title
+    [ ] Bug: People list renders white / missing
 
 ❤ Next ❤
 ========
 
+    [ ] need to present groups individually and better
 
+    [ ] Closer notification: Alexander boosted a post
+        [ ] On Group Message: Boosted by Alexandar, Samantha + 4 others
 
 TBD
 ===
 
-    [ ] Closer intro tut
+    [ ] show who will get you message / who's at this group now + last seen / if they choose "show me on the map"
+    [ ] toggle public post access for non verified accounts
+    [ ] Closer intro tut?
     [ ] Jacob-only Closer thinkation: what are parts of closer that people *must* have
 
     [ ] Closer show dim circle on map 7 miles
-    [ ] Closer notification: Alexander boosted a post
     [ ] Closer who's here right now in groups on group cards
     [ ] Closer welcome messages for passersby / more visible description?
     [ ] Closer default public notifications off ? if coming from invite?
+        [ ] Or: You're opted in to receive notifications of everything happening nearby.  Learn how to togging this on and off whenever you'd like.
 
 Headspace
 =========

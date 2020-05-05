@@ -36,7 +36,9 @@ class GroupActionDisplay constructor(private val on: On) {
     fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
         render(GroupActionViewHolder(view, about), groupAction, layout, scale)
 
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query(GroupAction_.id.equal(groupAction.id!!))
+        val query = groupAction.id?.let { GroupAction_.id.equal(it) } ?: GroupAction_.objectBoxId.equal(groupAction.objectBoxId)
+
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query(query)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
