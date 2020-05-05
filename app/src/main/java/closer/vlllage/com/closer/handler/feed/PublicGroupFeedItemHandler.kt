@@ -429,7 +429,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                             else -> {
                                 val explore = content === ContentViewType.HOME_EXPLORE
                                 eventsRecyclerView.visible = true
-                                hubsRecyclerView.visible = true
+                                hubsRecyclerView.visible = state.hasPlaces
                                 actionRecyclerView.visible = state.hasGroupActions
                                 suggestionsRecyclerView.visible = false//state.hasSuggestions && explore
                                 peopleRecyclerView.visible = true
@@ -454,6 +454,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 saySomething.visible = showPublic
                                 sendSomethingButton.visible = showPublic
                                 peopleContainer.visible = showPublic
+                                itemView.placesHeader.setText(if (showPublic) R.string.places_around_here else R.string.your_places)
                                 actionHeader.setText(if (showPublic) R.string.things_to_do_around_here else R.string.your_things_to_do)
                                 eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
                                 groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
@@ -493,7 +494,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         }
 
         on<DisposableHandler>().add(queryBuilder
-                .sort(on<SortHandler>().sortGroups(true))
+//                .sort(on<SortHandler>().sortGroups(true))
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())

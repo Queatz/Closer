@@ -341,6 +341,7 @@
     <string name="private_mode_switch_description">Friends mode is on.  You\'ll only see your friends\' groups and events.</string>
     <string name="add_location">Add location</string>
     <string name="your_groups">Your groups</string>
+    <string name="your_places">Your places</string>
     <string name="conversations">Conversations</string>
     <string name="delete">Delete</string>
     <string name="remind">Remind</string>

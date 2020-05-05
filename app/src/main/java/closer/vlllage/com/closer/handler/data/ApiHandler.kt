@@ -152,7 +152,7 @@ class ApiHandler constructor(private val on: On) {
     }
 
     fun createPhysicalGroup(name: String, about: String, isPublic: Boolean, latLng: LatLng): Single<CreateResult> {
-        return uiThread(api.backend.createPhysicalGroup(name, about, on<LatLngStr>().from(latLng), isPublic, true))
+        return uiThread(api.backend.createPhysicalGroup(name, about, on<LatLngStr>().from(latLng), isPublic, true, name.isNotEmpty()))
     }
 
     fun convertToHub(groupId: String, name: String): Single<SuccessResult> {

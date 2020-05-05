@@ -39,8 +39,13 @@ class MapActivityHandler constructor(private val on: On) {
     fun showGroupOnMap(group: Group) {
         val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
-        intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(group.latitude!!.toFloat(), group.longitude!!.toFloat()))
-        intent.putExtra(EXTRA_GROUP_ID, group.id)
+
+        if (group.latitude != null && group.longitude != null) {
+            intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(group.latitude!!.toFloat(), group.longitude!!.toFloat()))
+            intent.putExtra(EXTRA_GROUP_ID, group.id)
+        } else {
+            on<DefaultAlerts>().thatDidntWork()
+        }
 
         on<ActivityHandler>().activity!!.startActivity(intent)
     }

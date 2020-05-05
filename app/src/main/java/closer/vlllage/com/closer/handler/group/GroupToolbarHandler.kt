@@ -14,12 +14,10 @@ import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
-import com.google.android.gms.common.util.Strings.isEmptyOrWhitespace
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -251,7 +249,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (group.physical && isEmptyOrWhitespace(group.name)) {
+        if (group.physical && group.name.isNullOrBlank()) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.set_name),
                     R.drawable.ic_edit_location_black_24dp,
@@ -264,7 +262,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (group.physical && isEmptyOrWhitespace(group.photo)) {
+        if (group.physical && group.photo.isNullOrBlank()) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.set_background),
                     R.drawable.ic_camera_black_24dp,

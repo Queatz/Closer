@@ -41,7 +41,7 @@ class GroupResult : ModelResult() {
             group.groupMessageId = groupResult.groupMessageId
             group.photo = groupResult.photo
 
-            if (groupResult.geo != null && !groupResult.geo!!.isEmpty()) {
+            if (groupResult.geo.isNullOrEmpty().not()) {
                 group.latitude = groupResult.geo!![0]
                 group.longitude = groupResult.geo!![1]
             }

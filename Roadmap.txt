@@ -8,6 +8,7 @@ Incoming
     [ ] Closer show your places section when you have private places
     [ ] Closer fix jumpiness when searching for public groups
     [ ] Closer wrong window opens when opening reactions
+    [ ] Private hubs show on map not working
 
 ❤ Next ❤
 ========
