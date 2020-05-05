@@ -19,7 +19,6 @@ import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_group.view.*
@@ -59,8 +58,8 @@ class GroupActivity : CircularRevealActivity() {
         }
 
         on<TimerHandler>().postDisposable(Runnable {
-            on<RefreshHandler>().refreshAll()
-        }, 1625)
+            on<RefreshHandler>().refreshAll() // TODO needs to be scoped better
+        }, 1625) // TODO Shouldn't be a delay
 
         handleIntent(intent)
 
@@ -317,6 +316,7 @@ class GroupActivity : CircularRevealActivity() {
         if (intent.hasExtra(EXTRA_GROUP_ID)) {
             groupId = intent.getStringExtra(EXTRA_GROUP_ID)!!
             on<GroupHandler>().setGroupById(groupId)
+            on<RefreshHandler>().refreshGroup(groupId)
 
             if (intent.hasExtra(EXTRA_RESPOND)) {
                 on<GroupMessagesHandler>().setIsRespond()
