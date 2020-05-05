@@ -28,6 +28,7 @@
     <string name="create_group">Add group</string>
     <string name="create_public_group">Add public group</string>
     <string name="enter_group_name">Name this group…</string>
+    <string name="enter_place_name">Name this place…</string>
     <string name="wait_for_it">Wait for it…</string>
     <string name="phone_number_or_name">Invite by phone number or name</string>
     <string name="show_contacts">Search phone contacts</string>
@@ -45,6 +46,7 @@
     <string name="add_suggestion">Add suggestion</string>
     <string name="make_a_suggestion">Make a suggestion…</string>
     <string name="add_new_private_group">Add a friends group</string>
+    <string name="add_new_public_place">Add a place</string>
     <string name="add_new_private_place">Add a friends place</string>
     <string name="add_new_public_group">Add a public group</string>
     <string name="verify_your_number">Verify your number</string>
@@ -443,11 +445,13 @@
     <string name="direct_message">Direct message</string>
     <string name="talk_to">Talk to %1$s</string>
     <string name="subscribed_message">You will always get notifications from \"%1$s\"</string>
-    <string name="unsubscribed_message">You will on get notifications from \"%1$s\" when you are close by</string>
+    <string name="unsubscribed_message">You will only get notifications from \"%1$s\" when you are close by</string>
     <string name="from">from %1$s</string>
     <string name="friends">Friends</string>
     <string name="request_feature">Request this feature</string>
     <string name="unknown_place">Mysterious place</string>
+    <string name="view_photo">View photo</string>
+    <string name="view_background">View background</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

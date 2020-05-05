@@ -41,10 +41,10 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 phoneVerifiedTextView.visible = phone.verified ?: false
 
                 (phone.latitude != null && phone.longitude != null).let { hasLocation ->
-                    location.visible = hasLocation
                     if (hasLocation) {
                         on<ProximityHandler>().locationFromLatLng(LatLng(phone.latitude!!, phone.longitude!!)) {
                             location.text = it
+                            location.visible = hasLocation
                         }
                     }
                 }

@@ -111,6 +111,9 @@ class GroupMemberHandler constructor(private val on: On) {
                         on<ShareActivityTransitionHandler>().shareGroupToGroup(group.id!!)
                     }
                 },
+                MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.view_background) {
+                    group?.photo?.let { on<PhotoActivityTransitionHandler>().show(null, it) }
+                }.visible(group?.photo != null),
                 MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) {
                     if (group != null) {
                         on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> }

@@ -2,12 +2,8 @@
 Incoming
 ========
 
-    [ ] Closer Group events tab -> calendar
-    [ ] Closer Activity long press -> show photo
-    [ ] Closer Host event from group should prefill group name like for private groups
-    [ ] Closer group nearest you
-    [ ] Closer you will on get notifications -> only
-    [ ] Closer Locations are now saying suggestion -.-
+ [ ] Check content server memory and disk load
+ [ ] Suggestion -> note ?
 
 ❤ Next ❤
 ========

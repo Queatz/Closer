@@ -180,6 +180,7 @@ class GroupActionDisplay constructor(private val on: On) {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_open_in_new_black_24dp, R.string.open_group) { on<GroupActivityTransitionHandler>().showGroupMessages(null, groupAction.group) },
                     MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, R.string.share_group_activity) { shareGroupActivity(groupAction) },
+                    MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.view_photo) { showGroupActionPhoto(groupAction) }.visible(groupAction.photo != null),
                     MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.take_photo) { takeGroupActionPhoto(groupAction) },
                     MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo) { uploadGroupActionPhoto(groupAction) },
                     MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.update_description) { editGroupActionAbout(groupAction) },
@@ -187,6 +188,10 @@ class GroupActionDisplay constructor(private val on: On) {
                     MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.remove_action_menu_item) { removeGroupAction(groupAction) }
             )
         }
+    }
+
+    private fun showGroupActionPhoto(groupAction: GroupAction) = groupAction.photo?.let {
+        on<PhotoActivityTransitionHandler>().show(null, it.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=512")
     }
 
     private fun editGroupActionAbout(groupAction: GroupAction) {

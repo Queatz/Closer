@@ -24,7 +24,7 @@ class ProximityHandler constructor(private val on: On) {
                     }
                     it
                 }
-                .sort(on<SortHandler>().sortGroups())
+                .sort(on<SortHandler>().sortGroupsByDistance(latLng))
                 .build()
                 .find()
     }

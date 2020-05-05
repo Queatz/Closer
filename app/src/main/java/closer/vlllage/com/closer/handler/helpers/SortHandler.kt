@@ -9,7 +9,25 @@ import java.util.*
 
 class SortHandler constructor(private val on: On) {
 
-    @JvmOverloads
+
+    fun sortGroupsByDistance(latLng: LatLng): Comparator<Group> = Comparator { o1, o2 ->
+        if (o1.latitude == null || o1.longitude == null) {
+            if (o2.latitude == null || o2.longitude == null) {
+                return@Comparator 0
+            } else return@Comparator 1
+        } else if (o2.latitude == null || o2.longitude == null) {
+            return@Comparator -1
+        }
+
+        val d1 = FloatArray(1)
+        val d2 = FloatArray(1)
+
+        distanceBetween(o1.latitude!!, o1.longitude!!, latLng.latitude, latLng.longitude, d1)
+        distanceBetween(o2.latitude!!, o2.longitude!!, latLng.latitude, latLng.longitude, d2)
+
+        return@Comparator if (d1[0] == d2[0]) 0 else if (d1[0] < d2[0]) -1 else 1
+    }
+
     fun sortGroups(privateFirst: Boolean = true): Comparator<Group> {
         return Comparator { group, groupOther ->
             if (!on<DistanceHandler>().isPhoneNearGroup(group) && on<DistanceHandler>().isPhoneNearGroup(groupOther))
@@ -20,10 +38,8 @@ class SortHandler constructor(private val on: On) {
                 1
             else if (privateFirst && groupOther.isPublic && !group.isPublic)
                 -1
-            else if (group.updated == null || groupOther.updated == null)
-                0
             else
-                groupOther.updated!!.compareTo(group.updated)
+                (groupOther.updated ?: Date(0)).compareTo(group.updated ?: Date(0))
         }
     }
 
