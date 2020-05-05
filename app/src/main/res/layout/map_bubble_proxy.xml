@@ -8,7 +8,7 @@
     android:padding="4dp"
     android:clipToPadding="false">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/click"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,6 +22,9 @@
             android:id="@+id/bubbleRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHeight_max="128dp"
             android:maxHeight="128dp"
             android:paddingStart="@dimen/padHalf"
             android:paddingEnd="@dimen/padHalf"
@@ -31,7 +34,7 @@
             android:clipToPadding="false"
             tools:listitem="@layout/map_bubble_proxy_item"/>
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/markerLocation"

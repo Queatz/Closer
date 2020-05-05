@@ -50,7 +50,7 @@ class Background : BroadcastReceiver() {
         }
 
         if (intent.hasExtra(EXTRA_NOTIFICATION)) {
-            app.on<NotificationHandler>().hide(intent.getStringExtra(EXTRA_NOTIFICATION))
+            app.on<NotificationHandler>().hide(intent.getStringExtra(EXTRA_NOTIFICATION)!!)
         }
     }
 }

@@ -273,7 +273,7 @@ class GroupActivity : CircularRevealActivity() {
             view.profilePhoto.visible = true
             on<ImageHandler>().get().load("$photo?s=512")
                     .into(view.profilePhoto)
-            view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, photo!!) }
+            view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, photo) }
 
         } else {
             view.profilePhoto.visible = false
