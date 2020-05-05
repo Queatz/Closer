@@ -25,9 +25,9 @@
     <string name="cancel">Cancel</string>
     <string name="enter_code">Enter the code…</string>
     <string name="verify_number">Verify number</string>
-    <string name="create_group">Create group</string>
-    <string name="create_public_group">Create public group</string>
-    <string name="enter_group_name">Enter group name…</string>
+    <string name="create_group">Add group</string>
+    <string name="create_public_group">Add public group</string>
+    <string name="enter_group_name">Name this group…</string>
     <string name="wait_for_it">Wait for it…</string>
     <string name="phone_number_or_name">Invite by phone number or name</string>
     <string name="show_contacts">Search phone contacts</string>
@@ -44,9 +44,9 @@
     <string name="make_suggestion">Make suggestion…</string>
     <string name="add_suggestion">Add suggestion</string>
     <string name="make_a_suggestion">Make a suggestion…</string>
-    <string name="add_new_private_group">Create a private group</string>
-    <string name="add_new_private_place">Create a private place</string>
-    <string name="add_new_public_group">Create a public group</string>
+    <string name="add_new_private_group">Add a friends group</string>
+    <string name="add_new_private_place">Add a friends place</string>
+    <string name="add_new_public_group">Add a public group</string>
     <string name="verify_your_number">Verify your number</string>
     <string name="not_found">Not found</string>
     <string name="invite">Invite</string>
@@ -110,7 +110,7 @@
         Closer is all about getting closer to your friends.<br /><br />
         <b>Verify your number</b> to be automatically added to any groups you\'ve already been invited to.<br /><br />
         <b>Add your own groups,</b> invite your friends, and make stuff happen.<br /><br />
-        <span style="color:#2196F3"><b>Blue</b></span> groups are private.<br /><br /><span style="color:#8BC34A"><b>Green</b></span> groups are public.<br /><br /><span style="color:#9c27b0"><b>Purple</b></span> groups are physical hangouts.<br /><br /><span style="color:#f44336"><b>Red</b></span> groups are events.<br /><br />
+        <span style="color:#2196F3"><b>Blue</b></span> groups are just friends.<br /><br /><span style="color:#8BC34A"><b>Green</b></span> groups are public.<br /><br /><span style="color:#9c27b0"><b>Purple</b></span> groups are physical hangouts.<br /><br /><span style="color:#f44336"><b>Red</b></span> groups are events.<br /><br />
         Enjoy!
     ]]></string>
     <string name="you_hid_the_help_bubble">Congrats, you hid the help bubble!</string>
@@ -127,8 +127,8 @@
     <string name="no_suggestions_here">I couldn\'t find any suggestions here</string>
     <string name="add_event_here">Host event here…</string>
     <string name="post_event">Post event</string>
-    <string name="enter_event_details">Enter event details…</string>
-    <string name="enter_event_price">Enter event price (optional)</string>
+    <string name="enter_event_details">Describe the event</string>
+    <string name="enter_event_price">Price (optional)</string>
     <string name="when">When</string>
     <string name="ends_at">Ends at</string>
     <string name="starts_at">Starts at</string>
@@ -187,10 +187,10 @@
     <string name="group_settings">Group settings</string>
     <string name="return_to_map">Return to map</string>
     <string name="public_group">Public group</string>
-    <string name="private_group_message">Only members of this group can send and see messages in this group, and anyone in the group can add additional people to the group.</string>
+    <string name="private_group_message">Only members can send and see messages in this group, and anyone in the group can add additional friends to the group.</string>
     <string name="public_group_message">Anyone can send and see messages in this group.</string>
     <string name="public_group_title">This is a public group</string>
-    <string name="private_group_title">This group is private</string>
+    <string name="private_group_title">This a friends group</string>
     <string name="add_a_shortcut">Add a shortcut</string>
     <string name="activities">Activities</string>
     <string name="member">Member</string>
@@ -206,7 +206,7 @@
     <string name="today">Today</string>
     <string name="update_description">Update description</string>
     <string name="update_background">Update background</string>
-    <string name="private_group">Private group</string>
+    <string name="private_group">Friends group</string>
     <string name="shared_by">%1$s — shared by %2$s</string>
     <string name="is_in">— in %1$s</string>
     <string name="add">Add</string>
@@ -216,7 +216,7 @@
     <string name="added_phone">%1$s has been added</string>
     <string name="sending_photo">Sending photo…</string>
     <string name="settings_public_notifications">Public notifications</string>
-    <string name="public_notifications_switch_description">Public notifications are off. You\'ll only get notifications from private groups and direct messages.</string>
+    <string name="public_notifications_switch_description">Public notifications are off. You\'ll only get notifications from friends\' groups and direct messages.</string>
     <string name="remove_heart">Remove heart?</string>
     <string name="heart_removed">Heart removed</string>
     <string name="join_this_group">Join this group…</string>
@@ -315,11 +315,10 @@
     <string name="feature_requests">Top Feature Requests</string>
     <string name="vote">Vote</string>
     <string name="you_voted">☑ Voted</string>
-    <string name="beta_message">Welcome to Closer Beta! Tell us what you would like to see next.\n\nTogether, we can make the best local small groups app on Earth! 😍</string>
+    <string name="beta_message">Welcome to Closer Beta! Tap on the \"+\" to tell us what you would like to see next!</string>
     <string name="add_feature_request">Add a feature request</string>
     <string name="feature_request_name">Feature request name</string>
     <string name="details">Details</string>
-    <string name="create">Create</string>
     <string name="search_map_hint">Search for places</string>
     <string name="new_request">New request</string>
     <string name="feature_request_name_missing">Add a name for your feature request.</string>
@@ -337,8 +336,8 @@
     <string name="date_tiny_years">%1$sy</string>
     <string name="active">Active %1$s ago</string>
     <string name="last_active">Last active %1$s ago</string>
-    <string name="settings_private_mode">Private mode</string>
-    <string name="private_mode_switch_description">Private mode is on.  You\'ll only see your private groups and events.</string>
+    <string name="settings_private_mode">Friends mode</string>
+    <string name="private_mode_switch_description">Friends mode is on.  You\'ll only see your friends\' groups and events.</string>
     <string name="add_location">Add location</string>
     <string name="your_groups">Your groups</string>
     <string name="conversations">Conversations</string>
@@ -368,11 +367,12 @@
     <string name="message_deleted">Message deleted</string>
     <string name="delete_message_confirm">Do you want to delete this message?</string>
     <string name="yes_delete">Yes, delete</string>
-    <string name="unavailable_message">This messge is private or unavailable</string>
+    <string name="unavailable_message">This message is unavailable</string>
     <string name="reactions">Reactions</string>
     <string name="people">People</string>
     <string name="phone_verified">Phone verified</string>
     <string name="loading">Loading people, please wait…</string>
+    <string name="loading_location">Loading place…</string>
     <string name="nobody">Nobody</string>
     <string name="no_details">No details</string>
     <string name="change_your_group_status">Set your status in this group</string>
@@ -431,9 +431,9 @@
     <string name="cannot_delete_last_message">Your post must contain at least one section.</string>
     <string name="blank_sections_error">Fill out or remove blank sections before posting.</string>
     <string name="public_group_in_x">Public group in %1$s</string>
-    <string name="goal_hint">Enter a life goal</string>
-    <string name="lifestyle_hint">Enter a lifestyle</string>
-    <string name="create_place">Create place</string>
+    <string name="goal_hint">Describe the goal</string>
+    <string name="lifestyle_hint">Describe the lifestyle</string>
+    <string name="create_place">Add place</string>
     <string name="sample_name">Samantha</string>
     <string name="activity_name_info">Activities help people better understand the most common things to do in this group.</string>
     <string name="activity_intent_info">This is the message that gets posted when someone taps on this activity.  For example, if Samantha tapped \"Go into the cave\", then \"Samantha went into the cave\" might be what gets posted to the group.</string>
@@ -444,6 +444,10 @@
     <string name="talk_to">Talk to %1$s</string>
     <string name="subscribed_message">You will always get notifications from \"%1$s\"</string>
     <string name="unsubscribed_message">You will on get notifications from \"%1$s\" when you are close by</string>
+    <string name="from">from %1$s</string>
+    <string name="friends">Friends</string>
+    <string name="request_feature">Request this feature</string>
+    <string name="unknown_place">Mysterious place</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

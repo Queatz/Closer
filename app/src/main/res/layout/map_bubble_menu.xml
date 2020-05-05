@@ -30,11 +30,14 @@
             android:textStyle="bold"
             android:visibility="gone"
             tools:visibility="visible"
+            android:animateLayoutChanges="false"
             tools:text="@string/go_out_with" />
 
         <closer.vlllage.com.closer.ui.MaxSizeFrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:maxHeight="240dp"
+            app:maxWidth="240dp">
 
             <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/menuRecyclerView"

@@ -308,7 +308,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             })
 
             view.name.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_lock_black_18dp, 0, 0, 0
+                    if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_group_black_18dp, 0, 0, 0
             )
 
             view.setBackgroundResource(if (event.isPublic) R.drawable.clickable_red_8dp else R.drawable.clickable_blue_8dp)

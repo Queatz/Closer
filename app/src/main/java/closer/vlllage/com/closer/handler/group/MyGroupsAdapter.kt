@@ -81,7 +81,7 @@ class MyGroupsAdapter(on: On) : PoolRecyclerAdapter<MyGroupsAdapter.MyGroupViewH
         val group = groups[position]
 
         groupName.setBackgroundResource(on<GroupColorHandler>().getColorClickable(group))
-        groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0)
+        groupName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_group_black_18dp, 0, 0, 0)
         groupName.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
         groupName.compoundDrawableTintList = ColorStateList.valueOf(
                 on<ResourcesHandler>().resources.getColor(android.R.color.white, on<ActivityHandler>().activity!!.theme)

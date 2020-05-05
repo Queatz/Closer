@@ -1,9 +1,11 @@
 package closer.vlllage.com.closer.handler.group
 
+import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.OnSyncResult
 import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
@@ -40,7 +42,7 @@ class PhysicalGroupHandler constructor(private val on: On) {
     fun physicalGroupName(group: Group) = on<Val>().of(group.name, on<StoreHandler>().store.box(GroupMessage::class).query()
             .equal(GroupMessage_.to, group.id ?: "")
             .order(GroupMessage_.updated)
-            .build().findFirst()?.text?.let { on<GroupMessageParseHandler>().parseString(it) }?.let { "\"${it}\"" } ?: "")
+            .build().findFirst()?.text?.let { on<GroupMessageParseHandler>().parseString(it) }?.let { "\"${it}\"" } ?: on<ResourcesHandler>().resources.getString(R.string.talk_here))
 
     private fun openGroup(groupId: String) {
         on<GroupActivityTransitionHandler>().showGroupMessages(null, groupId, true)

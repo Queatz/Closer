@@ -23,7 +23,7 @@ class ShareHandler constructor(private val on: On) {
                     val groupNames = mutableListOf<MapBubbleMenuItem>()
                     for (group in groups) {
                         group.name ?: continue
-                        groupNames.add(MapBubbleMenuItem(group.name!!, if (group.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_lock_black_18dp))
+                        groupNames.add(MapBubbleMenuItem(group.name!!, if (group.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_group_black_18dp))
                     }
 
                     val menuBubble = MapBubble(latLng, BubbleType.MENU, true, true)

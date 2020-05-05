@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.helpers
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
 import closer.vlllage.com.closer.R
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.simple_input_modal.view.*
@@ -51,9 +52,11 @@ class DefaultInput constructor(private val on: On) {
              @StringRes button: Int = R.string.ok,
              prefill: String? = null,
              prefillTwo: String? = null,
+             @StyleRes theme: Int? = null,
              callback: (String, String) -> Unit,
              buttonCallback: ((String, String) -> Boolean)?) {
         on<AlertHandler>().make().apply {
+            theme?.let { this.theme = it }
             layoutResId = R.layout.simple_two_input_modal
             onAfterViewCreated = { _, view ->
                 val inputOne: TextView = view.inputOne

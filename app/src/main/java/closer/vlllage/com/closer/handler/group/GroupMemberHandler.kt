@@ -90,10 +90,10 @@ class GroupMemberHandler constructor(private val on: On) {
                     updatedGroupMember.subscribed = !updatedGroupMember.subscribed
                     if (updatedGroupMember.subscribed) {
                         on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.subscribed_message, group?.name
-                                ?: on<ResourcesHandler>().resources.getString(R.string.app_name)), long = true)
+                                ?: on<ResourcesHandler>().resources.getString(R.string.unknown)), long = true)
                     } else {
                         on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.unsubscribed_message, group?.name
-                                ?: on<ResourcesHandler>().resources.getString(R.string.app_name)), long = true)
+                                ?: on<ResourcesHandler>().resources.getString(R.string.unknown)), long = true)
                     }
                     on<SyncHandler>().sync(updatedGroupMember)
                 },

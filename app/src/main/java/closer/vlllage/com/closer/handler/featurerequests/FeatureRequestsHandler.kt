@@ -30,7 +30,8 @@ class FeatureRequestsHandler constructor(private val on: On) {
                 R.string.add_feature_request,
                 R.string.feature_request_name,
                 R.string.details,
-                button = R.string.create,
+                button = R.string.request_feature,
+                theme = R.style.AppTheme_AlertDialog_Red,
                 callback = { name, description ->
                     on<ApiHandler>().addFeatureRequest(name, description).subscribe({
                         refresh()

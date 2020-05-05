@@ -32,7 +32,7 @@ class MapBubbleEventView constructor(private val on: On) {
         if ((mapBubble.tag as Event).isPublic) {
             bubbleTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
         } else {
-            bubbleTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0)
+            bubbleTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_group_black_18dp, 0, 0, 0)
         }
 
         actionTextView.text = on<EventDetailsHandler>().formatEventDetails(mapBubble.tag as Event)

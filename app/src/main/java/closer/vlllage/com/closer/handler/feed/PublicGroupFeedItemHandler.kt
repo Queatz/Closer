@@ -119,7 +119,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 false
         )
 
-        on<SuggestionsRecyclerViewHandler>().attach(suggestionsRecyclerView)
+//        on<SuggestionsRecyclerViewHandler>().attach(suggestionsRecyclerView)
         on<PeopleRecyclerViewHandler>().attach(peopleRecyclerView)
 
         searchGroups.addTextChangedListener(object : TextWatcher {
@@ -295,7 +295,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_ACTIVITIES,
                         color = R.color.purple),
                 GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.groups),
+                        on<ResourcesHandler>().resources.getString(R.string.friends),
                         R.drawable.ic_group_black_24dp,
                         View.OnClickListener {
                       toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_GROUPS)
@@ -431,7 +431,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 eventsRecyclerView.visible = true
                                 hubsRecyclerView.visible = true
                                 actionRecyclerView.visible = state.hasGroupActions
-                                suggestionsRecyclerView.visible = state.hasSuggestions && explore
+                                suggestionsRecyclerView.visible = false//state.hasSuggestions && explore
                                 peopleRecyclerView.visible = true
                                 groupsRecyclerView.visible = true
                                 eventsHeader.visible = state.hasEvents
@@ -444,7 +444,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 }
                                 itemView.historyButton.visible = explore
                                 actionHeader.visible = state.hasGroupActions
-                                itemView.suggestionsHeader.visible = state.hasSuggestions && explore
+                                itemView.suggestionsHeader.visible = false//state.hasSuggestions && explore
                                 itemView.placesHeader.visible = state.hasPlaces
                                 itemView.feedText.visible = true
 
@@ -482,20 +482,15 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private fun loadGroups(target: LatLng) {
         val distance = .12f
 
-        val queryBuilder = on<StoreHandler>().store.box(Group::class).query()
-                .notNull(Group_.eventId)
-                .and()
-                .greater(Group_.updated, on<TimeAgo>().oneMonthAgo()).apply {
-                    if (on<AccountHandler>().privateOnly) {
-                        or()
-                        equal(Group_.isPublic, false)
-                    } else {
-                        or()
-                        isNull(Group_.eventId)
-                        between(Group_.latitude, target.latitude - distance, target.latitude + distance)
-                        between(Group_.longitude, target.longitude - distance, target.longitude + distance)
-                    }
-                }
+        val queryBuilder = when (on<AccountHandler>().privateOnly) {
+            true -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
+            false -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.notNull()
+                    .and(Group_.updated.greater(on<TimeAgo>().daysAgo()))
+                    .or(Group_.eventId.isNull
+                            .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
+                                    .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance))))
+            ))
+        }
 
         on<DisposableHandler>().add(queryBuilder
                 .sort(on<SortHandler>().sortGroups(true))
@@ -534,24 +529,25 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun loadSuggestions(latLng: LatLng) {
-        val distance = .12f
-
-        val queryBuilder = on<StoreHandler>().store.box(Suggestion::class).query()
-                .between(Suggestion_.latitude, latLng.latitude - distance, latLng.latitude + distance)
-                .and()
-                .between(Suggestion_.longitude, latLng.longitude - distance, latLng.longitude + distance)
-
-        on<DisposableHandler>().add(queryBuilder
-                .sort(on<SortHandler>().sortSuggestions(latLng))
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .single()
-                .observer { suggestions ->
-                    state.hasSuggestions = suggestions.isNotEmpty()
-                    stateObservable.onNext(state)
-                    on<SuggestionsRecyclerViewHandler>().setSuggestions(suggestions)
-                })
+// disable until we can either add ratings or make them more useful some other way
+//        val distance = .12f
+//
+//        val queryBuilder = on<StoreHandler>().store.box(Suggestion::class).query()
+//                .between(Suggestion_.latitude, latLng.latitude - distance, latLng.latitude + distance)
+//                .and()
+//                .between(Suggestion_.longitude, latLng.longitude - distance, latLng.longitude + distance)
+//
+//        on<DisposableHandler>().add(queryBuilder
+//                .sort(on<SortHandler>().sortSuggestions(latLng))
+//                .build()
+//                .subscribe()
+//                .on(AndroidScheduler.mainThread())
+//                .single()
+//                .observer { suggestions ->
+//                    state.hasSuggestions = suggestions.isNotEmpty()
+//                    stateObservable.onNext(state)
+//                    on<SuggestionsRecyclerViewHandler>().setSuggestions(suggestions)
+//                })
     }
 
     private fun saySomethingAtMapCenter() {

@@ -360,8 +360,12 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.contentBackend.privacy()).map { it.string() }
     }
 
-    fun getPlaces(query: String, bias: LatLng, limit: Int = 5): Single<GeoJsonResponse> {
+    fun getPlaces(query: String, bias: LatLng, limit: Int = 3): Single<GeoJsonResponse> {
         return uiThread(api.placesBackend.query(query, bias.latitude, bias.longitude, limit))
+    }
+
+    fun reverseGeocode(latLng: LatLng, limit: Int = 3): Single<GeoJsonResponse> {
+        return uiThread(api.placesBackend.reverse(latLng.latitude, latLng.longitude, limit))
     }
 
     fun getInviteCode(code: String): Single<InviteCodeResult> {

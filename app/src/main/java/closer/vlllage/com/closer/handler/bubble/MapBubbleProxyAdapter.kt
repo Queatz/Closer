@@ -113,7 +113,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                 if (event.isPublic) {
                     holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
                 } else {
-                    holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_lock_black_18dp, 0, 0, 0)
+                    holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_group_black_18dp, 0, 0, 0)
                 }
             }
             else -> {

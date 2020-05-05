@@ -40,10 +40,14 @@ class MessageDisplay constructor(private val on: On) {
                              onGroupClickListener: (Group) -> Unit,
                              onSuggestionClickListener: (Suggestion) -> Unit) {
         displayFallback(holder, groupMessage)
+        holder.group.visible = false
 
         holder.disposableGroup.add(on<DataHandler>().getGroupMessage(jsonObject.get("share").asString).subscribe({ sharedGroupMessage ->
             display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
             holder.time.text = on<GroupMessageParseHandler>().parseText(holder.time, on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
+
+            holder.group.visible = true
+            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.from, sharedGroupMessage.to?.let { getGroup(it) }?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
 
             holder.messageActionProfile.setText(R.string.group)
             holder.messageActionProfile.setOnClickListener {

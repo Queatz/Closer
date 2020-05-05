@@ -15,8 +15,9 @@ import java.util.*
 
 class GroupMessageAttachmentHandler constructor(private val on: On) {
 
-    fun shareLocation(latLng: LatLng, group: Group): Boolean {
+    fun shareLocation(latLng: LatLng, group: Group, name: String? = null): Boolean {
         val suggestion = Suggestion()
+        suggestion.name = name
         suggestion.latitude = latLng.latitude
         suggestion.longitude = latLng.longitude
         return shareSuggestion(suggestion, group)

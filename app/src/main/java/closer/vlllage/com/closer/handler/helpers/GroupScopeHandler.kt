@@ -18,7 +18,7 @@ class GroupScopeHandler constructor(private val on: On) {
             imageButton.setImageResource(R.drawable.ic_public_black_24dp)
             imageButton.setOnClickListener { on<DefaultAlerts>().message(R.string.public_group_title, R.string.public_group_message) }
         } else {
-            imageButton.setImageResource(R.drawable.ic_lock_black_18dp)
+            imageButton.setImageResource(R.drawable.ic_group_black_18dp)
             imageButton.setOnClickListener { on<DefaultAlerts>().message(R.string.private_group_title, R.string.private_group_message) }
         }
     }

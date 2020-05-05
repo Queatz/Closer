@@ -30,7 +30,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/removeGroupFromEvent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                android:drawableStart="@drawable/ic_lock_black_18dp"
+                android:drawableStart="@drawable/ic_group_black_18dp"
                 android:drawablePadding="@dimen/pad"
                 android:textColor="@color/textInverse"
                 android:padding="24dp"

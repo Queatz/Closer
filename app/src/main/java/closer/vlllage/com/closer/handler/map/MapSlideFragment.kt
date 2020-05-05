@@ -199,7 +199,7 @@ class MapSlideFragment : PoolFragment() {
                     ))
                 }
                 2 -> on<ShareHandler>().shareTo(menuBubble.latLng!!) { group ->
-                    val success = on<GroupMessageAttachmentHandler>().shareLocation(menuBubble.latLng!!, group)
+                    val success = on<GroupMessageAttachmentHandler>().shareLocation(menuBubble.latLng!!, group, menuBubble.status)
 
                     if (!success) {
                         on<DefaultAlerts>().thatDidntWork()
@@ -227,7 +227,14 @@ class MapSlideFragment : PoolFragment() {
                             (MapBubbleMenuItem(getString(R.string.add_suggestion), R.drawable.ic_edit_location_black_18dp, R.color.colorPrimary)),
                             (MapBubbleMenuItem(getString(R.string.add_new_private_place), R.drawable.ic_group_add_black_18dp, R.color.black)))
 
-            on<MapBubbleMenuView>().setMenuTitle(menuBubble, title)
+            on<MapBubbleMenuView>().setMenuTitle(menuBubble, title ?: on<ResourcesHandler>().resources.getString(R.string.loading_location))
+
+            if (title == null) {
+                on<LocalityHelper>().getName(latLng) {
+                    menuBubble.status = it ?: on<ResourcesHandler>().resources.getString(R.string.unknown_place)
+                    on<MapBubbleMenuView>().setMenuTitle(menuBubble, it ?: on<ResourcesHandler>().resources.getString(R.string.unknown_place))
+                }
+            }
         }
     }
 

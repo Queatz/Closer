@@ -79,8 +79,4 @@ class MyBubbleHandler constructor(private val on: On) {
     fun start() {
         on<DisposableHandler>().add(on<AccountHandler>().changes().subscribe({ this.updateFrom(it) }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
     }
-
-    fun isMyBubble(mapBubble: MapBubble): Boolean {
-        return myBubble == mapBubble
-    }
 }
