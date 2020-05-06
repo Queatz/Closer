@@ -157,7 +157,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             0 -> HeaderViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.feed_item_public_groups, parent, false))
+                    .inflate(R.layout.feed_item_public_groups, parent, false) as ViewGroup)
             1 -> GroupPreviewViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.group_preview_item, parent, false)).also {
                 it.disposableGroup = on<DisposableHandler>().group()
@@ -512,7 +512,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
     private fun bindHeader(holder: HeaderViewHolder) {
         holder.on = On(on).apply { use<DisposableHandler>() }
-        holder.on<PublicGroupFeedItemHandler>().attach(holder.itemView) { on<FeedHandler>().show(it) }
+        holder.on<PublicGroupFeedItemHandler>().attach(holder.view) { on<FeedHandler>().show(it) }
     }
 
     class HeaderMixedItem : MixedItem(0)
@@ -524,7 +524,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class TextMixedItem(val text: String) : MixedItem(5)
     open class MixedItem(val type: Int)
 
-    class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class HeaderViewHolder(val view: ViewGroup): RecyclerView.ViewHolder(view) {
         lateinit var on: On
     }
 

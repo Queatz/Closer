@@ -19,6 +19,8 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
 open class SearchGroupsAdapter constructor(
@@ -28,7 +30,7 @@ open class SearchGroupsAdapter constructor(
         private val onCreateGroupClickListener: ((groupName: String) -> Unit)?
 ) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
-    private var createPublicGroupName: String = ""
+    private var createPublicGroupName = BehaviorSubject.createDefault("")
     private val groups = mutableListOf<Group>()
     private var actionText: String? = null
     @LayoutRes
@@ -63,15 +65,18 @@ open class SearchGroupsAdapter constructor(
 
                 if (position >= itemCount - createGroupCount) {
                     holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
-                    holder.name.text = if (createPublicGroupName.isBlank()) "+" else createPublicGroupName
                     holder.about.text = on<ResourcesHandler>().resources.getString(R.string.add_new_public_group)
                     holder.backgroundPhoto.visible = false
                     holder.actionRecyclerView.visible = false
                     holder.cardView.setOnClickListener {
-                        onCreateGroupClickListener?.invoke(createPublicGroupName)
+                        onCreateGroupClickListener?.invoke(createPublicGroupName.value ?: "")
                     }
                     holder.cardView.setOnLongClickListener(null)
                     holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
+
+                    createPublicGroupName.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                        holder.name.text = if (it.isNullOrBlank()) "+" else it
+                    }.also { holder.on<DisposableHandler>().add(it) }
                     return
                 }
 
@@ -160,11 +165,11 @@ open class SearchGroupsAdapter constructor(
     override fun getItemCount() = groups.size + createGroupCount
 
     fun setCreatePublicGroupName(createPublicGroupName: String) {
-        this.createPublicGroupName = createPublicGroupName
-        notifyDataSetChanged()
+        this.createPublicGroupName.onNext(createPublicGroupName)
     }
 
     fun showCreateOption(showCreate: Boolean) {
+        if (showCreateGroup == showCreate) return
         showCreateGroup = showCreate
         notifyDataSetChanged()
     }

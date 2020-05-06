@@ -1,9 +1,13 @@
 package closer.vlllage.com.closer.handler.map
 
 import android.graphics.Rect
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
+import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -19,12 +23,14 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.objectbox.kotlin.oneOf
 import io.objectbox.kotlin.or
 import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
+import java.util.logging.Logger
+import kotlin.math.abs
 
 class FeedHandler constructor(private val on: On) {
     private lateinit var recyclerView: RecyclerView
@@ -202,6 +208,29 @@ class FeedHandler constructor(private val on: On) {
         }?.let {
             mixedAdapter.content = it
             on<PersistenceHandler>().lastFeedTab = it
+        }
+    }
+
+    fun scrollTo(itemView: ViewGroup, child: View) {
+        performScrollTo(itemView, child)
+        on<KeyboardVisibilityHandler>().isKeyboardVisible
+                .timeout(1, TimeUnit.SECONDS)
+                .filter { it }
+                .take(1)
+                .subscribe({
+            performScrollTo(itemView, child)
+        }, {}).also { on<DisposableHandler>().add(it) }
+    }
+
+    private fun performScrollTo(itemView: ViewGroup, child: View) {
+        recyclerView.stopScroll()
+        recyclerView.stopNestedScroll()
+
+        recyclerView.doOnLayout {
+            val h = recyclerView.height - on<KeyboardVisibilityHandler>().lastKeyboardHeight
+            val offset = itemView.top + child.bottom - h + on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble)
+
+            recyclerView.scrollBy(0, offset)
         }
     }
 

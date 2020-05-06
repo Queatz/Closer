@@ -9,7 +9,7 @@ import com.queatz.on.On
 
 class DistanceHandler constructor(private val on: On) {
     fun isPhoneNearGroup(group: Group, phone: Phone? = null): Boolean {
-        if (!group.physical) {
+        if (!group.physical || group.latitude == null || group.longitude == null) {
             return false
         }
 

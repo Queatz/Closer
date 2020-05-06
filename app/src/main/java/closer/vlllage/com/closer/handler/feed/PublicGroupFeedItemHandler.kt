@@ -41,6 +41,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var saySomething: EditText
     private lateinit var saySomethingHeader: TextView
     private lateinit var searchGroupsAdapter: SearchGroupsAdapter
+    private lateinit var searchHubsAdapter: SearchGroupsAdapter
+    private lateinit var searchEventsAdapter: SearchGroupsAdapter
     private lateinit var actionHeader: TextView
     private lateinit var groupsHeader: TextView
     private lateinit var eventsHeader: TextView
@@ -65,7 +67,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     private var groupActionsDisposable: DataSubscription? = null
 
-    fun attach(itemView: View, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
+    fun attach(itemView: ViewGroup, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
         this.itemView = itemView
         this.onToolbarItemSelected = onToolbarItemSelected
 
@@ -99,7 +101,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 false
         )
 
-        val searchEventsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        searchEventsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
         searchEventsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         eventsRecyclerView.adapter = searchEventsAdapter
@@ -109,7 +111,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 false
         )
 
-        val searchHubsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        searchHubsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
         searchHubsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         hubsRecyclerView.adapter = searchHubsAdapter
@@ -133,9 +135,20 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
 
             override fun afterTextChanged(s: Editable) {
-
             }
         })
+
+        searchGroups.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (searchGroups.hasFocus() && bottom != oldBottom) on<FeedHandler>().scrollTo(itemView, searchGroups)
+        }
+
+        searchGroups.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) on<FeedHandler>().scrollTo(itemView, searchGroups)
+        }
+
+        searchGroups.setOnClickListener {
+            on<FeedHandler>().scrollTo(itemView, searchGroups)
+        }
 
         on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
 
@@ -151,6 +164,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 state.hasPlaces = it.isNotEmpty()
                 stateObservable.onNext(state)
             })
+
+            showGroupActions(groups)
         })
 
         on<DisposableHandler>().add(on<SearchGroupHandler>().createGroupName.subscribe {
@@ -411,15 +426,16 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 saySomething.visible = false
                                 sendSomethingButton.visible = false
                                 peopleContainer.visible = false
+                                eventsRecyclerView.visible = state.hasEvents
                                 eventsHeader.visible = false
                                 groupsHeader.visible = false
-                                eventsRecyclerView.visible = false
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
                                 peopleRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
-                                searchGroups.visible = false
+                                searchGroups.visible = true
+                                searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_events_hint)
                                 itemView.historyButton.visible = false
                                 actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
@@ -428,7 +444,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                             }
                             else -> {
                                 val explore = content === ContentViewType.HOME_EXPLORE
-                                eventsRecyclerView.visible = true
+                                eventsRecyclerView.visible = state.hasEvents
                                 hubsRecyclerView.visible = state.hasPlaces
                                 actionRecyclerView.visible = state.hasGroupActions
                                 suggestionsRecyclerView.visible = false//state.hasSuggestions && explore
@@ -436,12 +452,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsRecyclerView.visible = true
                                 eventsHeader.visible = state.hasEvents
                                 groupsHeader.visible = true
-                                if (searchGroups.visible.not()) {
-                                    searchGroups.visible = true
-                                }
-                                on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint).let { hint ->
-                                    if (searchGroups.hint != hint) searchGroups.hint = hint
-                                }
+                                searchGroups.visible = true
+                                searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
                                 itemView.historyButton.visible = explore
                                 actionHeader.visible = state.hasGroupActions
                                 itemView.suggestionsHeader.visible = false//state.hasSuggestions && explore
@@ -494,15 +506,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         }
 
         on<DisposableHandler>().add(queryBuilder
-//                .sort(on<SortHandler>().sortGroups(true))
+                .sort(on<SortHandler>().sortGroups(true))
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { groups ->
                     on<SearchGroupHandler>().setGroups(groups)
-                    showGroupActions(groups)
-                    on<TimerHandler>().post(Runnable { groupsRecyclerView.scrollBy(0, 0) })
                 })
     }
 
@@ -613,9 +623,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                     state.hasGroupActions = groupActions.isNotEmpty()
                     stateObservable.onNext(state)
                     on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
-                }.also {
-                    on<DisposableHandler>().add(it)
-                }
+                }.also { on<DisposableHandler>().add(it) }
     }
 
     private fun createGroup(groupName: String?) {

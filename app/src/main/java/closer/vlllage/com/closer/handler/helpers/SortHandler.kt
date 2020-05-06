@@ -30,9 +30,12 @@ class SortHandler constructor(private val on: On) {
 
     fun sortGroups(privateFirst: Boolean = true): Comparator<Group> {
         return Comparator { group, groupOther ->
-            if (!on<DistanceHandler>().isPhoneNearGroup(group) && on<DistanceHandler>().isPhoneNearGroup(groupOther))
+            val nearGroup = on<DistanceHandler>().isPhoneNearGroup(group)
+            val nearGroupOther = on<DistanceHandler>().isPhoneNearGroup(groupOther)
+
+            if (!nearGroup && nearGroupOther)
                 1
-            else if (!on<DistanceHandler>().isPhoneNearGroup(groupOther) && on<DistanceHandler>().isPhoneNearGroup(group))
+            else if (!nearGroupOther && nearGroup)
                 -1
             else if (privateFirst && group.isPublic && !groupOther.isPublic)
                 1

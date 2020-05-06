@@ -57,10 +57,6 @@ class GroupActivity : CircularRevealActivity() {
             view.settingsButton.visible = true
         }
 
-        on<TimerHandler>().postDisposable(Runnable {
-            on<RefreshHandler>().refreshAll() // TODO needs to be scoped better
-        }, 1625) // TODO Shouldn't be a delay
-
         handleIntent(intent)
 
         on<GroupToolbarHandler>().attach(view.eventToolbar) {
@@ -72,7 +68,6 @@ class GroupActivity : CircularRevealActivity() {
             val finalHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.profilePhotoCollapsedHeight)
 
             ObjectAnimator.ofFloat(0f, 1f).apply {
-
                 addUpdateListener {
                     val params = view.profilePhoto.layoutParams as ConstraintLayout.LayoutParams
                     params.apply {

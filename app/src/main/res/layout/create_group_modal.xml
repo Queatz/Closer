@@ -14,7 +14,6 @@
         android:focusedByDefault="true"
         android:selectAllOnFocus="true"
         android:imeOptions="actionGo"
-        android:textAlignment="center"
         android:paddingTop="16dp"
         android:padding="8dp"
         android:maxLength="24"
