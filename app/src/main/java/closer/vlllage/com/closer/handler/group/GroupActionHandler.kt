@@ -62,7 +62,7 @@ class GroupActionHandler constructor(private val on: On) {
         }
     }
 
-    fun show(show: Boolean = true, immediate: Boolean = false) {
+    fun show(show: Boolean, immediate: Boolean = false) {
         var show = show
         if (animator == null) {
             return
