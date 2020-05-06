@@ -8,6 +8,22 @@
     android:padding="4dp"
     android:clipToPadding="false">
 
+    <View
+        android:id="@+id/markerLocation"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="4dp"
+        android:translationY="-8dp"
+        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@+id/click"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="4dp"
+        android:rotation="45"
+        android:background="@drawable/map_bubble_knob_map_ambient_fuzzy"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/click"
         android:layout_width="match_parent"
@@ -35,21 +51,5 @@
             tools:listitem="@layout/map_bubble_proxy_item"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/markerLocation"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-8dp"
-        android:layout_marginBottom="4dp"
-        android:layout_weight="1"
-        app:layout_constraintTop_toBottomOf="@+id/click"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:elevation="4dp"
-        android:rotation="45"
-        android:background="@drawable/map_bubble_knob_map_ambient_fuzzy"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,13 +2,6 @@
 Incoming
 ========
 
-    [X] Closer KISHOR location is blank
-    [X] Closer Add new place should cap words when entering name
-    [X] Closer @ mention suggestions start off with no height
-    [X] Closer show your places section when you have private places
-    [ ] Closer fix jumpiness when searching for public groups
-    [ ] Closer wrong window opens when opening reactions
-    [ ] Private hubs show on map not working
 
 ❤ Next ❤
 ========

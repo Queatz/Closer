@@ -237,14 +237,15 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         holder.day.clipToOutline = true
 
         val distance = .12f
+        val dateStart = Date(date.time + 1)
+        val dateEnd = Date(date.time + TimeUnit.DAYS.toMillis(1) - 1)
 
         holder.disposableGroup.add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { cameraPosition ->
             holder.eventsObservable?.let { holder.disposableGroup.dispose(it) }
             holder.eventsObservable = on<StoreHandler>().store.box(Event::class).query(
-                    Event_.startsAt.between(date, Date(date.time + TimeUnit.DAYS.toMillis(1))).or(
-                            Event_.endsAt.between(date, Date(date.time + TimeUnit.DAYS.toMillis(1)))
+                    Event_.startsAt.between(dateStart, dateEnd).or(Event_.endsAt.between(dateStart, dateEnd)
                     ).and(
                             Event_.latitude.between(cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance).and(
                                     Event_.longitude.between(cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
