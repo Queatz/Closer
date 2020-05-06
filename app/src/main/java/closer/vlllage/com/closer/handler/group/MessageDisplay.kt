@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
 import androidx.core.view.updateLayoutParams
@@ -16,6 +17,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.phone.NameCacheHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
@@ -71,14 +73,14 @@ class MessageDisplay constructor(private val on: On) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
-        val contactName = on<NameHandler>().getName(getPhone(groupMessage.from))
+        loadName(groupMessage.from!!, holder.name) {
+            on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_post, it)
+        }
 
         val post = jsonObject.get("post").asJsonObject
         val sections = post.get("sections").asJsonArray
 
         holder.message.visible = false
-        holder.name.visible = true
-        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_post, contactName)
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
         holder.action.visible = false
@@ -119,14 +121,13 @@ class MessageDisplay constructor(private val on: On) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
-        val phone = getPhone(groupMessage.from)
-        val contactName = on<NameHandler>().getName(phone)
-
         val action = jsonObject.get("action").asJsonObject
-        holder.name.visible = true
-        holder.name.text = contactName + " " + action.get("intent").asString
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
+
+        loadName(groupMessage.from!!, holder.name) {
+            it + " " + action.get("intent").asString
+        }
 
         val comment = action.get("comment").asString
         if (comment.isNullOrBlank()) {
@@ -138,18 +139,17 @@ class MessageDisplay constructor(private val on: On) {
         }
         holder.action.visible = true
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.profile)
-        holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
+        holder.action.setOnClickListener { on<NavigationHandler>().showProfile(groupMessage.from!!) }
     }
 
     private fun displayGroupAction(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
-        val phone = getPhone(groupMessage.from)
-        val contactName = on<NameHandler>().getName(phone)
+        loadName(groupMessage.from!!, holder.name) {
+            on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_group_action, it)
+        }
 
-        holder.name.visible = true
-        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_group_action, contactName)
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
@@ -167,12 +167,11 @@ class MessageDisplay constructor(private val on: On) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
-        val phone = getPhone(groupMessage.from)
-        val contactName = on<NameHandler>().getName(phone)
+        loadName(groupMessage.from!!, holder.name) {
+            on<ResourcesHandler>().resources.getString(R.string.phone_posted_a_review, it)
+        }
 
         val review = jsonObject.get("review").asJsonObject
-        holder.name.visible = true
-        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_posted_a_review, contactName)
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
@@ -192,7 +191,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.action.visible = true
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.profile)
-        holder.action.setOnClickListener { on<NavigationHandler>().showProfile(phone!!.id!!) }
+        holder.action.setOnClickListener { on<NavigationHandler>().showProfile(groupMessage.from!!) }
     }
 
     private fun displayGroupMessage(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
@@ -200,20 +199,14 @@ class MessageDisplay constructor(private val on: On) {
         holder.messageLayout.visible = true
 
         holder.action.visible = false
-        holder.name.visible = true
         holder.message.visible = true
         holder.message.gravity = Gravity.START
 
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
-        var phone: Phone? = null
+        loadName(groupMessage.from!!, holder.name) { it }
 
-        if (groupMessage.from != null) {
-            phone = getPhone(groupMessage.from)
-        }
-
-        holder.name.text = on<NameHandler>().getName(phone)
         holder.message.text = on<GroupMessageParseHandler>().parseText(holder.message, groupMessage.text!!)
 
         if (EmojiManager.isOnlyEmojis(groupMessage.text)) {
@@ -237,15 +230,12 @@ class MessageDisplay constructor(private val on: On) {
 
         val event = on<JsonHandler>().from(jsonObject.get("event"), Event::class.java)
 
-        holder.name.visible = true
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
-        val phone = getPhone(groupMessage.from)
-
-        val contactName = on<NameHandler>().getName(phone)
-
-        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_an_event, contactName)
+        loadName(groupMessage.from!!, holder.name) {
+            on<ResourcesHandler>().resources.getString(R.string.phone_shared_an_event, it)
+        }
 
         holder.message.visible = true
         holder.message.gravity = Gravity.START
@@ -264,15 +254,12 @@ class MessageDisplay constructor(private val on: On) {
 
         val group = on<JsonHandler>().from(jsonObject.get("group"), Group::class.java)
 
-        holder.name.visible = true
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
-        val phone = getPhone(groupMessage.from)
-
-        val contactName = on<NameHandler>().getName(phone)
-
-        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_group, contactName)
+        loadName(groupMessage.from!!, holder.name) {
+            on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_group, it)
+        }
 
         holder.message.visible = true
         holder.message.gravity = Gravity.START
@@ -292,18 +279,15 @@ class MessageDisplay constructor(private val on: On) {
         val suggestion: Suggestion = on<JsonHandler>().from(jsonObject.get("suggestion"), Suggestion::class.java)
         val suggestionHasNoName = suggestion.name.isNullOrBlank()
 
-        holder.name.visible = true
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
 
-        val phone = getPhone(groupMessage.from)
-
-        val contactName = on<NameHandler>().getName(phone)
-
-        if (suggestion.id.isNullOrBlank()) {
-            holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_location, contactName)
-        } else {
-            holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_suggestion, contactName)
+        loadName(groupMessage.from!!, holder.name) {
+            if (suggestion.id.isNullOrBlank()) {
+                on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_location, it)
+            } else {
+                on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_suggestion, it)
+            }
         }
 
         if (suggestionHasNoName) {
@@ -325,12 +309,11 @@ class MessageDisplay constructor(private val on: On) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
 
-        val phone = getPhone(groupMessage.from)
-        val contactName = on<NameHandler>().getName(phone)
+        loadName(groupMessage.from!!, holder.name) {
+            on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_photo, it)
+        }
 
         val photo = jsonObject.get("photo").asString + "?s=500"
-        holder.name.visible = true
-        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_photo, contactName)
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
         holder.message.visible = false
@@ -399,6 +382,20 @@ class MessageDisplay constructor(private val on: On) {
         ) {
             toggleMessageActionLayout(groupMessage, holder, true, shorthand = true)
         }
+    }
+
+    private fun loadName(phoneId: String, textView: TextView, callback: (String) -> String) {
+        on<NameCacheHandler>()[phoneId]?.let {
+            textView.visible = true
+            textView.text = callback(it)
+            return@loadName
+        }
+
+        textView.visible = false
+        on<NameHandler>().getNameAsync(phoneId).subscribe({
+            textView.visible = true
+            textView.text = callback(it)
+        }, {}).also { on<DisposableHandler>().add(it) }
     }
 
     fun toggleMessageActionLayout(groupMessage: GroupMessage, holder: GroupMessageViewHolder, show: Boolean? = null, shorthand: Boolean = false) {
@@ -532,15 +529,6 @@ class MessageDisplay constructor(private val on: On) {
                     on<DefaultAlerts>().thatDidntWork()
                 }))
         toggleMessageActionLayout(groupMessage, holder)
-    }
-
-    private fun getPhone(phoneId: String?): Phone? {
-        return if (phoneId == null)
-            null
-        else on<StoreHandler>().store.box(Phone::class).query()
-                .equal(Phone_.id, phoneId)
-                .build()
-                .findFirst()
     }
 
     private fun getGroup(groupId: String?): Group? {
