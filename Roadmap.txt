@@ -2,6 +2,10 @@
 Incoming
 ========
 
+[ ] Closer name cache
+[ ] Closer learn someone new group goes blank
+[ ] Closer Mention converter reuse generated textview
+[ ] Closer check message title gen async
 
 ❤ Next ❤
 ========
