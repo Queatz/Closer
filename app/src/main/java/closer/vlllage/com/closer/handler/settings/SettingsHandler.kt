@@ -25,7 +25,7 @@ class SettingsHandler constructor(private val on: On) : OnLifecycle {
     }
 
     operator fun get(userLocalSetting: UserLocalSetting): Boolean {
-        return sharedPreferences.getBoolean(userLocalSetting.name, false)
+        return sharedPreferences.getBoolean(userLocalSetting.name, userLocalSetting.defaultValue)
     }
 
     operator fun set(userLocalSetting: UserLocalSetting, newValue: Boolean) {

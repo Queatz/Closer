@@ -11,6 +11,7 @@ import closer.vlllage.com.closer.extensions.visible
 
 class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout, private var initialHeight: Int) {
     private var animator: ValueAnimator? = null
+    private var animatorIsHiding: Boolean = false
 
     fun cancel() {
         animator?.removeAllListeners();
@@ -19,10 +20,11 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
     }
 
     fun show(show: Boolean, immediate: Boolean = true) {
-        cancel()
-
         container.doOnAttach {
             if (show) {
+                if (!animatorIsHiding) cancel()
+                val preexistingAnimator = animator
+                animatorIsHiding = false
                 animator = ValueAnimator.ofInt(0, initialHeight).apply {
                     duration = 500
                     interpolator = AccelerateDecelerateInterpolator()
@@ -36,6 +38,8 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
                         private var cancelled: Boolean = false
 
                         override fun onAnimationStart(animation: Animator) {
+                            preexistingAnimator?.removeAllListeners()
+                            preexistingAnimator?.cancel()
                             if (cancelled) return
                             container.visible = true
                         }
@@ -54,7 +58,9 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
                     start()
                 }
             } else if (container.visible) {
+                cancel()
                 initialHeight = initialHeight.coerceAtLeast(container.measuredHeight)
+                animatorIsHiding = true
                 animator = ValueAnimator.ofInt(container.measuredHeight, 0).apply {
                     duration = 195
                     interpolator = DecelerateInterpolator()
@@ -64,7 +70,6 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
                     }
                     addListener(object : Animator.AnimatorListener {
                         override fun onAnimationStart(animation: Animator) {
-                            this@RevealAnimatorForConstraintLayout.cancel()
                             container.visible = true
                         }
 
