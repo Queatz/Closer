@@ -22,6 +22,21 @@ class AlertHandler constructor(private val on: On) {
             return
         }
 
+        if (alertConfig.message != null) {
+            on<GroupMessageParseHandler>().parseString(alertConfig.message!!, prefix = "").subscribe({
+                show(alertConfig, it)
+            }, {
+                show(alertConfig, alertConfig.message)
+            }).also {
+                on<DisposableHandler>().add(it)
+            }
+        } else {
+            show(alertConfig, alertConfig.message)
+        }
+    }
+
+    private fun show(alertConfig: AlertConfig, parsedMessage: String?) {
+
         val dialogBuilder = AlertDialog.Builder(on<ActivityHandler>().activity!!, alertConfig.theme)
         var textView: TextView? = null
         if (alertConfig.layoutResId != null) {
@@ -57,8 +72,8 @@ class AlertHandler constructor(private val on: On) {
             }
         }
 
-        if (alertConfig.message != null) {
-            dialogBuilder.setMessage(on<GroupMessageParseHandler>().parseString(alertConfig.message!!, prefix = ""))
+        if (parsedMessage != null) {
+            dialogBuilder.setMessage(parsedMessage)
         }
 
         if (alertConfig.title != null) {

@@ -25,10 +25,7 @@ import closer.vlllage.com.closer.extensions.fromJson
 import closer.vlllage.com.closer.extensions.toJson
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
-import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.handler.helpers.JsonHandler
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.Val
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
@@ -134,21 +131,24 @@ class NotificationHandler constructor(private val on: On) {
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
-            created = Date()
-            updated = Date()
-            name = on<ResourcesHandler>().resources.getString(R.string.group_message_notification, messageFrom, groupName)
-            message = on<GroupMessageParseHandler>().parseString(text)
-            intentTarget = intent.component!!.className
-            intentAction = intent.action
-            intentBundle = intent.extras?.toJson(on())
-            on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
-        }!!
+        on<DisposableHandler>().add(on<GroupMessageParseHandler>().parseString(text).subscribe({ parsedText ->
+            val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
+                created = Date()
+                updated = Date()
+                name = on<ResourcesHandler>().resources.getString(R.string.group_message_notification, messageFrom, groupName)
+                message = parsedText
+                intentTarget = intent.component!!.className
+                intentAction = intent.action
+                intentBundle = intent.extras?.toJson(on())
+                on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
+            }!!
 
-        show(contentIntent, null, null,
-                notification.name!!,
-                notification.message!!,
-                "$groupId/message", !java.lang.Boolean.valueOf(isPassive))
+            show(contentIntent, null, null,
+                    notification.name!!,
+                    notification.message!!,
+                    "$groupId/message", !java.lang.Boolean.valueOf(isPassive))
+        }, {}))
+
     }
 
     fun showGroupMessageReactionNotification(from: String, groupName: String, reaction: String, groupId: String, isPassive: String?) {

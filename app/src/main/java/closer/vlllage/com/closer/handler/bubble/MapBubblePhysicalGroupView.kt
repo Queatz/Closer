@@ -8,13 +8,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ImageHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
+import io.reactivex.android.schedulers.AndroidSchedulers
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
-import kotlinx.android.synthetic.main.text_item.view.*
 
 class MapBubblePhysicalGroupView constructor(private val on: On) {
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubblePhysicalGroupClickListener): View {
@@ -33,7 +33,17 @@ class MapBubblePhysicalGroupView constructor(private val on: On) {
         val name = view.findViewById<TextView>(R.id.name)
         if ((mapBubble.tag != null) and (mapBubble.tag is Group)) {
             val group = mapBubble.tag as Group
-            name.text = on<PhysicalGroupHandler>().physicalGroupName(group)
+
+            on<PhysicalGroupHandler>().physicalGroupName((mapBubble.tag as Group))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        if (name.isAttachedToWindow) {
+                            name.text = it
+                        }
+                    }, {}).also {
+                        on<DisposableHandler>().add(it)
+                    }
+
             if (group.photo != null) {
                 margin /= 4
                 size = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupPhoto)

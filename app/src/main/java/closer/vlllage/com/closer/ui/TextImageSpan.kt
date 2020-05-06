@@ -5,19 +5,23 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.text.style.ImageSpan
+import android.text.style.DynamicDrawableSpan
 import java.lang.ref.WeakReference
 
 
-class TextImageSpan(drawable: BitmapDrawable) : ImageSpan(drawable) {
+class TextImageSpan(private var bitmapDrawable: BitmapDrawable) : DynamicDrawableSpan() {
 
     private var mDrawableRef: WeakReference<Drawable>? = null
+
+    fun update(drawable: BitmapDrawable) {
+        bitmapDrawable = drawable
+        mDrawableRef = null
+    }
 
     override fun getSize(paint: Paint, text: CharSequence?,
                          start: Int, end: Int,
                          fm: Paint.FontMetricsInt?): Int {
-        val d = cachedDrawable
-        val rect: Rect = d!!.bounds
+        val rect: Rect = cachedDrawable.bounds
         if (fm != null) {
             val pfm: Paint.FontMetricsInt = paint.fontMetricsInt
             // keep it the same as paint's fm
@@ -33,17 +37,15 @@ class TextImageSpan(drawable: BitmapDrawable) : ImageSpan(drawable) {
     override fun draw(canvas: Canvas, text: CharSequence?,
                       start: Int, end: Int, x: Float,
                       top: Int, y: Int, bottom: Int, paint: Paint) {
-        val b = cachedDrawable
         canvas.save()
         val transY = y + paint.fontMetrics.top
         canvas.translate(x, transY)
-        b!!.draw(canvas)
+        cachedDrawable.draw(canvas)
         canvas.restore()
     }
 
     // Redefined locally because it is a private member from DynamicDrawableSpan
-    private val cachedDrawable: Drawable?
-        get() {
+    private val cachedDrawable: Drawable get() {
             val wr: WeakReference<Drawable>? = mDrawableRef
             var d: Drawable? = null
             if (wr != null) d = wr.get()
@@ -53,4 +55,6 @@ class TextImageSpan(drawable: BitmapDrawable) : ImageSpan(drawable) {
             }
             return d
         }
+
+    override fun getDrawable() = bitmapDrawable
 }

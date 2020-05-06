@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
+import io.reactivex.Single
 
 class PhysicalGroupHandler constructor(private val on: On) {
 
@@ -39,10 +40,14 @@ class PhysicalGroupHandler constructor(private val on: On) {
         return mapBubble
     }
 
-    fun physicalGroupName(group: Group) = on<Val>().of(group.name, on<StoreHandler>().store.box(GroupMessage::class).query()
-            .equal(GroupMessage_.to, group.id ?: "")
-            .order(GroupMessage_.updated)
-            .build().findFirst()?.text?.let { on<GroupMessageParseHandler>().parseString(it) }?.let { "\"${it}\"" } ?: on<ResourcesHandler>().resources.getString(R.string.talk_here))
+    fun physicalGroupName(group: Group): Single<String> = when {
+        group.name.isNullOrBlank() -> on<StoreHandler>().store.box(GroupMessage::class).query()
+                .equal(GroupMessage_.to, group.id ?: "")
+                .order(GroupMessage_.updated)
+                .build().findFirst()?.text?.let { on<GroupMessageParseHandler>().parseString(it).map { "\"${it}\"" } }
+                    ?: Single.just(on<ResourcesHandler>().resources.getString(R.string.talk_here))
+        else -> Single.just(group.name)
+    }
 
     private fun openGroup(groupId: String) {
         on<GroupActivityTransitionHandler>().showGroupMessages(null, groupId, true)

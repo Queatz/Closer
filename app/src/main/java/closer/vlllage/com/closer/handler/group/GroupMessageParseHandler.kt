@@ -18,11 +18,11 @@ import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
-import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
-import closer.vlllage.com.closer.store.models.Phone_
 import closer.vlllage.com.closer.ui.TextImageSpan
 import com.queatz.on.On
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.regex.Pattern
 
 class GroupMessageParseHandler constructor(private val on: On) {
@@ -30,35 +30,34 @@ class GroupMessageParseHandler constructor(private val on: On) {
     private val mentionPattern = Pattern.compile("@[0-9]+")
 
     private val defaultMentionConverter: MentionConverter
-        get() = { mention ->
-            val phoneList = on<StoreHandler>().store.box(Phone::class).query().equal(Phone_.id, mention).build().find()
-            if (phoneList.isEmpty()) {
-                on<ResourcesHandler>().resources.getString(R.string.unknown)
-            }
-            else {
-                on<NameHandler>().getName(phoneList[0])
-            }
-        }
+        get() = { on<NameHandler>().getNameAsync(it) }
 
     private val defaultMentionClickListener: OnMentionClickListener
-        get() = { mention ->
-            on<NavigationHandler>().showProfile(mention)
-        }
+        get() = { on<NavigationHandler>().showProfile(it) }
 
-    @JvmOverloads
-    fun parseString(groupMessage: String, mentionConverter: MentionConverter = defaultMentionConverter, prefix: String = ""): String {
+    fun parseString(groupMessage: String, mentionConverter: MentionConverter = defaultMentionConverter, prefix: String = ""): Single<String> {
         val matcher = mentionPattern.matcher(groupMessage)
+        var found = false
+        val stringBuilder = StringBuffer()
 
-        val builder = StringBuffer()
-        while (matcher.find()) {
-            matcher.appendReplacement(builder, "${prefix}${mentionConverter.invoke(matcher.group().substring(1))}")
-        }
-        matcher.appendTail(builder)
+        return Single.just(stringBuilder)
+                .flatMap {
+                    found = matcher.find()
 
-        return builder.toString()
+                    if (found) {
+                        mentionConverter.invoke(matcher.group().substring(1)).doOnSuccess { convertedName ->
+                            matcher.appendReplacement(it, "$prefix$convertedName")
+                        }.map { _ -> it }
+                    } else {
+                        Single.just(it)
+                    }
+                }
+                .repeatUntil { !found }
+                .reduce(stringBuilder) { _, _ -> stringBuilder }
+                .map { matcher.appendTail(it).toString() }
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
-    @JvmOverloads
     fun parseText(editText: TextView, groupMessage: String, mentionConverter: MentionConverter = defaultMentionConverter, onMentionClickListener: OnMentionClickListener = defaultMentionClickListener): CharSequence {
         val builder = SpannableStringBuilder()
         builder.append(groupMessage)
@@ -68,7 +67,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
         while (matcher.find()) {
             val match = matcher.group()
             val mention = match.substring(1)
-            val span = makeImageSpan(mentionConverter.invoke(mention), editText)
+            val span = makeImageSpan(on<ResourcesHandler>().resources.getString(R.string.unknown), editText, mentionConverter.invoke(mention))
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
                     onMentionClickListener.invoke(mention)
@@ -89,7 +88,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
         }
 
         editText.text.replace(editText.selectionStart - replaceString.length, editText.selectionStart, "@" + mention.id!!)
-        editText.text.setSpan(makeImageSpan(mention.name!!, editText),
+        editText.text.setSpan(makeImageSpan(on<NameHandler>().getName(mention), editText),
                 editText.selectionStart - mention.id!!.length - 1, editText.selectionStart,
                 SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -97,7 +96,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
     fun isMentionSelected(editText: EditText): Boolean {
         val text = editText.text
         val styleSpans = text.getSpans(editText.selectionStart, editText.selectionEnd, ImageSpan::class.java)
-        return styleSpans.size > 0
+        return styleSpans.isNotEmpty()
     }
 
     fun deleteMention(editText: EditText): Boolean {
@@ -118,11 +117,26 @@ class GroupMessageParseHandler constructor(private val on: On) {
         return true
     }
 
-    fun makeImageSpan(name: String, editText: TextView): ImageSpan {
+    fun makeImageSpan(name: String, editText: TextView, single: Single<String>? = null): TextImageSpan {
+        return TextImageSpan(makeBitmap(name, editText)).also { span ->
+            single?.observeOn(AndroidSchedulers.mainThread())
+                    ?.subscribe({
+                        span.update(makeBitmap(it, editText))
+                        editText.requestLayout()
+                        editText.invalidate()
+
+                        // stupid hack
+                        editText.includeFontPadding = !editText.includeFontPadding
+                        editText.includeFontPadding = !editText.includeFontPadding
+                    }, {})
+        }
+    }
+
+    fun makeBitmap(name: String, editText: TextView): BitmapDrawable {
         val textView = createContactTextView(name, editText)
         val bitmapDrawable = convertViewToDrawable(textView)
         bitmapDrawable.setBounds(0, 0, bitmapDrawable.intrinsicWidth, bitmapDrawable.intrinsicHeight)
-        return TextImageSpan(bitmapDrawable)
+        return bitmapDrawable
     }
 
     fun extractName(text: Editable, position: Int): CharSequence? {
@@ -167,5 +181,5 @@ class GroupMessageParseHandler constructor(private val on: On) {
     }
 }
 
-typealias MentionConverter = (mention: String) -> String
+typealias MentionConverter = (mention: String) -> Single<String>
 typealias OnMentionClickListener = (mention: String) -> Unit

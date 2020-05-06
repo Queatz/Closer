@@ -10,14 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
-import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
-import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> Unit)
     : PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder>(on) {
@@ -36,6 +34,9 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
 
     override fun onBindViewHolder(holder: ProxyMapBubbleViewHolder, position: Int) {
         val mapBubble = items[position]
+        holder.on = On(on).apply {
+            use<DisposableHandler>()
+        }
 
         when (mapBubble.type) {
             BubbleType.STATUS -> {
@@ -99,7 +100,13 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                     holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
                 }
 
-                holder.name.text = on<PhysicalGroupHandler>().physicalGroupName((mapBubble.tag as Group))
+                on<PhysicalGroupHandler>().physicalGroupName((mapBubble.tag as Group))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                    holder.name.text = it
+                }, {}).also {
+                    holder.on<DisposableHandler>().add(it)
+                }
             }
             BubbleType.EVENT -> {
                 holder.click.setBackgroundResource(R.drawable.clickable_red_8dp)
@@ -128,6 +135,10 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
         }
     }
 
+    override fun onViewRecycled(holder: ProxyMapBubbleViewHolder) {
+        holder.on.off()
+    }
+
     override fun getItemCount() = items.size
 
     inner class ProxyMapBubbleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -136,5 +147,6 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
         var background: ImageView = itemView.findViewById(R.id.background)
         var name: TextView = itemView.findViewById(R.id.name)
         var info: TextView = itemView.findViewById(R.id.info)
+        lateinit var on: On
     }
 }
