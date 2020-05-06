@@ -8,6 +8,7 @@ class JsonHandler constructor(private val on: On) {
 
     private val gson = GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            .serializeNulls()
             .create()
 
     fun <T> from(json: String, clazz: Class<T>): T {

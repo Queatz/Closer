@@ -99,7 +99,7 @@ class GroupMessagesHandler constructor(private val on: On) {
 
         updateSendButton()
         on<GroupHandler>().onGroupChanged { group ->
-            replyMessage.setText(on<GroupMessageParseHandler>().parseText(replyMessage, on<GroupDraftHandler>().getDraft(group)!!))
+            replyMessage.setText(on<GroupMessageParseHandler>().parseText(replyMessage, on<GroupDraftHandler>().getDraft(group.id!!)?.message ?: ""))
             updateSendButton()
         }
 
@@ -119,7 +119,7 @@ class GroupMessagesHandler constructor(private val on: On) {
                 updateSendButton()
 
                 on<GroupHandler>().group?.let { group ->
-                    on<GroupDraftHandler>().saveDraft(group, text.toString())
+                    on<GroupDraftHandler>().saveDraft(group.id!!, text.toString())
                     on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, replyMessage.selectionStart))
                 }
 

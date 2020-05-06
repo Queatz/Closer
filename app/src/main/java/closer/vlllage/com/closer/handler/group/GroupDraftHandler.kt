@@ -7,36 +7,30 @@ import closer.vlllage.com.closer.store.models.GroupDraft
 import closer.vlllage.com.closer.store.models.GroupDraft_
 
 class GroupDraftHandler constructor(private val on: On) {
-    fun saveDraft(group: Group, message: String) {
+    fun saveDraft(groupId: String, message: String? = null, post: String? = null) {
         on<StoreHandler>().store.box(GroupDraft::class)
                 .query()
-                .equal(GroupDraft_.groupId, group.id!!)
+                .equal(GroupDraft_.groupId, groupId)
                 .build().subscribe().single()
                 .observer { groupDrafts ->
                     val groupDraft: GroupDraft
 
                     if (groupDrafts.isEmpty()) {
-                        groupDraft = GroupDraft().apply {
-                            groupId = group.id
-                            this.message = message
-                        }
+                        groupDraft = GroupDraft().apply { this.groupId = groupId }
                     } else {
                         groupDraft = groupDrafts[0]
                     }
 
-                    groupDraft.message = message
+                    message?.let { groupDraft.message = it }
+                    post?.let { groupDraft.post = it }
+
                     on<StoreHandler>().store.box(GroupDraft::class).put(groupDraft)
                 }
     }
 
-    fun getDraft(group: Group): String? {
-        val draft = on<StoreHandler>().store.box(GroupDraft::class)
-                .query()
-                .equal(GroupDraft_.groupId, group.id!!)
-                .build()
-                .findFirst()
-
-        return draft?.message ?: ""
-
-    }
+    fun getDraft(groupId: String) = on<StoreHandler>().store.box(GroupDraft::class)
+            .query()
+            .equal(GroupDraft_.groupId, groupId)
+            .build()
+            .findFirst()
 }

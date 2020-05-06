@@ -8,4 +8,5 @@ class GroupDraft {
     @Id var objectBoxId: Long = 0
     var groupId: String? = null
     var message: String? = null
+    var post: String? = null
 }

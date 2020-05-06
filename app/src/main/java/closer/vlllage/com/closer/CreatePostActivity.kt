@@ -2,6 +2,7 @@ package closer.vlllage.com.closer
 
 import android.os.Bundle
 import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.group.GroupDraftHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler
 import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler
 import closer.vlllage.com.closer.handler.helpers.*
@@ -9,10 +10,13 @@ import closer.vlllage.com.closer.handler.post.CreatePostActionType
 import closer.vlllage.com.closer.handler.post.CreatePostHeaderAdapter
 import closer.vlllage.com.closer.handler.post.PostSection
 import closer.vlllage.com.closer.store.models.Group
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 
 class CreatePostActivity : ListActivity() {
+
+    private var saved = false
 
     lateinit var adapter: CreatePostHeaderAdapter
 
@@ -31,17 +35,6 @@ class CreatePostActivity : ListActivity() {
         }
 
         recyclerView.itemAnimator = null
-
-        closeCallback = {
-            on<AlertHandler>().make().apply {
-                message = getString(R.string.discard_post)
-                positiveButton = getString(R.string.yes_discard)
-                negativeButton = getString(R.string.nope)
-                positiveButtonCallback = { finish() }
-                show()
-            }
-            false
-        }
 
         adapter = CreatePostHeaderAdapter(on) {
             when (it.action) {
@@ -85,12 +78,10 @@ class CreatePostActivity : ListActivity() {
                     if (!verify()) {
                         on<DefaultAlerts>().message(R.string.blank_sections_error)
                     } else {
+                        saved = true
                         on<GroupMessageAttachmentHandler>().sharePost(groupId!!, adapter.items.map { it.attachment })
                         finish()
                     }
-                }
-                else -> {
-                    on<DefaultAlerts>().thatDidntWork()
                 }
             }
         }
@@ -104,6 +95,13 @@ class CreatePostActivity : ListActivity() {
         }).also {
             on<DisposableHandler>().add(it)
         }
+    }
+
+    override fun onDestroy() {
+        if (!saved) {
+            on<GroupDraftHandler>().saveDraft(groupId!!, post = on<JsonHandler>().to(adapter.items.map { it.attachment }))
+        }
+        super.onDestroy()
     }
 
     private fun verify() = adapter.items.all {
@@ -122,9 +120,9 @@ class CreatePostActivity : ListActivity() {
         adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.post_in, groupName))
         adapter.groupName = groupName
 
-        adapter.items = listOf(
-                on<JsonHandler>().from("{\"header\":{\"text\":\"\"}}", JsonObject::class.java)
-        ).map { PostSection(on<Val>().rndId(), it) }
+        adapter.items = (on<GroupDraftHandler>().getDraft(group.id!!)?.post?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.toList()?.map { it.asJsonObject } ?: listOf(
+                on<JsonHandler>().from( "{\"header\":{\"text\":\"\"}}", JsonObject::class.java)
+        )).map { PostSection(on<Val>().rndId(), it) }
 
         recyclerView.adapter = adapter
     }

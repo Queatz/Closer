@@ -379,7 +379,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             holder.replyMessage.removeTextChangedListener(holder.textWatcher)
         }
 
-        holder.replyMessage.setText(on<GroupMessageParseHandler>().parseText(holder.replyMessage, on<GroupDraftHandler>().getDraft(group)!!))
+        holder.replyMessage.setText(on<GroupMessageParseHandler>().parseText(holder.replyMessage, on<GroupDraftHandler>().getDraft(group.id!!)?.message ?: ""))
 
         holder.textWatcher = object : TextWatcher {
 
@@ -394,7 +394,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(text: Editable) {
-                on<GroupDraftHandler>().saveDraft(group, text.toString())
+                on<GroupDraftHandler>().saveDraft(group.id!!, text.toString())
                 holder.on<GroupMessageMentionHandler>().showSuggestionsForName(holder.on<GroupMessageParseHandler>().extractName(text, holder.replyMessage.selectionStart))
 
                 if (shouldDeleteMention) {
