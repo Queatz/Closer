@@ -16,6 +16,7 @@ import android.widget.TextView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.phone.NameCacheHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.models.Phone
@@ -67,7 +68,8 @@ class GroupMessageParseHandler constructor(private val on: On) {
         while (matcher.find()) {
             val match = matcher.group()
             val mention = match.substring(1)
-            val span = makeImageSpan(on<ResourcesHandler>().resources.getString(R.string.unknown), editText, mentionConverter.invoke(mention))
+            val span = on<NameCacheHandler>()[mention]?.let { makeImageSpan(it, editText) }
+                    ?: makeImageSpan(on<ResourcesHandler>().resources.getString(R.string.unknown), editText, mentionConverter.invoke(mention))
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
                     onMentionClickListener.invoke(mention)
@@ -81,11 +83,7 @@ class GroupMessageParseHandler constructor(private val on: On) {
     }
 
     fun insertMention(editText: EditText, mention: Phone) {
-        var replaceString = extractName(editText.text, editText.selectionStart)
-
-        if (replaceString == null) {
-            replaceString = ""
-        }
+        var replaceString = extractName(editText.text, editText.selectionStart) ?: ""
 
         editText.text.replace(editText.selectionStart - replaceString.length, editText.selectionStart, "@" + mention.id!!)
         editText.text.setSpan(makeImageSpan(on<NameHandler>().getName(mention), editText),
@@ -117,7 +115,21 @@ class GroupMessageParseHandler constructor(private val on: On) {
         return true
     }
 
-    fun makeImageSpan(name: String, editText: TextView, single: Single<String>? = null): TextImageSpan {
+    fun extractName(text: Editable, position: Int): CharSequence? {
+        if (position > 0 && position <= text.length) {
+            for (i in position - 1 downTo 0) {
+                if (text[i] == '@') {
+                    return text.subSequence(i, position)
+                } else if (Character.isWhitespace(text[i])) {
+                    return null
+                }
+            }
+        }
+
+        return null
+    }
+
+    private fun makeImageSpan(name: String, editText: TextView, single: Single<String>? = null): TextImageSpan {
         return TextImageSpan(makeBitmap(name, editText)).also { span ->
             single?.observeOn(AndroidSchedulers.mainThread())
                     ?.subscribe({
@@ -132,25 +144,11 @@ class GroupMessageParseHandler constructor(private val on: On) {
         }
     }
 
-    fun makeBitmap(name: String, editText: TextView): BitmapDrawable {
+    private fun makeBitmap(name: String, editText: TextView): BitmapDrawable {
         val textView = createContactTextView(name, editText)
         val bitmapDrawable = convertViewToDrawable(textView)
         bitmapDrawable.setBounds(0, 0, bitmapDrawable.intrinsicWidth, bitmapDrawable.intrinsicHeight)
         return bitmapDrawable
-    }
-
-    fun extractName(text: Editable, position: Int): CharSequence? {
-        if (position > 0 && position <= text.length) {
-            for (i in position - 1 downTo 0) {
-                if (text[i] == '@') {
-                    return text.subSequence(i, position)
-                } else if (Character.isWhitespace(text[i])) {
-                    return null
-                }
-            }
-        }
-
-        return null
     }
 
     private fun createContactTextView(text: String, editText: TextView): TextView {

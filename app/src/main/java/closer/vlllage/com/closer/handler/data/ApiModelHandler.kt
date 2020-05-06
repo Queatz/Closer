@@ -3,6 +3,8 @@ package closer.vlllage.com.closer.handler.data
 import closer.vlllage.com.closer.api.models.GoalResult
 import closer.vlllage.com.closer.api.models.LifestyleResult
 import closer.vlllage.com.closer.api.models.PhoneResult
+import closer.vlllage.com.closer.handler.phone.NameCacheHandler
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Goal
 import closer.vlllage.com.closer.store.models.Lifestyle
 import closer.vlllage.com.closer.store.models.Phone
@@ -35,6 +37,7 @@ class ApiModelHandler constructor(private val on: On) {
         phone.lifestyles = phoneResult.lifestyles?.map { it.name ?: "-" }
 
         on<RefreshHandler>().handleLifestylesAndGoals(phoneResult)
+        on<NameCacheHandler>()[phone.id!!] = on<NameHandler>().getName(phone)
 
         return phone
     }
