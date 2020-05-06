@@ -350,7 +350,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             }
         }
 
-        holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
+        holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.talk_here))
         holder.groupName.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupMessages(holder.groupName, group.id) }
         holder.groupName.setOnLongClickListener {
             on<GroupMemberHandler>().changeGroupSettings(group)
