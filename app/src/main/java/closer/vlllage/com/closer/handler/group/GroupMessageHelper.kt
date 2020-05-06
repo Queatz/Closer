@@ -52,6 +52,7 @@ class GroupMessageHelper constructor(private val on: On) {
 
     fun recycleViewHolder(holder: GroupMessageViewHolder) {
         holder.messageActionLayoutRevealAnimator?.cancel()
+        holder.messageActionLayoutRevealAnimator = null
         holder.disposableGroup.clear()
     }
 

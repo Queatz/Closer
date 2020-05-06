@@ -102,21 +102,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messageActionLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/pad"
         android:paddingBottom="@dimen/padHalf"
         app:layout_constraintTop_toBottomOf="@+id/messageLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/reactionsRecyclerView"
+        app:layout_constrainedHeight="true"
+        android:isScrollContainer="true"
         android:visibility="gone"
         tools:visibility="visible">
 
         <HorizontalScrollView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constrainedHeight="true"
             android:scrollbars="none"
             android:overScrollMode="never">
 
@@ -359,6 +360,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
+        tools:visibility="visible"
         tools:listitem="@layout/group_action_item"
         tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:orientation="horizontal" />

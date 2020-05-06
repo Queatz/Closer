@@ -4,6 +4,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.doOnAttach
+import androidx.core.view.doOnLayout
+import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
@@ -25,16 +28,22 @@ class GroupActionHandler constructor(private val on: On) {
 
     private var animator: RevealAnimatorForConstraintLayout? = null
     private var groupActionsDisposable: DataSubscription? = null
+    private var disposableGroup = on<DisposableHandler>().group()
     private var isShowing: Boolean = false
 
     fun attach(container: ConstraintLayout, actionRecyclerView: RecyclerView) {
+        isShowing = false
+        animator?.cancel()
+        groupActionsDisposable?.cancel()
+        disposableGroup.clear()
+
         animator = RevealAnimatorForConstraintLayout(container, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
 
-        on<GroupHandler>().onGroupChanged { group ->
+        on<GroupHandler>().onGroupChanged(disposableGroup) { group ->
             if (groupActionsDisposable != null) {
-                on<DisposableHandler>().dispose(groupActionsDisposable!!)
+                disposableGroup.dispose(groupActionsDisposable!!)
             }
 
             groupActionsDisposable = on<StoreHandler>().store.box(GroupAction::class).query()
@@ -43,17 +52,17 @@ class GroupActionHandler constructor(private val on: On) {
                     .subscribe()
                     .on(AndroidScheduler.mainThread())
                     .observer { groupActions ->
-                        on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
+                        on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions, isShowing)
                         show(groupActions.isNotEmpty(), true)
+                    }.also {
+                        disposableGroup.add(it)
                     }
-
-            on<DisposableHandler>().add(groupActionsDisposable!!)
 
             on<RefreshHandler>().refreshGroupActions(group.id!!)
         }
     }
 
-    fun show(show: Boolean, immediate: Boolean = false) {
+    fun show(show: Boolean = true, immediate: Boolean = false) {
         var show = show
         if (animator == null) {
             return

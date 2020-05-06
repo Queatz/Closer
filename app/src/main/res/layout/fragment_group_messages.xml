@@ -12,15 +12,24 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/pad"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/messagesRecyclerView"
         app:layout_constrainedHeight="true"
         app:layout_constraintHeight_max="120dp"
         android:paddingBottom="@dimen/pad"
         android:overScrollMode="never"
         tools:listitem="@layout/message_item"/>
 
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+        android:id="@+id/messagesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constrainedHeight="false"
+        android:layout_marginBottom="@dimen/pad"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintBottom_toTopOf="@+id/actionFrameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"
+        tools:listitem="@layout/message_item" />
 
     <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/sendButton"
@@ -46,6 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/sendButton"
+        app:layout_constrainedHeight="true"
         android:background="@drawable/clickable_light_flat"
         android:focusedByDefault="false"
         android:hint="@string/say_something"
@@ -65,13 +75,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/actionFrameLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/pad"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@+id/messagesRecyclerView"
         app:layout_constraintBottom_toTopOf="@+id/mentionSuggestionsLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constrainedHeight="true"
+        android:isScrollContainer="true"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:visibility="gone"
@@ -93,13 +104,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mentionSuggestionsLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/pad"
+        app:layout_constrainedHeight="true"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@+id/actionFrameLayout"
         app:layout_constraintBottom_toTopOf="@+id/replyMessage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:isScrollContainer="true"
         android:visibility="gone"
         tools:visibility="visible">
@@ -201,17 +212,5 @@
             android:contentDescription="@string/send_photo" />
 
     </LinearLayout>
-
-    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
-        android:id="@+id/messagesRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/pad"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@+id/actionFrameLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"
-        tools:listitem="@layout/message_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

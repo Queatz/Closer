@@ -410,7 +410,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.messageActionLayoutRevealAnimator!!.show(visible)
 
-        if (visible) { renderMessageActionLayout(groupMessage, holder, shorthand) }
+        if (visible) renderMessageActionLayout(groupMessage, holder, shorthand)
     }
 
     private fun renderMessageActionLayout(groupMessage: GroupMessage, holder: GroupMessageViewHolder, shorthand: Boolean) {

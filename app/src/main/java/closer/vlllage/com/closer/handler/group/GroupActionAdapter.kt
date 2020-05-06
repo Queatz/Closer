@@ -24,10 +24,8 @@ class GroupActionAdapter(on: On,
 
     private val groupActions = mutableListOf<GroupAction>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupActionViewHolder {
-        return GroupActionViewHolder(LayoutInflater.from(parent.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = GroupActionViewHolder(LayoutInflater.from(parent.context)
                 .inflate(if (layout == GroupActionDisplay.Layout.TEXT) R.layout.group_action_item else R.layout.group_action_photo_item, parent, false))
-    }
 
     override fun onBindViewHolder(holder: GroupActionViewHolder, position: Int) {
         on<GroupActionDisplay>().display(holder.itemView, groupActions[position], layout)
@@ -35,7 +33,7 @@ class GroupActionAdapter(on: On,
 
     override fun getItemCount() = groupActions.size
 
-    fun setGroupActions(groupActions: List<GroupAction>) {
+    fun setGroupActions(groupActions: List<GroupAction>, disableAnimation: Boolean = false) {
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun getOldListSize() = this@GroupActionAdapter.groupActions.size
             override fun getNewListSize() = groupActions.size
@@ -50,9 +48,10 @@ class GroupActionAdapter(on: On,
         }, true)
         this.groupActions.clear()
         this.groupActions.addAll(groupActions)
-        diffResult.dispatchUpdatesTo(this)
+
+        if (disableAnimation) notifyDataSetChanged()
+        else diffResult.dispatchUpdatesTo(this)
     }
 
     inner class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }
-

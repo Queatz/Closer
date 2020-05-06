@@ -8,7 +8,6 @@ import android.view.animation.DecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import closer.vlllage.com.closer.extensions.visible
 
-import java.lang.Math.max
 
 class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout, private var initialHeight: Int) {
     private var animator: ValueAnimator? = null
@@ -19,9 +18,8 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
         animator?.cancel()
     }
 
-    @JvmOverloads
     fun show(show: Boolean, immediate: Boolean = true) {
-        animator?.cancel()
+        cancel()
 
         if (!container.isAttachedToWindow) {
             if (attachListener == null) {
@@ -32,7 +30,6 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
                     }
 
                     override fun onViewDetachedFromWindow(v: View) {
-
                     }
                 }
             }
@@ -73,8 +70,8 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
                 override fun onAnimationRepeat(animation: Animator) {}
             })
             animator!!.start()
-        } else if (container.visibility != View.GONE) {
-            initialHeight = max(initialHeight, container.measuredHeight)
+        } else if (container.visible) {
+            initialHeight = initialHeight.coerceAtLeast(container.measuredHeight)
             animator = ValueAnimator.ofInt(container.measuredHeight, 0)
             animator!!.duration = 195
             animator!!.interpolator = DecelerateInterpolator()
