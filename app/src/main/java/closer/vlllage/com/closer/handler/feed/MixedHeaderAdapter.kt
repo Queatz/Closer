@@ -236,7 +236,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
         holder.day.clipToOutline = true
 
-        val distance = .12f
+        val distance = on<HowFar>().about7Miles
         val dateStart = Date(date.time + 1)
         val dateEnd = Date(date.time + TimeUnit.DAYS.toMillis(1) - 1)
 

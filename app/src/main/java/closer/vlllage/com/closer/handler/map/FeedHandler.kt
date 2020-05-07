@@ -77,7 +77,7 @@ class FeedHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .observer { setNotifications(it) })
 
-        val distance = .12f
+        val distance = on<HowFar>().about7Miles
 
         on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE)
                 .flatMap {

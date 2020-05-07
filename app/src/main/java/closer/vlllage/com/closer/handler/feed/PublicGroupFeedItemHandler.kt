@@ -479,10 +479,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun loadEvents(target: LatLng) {
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(Event::class).query()
-                .less(Event_.startsAt, on<TimeAgo>().startOfToday(1))
-                .and()
-                .greater(Event_.endsAt, Date())
+        val distance = on<HowFar>().about7Miles
+
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Event::class).query(
+                Event_.startsAt.less(on<TimeAgo>().startOfToday(1))
+                        .and(Event_.endsAt.greater(Date()))
+                        .and(Event_.latitude.between(target.latitude - distance, target.latitude + distance)
+                        .and(Event_.longitude.between(target.longitude - distance, target.longitude + distance))))
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
@@ -493,13 +496,15 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun loadGroups(target: LatLng) {
-        val distance = .12f
+        val distance = on<HowFar>().about7Miles
 
         val queryBuilder = when (on<AccountHandler>().privateOnly) {
             true -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
             false -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.notNull()
-                    .and(Group_.updated.greater(on<TimeAgo>().daysAgo()))
+                    .and(Group_.updated.greater(on<TimeAgo>().daysAgo()).and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
+                            .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance))))
                     .or(Group_.eventId.isNull
+                            .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo()))
                             .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
                                     .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance))))
             ))
@@ -541,7 +546,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     private fun loadSuggestions(latLng: LatLng) {
 // disable until we can either add ratings or make them more useful some other way
-//        val distance = .12f
+//        val distance = on<HowFar>().about7Miles
 //
 //        val queryBuilder = on<StoreHandler>().store.box(Suggestion::class).query()
 //                .between(Suggestion_.latitude, latLng.latitude - distance, latLng.latitude + distance)

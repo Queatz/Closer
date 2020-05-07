@@ -5,6 +5,7 @@ import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.HowFar
 import closer.vlllage.com.closer.handler.helpers.SortHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.handler.map.MapZoomHandler
@@ -24,7 +25,7 @@ class SuggestionBubbleHandler constructor(private val on: On) {
     private val disposableGroup = on<DisposableHandler>().group()
 
     private fun update() {
-        val distance = .12f
+        val distance = on<HowFar>().about7Miles
 
         disposableGroup.clear()
 
