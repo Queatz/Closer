@@ -80,6 +80,7 @@ class CreatePostActivity : ListActivity() {
                     } else {
                         saved = true
                         on<GroupMessageAttachmentHandler>().sharePost(groupId!!, adapter.items.map { it.attachment })
+                        on<GroupDraftHandler>().saveDraft(groupId!!, post = "")
                         finish()
                     }
                 }
@@ -120,7 +121,12 @@ class CreatePostActivity : ListActivity() {
         adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.post_in, groupName))
         adapter.groupName = groupName
 
-        adapter.items = (on<GroupDraftHandler>().getDraft(group.id!!)?.post?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.toList()?.map { it.asJsonObject } ?: listOf(
+        adapter.items = (on<GroupDraftHandler>().getDraft(group.id!!)
+                ?.post
+                ?.takeIf { it.isNotBlank() }
+                ?.let { on<JsonHandler>().from(it, JsonArray::class.java) }
+                ?.toList()
+                ?.map { it.asJsonObject } ?: listOf(
                 on<JsonHandler>().from( "{\"header\":{\"text\":\"\"}}", JsonObject::class.java)
         )).map { PostSection(on<Val>().rndId(), it) }
 

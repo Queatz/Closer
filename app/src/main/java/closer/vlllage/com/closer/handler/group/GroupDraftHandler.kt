@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.handler.group
 
 import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupDraft
 import closer.vlllage.com.closer.store.models.GroupDraft_
 

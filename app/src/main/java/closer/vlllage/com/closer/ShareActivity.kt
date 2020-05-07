@@ -81,7 +81,7 @@ class ShareActivity : ListActivity() {
             eventId = intent.getStringExtra(EXTRA_EVENT_ID)
             suggestionId = intent.getStringExtra(EXTRA_SUGGESTION_ID)
 
-            searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_to))
+            searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_with))
 
             if (Intent.ACTION_SEND == intent.action) {
                 data = intent.data
