@@ -20,7 +20,6 @@ class PhotoUploadGroupMessageHandler constructor(private val on: On) {
             e.printStackTrace()
             on<DefaultAlerts>().thatDidntWork()
         }
-
     }
 
     fun getPhotoPathFromId(photoId: String): String {

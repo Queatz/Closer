@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.data
 
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.app.ActivityCompat
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
@@ -13,7 +12,10 @@ import io.reactivex.subjects.PublishSubject
 import java.util.*
 
 class PermissionHandler constructor(private val on: On) {
-    private val permissionChanges = PublishSubject.create<String>()
+    companion object {
+        private val permissionChanges = PublishSubject.create<String>()
+        private const val REQUEST_CODE_PERMISSION = 1009293
+    }
 
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode != REQUEST_CODE_PERMISSION) {
@@ -121,9 +123,5 @@ class PermissionHandler constructor(private val on: On) {
 
             on<DisposableHandler>().add(disposable!!)
         }
-    }
-
-    companion object {
-        private const val REQUEST_CODE_PERMISSION = 1009293
     }
 }

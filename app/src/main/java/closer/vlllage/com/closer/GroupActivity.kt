@@ -22,7 +22,6 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_group.view.*
-import org.greenrobot.essentials.StringUtils
 
 class GroupActivity : CircularRevealActivity() {
 
@@ -195,8 +194,7 @@ class GroupActivity : CircularRevealActivity() {
         }
 
         view.peopleInGroup.visible = true
-
-        view.peopleInGroup.text = StringUtils.join(names, ", ")
+        view.peopleInGroup.text = names.joinToString()
     }
 
     private fun showGroupName(group: Group?) {

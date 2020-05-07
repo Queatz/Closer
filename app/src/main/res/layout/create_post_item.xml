@@ -13,12 +13,13 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/padDouble"
-        android:paddingEnd="@dimen/padDouble"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/optionsLayout"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingEnd="@dimen/padDouble"
+        android:clipToPadding="false"
         android:isScrollContainer="true" />
 
     <HorizontalScrollView
