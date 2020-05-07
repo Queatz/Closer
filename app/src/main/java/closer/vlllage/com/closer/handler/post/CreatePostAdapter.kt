@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -194,15 +195,11 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                         view.actionRecyclerView.adapter = adapter
                         view.actionRecyclerView.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
 
-                        on<StoreHandler>().store.box(GroupAction::class).query()
-                                .sort(on<SortHandler>().sortGroupActions())
-                                .build()
-                                .subscribe()
-                                .single()
-                                .on(AndroidScheduler.mainThread())
-                                .observer {
-                                    adapter.setGroupActions(it)
-                                }.also { holder.disposableGroup.add(it) }
+                        view.searchActivities.doOnTextChanged { text, _, _, _ ->
+                            searchGroupActivities(holder, adapter, text.toString())
+                        }
+
+                        searchGroupActivities(holder, adapter, null)
 
                         content.addView(view)
                     }
@@ -220,6 +217,14 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
     }
 
     override fun getItemCount() = items.size
+
+    private fun searchGroupActivities(holder: CreatePostViewHolder, adapter: GroupActionAdapter, queryString: String?) {
+        holder.disposableGroup.clear()
+
+        on<SearchGroupActions>().observe(queryString = queryString) { groupActions ->
+            adapter.setGroupActions(groupActions)
+        }.also { holder.disposableGroup.add(it) }
+    }
 }
 
 data class PostSection constructor(

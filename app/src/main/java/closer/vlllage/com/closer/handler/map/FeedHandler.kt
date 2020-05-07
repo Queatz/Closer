@@ -154,24 +154,9 @@ class FeedHandler constructor(private val on: On) {
         groupActionsGroups = groups
         groupActionsObservable?.let { on<DisposableHandler>().dispose(it) }
 
-        groupActionsObservable = on<StoreHandler>().store.box(GroupAction::class).query(
-                GroupAction_.group.oneOf(groups
-                        .map { it.id }
-                        .filterNotNull()
-                        .toTypedArray()
-                ).and(
-                        GroupAction_.about.contains(groupActionsQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE) or
-                        GroupAction_.name.contains(groupActionsQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE) or
-                        GroupAction_.flow.contains(groupActionsQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE)
-                )
-        )
-                .sort(on<SortHandler>().sortGroupActions())
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .observer { groupActions ->
-                    mixedAdapter.groupActions = groupActions.toMutableList()
-                }
+        groupActionsObservable = on<SearchGroupActions>().observe(groupActionsGroups, groupActionsQueryString) { groupActions ->
+            mixedAdapter.groupActions = groupActions.toMutableList()
+        }
 
         on<DisposableHandler>().add(groupActionsObservable!!)
     }

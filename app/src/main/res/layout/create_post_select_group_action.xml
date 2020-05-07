@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clipToPadding="false">
 
     <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/actionRecyclerView"
@@ -15,8 +16,39 @@
         app:layout_constraintTop_toTopOf="parent"
         android:paddingEnd="@dimen/pad"
         android:clipToPadding="false"
+        android:clipChildren="false"
         tools:orientation="horizontal"
         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/group_action_item"/>
+
+    <EditText
+        android:id="@+id/searchActivities"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad"
+        android:layout_marginBottom="@dimen/pad"
+        android:layout_marginStart="@dimen/pad"
+        android:layout_marginEnd="@dimen/pad"
+        app:layout_goneMarginBottom="@dimen/padDouble"
+        app:layout_constraintTop_toBottomOf="@+id/actionRecyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/clickable_dark_flat"
+        android:drawableStart="@drawable/ic_search_black_24dp"
+        android:drawablePadding="@dimen/pad"
+        android:drawableTint="@color/colorPrimary"
+        android:hint="@string/search_for_things_to_do"
+        android:imeOptions="actionGo"
+        android:inputType="text|textCapWords"
+        android:maxLines="1"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingTop="@dimen/pad"
+        android:paddingEnd="@dimen/padDouble"
+        android:paddingBottom="@dimen/pad"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/textInverse"
+        android:textColorHint="@color/textHintInverse"
+        android:textColorHighlight="@color/colorAccent_50"
+        android:textSize="14sp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
