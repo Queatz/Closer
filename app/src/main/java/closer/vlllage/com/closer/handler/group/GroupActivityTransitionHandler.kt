@@ -66,7 +66,7 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
             on<DisposableHandler>().add(on<DataHandler>().getEvent(event.id!!)
                     .subscribe({
                         if (it.groupId != null) {
-                            on<GroupActivityTransitionHandler>().showGroupMessages(view, event.groupId)
+                            on<GroupActivityTransitionHandler>().showGroupMessages(view, it.groupId)
                         } else {
                             on<DefaultAlerts>().thatDidntWork()
                         }

@@ -228,8 +228,9 @@ class EventHandler constructor(private val on: On) {
         on<TaskHandler>().activeTask = null
 
         on<SyncHandler>().sync(event) { id ->
+            event.id = id
+
             if (group != null) {
-                event.id = id
                 on<GroupMessageAttachmentHandler>().shareEvent(event, group)
                 on<NavigationHandler>().showGroup(group.id!!)
             }
@@ -253,8 +254,9 @@ class EventHandler constructor(private val on: On) {
                     on<DefaultAlerts>().thatDidntWork()
                 }))
             }
+
+            onEventCreatedListener.invoke(event)
         }
-        onEventCreatedListener.invoke(event)
     }
 
     fun eventBubbleFrom(event: Event): MapBubble {
