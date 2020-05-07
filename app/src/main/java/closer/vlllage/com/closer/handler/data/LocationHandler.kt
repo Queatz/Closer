@@ -12,23 +12,20 @@ import com.google.android.gms.location.LocationServices
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
 
-class LocationHandler constructor(private val on: On) : OnLifecycle {
+class LocationHandler constructor(private val on: On) {
 
-    private lateinit var fusedLocationProvider: FusedLocationProviderClient
+    private var fusedLocationProvider: FusedLocationProviderClient = if (on<ActivityHandler>().isPresent) {
+        LocationServices.getFusedLocationProviderClient(
+                on<ActivityHandler>().activity!!
+        )
+    } else {
+        LocationServices.getFusedLocationProviderClient(
+                on<ApplicationHandler>().app
+        )
+    }
+
     var lastKnownLocation: Location? = null
         private set
-
-    override fun on() {
-        fusedLocationProvider = if (on<ActivityHandler>().isPresent) {
-            LocationServices.getFusedLocationProviderClient(
-                    on<ActivityHandler>().activity!!
-            )
-        } else {
-            LocationServices.getFusedLocationProviderClient(
-                    on<ApplicationHandler>().app
-            )
-        }
-    }
 
     fun getCurrentLocation(callback: (Location) -> Unit) {
         getCurrentLocation(callback, null)
