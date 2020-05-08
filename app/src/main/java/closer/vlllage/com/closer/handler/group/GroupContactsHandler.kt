@@ -53,10 +53,12 @@ class GroupContactsHandler constructor(private val on: On) {
             } else {
                 on<AlertHandler>().make().apply {
                     positiveButton = on<ResourcesHandler>().resources.getString(R.string.add_phone_name, phoneContact.firstName)
-                    negativeButton = on<ResourcesHandler>().resources.getString(R.string.profile)
                     message = phoneContact.phoneNumber
                     positiveButtonCallback = { inviteToGroup(group, phoneContact) }
-                    negativeButtonCallback = { on<NavigationHandler>().showProfile(phoneContact.phoneId!!) }
+                    if (phoneContact.phoneId != null) {
+                        negativeButton = on<ResourcesHandler>().resources.getString(R.string.profile)
+                        negativeButtonCallback = { on<NavigationHandler>().showProfile(phoneContact.phoneId!!) }
+                    }
                     title = on<ResourcesHandler>().resources.getString(R.string.add_phone_to_group, phoneContact.firstName, group.name)
                     show()
                 }
