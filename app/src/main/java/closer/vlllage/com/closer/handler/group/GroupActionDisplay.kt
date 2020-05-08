@@ -31,6 +31,7 @@ import java.util.*
 
 class GroupActionDisplay constructor(private val on: On) {
 
+    var launchGroup: Boolean = true
     var onGroupActionClickListener: ((GroupAction) -> Unit)? = null
 
     fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
@@ -148,7 +149,10 @@ class GroupActionDisplay constructor(private val on: On) {
                             on<DefaultAlerts>().thatDidntWork()
                         } else {
                             on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
-                            on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
+
+                            if (launchGroup) {
+                                on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
+                            }
                         }
                     }
                 } else {

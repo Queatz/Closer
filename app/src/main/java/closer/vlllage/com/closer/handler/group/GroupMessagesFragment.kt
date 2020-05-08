@@ -23,6 +23,7 @@ class GroupMessagesFragment : PoolActivityFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
+        on<GroupActionDisplay>().launchGroup = false
         on<GroupActionHandler>().attach(actionFrameLayout, actionRecyclerView)
         on<GroupMessagesHandler>().attach(messagesRecyclerView, replyMessage, sendButton, sendMoreButton, sendMoreLayout)
         on<PinnedMessagesHandler>().attach(pinnedMessagesRecyclerView)
