@@ -19,6 +19,7 @@
         app:layout_constraintBottom_toTopOf="@+id/optionsLayout"
         android:paddingStart="@dimen/padDouble"
         android:paddingEnd="@dimen/padDouble"
+        android:paddingBottom="@dimen/pad"
         android:clipToPadding="false"
         android:isScrollContainer="true" />
 
@@ -36,8 +37,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/padDouble"
-            android:paddingBottom="@dimen/padDouble"
+            android:paddingTop="@dimen/pad"
+            android:paddingBottom="@dimen/pad"
             android:clipToPadding="false"
             android:paddingStart="@dimen/padDouble"
             android:paddingEnd="@dimen/pad">
