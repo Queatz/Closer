@@ -211,12 +211,12 @@ class MapSlideFragment : PoolFragment() {
                 3 -> on<SuggestionHandler>().createNewSuggestion(menuBubble.latLng!!)
                 4 -> {
                     on<DefaultInput>().show(R.string.add_new_public_place, R.string.enter_place_name, R.string.create_place, inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS, prefill = menuBubble.status) {
-                        on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!, isPublic = true, name = it)
+                        on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!, isPublic = true, hub = true, name = it)
                     }
                 }
                 5 -> {
                     on<DefaultInput>().show(R.string.add_new_private_place, R.string.enter_place_name, R.string.create_place, inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS) {
-                        on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!, isPublic = false, name = it)
+                        on<PhysicalGroupHandler>().createPhysicalGroup(menuBubble.latLng!!, isPublic = false, hub = true, name = it)
                     }
                 }
             }

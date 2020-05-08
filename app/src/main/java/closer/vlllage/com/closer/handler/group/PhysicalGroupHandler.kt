@@ -17,9 +17,10 @@ import io.reactivex.Single
 
 class PhysicalGroupHandler constructor(private val on: On) {
 
-    fun createPhysicalGroup(latLng: LatLng, isPublic: Boolean = true, name: String = "", onSyncResult: OnSyncResult? = null) {
+    fun createPhysicalGroup(latLng: LatLng, isPublic: Boolean = true, hub: Boolean = false, name: String = "", onSyncResult: OnSyncResult? = null) {
         val group = on<StoreHandler>().create(Group::class.java)
         group!!.name = name
+        group.hub = hub
         group.about = ""
         group.isPublic = isPublic
         group.physical = true

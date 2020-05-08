@@ -134,7 +134,7 @@ class SyncHandler constructor(private val on: On) {
             on<ApiHandler>().createPhysicalGroup(group.name ?: "", group.about ?: "", group.isPublic, LatLng(
                     group.latitude!!,
                     group.longitude!!
-            ))
+            ), group.hub)
         } else if (group.isPublic) {
             on<ApiHandler>().createPublicGroup(group.name!!, group.about!!, LatLng(
                     group.latitude!!,
