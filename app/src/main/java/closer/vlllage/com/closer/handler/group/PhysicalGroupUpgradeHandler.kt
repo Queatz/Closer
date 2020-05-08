@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
+import kotlinx.android.synthetic.main.simple_input_modal.view.*
 
 class PhysicalGroupUpgradeHandler constructor(private val on: On) {
     fun convertToHub(group: Group, onGroupUpdateListener: (Group) -> Unit) {
@@ -13,12 +14,13 @@ class PhysicalGroupUpgradeHandler constructor(private val on: On) {
             title = on<ResourcesHandler>().resources.getString(R.string.set_name)
             layoutResId = R.layout.input_modal
             textViewId = R.id.input
+            onAfterViewCreated = { _, view -> view.input.setText(group.name ?: "") }
             onTextViewSubmitCallback = { result ->
                 on<DisposableHandler>().add(on<ApiHandler>().convertToHub(group.id!!, result).subscribe({
                     group.name = result
                     on<StoreHandler>().store.box(Group::class).put(group)
                     onGroupUpdateListener.invoke(group)
-                }, { error -> on<DefaultAlerts>().thatDidntWork() }))
+                }, { on<DefaultAlerts>().thatDidntWork() }))
             }
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.set_name)
             show()

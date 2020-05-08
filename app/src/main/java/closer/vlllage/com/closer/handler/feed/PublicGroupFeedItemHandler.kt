@@ -66,6 +66,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private val showCalendarIndicator = BehaviorSubject.createDefault(false)
 
     private var groupActionsDisposable: DataSubscription? = null
+    private var eventsDisposable: DataSubscription? = null
 
     fun attach(itemView: ViewGroup, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
         this.itemView = itemView
@@ -155,10 +156,12 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         on<DisposableHandler>().add(on<SearchGroupHandler>().groups.subscribe { groups ->
             searchGroupsAdapter.setGroups(groups.filter { !it.hasEvent() && !it.physical })
 
-            searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
-                state.hasEvents = it.isNotEmpty()
-                stateObservable.onNext(state)
-            })
+            if (on<AccountHandler>().privateOnly) {
+                searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
+                    state.hasEvents = it.isNotEmpty()
+                    stateObservable.onNext(state)
+                })
+            }
 
             searchHubsAdapter.setGroups(groups.filter { it.hub }.also {
                 state.hasPlaces = it.isNotEmpty()
@@ -215,6 +218,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 loadGroups(center)
                 loadSuggestions(center)
                 loadPeople(center)
+                loadEvents(center)
             }
             state.privateOnly = on<AccountHandler>().privateOnly
             stateObservable.onNext(state)
@@ -479,6 +483,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun loadEvents(target: LatLng) {
+        eventsDisposable?.let { on<DisposableHandler>().dispose(it) }
         val distance = on<HowFar>().about7Miles
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(Event::class).query(
@@ -492,6 +497,20 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .single()
                 .observer {
                     showCalendarIndicator.onNext(it.isNotEmpty())
+
+                    if (on<AccountHandler>().privateOnly.not()) {
+                        eventsDisposable = on<StoreHandler>().store.box(Group::class).query(
+                                Group_.id.oneOf(it.map { it.groupId }.toTypedArray())
+                        ).build()
+                            .subscribe()
+                            .on(AndroidScheduler.mainThread())
+                            .observer { groups ->
+                                searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
+                                    state.hasEvents = it.isNotEmpty()
+                                    stateObservable.onNext(state)
+                                })
+                            }.also { on<DisposableHandler>().add(it) }
+                    }
                 })
     }
 
@@ -500,13 +519,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         val queryBuilder = when (on<AccountHandler>().privateOnly) {
             true -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
-            false -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.notNull()
-                    .and(Group_.updated.greater(on<TimeAgo>().daysAgo()).and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
-                            .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance))))
-                    .or(Group_.eventId.isNull
-                            .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo()))
-                            .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
-                                    .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance))))
+            false -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.isNull
+                    .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo()))
+                    .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
+                    .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance)))
             ))
         }
 

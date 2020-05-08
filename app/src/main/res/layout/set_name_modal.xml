@@ -24,7 +24,7 @@
         android:contentDescription="@string/your_name_here"
         android:selectAllOnFocus="true"
         android:imeOptions="actionGo"
-        android:textAlignment="center"
+        android:paddingStart="@dimen/padDialog"
         android:paddingTop="16dp"
         android:padding="8dp"
         android:maxLength="24"

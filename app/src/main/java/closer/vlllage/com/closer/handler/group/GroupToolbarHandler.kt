@@ -240,7 +240,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.show_on_map),
                     R.drawable.ic_my_location_black_24dp,
-                    View.OnClickListener { v ->
+                    View.OnClickListener {
                         if (event != null)
                             showEventOnMap(event)
                         else
@@ -249,11 +249,11 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (group.physical && group.name.isNullOrBlank()) {
+        if (group.physical && group.hub.not()) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.set_name),
                     R.drawable.ic_edit_location_black_24dp,
-                    View.OnClickListener { v ->
+                    View.OnClickListener {
                         on<PhysicalGroupUpgradeHandler>().convertToHub(group) { updatedGroup ->
                             on<RefreshHandler>().refresh(updatedGroup)
                             show(updatedGroup)
@@ -266,7 +266,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.set_background),
                     R.drawable.ic_camera_black_24dp,
-                    View.OnClickListener { v ->
+                    View.OnClickListener {
                         on<PhysicalGroupUpgradeHandler>().setBackground(group) { updatedGroup ->
                             on<RefreshHandler>().refresh(updatedGroup)
                             show(updatedGroup)
@@ -289,7 +289,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.get_directions),
                     R.drawable.ic_directions_black_24dp,
-                    View.OnClickListener { v ->
+                    View.OnClickListener {
                         on<OutboundHandler>().openDirections(LatLng(
                                 group.latitude!!,
                                 group.longitude!!
