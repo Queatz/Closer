@@ -10,10 +10,14 @@ import java.io.IOException
 
 class MediaHandler constructor(private val on: On) {
 
-    private var onMediaSelectedListener: ((Uri) -> Unit)? = null
+    companion object {
+        const val AUTHORITY = "closer.vlllage.com.closer.fileprovider"
+        private const val REQUEST_CODE_MEDIA = 1045
+        private var onMediaSelectedListener: ((Uri) -> Unit)? = null
+    }
 
     fun getPhoto(onMediaSelectedListener: (Uri) -> Unit) {
-        this.onMediaSelectedListener = onMediaSelectedListener
+        MediaHandler.onMediaSelectedListener = onMediaSelectedListener
 
         val mediaIntent = Intent(Intent.ACTION_GET_CONTENT)
         mediaIntent.type = "image/*"
@@ -43,10 +47,5 @@ class MediaHandler constructor(private val on: On) {
         }
 
         data?.data?.let { onMediaSelectedListener?.invoke(it) }
-    }
-
-    companion object {
-        const val AUTHORITY = "closer.vlllage.com.closer.fileprovider"
-        private const val REQUEST_CODE_MEDIA = 1045
     }
 }
