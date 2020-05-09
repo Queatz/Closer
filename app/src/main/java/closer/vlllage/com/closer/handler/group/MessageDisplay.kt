@@ -339,6 +339,8 @@ class MessageDisplay constructor(private val on: On) {
                 onEventClickListener: (Event) -> Unit,
                 onGroupClickListener: (Group) -> Unit,
                 onSuggestionClickListener: (Suggestion) -> Unit) {
+        holder.group.visible = false
+
         if (groupMessage.attachment != null) {
             try {
                 val jsonObject = on<JsonHandler>().from(groupMessage.attachment!!, JsonObject::class.java)
