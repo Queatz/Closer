@@ -37,13 +37,14 @@ class Search constructor(private val on: On) {
         val distance = on<HowFar>().about7Miles
 
         return on<StoreHandler>().store.box(Phone::class).query(
+                Phone_.updated.greater(on<TimeAgo>().oneHourAgo()).and(
                 Phone_.latitude.between(latLng.latitude - distance, latLng.latitude + distance).and(
                 Phone_.longitude.between(latLng.longitude - distance, latLng.longitude + distance)).let { query ->
                     queryString?.takeIf { it.isNotBlank() }?.let {
                         query.and(Phone_.introduction.contains(queryString, QueryBuilder.StringOrder.CASE_INSENSITIVE) or
                                 Phone_.status.contains(queryString, QueryBuilder.StringOrder.CASE_INSENSITIVE) or
                                 Phone_.name.contains(queryString, QueryBuilder.StringOrder.CASE_INSENSITIVE))
-                    } ?: query } )
+                    } ?: query } ) )
                 .sort(on<SortHandler>().sortPhones())
                 .build()
                 .subscribe()
