@@ -5,6 +5,7 @@ import closer.vlllage.com.closer.handler.bubble.BubbleType
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.Search
 import closer.vlllage.com.closer.handler.helpers.SortHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.handler.map.MapZoomHandler
@@ -24,23 +25,9 @@ class PhysicalGroupBubbleHandler constructor(private val on: On) {
     private fun update() {
             disposableGroup.clear()
 
-            val distance = 0.12f
-
             val latLng = on<MapHandler>().center ?: return
 
-            disposableGroup.add(on<StoreHandler>().store.box(Group::class).query()
-                    .equal(Group_.physical, true)
-                    .between(Group_.latitude, latLng.latitude - distance, latLng.latitude + distance)
-                    .between(Group_.longitude, latLng.longitude - distance, latLng.longitude + distance).apply {
-                        if (on<AccountHandler>().privateOnly) {
-                            equal(Group_.isPublic, false)
-                        }
-                    }
-                    .sort(on<SortHandler>().sortPhysicalGroups(latLng))
-                    .build()
-                    .subscribe()
-                    .on(AndroidScheduler.mainThread())
-                    .observer { groups ->
+            disposableGroup.add(on<Search>().physicalGroups(latLng, privateOnly = on<AccountHandler>().privateOnly) { groups ->
                         val showGroups = groups.take(5)
 
                         for (group in showGroups) {

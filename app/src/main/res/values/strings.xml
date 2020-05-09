@@ -127,6 +127,8 @@
     <string name="location_is_needed">Your phone\'s current location is needed to set public groups.</string>
     <string name="message_sent">Message sent</string>
     <string name="no_suggestions_here">I couldn\'t find any suggestions here</string>
+    <string name="no_more_results">I couldn\'t find anything else</string>
+    <string name="no_results">I couldn\'t find anything</string>
     <string name="add_event_here">Host event here…</string>
     <string name="post_event">Post event</string>
     <string name="enter_event_details">Describe the event</string>
@@ -321,7 +323,7 @@
     <string name="add_feature_request">Add a feature request</string>
     <string name="feature_request_name">Feature request name</string>
     <string name="details">Details</string>
-    <string name="search_map_hint">Search places</string>
+    <string name="search_map_hint">Explore this area</string>
     <string name="new_request">New request</string>
     <string name="feature_request_name_missing">Add a name for your feature request.</string>
     <string name="feature_request_description_missing">Add details about your feature request.</string>

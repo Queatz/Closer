@@ -484,34 +484,24 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     private fun loadEvents(target: LatLng) {
         eventsDisposable?.let { on<DisposableHandler>().dispose(it) }
-        val distance = on<HowFar>().about7Miles
 
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(Event::class).query(
-                Event_.startsAt.less(on<TimeAgo>().startOfToday(1))
-                        .and(Event_.endsAt.greater(Date()))
-                        .and(Event_.latitude.between(target.latitude - distance, target.latitude + distance)
-                        .and(Event_.longitude.between(target.longitude - distance, target.longitude + distance))))
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .single()
-                .observer {
-                    showCalendarIndicator.onNext(it.isNotEmpty())
+        on<DisposableHandler>().add(on<Search>().events(target, single = true) {
+            showCalendarIndicator.onNext(it.isNotEmpty())
 
-                    if (on<AccountHandler>().privateOnly.not()) {
-                        eventsDisposable = on<StoreHandler>().store.box(Group::class).query(
-                                Group_.id.oneOf(it.map { it.groupId }.toTypedArray())
-                        ).build()
-                            .subscribe()
-                            .on(AndroidScheduler.mainThread())
-                            .observer { groups ->
-                                searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
-                                    state.hasEvents = it.isNotEmpty()
-                                    stateObservable.onNext(state)
-                                })
-                            }.also { on<DisposableHandler>().add(it) }
-                    }
-                })
+            if (on<AccountHandler>().privateOnly.not()) {
+                eventsDisposable = on<StoreHandler>().store.box(Group::class).query(
+                        Group_.id.oneOf(it.map { it.groupId }.toTypedArray())
+                ).build()
+                        .subscribe()
+                        .on(AndroidScheduler.mainThread())
+                        .observer { groups ->
+                            searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
+                                state.hasEvents = it.isNotEmpty()
+                                stateObservable.onNext(state)
+                            })
+                        }.also { on<DisposableHandler>().add(it) }
+            }
+        })
     }
 
     private fun loadGroups(target: LatLng) {

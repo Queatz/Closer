@@ -12,12 +12,9 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.GroupAction
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
-import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.create_post_item.view.*
 import kotlinx.android.synthetic.main.create_post_section_header.view.input
 import kotlinx.android.synthetic.main.create_post_section_text.view.*
@@ -221,7 +218,7 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
     private fun searchGroupActivities(holder: CreatePostViewHolder, adapter: GroupActionAdapter, queryString: String?) {
         holder.disposableGroup.clear()
 
-        on<SearchGroupActions>().observe(queryString = queryString) { groupActions ->
+        on<Search>().groupActions(queryString = queryString) { groupActions ->
             adapter.setGroupActions(groupActions)
         }.also { holder.disposableGroup.add(it) }
     }

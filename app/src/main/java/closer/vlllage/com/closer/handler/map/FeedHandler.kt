@@ -23,14 +23,10 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.objectbox.kotlin.or
-import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
-import java.util.logging.Logger
-import kotlin.math.abs
 
 class FeedHandler constructor(private val on: On) {
     private lateinit var recyclerView: RecyclerView
@@ -154,7 +150,7 @@ class FeedHandler constructor(private val on: On) {
         groupActionsGroups = groups
         groupActionsObservable?.let { on<DisposableHandler>().dispose(it) }
 
-        groupActionsObservable = on<SearchGroupActions>().observe(groupActionsGroups, groupActionsQueryString) { groupActions ->
+        groupActionsObservable = on<Search>().groupActions(groupActionsGroups, groupActionsQueryString) { groupActions ->
             mixedAdapter.groupActions = groupActions.toMutableList()
         }
 

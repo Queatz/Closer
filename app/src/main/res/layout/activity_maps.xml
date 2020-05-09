@@ -64,8 +64,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginStart="84dp"
-            android:layout_marginEnd="84dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginEnd="64dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -88,8 +88,7 @@
             android:textColor="@color/textInverse"
             android:textColorHint="@color/textHintInverse"
             android:textColorHighlight="@color/colorAccent_50"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/connectionError"

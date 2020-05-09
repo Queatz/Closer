@@ -57,11 +57,11 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         mapView = mapFragment.view
     }
 
-    fun centerMap(latLng: LatLng) {
+    fun centerMap(latLng: LatLng, zoom: Float = DEFAULT_ZOOM) {
         centerOnMapLoad = latLng
 
         if (map != null) {
-            map!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
+            map!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
         }
     }
 

@@ -104,6 +104,18 @@ class SortHandler constructor(private val on: On) {
         }
     }
 
+    fun sortEvents(latLng: LatLng): Comparator<Event> {
+        return Comparator { o1, o2 ->
+            val d1 = FloatArray(1)
+            val d2 = FloatArray(1)
+
+            distanceBetween(o1.latitude!!, o1.longitude!!, latLng.latitude, latLng.longitude, d1)
+            distanceBetween(o2.latitude!!, o2.longitude!!, latLng.latitude, latLng.longitude, d2)
+
+            return@Comparator if (d1[0] == d2[0]) 0 else if (d1[0] < d2[0]) -1 else 1
+        }
+    }
+
     fun sortPhysicalGroups(latLng: LatLng): Comparator<Group> {
         return Comparator { o1, o2 ->
             val d1 = FloatArray(1)

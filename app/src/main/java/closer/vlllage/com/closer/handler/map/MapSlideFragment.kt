@@ -175,17 +175,7 @@ class MapSlideFragment : PoolFragment() {
     }
 
     private fun search(query: String) {
-        on<DisposableHandler>().add(on<PlacesHandler>().findPlace(query).subscribe({
-            on<SuggestionHandler>().showSuggestions(it.map {
-                Suggestion().apply {
-                    name = it.properties.name
-                    latitude = it.geometry.coordinates[1]
-                    longitude = it.geometry.coordinates[0]
-                }
-            })
-        }, {
-            networkError(it)
-        }))
+        on<SearchMapHandler>().next(query)
     }
 
     private fun showMapMenu(latLng: LatLng, title: String?) {
@@ -270,7 +260,7 @@ class MapSlideFragment : PoolFragment() {
         locationPermissionWasDenied = locationPermissionDenied
     }
 
-    fun mapBubbleFrom(phoneList: List<Phone>): List<MapBubble> {
+    private fun mapBubbleFrom(phoneList: List<Phone>): List<MapBubble> {
         val mapBubbles = mutableListOf<MapBubble>()
 
         for (phone in phoneList) {
