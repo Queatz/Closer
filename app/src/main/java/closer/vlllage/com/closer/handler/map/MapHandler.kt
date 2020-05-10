@@ -48,9 +48,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         } else map!!.cameraPosition.zoom
 
     val visibleRegion: VisibleRegion?
-        get() = if (map == null) {
-            null
-        } else map!!.projection.visibleRegion
+        get() = map?.projection?.visibleRegion
 
     fun attach(mapFragment: SupportMapFragment) {
         mapFragment.getMapAsync(this)
@@ -60,9 +58,11 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
     fun centerMap(latLng: LatLng, zoom: Float = DEFAULT_ZOOM) {
         centerOnMapLoad = latLng
 
-        if (map != null) {
-            map!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
-        }
+        map?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+    }
+
+    fun zoomMap(amount: Float) {
+        map?.animateCamera(CameraUpdateFactory.zoomBy(amount))
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

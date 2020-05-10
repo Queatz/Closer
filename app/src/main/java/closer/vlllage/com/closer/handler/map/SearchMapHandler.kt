@@ -9,15 +9,17 @@ import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 
 class SearchMapHandler constructor(private val on: On) {
+    private var shouldRestartSearch = false
     private var lastQuery: String = ""
     private var lastResults: SearchResults = SearchResults {}
     private var lastResultsCursor = 0
     private var disposableGroup = on<DisposableHandler>().group()
 
     fun next(query: String) {
-        if (lastQuery == query && lastResults.ready) {
+        if (!shouldRestartSearch && lastQuery == query && lastResults.ready) {
             continueSearch()
         } else {
+            shouldRestartSearch = false
             on<MapHandler>().center ?: return
 
             startSearch(query, on<MapHandler>().center!!)
@@ -32,9 +34,15 @@ class SearchMapHandler constructor(private val on: On) {
                 is Group -> { on<MapHandler>().centerMap(LatLng(it.latitude!!, it.longitude!!), 20f) }
                 is Suggestion -> { on<MapHandler>().centerMap(LatLng(it.latitude!!, it.longitude!!), 20f) }
             }
-        } ?: on<ToastHandler>().show(if (lastResultsCursor > 0) R.string.no_more_results else R.string.no_results)
-        lastResultsCursor++
+            lastResultsCursor++
+        } ?: noResults()
+    }
 
+    private fun noResults() {
+        on<ToastHandler>().show(if (lastResultsCursor > 0) R.string.no_more_results else R.string.no_results)
+        on<MapHandler>().zoomMap(-1f)
+
+        shouldRestartSearch = true
     }
 
     private fun startSearch(query: String, center: LatLng) {
