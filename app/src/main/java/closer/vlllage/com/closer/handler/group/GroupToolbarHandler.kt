@@ -159,6 +159,17 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
+        if (group.isPublic && !group.hasPhone()) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.photos),
+                    R.drawable.ic_photo_black_24dp,
+                    View.OnClickListener {
+                        contentView.onNext(ContentViewType.GROUP_PHOTOS)
+                    },
+                    ContentViewType.GROUP_PHOTOS
+            ))
+        }
+
         if (group.ratingCount ?: 0 > 0 && (group.physical || group.hasEvent())) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count, group.ratingCount!!, group.ratingCount!!),

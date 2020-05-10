@@ -15,4 +15,5 @@ enum class ContentViewType {
     HOME_CALENDAR,
     HOME_GROUPS,
     HOME_NOTIFICATIONS,
+    GROUP_PHOTOS
 }
