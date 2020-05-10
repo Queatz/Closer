@@ -510,6 +510,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         val queryBuilder = when (on<AccountHandler>().privateOnly) {
             true -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
             false -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.isNull
+                    .and(Group_.phoneId.isNull)
                     .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo()))
                     .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
                     .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance)))
@@ -528,7 +529,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun loadPeople(latLng: LatLng) {
-        val distance = 0.01714 * 7 // 7 miles
+        val distance = on<HowFar>().about7Miles
 
         val queryBuilder = on<StoreHandler>().store.box(Phone::class).query()
                 .between(Phone_.latitude, latLng.latitude - distance, latLng.latitude + distance)

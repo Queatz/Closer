@@ -26,6 +26,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.group_action_edit_flow_modal.view.*
 import java.util.*
 
@@ -68,7 +69,12 @@ class GroupActionDisplay constructor(private val on: On) {
             true
         }
 
-        if (layout == Layout.PHOTO) {
+        if (layout == Layout.TEXT) {
+            on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                holder.actionName.setBackgroundResource(it.clickableRoundedBackground)
+                holder.actionName.setTextColor(it.text)
+            })
+        } else if (layout == Layout.PHOTO) {
             val group = on<StoreHandler>().store.box(Group::class).query()
                     .equal(Group_.id, groupAction.group!!)
                     .build()

@@ -343,6 +343,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     private fun bindGroupPreview(holder: GroupPreviewViewHolder, group: Group) {
         holder.on = On(on).apply {
             use<DisposableHandler>()
+            use<LightDarkHandler>()
             use<GroupMessageHelper> {
                 onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
                 onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event) }
@@ -453,6 +454,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         }
 
         on<GroupScopeHandler>().setup(group, holder.scopeIndicatorButton)
+
+        if (group.hasPhone()) {
+            holder.on<LightDarkHandler>().setLight(true)
+        } else {
+            holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.observeOn(AndroidSchedulers.mainThread()).subscribe { holder.on<LightDarkHandler>().setLight(it.light) })
+        }
 
         holder.disposableGroup.add(holder.on<LightDarkHandler>().onLightChanged
                 .observeOn(AndroidSchedulers.mainThread())

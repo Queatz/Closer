@@ -85,7 +85,6 @@ class FeedHandler constructor(private val on: On) {
                     val groupPreviewQueryBuilder = on<StoreHandler>().store.box(Group::class).query().apply {
                         if (!on<AccountHandler>().privateOnly) {
                             between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
-                                    .and()
                                     .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
                         } else {
                             equal(Group_.isPublic, false)

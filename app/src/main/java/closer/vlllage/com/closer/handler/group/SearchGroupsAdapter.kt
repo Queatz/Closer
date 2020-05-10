@@ -85,7 +85,7 @@ open class SearchGroupsAdapter constructor(
                 holder.cardView.setBackgroundResource(if (isSmall)
                     backgroundResId else on<GroupColorHandler>().getColorClickable4dp(group))
 
-                holder.name.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
+                holder.name.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.unknown))
 
                 val recentActivity = (group.updated ?: Date(0)).after(on<TimeAgo>().weeksAgo())
 
@@ -150,6 +150,19 @@ open class SearchGroupsAdapter constructor(
                     }
                 }
 
+                if (!isSmall) {
+                    if (group.hasPhone()) {
+                        holder.on<LightDarkHandler>().setLight(true)
+                    } else {
+                        holder.on<LightDarkHandler>().setLight(false)
+                    }
+
+                    holder.on<LightDarkHandler>().onLightChanged.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                        holder.name.setTextColor(it.text)
+                        holder.about.setTextColor(it.text)
+                        holder.action.setTextColor(it.text)
+                    }
+                }
             }
         }
     }
