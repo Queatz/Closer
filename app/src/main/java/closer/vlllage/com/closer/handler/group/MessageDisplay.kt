@@ -448,7 +448,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.messageActionShare.visible = groupMessage.from != null
         holder.messageActionPin.visible = groupMessage.from != null && !holder.global && !holder.inFeed
-        holder.messageActionDelete.visible = groupMessage.from == on<PersistenceHandler>().phoneId
+        holder.messageActionDelete.visible = groupMessage.from == on<PersistenceHandler>().phoneId && !holder.pinned
 
         holder.messageActionProfile.visible = holder.global || groupMessage.from != null
 
