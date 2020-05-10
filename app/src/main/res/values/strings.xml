@@ -127,7 +127,7 @@
     <string name="location_is_needed">Your phone\'s current location is needed to set public groups.</string>
     <string name="message_sent">Message sent</string>
     <string name="no_suggestions_here">I couldn\'t find any suggestions here</string>
-    <string name="no_more_results">I couldn\'t find anything else. Tap again to restart search.</string>
+    <string name="no_more_results">I couldn\'t find anything else. Tap again to restart the search.</string>
     <string name="no_results">I couldn\'t find anything</string>
     <string name="add_event_here">Host event here…</string>
     <string name="post_event">Post event</string>
@@ -215,7 +215,7 @@
     <string name="is_in">— in %1$s</string>
     <string name="add">Add</string>
     <string name="add_person_to">Add %1$s to</string>
-    <string name="share_group_to">Share %1$s to</string>
+    <string name="share_group_to">Share %1$s with</string>
     <string name="send">Send</string>
     <string name="added_phone">%1$s has been added</string>
     <string name="sending_photo">Sending photo…</string>

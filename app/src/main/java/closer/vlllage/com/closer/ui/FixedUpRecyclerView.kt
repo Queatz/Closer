@@ -3,9 +3,8 @@ package closer.vlllage.com.closer.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 open class FixedUpRecyclerView : RecyclerView {
 
     private var mRequestedLayout = false
+    var dispatchTouchEventListener: ((MotionEvent) -> Unit)? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -31,6 +31,11 @@ open class FixedUpRecyclerView : RecyclerView {
                 if (child.height == 0) child.post { child.requestLayout() }
             }
         })
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        dispatchTouchEventListener?.invoke(ev)
+        return super.dispatchTouchEvent(ev)
     }
 
     @SuppressLint("WrongCall")

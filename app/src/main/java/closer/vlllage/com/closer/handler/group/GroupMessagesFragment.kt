@@ -31,14 +31,13 @@ class GroupMessagesFragment : PoolActivityFragment() {
             mention -> on<GroupMessagesHandler>().insertMention(mention)
         }
 
-        messagesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                when (newState) {
-                    RecyclerView.SCROLL_STATE_DRAGGING -> on<GroupActionHandler>().show(false)
-                    RecyclerView.SCROLL_STATE_IDLE -> on<GroupActionHandler>().show(true)
-                }
+        messagesRecyclerView.dispatchTouchEventListener = { event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> on<GroupActionHandler>().show(false)
+                MotionEvent.ACTION_UP -> on<GroupActionHandler>().show(true)
+                MotionEvent.ACTION_CANCEL -> on<GroupActionHandler>().show(true)
             }
-        })
+        }
 
         disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             sendButton.imageTintList = it.tint
