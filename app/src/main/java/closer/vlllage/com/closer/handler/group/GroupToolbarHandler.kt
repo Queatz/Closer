@@ -232,7 +232,13 @@ class GroupToolbarHandler constructor(private val on: On) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.share),
                     R.drawable.ic_share_black_24dp,
-                    View.OnClickListener { shareEvent(event) }
+                    View.OnClickListener { on<ShareActivityTransitionHandler>().shareEvent(event.id!!) }
+            ))
+        } else if (!group.hasPhone()) {
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.share),
+                    R.drawable.ic_share_black_24dp,
+                    View.OnClickListener { on<ShareActivityTransitionHandler>().shareGroupToGroup(group.id!!) }
             ))
         }
 
@@ -355,10 +361,6 @@ class GroupToolbarHandler constructor(private val on: On) {
         }
 
         adapter.items = items
-    }
-
-    private fun shareEvent(event: Event) {
-        on<ShareActivityTransitionHandler>().shareEvent(event.id!!)
     }
 
     private fun isEventCancelable(event: Event?): Boolean {
