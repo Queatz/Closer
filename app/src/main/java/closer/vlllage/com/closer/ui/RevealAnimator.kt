@@ -85,6 +85,8 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
                     })
                     start()
                 }
+            } else {
+                cancel()
             }
         }
     }
