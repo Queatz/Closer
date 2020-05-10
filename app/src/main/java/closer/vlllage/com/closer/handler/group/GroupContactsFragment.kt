@@ -114,6 +114,7 @@ class GroupContactsFragment : PoolActivityFragment() {
             on<DisposableHandler>().add(on<ApiHandler>().createInviteCode(it.id!!, !it.isPublic).subscribe({ inviteCodeResult: InviteCodeResult ->
                 on<DefaultInput>().show(R.string.invite_by_shareable_link, buttonRes = R.string.copy, prefill = urlFromInviteCode(inviteCodeResult.code!!)) { link ->
                     on<CopyPaste>().copy(link)
+                    on<ToastHandler>().show(R.string.copied_link)
                 }
             }, { on<DefaultAlerts>().thatDidntWork() }))
         }
