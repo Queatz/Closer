@@ -23,13 +23,6 @@ class GroupMemberHandler constructor(private val on: On) {
         }
 
         when {
-            group.hasPhone() -> {
-                on<MenuHandler>().run {
-                    show(
-                            MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) }
-                    )
-                }
-            }
             group.isPublic -> {
                 on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
                         .equal(GroupMember_.group, group.id!!)
@@ -105,20 +98,20 @@ class GroupMemberHandler constructor(private val on: On) {
                     if (group != null) {
                         join(group)
                     }
-                }.visible(!isCurrentUserMemberOf(group)),
+                }.visible(!isCurrentUserMemberOf(group) && group?.hasPhone() != true),
                 MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, R.string.share_group) {
                     if (group != null) {
                         on<ShareActivityTransitionHandler>().shareGroupToGroup(group.id!!)
                     }
-                },
+                }.visible(group?.hasPhone() != true),
                 MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.view_background) {
                     group?.photo?.let { on<PhotoActivityTransitionHandler>().show(null, it) }
-                }.visible(group?.photo != null),
+                }.visible(group?.photo != null && !group.hasPhone()),
                 MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) {
                     if (group != null) {
                         on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> }
                     }
-                },
+                }.visible(group?.hasPhone() != true),
                 MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.update_description) {
                     if (group != null) {
                         on<AlertHandler>().make().apply {
@@ -131,7 +124,7 @@ class GroupMemberHandler constructor(private val on: On) {
                             show()
                         }
                     }
-                },
+                }.visible(group?.hasPhone() != true),
                 MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) {
                     if (group != null) {
                         on<GroupActionHandler>().addActionToGroup(group)

@@ -324,16 +324,14 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (!group.hasPhone() && items.isNotEmpty()) {
-            items.add(0, ToolbarItem(
-                    on<ResourcesHandler>().resources.getString(R.string.posts),
-                    R.drawable.ic_view_day_black_24dp,
-                    View.OnClickListener {
-                        contentView.onNext(ContentViewType.MESSAGES)
-                    },
-                    ContentViewType.MESSAGES
-            ))
-        }
+        items.add(if (group.hasPhone()) 1 else 0, ToolbarItem(
+                on<ResourcesHandler>().resources.getString(R.string.talk),
+                R.drawable.ic_message_black_24dp,
+                View.OnClickListener {
+                    contentView.onNext(ContentViewType.MESSAGES)
+                },
+                ContentViewType.MESSAGES
+        ))
 
         if (isEventCancelable(event)) {
             items.add(ToolbarItem(

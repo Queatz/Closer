@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Closer</string>
+    <string name="app_name" translatable="false">Closer</string>
+    <string name="notification_channel" translatable="false">notifications</string>
+
     <string name="reply">Reply</string>
     <string name="update">Update</string>
     <string name="closer_notifications">Closer notifications</string>
@@ -9,7 +11,6 @@
     <string name="your_name_here">Your name here</string>
     <string name="set_name">Set name</string>
     <string name="add_a_name">Add a name…</string>
-    <string name="notification_channel" translatable="false">notifications</string>
     <string name="message_not_sent">Couldn\'t send message</string>
     <string name="network_down">Network unavailable</string>
     <string name="get_directions">Get directions</string>

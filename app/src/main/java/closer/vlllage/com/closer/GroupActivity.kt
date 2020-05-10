@@ -323,7 +323,9 @@ class GroupActivity : CircularRevealActivity() {
                 }
             }
         } else if (intent.hasExtra(EXTRA_PHONE_ID)) {
-            on<DisposableHandler>().add(on<DataHandler>().getGroupForPhone(intent.getStringExtra(EXTRA_PHONE_ID)!!).subscribe({
+            val phoneId = intent.getStringExtra(EXTRA_PHONE_ID)!!
+            on<RefreshHandler>().refreshGroupForPhone(phoneId)
+            on<DisposableHandler>().add(on<DataHandler>().getGroupForPhone(phoneId).subscribe({
                 groupId = it.id!!
                 on<GroupHandler>().setGroupById(groupId)
 
