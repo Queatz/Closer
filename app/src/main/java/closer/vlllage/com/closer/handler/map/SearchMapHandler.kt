@@ -40,7 +40,7 @@ class SearchMapHandler constructor(private val on: On) {
 
     private fun noResults() {
         on<ToastHandler>().show(if (lastResultsCursor > 0) R.string.no_more_results else R.string.no_results, lastResultsCursor > 0)
-        on<MapHandler>().zoomMap(-1f)
+        if (lastResultsCursor > 0) on<MapHandler>().zoomMap(-1f)
 
         shouldRestartSearch = true
     }
