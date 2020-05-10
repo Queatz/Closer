@@ -124,7 +124,6 @@
             android:layout_height="1.5dp" />
 
         <TextView
-            android:id="@+id/time5amLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/pad"
@@ -136,7 +135,6 @@
             android:paddingBottom="@dimen/padHalf" />
 
         <TextView
-            android:id="@+id/time8amLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/pad"
@@ -148,7 +146,6 @@
             android:paddingBottom="@dimen/padHalf" />
 
         <TextView
-            android:id="@+id/timeNoonLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/pad"
@@ -160,7 +157,6 @@
             android:paddingBottom="@dimen/padHalf" />
 
         <TextView
-            android:id="@+id/time5pmLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/pad"
@@ -172,7 +168,6 @@
             android:paddingBottom="@dimen/padHalf" />
 
         <TextView
-            android:id="@+id/time8pmLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/pad"
@@ -184,7 +179,6 @@
             android:paddingBottom="@dimen/padHalf" />
 
         <TextView
-            android:id="@+id/timeMidnightLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/pad"
@@ -196,7 +190,6 @@
             android:paddingBottom="@dimen/padHalf" />
 
         <TextView
-            android:id="@+id/timeMidnightBeginLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/pad"

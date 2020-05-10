@@ -1,14 +1,10 @@
 <resources>
     <string name="app_name">Closer</string>
     <string name="reply">Reply</string>
-    <string name="turn_off">Turn off</string>
-    <string name="turn_on">Turn on</string>
     <string name="update">Update</string>
-    <string name="update_status">Update status</string>
     <string name="closer_notifications">Closer notifications</string>
     <string name="what_s_up">Your public status message</string>
     <string name="public_status">Public status</string>
-    <string name="off">Off</string>
     <string name="update_your_name">Update your name</string>
     <string name="your_name_here">Your name here</string>
     <string name="set_name">Set name</string>
@@ -16,7 +12,6 @@
     <string name="notification_channel" translatable="false">notifications</string>
     <string name="message_not_sent">Couldn\'t send message</string>
     <string name="network_down">Network unavailable</string>
-    <string name="write_a_reply">Write a reply…</string>
     <string name="get_directions">Get directions</string>
     <string name="go_out_with">Go out with…</string>
     <string name="close_messages">Close messages</string>
@@ -38,9 +33,7 @@
     <string name="number_verified">Your phone number has been verified.</string>
     <string name="welcome_to_closer">Welcome to Closer!</string>
     <string name="close">Close</string>
-    <string name="set_group_name">Set group name</string>
     <string name="unknown">Unknown</string>
-    <string name="add_to_group">Add to group</string>
     <string name="make_suggestion">Describe the suggestion</string>
     <string name="add_a_suggestion">Add a suggestion</string>
     <string name="add_suggestion">Add suggestion</string>
@@ -51,9 +44,7 @@
     <string name="verify_your_number">Verify your number</string>
     <string name="not_found">Not found</string>
     <string name="invite">Invite</string>
-    <string name="share_this_location">Share this location…</string>
     <string name="automatic">You will be automatically added to groups you\'ve already been invited to.</string>
-    <string name="call">Call</string>
     <string name="yaay">Yaaay!</string>
     <string name="resend_code">Re-send code</string>
     <string name="oh_no">Oh no!</string>
@@ -69,11 +60,9 @@
     <string name="add_phone_name">Invite %1$s</string>
     <string name="add_phone_to_group">Invite %1$s to %2$s?</string>
     <string name="phone_invited">%1$s has been invited to %2$s</string>
-    <string name="great">Great!</string>
     <string name="sync_didnt_work">Sync didn\'t work</string>
     <string name="boo">Boo</string>
     <string name="add_contact">+ Invite</string>
-    <string name="contact_inactive_inline">%1$s (inactive)</string>
     <string name="contact_invited_inline">%1$s (invited)</string>
     <string name="invite_by_phone">Invite by phone</string>
     <string name="invite_to_group">Invite to %1$s?</string>
@@ -81,7 +70,6 @@
     <string name="invite_by_phone_name_info">If you\'d like, add their name so others in the group know who you\'re inviting.</string>
     <string name="set_name_optional_info">If you\'d like, update your name so others in the group know who you are.</string>
     <string name="no_name">No name</string>
-    <string name="call_phone">Call %1$s?</string>
     <string name="skip">Skip</string>
     <string name="invited_to_group_notification">%1$s added you to %2$s</string>
     <string name="group_message_notification">%1$s (%2$s)</string>
@@ -91,7 +79,6 @@
     <string name="confirm_cancel_invite">Cancel %1$s\'s invite?</string>
     <string name="invite_cancelled">Invite cancelled</string>
     <string name="shared_location">Shared location</string>
-    <string name="show_location">Show location</string>
     <string name="show_on_map">Show on map</string>
     <string name="phone_shared_a_suggestion">%1$s shared a suggestion</string>
     <string name="phone_shared_an_event">%1$s shared an event</string>
@@ -106,7 +93,6 @@
     <string name="enable_location_permission_rationale">Open your system settings for Closer, tap on Permissions, and then turn on Location.</string>
     <string name="enable_contacts_permission_rationale">Open your system settings for Closer, tap on Permissions, and then turn on Contacts.</string>
     <string name="show_help">Show help</string>
-    <string name="help">Help</string>
     <string name="help_message_html"><![CDATA[Thanks for using Closer!<br /><br />
         Closer is all about getting closer to your friends.<br /><br />
         <b>Verify your number</b> to be automatically added to any groups you\'ve already been invited to.<br /><br />
@@ -115,27 +101,18 @@
         Enjoy!
     ]]></string>
     <string name="you_hid_the_help_bubble">Congrats, you hid the help bubble!</string>
-    <string name="search_public_groups">Public groups</string>
-    <string name="public_groups">Public groups</string>
     <string name="search_public_groups_hint">Search groups</string>
     <string name="search_events_hint">Search events</string>
     <string name="search_groups">Search groups</string>
     <string name="open_group">Open group</string>
     <string name="tell_more_about_group">This group is about…</string>
     <string name="tell_more_about_group_action">More about this activity…</string>
-    <string name="group_as_public">%1$s (Public group)</string>
-    <string name="location_is_needed">Your phone\'s current location is needed to set public groups.</string>
     <string name="message_sent">Message sent</string>
     <string name="no_suggestions_here">I couldn\'t find any suggestions here</string>
     <string name="no_more_results">I couldn\'t find anything else. Tap again to restart the search.</string>
     <string name="no_results">I couldn\'t find anything</string>
-    <string name="add_event_here">Host event here…</string>
-    <string name="post_event">Post event</string>
     <string name="enter_event_details">Describe the event</string>
     <string name="enter_event_price">Price (optional)</string>
-    <string name="when">When</string>
-    <string name="ends_at">Ends at</string>
-    <string name="starts_at">Starts at</string>
     <string name="view">View</string>
     <string name="event_start_end_time">%1$s — %2$s %3$s</string>
     <string name="event_start_end_time_multiday">%1$s %2$s — %3$s %4$s</string>
@@ -163,14 +140,10 @@
     <string name="subscribe">Subscribe</string>
     <string name="unsubscribe">Unsubscribe</string>
     <string name="more_options">More options</string>
-    <string name="random_suggestion">Get random suggestions</string>
-    <string name="on_map">On the map</string>
-    <string name="near_here">Somewhere</string>
     <string name="share_with">Share with</string>
     <string name="set_my_name">Update your profile</string>
     <string name="add_an_action">Add an activity</string>
     <string name="add_action">Add activity</string>
-    <string name="action_name">Activity name</string>
     <string name="action_intent">Add message text</string>
     <string name="action_intent_hint">went into the cave</string>
     <string name="action_name_hint">Activity name</string>
@@ -178,13 +151,10 @@
     <string name="remove_action">Remove this activity</string>
     <string name="remove_action_message">Remove \"%1$s\" from this group?</string>
     <string name="add_a_comment">Add a comment…</string>
-    <string name="go">Go</string>
-    <string name="search_for_groups">View nearby groups</string>
     <string name="nope">Nope</string>
     <string name="take_photo">Take photo</string>
     <string name="upload_photo">Upload photo</string>
     <string name="remove_action_menu_item">Remove from group…</string>
-    <string name="post">Post</string>
     <string name="settings_open_groups_expanded">Open groups expanded</string>
     <string name="send_feedback">Send us feedback</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -196,7 +166,6 @@
     <string name="public_group_title">This is a public group</string>
     <string name="private_group_title">This a friends group</string>
     <string name="add_a_shortcut">Add a shortcut</string>
-    <string name="activities">Activities</string>
     <string name="member">Member</string>
     <string name="member_you">Member (You)</string>
     <string name="youve_subscribed">You\'re subscribed</string>
@@ -206,7 +175,6 @@
     <string name="host_event">Host event</string>
     <string name="share_your_location">Show me on the map</string>
     <string name="about_you">About you</string>
-    <string name="is_next_day">Next day</string>
     <string name="today">Today</string>
     <string name="update_description">Update description</string>
     <string name="update_background">Update background</string>
@@ -216,18 +184,13 @@
     <string name="add">Add</string>
     <string name="add_person_to">Add %1$s to</string>
     <string name="share_group_to">Share %1$s with</string>
-    <string name="send">Send</string>
     <string name="added_phone">%1$s has been added</string>
     <string name="sending_photo">Sending photo…</string>
     <string name="settings_public_notifications">Public notifications</string>
     <string name="public_notifications_switch_description">Public notifications are off. You\'ll only get notifications from friends\' groups and direct messages.</string>
-    <string name="remove_heart">Remove heart?</string>
-    <string name="heart_removed">Heart removed</string>
     <string name="join_this_group">Join this group…</string>
     <string name="join_this_event">Join this event…</string>
     <string name="you_joined_group">You joined %1$s</string>
-    <string name="yes_join">Yes, join!</string>
-    <string name="join">Join</string>
     <string name="join_group_title">Join %1$s</string>
     <string name="join_group_message">Join this group to let others know you\'re here.</string>
     <string name="join_event_message">Join this event to let others know you\'re here.</string>
@@ -237,16 +200,13 @@
     <string name="pinned_message">Pinned message</string>
     <string name="unpin">Unpin</string>
     <string name="pin">Pin</string>
-    <string name="reminder">Reminder</string>
     <string name="heart">♥</string>
     <string name="about_this_group">About this group</string>
     <string name="suggestion">Suggestion</string>
-    <string name="messages">Messages</string>
     <string name="groups">Groups</string>
     <string name="photos">Photos</string>
     <string name="human_found">You found a human!</string>
     <string name="continue_text">Continue</string>
-    <string name="invite_to">Invite to group…</string>
     <string name="activity">Activity</string>
     <string name="settings_show_close_button">Show close button in groups</string>
     <string name="profile">Profile</string>
@@ -267,7 +227,6 @@
     <string name="offtime_hint">What do you do in your offtime?</string>
     <string name="them">Them</string>
     <string name="cheer_them">Cheer %1$s</string>
-    <string name="remove">Remove</string>
     <string name="remove_lifestyle">Leave lifestyle…</string>
     <string name="remove_goal">Remove goal…</string>
     <string name="remove_lifestyle_confirm">Leave this lifestyle?</string>
@@ -311,7 +270,6 @@
     <string name="starts">Start time</string>
     <string name="events">Events</string>
     <string name="post_review">Post your review</string>
-    <string name="rating">%1$s rating</string>
     <string name="review_summary">Review summary</string>
     <string name="settings_use_light_theme">Use dark theme</string>
     <string name="no_events_yet_be_the_first_to_host_one">No events yet. Be the first to host one!</string>
@@ -340,9 +298,6 @@
     <string name="date_tiny_years">%1$sy</string>
     <string name="active">Active %1$s ago</string>
     <string name="last_active">Last active %1$s ago</string>
-    <string name="settings_private_mode">Friends mode</string>
-    <string name="private_mode_switch_description">Friends mode is on.  You\'ll only see your friends\' groups and events.</string>
-    <string name="add_location">Add location</string>
     <string name="your_groups">Your groups</string>
     <string name="your_places">Your places</string>
     <string name="conversations">Conversations</string>
@@ -386,7 +341,6 @@
     <string name="text_you">%1$s (You)</string>
     <string name="group_status_changed">Group status changed</string>
     <string name="group_photo_changed">Group photo changed</string>
-    <string name="map">Map</string>
     <string name="calendar">Calendar</string>
     <string name="explore">Explore</string>
     <string name="your_events">Your events</string>
@@ -405,7 +359,6 @@
     <string name="option_1">Option 1</string>
     <string name="option_2">Option 2</string>
     <string name="option_3_optional">Option 3 (optional)</string>
-    <string name="information">Information</string>
     <string name="joined_date">Joined %1$s</string>
     <string name="by_invite_from">by invite from %1$s</string>
     <string name="midnight">Midnight</string>
@@ -431,8 +384,6 @@
     <string name="write_here">Write here</string>
     <string name="edit">Edit</string>
     <string name="resize">Resize photo</string>
-    <string name="discard_post">Discard this post?</string>
-    <string name="yes_discard">Yes, discard</string>
     <string name="cannot_delete_last_message">Your post must contain at least one section.</string>
     <string name="blank_sections_error">Fill out or remove blank sections before posting.</string>
     <string name="public_group_in_x">Public group in %1$s</string>
@@ -443,7 +394,6 @@
     <string name="activity_name_info">Activities help people better understand the most common things to do in this group.</string>
     <string name="activity_intent_info">This is the message that gets posted when someone taps on this activity.  For example, if Samantha tapped \"Go into the cave\", then \"Samantha went into the cave\" might be what gets posted to the group.</string>
     <string name="show_more">Show more</string>
-    <string name="chevron_right">›</string>
     <string name="no_comment">Don\'t show comment box</string>
     <string name="direct_message">Direct message</string>
     <string name="talk_to">Talk to %1$s</string>

@@ -5,7 +5,6 @@
 
     <color name="text">@color/white</color>
     <color name="textInverse">@color/dark</color>
-    <color name="highlightInverse">@color/black_15</color>
     <color name="textHint">@color/white_75</color>
     <color name="textHintInverse">@color/black_50</color>
 
@@ -20,26 +19,21 @@
     <color name="colorAccentDark">#CC8F00</color>
     <color name="colorAccentLight">#FFC107</color>
     <color name="blue200">#90CAF9</color>
-    <color name="blue200_transparent">#0090CAF9</color>
     <color name="green">#8BC34A</color>
     <color name="green700">#388E3C</color>
-    <color name="green_transparent">#008BC34A</color>
     <color name="greenLight">#AED581</color>
     <color name="green200">#C5E1A5</color>
     <color name="orange">#FF5722</color>
     <color name="red">#f44336</color>
     <color name="redLight">#E57373</color>
-    <color name="red200">#EF9A9A</color>
     <color name="selectable">#BDBDBD</color>
     <color name="dark">#222222</color>
-    <color name="dark_transparent">#00222222</color>
     <color name="disabled">@color/selectable</color>
     <color name="highlight">#66ffffff</color>
     <color name="highlight_50">#33ffffff</color>
     <color name="white_15">#33ffffff</color>
     <color name="white_50">#88ffffff</color>
     <color name="white_75">#aaffffff</color>
-    <color name="white_95">#ddffffff</color>
     <color name="black_2">#02000000</color>
     <color name="black_5">#11000000</color>
     <color name="black_10">#22000000</color>
