@@ -6,10 +6,11 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 
 import java.lang.Math.abs
 
-class SoftScrollStopper : FrameLayout {
+class SoftScrollStopper : ConstraintLayout {
 
     private var isChildScrolling: Boolean = false
     private val originPosition = Point()

@@ -100,7 +100,7 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <closer.vlllage.com.closer.ui.SoftScrollStopper
         android:id="@+id/messageActionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -348,7 +348,7 @@
 
         </HorizontalScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </closer.vlllage.com.closer.ui.SoftScrollStopper>
 
     <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/reactionsRecyclerView"
