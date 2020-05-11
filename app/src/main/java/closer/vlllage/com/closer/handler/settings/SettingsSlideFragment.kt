@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.WindowHandler
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
+import closer.vlllage.com.closer.handler.map.NetworkConnectionViewHandler
 import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.ui.Animate
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -25,6 +26,8 @@ class SettingsSlideFragment : PoolFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        on<NetworkConnectionViewHandler>().attach(connectionError)
+
         view.findViewById<View>(R.id.scrollView).setPadding(0, on<WindowHandler>().statusBarHeight, 0, 0)
 
         openGroupsExpandedSettingsSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED]

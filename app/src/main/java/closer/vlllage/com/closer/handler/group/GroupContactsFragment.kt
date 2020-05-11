@@ -29,7 +29,7 @@ class GroupContactsFragment : PoolActivityFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
 
-        on<GroupHandler>().onGroupChanged { group ->
+        on<GroupHandler>().onGroupChanged(disposableGroup) { group ->
             showForGroup(group)
         }
     }

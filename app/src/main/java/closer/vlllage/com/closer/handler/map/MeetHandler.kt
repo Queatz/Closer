@@ -4,6 +4,7 @@ import closer.vlllage.com.closer.api.models.PhoneResult
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.ApiModelHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
+import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
@@ -36,7 +37,7 @@ class MeetHandler constructor(private val on: On) {
                     total.onNext(it.total)
                     phones.onNext(it.phones.toMutableList())
                 }, {
-                    on<DefaultAlerts>().thatDidntWork()
+                    on<ConnectionErrorHandler>().notifyConnectionError()
                 }))
     }
 

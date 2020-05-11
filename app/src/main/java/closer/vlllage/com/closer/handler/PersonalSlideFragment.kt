@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.PhotoUploadGroupMessageHandler
 import closer.vlllage.com.closer.handler.group.SearchGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.map.NetworkConnectionViewHandler
 import closer.vlllage.com.closer.handler.map.SetNameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.pool.PoolFragment
@@ -33,8 +34,7 @@ class PersonalSlideFragment : PoolFragment() {
     private var previousStatus: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val subscribedGroupsRecyclerView = view.findViewById<RecyclerView>(R.id.subscribedGroupsRecyclerView)
-        val youveSubscribedEmpty = view.findViewById<TextView>(R.id.youveSubscribedEmpty)
+        on<NetworkConnectionViewHandler>().attach(connectionError)
 
         val searchGroupsAdapter = SearchGroupsAdapter(on, false, { group, v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, group.id) }, null)
 

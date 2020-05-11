@@ -37,7 +37,10 @@ class ApiModelHandler constructor(private val on: On) {
         phone.lifestyles = phoneResult.lifestyles?.map { it.name ?: "-" }
 
         on<RefreshHandler>().handleLifestylesAndGoals(phoneResult)
-        on<NameCacheHandler>()[phone.id!!] = on<NameHandler>().getName(phone)
+
+        if (phone.id != null) {
+            on<NameCacheHandler>()[phone.id!!] = on<NameHandler>().getName(phone)
+        }
 
         return phone
     }

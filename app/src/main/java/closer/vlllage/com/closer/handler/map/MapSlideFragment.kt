@@ -151,17 +151,17 @@ class MapSlideFragment : PoolFragment() {
                 it.filter { on<AccountHandler>().privateOnly.not() }
                         .filter { it.latitude != null && it.longitude != null }
                         .map { LatLng(it.latitude!!, it.longitude!!) }
-            }.subscribe { phones ->
+            }.subscribe({ phones ->
                 on<DataVisualsHandler>().setPhones(phones)
-            })
+            }, { }))
 
             on<DisposableHandler>().add(on<DataHandler>().getRecentlyActiveGroups(100).map {
                 it.filter { on<AccountHandler>().privateOnly.not() }
                         .filter { it.latitude != null && it.longitude != null }
                         .map { LatLng(it.latitude!!, it.longitude!!) }
-            }.subscribe { phones ->
+            }.subscribe({ phones ->
                 on<DataVisualsHandler>().setGroups(phones)
-            })
+            }, { }))
         }
 
         view.searchMap.setOnEditorActionListener { _, actionId, event ->
