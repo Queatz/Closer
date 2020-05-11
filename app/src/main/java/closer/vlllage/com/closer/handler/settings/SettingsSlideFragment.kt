@@ -38,6 +38,7 @@ class SettingsSlideFragment : PoolFragment() {
 
         view.findViewById<View>(R.id.sendFeedbackButton).setOnClickListener { v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, on<ConfigHandler>().feedbackGroupId()) }
         view.findViewById<View>(R.id.viewPrivacyPolicyButton).setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().privacy().subscribe({ privacyPolicy -> on<DefaultAlerts>().message(privacyPolicy) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
+        view.findViewById<View>(R.id.viewTermsOfUseButton).setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().terms().subscribe({ terms -> on<DefaultAlerts>().message(terms) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
         view.findViewById<View>(R.id.showHelpButton).setOnClickListener { on<HelpHandler>().showHelp() }
         view.findViewById<View>(R.id.returnToMapButton).setOnClickListener { on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_MAP) }
 

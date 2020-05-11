@@ -2,12 +2,22 @@
 Incoming
 ========
 
-[ ] Clicking on messages jumps randomly
-[X] Closer learn someone new group goes blank
-[X] Closer check message title gen async
+    [ ] Start using Epics for planning/prioritizing Closer
+        [ ] Launch Closer for Small Businesses
+            [ ] Need to do all these things
+
+    [X] Add Terms of Use
+    [X] Shared messages should always have (Group)
+
+    [ ] Closer managed groups
+        [ ] Closer "business page" / group about add section / template
+        [ ] Closer owners of groups can edit location, name, delete messages, everything
 
 ❤ Next ❤
 ========
+
+    [ ] Closer things hidden in closer groups (fun game)
+    [ ] Closer intros to Austin people (who's who in Austin)
 
     [ ] Closer quantize location if not shared on map
     [ ] need to present groups individually and better
@@ -18,6 +28,8 @@ Incoming
 TBD
 ===
 
+    [ ] Closer "Real people. Real activities. Real talk."
+    [ ] Closer who's here now in groups
     [ ] Suggestion -> note ?
     [ ] show who will get you message / who's at this group now + last seen / if they choose "show me on the map"
     [ ] toggle public post access for non verified accounts

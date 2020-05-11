@@ -128,6 +128,20 @@
                 android:drawableTint="@color/text" />
 
             <Button style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/viewTermsOfUseButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/terms_of_use"
+                android:drawableStart="@drawable/ic_open_in_new_black_24dp"
+                android:drawablePadding="@dimen/pad"
+                android:drawableTint="@color/text" />
+
+            <Button style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/viewPrivacyPolicyButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

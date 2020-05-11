@@ -41,14 +41,17 @@ class MessageDisplay constructor(private val on: On) {
                              onGroupClickListener: (Group) -> Unit,
                              onSuggestionClickListener: (Suggestion) -> Unit) {
         displayFallback(holder, groupMessage)
-        holder.group.visible = false
+        holder.showGroupInsteadOfProfile = null
 
         holder.disposableGroup.add(on<DataHandler>().getGroupMessage(jsonObject.get("share").asString).subscribe({ sharedGroupMessage ->
             display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
             holder.time.text = on<GroupMessageParseHandler>().parseText(holder.time, on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
 
+            val group = sharedGroupMessage.to?.let { getGroup(it) }
+            holder.showGroupInsteadOfProfile = group?.id
+
             holder.group.visible = true
-            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.from, sharedGroupMessage.to?.let { getGroup(it) }?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
+            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.from, group?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
 
             holder.messageActionProfile.setText(R.string.group)
             holder.messageActionProfile.setOnClickListener {
@@ -373,7 +376,9 @@ class MessageDisplay constructor(private val on: On) {
 
         if (holder.global) {
             holder.group.visible = true
-            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, groupMessage.to?.let { getGroup(it) }?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
+            val group = groupMessage.to?.let { getGroup(it) }
+            holder.showGroupInsteadOfProfile = group?.id
+            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, group?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
         }
 
         if (
@@ -443,18 +448,18 @@ class MessageDisplay constructor(private val on: On) {
         holder.messageActionShorthand.visible = false
 
         holder.messageActionProfile.text = on<ResourcesHandler>().resources.getString(
-                if (holder.global) R.string.group else R.string.profile
+                if (holder.showGroupInsteadOfProfile != null) R.string.group else R.string.profile
         )
 
         holder.messageActionShare.visible = groupMessage.from != null
         holder.messageActionPin.visible = groupMessage.from != null && !holder.global && !holder.inFeed
         holder.messageActionDelete.visible = groupMessage.from == on<PersistenceHandler>().phoneId && !holder.pinned
 
-        holder.messageActionProfile.visible = holder.global || groupMessage.from != null
+        holder.messageActionProfile.visible = holder.showGroupInsteadOfProfile != null || groupMessage.from != null
 
-        if (holder.global) {
+        if (holder.showGroupInsteadOfProfile != null) {
             holder.messageActionProfile.setOnClickListener {
-                on<NavigationHandler>().showGroup(groupMessage.to!!)
+                on<NavigationHandler>().showGroup(holder.showGroupInsteadOfProfile!!)
                 toggleMessageActionLayout(groupMessage, holder)
             }
         } else if (groupMessage.from != null) {

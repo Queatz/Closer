@@ -138,6 +138,7 @@ class GroupMessageHelper constructor(private val on: On) {
 
         holder.pinned = pinned
         holder.global = global
+        holder.showGroupInsteadOfProfile = if (global) groupMessage.to else null
         holder.inFeed = inFeed
 
         holder.message.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.textSize))
@@ -226,6 +227,7 @@ class GroupMessageViewHolder(on: On, itemView: View) : RecyclerView.ViewHolder(i
     internal var pinned: Boolean = false
     internal var global: Boolean = false
     internal var inFeed: Boolean = false
+    internal var showGroupInsteadOfProfile: String? = null
 
     init {
         name = itemView.findViewById(R.id.name)

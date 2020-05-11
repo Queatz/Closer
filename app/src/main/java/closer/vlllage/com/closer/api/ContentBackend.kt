@@ -9,6 +9,9 @@ interface ContentBackend {
     @GET("privacy")
     fun privacy(): Single<ResponseBody>
 
+    @GET("terms")
+    fun terms(): Single<ResponseBody>
+
     companion object {
         const val BASE_URL = "http://closer.vlllage.com/"
     }

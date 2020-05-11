@@ -360,6 +360,10 @@ class ApiHandler constructor(private val on: On) {
         return uiThread(api.contentBackend.privacy()).map { it.string() }
     }
 
+    fun terms(): Single<String> {
+        return uiThread(api.contentBackend.terms()).map { it.string() }
+    }
+
     fun getPlaces(query: String, bias: LatLng, limit: Int = 3): Single<GeoJsonResponse> {
         return uiThread(api.placesBackend.query(query, bias.latitude, bias.longitude, limit))
     }
