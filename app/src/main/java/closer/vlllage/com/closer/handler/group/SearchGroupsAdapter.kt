@@ -27,10 +27,11 @@ open class SearchGroupsAdapter constructor(
         on: On,
         private var showCreateGroup: Boolean,
         private val onGroupClickListener: ((group: Group, view: View) -> Unit)?,
-        private val onCreateGroupClickListener: ((groupName: String) -> Unit)?
+        private val onCreateGroupClickListener: ((groupName: String, isPublic: Boolean) -> Unit)?
 ) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
-    private var createPublicGroupName = BehaviorSubject.createDefault("")
+    private var createGroupName = BehaviorSubject.createDefault("")
+    private var createIsPublic = true
     private val groups = mutableListOf<Group>()
     private var actionText: String? = null
     @LayoutRes
@@ -65,16 +66,16 @@ open class SearchGroupsAdapter constructor(
 
                 if (position >= itemCount - createGroupCount) {
                     holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
-                    holder.about.text = on<ResourcesHandler>().resources.getString(R.string.add_new_public_group)
+                    holder.about.text = on<ResourcesHandler>().resources.getString(if (createIsPublic) R.string.add_new_public_group else R.string.add_new_private_group)
                     holder.backgroundPhoto.visible = false
                     holder.actionRecyclerView.visible = false
                     holder.cardView.setOnClickListener {
-                        onCreateGroupClickListener?.invoke(createPublicGroupName.value ?: "")
+                        onCreateGroupClickListener?.invoke(createGroupName.value ?: "", createIsPublic)
                     }
                     holder.cardView.setOnLongClickListener(null)
-                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else R.drawable.clickable_green_4dp)
+                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else if (createIsPublic) R.drawable.clickable_green_4dp else R.drawable.clickable_blue_4dp)
 
-                    createPublicGroupName.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    createGroupName.observeOn(AndroidSchedulers.mainThread()).subscribe {
                         holder.name.text = if (it.isNullOrBlank()) "+" else it
                     }.also { holder.on<DisposableHandler>().add(it) }
                     return
@@ -178,7 +179,12 @@ open class SearchGroupsAdapter constructor(
     override fun getItemCount() = groups.size + createGroupCount
 
     fun setCreatePublicGroupName(createPublicGroupName: String) {
-        this.createPublicGroupName.onNext(createPublicGroupName)
+        this.createGroupName.onNext(createPublicGroupName)
+    }
+
+    fun setCreateIsPublic(isPublic: Boolean) {
+        this.createIsPublic = isPublic
+        notifyDataSetChanged()
     }
 
     fun showCreateOption(showCreate: Boolean) {

@@ -14,7 +14,6 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupContact_
 import closer.vlllage.com.closer.store.models.Group_
-import closer.vlllage.com.closer.ui.CircularRevealActivity
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.fragment_phone_photos.*
 

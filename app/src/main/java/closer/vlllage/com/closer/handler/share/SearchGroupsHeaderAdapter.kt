@@ -17,7 +17,7 @@ import com.queatz.on.On
 
 class SearchGroupsHeaderAdapter constructor(on: On,
                                 onGroupClickListener: ((Group, View) -> Unit)?,
-                                onCreateGroupClickListener: ((String) -> Unit)?,
+                                onCreateGroupClickListener: ((String, Boolean) -> Unit)?,
                                 private val onQueryChangedListener: OnQueryChangedListener)
     : SearchGroupsAdapter(on, false, onGroupClickListener, onCreateGroupClickListener) {
 

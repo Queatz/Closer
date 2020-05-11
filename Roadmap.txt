@@ -2,6 +2,10 @@
 Incoming
 ========
 
+    [X] Closer Add a friends group modal text alignment is off
+    [ ] Closer increase font size + standardize
+    [ ] Closer create a friends group from the friends tab
+
     [ ] Start using Epics for planning/prioritizing Closer
         [ ] Launch Closer for Small Businesses
             [ ] Need to do all these things

@@ -22,6 +22,7 @@
     <string name="enter_code">Enter the code…</string>
     <string name="verify_number">Verify number</string>
     <string name="create_group">Add group</string>
+    <string name="create_private_group">Add friends group</string>
     <string name="create_public_group">Add public group</string>
     <string name="enter_group_name">Name this group</string>
     <string name="enter_place_name">Name this place</string>

@@ -58,7 +58,7 @@ class MyGroupsLayoutHandler constructor(private val on: On) {
                 on<ResourcesHandler>().resources.getString(R.string.add_new_private_group),
                 View.OnClickListener { view ->
                     on<AlertHandler>().make().apply {
-                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_group)
+                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_private_group)
                         title = on<ResourcesHandler>().resources.getString(R.string.add_new_private_group)
                         layoutResId = R.layout.create_group_modal
                         textViewId = R.id.input

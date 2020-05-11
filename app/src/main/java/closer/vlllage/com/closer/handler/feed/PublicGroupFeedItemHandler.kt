@@ -92,7 +92,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
 
-        searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean -> createGroup(groupName, isPublic) })
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         groupsRecyclerView.adapter = searchGroupsAdapter
@@ -102,7 +102,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 false
         )
 
-        searchEventsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        searchEventsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean -> createGroup(groupName, isPublic) })
         searchEventsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         eventsRecyclerView.adapter = searchEventsAdapter
@@ -112,7 +112,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 false
         )
 
-        searchHubsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String -> createGroup(groupName) })
+        searchHubsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean -> createGroup(groupName, isPublic) })
         searchHubsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         hubsRecyclerView.adapter = searchHubsAdapter
@@ -475,7 +475,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 eventsHeader.setText(if (showPublic) R.string.events_around_here else R.string.your_events)
                                 groupsHeader.setText(if (showPublic) R.string.groups_around_here else R.string.your_groups)
                                 itemView.feedText.setText(if (showPublic) R.string.conversations_around_here else R.string.conversations)
-                                searchGroupsAdapter.showCreateOption(showPublic)
+                                searchGroupsAdapter.setCreateIsPublic(showPublic)
+                                searchGroupsAdapter.showCreateOption(true)
                             }
                         }
                     })
@@ -638,14 +639,14 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 }.also { on<DisposableHandler>().add(it) }
     }
 
-    private fun createGroup(groupName: String?) {
+    private fun createGroup(groupName: String?, isPublic: Boolean) {
         if (groupName.isNullOrBlank()) {
             on<AlertHandler>().make().apply {
-                title = on<ResourcesHandler>().resources.getString(R.string.create_public_group)
+                title = on<ResourcesHandler>().resources.getString(if (isPublic) R.string.create_public_group else R.string.add_new_private_group)
                 layoutResId = R.layout.create_group_modal
                 textViewId = R.id.input
                 onTextViewSubmitCallback = {
-                    addGroupDescription(it.trim())
+                    addGroupDescription(it.trim(), isPublic)
                 }
                 onAfterViewCreated = { alertConfig, view ->
                     alertConfig.alertResult = view.input
@@ -657,25 +658,25 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 show()
             }
         } else {
-            addGroupDescription(groupName)
+            addGroupDescription(groupName, isPublic)
         }
     }
 
-    private fun addGroupDescription(groupName: String) {
+    private fun addGroupDescription(groupName: String, isPublic: Boolean) {
         searchGroups.setText("")
 
         on<MapHandler>().center?.let { latLng ->
             on<LocalityHelper>().getLocality(on<MapHandler>().center!!) { locality ->
                 on<AlertHandler>().make().apply {
                     title = groupName
-                    message = locality?.let { on<ResourcesHandler>().resources.getString(R.string.public_group_in_x, it) } ?: on<ResourcesHandler>().resources.getString(R.string.public_group)
+                    message = if (isPublic) locality?.let { on<ResourcesHandler>().resources.getString(R.string.public_group_in_x, it) } ?: on<ResourcesHandler>().resources.getString(R.string.public_group) else on<ResourcesHandler>().resources.getString(R.string.private_group)
                     layoutResId = R.layout.create_public_group_modal
                     textViewId = R.id.input
                     onTextViewSubmitCallback = { about ->
                         val group = on<StoreHandler>().create(Group::class.java)
                         group!!.name = groupName
                         group.about = about
-                        group.isPublic = true
+                        group.isPublic = isPublic
                         group.latitude = latLng.latitude
                         group.longitude = latLng.longitude
                         on<StoreHandler>().store.box(Group::class).put(group)
@@ -683,7 +684,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                             openGroup(groupId, null)
                         })
                     }
-                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_public_group)
+                    positiveButton = on<ResourcesHandler>().resources.getString(if (isPublic) R.string.create_public_group else R.string.create_private_group)
                     show()
                 }
             }
