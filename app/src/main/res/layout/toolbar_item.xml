@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:padding="@dimen/pad"
-        android:textSize="@dimen/groupToolbarTextSize"
+        android:textSize="@dimen/textSizeSmall"
         android:drawableTint="@color/text"
         android:drawablePadding="@dimen/padHalf"
         android:background="@drawable/clickable_light"

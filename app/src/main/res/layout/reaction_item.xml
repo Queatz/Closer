@@ -8,5 +8,5 @@
     android:paddingBottom="@dimen/padHalf"
     android:background="@drawable/clickable_accent_rounded"
     android:textColor="@color/text"
-    android:textSize="14sp"
+    android:textSize="@dimen/textSize"
     tools:text="♥"/>

@@ -29,7 +29,7 @@
         android:padding="@dimen/pad"
         android:textColor="@color/text"
         android:maxLines="3"
-        android:textSize="@dimen/groupActionSmallTextSize"
+        android:textSize="@dimen/textSize"
         android:textStyle="bold"
         tools:text="Book a room or hotel tonight" />
 
@@ -46,7 +46,7 @@
         android:textColor="@color/text"
         android:textStyle="bold"
         android:maxLines="1"
-        android:textSize="@dimen/groupActionVerySmallTextSize"
+        android:textSize="@dimen/textSizeSmall"
         tools:text="Cortado club" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

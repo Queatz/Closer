@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="@dimen/padDouble"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="@dimen/textSizeHeader"
         android:textColor="@color/textInverse"
         tools:text="Climb these rocks to get an epic photo" />
 

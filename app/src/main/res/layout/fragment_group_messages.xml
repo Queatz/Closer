@@ -22,10 +22,13 @@
 
     <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/sendButton"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="@dimen/pad"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintBottom_toBottomOf="@+id/replyMessage"
+        app:layout_constraintTop_toTopOf="@+id/replyMessage"
+        app:layout_constraintStart_toEndOf="@+id/replyMessage"
         app:layout_constraintEnd_toEndOf="parent"
         android:minWidth="0dp"
         android:background="@drawable/clickable_light_flat"
@@ -41,6 +44,7 @@
         android:layout_marginStart="@dimen/pad"
         android:layout_marginTop="@dimen/pad"
         android:layout_marginEnd="@dimen/pad"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/sendButton"
@@ -59,7 +63,7 @@
         android:textColor="@color/text"
         android:textColorHint="@color/textHint"
         android:textColorHighlight="@color/colorAccent_50"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSize"
         tools:text="Hey guys let's go out" />
 
     <androidx.constraintlayout.widget.ConstraintLayout

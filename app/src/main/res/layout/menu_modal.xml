@@ -18,7 +18,7 @@
         android:paddingBottom="@dimen/padHalf"
         android:textAllCaps="true"
         android:textColor="@color/textInverse"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSizeSmall"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

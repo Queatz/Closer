@@ -18,7 +18,7 @@
         android:background="@drawable/clickable_blue"
         android:textColor="@color/text"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="@dimen/textSize"
         tools:text="888 Friends" />
 
 </FrameLayout>

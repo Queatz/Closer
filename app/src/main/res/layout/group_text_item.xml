@@ -17,11 +17,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:lineSpacingMultiplier="1.5"
-        android:textSize="14sp"
+        android:textSize="@dimen/textSize"
         android:textColor="@color/text"
         android:textIsSelectable="true"
         android:linksClickable="true"
         android:autoLink="all"
-        tools:text="Where are we going this weekend?" />z
+        tools:text="Where are we going this weekend?" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

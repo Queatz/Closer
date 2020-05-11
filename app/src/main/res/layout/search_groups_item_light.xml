@@ -56,7 +56,7 @@
             android:layout_marginTop="@dimen/pad"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:textSize="14sp"
+            android:textSize="@dimen/textSize"
             android:textColor="@color/text"
             android:textStyle="bold"
             tools:text="Mai Pham" />
@@ -71,7 +71,7 @@
             app:layout_constraintTop_toBottomOf="@+id/name"
             app:layout_constraintBottom_toTopOf="@id/actionRecyclerView"
             app:layout_goneMarginBottom="@dimen/pad"
-            android:textSize="12sp"
+            android:textSize="@dimen/textSizeSmall"
             android:textColor="@color/text"
             tools:text="For all fans of 1 hour workouts" />
 
@@ -85,7 +85,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/actionRecyclerView"
             app:layout_constraintHorizontal_bias="1"
-            android:textSize="12sp"
+            android:textSize="@dimen/textSizeSmall"
             android:textColor="@color/text"
             android:textAllCaps="true"
             android:textStyle="bold"

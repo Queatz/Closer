@@ -8,8 +8,8 @@
         android:id="@+id/messageText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp"
-        android:textSize="18sp"
+        android:padding="@dimen/padDialog"
+        android:textSize="@dimen/textSizeHeader"
         android:textColor="@color/textInverse"
         tools:text="Once upon a time there was a foxy named Alfred Meyers." />
 

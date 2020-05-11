@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="16sp"
+        android:textSize="@dimen/textSizeLarge"
         android:padding="@dimen/padDouble"
         android:text="@string/take_photo"
         android:textColor="@color/textInverse"

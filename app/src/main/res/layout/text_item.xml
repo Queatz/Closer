@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:drawablePadding="@dimen/pad"
-        android:textSize="18dp"
+        android:textSize="@dimen/textSizeHeader"
         android:gravity="center_horizontal"
         android:textColor="@color/textHintInverse"
         android:padding="@dimen/padDialog"

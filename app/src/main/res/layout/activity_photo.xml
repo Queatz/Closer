@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="8dp"
-            android:textSize="12sp"
+            android:textSize="@dimen/textSizeSmall"
             android:drawableTint="@color/text"
             android:drawableTop="@drawable/ic_share_black_24dp"
             android:drawablePadding="4dp"

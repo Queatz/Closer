@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/textHint"
         android:gravity="center_horizontal"
         android:visibility="visible"
@@ -39,7 +39,7 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="@dimen/textSizeSmall"
             android:textColor="@color/text"
             android:textStyle="bold"
             tools:text="Stella" />
@@ -140,7 +140,7 @@
                     android:paddingBottom="5dp"
                     android:text="@string/heart"
                     android:textColor="@color/text"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
@@ -158,7 +158,7 @@
                     android:paddingBottom="5dp"
                     android:text="@string/react_laugh"
                     android:textColor="@color/text"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
@@ -176,7 +176,7 @@
                     android:paddingBottom="5dp"
                     android:text="@string/react_yummy"
                     android:textColor="@color/text"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
@@ -194,7 +194,7 @@
                     android:paddingBottom="5dp"
                     android:text="@string/react_cool"
                     android:textColor="@color/text"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
@@ -212,7 +212,7 @@
                     android:paddingBottom="5dp"
                     android:text="@string/react_kiss"
                     android:textColor="@color/text"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
@@ -231,7 +231,7 @@
                     android:drawableStart="@drawable/ic_chevron_right_black_18dp"
                     android:contentDescription="@string/show_more"
                     android:textColor="@color/text"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
@@ -247,7 +247,7 @@
                     android:paddingRight="12dp"
                     android:paddingBottom="6dp"
                     android:textColor="@color/text"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/textSizeSmall"
                     android:textStyle="bold"
                     android:text="@string/reply"
                     android:focusable="true" />
@@ -265,7 +265,7 @@
                     android:paddingRight="12dp"
                     android:paddingBottom="6dp"
                     android:textColor="@color/text"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/textSizeSmall"
                     android:textStyle="bold"
                     android:text="@string/share"
                     android:focusable="true" />
@@ -283,7 +283,7 @@
                     android:paddingRight="12dp"
                     android:paddingBottom="6dp"
                     android:textColor="@color/text"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/textSizeSmall"
                     android:textStyle="bold"
                     android:text="@string/profile"
                     android:focusable="true" />
@@ -301,7 +301,7 @@
                     android:paddingRight="12dp"
                     android:paddingBottom="6dp"
                     android:textColor="@color/text"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/textSizeSmall"
                     android:textStyle="bold"
                     android:text="@string/remind"
                     android:visibility="gone"
@@ -320,7 +320,7 @@
                     android:paddingRight="12dp"
                     android:paddingBottom="6dp"
                     android:textColor="@color/text"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/textSizeSmall"
                     android:textStyle="bold"
                     android:text="@string/pin"
                     android:focusable="true" />
@@ -338,7 +338,7 @@
                     android:paddingRight="12dp"
                     android:paddingBottom="6dp"
                     android:textColor="@color/text"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/textSizeSmall"
                     android:textStyle="bold"
                     android:text="@string/delete"
                     android:visibility="gone"
@@ -375,7 +375,7 @@
         app:layout_constraintBottom_toTopOf="@+id/time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_goneMarginTop="@dimen/pad"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/text"
         android:paddingTop="@dimen/padHalf"
         android:paddingBottom="@dimen/padHalf"
@@ -400,7 +400,7 @@
         app:layout_constraintTop_toBottomOf="@+id/messageRepliesCount"
         app:layout_constraintBottom_toTopOf="@+id/action"
         android:layout_marginStart="@dimen/padHalf"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/text"
         android:gravity="bottom"
         tools:text="8:45pm" />
@@ -413,7 +413,7 @@
         app:layout_constraintStart_toEndOf="@+id/time"
         app:layout_constraintTop_toTopOf="@+id/time"
         app:layout_constraintBottom_toBottomOf="@+id/time"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/text"
         android:visibility="gone"
         tools:visibility="visible"
@@ -423,18 +423,21 @@
     <TextView
         android:id="@+id/action"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/pad"
         android:layout_marginBottom="@dimen/padHalf"
         android:paddingStart="@dimen/padDouble"
         android:paddingEnd="@dimen/padDouble"
+        android:paddingTop="@dimen/pad"
+        android:paddingBottom="@dimen/pad"
+        android:minHeight="0dp"
         android:gravity="center_vertical"
         android:elevation="2dp"
         android:textAllCaps="true"
         android:background="@drawable/clickable_accent"
         android:textColor="@color/text"
         android:textStyle="bold"
-        android:textSize="10sp"
+        android:textSize="@dimen/textSizeSmall"
         app:layout_constraintTop_toBottomOf="@+id/time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

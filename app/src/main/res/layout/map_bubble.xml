@@ -43,7 +43,7 @@
             android:layout_marginStart="@dimen/pad"
             android:layout_marginTop="@dimen/pad"
             android:textColor="@color/textInverse"
-            android:textSize="16sp"
+            android:textSize="@dimen/textSizeLarge"
             tools:text="Jacob" />
 
         <TextView
@@ -53,7 +53,7 @@
             app:layout_constraintTop_toBottomOf="@+id/name"
             app:layout_constraintStart_toStartOf="@+id/name"
             android:layout_marginTop="@dimen/padHalf"
-            android:textSize="16sp"
+            android:textSize="@dimen/textSizeLarge"
             android:textColor="@color/textInverse"
             tools:text="👊 fist bump" />
 
@@ -67,7 +67,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="@dimen/padDouble"
             android:layout_marginTop="@dimen/pad"
-            android:textSize="14sp"
+            android:textSize="@dimen/textSize"
             android:textColor="@color/textHintInverse"
             android:text="@string/reply" />
     </androidx.constraintlayout.widget.ConstraintLayout>

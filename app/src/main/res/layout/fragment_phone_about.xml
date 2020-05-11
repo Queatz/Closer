@@ -79,6 +79,7 @@
 
             <TextView
                 android:textStyle="bold"
+                android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,15 +92,19 @@
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize"
                 tools:text="Something here..."/>
 
             <TextView
                 android:id="@+id/actionEditIntroduction"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
+                android:minHeight="0dp"
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingBottom="@dimen/pad"
                 android:gravity="center_vertical"
                 android:elevation="2dp"
                 android:textAllCaps="true"
@@ -108,11 +113,12 @@
                 android:background="@drawable/clickable_accent"
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
-                android:textSize="10sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:text="@string/edit_your_introduction" />
 
             <TextView
                 android:textStyle="bold"
+                android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,10 +142,13 @@
             <TextView
                 android:id="@+id/actionAddGoal"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
+                android:minHeight="0dp"
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingBottom="@dimen/pad"
                 android:gravity="center_vertical"
                 android:elevation="2dp"
                 android:textAllCaps="true"
@@ -148,11 +157,12 @@
                 android:background="@drawable/clickable_accent"
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
-                android:textSize="10sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:text="@string/add_a_goal" />
 
             <TextView
                 android:textStyle="bold"
+                android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -176,10 +186,13 @@
             <TextView
                 android:id="@+id/actionAddLifestyle"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
+                android:minHeight="0dp"
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingBottom="@dimen/pad"
                 android:gravity="center_vertical"
                 android:elevation="2dp"
                 android:textAllCaps="true"
@@ -188,11 +201,12 @@
                 android:background="@drawable/clickable_accent"
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
-                android:textSize="10sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:text="@string/add_a_lifestyle" />
 
             <TextView
                 android:textStyle="bold"
+                android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -205,15 +219,19 @@
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize"
                 tools:text="Something here..."/>
 
             <TextView
                 android:id="@+id/actionEditOfftime"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
+                android:minHeight="0dp"
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingBottom="@dimen/pad"
                 android:gravity="center_vertical"
                 android:elevation="2dp"
                 android:textAllCaps="true"
@@ -222,11 +240,12 @@
                 android:background="@drawable/clickable_accent"
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
-                android:textSize="10sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:text="@string/edit_your_offtime" />
 
             <TextView
                 android:textStyle="bold"
+                android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -239,15 +258,19 @@
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize"
                 tools:text="Something here..."/>
 
             <TextView
                 android:id="@+id/actionEditOccupation"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
+                android:minHeight="0dp"
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingBottom="@dimen/pad"
                 android:gravity="center_vertical"
                 android:elevation="2dp"
                 android:textAllCaps="true"
@@ -256,11 +279,12 @@
                 android:background="@drawable/clickable_accent"
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
-                android:textSize="10sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:text="@string/edit_your_occupation" />
 
             <TextView
                 android:textStyle="bold"
+                android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -273,15 +297,19 @@
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize"
                 tools:text="Something here..."/>
 
             <TextView
                 android:id="@+id/actionEditHistory"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
+                android:minHeight="0dp"
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingBottom="@dimen/pad"
                 android:gravity="center_vertical"
                 android:elevation="2dp"
                 android:textAllCaps="true"
@@ -290,7 +318,7 @@
                 android:background="@drawable/clickable_accent"
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
-                android:textSize="10sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:text="@string/edit_your_history" />
 
         </LinearLayout>

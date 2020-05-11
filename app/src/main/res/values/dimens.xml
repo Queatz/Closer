@@ -22,14 +22,14 @@
     <dimen name="miniWindowCornerRadius">12dp</dimen>
     <dimen name="groupActionCombinedWidth">138dp</dimen>
     <dimen name="groupActionCombinedHeight">84dp</dimen>
-    <dimen name="groupActionVerySmallTextSize">10sp</dimen>
-    <dimen name="groupActionSmallTextSize">14sp</dimen>
-    <dimen name="groupActionLargeTextSize">16sp</dimen>
-    <dimen name="groupToolbarTextSize">12sp</dimen>
     <dimen name="iconSizeSm">18dp</dimen>
     <dimen name="cornerRadiusHalf">12dp</dimen>
     <dimen name="qr_code">180dp</dimen>
     <dimen name="maxPhotoHeight">256dp</dimen>
-    <dimen name="textSize">12sp</dimen>
+    <dimen name="textSizeSmall">12sp</dimen>
+    <dimen name="textSize">14sp</dimen>
+    <dimen name="textSizeLarge">16sp</dimen>
+    <dimen name="textSizeHeader">18sp</dimen>
+    <dimen name="textSizeTitle">22sp</dimen>
     <dimen name="textSizeEmoji">24sp</dimen>
 </resources>

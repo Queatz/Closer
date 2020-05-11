@@ -88,7 +88,7 @@
             android:textColor="@color/textInverse"
             android:textColorHint="@color/textHintInverse"
             android:textColorHighlight="@color/colorAccent_50"
-            android:textSize="14sp" />
+            android:textSize="@dimen/textSize" />
 
         <TextView
             android:id="@+id/connectionError"

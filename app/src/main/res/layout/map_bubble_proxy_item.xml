@@ -46,7 +46,7 @@
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         android:drawablePadding="@dimen/pad"
         android:drawableTint="@color/white"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/textHint"
         android:padding="12dp"
         tools:text="Mai Pham"/>
@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/name"
         android:drawablePadding="@dimen/pad"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/text"
         android:paddingStart="12dp"
         android:paddingBottom="12dp"

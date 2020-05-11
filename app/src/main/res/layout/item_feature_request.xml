@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:textStyle="bold"
                 tools:text="Reply directly to messages"
-                android:textSize="22sp"
+                android:textSize="@dimen/textSizeTitle"
                 android:textColor="@color/textInverse" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:paddingBottom="@dimen/padHalf"
                 android:textAllCaps="true"
                 android:textStyle="bold"
-                android:textSize="@dimen/groupActionSmallTextSize"
+                android:textSize="@dimen/textSize"
                 android:textColor="@color/text"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -67,7 +67,7 @@
                 android:layout_marginStart="@dimen/padDouble"
                 android:layout_marginEnd="@dimen/padDouble"
                 tools:text="I'd like to be able to reply directly to an message, and start a new chat thread there."
-                android:textSize="@dimen/groupActionLargeTextSize"
+                android:textSize="@dimen/textSizeLarge"
                 android:textColor="@color/textInverse" />
             <TextView
                 android:id="@+id/voteCount"
@@ -81,7 +81,7 @@
                 android:layout_marginStart="@dimen/padDouble"
                 android:layout_marginEnd="@dimen/padDouble"
                 tools:text="17 votes"
-                android:textSize="@dimen/groupActionLargeTextSize"
+                android:textSize="@dimen/textSizeLarge"
                 android:textColor="@color/textHintInverse" />
 
             <Button

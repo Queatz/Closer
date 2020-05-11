@@ -35,7 +35,7 @@
             android:paddingBottom="@dimen/padHalf"
             android:textAllCaps="true"
             android:textColor="@color/textInverse"
-            android:textSize="12sp"
+            android:textSize="@dimen/textSizeSmall"
             android:textStyle="bold"
             app:layout_constraintVertical_bias="0"
             app:layout_constraintTop_toTopOf="parent"
@@ -51,7 +51,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:contentDescription="@string/add_action"
             android:padding="6dp"
-            android:textSize="12sp"
+            android:textSize="@dimen/textSizeSmall"
             android:tint="@color/red"
             android:scaleType="centerInside"
             android:src="@drawable/ic_add_black_24dp"
@@ -68,7 +68,7 @@
             android:layout_marginStart="@dimen/pad"
             android:layout_marginEnd="@dimen/pad"
             android:textColor="@color/text"
-            android:textSize="14sp"
+            android:textSize="@dimen/textSize"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/windowTitle"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +104,7 @@
             android:textColor="@color/textInverse"
             android:textColorHint="@color/textHintInverse"
             android:textColorHighlight="@color/colorAccent_50"
-            android:textSize="14sp" />
+            android:textSize="@dimen/textSize" />
 
     <closer.vlllage.com.closer.ui.FixedUpRecyclerView
         android:id="@+id/featureRequestsRecyclerView"

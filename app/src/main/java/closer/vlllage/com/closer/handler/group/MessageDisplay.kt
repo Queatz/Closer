@@ -266,13 +266,11 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.message.visible = true
         holder.message.gravity = Gravity.START
-        holder.message.text = "${if (group.name == null) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name}${if (group.about != null) "\n" + group.about!! else ""}"
+        holder.message.text = "${if (group.name.isNullOrBlank()) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name}${if (!group.about.isNullOrBlank()) "\n${group.about}" else ""}"
 
         holder.action.visible = true
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.open_group)
-        holder.action.setOnClickListener { view ->
-            onGroupClickListener.invoke(group)
-        }
+        holder.action.setOnClickListener { onGroupClickListener.invoke(group) }
     }
 
     private fun displaySuggestion(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage, onSuggestionClickListener: ((Suggestion) -> Unit)?) {

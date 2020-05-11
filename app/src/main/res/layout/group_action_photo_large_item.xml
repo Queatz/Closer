@@ -47,7 +47,7 @@
             android:padding="@dimen/pad"
             android:textColor="@color/text"
             android:maxLines="3"
-            android:textSize="@dimen/groupActionLargeTextSize"
+            android:textSize="@dimen/textSizeLarge"
             android:textStyle="bold"
             tools:text="Book a room or hotel tonight" />
 
@@ -64,7 +64,7 @@
             android:textColor="@color/text"
             android:textStyle="bold"
             android:maxLines="1"
-            android:textSize="@dimen/groupActionSmallTextSize"
+            android:textSize="@dimen/textSize"
             tools:text="Cortado club" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -80,7 +80,7 @@
         android:padding="@dimen/padDouble"
         android:lineSpacingMultiplier="1.5"
         android:textColor="@color/textInverse"
-        android:textSize="@dimen/groupActionLargeTextSize"
+        android:textSize="@dimen/textSizeLarge"
         android:visibility="gone"
         tools:visibility="visible"
         tools:text="Matcha is the worlds most valuable resource.  It is to be declared glorious every day by every one!  declare now!!!!" />

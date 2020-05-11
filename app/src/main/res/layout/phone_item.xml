@@ -32,9 +32,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/photo"
         android:drawablePadding="@dimen/pad"
-        android:textSize="18sp"
+        android:textSize="@dimen/textSizeLarge"
         android:textColor="@color/textInverse"
-        android:padding="12dp"
+        android:padding="@dimen/padDouble"
         tools:text="Mai Hoang Truc Pham"/>
 
     <TextView
@@ -47,9 +47,9 @@
         app:layout_constraintStart_toEndOf="@+id/name"
         app:layout_constraintHorizontal_bias="1.0"
         android:drawablePadding="@dimen/pad"
-        android:textSize="18sp"
+        android:textSize="@dimen/textSizeLarge"
         android:textColor="@color/textInverse"
-        android:padding="16dp"
+        android:padding="@dimen/padDouble"
         tools:text="Love"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

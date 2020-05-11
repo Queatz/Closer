@@ -60,7 +60,7 @@
                 android:drawablePadding="6dp"
                 android:text="@string/heading"
                 android:textColor="@color/text"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:textStyle="bold" />
 
             <TextView
@@ -80,7 +80,7 @@
                 android:drawablePadding="6dp"
                 android:text="@string/text"
                 android:textColor="@color/text"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:textStyle="bold" />
 
             <TextView
@@ -100,7 +100,7 @@
                 android:drawablePadding="6dp"
                 android:text="@string/photo"
                 android:textColor="@color/text"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:textStyle="bold" />
 
             <TextView
@@ -120,7 +120,7 @@
                 android:drawablePadding="6dp"
                 android:text="@string/activity"
                 android:textColor="@color/text"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:textStyle="bold" />
 
             <TextView
@@ -141,7 +141,7 @@
                 android:text="@string/edit"
                 android:visibility="gone"
                 android:textColor="@color/text"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:textStyle="bold" />
 
             <TextView
@@ -161,7 +161,7 @@
                 android:drawablePadding="6dp"
                 android:text="@string/delete"
                 android:textColor="@color/text"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeSmall"
                 android:textStyle="bold" />
 
         </LinearLayout>

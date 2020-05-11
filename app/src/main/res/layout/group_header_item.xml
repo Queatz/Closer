@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:lineSpacingMultiplier="1.5"
-        android:textSize="18sp"
+        android:textSize="@dimen/textSizeHeader"
         android:textStyle="bold"
         android:textColor="@color/text"
         android:textIsSelectable="true"

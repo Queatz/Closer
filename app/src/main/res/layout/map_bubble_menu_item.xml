@@ -10,7 +10,7 @@
         android:id="@+id/menuItemTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="@dimen/textSize"
         android:textColor="@color/textInverse"
         android:textStyle="bold"
         android:padding="12dp"

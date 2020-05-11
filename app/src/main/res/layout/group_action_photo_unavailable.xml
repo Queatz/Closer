@@ -23,9 +23,9 @@
         android:padding="@dimen/pad"
         android:textColor="@color/text"
         android:maxLines="3"
-        android:textSize="@dimen/groupActionSmallTextSize"
+        android:textSize="@dimen/textSize"
         android:textStyle="bold"
         android:clickable="true"
-        android:text="This activity is private or unavailable" />
+        android:text="@string/this_activity_is_private_or_unavailable" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

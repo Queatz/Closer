@@ -81,20 +81,23 @@
     <Button
         android:id="@+id/actionViewProfile"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/pad"
         app:layout_constraintTop_toBottomOf="@+id/yourName"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="@dimen/padDialog"
         android:paddingStart="@dimen/padDouble"
         android:paddingEnd="@dimen/padDouble"
+        android:paddingTop="@dimen/pad"
+        android:paddingBottom="@dimen/pad"
         android:gravity="center_vertical"
-        android:elevation="2dp"
+        android:elevation="@dimen/elevationSmall"
         android:textAllCaps="true"
+        android:minHeight="0dp"
         android:background="@drawable/clickable_accent"
         android:textColor="@color/text"
         android:textStyle="bold"
-        android:textSize="10sp"
+        android:textSize="@dimen/textSizeSmall"
         android:text="@string/view_profile" />
 
     <Switch
