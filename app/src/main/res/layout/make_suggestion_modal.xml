@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:paddingTop="8dp">
+    android:paddingTop="@dimen/pad">
 
     <EditText
         android:id="@+id/input"
@@ -15,8 +15,8 @@
         android:selectAllOnFocus="true"
         android:imeOptions="actionGo"
         android:textAlignment="center"
-        android:paddingTop="16dp"
-        android:padding="8dp"
+        android:paddingTop="@dimen/padDouble"
+        android:padding="@dimen/pad"
         android:maxLength="48"
         android:background="@null"
         android:inputType="textShortMessage|textCapSentences"

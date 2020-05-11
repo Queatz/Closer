@@ -93,9 +93,9 @@ class MyGroupsLayoutHandler constructor(private val on: On) {
 
     fun showBottomPadding(showBottomPadding: Boolean) {
         container!!.setPadding(
-                container!!.paddingLeft,
+                container!!.paddingStart,
                 container!!.paddingTop,
-                container!!.paddingRight,
+                container!!.paddingEnd,
                 if (showBottomPadding) on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeight) else 0
         )
     }

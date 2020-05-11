@@ -102,7 +102,7 @@
             android:id="@+id/actionRecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="@dimen/pad"
+            android:paddingEnd="@dimen/pad"
             android:clipToPadding="false"
             android:visibility="gone"
             tools:visibility="visible"

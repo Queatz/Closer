@@ -78,7 +78,7 @@
         android:layout_marginTop="@dimen/pad"
         app:layout_constraintTop_toBottomOf="@+id/about"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingRight="@dimen/pad"
+        android:paddingEnd="@dimen/pad"
         android:paddingBottom="@dimen/pad"
         android:clipToPadding="false"
         android:visibility="gone"

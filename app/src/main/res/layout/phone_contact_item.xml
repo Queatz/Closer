@@ -7,10 +7,10 @@
     android:orientation="vertical"
     android:background="@drawable/clickable_light"
     android:clickable="true"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingTop="@dimen/pad"
+    android:paddingBottom="@dimen/pad"
+    android:paddingStart="@dimen/padDouble"
+    android:paddingEnd="@dimen/padDouble">
 
     <ImageView
         android:id="@+id/phoneIcon"
@@ -27,7 +27,7 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="@dimen/pad"
         app:layout_constraintTop_toTopOf="@+id/phoneIcon"
         app:layout_constraintStart_toEndOf="@+id/phoneIcon"
         android:textSize="@dimen/textSize"

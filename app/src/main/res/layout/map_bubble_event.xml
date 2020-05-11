@@ -19,8 +19,8 @@
         android:elevation="4dp"
         android:paddingBottom="12dp"
         android:paddingTop="12dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="6dp">
+        android:paddingStart="24dp"
+        android:paddingEnd="6dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:paddingTop="4dp"
+                android:paddingTop="@dimen/padHalf"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/text"
@@ -70,7 +70,7 @@
         android:layout_height="16dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="-8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="@dimen/padHalf"
         android:elevation="4dp"
         android:rotation="45"
         android:background="@drawable/map_bubble_knob_red_light"/>

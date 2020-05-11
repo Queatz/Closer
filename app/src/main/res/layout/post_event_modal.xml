@@ -33,7 +33,7 @@
                 android:drawableStart="@drawable/ic_group_black_18dp"
                 android:drawablePadding="@dimen/pad"
                 android:textColor="@color/textInverse"
-                android:padding="24dp"
+                android:padding="@dimen/padDialog"
                 android:ellipsize="end"
                 android:maxLines="1"
                 tools:text="in Mermaid Sea Club" />
@@ -58,8 +58,8 @@
             android:id="@+id/isPublicSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="24dp"
-            android:paddingLeft="24dp"
+            android:paddingEnd="@dimen/padDialog"
+            android:paddingStart="@dimen/padDialog"
             android:paddingTop="@dimen/padDouble"
             android:paddingBottom="@dimen/padDouble"
             android:text="@string/is_public"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/enter_event_details"
             android:imeOptions="actionGo"
-            android:padding="24dp"
+            android:padding="@dimen/padDialog"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:background="@null"
             android:maxLength="128"
@@ -89,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
-                android:padding="24dp"
+                android:padding="@dimen/padDialog"
                 android:layout_alignParentLeft="true"
                 android:text="@string/starts"/>
 
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
-                android:padding="24dp"
+                android:padding="@dimen/padDialog"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/red"
                 android:text="@string/today"/>
@@ -133,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
-                android:padding="24dp"
+                android:padding="@dimen/padDialog"
                 android:layout_alignParentLeft="true"
                 android:text="@string/ends"/>
 
@@ -142,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
-                android:padding="24dp"
+                android:padding="@dimen/padDialog"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/red"
                 android:text="@string/today"/>
@@ -172,7 +172,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/enter_welcome_message"
             android:imeOptions="actionGo"
-            android:padding="24dp"
+            android:padding="@dimen/padDialog"
             android:background="@null"
             android:inputType="textShortMessage|textCapSentences" />
 
@@ -182,7 +182,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/enter_event_price"
             android:imeOptions="actionGo"
-            android:padding="24dp"
+            android:padding="@dimen/padDialog"
             android:maxLength="12"
             android:background="@null"
             android:inputType="textShortMessage" />

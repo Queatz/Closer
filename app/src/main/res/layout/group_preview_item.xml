@@ -48,10 +48,10 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:background="@drawable/clickable_light_rounded_8dp"
-            android:paddingLeft="16dp"
-            android:paddingTop="8dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="4dp"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingTop="@dimen/pad"
+            android:paddingEnd="@dimen/padDouble"
+            android:paddingBottom="@dimen/padHalf"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/pinnedMessagesRecyclerView"
             android:textAllCaps="true"
@@ -109,7 +109,7 @@
             android:id="@+id/messagesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="240dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/pad"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -138,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                android:paddingRight="@dimen/pad"
+                android:paddingEnd="@dimen/pad"
                 android:clipToPadding="false" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,10 +15,10 @@
         android:orientation="vertical"
         android:background="@drawable/clickable_white_rounded"
         android:clickable="true"
-        android:elevation="4dp"
+        android:elevation="@dimen/elevation"
         android:paddingEnd="@dimen/padDouble"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingTop="@dimen/pad"
+        android:paddingBottom="@dimen/pad">
 
         <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/photo"
@@ -77,7 +77,7 @@
         android:layout_height="16dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="-8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="@dimen/padHalf"
         android:elevation="4dp"
         android:rotation="45"
         android:background="@drawable/map_bubble_knob_map_ambient_fuzzy"/>

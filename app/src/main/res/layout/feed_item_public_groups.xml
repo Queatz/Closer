@@ -88,9 +88,9 @@
             android:imeOptions="actionGo"
             android:inputType="text|textCapSentences"
             android:maxLines="1"
-            android:paddingLeft="@dimen/padDouble"
+            android:paddingStart="@dimen/padDouble"
             android:paddingTop="@dimen/pad"
-            android:paddingRight="16dp"
+            android:paddingEnd="@dimen/padDouble"
             android:paddingBottom="@dimen/pad"
             android:selectAllOnFocus="true"
             android:textColor="@color/textInverse"
@@ -234,8 +234,8 @@
                     android:id="@+id/publicEventsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/padHalf"
-                    android:paddingRight="@dimen/padHalf"
+                    android:paddingStart="@dimen/padHalf"
+                    android:paddingEnd="@dimen/padHalf"
                     android:clipToPadding="false" />
 
             </closer.vlllage.com.closer.ui.SoftScrollStopper>
@@ -261,8 +261,8 @@
                     android:id="@+id/publicHubsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/padHalf"
-                    android:paddingRight="@dimen/padHalf"
+                    android:paddingStart="@dimen/padHalf"
+                    android:paddingEnd="@dimen/padHalf"
                     android:clipToPadding="false" />
 
             </closer.vlllage.com.closer.ui.SoftScrollStopper>
@@ -288,8 +288,8 @@
                     android:id="@+id/publicGroupsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/padHalf"
-                    android:paddingRight="@dimen/padHalf"
+                    android:paddingStart="@dimen/padHalf"
+                    android:paddingEnd="@dimen/padHalf"
                     android:clipToPadding="false" />
 
             </closer.vlllage.com.closer.ui.SoftScrollStopper>
@@ -318,9 +318,9 @@
             android:imeOptions="actionGo"
             android:inputType="text|textCapWords"
             android:maxLines="1"
-            android:paddingLeft="@dimen/padDouble"
+            android:paddingStart="@dimen/padDouble"
             android:paddingTop="@dimen/pad"
-            android:paddingRight="16dp"
+            android:paddingEnd="@dimen/padDouble"
             android:paddingBottom="@dimen/pad"
             android:selectAllOnFocus="true"
             android:textColor="@color/textInverse"
