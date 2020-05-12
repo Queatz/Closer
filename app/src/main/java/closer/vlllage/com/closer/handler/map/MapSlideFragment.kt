@@ -132,7 +132,11 @@ class MapSlideFragment : PoolFragment() {
         on<MyGroupsLayoutActionsHandler>().showHelpButton(!on<PersistenceHandler>().isHelpHidden)
 
         on<EventBubbleHandler>().attach()
-        on<FeedHandler>().attach(view.feed)
+        on<FeedHandler>().attach(view.feed, view.toTheTopLayout)
+
+        view.toTheTop.setOnClickListener {
+            on<FeedHandler>().hide()
+        }
 
         on<DisposableHandler>().add(on<MeetHandler>().total
                 .subscribe {

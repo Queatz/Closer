@@ -3,11 +3,14 @@ package closer.vlllage.com.closer.handler.map
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -37,8 +40,9 @@ class FeedHandler constructor(private val on: On) {
     private var groupMessagesObservable: DataSubscription? = null
     private var groupActionsQueryString = ""
     private var groupActionsGroups = listOf<Group>()
+    private var isToTheTopVisible = false
 
-    fun attach(recyclerView: RecyclerView) {
+    fun attach(recyclerView: RecyclerView, toTheTop: View) {
         this.recyclerView = recyclerView
         layoutManager = LinearLayoutManager(
                 recyclerView.context,
@@ -65,6 +69,39 @@ class FeedHandler constructor(private val on: On) {
         mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.GROUPS
 
         recyclerView.adapter = mixedAdapter
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                val visible = layoutManager.findFirstVisibleItemPosition() >= 3
+
+                if (isToTheTopVisible != visible) {
+                    isToTheTopVisible = visible
+
+                    toTheTop.clearAnimation()
+
+                    toTheTop.startAnimation((if (visible) AlphaAnimation(if (toTheTop.visible) toTheTop.alpha else 0f, 1f) else AlphaAnimation(toTheTop.alpha, 0f)).apply {
+                        duration = 150
+
+                        if (!visible) {
+                            setAnimationListener(object : Animation.AnimationListener {
+                                override fun onAnimationRepeat(animation: Animation?) {
+
+                                }
+
+                                override fun onAnimationEnd(animation: Animation?) {
+                                    toTheTop.visible = false
+                                }
+
+                                override fun onAnimationStart(animation: Animation?) {
+                                }
+                            })
+                        }
+
+                        toTheTop.visible = true
+                    })
+                }
+            }
+        })
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(Notification::class).query()
                 .sort(on<SortHandler>().sortNotifications())
