@@ -394,7 +394,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 saySomethingHeader.visible = false
                                 saySomething.visible = true
                                 sendSomethingButton.visible = true
-                                peopleContainer.visible = true
+                                peopleContainer.visible = state.hasPeople
                                 eventsHeader.visible = false
                                 groupsHeader.visible = false
                                 eventsRecyclerView.visible = false
@@ -606,7 +606,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { phones ->
-                    peopleContainer.visible = phones.isNotEmpty() && on<AccountHandler>().privateOnly.not()
+                    state.hasPeople = phones.isNotEmpty()
+                    stateObservable.onNext(state)
                     on<PeopleRecyclerViewHandler>().setPeople(phones)
                 })
     }
@@ -761,5 +762,6 @@ class ViewState {
     var hasEvents = false
     var hasPlaces = false
     var hasSuggestions = false
+    var hasPeople = false
     var privateOnly = false
 }
