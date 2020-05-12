@@ -18,4 +18,10 @@ class Val constructor(private val on: On) {
     fun of(string: String?, stringWhenEmpty: String): String {
         return if (string.isNullOrBlank()) stringWhenEmpty else string
     }
+
+    inline fun <reified T : Enum<T>> valueOr(type: String, default: T): T = try {
+        java.lang.Enum.valueOf(T::class.java, type)
+    } catch (e: IllegalArgumentException) {
+        default
+    }
 }
