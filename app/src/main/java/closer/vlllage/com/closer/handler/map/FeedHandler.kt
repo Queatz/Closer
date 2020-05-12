@@ -62,7 +62,7 @@ class FeedHandler constructor(private val on: On) {
             }
         })
 
-        mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.EXPLORE
+        mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.GROUPS
 
         recyclerView.adapter = mixedAdapter
 
@@ -181,9 +181,10 @@ class FeedHandler constructor(private val on: On) {
             ContentViewType.HOME_NOTIFICATIONS -> FeedContent.NOTIFICATIONS
             ContentViewType.HOME_CALENDAR -> FeedContent.CALENDAR
             ContentViewType.HOME_ACTIVITIES -> FeedContent.ACTIVITIES
+            ContentViewType.HOME_FRIENDS -> FeedContent.FRIENDS
             ContentViewType.HOME_GROUPS -> FeedContent.GROUPS
-            ContentViewType.HOME_EXPLORE -> FeedContent.EXPLORE
             ContentViewType.HOME_POSTS -> FeedContent.POSTS
+            ContentViewType.HOME_PLACES -> FeedContent.PLACES
             else -> null
         }?.let {
             mixedAdapter.content = it

@@ -25,9 +25,6 @@ import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
@@ -110,7 +107,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             generate()
         }
 
-    var content: FeedContent = FeedContent.EXPLORE
+    var content: FeedContent = FeedContent.POSTS
         set(value) {
             field = value
             generate()
@@ -120,13 +117,13 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         items = mutableListOf<MixedItem>().apply {
             add(HeaderMixedItem())
             when (content) {
-                FeedContent.EXPLORE -> groups.apply {
+                FeedContent.GROUPS, FeedContent.PLACES -> groups.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else {
                         forEach { add(GroupMixedItem(it)) }
                     }
                 }
-                FeedContent.GROUPS -> groups.forEach { add(GroupMixedItem(it)) }
+                FeedContent.FRIENDS -> groups.forEach { add(GroupMixedItem(it)) }
                 FeedContent.POSTS -> groupMessages.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else {
