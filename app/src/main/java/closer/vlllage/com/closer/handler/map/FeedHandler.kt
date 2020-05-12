@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageHelper
 import closer.vlllage.com.closer.handler.group.GroupToolbarHandler
+import closer.vlllage.com.closer.handler.group.SearchGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
@@ -110,32 +111,6 @@ class FeedHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .observer { setNotifications(it) })
 
-        val distance = on<HowFar>().about7Miles
-
-        on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE)
-                .flatMap {
-                    on<MapHandler>().onMapIdleObservable()
-                }
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { cameraPosition ->
-                    val groupPreviewQueryBuilder = on<StoreHandler>().store.box(Group::class).query().apply {
-                        if (!on<AccountHandler>().privateOnly) {
-                            between(Group_.latitude, cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance)
-                                    .between(Group_.longitude, cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
-                        } else {
-                            equal(Group_.isPublic, false)
-                        }
-                    }
-                    on<DisposableHandler>().add(groupPreviewQueryBuilder
-                            .sort(on<SortHandler>().sortGroups(false))
-                            .build()
-                            .subscribe()
-                            .single()
-                            .on(AndroidScheduler.mainThread())
-                            .observer { setGroups(it) })
-                })
-
         on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { visible ->
@@ -156,7 +131,7 @@ class FeedHandler constructor(private val on: On) {
         setGroupActions(groupActionsGroups)
     }
 
-    private fun setGroups(groups: List<Group>) {
+    fun setGroups(groups: List<Group>) {
         mixedAdapter.groups = groups.toMutableList()
         setGroupMessages(groups)
         setGroupActions(groups)

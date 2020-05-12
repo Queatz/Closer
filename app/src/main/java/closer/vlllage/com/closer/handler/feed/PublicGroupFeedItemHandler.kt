@@ -154,22 +154,34 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
 
         on<DisposableHandler>().add(on<SearchGroupHandler>().groups.subscribe { groups ->
-            searchGroupsAdapter.setGroups(groups.filter { !it.hasEvent() && !it.physical })
+            searchGroupsAdapter.setGroups(on<FilterGroups>().public(groups))
 
-            if (on<AccountHandler>().privateOnly) {
-                searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
-                    state.hasEvents = it.isNotEmpty()
-                    stateObservable.onNext(state)
-                })
-            }
+            searchEventsAdapter.setGroups(on<FilterGroups>().events(groups).also {
+                state.hasEvents = it.isNotEmpty()
+                stateObservable.onNext(state)
+            })
 
-            searchHubsAdapter.setGroups(groups.filter { it.hub }.also {
+            searchHubsAdapter.setGroups(on<FilterGroups>().physical(groups).also {
                 state.hasPlaces = it.isNotEmpty()
                 stateObservable.onNext(state)
             })
 
             showGroupActions(groups)
         })
+
+        on<DisposableHandler>().add(toolbarAdapter.selectedContentView.flatMap { content ->
+            if ((content == ContentViewType.HOME_POSTS || content == ContentViewType.HOME_NOTIFICATIONS) && searchGroups.text.isNotEmpty()) {
+                searchGroups.setText("")
+            }
+
+            on<SearchGroupHandler>().groups.map { Pair(content, it) }
+        }.observeOn(AndroidSchedulers.mainThread()).subscribe({ result ->
+            on<FeedHandler>().setGroups(when (result.first) {
+                ContentViewType.HOME_GROUPS -> on<FilterGroups>().public(result.second)
+                ContentViewType.HOME_PLACES -> on<FilterGroups>().physical(result.second)
+                else -> result.second
+            })
+        }, {}))
 
         on<DisposableHandler>().add(on<SearchGroupHandler>().createGroupName.subscribe {
             searchGroupsAdapter.setCreatePublicGroupName(it)
@@ -327,7 +339,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.friends),
                         R.drawable.ic_group_black_24dp,
                         View.OnClickListener {
-                      toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_FRIENDS)
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_FRIENDS)
                             on<AccountHandler>().updatePrivateOnly(true)
                         },
                         value = ContentViewType.HOME_FRIENDS,
