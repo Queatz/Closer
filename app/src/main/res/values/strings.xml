@@ -252,11 +252,6 @@
     <string name="want_to_meet_phone">Want to meet %1$s?</string>
     <string name="yes">Yeah</string>
     <string name="pass">Pass</string>
-    <string name="things_to_do_around_here">Local activities</string>
-    <string name="groups_around_here">Local groups</string>
-    <string name="events_around_here">Local events</string>
-    <string name="conversations_around_here">Local conversations</string>
-    <string name="places_around_here">Local places</string>
     <string name="react_laugh">😂</string>
     <string name="react_cool">😎</string>
     <string name="react_kiss">😘</string>
@@ -265,8 +260,6 @@
     <string name="share_location">Share location</string>
     <string name="x_removed">%1$s removed</string>
     <string name="remove_x">Remove %1$s?</string>
-    <string name="talk_with_locals">Talk with locals</string>
-    <string name="local_recommendations">Local recommendations</string>
     <string name="say_something_in">Talk in %1$s…</string>
     <string name="ends">End time</string>
     <string name="starts">Start time</string>
@@ -343,8 +336,6 @@
     <string name="text_you">%1$s (You)</string>
     <string name="group_status_changed">Group status changed</string>
     <string name="group_photo_changed">Group photo changed</string>
-    <string name="calendar">Calendar</string>
-    <string name="explore">Explore</string>
     <string name="your_events">Your events</string>
     <string name="open">Open</string>
     <string name="notifications">Notifications</string>
@@ -368,7 +359,6 @@
     <string name="activity_description_updated">Activity description updated</string>
     <string name="post_in">Post in %1$s</string>
     <string name="nothing_around_here">Nothing around here.\n\nTry moving the map around.</string>
-    <string name="top_posts">Top posts</string>
     <string name="sent_at">Sent %1$s</string>
     <string name="join_event">Join event</string>
     <string name="join_group">Join group</string>

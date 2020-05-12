@@ -62,7 +62,7 @@
             android:paddingBottom="@dimen/pad"
             android:layout_marginTop="@dimen/padDouble"
             app:layout_constraintTop_toBottomOf="@+id/appsToolbarContainer"
-            android:text="@string/talk_with_locals"
+            android:text="@string/talk"
             android:textColor="@color/black_50"
             android:textStyle="bold"
             android:textAllCaps="true" />
@@ -159,7 +159,7 @@
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
                 android:paddingBottom="@dimen/pad"
-                android:text="@string/local_recommendations"
+                android:text="@string/suggestion"
                 android:textColor="@color/black_50"
                 android:textStyle="bold"
                 android:textAllCaps="true"
@@ -191,7 +191,7 @@
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
                 android:paddingBottom="@dimen/pad"
-                android:text="@string/things_to_do_around_here"
+                android:text="@string/things_to_do"
                 android:textColor="@color/black_50"
                 android:textStyle="bold"
                 android:textAllCaps="true"/>
@@ -221,7 +221,7 @@
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
                 android:paddingBottom="@dimen/pad"
-                android:text="@string/events_around_here"
+                android:text="@string/events"
                 android:textColor="@color/black_50"
                 android:textStyle="bold"
                 android:textAllCaps="true"/>
@@ -248,7 +248,7 @@
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
                 android:paddingBottom="@dimen/pad"
-                android:text="@string/places_around_here"
+                android:text="@string/places"
                 android:textColor="@color/black_50"
                 android:textStyle="bold"
                 android:textAllCaps="true"/>
@@ -275,7 +275,7 @@
                 android:paddingStart="@dimen/padDouble"
                 android:paddingEnd="@dimen/padDouble"
                 android:paddingBottom="@dimen/pad"
-                android:text="@string/groups_around_here"
+                android:text="@string/groups"
                 android:textColor="@color/black_50"
                 android:textStyle="bold"
                 android:textAllCaps="true"/>
@@ -357,7 +357,7 @@
             android:paddingStart="@dimen/padDouble"
             android:paddingEnd="@dimen/padDouble"
             android:paddingBottom="@dimen/pad"
-            android:text="@string/conversations_around_here"
+            android:text="@string/conversations"
             android:textColor="@color/black_50"
             android:textStyle="bold"
             android:textAllCaps="true" />
