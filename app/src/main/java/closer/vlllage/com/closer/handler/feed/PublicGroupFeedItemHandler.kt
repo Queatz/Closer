@@ -169,19 +169,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             showGroupActions(groups)
         })
 
-        on<DisposableHandler>().add(toolbarAdapter.selectedContentView.flatMap { content ->
+        on<DisposableHandler>().add(toolbarAdapter.selectedContentView
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { content ->
             if ((content == ContentViewType.HOME_POSTS || content == ContentViewType.HOME_NOTIFICATIONS) && searchGroups.text.isNotEmpty()) {
                 searchGroups.setText("")
             }
-
-            on<SearchGroupHandler>().groups.map { Pair(content, it) }
-        }.observeOn(AndroidSchedulers.mainThread()).subscribe({ result ->
-            on<FeedHandler>().setGroups(when (result.first) {
-                ContentViewType.HOME_GROUPS -> on<FilterGroups>().public(result.second)
-                ContentViewType.HOME_PLACES -> on<FilterGroups>().physical(result.second)
-                else -> result.second
-            })
-        }, {}))
+        })
 
         on<DisposableHandler>().add(on<SearchGroupHandler>().createGroupName.subscribe {
             searchGroupsAdapter.setCreatePublicGroupName(it)

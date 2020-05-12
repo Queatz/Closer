@@ -11,10 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.AccountHandler
-import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.feed.FeedContent
+import closer.vlllage.com.closer.handler.feed.FilterGroups
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageHelper
@@ -24,12 +23,15 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.*
+import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.GroupMessage
+import closer.vlllage.com.closer.store.models.GroupMessage_
+import closer.vlllage.com.closer.store.models.Notification
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 
 class FeedHandler constructor(private val on: On) {
@@ -42,6 +44,7 @@ class FeedHandler constructor(private val on: On) {
     private var groupActionsQueryString = ""
     private var groupActionsGroups = listOf<Group>()
     private var isToTheTopVisible = false
+    private var content = BehaviorSubject.create<FeedContent>()
 
     fun attach(recyclerView: RecyclerView, toTheTop: View) {
         this.recyclerView = recyclerView
@@ -67,7 +70,9 @@ class FeedHandler constructor(private val on: On) {
             }
         })
 
-        mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.GROUPS
+        mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.POSTS
+
+        content.onNext(mixedAdapter.content)
 
         recyclerView.adapter = mixedAdapter
 
@@ -124,6 +129,18 @@ class FeedHandler constructor(private val on: On) {
                 recyclerView.postInvalidate()
             }
         })
+
+        content.flatMap { content -> on<SearchGroupHandler>().groups.map { Pair(content, it) } }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result ->
+                    setGroups(when (result.first) {
+                        FeedContent.GROUPS -> on<FilterGroups>().public(result.second)
+                        FeedContent.PLACES -> on<FilterGroups>().physical(result.second)
+                        else -> result.second
+                    })
+                }, {}).also {
+                    on<DisposableHandler>().add(it)
+                }
     }
 
     fun searchGroupActions(queryString: String) {
@@ -199,6 +216,7 @@ class FeedHandler constructor(private val on: On) {
             ContentViewType.HOME_PLACES -> FeedContent.PLACES
             else -> null
         }?.let {
+            content.onNext(it)
             mixedAdapter.content = it
             on<PersistenceHandler>().lastFeedTab = it
         }
