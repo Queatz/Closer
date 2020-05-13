@@ -141,13 +141,11 @@ class FeedHandler constructor(private val on: On) {
                     on<DisposableHandler>().add(it)
                 }
 
-        on<DisposableHandler>().add(on<AccountHandler>().changes(AccountHandler.ACCOUNT_FIELD_PRIVATE).switchMap {
-            on<MapHandler>().onMapIdleObservable()
-        }.subscribe {
+        on<DisposableHandler>().add(content.switchMap { on<MapHandler>().onMapIdleObservable() }.subscribe({
             on<MapHandler>().center?.let { center ->
                 loadGroups(center)
             }
-        })
+        }, {}))
     }
 
     fun searchGroupActions(queryString: String) {
@@ -164,9 +162,9 @@ class FeedHandler constructor(private val on: On) {
     private fun loadGroups(target: LatLng) {
         val distance = on<HowFar>().about7Miles
 
-        val queryBuilder = when (on<AccountHandler>().privateOnly) {
-            true -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
-            false -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.isNull
+        val queryBuilder = when (feedContent()) {
+            FeedContent.FRIENDS -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
+            else -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.isNull
                     .and(Group_.phoneId.isNull)
                     .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo()))
                     .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
