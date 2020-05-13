@@ -21,6 +21,13 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
 
     var people = mutableListOf<Phone>()
         set(value) {
+            if (field.isEmpty()) {
+                field.clear()
+                field.addAll(value)
+                notifyDataSetChanged()
+                return
+            }
+
             val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                     return field[oldItemPosition].id == value[newItemPosition].id
