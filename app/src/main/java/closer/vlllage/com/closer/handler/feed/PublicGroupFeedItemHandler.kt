@@ -199,7 +199,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         }
 
         val cameraPositionCallback: (CameraPosition) -> Unit = { cameraPosition: CameraPosition ->
-            loadGroups(cameraPosition.target)
             loadSuggestions(cameraPosition.target)
             loadPeople(cameraPosition.target)
             loadEvents(cameraPosition.target)
@@ -221,7 +220,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         on<DisposableHandler>().add(on<AccountHandler>().changes(ACCOUNT_FIELD_PRIVATE).subscribe {
             on<MapHandler>().center?.let { center ->
-                loadGroups(center)
                 loadSuggestions(center)
                 loadPeople(center)
                 loadEvents(center)
@@ -568,30 +566,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         }.also { on<DisposableHandler>().add(it) }
             }
         })
-    }
-
-    private fun loadGroups(target: LatLng) {
-        val distance = on<HowFar>().about7Miles
-
-        val queryBuilder = when (on<AccountHandler>().privateOnly) {
-            true -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
-            false -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.isNull
-                    .and(Group_.phoneId.isNull)
-                    .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo()))
-                    .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
-                    .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance)))
-            ))
-        }
-
-        on<DisposableHandler>().add(queryBuilder
-                .sort(on<SortHandler>().sortGroups(true))
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .single()
-                .observer { groups ->
-                    on<SearchGroupHandler>().setGroups(groups)
-                })
     }
 
     private fun loadPeople(latLng: LatLng) {

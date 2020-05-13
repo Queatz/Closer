@@ -18,7 +18,9 @@ class SearchGroupHandler constructor(private val on: On) {
     val createGroupName = BehaviorSubject.createDefault("")
 
     fun showGroupsForQuery(searchQuery: String) {
-        this.searchQuery = searchQuery.toLowerCase()
+        if (this.searchQuery == searchQuery.toLowerCase(Locale.getDefault())) return
+
+        this.searchQuery = searchQuery.toLowerCase(Locale.getDefault())
 
         createGroupName.onNext(if (searchQuery.isBlank()) "" else searchQuery)
 
@@ -31,8 +33,8 @@ class SearchGroupHandler constructor(private val on: On) {
         val groups = mutableListOf<Group>()
         for (group in allGroups) {
             if (group.name != null) {
-                if (group.name!!.toLowerCase().contains(searchQuery) ||
-                        on<Val>().of(group.about, "").toLowerCase().contains(searchQuery) ||
+                if (group.name!!.toLowerCase(Locale.getDefault()).contains(searchQuery) ||
+                        on<Val>().of(group.about, "").toLowerCase(Locale.getDefault()).contains(searchQuery) ||
                         groupActionNamesContains(group, searchQuery)) {
                     groups.add(group)
                 }
@@ -47,7 +49,7 @@ class SearchGroupHandler constructor(private val on: On) {
                 .equal(GroupAction_.group, group.id!!).build().find()
 
         for (groupAction in groupActions) {
-            if (groupAction.name!!.toLowerCase().contains(searchQuery)) {
+            if (groupAction.name!!.toLowerCase(Locale.getDefault()).contains(searchQuery)) {
                 return true
             }
         }

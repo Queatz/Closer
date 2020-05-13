@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.feed.FilterGroups
@@ -23,10 +24,8 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.GroupMessage
-import closer.vlllage.com.closer.store.models.GroupMessage_
-import closer.vlllage.com.closer.store.models.Notification
+import closer.vlllage.com.closer.store.models.*
+import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
@@ -130,7 +129,7 @@ class FeedHandler constructor(private val on: On) {
             }
         })
 
-        content.distinctUntilChanged().flatMap { content -> on<SearchGroupHandler>().groups.map { Pair(content, it) } }
+        content.distinctUntilChanged().switchMap { content -> on<SearchGroupHandler>().groups.map { Pair(content, it) } }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     setGroups(when (result.first) {
@@ -141,6 +140,14 @@ class FeedHandler constructor(private val on: On) {
                 }, {}).also {
                     on<DisposableHandler>().add(it)
                 }
+
+        on<DisposableHandler>().add(on<AccountHandler>().changes(AccountHandler.ACCOUNT_FIELD_PRIVATE).switchMap {
+            on<MapHandler>().onMapIdleObservable()
+        }.subscribe {
+            on<MapHandler>().center?.let { center ->
+                loadGroups(center)
+            }
+        })
     }
 
     fun searchGroupActions(queryString: String) {
@@ -152,6 +159,30 @@ class FeedHandler constructor(private val on: On) {
         mixedAdapter.groups = groups.toMutableList()
         setGroupMessages(groups)
         setGroupActions(groups)
+    }
+
+    private fun loadGroups(target: LatLng) {
+        val distance = on<HowFar>().about7Miles
+
+        val queryBuilder = when (on<AccountHandler>().privateOnly) {
+            true -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
+            false -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.isNull
+                    .and(Group_.phoneId.isNull)
+                    .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo()))
+                    .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
+                            .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance)))
+            ))
+        }
+
+        on<DisposableHandler>().add(queryBuilder
+                .sort(on<SortHandler>().sortGroups(true))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { groups ->
+                    on<SearchGroupHandler>().setGroups(groups)
+                })
     }
 
     private fun setGroupMessages(groups: List<Group>) {
