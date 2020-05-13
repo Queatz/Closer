@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer
 
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -11,7 +12,6 @@ import com.squareup.picasso.Callback
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import kotlin.math.abs
 
 class PhotoActivity : CircularRevealActivity() {
@@ -21,7 +21,13 @@ class PhotoActivity : CircularRevealActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val attrib = window.attributes
+            attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo)
         photo = findViewById(R.id.photo)

@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityLayout"
-    android:background="@color/black_75"
-    android:fitsSystemWindows="true">
+    android:background="@color/black_75">
 
     <closer.vlllage.com.closer.ui.StablePhotoView
         android:id="@+id/photo"
@@ -20,20 +19,22 @@
         android:contentDescription="@string/photo"
         android:transitionName="photo" />
 
-    <LinearLayout
-        android:id="@+id/eventToolbar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fitsSystemWindows="true">
+
         <Button
             android:id="@+id/actionShare"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            app:layout_constraintTop_toTopOf="parent"
             android:padding="@dimen/pad"
             android:textSize="@dimen/textSizeSmall"
             android:drawableTint="@color/text"
@@ -42,7 +43,8 @@
             android:background="@drawable/clickable_light"
             android:text="@string/share"
             android:textColor="@color/text" />
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
