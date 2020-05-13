@@ -185,7 +185,7 @@
     <string name="is_in">— in %1$s</string>
     <string name="add">Add</string>
     <string name="add_person_to">Add %1$s to</string>
-    <string name="share_group_to">Share %1$s with</string>
+    <string name="share_group_to">Share \"%1$s\" with</string>
     <string name="added_phone">%1$s has been added</string>
     <string name="sending_photo">Sending photo…</string>
     <string name="settings_public_notifications">Public notifications</string>
@@ -364,7 +364,7 @@
     <string name="join_group">Join group</string>
     <string name="search_for_things_to_do">Search activities</string>
     <string name="things_to_do">Activities</string>
-    <string name="view_more_conversations">View more conversations in the Explore tab.</string>
+    <string name="view_more_conversations">Move the map to see more conversations.</string>
     <string name="your_things_to_do">Your activities</string>
     <string name="send_file">Send file</string>
     <string name="send_audio">Send audio</string>
