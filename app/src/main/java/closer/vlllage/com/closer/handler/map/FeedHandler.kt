@@ -130,7 +130,7 @@ class FeedHandler constructor(private val on: On) {
             }
         })
 
-        content.flatMap { content -> on<SearchGroupHandler>().groups.map { Pair(content, it) } }
+        content.distinctUntilChanged().flatMap { content -> on<SearchGroupHandler>().groups.map { Pair(content, it) } }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     setGroups(when (result.first) {
