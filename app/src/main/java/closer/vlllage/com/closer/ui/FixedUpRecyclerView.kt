@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,7 +20,8 @@ open class FixedUpRecyclerView : RecyclerView {
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     init {
-        @Suppress("LeakingThis") setOnHierarchyChangeListener(object : OnHierarchyChangeListener {
+        @Suppress("LeakingThis")
+        setOnHierarchyChangeListener(object : OnHierarchyChangeListener {
             override fun onChildViewRemoved(parent: View, child: View) {
                 if ((layoutManager as? LinearLayoutManager)?.orientation != HORIZONTAL) return
                 if (child.height == 0 || parent.height >= child.height) post { requestLayout() }
@@ -36,6 +38,14 @@ open class FixedUpRecyclerView : RecyclerView {
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         dispatchTouchEventListener?.invoke(ev)
         return super.dispatchTouchEvent(ev)
+    }
+
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+
+        // If children were laid out when the view is invisible, they need to relayout
+        if (visibility == View.VISIBLE) children.forEach { it.requestLayout() }
     }
 
     @SuppressLint("WrongCall")

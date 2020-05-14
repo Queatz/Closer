@@ -381,7 +381,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                peopleRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
                                 itemView.historyButton.visible = false
@@ -402,7 +401,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                peopleRecyclerView.visible = true
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
                                 itemView.historyButton.visible = false
@@ -422,7 +420,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                peopleRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
                                 if (searchGroups.visible.not()) {
                                     searchGroups.visible = true
@@ -447,7 +444,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                peopleRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_events_hint)
@@ -462,7 +458,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 hubsRecyclerView.visible = state.hasPlaces
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                peopleRecyclerView.visible = true
                                 groupsRecyclerView.visible = false
                                 eventsHeader.visible = false
                                 groupsHeader.visible = false
@@ -488,7 +483,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                peopleRecyclerView.visible = true
                                 groupsRecyclerView.visible = true
                                 eventsHeader.visible = false
                                 groupsHeader.visible = false
@@ -514,7 +508,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 hubsRecyclerView.visible = state.hasPlaces
                                 actionRecyclerView.visible = state.hasGroupActions
                                 suggestionsRecyclerView.visible = false
-                                peopleRecyclerView.visible = true
                                 groupsRecyclerView.visible = true
                                 eventsHeader.visible = state.hasEvents
                                 groupsHeader.visible = true
