@@ -8,9 +8,10 @@ import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import closer.vlllage.com.closer.handler.map.MapHandler.Companion.DEFAULT_ZOOM
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import java.util.*
+import kotlin.math.pow
 
 /**
  * Created by jacob on 2/18/18.
@@ -109,7 +110,7 @@ class BubbleMapLayer {
         }
 
         if (this.view!!.height > 0) {
-            view.elevation = Math.min((if (mapBubble.isOnTop) 2 else 1) + point.y.toFloat() / this.view!!.height.toFloat(), 64f)
+            view.elevation = ((if (mapBubble.isOnTop) 2 else 1) + point.y.toFloat() / this.view!!.height.toFloat()).coerceAtMost(64f)
         }
     }
 
@@ -229,15 +230,10 @@ class BubbleMapLayer {
         return true
     }
 
-    private fun zoomScale(mapBubble: MapBubble): Float {
-        if (mapBubble.type == BubbleType.PHYSICAL_GROUP) {
-            return Math.pow((map!!.cameraPosition.zoom / 15f).toDouble(), 2.0).toFloat()
-        }
-
-        return if (mapBubble.type != BubbleType.MENU) {
-            Math.min(1.0, Math.pow((map!!.cameraPosition.zoom / 15f).toDouble(), 2.0)).toFloat()
-        } else 1f
-
+    private fun zoomScale(mapBubble: MapBubble): Float = when (mapBubble.type) {
+        BubbleType.PHYSICAL_GROUP -> (map!!.cameraPosition.zoom / (DEFAULT_ZOOM + 1)).toDouble().pow(10.0).coerceAtLeast(.75).coerceAtMost(1.5).toFloat()
+        BubbleType.MENU -> 1f
+        else -> 1.0.coerceAtMost((map!!.cameraPosition.zoom / (DEFAULT_ZOOM - 1)).toDouble().pow(10.0)).coerceAtLeast(.25).coerceAtMost(1.0).toFloat()
     }
 
     interface BubbleView {

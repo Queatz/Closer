@@ -125,6 +125,8 @@
         app:layout_constraintTop_toBottomOf="@id/shareYourLocationSwitch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:paddingEnd="@dimen/padDialog"
+        android:paddingStart="@dimen/padDialog"
         android:padding="@dimen/padDouble"
         android:imeOptions="actionGo"
         android:background="@null"

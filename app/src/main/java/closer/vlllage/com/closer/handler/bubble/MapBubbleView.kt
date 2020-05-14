@@ -40,9 +40,7 @@ class MapBubbleView constructor(private val on: On) {
             name.visible = true
             name.text = mapBubble.name + on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)
 
-            if (info != null) {
-                info.text = on<TimeStr>().pretty((mapBubble.tag as Phone).updated)
-            }
+            info?.text = on<TimeStr>().pretty((mapBubble.tag as Phone).updated)
         } else {
             if (mapBubble.name!!.isEmpty()) {
                 name.visible = false
@@ -58,9 +56,7 @@ class MapBubbleView constructor(private val on: On) {
             } else if (mapBubble.tag is Phone) {
                 val phone = mapBubble.tag as Phone
 
-                if (action != null) {
-                    action.text = on<TimeStr>().pretty(phone.updated)
-                }
+                action?.text = on<TimeStr>().pretty(phone.updated)
 
                 if (photo != null) {
                     if (!phone.photo.isNullOrBlank()) {

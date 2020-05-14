@@ -27,7 +27,7 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
         mergeBubblesDisposable?.dispose()
 
         mergeBubblesDisposable = mergeBubbles(HashSet(mapBubbles), lastClusterSize)
-                .delay(150, TimeUnit.MILLISECONDS)
+                .delay(250, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->

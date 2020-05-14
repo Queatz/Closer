@@ -2,6 +2,10 @@
 Incoming
 ========
 
+    [ ] First turn on of location
+        "Anyone on Closer will be able to see your location on the map" Turn off / I want this
+    [ ] Talk in Allen -> Talk on Allen's wall
+
     [X] Closer Add a friends group modal text alignment is off
     [ ] Closer increase font size + standardize
     [X] Closer create a friends group from the friends tab

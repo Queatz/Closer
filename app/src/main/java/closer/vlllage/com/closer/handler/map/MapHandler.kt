@@ -188,7 +188,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
     fun onMapReadyObservable() = onMapReadyObservable.observeOn(AndroidSchedulers.mainThread())!!
 
     companion object {
-        private const val DEFAULT_ZOOM = 18f
-        private const val DEFAULT_TILT = 45f
+        const val DEFAULT_ZOOM = 18f
+        const val DEFAULT_TILT = 45f
     }
 }
