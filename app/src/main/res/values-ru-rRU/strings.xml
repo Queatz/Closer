@@ -26,6 +26,7 @@
     <string name="create_public_group">Добавить общедоступную группу</string>
     <string name="enter_group_name">Назовите эту группу</string>
     <string name="enter_place_name">Назовите это место</string>
+    <string name="places">места</string>
     <string name="wait_for_it">Ждите…</string>
     <string name="phone_number_or_name">Пригласить по номеру телефона или имени</string>
     <string name="show_contacts">Поиск телефонных контактов</string>
