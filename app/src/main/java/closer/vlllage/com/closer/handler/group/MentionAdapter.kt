@@ -47,6 +47,12 @@ class MentionAdapter(on: On, private val onMentionClickListener: ((Phone) -> Uni
     }
 
     fun setItems(items: List<Phone>) {
+        if (this.items.isEmpty()) {
+            this.items.clear()
+            this.items.addAll(items)
+            notifyDataSetChanged()
+        }
+
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun getOldListSize(): Int {
                 return this@MentionAdapter.items.size

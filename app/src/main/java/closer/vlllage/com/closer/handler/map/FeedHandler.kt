@@ -44,6 +44,7 @@ class FeedHandler constructor(private val on: On) {
     private var groupActionsGroups = listOf<Group>()
     private var isToTheTopVisible = false
     private var content = BehaviorSubject.create<FeedContent>()
+    private var loadGroupsDisposableGroup: DisposableGroup = on<DisposableHandler>().group()
 
     fun attach(recyclerView: RecyclerView, toTheTop: View) {
         this.recyclerView = recyclerView
@@ -160,6 +161,8 @@ class FeedHandler constructor(private val on: On) {
     }
 
     private fun loadGroups(target: LatLng) {
+        loadGroupsDisposableGroup.clear()
+
         val distance = on<HowFar>().about7Miles
 
         val queryBuilder = when (feedContent()) {
@@ -172,15 +175,29 @@ class FeedHandler constructor(private val on: On) {
             ))
         }
 
-        on<DisposableHandler>().add(queryBuilder
+        queryBuilder
                 .sort(on<SortHandler>().sortGroups(true))
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { groups ->
-                    on<SearchGroupHandler>().setGroups(groups)
-                })
+                    if (feedContent() == FeedContent.FRIENDS) {
+                        on<SearchGroupHandler>().setGroups(groups)
+                    } else {
+                        on<Search>().events(target, single = true) { events ->
+                            on<StoreHandler>().store.box(Group::class).query(
+                                    Group_.id.oneOf(events.map { it.groupId }.toTypedArray())
+                            ).build()
+                                    .subscribe()
+                                    .single()
+                                    .on(AndroidScheduler.mainThread())
+                                    .observer { eventGroups ->
+                                        on<SearchGroupHandler>().setGroups(groups + eventGroups.filter { eventGroup -> groups.all { it.id != eventGroup.id } })
+                                    }.also { loadGroupsDisposableGroup.add(it) }
+                        }.also { loadGroupsDisposableGroup.add(it) }
+                    }
+                }.also { loadGroupsDisposableGroup.add(it) }
     }
 
     private fun setGroupMessages(groups: List<Group>) {

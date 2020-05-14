@@ -66,7 +66,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private val showCalendarIndicator = BehaviorSubject.createDefault(false)
 
     private var groupActionsDisposable: DataSubscription? = null
-    private var eventsDisposable: DataSubscription? = null
 
     fun attach(itemView: ViewGroup, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
         this.itemView = itemView
@@ -131,11 +130,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                on<FeedHandler>().searchGroupActions(s.toString())
-                on<SearchGroupHandler>().showGroupsForQuery(s.toString())
             }
 
             override fun afterTextChanged(s: Editable) {
+                on<FeedHandler>().searchGroupActions(searchGroups.text.toString())
+                on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
             }
         })
 
@@ -153,13 +152,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
 
-        on<DisposableHandler>().add(on<SearchGroupHandler>().groups.subscribe { groups ->
-            searchGroupsAdapter.setGroups(on<FilterGroups>().public(groups))
-
+        on<DisposableHandler>().add(on<SearchGroupHandler>().groups.observeOn(AndroidSchedulers.mainThread()).subscribe { groups ->
             searchEventsAdapter.setGroups(on<FilterGroups>().events(groups).also {
                 state.hasEvents = it.isNotEmpty()
                 stateObservable.onNext(state)
             })
+
+            searchGroupsAdapter.setGroups(on<FilterGroups>().public(groups))
 
             searchHubsAdapter.setGroups(on<FilterGroups>().physical(groups).also {
                 state.hasPlaces = it.isNotEmpty()
@@ -201,7 +200,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         val cameraPositionCallback: (CameraPosition) -> Unit = { cameraPosition: CameraPosition ->
             loadSuggestions(cameraPosition.target)
             loadPeople(cameraPosition.target)
-            loadEvents(cameraPosition.target)
 
             val nearestGroupName = on<ProximityHandler>().findGroupsNear(cameraPosition.target, true).firstOrNull()?.name
 
@@ -222,7 +220,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             on<MapHandler>().center?.let { center ->
                 loadSuggestions(center)
                 loadPeople(center)
-                loadEvents(center)
             }
             state.privateOnly = on<AccountHandler>().privateOnly
             stateObservable.onNext(state)
@@ -544,28 +541,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         }
                     })
         }
-    }
-
-    private fun loadEvents(target: LatLng) {
-        eventsDisposable?.let { on<DisposableHandler>().dispose(it) }
-
-        on<DisposableHandler>().add(on<Search>().events(target, single = true) {
-            showCalendarIndicator.onNext(it.isNotEmpty())
-
-            if (on<AccountHandler>().privateOnly.not()) {
-                eventsDisposable = on<StoreHandler>().store.box(Group::class).query(
-                        Group_.id.oneOf(it.map { it.groupId }.toTypedArray())
-                ).build()
-                        .subscribe()
-                        .on(AndroidScheduler.mainThread())
-                        .observer { groups ->
-                            searchEventsAdapter.setGroups(groups.filter { it.hasEvent() }.also {
-                                state.hasEvents = it.isNotEmpty()
-                                stateObservable.onNext(state)
-                            })
-                        }.also { on<DisposableHandler>().add(it) }
-            }
-        })
     }
 
     private fun loadPeople(latLng: LatLng) {
