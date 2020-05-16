@@ -65,15 +65,20 @@ class PersonalSlideFragment : PoolFragment() {
                     }
                 })
 
-        shareYourLocationSwitch.setOnCheckedChangeListener { switchView, isChecked ->
+        shareYourLocationSwitch.isChecked = on<AccountHandler>().active
+
+        shareYourLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
             on<AccountHandler>().updateActive(isChecked)
+
+            if (isChecked) {
+                on<DefaultAlerts>().message(R.string.your_sharing_location)
+            }
         }
 
-        shareYourLocationSwitch.isChecked = on<AccountHandler>().active
         previousStatus = on<AccountHandler>().status
         currentStatus.setText(previousStatus)
 
-        currentStatus.setOnFocusChangeListener { editTextView, isFocused ->
+        currentStatus.setOnFocusChangeListener { _, _ ->
             if (currentStatus.text.toString() == previousStatus) {
                 return@setOnFocusChangeListener
             }

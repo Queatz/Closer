@@ -2,7 +2,10 @@
 Incoming
 ========
 
-    [ ] First turn on of location
+    [ ] Don't include people groups in expired groups
+    [ ] Reload active groups and phones on map zoom and move
+
+    [X] First turn on of location
         "Anyone on Closer will be able to see your location on the map" Turn off / I want this
     [ ] Talk in Allen -> Talk on Allen's wall
 
