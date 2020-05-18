@@ -2,6 +2,10 @@
 Incoming
 ========
 
+    [ ] in group should use groupName
+    [ ] "null" for status
+    [ ] Reply option missing on action message
+
     [ ] Send user language to backend
     [ ] Send notifications in that user's language
 

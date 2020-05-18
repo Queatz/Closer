@@ -68,6 +68,7 @@ open class SearchGroupsAdapter constructor(
                     holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
                     holder.about.text = on<ResourcesHandler>().resources.getString(if (createIsPublic) R.string.add_new_public_group else R.string.add_new_private_group)
                     holder.backgroundPhoto.visible = false
+                    setShadows(holder, false)
                     holder.actionRecyclerView.visible = false
                     holder.cardView.setOnClickListener {
                         onCreateGroupClickListener?.invoke(createGroupName.value ?: "", createIsPublic)
@@ -150,14 +151,7 @@ open class SearchGroupsAdapter constructor(
                         holder.backgroundPhoto.visible = false
                     }
 
-                    listOf(holder.name, holder.about, holder.action).forEach {
-                        it.setShadowLayer(
-                                it.shadowRadius,
-                                it.shadowDx,
-                                it.shadowDy,
-                                on<ResourcesHandler>().resources.getColor(if (group.photo != null) R.color.black else R.color.black_transparent)
-                        )
-                    }
+                    setShadows(holder, group.photo != null)
                 }
 
                 if (!isSmall) {
@@ -174,6 +168,17 @@ open class SearchGroupsAdapter constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun setShadows(holder: SearchGroupsViewHolder, show: Boolean) {
+        listOf(holder.name, holder.about, holder.action).forEach {
+            it.setShadowLayer(
+                    it.shadowRadius,
+                    it.shadowDx,
+                    it.shadowDy,
+                    on<ResourcesHandler>().resources.getColor(if (show) R.color.black else R.color.black_transparent)
+            )
         }
     }
 

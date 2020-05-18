@@ -51,7 +51,7 @@ class MessageDisplay constructor(private val on: On) {
             holder.showGroupInsteadOfProfile = group?.id
 
             holder.group.visible = true
-            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.from, group?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
+            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.from, group?.name?.let { if (it.isBlank()) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name } ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
 
             holder.messageActionProfile.setText(R.string.group)
             holder.messageActionProfile.setOnClickListener {
@@ -376,7 +376,7 @@ class MessageDisplay constructor(private val on: On) {
             holder.group.visible = true
             val group = groupMessage.to?.let { getGroup(it) }
             holder.showGroupInsteadOfProfile = group?.id
-            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, group?.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
+            holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, group?.name?.let { if (it.isBlank()) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name } ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
         }
 
         if (
@@ -449,6 +449,7 @@ class MessageDisplay constructor(private val on: On) {
                 if (holder.showGroupInsteadOfProfile != null) R.string.group else R.string.profile
         )
 
+        holder.messageActionReply.visible = true
         holder.messageActionShare.visible = groupMessage.from != null
         holder.messageActionPin.visible = groupMessage.from != null && !holder.global && !holder.inFeed
         holder.messageActionDelete.visible = groupMessage.from == on<PersistenceHandler>().phoneId && !holder.pinned

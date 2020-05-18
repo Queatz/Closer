@@ -59,7 +59,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                 holder.photo.colorFilter = null
                 holder.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
-                holder.name.text = "${mapBubble.name}${on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)}\n${mapBubble.status}"
+                holder.name.text = "${mapBubble.name}${on<PhoneDetailsHandler>().detailsOf(mapBubble.tag as Phone)}\n${mapBubble.status ?: ""}"
                 holder.info.visible = true
                 holder.info.text = on<TimeStr>().pretty((mapBubble.tag as Phone).updated)
 
