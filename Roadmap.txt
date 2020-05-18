@@ -2,6 +2,9 @@
 Incoming
 ========
 
+    [ ] Send user language to backend
+    [ ] Send notifications in that user's language
+
     [ ] Fancier members page inside groups
     [ ] Fancier profile?
 

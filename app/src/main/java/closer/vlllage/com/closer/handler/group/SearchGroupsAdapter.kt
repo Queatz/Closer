@@ -149,6 +149,15 @@ open class SearchGroupsAdapter constructor(
                     } else {
                         holder.backgroundPhoto.visible = false
                     }
+
+                    listOf(holder.name, holder.about, holder.action).forEach {
+                        it.setShadowLayer(
+                                it.shadowRadius,
+                                it.shadowDx,
+                                it.shadowDy,
+                                on<ResourcesHandler>().resources.getColor(if (group.photo != null) R.color.black else R.color.black_transparent)
+                        )
+                    }
                 }
 
                 if (!isSmall) {

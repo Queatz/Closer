@@ -58,6 +58,10 @@
             app:layout_constraintStart_toStartOf="parent"
             android:textSize="@dimen/textSize"
             android:textColor="@color/text"
+            android:shadowRadius="4"
+            android:shadowColor="@color/black"
+            android:shadowDx="1"
+            android:shadowDy="1"
             android:textStyle="bold"
             tools:text="Mai Pham" />
 
@@ -73,6 +77,10 @@
             app:layout_goneMarginBottom="@dimen/pad"
             android:textSize="@dimen/textSizeSmall"
             android:textColor="@color/text"
+            android:shadowRadius="4"
+            android:shadowColor="@color/black"
+            android:shadowDx="1"
+            android:shadowDy="1"
             tools:text="For all fans of 1 hour workouts" />
 
         <TextView
@@ -87,6 +95,10 @@
             app:layout_constraintHorizontal_bias="1"
             android:textSize="@dimen/textSizeSmall"
             android:textColor="@color/text"
+            android:shadowRadius="4"
+            android:shadowColor="@color/black"
+            android:shadowDx="1"
+            android:shadowDy="1"
             android:textAllCaps="true"
             android:textStyle="bold"
             android:text="@string/open_group" />
