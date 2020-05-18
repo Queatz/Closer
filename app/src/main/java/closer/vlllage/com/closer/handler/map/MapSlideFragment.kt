@@ -86,6 +86,14 @@ class MapSlideFragment : PoolFragment() {
             }
         }
         on<MapHandler>().onMapIdleListener = { latLng ->
+            on<LocalityHelper>().getLocality(latLng) {
+                if (it.isNullOrBlank()) {
+                    view.searchMap.hint = on<ResourcesHandler>().resources.getString(R.string.search_map_hint)
+                } else {
+                    view.searchMap.hint = on<ResourcesHandler>().resources.getString(R.string.search_x_hint, it)
+                }
+            }
+
             on<DisposableHandler>().add(on<DataHandler>().run {
                 getPhonesNear(latLng)
                         .filter { on<AccountHandler>().privateOnly.not() }

@@ -277,6 +277,7 @@
     <string name="feature_request_name">Имя для запроса функции</string>
     <string name="details">Подробности</string>
     <string name="search_map_hint">Обзор этой области</string>
+    <string name="search_x_hint">Обзор %1$s</string>
     <string name="new_request">Новый запрос</string>
     <string name="feature_request_name_missing">Добавьте имя к вашему запросу функции.</string>
     <string name="feature_request_description_missing">Добавьте информацию о запрашиваемой функции.</string>
@@ -466,4 +467,5 @@
         <item quantity="many">%1$s ответов</item>
         <item quantity="other">%1$s ответы</item>
     </plurals>
+    <string name="your_sharing_location">Любой на Closer может видеть ваше местоположение, пока вы не отключите это.</string>
 </resources>

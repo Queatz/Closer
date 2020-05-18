@@ -2,6 +2,9 @@
 Incoming
 ========
 
+    [ ] Fancier members page inside groups
+    [ ] Fancier profile?
+
     [ ] Don't include people groups in expired groups
     [ ] Reload active groups and phones on map zoom and move
 

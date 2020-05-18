@@ -277,6 +277,7 @@
     <string name="feature_request_name">Feature request name</string>
     <string name="details">Details</string>
     <string name="search_map_hint">Explore this area</string>
+    <string name="search_x_hint">Explore %1$s</string>
     <string name="new_request">New request</string>
     <string name="feature_request_name_missing">Add a name for your feature request.</string>
     <string name="feature_request_description_missing">Add details about your feature request.</string>
