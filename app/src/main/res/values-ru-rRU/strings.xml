@@ -178,7 +178,7 @@
     <string name="is_in">- в %1$s</string>
     <string name="add">Добавить</string>
     <string name="add_person_to">Добавить %1$s в</string>
-    <string name="share_group_to">Поделиться %1$s с</string>
+    <string name="share_group_to">Поделиться \"%1$s\" с</string>
     <string name="added_phone">%1$s был(а) добавлен(а)</string>
     <string name="sending_photo">Отправка фото…</string>
     <string name="settings_public_notifications">Общедоступные уведомления</string>
