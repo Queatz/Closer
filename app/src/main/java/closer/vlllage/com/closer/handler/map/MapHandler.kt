@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import android.view.View
+import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.LocationHandler
 import closer.vlllage.com.closer.handler.data.PermissionHandler
@@ -11,6 +12,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.WindowHandler
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -88,9 +90,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         }
         mapView!!.addOnLayoutChangeListener { v, i1, i2, i3, i4, i5, i6, i7, i8 -> onMapChangedListener!!.invoke() }
         onMapChangedListener!!.invoke()
-        map!!.setPadding(0, on<WindowHandler>().statusBarHeight, 0, 0)
-
-        map!!.setMinZoomPreference(0.0f)
+        map!!.setPadding(0, on<WindowHandler>().statusBarHeight, 0, on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf))
 
         if (centerOnMapLoad == null) {
             locateMe()
@@ -125,16 +125,16 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         }
 
         if (map!!.cameraPosition.zoom >= 18) {
-            if (map!!.mapType != GoogleMap.MAP_TYPE_SATELLITE) {
-                map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
+            if (map!!.mapType != GoogleMap.MAP_TYPE_HYBRID) {
+                map!!.mapType = GoogleMap.MAP_TYPE_HYBRID
             }
         } else if (map!!.cameraPosition.zoom <= 3) {
-            if (map!!.mapType != GoogleMap.MAP_TYPE_SATELLITE) {
-                map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
+            if (map!!.mapType != GoogleMap.MAP_TYPE_HYBRID) {
+                map!!.mapType = GoogleMap.MAP_TYPE_HYBRID
             }
         } else {
-            if (map!!.mapType != GoogleMap.MAP_TYPE_NORMAL) {
-                map!!.mapType = GoogleMap.MAP_TYPE_NORMAL
+            if (map!!.mapType != GoogleMap.MAP_TYPE_TERRAIN) {
+                map!!.mapType = GoogleMap.MAP_TYPE_TERRAIN
             }
         }
     }
