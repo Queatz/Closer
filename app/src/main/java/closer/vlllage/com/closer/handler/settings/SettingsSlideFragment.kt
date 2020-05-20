@@ -1,10 +1,12 @@
 package closer.vlllage.com.closer.handler.settings
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
+import closer.vlllage.com.closer.BuildConfig
 import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
@@ -25,10 +27,11 @@ class SettingsSlideFragment : PoolFragment() {
         return inflater.inflate(R.layout.activity_settings, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         on<NetworkConnectionViewHandler>().attach(connectionError)
 
-        view.findViewById<View>(R.id.scrollView).setPadding(0, on<WindowHandler>().statusBarHeight, 0, 0)
+        scrollView.setPadding(0, on<WindowHandler>().statusBarHeight, 0, 0)
 
         openGroupsExpandedSettingsSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED]
         openGroupsExpandedSettingsSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED] = checked }
@@ -39,14 +42,14 @@ class SettingsSlideFragment : PoolFragment() {
         showCloseButtonSettingsSwitch.isChecked = !on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON]
         showCloseButtonSettingsSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON] = !checked }
 
-        view.findViewById<View>(R.id.sendFeedbackButton).setOnClickListener { v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, on<ConfigHandler>().feedbackGroupId()) }
-        view.findViewById<View>(R.id.viewPrivacyPolicyButton).setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().privacy().subscribe({ privacyPolicy -> on<DefaultAlerts>().message(privacyPolicy) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
-        view.findViewById<View>(R.id.viewTermsOfUseButton).setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().terms().subscribe({ terms -> on<DefaultAlerts>().message(terms) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
-        view.findViewById<View>(R.id.showHelpButton).setOnClickListener { on<HelpHandler>().showHelp() }
-        view.findViewById<View>(R.id.returnToMapButton).setOnClickListener { on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_MAP) }
+        sendFeedbackButton.setOnClickListener { v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, on<ConfigHandler>().feedbackGroupId()) }
+        viewPrivacyPolicyButton.setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().privacy().subscribe({ privacyPolicy -> on<DefaultAlerts>().message(privacyPolicy) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
+        viewTermsOfUseButton.setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().terms().subscribe({ terms -> on<DefaultAlerts>().message(terms) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
+        showHelpButton.setOnClickListener { on<HelpHandler>().showHelp() }
+        returnToMapButton.setOnClickListener { on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_MAP) }
 
         val publicNotificationsSettingsSwitch = view.findViewById<Switch>(R.id.publicNotificationsSettingsSwitch)
-        val publicNotificationsSettingsSwitchDescription = view.findViewById<View>(R.id.publicNotificationsSettingsSwitchDescription)
+        val publicNotificationsSettingsSwitchDescription = publicNotificationsSettingsSwitchDescription
 
         publicNotificationsSettingsSwitch.setOnCheckedChangeListener { _, isChecked ->
             on<Animate>().alpha(publicNotificationsSettingsSwitchDescription, !isChecked)
@@ -56,8 +59,10 @@ class SettingsSlideFragment : PoolFragment() {
         publicNotificationsSettingsSwitch.isChecked = !on<AccountHandler>().privateMode
         publicNotificationsSettingsSwitchDescription.visible = !publicNotificationsSettingsSwitch.isChecked
 
+        appVersion.text = "${getString(R.string.version)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+
 //        val privateModeSettingsSwitch = view.findViewById<Switch>(R.id.privateModeSettingsSwitch)
-//        val privateModeSettingsSwitchDescription = view.findViewById<View>(R.id.privateModeSettingsSwitchDescription)
+//        val privateModeSettingsSwitchDescription = privateModeSettingsSwitchDescription
 //
 //        privateModeSettingsSwitch.setOnCheckedChangeListener { _, isChecked ->
 //            on<Animate>().alpha(privateModeSettingsSwitchDescription, isChecked)

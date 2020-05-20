@@ -468,4 +468,5 @@
         <item quantity="other">%1$s ответы</item>
     </plurals>
     <string name="your_sharing_location">Любой на Closer может видеть ваше местоположение, пока вы не отключите это.</string>
+    <string name="version">Версия</string>
 </resources>

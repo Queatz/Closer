@@ -181,6 +181,16 @@
                 android:drawablePadding="@dimen/pad"
                 android:drawableTint="@color/text" />
 
+            <TextView
+                android:id="@+id/appVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
+                android:textColor="@color/textHint"
+                android:gravity="center_horizontal" />
+
         </LinearLayout>
 
     </ScrollView>

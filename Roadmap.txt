@@ -2,9 +2,7 @@
 Incoming
 ========
 
-    [ ] in group should use groupName
-    [ ] "null" for status
-    [ ] Reply option missing on action message
+    [x] App version in settings slide
 
     [ ] Send user language to backend
     [ ] Send notifications in that user's language
@@ -16,7 +14,8 @@ Incoming
     [ ] Reload active groups and phones on map zoom and move
 
     [X] First turn on of location
-        "Anyone on Closer will be able to see your location on the map" Turn off / I want this
+        "Anyone on Closer will be able to see your location on the map"
+         Turn off / I want this
     [ ] Talk in Allen -> Talk on Allen's wall
 
     [X] Closer Add a friends group modal text alignment is off
