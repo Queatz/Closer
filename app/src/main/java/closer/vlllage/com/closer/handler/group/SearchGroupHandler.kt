@@ -27,8 +27,14 @@ class SearchGroupHandler constructor(private val on: On) {
         groupsCache?.let { setGroups(it) }
     }
 
-    fun setGroups(allGroups: List<Group>) {
+    fun setGroups(allGroups: List<Group>, includeTopics: Boolean = false) {
         this.groupsCache = allGroups
+
+        if (includeTopics) {
+            this.groups.onNext(allGroups)
+
+            return
+        }
 
         val groups = mutableListOf<Group>()
         for (group in allGroups) {

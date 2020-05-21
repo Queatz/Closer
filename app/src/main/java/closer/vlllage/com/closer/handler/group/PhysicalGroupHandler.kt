@@ -43,9 +43,10 @@ class PhysicalGroupHandler constructor(private val on: On) {
     }
 
     fun physicalGroupName(group: Group): Single<String> = when {
-        group.name.isNullOrBlank() -> on<StoreHandler>().store.box(GroupMessage::class).query()
-                .equal(GroupMessage_.to, group.id ?: "")
-                .order(GroupMessage_.created, OrderFlags.DESCENDING)
+        group.name.isNullOrBlank() -> on<StoreHandler>().store.box(GroupMessage::class).query(
+                GroupMessage_.to.equal(group.id ?: "").and(GroupMessage_.text.notNull())
+        )
+                .order(GroupMessage_.created)
                 .build().findFirst()?.text?.let { on<GroupMessageParseHandler>().parseString(it).map { "\"$it\"" } }
                     ?: Single.just(on<ResourcesHandler>().resources.getString(R.string.talk_here))
         else -> Single.just(group.name)

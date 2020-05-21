@@ -31,8 +31,6 @@ class SettingsSlideFragment : PoolFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         on<NetworkConnectionViewHandler>().attach(connectionError)
 
-        scrollView.setPadding(0, on<WindowHandler>().statusBarHeight, 0, 0)
-
         openGroupsExpandedSettingsSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED]
         openGroupsExpandedSettingsSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_GROUP_EXPANDED] = checked }
 

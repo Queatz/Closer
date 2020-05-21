@@ -11,15 +11,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
-import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.*
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.FeedHandler
-import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
@@ -138,7 +138,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
         })
 
-        searchGroups.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        searchGroups.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (searchGroups.hasFocus() && bottom != oldBottom) on<FeedHandler>().scrollTo(itemView, searchGroups)
         }
 
@@ -158,9 +158,12 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 stateObservable.onNext(state)
             })
 
-            searchGroupsAdapter.setGroups(on<FilterGroups>().public(groups))
-
-            searchHubsAdapter.setGroups(on<FilterGroups>().physical(groups).also {
+            if (on<FeedHandler>().feedContent() == FeedContent.POSTS) {
+                searchGroupsAdapter.setGroups(on<FilterGroups>().physical(groups))
+            } else {
+                searchGroupsAdapter.setGroups(on<FilterGroups>().public(groups))
+            }
+            searchHubsAdapter.setGroups(on<FilterGroups>().hub(groups).also {
                 state.hasPlaces = it.isNotEmpty()
                 stateObservable.onNext(state)
             })
@@ -288,14 +291,22 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_POSTS,
                         color = R.color.orange),
                 GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.things_to_do),
-                        R.drawable.ic_beach_access_black_24dp,
+                        on<ResourcesHandler>().resources.getString(R.string.notifications),
+                        R.drawable.ic_notifications_black_24dp,
                         View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITIES)
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_NOTIFICATIONS)
+                        },
+                        value = ContentViewType.HOME_NOTIFICATIONS,
+                        color = R.color.colorAccent),
+                GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.places),
+                        R.drawable.ic_location_on_black_24dp,
+                        View.OnClickListener {
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_PLACES)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
-                        value = ContentViewType.HOME_ACTIVITIES,
-                        color = R.color.colorAccent),
+                        value = ContentViewType.HOME_PLACES,
+                        color = R.color.purple),
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.events),
                         R.drawable.ic_event_note_black_24dp,
@@ -307,16 +318,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         color = R.color.red,
                         indicator = showCalendarIndicator),
                 GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.places),
-                        R.drawable.ic_location_on_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_PLACES)
-                            on<AccountHandler>().updatePrivateOnly(false)
-                        },
-                        value = ContentViewType.HOME_PLACES,
-                        color = R.color.purple),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.groups),
+                        on<ResourcesHandler>().resources.getString(R.string.communities),
                         R.drawable.ic_location_city_black_24dp,
                         View.OnClickListener {
                             toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_GROUPS)
@@ -325,6 +327,15 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_GROUPS,
                         color = R.color.green),
                 GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.things_to_do),
+                        R.drawable.ic_beach_access_black_24dp,
+                        View.OnClickListener {
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITIES)
+                            on<AccountHandler>().updatePrivateOnly(false)
+                        },
+                        value = ContentViewType.HOME_ACTIVITIES,
+                        color = R.color.colorAccent),
+                GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.friends),
                         R.drawable.ic_group_black_24dp,
                         View.OnClickListener {
@@ -332,23 +343,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                             on<AccountHandler>().updatePrivateOnly(true)
                         },
                         value = ContentViewType.HOME_FRIENDS,
-                        color = R.color.colorPrimary),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.notifications),
-                        R.drawable.ic_notifications_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_NOTIFICATIONS)
-                        },
-                        value = ContentViewType.HOME_NOTIFICATIONS,
-                        color = R.color.colorAccent),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.settings),
-                        R.drawable.ic_settings_black_24dp,
-                        View.OnClickListener {
-                            on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_SETTINGS)
-                        },
-                        value = ContentViewType.EVENTS,
-                        color = R.color.dark)
+                        color = R.color.colorPrimary)
         )
     }
 
@@ -387,8 +382,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
-                                itemView.feedText.visible = true
-                                itemView.feedText.setText(R.string.notifications)
+                                itemView.feedText.visible = false
                             }
                             ContentViewType.HOME_POSTS -> {
                                 saySomethingHeader.visible = false
@@ -396,18 +390,20 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 sendSomethingButton.visible = true
                                 peopleContainer.visible = state.hasPeople
                                 eventsHeader.visible = false
-                                groupsHeader.visible = false
+                                groupsHeader.visible = true
+                                groupsHeader.setText(R.string.conversations)
                                 eventsRecyclerView.visible = false
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                groupsRecyclerView.visible = false
+                                groupsRecyclerView.visible = true
                                 searchGroups.visible = false
                                 itemView.historyButton.visible = false
                                 actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = false
+                                searchGroupsAdapter.showCreateOption(false)
                             }
                             ContentViewType.HOME_ACTIVITIES -> {
                                 saySomethingHeader.visible = false

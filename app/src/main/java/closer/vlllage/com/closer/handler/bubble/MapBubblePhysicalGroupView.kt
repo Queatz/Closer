@@ -4,23 +4,24 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ImageHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
+import kotlinx.android.synthetic.main.map_bubble_physical_group.view.*
 
 class MapBubblePhysicalGroupView constructor(private val on: On) {
     fun from(layer: ViewGroup, mapBubble: MapBubble, onClickListener: MapBubblePhysicalGroupClickListener): View {
         val view = LayoutInflater.from(layer.context).inflate(R.layout.map_bubble_physical_group, layer, false)
 
-        view.findViewById<View>(R.id.click).setOnClickListener { v -> onClickListener.invoke(mapBubble) }
+        view.click.setOnClickListener { onClickListener.invoke(mapBubble) }
         update(view, mapBubble)
 
         return view
@@ -29,39 +30,53 @@ class MapBubblePhysicalGroupView constructor(private val on: On) {
     fun update(view: View, mapBubble: MapBubble) {
         var margin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
         var size = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupIcon)
-        val photo = view.findViewById<ImageView>(R.id.photo)
-        val name = view.findViewById<TextView>(R.id.name)
-        if ((mapBubble.tag != null) and (mapBubble.tag is Group)) {
-            val group = mapBubble.tag as Group
+        if (mapBubble.tag != null) {
+            when (mapBubble.tag) {
+                is Group -> {
+                    view.click.setBackgroundResource(R.drawable.clickable_purple)
 
-            on<PhysicalGroupHandler>().physicalGroupName((mapBubble.tag as Group))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        if (name.isAttachedToWindow) {
-                            name.text = it
-                        }
-                    }, {}).also {
-                        on<DisposableHandler>().add(it)
-                    }
+                    on<PhysicalGroupHandler>().physicalGroupName(mapBubble.tag as Group)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                if (view.name.isAttachedToWindow) {
+                                    view.name.text = it
+                                }
+                            }, {}).also {
+                                on<DisposableHandler>().add(it)
+                            }
+                }
+                is Phone -> {
+                    view.click.setBackgroundResource(R.drawable.clickable_white_rounded)
 
-            if (group.photo != null) {
+                    val status = (mapBubble.tag as Phone).status
+                    view.name.text = if (status.isNullOrBlank()) on<NameHandler>().getName((mapBubble.tag as Phone)) else "\"$status\""
+                }
+            }
+
+            val photoUrl = when (mapBubble.tag) {
+                is Group -> (mapBubble.tag as Group).photo
+                is Phone -> (mapBubble.tag as Phone).photo
+                else -> null
+            }
+
+            if (photoUrl != null) {
                 margin /= 4
                 size = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.physicalGroupPhoto)
-                photo.colorFilter = null
-                photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
+                view.photo.colorFilter = null
+                view.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 on<ImageHandler>().get()
-                        .load(group.photo!! + "?s=128")
+                        .load("$photoUrl?s=128")
                         .transform(CropCircleTransformation())
-                        .into(photo)
+                        .into(view.photo)
             } else {
-                photo.setImageResource(R.drawable.ic_chat_black_24dp)
-                photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
+                view.photo.setImageResource(if (mapBubble.tag is Phone) R.drawable.ic_person_black_24dp else R.drawable.ic_chat_black_24dp)
+                view.photo.imageTintList = if (mapBubble.tag is Phone) null else ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.white))
             }
         }
 
-        (photo.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
-        (photo.layoutParams as ViewGroup.MarginLayoutParams).height = size
-        (photo.layoutParams as ViewGroup.MarginLayoutParams).width = size
+        (view.photo.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
+        (view.photo.layoutParams as ViewGroup.MarginLayoutParams).height = size
+        (view.photo.layoutParams as ViewGroup.MarginLayoutParams).width = size
     }
 
 }

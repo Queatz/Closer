@@ -34,13 +34,13 @@ class BubbleHandler constructor(private val on: On) {
                     BubbleType.SUGGESTION -> on<MapBubbleSuggestionView>().from(view!!, mapBubble, onMapBubbleSuggestionClickListener)
                     BubbleType.EVENT -> on<MapBubbleEventView>().from(view!!, mapBubble, onMapBubbleEventClickListener)
                     BubbleType.PHYSICAL_GROUP -> on<MapBubblePhysicalGroupView>().from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener)
-                    else -> on<MapBubbleView>().from(view!!, mapBubble, onClickListener!!)
+                    else -> on<MapBubblePhysicalGroupView>().from(view!!, mapBubble, onClickListener!!)
                 }
             }
 
             override fun updateView(mapBubble: MapBubble) {
                 when (mapBubble.type) {
-                    BubbleType.STATUS -> on<MapBubbleView>().update(mapBubble.view!!, mapBubble)
+                    BubbleType.STATUS -> on<MapBubblePhysicalGroupView>().update(mapBubble.view!!, mapBubble)
                 }
             }
         }

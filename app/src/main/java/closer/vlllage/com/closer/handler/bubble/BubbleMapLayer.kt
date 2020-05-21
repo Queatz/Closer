@@ -231,7 +231,7 @@ class BubbleMapLayer {
     }
 
     private fun zoomScale(mapBubble: MapBubble): Float = when (mapBubble.type) {
-        BubbleType.PHYSICAL_GROUP -> (map!!.cameraPosition.zoom / (DEFAULT_ZOOM)).toDouble().pow(10.0).coerceAtLeast(.75).coerceAtMost(2.0).toFloat()
+        BubbleType.PHYSICAL_GROUP, BubbleType.STATUS -> (map!!.cameraPosition.zoom / (DEFAULT_ZOOM)).toDouble().pow(10.0).coerceAtLeast(.75).coerceAtMost(2.0).toFloat()
         BubbleType.MENU -> 1f
         else -> 1.0.coerceAtMost((map!!.cameraPosition.zoom / (DEFAULT_ZOOM)).toDouble().pow(10.0)).coerceAtLeast(.5).coerceAtMost(1.0).toFloat()
     }

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.feed.FilterGroups
@@ -119,23 +118,23 @@ class FeedHandler constructor(private val on: On) {
         on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { visible ->
-            if (visible) {
-                recyclerView.setPadding(0, 0, 0, on<KeyboardVisibilityHandler>().lastKeyboardHeight)
-                recyclerView.requestLayout()
-                recyclerView.postInvalidate()
-            } else {
-                recyclerView.setPadding(0, 0, 0, 0)
-                recyclerView.requestLayout()
-                recyclerView.postInvalidate()
-            }
-        })
+                    if (visible) {
+                        recyclerView.setPadding(0, 0, 0, on<KeyboardVisibilityHandler>().lastKeyboardHeight)
+                        recyclerView.requestLayout()
+                        recyclerView.postInvalidate()
+                    } else {
+                        recyclerView.setPadding(0, 0, 0, 0)
+                        recyclerView.requestLayout()
+                        recyclerView.postInvalidate()
+                    }
+                })
 
         content.distinctUntilChanged().switchMap { content -> on<SearchGroupHandler>().groups.map { Pair(content, it) } }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     setGroups(when (result.first) {
                         FeedContent.GROUPS -> on<FilterGroups>().public(result.second)
-                        FeedContent.PLACES -> on<FilterGroups>().physical(result.second)
+                        FeedContent.PLACES -> on<FilterGroups>().hub(result.second)
                         else -> result.second
                     })
                 }, {}).also {
@@ -167,12 +166,13 @@ class FeedHandler constructor(private val on: On) {
 
         val queryBuilder = when (feedContent()) {
             FeedContent.FRIENDS -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false))
-            else -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true).and(Group_.eventId.isNull
+            else -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true)
+                    .and(Group_.eventId.isNull)
                     .and(Group_.phoneId.isNull)
                     .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo()))
                     .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
                             .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance)))
-            ))
+            )
         }
 
         queryBuilder
@@ -183,7 +183,7 @@ class FeedHandler constructor(private val on: On) {
                 .single()
                 .observer { groups ->
                     if (feedContent() == FeedContent.FRIENDS) {
-                        on<SearchGroupHandler>().setGroups(groups)
+                        on<SearchGroupHandler>().setGroups(groups, includeTopics = true)
                     } else {
                         on<Search>().events(target, single = true) { events ->
                             on<StoreHandler>().store.box(Group::class).query(
@@ -193,7 +193,7 @@ class FeedHandler constructor(private val on: On) {
                                     .single()
                                     .on(AndroidScheduler.mainThread())
                                     .observer { eventGroups ->
-                                        on<SearchGroupHandler>().setGroups(groups + eventGroups.filter { eventGroup -> groups.all { it.id != eventGroup.id } })
+                                        on<SearchGroupHandler>().setGroups(groups + eventGroups.filter { eventGroup -> groups.all { it.id != eventGroup.id } }, includeTopics = feedContent() == FeedContent.POSTS)
                                     }.also { loadGroupsDisposableGroup.add(it) }
                         }.also { loadGroupsDisposableGroup.add(it) }
                     }

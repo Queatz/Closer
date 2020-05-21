@@ -14,6 +14,8 @@ import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.phone.NameCacheHandler
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
@@ -87,7 +89,7 @@ open class SearchGroupsAdapter constructor(
                 holder.cardView.setBackgroundResource(if (isSmall)
                     backgroundResId else on<GroupColorHandler>().getColorClickable4dp(group))
 
-                holder.name.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.unknown))
+                loadName(group, holder.name) { it }
 
                 val recentActivity = (group.updated ?: Date(0)).after(on<TimeAgo>().weeksAgo())
 
@@ -247,6 +249,23 @@ open class SearchGroupsAdapter constructor(
     fun setNoAnimation(noAnimation: Boolean): SearchGroupsAdapter {
         isNoAnimation = noAnimation
         return this
+    }
+
+    private fun loadName(group: Group, textView: TextView, callback: (String) -> String) {
+        textView.visible = false
+
+        if (!group.name.isNullOrBlank()) {
+            textView.visible = true
+            textView.text = callback(group.name!!)
+        } else if (group.physical) {
+            on<PhysicalGroupHandler>().physicalGroupName(group).subscribe({
+                textView.visible = true
+                textView.text = callback(it)
+            }, {}).also { on<DisposableHandler>().add(it) }
+        } else {
+            textView.visible = true
+            textView.text = callback(on<ResourcesHandler>().resources.getString(R.string.unknown))
+        }
     }
 
     class SearchGroupsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

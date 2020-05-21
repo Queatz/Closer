@@ -148,7 +148,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:clipChildren="false"/>
 
-
     <closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout
         android:id="@+id/toTheTopLayout"
         android:layout_width="0dp"

@@ -56,7 +56,7 @@
 
     <TextView
         android:id="@+id/yourName"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@+id/yourPhoto"
         app:layout_constraintBottom_toBottomOf="@+id/yourPhoto"
@@ -70,8 +70,13 @@
         android:background="@drawable/clickable_light_50_rounded_512dp"
         android:textColor="@color/text"
         android:gravity="start"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
         android:focusedByDefault="true"
-        android:textAppearance="?android:textAppearanceMedium"/>
+        android:textAppearance="?android:textAppearanceMedium"
+        android:drawableEnd="@drawable/ic_edit_black_24dp"
+        android:drawablePadding="@dimen/padDouble"
+        android:drawableTint="@color/text" />
 
     <ImageView
         android:id="@+id/profilePhoto"

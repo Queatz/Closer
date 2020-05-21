@@ -374,8 +374,8 @@ class MessageDisplay constructor(private val on: On) {
 
         if (holder.global) {
             holder.group.visible = true
+            holder.showGroupInsteadOfProfile = groupMessage.to
             val group = groupMessage.to?.let { getGroup(it) }
-            holder.showGroupInsteadOfProfile = group?.id
             holder.group.text = on<ResourcesHandler>().resources.getString(R.string.is_in, group?.name?.let { if (it.isBlank()) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name } ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
         }
 

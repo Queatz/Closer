@@ -2,7 +2,19 @@
 Incoming
 ========
 
-    [x] App version in settings slide
+    [X] Notifications at the start of MyGroupsLayout if there are new ones
+    [X] Show topics across the posts tab
+    [ ] Red dot if there are new topics
+    [ ] Avatar on map
+
+ [ ] Wrong group opens sometimes
+ [X] Profile shows on profiles when it should be Group
+ [ ] My Bubble translate offset makes bubble blank in proxy
+ [ ] Use physicalGroupName instead of "Talk Here"
+    [ ] Determine if doing it server side is best
+
+More
+----
 
     [ ] Send user language to backend
     [ ] Send notifications in that user's language
