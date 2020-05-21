@@ -114,7 +114,9 @@
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="@string/edit_your_introduction" />
+                android:drawableStart="@drawable/ic_edit_black_18dp"
+                android:drawablePadding="@dimen/pad"
+                android:text="@string/edit" />
 
             <TextView
                 android:textStyle="bold"
@@ -158,7 +160,9 @@
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="@string/add_a_goal" />
+                android:drawableStart="@drawable/ic_add_black_18dp"
+                android:drawablePadding="@dimen/padHalf"
+                android:text="@string/add" />
 
             <TextView
                 android:textStyle="bold"
@@ -202,7 +206,9 @@
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="@string/add_a_lifestyle" />
+                android:drawableStart="@drawable/ic_add_black_18dp"
+                android:drawablePadding="@dimen/padHalf"
+                android:text="@string/add" />
 
             <TextView
                 android:textStyle="bold"
@@ -241,7 +247,9 @@
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="@string/edit_your_offtime" />
+                android:drawableStart="@drawable/ic_edit_black_18dp"
+                android:drawablePadding="@dimen/pad"
+                android:text="@string/edit" />
 
             <TextView
                 android:textStyle="bold"
@@ -280,7 +288,9 @@
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="@string/edit_your_occupation" />
+                android:drawableStart="@drawable/ic_edit_black_18dp"
+                android:drawablePadding="@dimen/pad"
+                android:text="@string/edit" />
 
             <TextView
                 android:textStyle="bold"
@@ -319,7 +329,9 @@
                 android:textColor="@color/textInverse"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="@string/edit_your_history" />
+                android:drawableStart="@drawable/ic_edit_black_18dp"
+                android:drawablePadding="@dimen/pad"
+                android:text="@string/edit" />
 
         </LinearLayout>
 

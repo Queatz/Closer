@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,15 +45,26 @@
 
     <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/yourPhoto"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:background="?selectableItemBackgroundBorderless"
         app:layout_constraintTop_toBottomOf="@+id/yourContactInfoHeader"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="@dimen/pad"
-        android:scaleType="centerInside"
+        android:layout_marginStart="@dimen/pad"
+        android:scaleType="centerCrop"
         android:padding="@dimen/pad"
         android:src="@drawable/ic_person_white_24dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/yourPhoto"
+        app:layout_constraintEnd_toEndOf="@+id/yourPhoto"
+        android:layout_margin="@dimen/padHalf"
+        android:padding="@dimen/padHalf"
+        android:background="@drawable/clickable_white_rounded_flat"
+        android:contentDescription="@string/edit"
+        android:src="@drawable/ic_edit_black_18dp" />
 
     <TextView
         android:id="@+id/yourName"
@@ -87,7 +99,7 @@
         android:id="@+id/actionViewProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/pad"
+        android:layout_marginTop="@dimen/padDouble"
         app:layout_constraintTop_toBottomOf="@+id/yourName"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="@dimen/padDialog"

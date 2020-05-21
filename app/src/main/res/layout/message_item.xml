@@ -100,14 +100,29 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+        android:id="@+id/reactionsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padHalf"
+        app:layout_constraintTop_toBottomOf="@+id/messageLayout"
+        app:layout_constraintBottom_toTopOf="@+id/messageActionLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:listitem="@layout/group_action_item"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:orientation="horizontal" />
+
     <closer.vlllage.com.closer.ui.SoftScrollStopper
         android:id="@+id/messageActionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/pad"
         android:paddingBottom="@dimen/padHalf"
-        app:layout_constraintTop_toBottomOf="@+id/messageLayout"
-        app:layout_constraintBottom_toTopOf="@+id/reactionsRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/reactionsRecyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/messageRepliesCount"
         app:layout_constrainedHeight="true"
         android:isScrollContainer="true"
         android:visibility="gone"
@@ -350,28 +365,13 @@
 
     </closer.vlllage.com.closer.ui.SoftScrollStopper>
 
-    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
-        android:id="@+id/reactionsRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padHalf"
-        app:layout_constraintTop_toBottomOf="@+id/messageActionLayout"
-        app:layout_constraintBottom_toTopOf="@+id/messageRepliesCount"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        tools:visibility="visible"
-        tools:listitem="@layout/group_action_item"
-        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:orientation="horizontal" />
-
     <TextView
         android:id="@+id/messageRepliesCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padHalf"
         android:layout_marginBottom="@dimen/padHalf"
-        app:layout_constraintTop_toBottomOf="@+id/reactionsRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/messageActionLayout"
         app:layout_constraintBottom_toTopOf="@+id/time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_goneMarginTop="@dimen/pad"

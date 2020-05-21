@@ -2,6 +2,11 @@
 Incoming
 ========
 
+    [X] Todo: use topic name instead of "Talk Here" in chat title
+    [X] Todo: add edit icon to change profile photo button
+    [ ] Todo: images are sometimes rotated from Samsung devices
+    [ ] Todo: Shorted edit profile buttons
+
     [X] Notifications at the start of MyGroupsLayout if there are new ones
     [X] Show topics across the posts tab
     [ ] Red dot if there are new topics

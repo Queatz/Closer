@@ -209,7 +209,7 @@ class GroupActivity : CircularRevealActivity() {
                     { view.groupName.text = on<NameHandler>().getName(it) }, { on<DefaultAlerts>().thatDidntWork() }
             ))
         } else {
-            view.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.talk_here))
+            on<DisplayNameHelper>().loadName(group, view.groupName) { it }
         }
     }
 
