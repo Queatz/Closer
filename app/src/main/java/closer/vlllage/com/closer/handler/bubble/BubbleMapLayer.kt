@@ -92,6 +92,8 @@ class BubbleMapLayer {
     }
 
     fun update(mapBubble: MapBubble) {
+        if (mapBubble.inProxy) return
+
         val view = mapBubble.view ?: return
 
         if (map == null) {
