@@ -12,6 +12,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.github.chrisbanes.photoview.PhotoView
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -66,7 +67,7 @@ class PhotoActivity : CircularRevealActivity() {
                     return false
                 }
 
-            }).transition(DrawableTransitionOptions.withCrossFade()).into(photo)
+            }).into(photo)
         }
 
         photo.setOnClickListener { finish() }
@@ -93,6 +94,8 @@ class PhotoActivity : CircularRevealActivity() {
 
     private fun loadFullRes(photoUrl: String) {
         on<ImageHandler>().get().load(photoUrl.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=1600")
+                .apply(RequestOptions().skipMemoryCache(true))
+                .placeholder(photo.drawable)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(photo)
     }

@@ -2,6 +2,9 @@
 Incoming
 ========
 
+ [ ] Increase delay of group activity reappear
+ [ ] Use small layout when group activity has a small height
+
  [ ] Red dot if there are new topics
  [ ] Avatar on map
  [ ] Wrong group opens sometimes
