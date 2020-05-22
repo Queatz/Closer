@@ -2,17 +2,15 @@
 Incoming
 ========
 
-    [ ] Red dot if there are new topics
-    [ ] Avatar on map
-
+ [ ] Red dot if there are new topics
+ [ ] Avatar on map
  [ ] Wrong group opens sometimes
- [ ] My Bubble translate offset makes bubble blank in proxy
-
 
  Completed
  =========
 
 
+ [X] My Bubble translate offset makes bubble blank in proxy
  [X] Open talk tab on person (when going to them from a notification)
     [X] Todo: use topic name instead of "Talk Here" in chat title
     [X] Todo: add edit icon to change profile photo button
