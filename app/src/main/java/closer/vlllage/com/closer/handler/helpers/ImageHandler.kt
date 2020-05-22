@@ -11,7 +11,7 @@ class ImageHandler constructor(private val on: On) : OnLifecycle {
 
     override fun on() {
         if (glide == null)
-            glide = Glide.with(on<ApplicationHandler>().app)
+            glide = Glide.with(on<ApplicationHandler>().app).setDefaultRequestOptions(RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
     }
 
     fun get() = glide!!

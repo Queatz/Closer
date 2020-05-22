@@ -7,11 +7,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.queatz.on.On
 
 class PhotoHelper constructor(private val on: On) {
-    fun loadCircle(imageView: ImageView, url: String, @DimenRes size: Int? = null) {
+    fun loadCircle(imageView: ImageView, url: String, @DimenRes sizeRes: Int? = null) {
         on<ImageHandler>().get().clear(imageView)
         on<ImageHandler>().get().load(url)
                 .apply(RequestOptions().also {
-                    size?.let { size -> it.override(size) }
+                    sizeRes?.let { size -> it.override(on<ResourcesHandler>().resources.getDimensionPixelSize(size)) }
                 }.centerCrop().circleCrop())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView)
