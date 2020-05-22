@@ -14,13 +14,22 @@ import java.util.*
 
 
 class GroupActionAdapter(on: On,
-                         private val layout: GroupActionDisplay.Layout,
+                         layout: GroupActionDisplay.Layout,
                          onGroupActionClickListener: ((GroupAction) -> Unit)? = null)
     : PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder>(on) {
 
     init {
         on<GroupActionDisplay>().onGroupActionClickListener = onGroupActionClickListener
     }
+
+    var layout: GroupActionDisplay.Layout = layout
+        set(value) {
+            if (field == value) return
+
+            field = value
+
+            notifyDataSetChanged()
+        }
 
     private val groupActions = mutableListOf<GroupAction>()
 
@@ -30,6 +39,8 @@ class GroupActionAdapter(on: On,
     override fun onBindViewHolder(holder: GroupActionViewHolder, position: Int) {
         on<GroupActionDisplay>().display(holder.itemView, groupActions[position], layout)
     }
+
+    override fun getItemViewType(position: Int) = layout.ordinal
 
     override fun getItemCount() = groupActions.size
 

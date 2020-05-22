@@ -11,6 +11,7 @@ import closer.vlllage.com.closer.handler.settings.UserLocalSetting.CLOSER_SETTIN
 import com.queatz.on.On
 import closer.vlllage.com.closer.ui.DragTriggerView
 import closer.vlllage.com.closer.ui.TimedValue
+import io.reactivex.subjects.BehaviorSubject
 import java.lang.Math.abs
 import java.lang.Math.max
 
@@ -23,9 +24,17 @@ class MiniWindowHandler constructor(private val on: On) {
     val miniWindowMinTopMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowMinTopMargin)
     val miniWindowTopMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowTopMargin)
 
+    val miniWindowHeightObservable = BehaviorSubject.create<Int>()
+
     fun attach(toggleView: View, windowView: View, miniWindowEventListener: (() -> Unit)?) {
         this.windowView = windowView
         params = windowView.layoutParams as ConstraintLayout.LayoutParams
+
+        windowView.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (oldTop != top || oldBottom != bottom) {
+                miniWindowHeightObservable.onNext(bottom - top)
+            }
+        }
 
         windowView.clipToOutline = true
 

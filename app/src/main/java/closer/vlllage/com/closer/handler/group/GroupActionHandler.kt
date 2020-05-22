@@ -22,6 +22,7 @@ import closer.vlllage.com.closer.ui.RevealAnimatorForConstraintLayout
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.add_action_modal.view.*
 
 class GroupActionHandler constructor(private val on: On) {
@@ -40,6 +41,17 @@ class GroupActionHandler constructor(private val on: On) {
         animator = RevealAnimatorForConstraintLayout(container, (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.groupActionCombinedHeight) * 1.5f).toInt())
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
+
+        on<MiniWindowHandler>().miniWindowHeightObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
+            on<GroupActionRecyclerViewHandler>().setLayout(
+                    if (it < on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.miniWindowBreakpointHeight))
+                        GroupActionDisplay.Layout.TEXT
+                    else
+                        GroupActionDisplay.Layout.PHOTO
+            )
+        }.also {
+            on<DisposableHandler>().add(it)
+        }
 
         on<GroupHandler>().onGroupChanged(disposableGroup) { group ->
             if (groupActionsDisposable != null) {
