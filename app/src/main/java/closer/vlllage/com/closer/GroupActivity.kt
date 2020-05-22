@@ -20,6 +20,7 @@ import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_group.view.*
 
@@ -245,7 +246,9 @@ class GroupActivity : CircularRevealActivity() {
 
         if (group.photo != null) {
             view.backgroundPhoto.visible = true
-            on<ImageHandler>().get().load(group.photo + "?s=512").into(view.backgroundPhoto)
+            on<ImageHandler>().get().load(group.photo + "?s=512")
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(view.backgroundPhoto)
             view.backgroundPhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.backgroundPhoto, group.photo!!) }
 
         } else {
@@ -265,6 +268,7 @@ class GroupActivity : CircularRevealActivity() {
         if (photo != null) {
             view.profilePhoto.visible = true
             on<ImageHandler>().get().load("$photo?s=512")
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(view.profilePhoto)
             view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, photo) }
 

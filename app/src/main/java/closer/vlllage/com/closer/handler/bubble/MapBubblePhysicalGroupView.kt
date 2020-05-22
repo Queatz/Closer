@@ -12,9 +12,10 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
-import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.map_bubble_physical_group.view.*
 
 class MapBubblePhysicalGroupView constructor(private val on: On) {
@@ -66,7 +67,8 @@ class MapBubblePhysicalGroupView constructor(private val on: On) {
                 view.photo.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(android.R.color.transparent))
                 on<ImageHandler>().get()
                         .load("$photoUrl?s=128")
-                        .transform(CropCircleTransformation())
+                        .apply(RequestOptions().circleCrop())
+                        .transition(DrawableTransitionOptions.withCrossFade())
                         .into(view.photo)
             } else {
                 view.photo.setImageResource(if (mapBubble.tag is Phone) R.drawable.ic_person_black_24dp else R.drawable.ic_chat_black_24dp)

@@ -1,14 +1,19 @@
 package closer.vlllage.com.closer
 
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.ui.CircularRevealActivity
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.github.chrisbanes.photoview.PhotoView
-import com.squareup.picasso.Callback
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -50,21 +55,18 @@ class PhotoActivity : CircularRevealActivity() {
 
         if (intent != null) {
             val photoUrl = intent.getStringExtra(EXTRA_PHOTO)!!
-            on<ImageHandler>().get().load(photoUrl)
-                    .into(photo, object : Callback {
-                        override fun onSuccess() {
-                            on<DisposableHandler>().add(enterAnimationCompleteObservable
-                                    .subscribeOn(Schedulers.computation())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe({ loadFullRes(photoUrl) }, {
-                                        on<ToastHandler>().show(R.string.failed_to_load_photo)
-                                    }))
-                        }
+            on<ImageHandler>().get().load(photoUrl).listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    onSuccess(photoUrl)
+                    return false
+                }
 
-                        override fun onError(e: Exception) {
-                            onSuccess()
-                        }
-                    })
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    onSuccess(photoUrl)
+                    return false
+                }
+
+            }).transition(DrawableTransitionOptions.withCrossFade()).into(photo)
         }
 
         photo.setOnClickListener { finish() }
@@ -80,9 +82,18 @@ class PhotoActivity : CircularRevealActivity() {
 
     override val backgroundId = R.id.activityLayout
 
+    private fun onSuccess(photoUrl: String) {
+        on<DisposableHandler>().add(enterAnimationCompleteObservable
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ loadFullRes(photoUrl) }, {
+                    on<ToastHandler>().show(R.string.failed_to_load_photo)
+                }))
+    }
+
     private fun loadFullRes(photoUrl: String) {
         on<ImageHandler>().get().load(photoUrl.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=1600")
-                .noPlaceholder()
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(photo)
     }
 

@@ -60,11 +60,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/yourPhoto"
         app:layout_constraintEnd_toEndOf="@+id/yourPhoto"
-        android:layout_margin="@dimen/padHalf"
-        android:padding="@dimen/padHalf"
+        android:layout_margin="6dp"
+        android:padding="@dimen/padQuarter"
+        android:tint="@color/colorPrimary"
         android:background="@drawable/clickable_white_rounded_flat"
         android:contentDescription="@string/edit"
-        android:src="@drawable/ic_edit_black_18dp" />
+        android:src="@drawable/ic_add_black_18dp" />
 
     <TextView
         android:id="@+id/yourName"

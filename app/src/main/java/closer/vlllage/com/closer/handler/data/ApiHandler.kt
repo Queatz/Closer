@@ -306,13 +306,12 @@ class ApiHandler constructor(private val on: On) {
             }
 
             override fun contentLength(): Long {
-                try {
-                    return photo.available().toLong()
+                return try {
+                    photo.available().toLong()
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    return 0
+                    0
                 }
-
             }
 
             override fun writeTo(sink: BufferedSink) {
@@ -329,7 +328,7 @@ class ApiHandler constructor(private val on: On) {
         val part = MultipartBody.Part.createFormData("photo", "closer-photo", body)
         val id = on<Val>().rndId()
         return uiThread(api.photoUploadBackend.uploadPhoto(id, part))
-                .map { responseBody -> id }
+                .map { id }
     }
 
     fun getRecentlyActivePhones(limit: Int): Single<List<PhoneResult>> {

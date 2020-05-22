@@ -12,11 +12,13 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ImageHandler
 import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.JsonObject
 import com.queatz.on.On
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.message_item.view.*
 
 class MessageSections constructor(private val on: On) {
@@ -60,8 +62,11 @@ class MessageSections constructor(private val on: On) {
         }
 
         rootView.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, url) }
-        on<ImageHandler>().get().cancelRequest(rootView.photo)
-        on<ImageHandler>().get().load(url).transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners), 0)).into(rootView.photo)
+        on<ImageHandler>().get().clear(rootView.photo)
+        on<ImageHandler>().get().load(url)
+                .apply(RequestOptions().transform(RoundedCorners(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners))))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(rootView.photo)
     })
 
     fun renderHeaderSection(header: JsonObject, parent: ViewGroup) = LayoutInflater.from(parent.context).inflate(R.layout.group_header_item, parent, false).let { rootView ->

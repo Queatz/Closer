@@ -21,6 +21,8 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.store.models.Group_
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
@@ -93,9 +95,10 @@ class GroupActionDisplay constructor(private val on: On) {
                 holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.textSize) * scale)
                 holder.actionName.setBackgroundResource(R.drawable.gradient_shadow_top_rounded_8dp)
                 holder.photo?.setImageDrawable(null)
-                on<ImageHandler>().get().load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=512")
-                        .noPlaceholder()
-                        .into(holder.photo)
+                on<ImageHandler>().get()
+                        .load(groupAction.photo!!.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=512")
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(holder.photo!!)
             } else {
                 holder.actionName.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.textSizeLarge) * scale)
                 holder.actionName.background = null

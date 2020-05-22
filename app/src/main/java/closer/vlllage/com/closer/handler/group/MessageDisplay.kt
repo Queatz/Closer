@@ -24,12 +24,14 @@ import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import closer.vlllage.com.closer.ui.RevealAnimatorForConstraintLayout
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
 import com.vdurmont.emoji.EmojiManager
 import io.reactivex.Single
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import java.util.*
 
 class MessageDisplay constructor(private val on: On) {
@@ -321,8 +323,12 @@ class MessageDisplay constructor(private val on: On) {
         holder.action.visible = false // or Share / save photo?
         holder.photo.visible = true
         holder.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, photo) }
-        on<ImageHandler>().get().cancelRequest(holder.photo)
-        on<ImageHandler>().get().load(photo).transform(RoundedCornersTransformation(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners), 0)).into(holder.photo)
+        on<ImageHandler>().get().clear(holder.photo)
+        on<ImageHandler>().get()
+                .load(photo)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .apply(RequestOptions().transform(RoundedCorners(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners))))
+                .into(holder.photo)
     }
 
     private fun displayFallback(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {

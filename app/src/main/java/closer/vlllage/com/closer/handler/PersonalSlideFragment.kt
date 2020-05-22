@@ -22,8 +22,9 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMember
 import closer.vlllage.com.closer.store.models.GroupMember_
 import closer.vlllage.com.closer.store.models.Group_
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import io.objectbox.android.AndroidScheduler
-import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_personal.*
 import java.util.*
 
@@ -98,8 +99,8 @@ class PersonalSlideFragment : PoolFragment() {
 
         if (!on<PersistenceHandler>().myPhoto.isBlank()) {
             on<ImageHandler>().get().load(on<PersistenceHandler>().myPhoto + "?s=128")
-                    .noPlaceholder()
-                    .transform(CropCircleTransformation())
+                    .apply(RequestOptions().circleCrop())
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(yourPhoto)
         }
 

@@ -1,24 +1,22 @@
 package closer.vlllage.com.closer.handler.helpers
 
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
-import okhttp3.Cache
-import okhttp3.OkHttpClient
 
 class ImageHandler constructor(private val on: On) : OnLifecycle {
 
     override fun on() {
-        if (picasso == null)
-            picasso = Picasso.Builder(on<ApplicationHandler>().app)
-                    .downloader(OkHttp3Downloader(OkHttpClient.Builder().cache(Cache(on<ApplicationHandler>().app.cacheDir, Integer.MAX_VALUE.toLong())).build()))
-                    .build()
+        if (glide == null)
+            glide = Glide.with(on<ApplicationHandler>().app)
     }
 
-    fun get() = picasso!!
+    fun get() = glide!!
 
     companion object {
-        private var picasso: Picasso? = null
+        private var glide: RequestManager? = null
     }
 }

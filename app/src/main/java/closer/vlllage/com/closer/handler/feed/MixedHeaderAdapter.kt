@@ -444,7 +444,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             on<KeyboardHandler>().showKeyboard(view, false)
         }
 
-        on<ImageHandler>().get().cancelRequest(holder.backgroundPhoto)
+        on<ImageHandler>().get().clear(holder.backgroundPhoto)
         if (group.photo != null) {
             holder.backgroundPhoto.visible = true
             holder.backgroundPhoto.setImageDrawable(null)

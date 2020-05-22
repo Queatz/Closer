@@ -14,6 +14,7 @@ import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.*
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -93,6 +94,7 @@ class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> 
                         holder.background.visible = true
                         on<ImageHandler>().get()
                                 .load(group.photo!! + "?s=128")
+                                .transition(DrawableTransitionOptions.withCrossFade())
                                 .into(holder.background)
                     }
 

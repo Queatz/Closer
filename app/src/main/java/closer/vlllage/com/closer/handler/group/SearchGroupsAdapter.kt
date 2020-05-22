@@ -143,7 +143,7 @@ open class SearchGroupsAdapter constructor(
                                 holder.on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
                             })
 
-                    on<ImageHandler>().get().cancelRequest(holder.backgroundPhoto)
+                    on<ImageHandler>().get().clear(holder.backgroundPhoto)
                     if (group.photo != null) {
                         holder.backgroundPhoto.visible = true
                         holder.backgroundPhoto.setImageDrawable(null)
