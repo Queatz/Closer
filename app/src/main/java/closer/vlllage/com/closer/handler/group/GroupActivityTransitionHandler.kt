@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Rect
 import android.view.View
+import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.GroupActivity
+import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_CONTENT
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_GROUP_ID
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_MEET
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_NEW_MEMBER
@@ -16,13 +18,13 @@ import com.queatz.on.On
 
 class GroupActivityTransitionHandler constructor(private val on: On) {
 
-    fun showGroupMessages(view: View?, groupId: String?, isRespond: Boolean = false, isMeet: Boolean = false, isNewMember: Boolean = false) {
+    fun showGroupMessages(view: View?, groupId: String?, isRespond: Boolean = false, isMeet: Boolean = false, isNewMember: Boolean = false, isPhone: Boolean = false) {
         if (groupId == null) {
             on<DefaultAlerts>().thatDidntWork()
             return
         }
 
-        val intent = getIntent(groupId, isRespond, isMeet, isNewMember)
+        val intent = getIntent(groupId, isRespond, isMeet, isNewMember, isPhone)
 
         if (view != null) {
             val bounds = Rect()
@@ -34,7 +36,7 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
         on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
-    fun getIntent(groupId: String, isRespond: Boolean, isMeet: Boolean = false, isNewMember: Boolean = false): Intent {
+    fun getIntent(groupId: String, isRespond: Boolean, isMeet: Boolean = false, isNewMember: Boolean = false, isPhone: Boolean = false): Intent {
         val intent = Intent(on<ApplicationHandler>().app, GroupActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_GROUP_ID, groupId)
@@ -49,6 +51,10 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
 
         if (isNewMember) {
             intent.putExtra(EXTRA_NEW_MEMBER, true)
+        }
+
+        if (isPhone) {
+            intent.putExtra(EXTRA_CONTENT, ContentViewType.PHONE_ABOUT)
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
@@ -79,7 +85,7 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
     fun showGroupForPhone(view: View?, phoneId: String, meet: Boolean = false) {
         on<ApplicationHandler>().app.on<DisposableHandler>().add(
                 on<DataHandler>().getGroupForPhone(phoneId).subscribe({
-                    on<GroupActivityTransitionHandler>().showGroupMessages(view, it.id, isMeet = meet)
+                    showGroupMessages(view, it.id, isMeet = meet, isPhone = true)
                 }, {
                     on<DefaultAlerts>().thatDidntWork()
                 })

@@ -29,6 +29,8 @@ class GroupActivity : CircularRevealActivity() {
     lateinit var view: GroupViewHolder
     lateinit var groupId: String
 
+    private var initialContent: ContentViewType? = null
+
     private var contentView: ContentViewType = ContentViewType.MESSAGES
         set(value) {
             field = value
@@ -125,8 +127,7 @@ class GroupActivity : CircularRevealActivity() {
                     on<LightDarkHandler>().setLight(group.hasPhone())
                 }
 
-                on<GroupToolbarHandler>().contentView.onNext(if (group.hasPhone())
-                    ContentViewType.PHONE_ABOUT else ContentViewType.MESSAGES)
+                on<GroupToolbarHandler>().contentView.onNext(initialContent ?: ContentViewType.MESSAGES)
 
                 on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
 
@@ -320,6 +321,10 @@ class GroupActivity : CircularRevealActivity() {
                 on<GroupMessagesHandler>().setIsRespond()
             }
 
+            if (intent.hasExtra(EXTRA_CONTENT)) {
+                initialContent = intent.getSerializableExtra(EXTRA_CONTENT) as ContentViewType
+            }
+
             if (intent.hasExtra(EXTRA_NEW_MEMBER)) {
                 val disposableGroup = on<DisposableHandler>().group()
                 on<GroupHandler>().onGroupChanged(disposableGroup) {
@@ -384,5 +389,6 @@ class GroupActivity : CircularRevealActivity() {
         const val EXTRA_RESPOND = "respond"
         const val EXTRA_MEET = "meet"
         const val EXTRA_NEW_MEMBER = "newMember"
+        const val EXTRA_CONTENT = "content"
     }
 }

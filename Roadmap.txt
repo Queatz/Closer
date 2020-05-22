@@ -2,22 +2,30 @@
 Incoming
 ========
 
-    [X] Todo: use topic name instead of "Talk Here" in chat title
-    [X] Todo: add edit icon to change profile photo button
-    [X] Todo: Shorted edit profile buttons
-    [X] Todo: Move reactions up
-    [ ] Todo: images are sometimes rotated from Samsung devices
-
-    [X] Notifications at the start of MyGroupsLayout if there are new ones
-    [X] Show topics across the posts tab
     [ ] Red dot if there are new topics
     [ ] Avatar on map
 
  [ ] Wrong group opens sometimes
- [X] Profile shows on profiles when it should be Group
  [ ] My Bubble translate offset makes bubble blank in proxy
- [ ] Use physicalGroupName instead of "Talk Here"
-    [ ] Determine if doing it server side is best
+
+
+ Completed
+ =========
+
+
+ [X] Open talk tab on person (when going to them from a notification)
+    [X] Todo: use topic name instead of "Talk Here" in chat title
+    [X] Todo: add edit icon to change profile photo button
+    [X] Todo: Shorted edit profile buttons
+    [X] Todo: Move reactions up
+    [X] Todo: images are sometimes rotated from Samsung devices
+
+    [X] Notifications at the start of MyGroupsLayout if there are new ones
+    [X] Show topics across the posts tab
+ [X] Profile shows on profiles when it should be Group
+ [X] Use physicalGroupName instead of "Talk Here"
+    [X] Determine if doing it server side is best
+
 
 More
 ----
@@ -100,6 +108,7 @@ Headspace
         [ ] Mai is here
         [ ] Allen climbed the tree
     [ ] Textual awareness
+
 Strategy
 ========
 
