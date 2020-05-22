@@ -28,7 +28,7 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
                 animator = ValueAnimator.ofInt(0, initialHeight).apply {
                     duration = 500
                     interpolator = AccelerateDecelerateInterpolator()
-                    startDelay = (if (immediate) 0 else 1700).toLong()
+                    startDelay = (if (immediate) 0 else 4000).toLong()
                     addUpdateListener { animation ->
                         container.maxHeight = animation.animatedValue as Int
                         container.alpha = animation.animatedFraction
