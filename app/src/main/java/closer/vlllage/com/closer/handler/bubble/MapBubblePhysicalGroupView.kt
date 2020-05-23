@@ -34,7 +34,8 @@ class MapBubblePhysicalGroupView constructor(private val on: On) {
         if (mapBubble.tag != null) {
             when (mapBubble.tag) {
                 is Group -> {
-                    view.click.setBackgroundResource(R.drawable.clickable_purple)
+                    if (!mapBubble.inProxy)
+                        view.click.setBackgroundResource(R.drawable.clickable_purple)
 
                     on<PhysicalGroupHandler>().physicalGroupName(mapBubble.tag as Group)
                             .observeOn(AndroidSchedulers.mainThread())
@@ -47,7 +48,8 @@ class MapBubblePhysicalGroupView constructor(private val on: On) {
                             }
                 }
                 is Phone -> {
-                    view.click.setBackgroundResource(R.drawable.clickable_white_rounded)
+                    if (!mapBubble.inProxy)
+                        view.click.setBackgroundResource(R.drawable.clickable_white_rounded)
 
                     val status = (mapBubble.tag as Phone).status
                     view.name.text = if (status.isNullOrBlank()) on<NameHandler>().getName((mapBubble.tag as Phone)) else "\"$status\""

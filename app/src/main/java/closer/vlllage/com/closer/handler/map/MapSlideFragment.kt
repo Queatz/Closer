@@ -160,17 +160,13 @@ class MapSlideFragment : PoolFragment() {
             on<DataVisualsHandler>().attach()
 
             on<DisposableHandler>().add(on<DataHandler>().getRecentlyActivePhones(100).map {
-                it.filter { on<AccountHandler>().privateOnly.not() }
-                        .filter { it.latitude != null && it.longitude != null }
-                        .map { LatLng(it.latitude!!, it.longitude!!) }
+                it.filter { it.latitude != null && it.longitude != null }.map { LatLng(it.latitude!!, it.longitude!!) }
             }.subscribe({ phones ->
                 on<DataVisualsHandler>().setPhones(phones)
             }, { }))
 
             on<DisposableHandler>().add(on<DataHandler>().getRecentlyActiveGroups(100).map {
-                it.filter { on<AccountHandler>().privateOnly.not() }
-                        .filter { it.latitude != null && it.longitude != null }
-                        .map { LatLng(it.latitude!!, it.longitude!!) }
+                it.filter { it.latitude != null && it.longitude != null }.map { LatLng(it.latitude!!, it.longitude!!) }
             }.subscribe({ phones ->
                 on<DataVisualsHandler>().setGroups(phones)
             }, { }))

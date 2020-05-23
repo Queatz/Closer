@@ -9,7 +9,7 @@
     <dimen name="profilePhotoCollapsedHeight">84dp</dimen>
     <dimen name="profilePhotoSmall">32dp</dimen>
     <dimen name="miniWindowHeight">350dp</dimen>
-    <dimen name="miniWindowBreakpointHeight">500dp</dimen>
+    <dimen name="miniWindowBreakpointHeight">540dp</dimen>
     <dimen name="miniWindowTopMargin">84dp</dimen>
     <dimen name="miniWindowMinTopMargin">0dp</dimen>
     <dimen name="imageCorners">4dp</dimen>
