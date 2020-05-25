@@ -9,17 +9,16 @@ More
 ----
 
     [ ] Send user language to backend
-    [ ] Send notifications in that user's language
+        [ ] Send notifications in that user's language
 
-    [ ] Fancier members page inside groups
+    [X] Fancier members page inside groups
     [ ] Fancier profile?
 
     [ ] Don't include people groups in expired groups
     [ ] Reload active groups and phones on map zoom and move
 
-    [X] First turn on of location
-        "Anyone on Closer will be able to see your location on the map"
-         Turn off / I want this
+    [ ] First photo posted to "talk here" gets set as background
+
     [ ] Talk in Allen -> Talk on Allen's wall
 
     [X] Closer Add a friends group modal text alignment is off
