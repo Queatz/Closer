@@ -22,6 +22,7 @@ import kotlin.math.abs
 
 class PhotoActivity : CircularRevealActivity() {
 
+    private lateinit var photoUrl: String
     private lateinit var photo: PhotoView
     private val enterAnimationCompleteObservable = BehaviorSubject.create<Boolean>()
 
@@ -55,7 +56,7 @@ class PhotoActivity : CircularRevealActivity() {
         enterAnimationCompleteObservable.onNext(true)
 
         if (intent != null) {
-            val photoUrl = intent.getStringExtra(EXTRA_PHOTO)!!
+            photoUrl = intent.getStringExtra(EXTRA_PHOTO)!!
             on<ImageHandler>().get().load(photoUrl).listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                     onSuccess(photoUrl)
@@ -73,11 +74,21 @@ class PhotoActivity : CircularRevealActivity() {
         photo.setOnClickListener { finish() }
 
         findViewById<View>(R.id.actionShare).setOnClickListener {
-            if (photo.drawable is BitmapDrawable) {
-                on<SystemShareHandler>().share((photo.drawable as BitmapDrawable).bitmap)
-            } else {
-                on<DefaultAlerts>().thatDidntWork()
-            }
+            on<ImageHandler>().get().load(photoUrl.split("\\?".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "?s=1600")
+                    .apply(RequestOptions().skipMemoryCache(true))
+                    .addListener(object : RequestListener<Drawable> {
+                        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                            on<SystemShareHandler>().share((resource as BitmapDrawable).bitmap)
+                            return true
+                        }
+
+                        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                            on<DefaultAlerts>().thatDidntWork()
+                            return true
+                        }
+                    })
+                    .preload()
+
         }
     }
 
