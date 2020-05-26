@@ -9,7 +9,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 class LightDarkHandler constructor(private val on: On) {
 
-    private val DARK = LightDarkColors(false,
+    val DARK = LightDarkColors(false,
             on<ResourcesHandler>().resources.getColor(R.color.text),
             on<ResourcesHandler>().resources.getColor(R.color.white_50),
             on<ResourcesHandler>().resources.getColor(R.color.white_50),
@@ -24,7 +24,7 @@ class LightDarkHandler constructor(private val on: On) {
             R.drawable.clickable_borderless_light
     )
 
-    private val LIGHT = LightDarkColors(true,
+    val LIGHT = LightDarkColors(true,
             on<ResourcesHandler>().resources.getColor(R.color.textInverse),
             on<ResourcesHandler>().resources.getColor(R.color.colorPrimary),
             on<ResourcesHandler>().resources.getColor(R.color.colorAccentDark),

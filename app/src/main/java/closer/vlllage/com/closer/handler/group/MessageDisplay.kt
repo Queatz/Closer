@@ -221,7 +221,8 @@ class MessageDisplay constructor(private val on: On) {
 
     private fun displayMessage(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.name.visible = false
-        holder.time.visible = false
+        holder.time.visible = true
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
         holder.messageLayout.visible = false
         holder.eventMessage.visible = true
         holder.eventMessage.text = on<GroupMessageParseHandler>().parseText(holder.eventMessage, jsonObject.get("message").asString)

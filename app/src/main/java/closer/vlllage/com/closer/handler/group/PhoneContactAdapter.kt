@@ -50,20 +50,37 @@ class PhoneContactAdapter(on: On,
         holder.phoneIconIsPhoto = false
         holder.phoneIcon.alpha = .75f
 
-        holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
-            holder.name.setTextColor(it.text)
-            holder.number.setTextColor(it.text)
-            holder.action.setTextColor(it.action)
+        val isMember = position < memberAndInviteCount
 
-            if (!holder.phoneIconIsPhoto) {
-                holder.phoneIcon.imageTintList = it.tint
+        holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
+            if (!isMember) {
+                holder.itemView.setBackgroundResource(it.clickableRoundedBackground8dp)
+                holder.name.setTextColor(it.text)
+                holder.number.setTextColor(it.text)
+                holder.action.setTextColor(it.action)
+
+                if (!holder.phoneIconIsPhoto) {
+                    holder.phoneIcon.imageTintList = it.tint
+                }
             }
         })
 
-        val pad = if (position < memberAndInviteCount) on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) else 0
-        holder.itemView.setPaddingRelative(pad, pad, pad, pad)
+        val pad = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble)
 
-        if (position < memberAndInviteCount) {
+        if (isMember) {
+            holder.name.setTextColor(on<LightDarkHandler>().LIGHT.text)
+            holder.number.setTextColor(on<LightDarkHandler>().LIGHT.text)
+            holder.action.setTextColor(on<LightDarkHandler>().LIGHT.action)
+            holder.itemView.setPaddingRelative(pad, pad, pad, pad)
+
+            if (!holder.phoneIconIsPhoto) {
+                holder.phoneIcon.imageTintList = on<LightDarkHandler>().LIGHT.tint
+            }
+        } else {
+            holder.itemView.setPaddingRelative(0, 0, pad, 0)
+        }
+
+        if (isMember) {
             holder.itemView.setBackgroundResource(R.drawable.clickable_white_8dp_flat)
             holder.itemView.elevation = on<ResourcesHandler>().resources.getDimension(R.dimen.elevation)
 
@@ -148,7 +165,6 @@ class PhoneContactAdapter(on: On,
             contact = contacts[position - memberAndInviteCount]
         }
 
-        holder.itemView.setBackgroundResource(R.drawable.clickable_light_rounded_8dp)
         holder.itemView.elevation = 0f
         holder.phoneIcon.setImageResource(R.drawable.ic_person_add_black_24dp)
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.invite)
