@@ -37,6 +37,7 @@ class PhoneGroupsFragment : PoolActivityFragment() {
             setLayoutResId(R.layout.search_groups_item_light)
             setBackgroundResId(R.drawable.clickable_green_flat)
             flat = true
+            transparentBackground = true
         }
 
         photosRecyclerView.layoutManager = LinearLayoutManager(photosRecyclerView.context)
@@ -56,12 +57,10 @@ class PhoneGroupsFragment : PoolActivityFragment() {
                         .subscribe()
                         .on(AndroidScheduler.mainThread())
                         .observer { groupContacts ->
-                            searchGroupsAdapter.setGroups(groupContacts.map { on<StoreHandler>().store.box(Group::class).query()
-                                    .equal(Group_.id, it.groupId!!)
-                                    .build()
-                                    .findFirst()}
-                                    .filter { it != null }
-                                    .map { it!! })
+                            searchGroupsAdapter.setGroups(
+                                    on<StoreHandler>().store.box(Group::class).query(
+                                            Group_.id.oneOf(groupContacts.map { it.groupId }.toTypedArray())
+                                    ).build().find())
                         })
             }
         }

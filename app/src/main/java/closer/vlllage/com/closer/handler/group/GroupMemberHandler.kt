@@ -106,12 +106,12 @@ class GroupMemberHandler constructor(private val on: On) {
                 }.visible(group?.hasPhone() != true),
                 MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.view_background) {
                     group?.photo?.let { on<PhotoActivityTransitionHandler>().show(null, it) }
-                }.visible(group?.photo != null && !group.hasPhone()),
+                }.visible(group?.photo != null),
                 MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) {
                     if (group != null) {
                         on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> }
                     }
-                }.visible(group?.hasPhone() != true),
+                },
                 MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.update_description) {
                     if (group != null) {
                         on<AlertHandler>().make().apply {

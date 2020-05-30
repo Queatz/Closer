@@ -68,17 +68,17 @@ class GroupActivity : CircularRevealActivity() {
             }
 
             val initialHeight = view.profilePhoto.measuredHeight
-            val finalHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.profilePhotoCollapsedHeight)
+            val finalHeight = 0 //on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.profilePhotoCollapsedHeight)
 
             ObjectAnimator.ofFloat(0f, 1f).apply {
+                duration = 150
                 addUpdateListener {
                     val params = view.profilePhoto.layoutParams as ConstraintLayout.LayoutParams
                     params.apply {
-                        matchConstraintPercentHeight = 1f
                         height = (initialHeight + it.animatedFraction * (finalHeight - initialHeight)).toInt()
+                        matchConstraintPercentHeight = if (height == 0) 0f else 1f
                         view.profilePhoto.layoutParams = this
                     }
-                    view.profilePhoto.alpha = 1f - (0.66f * it.animatedFraction)
                 }
                 start()
             }
@@ -133,6 +133,9 @@ class GroupActivity : CircularRevealActivity() {
 
                 view.peopleInGroup.isSelected = true
 
+                if (!group.hasPhone()) {
+                    setGroupProfilePhoto(null)
+                }
 
                 setGroupBackground(group)
                 setGroupRating(group)
@@ -243,8 +246,6 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun setGroupBackground(group: Group) {
-        view.profilePhoto.visible = false
-
         if (group.photo != null) {
             view.backgroundPhoto.visible = true
             on<ImageHandler>().get().load(group.photo + "?s=512")
@@ -264,8 +265,6 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun setGroupProfilePhoto(photo: String?) {
-        view.backgroundPhoto.visible = false
-
         if (photo != null) {
             view.profilePhoto.visible = true
             on<ImageHandler>().get().load("$photo?s=512")

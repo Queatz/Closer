@@ -73,12 +73,12 @@ class RefreshHandler constructor(private val on: On) {
 
     fun refreshGroupContactsForPhone(phoneId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getGroupContactsForPhone(phoneId).subscribe({
-            handleGroupContacts(it!!, noPhones = true)
+            handleGroupContacts(it!!, noPhones = true, removeAllExcept = false)
         }, connectionError))
     }
 
     fun refreshGroupContacts(groupId: String) {
-        on<DisposableHandler>().add(on<ApiHandler>().getContacts(groupId).subscribe({ handleGroupContacts(it, noGroups = true) },
+        on<DisposableHandler>().add(on<ApiHandler>().getContacts(groupId).subscribe({ handleGroupContacts(it, noGroups = true, removeAllExcept = false) },
                 connectionError))
     }
 
@@ -295,7 +295,7 @@ class RefreshHandler constructor(private val on: On) {
         handleFullListResult(groups, Group::class.java, Group_.id, deleteLocal, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) })
     }
 
-    private fun handleGroupContacts(groupContacts: List<GroupContactResult>, noGroups: Boolean = false, noPhones: Boolean = false) {
+    private fun handleGroupContacts(groupContacts: List<GroupContactResult>, noGroups: Boolean = false, noPhones: Boolean = false, removeAllExcept: Boolean = true) {
         val allMyGroupContactIds = HashSet<String>()
 
         if (!noPhones) {
@@ -349,7 +349,10 @@ class RefreshHandler constructor(private val on: On) {
             }
 
             on<StoreHandler>().store.box(GroupContact::class).put(groupContactsToAdd)
-            on<StoreHandler>().removeAllExcept(GroupContact::class.java, GroupContact_.id, allMyGroupContactIds)
+
+            if (removeAllExcept) {
+                on<StoreHandler>().removeAllExcept(GroupContact::class.java, GroupContact_.id, allMyGroupContactIds)
+            }
         }
     }
 

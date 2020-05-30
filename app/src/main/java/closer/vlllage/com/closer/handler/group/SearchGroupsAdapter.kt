@@ -42,6 +42,7 @@ open class SearchGroupsAdapter constructor(
     private var isSmall: Boolean = false
     private var isNoAnimation: Boolean = false
     var flat: Boolean = false
+    var transparentBackground: Boolean = false
 
     private val createGroupCount get() = if (showCreateGroup) 1 else 0
 
@@ -57,7 +58,11 @@ open class SearchGroupsAdapter constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return SearchGroupsViewHolder(LayoutInflater.from(parent.context)
-                .inflate(layoutResId, parent, false))
+                .inflate(layoutResId, parent, false).also {
+                    if (transparentBackground) {
+                        it.background = null
+                    }
+                })
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

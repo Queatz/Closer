@@ -13,8 +13,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/padDouble"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/padDouble"
+            android:paddingBottom="@dimen/padDouble"
             android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:orientation="vertical"
+            android:background="@drawable/color_white_rounded"
+            android:clipToPadding="false"
+            android:padding="@dimen/padDouble"
+            android:elevation="@dimen/elevation">
 
             <TextView
                 android:id="@+id/phoneVerifiedTextView"
@@ -61,7 +73,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
-                android:layout_marginBottom="@dimen/pad"
                 android:paddingTop="@dimen/pad"
                 android:paddingBottom="@dimen/pad"
                 android:paddingStart="@dimen/pad"
@@ -77,13 +88,24 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:text="@string/direct_message" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:orientation="vertical"
+            android:background="@drawable/color_white_rounded"
+            android:clipToPadding="false"
+            android:padding="@dimen/padDouble"
+            android:elevation="@dimen/elevation">
+
             <TextView
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad"
                 android:layout_marginBottom="@dimen/pad"
                 android:text="@string/introduction"/>
 
@@ -118,13 +140,24 @@
                 android:drawablePadding="@dimen/pad"
                 android:text="@string/edit" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:orientation="vertical"
+            android:background="@drawable/color_white_rounded"
+            android:clipToPadding="false"
+            android:padding="@dimen/padDouble"
+            android:elevation="@dimen/elevation">
+
             <TextView
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
                 android:text="@string/goals"/>
 
@@ -164,13 +197,24 @@
                 android:drawablePadding="@dimen/padHalf"
                 android:text="@string/add" />
 
-            <TextView
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:orientation="vertical"
+            android:background="@drawable/color_white_rounded"
+            android:clipToPadding="false"
+            android:padding="@dimen/padDouble"
+            android:elevation="@dimen/elevation">
+
+        <TextView
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
                 android:text="@string/lifestyle"/>
 
@@ -210,13 +254,24 @@
                 android:drawablePadding="@dimen/padHalf"
                 android:text="@string/add" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:orientation="vertical"
+            android:background="@drawable/color_white_rounded"
+            android:clipToPadding="false"
+            android:padding="@dimen/padDouble"
+            android:elevation="@dimen/elevation">
+
             <TextView
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
                 android:text="@string/offtime"/>
 
@@ -251,13 +306,24 @@
                 android:drawablePadding="@dimen/pad"
                 android:text="@string/edit" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:orientation="vertical"
+            android:background="@drawable/color_white_rounded"
+            android:clipToPadding="false"
+            android:padding="@dimen/padDouble"
+            android:elevation="@dimen/elevation">
+
             <TextView
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
                 android:text="@string/occupations"/>
 
@@ -292,13 +358,24 @@
                 android:drawablePadding="@dimen/pad"
                 android:text="@string/edit" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:orientation="vertical"
+            android:background="@drawable/color_white_rounded"
+            android:clipToPadding="false"
+            android:padding="@dimen/padDouble"
+            android:elevation="@dimen/elevation">
+
             <TextView
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
                 android:textColor="@color/textInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
                 android:text="@string/history"/>
 
@@ -332,6 +409,8 @@
                 android:drawableStart="@drawable/ic_edit_black_18dp"
                 android:drawablePadding="@dimen/pad"
                 android:text="@string/edit" />
+
+        </LinearLayout>
 
         </LinearLayout>
 
