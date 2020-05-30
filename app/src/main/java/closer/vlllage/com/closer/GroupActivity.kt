@@ -123,10 +123,6 @@ class GroupActivity : CircularRevealActivity() {
             onContactInfoChanged { redrawContacts(it) }
 
             onGroupChanged { group ->
-//                if (!on<SettingsHandler>().get(UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME)) {
-//                    on<LightDarkHandler>().setLight(group.hasPhone())
-//                }
-
                 on<GroupToolbarHandler>().contentView.onNext(initialContent ?: ContentViewType.MESSAGES)
 
                 on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)

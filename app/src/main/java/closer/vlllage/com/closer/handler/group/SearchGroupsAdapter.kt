@@ -161,7 +161,7 @@ open class SearchGroupsAdapter constructor(
                 }
 
                 if (!isSmall) {
-                    if (group.hasPhone()) {
+                    if (group.hasPhone() && group.photo == null) {
                         holder.on<LightDarkHandler>().setLight(true)
                     } else {
                         holder.on<LightDarkHandler>().setLight(false)
