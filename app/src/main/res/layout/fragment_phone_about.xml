@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -12,166 +12,162 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             android:orientation="vertical"
             android:paddingStart="@dimen/padDouble"
             android:paddingEnd="@dimen/padDouble"
-            android:paddingBottom="@dimen/padDouble"
-            android:clipToPadding="false">
+            android:paddingBottom="@dimen/padDouble">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
-            android:orientation="vertical"
-            android:background="@drawable/color_white_rounded"
-            android:clipToPadding="false"
-            android:padding="@dimen/padDouble"
-            android:elevation="@dimen/elevation">
-
-            <TextView
-                android:id="@+id/phoneVerifiedTextView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/pad"
-                android:textColor="@color/textInverse"
-                android:drawableStart="@drawable/ic_verified_user_black_18dp"
-                android:drawableTint="@color/green700"
-                android:drawablePadding="@dimen/pad"
-                android:gravity="center_vertical"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:text="@string/phone_verified" />
+                android:layout_marginTop="@dimen/padDouble"
+                android:background="@drawable/color_white_rounded"
+                android:clipToPadding="false"
+                android:elevation="@dimen/elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/padDouble">
 
-            <TextView
-                android:id="@+id/activeTextView"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad"
+                    android:text="@string/introduction"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/introductionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSize"
+                    tools:text="Something here..." />
+
+                <TextView
+                    android:id="@+id/actionEditIntroduction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad"
+                    android:background="@drawable/clickable_accent"
+                    android:drawableStart="@drawable/ic_edit_black_18dp"
+                    android:drawablePadding="@dimen/pad"
+                    android:elevation="2dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="0dp"
+                    android:paddingStart="@dimen/padDouble"
+                    android:paddingTop="@dimen/pad"
+                    android:paddingEnd="@dimen/padDouble"
+                    android:paddingBottom="@dimen/pad"
+                    android:text="@string/edit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/pad"
-                android:textColor="@color/textInverse"
-                android:drawableStart="@drawable/ic_help_black_18dp"
-                android:drawableTint="@color/colorPrimary"
-                android:drawablePadding="@dimen/pad"
-                android:gravity="center_vertical"
-                tools:text="Last active 1 week ago" />
+                android:layout_marginTop="@dimen/padDouble"
+                android:background="@drawable/color_white_rounded"
+                android:clipToPadding="false"
+                android:elevation="@dimen/elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/padDouble">
+
+                <TextView
+                    android:id="@+id/phoneVerifiedTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad"
+                    android:drawableStart="@drawable/ic_verified_user_black_18dp"
+                    android:drawablePadding="@dimen/pad"
+                    android:drawableTint="@color/green700"
+                    android:gravity="center_vertical"
+                    android:text="@string/phone_verified"
+                    android:textColor="@color/textInverse"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/activeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad"
+                    android:drawableStart="@drawable/ic_help_black_18dp"
+                    android:drawablePadding="@dimen/pad"
+                    android:drawableTint="@color/colorPrimary"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/textInverse"
+                    tools:text="Last active 1 week ago" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad"
+                    android:drawableStart="@drawable/ic_my_location_black_18dp"
+                    android:drawablePadding="@dimen/pad"
+                    android:drawableTint="@color/purple"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/textInverse"
+                    android:visibility="gone"
+                    tools:text="near Paris, France"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/sendDirectMessageButton"
+                    style="@style/Widget.AppCompat.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad"
+                    android:background="@drawable/clickable_blue_8dp"
+                    android:drawableStart="@drawable/ic_mail_black_24dp"
+                    android:drawablePadding="@dimen/pad"
+                    android:drawableTint="@color/text"
+                    android:elevation="@dimen/elevationSmall"
+                    android:gravity="center"
+                    android:minHeight="0dp"
+                    android:paddingStart="@dimen/pad"
+                    android:paddingTop="@dimen/pad"
+                    android:paddingEnd="@dimen/padDouble"
+                    android:paddingBottom="@dimen/pad"
+                    android:text="@string/direct_message"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/text" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/location"
+                android:id="@+id/goalsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
                 android:textColor="@color/textInverse"
-                android:drawableStart="@drawable/ic_my_location_black_18dp"
-                android:drawableTint="@color/purple"
-                android:drawablePadding="@dimen/pad"
-                android:gravity="center_vertical"
-                android:visibility="gone"
-                tools:visibility="visible"
-                tools:text="near Paris, France" />
-
-            <Button style="@style/Widget.AppCompat.Button"
-                android:id="@+id/sendDirectMessageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad"
-                android:paddingTop="@dimen/pad"
-                android:paddingBottom="@dimen/pad"
-                android:paddingStart="@dimen/pad"
-                android:paddingEnd="@dimen/padDouble"
-                android:minHeight="0dp"
-                android:textColor="@color/text"
-                android:background="@drawable/clickable_blue_8dp"
-                android:gravity="center"
-                android:elevation="@dimen/elevationSmall"
-                android:drawableStart="@drawable/ic_mail_black_24dp"
-                android:drawableTint="@color/text"
-                android:drawablePadding="@dimen/pad"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:text="@string/direct_message" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
-            android:orientation="vertical"
-            android:background="@drawable/color_white_rounded"
-            android:clipToPadding="false"
-            android:padding="@dimen/padDouble"
-            android:elevation="@dimen/elevation">
-
-            <TextView
+                android:textSize="@dimen/textSizeLarge"
                 android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
-                android:textColor="@color/textInverse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/pad"
-                android:text="@string/introduction"/>
-
-            <TextView
-                android:id="@+id/introductionTextView"
-                android:textColor="@color/textInverse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/textSize"
-                tools:text="Something here..."/>
-
-            <TextView
-                android:id="@+id/actionEditIntroduction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad"
-                android:minHeight="0dp"
-                android:paddingStart="@dimen/padDouble"
-                android:paddingEnd="@dimen/padDouble"
-                android:paddingTop="@dimen/pad"
-                android:paddingBottom="@dimen/pad"
-                android:gravity="center_vertical"
-                android:elevation="2dp"
-                android:textAllCaps="true"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:background="@drawable/clickable_accent"
-                android:textColor="@color/textInverse"
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
-                android:drawableStart="@drawable/ic_edit_black_18dp"
-                android:drawablePadding="@dimen/pad"
-                android:text="@string/edit" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
-            android:orientation="vertical"
-            android:background="@drawable/color_white_rounded"
-            android:clipToPadding="false"
-            android:padding="@dimen/padDouble"
-            android:elevation="@dimen/elevation">
-
-            <TextView
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
-                android:textColor="@color/textInverse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/pad"
-                android:text="@string/goals"/>
+                tools:text="@string/goals" />
 
             <TextView
                 android:id="@+id/goalsEmptyTextView"
-                android:textColor="@color/textHintInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/nothing_here"/>
+                android:text="@string/nothing_here"
+                android:textColor="@color/textHintInverse" />
 
             <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/goalsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false" />
 
             <TextView
@@ -179,238 +175,238 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
-                android:minHeight="0dp"
-                android:paddingStart="@dimen/padDouble"
-                android:paddingEnd="@dimen/padDouble"
-                android:paddingTop="@dimen/pad"
-                android:paddingBottom="@dimen/pad"
-                android:gravity="center_vertical"
-                android:elevation="2dp"
-                android:textAllCaps="true"
-                android:visibility="gone"
-                tools:visibility="visible"
                 android:background="@drawable/clickable_accent"
-                android:textColor="@color/textInverse"
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
                 android:drawableStart="@drawable/ic_add_black_18dp"
                 android:drawablePadding="@dimen/padHalf"
-                android:text="@string/add" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
-            android:orientation="vertical"
-            android:background="@drawable/color_white_rounded"
-            android:clipToPadding="false"
-            android:padding="@dimen/padDouble"
-            android:elevation="@dimen/elevation">
-
-        <TextView
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
+                android:elevation="2dp"
+                android:gravity="center_vertical"
+                android:minHeight="0dp"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:text="@string/add_a_goal"
+                android:textAllCaps="true"
                 android:textColor="@color/textInverse"
+                android:textSize="@dimen/textSizeSmall"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/lifestyleHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
-                android:text="@string/lifestyle"/>
+                android:textColor="@color/textInverse"
+                android:textSize="@dimen/textSizeLarge"
+                android:textStyle="bold"
+                tools:text="@string/lifestyle" />
 
             <TextView
                 android:id="@+id/lifestylesEmptyTextView"
-                android:textColor="@color/textHintInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/nothing_here"/>
+                android:text="@string/nothing_here"
+                android:textColor="@color/textHintInverse" />
 
             <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/lifestyleRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
 
             <TextView
                 android:id="@+id/actionAddLifestyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad"
-                android:minHeight="0dp"
-                android:paddingStart="@dimen/padDouble"
-                android:paddingEnd="@dimen/padDouble"
-                android:paddingTop="@dimen/pad"
-                android:paddingBottom="@dimen/pad"
-                android:gravity="center_vertical"
-                android:elevation="2dp"
-                android:textAllCaps="true"
-                android:visibility="gone"
-                tools:visibility="visible"
                 android:background="@drawable/clickable_accent"
-                android:textColor="@color/textInverse"
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
                 android:drawableStart="@drawable/ic_add_black_18dp"
                 android:drawablePadding="@dimen/padHalf"
-                android:text="@string/add" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
-            android:orientation="vertical"
-            android:background="@drawable/color_white_rounded"
-            android:clipToPadding="false"
-            android:padding="@dimen/padDouble"
-            android:elevation="@dimen/elevation">
-
-            <TextView
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
-                android:textColor="@color/textInverse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/pad"
-                android:text="@string/offtime"/>
-
-            <TextView
-                android:id="@+id/offtimeTextView"
-                android:textColor="@color/textInverse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/textSize"
-                tools:text="Something here..."/>
-
-            <TextView
-                android:id="@+id/actionEditOfftime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad"
+                android:elevation="2dp"
+                android:gravity="center_vertical"
                 android:minHeight="0dp"
                 android:paddingStart="@dimen/padDouble"
-                android:paddingEnd="@dimen/padDouble"
                 android:paddingTop="@dimen/pad"
+                android:paddingEnd="@dimen/padDouble"
                 android:paddingBottom="@dimen/pad"
-                android:gravity="center_vertical"
-                android:elevation="2dp"
+                android:text="@string/add_a_lifestyle"
                 android:textAllCaps="true"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:background="@drawable/clickable_accent"
                 android:textColor="@color/textInverse"
-                android:textStyle="bold"
                 android:textSize="@dimen/textSizeSmall"
-                android:drawableStart="@drawable/ic_edit_black_18dp"
-                android:drawablePadding="@dimen/pad"
-                android:text="@string/edit" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
-            android:orientation="vertical"
-            android:background="@drawable/color_white_rounded"
-            android:clipToPadding="false"
-            android:padding="@dimen/padDouble"
-            android:elevation="@dimen/elevation">
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <TextView
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
-                android:textColor="@color/textInverse"
+                android:id="@+id/moreAboutHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
                 android:layout_marginBottom="@dimen/pad"
-                android:text="@string/occupations"/>
-
-            <TextView
-                android:id="@+id/occupationTextView"
                 android:textColor="@color/textInverse"
+                android:textSize="@dimen/textSizeLarge"
+                android:textStyle="bold"
+                tools:text="@string/more_about_x" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/textSize"
-                tools:text="Something here..."/>
+                android:background="@drawable/color_white_rounded"
+                android:clipToPadding="false"
+                android:elevation="@dimen/elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/padDouble">
 
-            <TextView
-                android:id="@+id/actionEditOccupation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad"
-                android:minHeight="0dp"
-                android:paddingStart="@dimen/padDouble"
-                android:paddingEnd="@dimen/padDouble"
-                android:paddingTop="@dimen/pad"
-                android:paddingBottom="@dimen/pad"
-                android:gravity="center_vertical"
-                android:elevation="2dp"
-                android:textAllCaps="true"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:background="@drawable/clickable_accent"
-                android:textColor="@color/textInverse"
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
-                android:drawableStart="@drawable/ic_edit_black_18dp"
-                android:drawablePadding="@dimen/pad"
-                android:text="@string/edit" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad"
+                    android:text="@string/offtime"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/offtimeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSize"
+                    tools:text="Something here..." />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
-            android:orientation="vertical"
-            android:background="@drawable/color_white_rounded"
-            android:clipToPadding="false"
-            android:padding="@dimen/padDouble"
-            android:elevation="@dimen/elevation">
+                <TextView
+                    android:id="@+id/actionEditOfftime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad"
+                    android:background="@drawable/clickable_accent"
+                    android:drawableStart="@drawable/ic_edit_black_18dp"
+                    android:drawablePadding="@dimen/pad"
+                    android:elevation="2dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="0dp"
+                    android:paddingStart="@dimen/padDouble"
+                    android:paddingTop="@dimen/pad"
+                    android:paddingEnd="@dimen/padDouble"
+                    android:paddingBottom="@dimen/pad"
+                    android:text="@string/edit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
-            <TextView
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
-                android:textColor="@color/textInverse"
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/pad"
-                android:text="@string/history"/>
+                android:layout_marginTop="@dimen/padDouble"
+                android:background="@drawable/color_white_rounded"
+                android:clipToPadding="false"
+                android:elevation="@dimen/elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/padDouble">
 
-            <TextView
-                android:id="@+id/historyTextView"
-                android:textColor="@color/textInverse"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad"
+                    android:text="@string/occupations"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/occupationTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSize"
+                    tools:text="Something here..." />
+
+                <TextView
+                    android:id="@+id/actionEditOccupation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad"
+                    android:background="@drawable/clickable_accent"
+                    android:drawableStart="@drawable/ic_edit_black_18dp"
+                    android:drawablePadding="@dimen/pad"
+                    android:elevation="2dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="0dp"
+                    android:paddingStart="@dimen/padDouble"
+                    android:paddingTop="@dimen/pad"
+                    android:paddingEnd="@dimen/padDouble"
+                    android:paddingBottom="@dimen/pad"
+                    android:text="@string/edit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/textSize"
-                tools:text="Something here..."/>
+                android:layout_marginTop="@dimen/padDouble"
+                android:background="@drawable/color_white_rounded"
+                android:clipToPadding="false"
+                android:elevation="@dimen/elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/padDouble">
 
-            <TextView
-                android:id="@+id/actionEditHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad"
-                android:minHeight="0dp"
-                android:paddingStart="@dimen/padDouble"
-                android:paddingEnd="@dimen/padDouble"
-                android:paddingTop="@dimen/pad"
-                android:paddingBottom="@dimen/pad"
-                android:gravity="center_vertical"
-                android:elevation="2dp"
-                android:textAllCaps="true"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:background="@drawable/clickable_accent"
-                android:textColor="@color/textInverse"
-                android:textStyle="bold"
-                android:textSize="@dimen/textSizeSmall"
-                android:drawableStart="@drawable/ic_edit_black_18dp"
-                android:drawablePadding="@dimen/pad"
-                android:text="@string/edit" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad"
+                    android:text="@string/history"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/historyTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSize"
+                    tools:text="Something here..." />
+
+                <TextView
+                    android:id="@+id/actionEditHistory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad"
+                    android:background="@drawable/clickable_accent"
+                    android:drawableStart="@drawable/ic_edit_black_18dp"
+                    android:drawablePadding="@dimen/pad"
+                    android:elevation="2dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="0dp"
+                    android:paddingStart="@dimen/padDouble"
+                    android:paddingTop="@dimen/pad"
+                    android:paddingEnd="@dimen/padDouble"
+                    android:paddingBottom="@dimen/pad"
+                    android:text="@string/edit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

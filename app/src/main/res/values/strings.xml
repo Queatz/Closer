@@ -216,7 +216,8 @@
     <string name="introduction">Introduction</string>
     <string name="offtime">In my offtime</string>
     <string name="history">History</string>
-    <string name="goals">Current goals</string>
+    <string name="goals">%1$s\'s current goals</string>
+    <string name="lifestyles">%1$s\'s lifestyle</string>
     <string name="lifestyle">Lifestyle</string>
     <string name="nothing_here">There\'s nothing here</string>
     <string name="edit_your_introduction">Edit your introduction</string>
@@ -406,6 +407,7 @@
     <string name="your_sharing_location">Anyone on Closer can see your location until you turn this off.</string>
     <string name="version">Version</string>
     <string name="communities">Communities</string>
+    <string name="more_about_x">More about %1$s</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

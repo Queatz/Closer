@@ -61,6 +61,19 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 occupationTextView.text = phone.occupation ?: nothing
                 historyTextView.text = phone.history ?: nothing
 
+                val name = on<NameHandler>().getName(phone)
+                goalsHeader.text = on<ResourcesHandler>().resources.getString(R.string.goals, name)
+                lifestyleHeader.text = on<ResourcesHandler>().resources.getString(R.string.lifestyles, name)
+                moreAboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.more_about_x, name)
+
+                on<LightDarkHandler>().onLightChanged.subscribe {
+                    goalsHeader.setTextColor(it.text)
+                    lifestyleHeader.setTextColor(it.text)
+                    moreAboutHeader.setTextColor(it.text)
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
+
                 with(on<ResourcesHandler>().resources) {
                     introductionTextView.setTextColor(
                             if (phone.introduction.isNullOrBlank()) getColor(R.color.textHintInverse)
@@ -137,11 +150,6 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 goalsRecyclerView.adapter = goalAdapter
                 goalsRecyclerView.layoutManager = LinearLayoutManager(context)
-//                goalsRecyclerView.layoutManager = object : LinearLayoutManager(context) {
-//                    override fun onMeasure(recycler: RecyclerView.Recycler, state: RecyclerView.State, widthSpec: Int, heightSpec: Int) {
-//                        super.onMeasure(recycler, state, widthSpec, MeasureSpec.makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.AT_MOST))
-//                    }
-//                }
 
                 val lifestyleAdapter = GoalAdapter(on, true) {
                     if (editable) {
