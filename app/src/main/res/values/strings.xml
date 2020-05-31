@@ -408,6 +408,8 @@
     <string name="version">Version</string>
     <string name="communities">Communities</string>
     <string name="more_about_x">More about %1$s</string>
+    <string name="sent_to_x">Sent to %1$s</string>
+    <string name="about_x">About %1$s</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

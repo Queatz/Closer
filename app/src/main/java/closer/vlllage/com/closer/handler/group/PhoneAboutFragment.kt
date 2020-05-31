@@ -64,6 +64,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 val name = on<NameHandler>().getName(phone)
                 goalsHeader.text = on<ResourcesHandler>().resources.getString(R.string.goals, name)
                 lifestyleHeader.text = on<ResourcesHandler>().resources.getString(R.string.lifestyles, name)
+                aboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.about_x, name)
                 moreAboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.more_about_x, name)
 
                 on<LightDarkHandler>().onLightChanged.subscribe {

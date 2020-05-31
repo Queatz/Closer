@@ -19,10 +19,20 @@
             android:paddingEnd="@dimen/padDouble"
             android:paddingBottom="@dimen/padDouble">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/aboutHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padDouble"
+                android:layout_marginBottom="@dimen/pad"
+                android:textColor="@color/textInverse"
+                android:textSize="@dimen/textSizeLarge"
+                android:textStyle="bold"
+                tools:text="@string/about_x" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/color_white_rounded"
                 android:clipToPadding="false"
                 android:elevation="@dimen/elevation"
