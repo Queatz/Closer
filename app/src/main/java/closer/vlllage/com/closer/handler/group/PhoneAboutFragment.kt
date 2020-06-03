@@ -58,10 +58,10 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 }
 
                 val nothing = on<ResourcesHandler>().resources.getString(R.string.nothing_here)
-                introductionTextView.text = phone.introduction ?: nothing
-                offtimeTextView.text = phone.offtime ?: nothing
-                occupationTextView.text = phone.occupation ?: nothing
-                historyTextView.text = phone.history ?: nothing
+                introductionTextView.text = phone.introduction?.takeIf { it.isNotBlank() } ?: nothing
+                offtimeTextView.text = phone.offtime?.takeIf { it.isNotBlank() } ?: nothing
+                occupationTextView.text = phone.occupation?.takeIf { it.isNotBlank() } ?: nothing
+                historyTextView.text = phone.history?.takeIf { it.isNotBlank() } ?: nothing
 
                 val name = on<NameHandler>().getName(phone)
                 goalsHeader.text = on<ResourcesHandler>().resources.getString(R.string.goals, name)
