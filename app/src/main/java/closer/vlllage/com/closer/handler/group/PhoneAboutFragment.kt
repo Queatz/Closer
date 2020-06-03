@@ -16,6 +16,8 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.GoalAdapter
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.ReplyHandler
+import closer.vlllage.com.closer.handler.settings.SettingsHandler
+import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.pool.PoolActivityFragment
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_phone_about.*
@@ -67,10 +69,17 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 aboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.about_x, name)
                 moreAboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.more_about_x, name)
 
+                if (phone.photo.isNullOrEmpty()) {
+                    on<LightDarkHandler>().setLight(true)
+                } else {
+                    on<LightDarkHandler>().setLight(on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME])
+                }
+
                 on<LightDarkHandler>().onLightChanged.subscribe {
                     goalsHeader.setTextColor(it.text)
                     lifestyleHeader.setTextColor(it.text)
                     moreAboutHeader.setTextColor(it.text)
+                    aboutHeader.setTextColor(it.text)
                 }.also {
                     on<DisposableHandler>().add(it)
                 }

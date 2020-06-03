@@ -1,9 +1,18 @@
 
+Growth
+========
+ [ ] Is there anything that you will teach for free pay fb
+ [ ] Intros to Austin people (who's who in Austin)
+
 Incoming
 ========
 
- [ ] Red dot if there are new topics created today
- [ ] Wrong group opens sometimes
+ [ ] FEAT Red dot if there are new topics created today
+ [ ] VISBIG About Jacob needs light dark / also no photo = light theme foresees
+ [ ] BUG Wrong group opens sometimes
+
+ [ ] "Jason updated the group description / background"
+ [ ] Activity log for groups from ... overflow menu "Activity logbook"
 
 More
 ----
