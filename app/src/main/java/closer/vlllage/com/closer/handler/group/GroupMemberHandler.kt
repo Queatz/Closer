@@ -45,6 +45,9 @@ class GroupMemberHandler constructor(private val on: On) {
                 on<MenuHandler>().show(
                         MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) { on<GroupActionHandler>().addActionToGroup(group) },
                         MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) },
+                        MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.view_background) {
+                            group.photo?.let { on<PhotoActivityTransitionHandler>().show(null, it) }
+                        }.visible(group.photo != null),
                         MenuHandler.MenuOption(R.drawable.ic_camera_black_24dp, R.string.update_background) { on<PhysicalGroupUpgradeHandler>().setBackground(group) { updateGroup -> } },
                         MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.update_description) {
                             on<AlertHandler>().make().apply {

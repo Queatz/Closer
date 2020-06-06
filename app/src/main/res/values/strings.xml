@@ -410,6 +410,7 @@
     <string name="more_about_x">More about %1$s</string>
     <string name="sent_to_x">Sent to %1$s</string>
     <string name="about_x">About %1$s</string>
+    <string name="notifications_muted">All notifications have been muted until you turn them back on</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

@@ -22,7 +22,8 @@ class Background : BroadcastReceiver() {
         val app = context.applicationContext as App
 
         if (intent.getBooleanExtra(EXTRA_MUTE, false)) {
-                app.on<PersistenceHandler>().isNotificationsPaused = true
+            app.on<PersistenceHandler>().isNotificationsPaused = true
+            app.on<ToastHandler>().show(R.string.notifications_muted)
         } else {
             val remoteInput = RemoteInput.getResultsFromIntent(intent)
             if (remoteInput != null) {
