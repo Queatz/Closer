@@ -7,9 +7,16 @@ Growth
 Incoming
 ========
 
-    [ ] BUG Wrong group opens sometimes
+    [X] BUG Wrong group opens sometimes
+        [X] Just close/discard all others
     [ ] FEAT Red dot if there are new topics created today
     [ ] FEAT Activity log for groups from ... overflow menu "Activity logbook"
+    [ ] Complete goal option, "post to feed"
+    [ ] Show distance next to time (maybe)
+
+Done
+====
+    [X] Custom messages should still be from the person they're about
 
 More
 ----

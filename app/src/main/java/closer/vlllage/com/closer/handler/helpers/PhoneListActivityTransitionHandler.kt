@@ -12,6 +12,7 @@ class PhoneListActivityTransitionHandler constructor(private val on: On) {
         val intent = Intent(on<ApplicationHandler>().app, PhoneListActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_GROUP_MESSAGE_ID, groupMessageId)
+        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
@@ -19,6 +20,7 @@ class PhoneListActivityTransitionHandler constructor(private val on: On) {
         val intent = Intent(on<ApplicationHandler>().app, PhoneListActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_GOAL_NAME, goalName)
+        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
@@ -26,6 +28,7 @@ class PhoneListActivityTransitionHandler constructor(private val on: On) {
         val intent = Intent(on<ApplicationHandler>().app, PhoneListActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_LIFESTYLE_NAME, goalName)
+        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         on<ActivityHandler>().activity!!.startActivity(intent)
     }
 }

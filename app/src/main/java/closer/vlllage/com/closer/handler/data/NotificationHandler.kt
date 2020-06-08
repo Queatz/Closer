@@ -229,7 +229,7 @@ class NotificationHandler constructor(private val on: On) {
                 notification.intentTarget!!
         )
         intent.putExtras(Bundle().fromJson(on(), notification.intentBundle!!))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
 
         context.startActivity(intent)
     }
