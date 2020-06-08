@@ -63,7 +63,7 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
             holder.itemView.photo.setImageResource(R.drawable.ic_person_black_24dp)
             holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
         } else {
-            on<PhotoHelper>().loadCircle(holder.itemView.photo, person.photo!!)
+            on<PhotoHelper>().loadCircle(holder.itemView.photo, "${person.photo}?s=256")
             holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_CROP
         }
 
