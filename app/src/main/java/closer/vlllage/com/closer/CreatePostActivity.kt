@@ -116,7 +116,7 @@ class CreatePostActivity : ListActivity() {
     }
 
     private fun setGroup(group: Group) {
-        val groupName = if (group.name.isNullOrBlank()) on<ResourcesHandler>().resources.getString(R.string.app_name) else group.name!!
+        val groupName = if (group.name.isNullOrBlank()) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name!!
 
         adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.post_in, groupName))
         adapter.groupName = groupName

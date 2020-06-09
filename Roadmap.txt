@@ -15,7 +15,7 @@ Incoming
     [ ] Show distance next to time (maybe)
     [ ] Choose photo from Closer
     [X] padding on message box right side when showing placeholder
-    [ ] Show placeholder group name in notification when blank
+    [X] Show placeholder group name in notification when blank
 
 Done
 ====

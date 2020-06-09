@@ -9,7 +9,6 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcel
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
@@ -25,10 +24,12 @@ import closer.vlllage.com.closer.extensions.fromJson
 import closer.vlllage.com.closer.extensions.toJson
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
-import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
-import closer.vlllage.com.closer.store.models.Group
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import java.util.*
@@ -169,7 +170,11 @@ class NotificationHandler constructor(private val on: On) {
         val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
             created = Date()
             updated = Date()
-            name = on<ResourcesHandler>().resources.getString(R.string.group_message_reaction_notification, from, groupName)
+            name = on<ResourcesHandler>().resources.getString(
+                    R.string.group_message_reaction_notification,
+                    from,
+                    groupName.ifBlank { on<ResourcesHandler>().resources.getString(R.string.unknown) }
+            )
             message = reaction
             intentTarget = intent.component!!.className
             intentAction = intent.action

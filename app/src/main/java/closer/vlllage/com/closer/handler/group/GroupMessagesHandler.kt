@@ -6,7 +6,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
-import androidx.core.view.doOnAttach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -18,7 +17,6 @@ import closer.vlllage.com.closer.handler.map.MapActivityHandler
 import closer.vlllage.com.closer.handler.media.MediaHandler
 import closer.vlllage.com.closer.handler.post.CreatePostActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import closer.vlllage.com.closer.store.models.Phone
