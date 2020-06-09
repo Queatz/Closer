@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.core.view.doOnAttach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -101,6 +102,10 @@ class GroupMessagesHandler constructor(private val on: On) {
         on<GroupHandler>().onGroupChanged { group ->
             replyMessage.setText(on<GroupMessageParseHandler>().parseText(replyMessage, on<GroupDraftHandler>().getDraft(group.id!!)?.message ?: ""))
             updateSendButton()
+        }
+
+        sendMoreLayout.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            updatePadding()
         }
 
         this.replyMessage.addTextChangedListener(object : TextWatcher {
@@ -201,22 +206,33 @@ class GroupMessagesHandler constructor(private val on: On) {
         )
     }
 
-    fun showSendMoreOptions(show: Boolean) {
-        if (show) {
-            sendMoreButton.setImageResource(R.drawable.ic_close_black_24dp)
-            sendMoreLayout.visible = true
-        } else {
-            sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
-            sendMoreLayout.visible = false
-        }
+    private fun updatePadding() {
+        replyMessage.setPadding(
+                replyMessage.paddingLeft,
+                replyMessage.paddingTop,
+                (sendMoreLayout.width.takeIf { sendMoreLayout.visible } ?: 0) +
+                (sendMoreButton.width.takeIf { sendMoreButton.visible } ?: 0) +
+                (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble).takeIf {
+                    !sendMoreLayout.visible && !sendMoreButton.visible
+                } ?: 0),
+                replyMessage.paddingBottom
+        )
     }
 
     fun insertMention(mention: Phone) {
         on<GroupMessageParseHandler>().insertMention(replyMessage, mention)
     }
 
+    private fun showSendMoreOptions(show: Boolean) {
+        sendMoreButton.setImageResource(if (show) R.drawable.ic_close_black_24dp else R.drawable.ic_more_horiz_black_24dp)
+        sendMoreLayout.visible = show
+        updatePadding()
+    }
+
     private fun updateSendButton() {
-        if (replyMessage.text.toString().isBlank()) {
+        val blank = replyMessage.text.toString().isBlank()
+
+        if (blank) {
             sendButton.setImageResource(R.drawable.ic_camera_black_24dp)
             sendMoreButton.visible = true
             on<GroupActionHandler>().show(true)
@@ -227,6 +243,8 @@ class GroupMessagesHandler constructor(private val on: On) {
             sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
             on<GroupActionHandler>().show(false)
         }
+
+        updatePadding()
     }
 
     private fun setGroupMessages(groupMessages: List<GroupMessage>) {

@@ -13,6 +13,9 @@ Incoming
     [ ] FEAT Activity log for groups from ... overflow menu "Activity logbook"
     [ ] Complete goal option, "post to feed"
     [ ] Show distance next to time (maybe)
+    [ ] Choose photo from Closer
+    [X] padding on message box right side when showing placeholder
+    [ ] Show placeholder group name in notification when blank
 
 Done
 ====
