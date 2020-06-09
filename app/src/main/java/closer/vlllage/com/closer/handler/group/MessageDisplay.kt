@@ -1,7 +1,9 @@
 package closer.vlllage.com.closer.handler.group
 
 import android.util.TypedValue
+import android.view.GestureDetector
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
@@ -323,7 +325,29 @@ class MessageDisplay constructor(private val on: On) {
         holder.message.visible = false
         holder.action.visible = false // or Share / save photo?
         holder.photo.visible = true
-        holder.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, photo) }
+
+        val gl = object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDown(e: MotionEvent?) = true
+
+            override fun onDoubleTap(e: MotionEvent?): Boolean {
+                react(groupMessage, on<ResourcesHandler>().resources.getString(R.string.heart))
+                return true
+            }
+
+            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                on<PhotoActivityTransitionHandler>().show(holder.photo, photo)
+                return true
+            }
+
+            override fun onLongPress(e: MotionEvent?) {
+                on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+            }
+        }
+
+        val gd = GestureDetector(holder.photo.context, gl)
+
+        holder.photo.setOnTouchListener { _, event -> gd.onTouchEvent(event) }
+
         on<ImageHandler>().get().clear(holder.photo)
         on<ImageHandler>().get()
                 .load(photo)
@@ -534,14 +558,18 @@ class MessageDisplay constructor(private val on: On) {
     }
 
     private fun react(holder: GroupMessageViewHolder, groupMessage: GroupMessage, reaction: String) {
+        react(groupMessage, reaction, hasMyReaction(groupMessage, reaction))
+        toggleMessageActionLayout(groupMessage, holder)
+    }
+
+    private fun react(groupMessage: GroupMessage, reaction: String, remove: Boolean = false) {
         on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>()
-                .reactToMessage(groupMessage.id!!, reaction, hasMyReaction(groupMessage, reaction))
+                .reactToMessage(groupMessage.id!!, reaction, remove)
                 .subscribe({
                     on<RefreshHandler>().refreshGroupMessage(groupMessage.id!!)
                 }, {
                     on<DefaultAlerts>().thatDidntWork()
                 }))
-        toggleMessageActionLayout(groupMessage, holder)
     }
 
     private fun getGroup(groupId: String?): Group? {

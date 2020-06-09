@@ -10,12 +10,10 @@ Incoming
     [X] BUG Wrong group opens sometimes
         [X] Just close/discard all others
     [ ] FEAT Red dot if there are new topics created today
-    [ ] FEAT Activity log for groups from ... overflow menu "Activity logbook"
+    [ ] FEAT Activity log for groups from ... overflow menu "Activity logbook" rESTORE Background / description etc.
     [ ] Complete goal option, "post to feed"
+    [ ] FEAT Choose photo from Closer
     [ ] Show distance next to time (maybe)
-    [ ] Choose photo from Closer
-    [X] padding on message box right side when showing placeholder
-    [X] Show placeholder group name in notification when blank
 
 Done
 ====

@@ -113,11 +113,6 @@ class GroupMessageHelper constructor(private val on: On) {
             true
         }
 
-        holder.photo.setOnLongClickListener {
-            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
-            true
-        }
-
         holder.messageActionLayout.visible = false
         holder.time.movementMethod = LinkMovementMethod.getInstance()
         holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()
