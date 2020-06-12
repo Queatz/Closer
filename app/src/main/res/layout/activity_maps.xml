@@ -64,13 +64,12 @@
             android:id="@+id/searchMap"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="84dp"
-            android:layout_marginEnd="84dp"
+            android:layout_marginTop="@dimen/padDouble"
+            android:layout_marginStart="@dimen/padDouble"
+            android:layout_marginEnd="@dimen/padDouble"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_max="240dp"
             android:elevation="@dimen/elevationHigh"
             android:background="@drawable/rounded_white_bkg"
             android:drawableStart="@drawable/ic_search_black_24dp"
@@ -134,6 +133,18 @@
             </LinearLayout>
 
         </closer.vlllage.com.closer.ui.ScrollStopper>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/locateMeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/padDouble"
+            android:layout_marginBottom="@dimen/pad"
+            app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
+            android:src="@drawable/ic_my_location_black_24dp"
+            android:backgroundTint="@color/white"
+            app:borderWidth="0dp" />
 
     </closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout>
 

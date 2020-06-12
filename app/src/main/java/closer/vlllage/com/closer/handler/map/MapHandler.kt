@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.*
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.activity_maps.view.*
 import java.util.*
 
 
@@ -35,6 +36,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
     var onMapLongClickedListener: ((LatLng) -> Unit)? = null
     var onMapReadyListener: ((GoogleMap) -> Unit)? = null
     var onMapIdleListener: ((LatLng) -> Unit)? = null
+    private var topPadding = on<WindowHandler>().statusBarHeight
 
     private val onMapIdleObservable = BehaviorSubject.create<CameraPosition>()
     private val onMapReadyObservable = BehaviorSubject.create<GoogleMap>()
@@ -90,7 +92,12 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         }
         mapView!!.addOnLayoutChangeListener { v, i1, i2, i3, i4, i5, i6, i7, i8 -> onMapChangedListener!!.invoke() }
         onMapChangedListener!!.invoke()
-        map!!.setPadding(0, on<WindowHandler>().statusBarHeight, 0, on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf))
+        map!!.setPadding(
+                on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf),
+                topPadding,
+                on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf),
+                on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf))
+        map!!.uiSettings.isMyLocationButtonEnabled = false
 
         if (centerOnMapLoad == null) {
             locateMe()
@@ -100,6 +107,16 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         }
 
         updateMyLocationEnabled()
+    }
+
+    fun setTopPadding(padding: Int) {
+        topPadding = padding
+        map?.setPadding(
+                on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf),
+                topPadding,
+                on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf),
+                on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf)
+        )
     }
 
     fun locateMe() {

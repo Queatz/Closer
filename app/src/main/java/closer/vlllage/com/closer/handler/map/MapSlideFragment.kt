@@ -3,14 +3,17 @@ package closer.vlllage.com.closer.handler.map
 import android.Manifest
 import android.content.Intent
 import android.location.Address
+import android.location.Location
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.FragmentActivity
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.toLatLng
 import closer.vlllage.com.closer.handler.bubble.*
 import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.event.EventBubbleHandler
@@ -170,6 +173,16 @@ class MapSlideFragment : PoolFragment() {
             }.subscribe({ phones ->
                 on<DataVisualsHandler>().setGroups(phones)
             }, { }))
+        }
+
+        view.searchMap.doOnLayout {
+            on<MapHandler>().setTopPadding(view.searchMap.bottom)
+        }
+
+        view.locateMeButton.setOnClickListener {
+            on<LocationHandler>().getCurrentLocation {
+                on<MapHandler>().centerMap(it.toLatLng())
+            }
         }
 
         view.searchMap.setOnEditorActionListener { _, actionId, event ->

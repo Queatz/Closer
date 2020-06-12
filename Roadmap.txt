@@ -1,66 +1,54 @@
 
-Growth
-========
-    [ ] Is there anything that you will teach for free pay fb
-    [ ] Intros to Austin people (who's who in Austin)
-
 Incoming
 ========
 
-    [X] BUG Wrong group opens sometimes
-        [X] Just close/discard all others
-    [ ] FEAT Red dot if there are new topics created today
-    [ ] FEAT Activity log for groups from ... overflow menu "Activity logbook" rESTORE Background / description etc.
-    [ ] Complete goal option, "post to feed"
-    [ ] FEAT Choose photo from Closer
-    [ ] Show distance next to time (maybe)
+❤ Next ❤
+========
 
-Done
-====
-    [X] Custom messages should still be from the person they're about
+    [ ] FEAT Activity log for groups from ... overflow menu "Activity logbook" rESTORE Background / description etc.
+    [ ] FEAT Choose photo from Closer
+    [ ] Search for places option
+
+    [ ] Closer quantize location if not shared on map
+    [ ] (TH!NK) Need to present groups individually and better
 
 More
 ----
 
-    [ ] String translate service on backend
-    [ ] Konvert backend to Kotlin
+    [ ] FEAT Red dot if there are new topics created today
+    [ ] Complete goal option, "post to feed"
+    [ ] Show distance next to time (maybe)
 
     [ ] Send user language to backend
         [ ] Send notifications in that user's language
+    [ ] String translate service on backend
+    [ ] Konvert backend to Kotlin
 
     [ ] Reload active groups and phones on map zoom and move
 
-    [ ] Talk in Allen -> Talk on Allen's wall (?)
-
-    [X] Closer Add a friends group modal text alignment is off
-    [X] Closer increase font size + standardize
-    [X] Closer create a friends group from the friends tab
-
-    [ ] Start using Epics for planning/prioritizing Closer
-        [ ] Launch Closer for Small Businesses
-            [ ] Need to do all these things
-
-    [X] Add Terms of Use
-    [X] Shared messages should always have (Group)
+    [ ] Talk in Allen -> Talk on Allen's wall/space/profile (?)
 
     [ ] Closer managed groups
         [ ] Closer "business page" / group about add section / template
         [ ] Closer owners of groups can edit location, name, delete messages, everything
 
-❤ Next ❤
-========
-
-    [ ] Closer things hidden in closer groups (fun game)
-    [ ] Closer intros to Austin people (who's who in Austin)
-
-    [ ] Closer quantize location if not shared on map
-    [ ] need to present groups individually and better
-    [ ] Closer notification: Alexander boosted a post
+    [ ] (Boost) Closer notification: Alexander boosted a post
         [ ] On Group Message: Boosted by Alexandar, Samantha + 4 others
+
+Growth
+========
+    [ ] Is there anything that you will teach for free pay fb
+    [ ] Intros to Austin people (who's who in Austin)
 
 TBD
 ===
 
+    [ ] Closer intros to Austin people (who's who in Austin)
+    [ ] Start using Epics for planning/prioritizing Closer
+        [ ] Launch Closer for Small Businesses
+            [ ] "Need to do all these things" to support that
+
+    [ ] Closer things hidden in closer groups (fun game)
     [ ] Closer "Real people. Real talk."
     [ ] Closer who's here now in groups
     [ ] Suggestion -> note ?
@@ -99,7 +87,6 @@ Headspace
 Strategy
 ========
 
-kunk
 
 Personas
 ========
