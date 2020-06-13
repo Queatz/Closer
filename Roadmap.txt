@@ -2,12 +2,31 @@
 Incoming
 ========
 
+ [ ] Is this person contributing good to society? Yes / No
+ [ ] Switch data model from phoneId/gmId/etc to ofId/ofKind
+    [ ] add goal group
+ [ ] Cheer Emma -> Help Emma?
+
 ❤ Next ❤
 ========
 
+    [ ] Closer lifestyles beefup
+        [ ] "Turn on this mode to this person / group"
+            [ ] Show on profile that you see this lifestyle because you're in the same group
+        [ ] On feed
+        [ ] On profile
+            [ ] "Jacob's lifestyle"
+            [ ] "Jacob's lifestyle shared specifically/privately with you"
+
+    [ ] Closer goals beefup
+        [ ] Overall progress
+        [ ] On feed
+        [ ]
+    [ ]
+
     [ ] FEAT Activity log for groups from ... overflow menu "Activity logbook" rESTORE Background / description etc.
     [ ] FEAT Choose photo from Closer
-    [ ] Search for places option
+    [ ] Search for places option / country, city etc.
 
     [ ] Closer quantize location if not shared on map
     [ ] (TH!NK) Need to present groups individually and better

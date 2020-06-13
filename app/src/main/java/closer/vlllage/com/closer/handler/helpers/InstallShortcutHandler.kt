@@ -23,7 +23,7 @@ class InstallShortcutHandler constructor(private val on: On) {
                     on<GroupColorHandler>().getLightColor(group)
             )
             val shortcutInfo = ShortcutInfoCompat.Builder(on<ApplicationHandler>().app, "group-" + group.id!!)
-                    .setIntent(on<GroupActivityTransitionHandler>().getIntent(group.id!!, false))
+                    .setIntent(on<GroupActivityTransitionHandler>().getIntent(group.id!!, false, isPhone = group.hasPhone()))
                     .setShortLabel(name)
                     .setIcon(IconCompat.createWithBitmap(icon))
                     .build()
