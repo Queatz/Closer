@@ -77,12 +77,7 @@ class GroupActionDisplay constructor(private val on: On) {
                 holder.actionName.setTextColor(it.text)
             })
         } else if (layout == Layout.PHOTO) {
-            val group = on<StoreHandler>().store.box(Group::class).query()
-                    .equal(Group_.id, groupAction.group!!)
-                    .build()
-                    .findFirst()
-
-            holder.groupName?.text = group?.name ?: ""
+            on<DisplayNameHelper>().loadName(groupAction.group, holder.groupName!!) { it }
 
             when (getRandom(groupAction).nextInt(4)) {
                 1 -> holder.itemView.setBackgroundResource(R.drawable.clickable_blue_8dp)
