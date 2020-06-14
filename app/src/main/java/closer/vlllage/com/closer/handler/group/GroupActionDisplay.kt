@@ -34,6 +34,7 @@ import java.util.*
 
 class GroupActionDisplay constructor(private val on: On) {
 
+    var showGroupName: Boolean = true
     var launchGroup: Boolean = true
     var onGroupActionClickListener: ((GroupAction) -> Unit)? = null
 
@@ -77,8 +78,11 @@ class GroupActionDisplay constructor(private val on: On) {
                 holder.actionName.setTextColor(it.text)
             })
         } else if (layout == Layout.PHOTO) {
-            on<DisplayNameHelper>().loadName(groupAction.group, holder.groupName!!) { it }
-
+            if (showGroupName) {
+                on<DisplayNameHelper>().loadName(groupAction.group, holder.groupName!!) { it }
+            } else {
+                holder.groupName?.visible = false
+            }
             when (getRandom(groupAction).nextInt(4)) {
                 1 -> holder.itemView.setBackgroundResource(R.drawable.clickable_blue_8dp)
                 2 -> holder.itemView.setBackgroundResource(R.drawable.clickable_accent_8dp)

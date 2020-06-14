@@ -1,12 +1,49 @@
 
-Law & Order
+Some Sense of Order
 ========
 
+Spam prevention feature (BE)
+ * Too many events in 1 area
+ * Too many events by 1 person
+ * Alert moderators
 
+Moderators
+ * Step up as moderator
+  * Proof of humanity
+  * Accept moderator guidebook
+  * Notification to other moderators
+ * Step down as moderator
+  * Notification to other moderators
+ * Moderators get notified of all moderator activity nearby
+  * Remove suggestions, messages, groups, etc.
+  * Timeout person (severity 1 day -> 2 day -> 1 week -> 2 week -> 1 month -> 2 month -> 1 year -> 2 year)
+   * See moderation log for person
+ * Moderation log for area / world
+  * Report their bad moderating to Closer
+
+Community reports
+ * Report anything to local moderators
+  * Add a comment
+  * If moderator takes action: Check all reports of entity ->
+   * If approved -> send notification "A moderator has removed the message you reported."
+   * If not approved -> send notification "Thank you for reporting, however, a moderator has decided not to removed the message you reported."
+    * If you think this is in error, please contact Closer support.
+
+Owners for groups
+ * If owners exist, only owners can edit group
+ * Owners can add other owners
+ * "Lien stepped up as a group owner"
+ * "Lien made Kelly a group owner"
+ * "Lien stepped down as a group owner.  This group no longer has an owner."
+ * Show on group about page
 
 Incoming
 ========
 
+    [ ] FAQs
+    [ ] Guides
+    [ ] "Getting started" button above feed at the start (replace + move help button)
+        [ ] Goes away after completion
     [ ] Is this person contributing to society in a good way? Yes / No
     [ ] Switch data model from phoneId/gmId/etc to ofId/ofKind
         [ ] add goal group
