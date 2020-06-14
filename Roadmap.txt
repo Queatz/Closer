@@ -1,4 +1,9 @@
 
+Law & Order
+========
+
+
+
 Incoming
 ========
 
@@ -22,7 +27,7 @@ Incoming
         [ ] Overall progress
         [ ] On feed
         [ ]
-    [ ]
+    [ ] Server: 1st message to non-hub physical group sets group name to "the message that is very long..."
 
     [ ] FEAT Activity log for groups from ... overflow menu "Activity logbook" rESTORE Background / description etc.
     [ ] FEAT Choose photo from Closer

@@ -128,13 +128,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         on<PeopleRecyclerViewHandler>().attach(peopleRecyclerView)
 
         searchGroups.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
                 on<FeedHandler>().searchGroupActions(searchGroups.text.toString())
                 on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
@@ -210,10 +205,14 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             nearestGroup = on<ProximityHandler>().findGroupsNear(cameraPosition.target, true).firstOrNull()
             updateLaunchGroupButton()
 
-            val nearestGroupName = nearestGroup?.name
-
-            if (nearestGroupName.isNullOrBlank().not()) {
-                saySomething.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, nearestGroupName)
+            if (nearestGroup != null) {
+                on<PhysicalGroupHandler>().physicalGroupName(nearestGroup!!).subscribe({
+                    saySomething.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, it)
+                }, {
+                    saySomething.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, on<ResourcesHandler>().resources.getString(R.string.unknown))
+                }).also {
+                    on<DisposableHandler>().add(it)
+                }
             } else {
                 on<LocalityHelper>().getLocality(cameraPosition.target!!) {
                     saySomething.hint = it?.let {
@@ -594,19 +593,18 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun saySomethingAtMapCenter() {
-        on<MapHandler>().center?.let {
-            val text = saySomething.text.toString()
-            saySomething.setText("")
+        val text = saySomething.text.toString()
+        saySomething.setText("")
 
-            val latLng = LatLng(it.latitude, it.longitude)
-            val nearestGroup = on<ProximityHandler>().findGroupsNear(latLng, true).firstOrNull()
-
-            if (nearestGroup?.id != null) {
-                sendMessage(nearestGroup.id!!, text)
-            } else {
-                on<PhysicalGroupHandler>().createPhysicalGroup(latLng) {
+        if (nearestGroup?.id != null) {
+            sendMessage(nearestGroup!!.id!!, text)
+        } else {
+            on<MapHandler>().center?.let {
+                on<PhysicalGroupHandler>().createPhysicalGroup(LatLng(it.latitude, it.longitude)) {
                     sendMessage(it, text)
                 }
+            } ?: run {
+                on<DefaultAlerts>().thatDidntWork()
             }
         }
     }
