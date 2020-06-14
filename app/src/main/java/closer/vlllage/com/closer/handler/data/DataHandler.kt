@@ -72,6 +72,16 @@ class DataHandler constructor(private val on: On) {
                 .map { GroupActionResult.from(it) }
     })
 
+    fun getGroupMember(groupId: String) = chain({
+        on<StoreHandler>().store.box(GroupMember::class).query()
+                .equal(GroupMember_.group, groupId)
+                .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
+                .build()
+    }, {
+        on<ApiHandler>().getGroupMember(groupId)
+                .map { GroupMemberResult.from(it) }
+    })
+
     fun getEvent(eventId: String) = chain({
         on<StoreHandler>().store.box(Event::class).query()
                 .equal(Event_.id, eventId)

@@ -2,10 +2,10 @@
 Incoming
 ========
 
- [ ] Is this person contributing good to society? Yes / No
- [ ] Switch data model from phoneId/gmId/etc to ofId/ofKind
-    [ ] add goal group
- [ ] Cheer Emma -> Help Emma?
+    [ ] Is this person contributing to society in a good way? Yes / No
+    [ ] Switch data model from phoneId/gmId/etc to ofId/ofKind
+        [ ] add goal group
+    [ ] Cheer Emma -> Help Emma?
 
 ❤ Next ❤
 ========

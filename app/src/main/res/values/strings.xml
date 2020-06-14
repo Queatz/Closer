@@ -224,7 +224,7 @@
     <string name="edit_your_history">Edit your history</string>
     <string name="edit_your_offtime">Edit your offtime</string>
     <string name="add_a_lifestyle">Join a lifestyle</string>
-    <string name="add_a_goal">Add a  goal</string>
+    <string name="add_a_goal">Add a goal</string>
     <string name="introduction_hint">What\'s the first thing people might want to know about you?</string>
     <string name="history_hint">Where are you from, what have you done?</string>
     <string name="offtime_hint">What do you do in your offtime?</string>
@@ -410,7 +410,9 @@
     <string name="more_about_x">More about %1$s</string>
     <string name="sent_to_x">Sent to %1$s</string>
     <string name="about_x">About %1$s</string>
-    <string name="notifications_muted">All notifications have been muted until you turn them back on</string>
+    <string name="all_notifications_muted">All notifications have been muted until you turn them back on</string>
+    <string name="notifications_muted">Notifications muted</string>
+    <string name="notifications_unmuted">Notifications unmuted</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

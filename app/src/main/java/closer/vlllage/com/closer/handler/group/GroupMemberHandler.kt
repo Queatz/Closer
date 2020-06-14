@@ -4,16 +4,17 @@ import android.widget.EditText
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.api.models.GroupMemberResult
-import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.*
+import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.GroupContact
+import closer.vlllage.com.closer.store.models.GroupContact_
+import closer.vlllage.com.closer.store.models.GroupMember
 import com.queatz.on.On
-import io.objectbox.android.AndroidScheduler
 
 class GroupMemberHandler constructor(private val on: On) {
     fun changeGroupSettings(group: Group?) {
@@ -24,22 +25,10 @@ class GroupMemberHandler constructor(private val on: On) {
 
         when {
             group.isPublic -> {
-                on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
-                        .equal(GroupMember_.group, group.id!!)
-                        .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
-                        .build().subscribe().single().on(AndroidScheduler.mainThread()).observer { groupMembers ->
-                            if (groupMembers.isEmpty()) {
-                                on<DisposableHandler>().add(on<ApiHandler>().getGroupMember(group.id!!)
-                                        .map { GroupMemberResult.from(it) }
-                                        .doOnSuccess { on<StoreHandler>().store.box(GroupMember::class).put(it) }
-                                        .subscribe(
-                                                { groupMember -> setupGroupMember(group, groupMember) },
-                                                { error -> setupGroupMember(group, null) }
-                                        ))
-                            } else {
-                                setupGroupMember(group, groupMembers[0])
-                            }
-                        })
+                on<DataHandler>().getGroupMember(group.id!!).subscribe(
+                        { groupMember -> setupGroupMember(group, groupMember) },
+                        { setupGroupMember(group, null) }
+                ).also { on<DisposableHandler>().add(it) }
             }
             else -> {
                 on<MenuHandler>().show(
@@ -139,6 +128,28 @@ class GroupMemberHandler constructor(private val on: On) {
                     }
                 }
         )
+    }
+
+    fun mute(group: Group?, mute: Boolean) {
+        if (group == null) {
+            on<DefaultAlerts>().thatDidntWork()
+            return
+        }
+
+        on<DataHandler>().getGroupMember(group.id!!).subscribe(
+                {
+                    it.muted = mute
+                    on<SyncHandler>().sync(it)
+
+                    on<ToastHandler>().show(when (it.muted) {
+                        true -> R.string.notifications_muted
+                        false -> R.string.notifications_unmuted
+                    })
+                },
+                {
+                    on<DefaultAlerts>().thatDidntWork()
+                }
+        ).also { on<DisposableHandler>().add(it) }
     }
 
     fun join(group: Group) {

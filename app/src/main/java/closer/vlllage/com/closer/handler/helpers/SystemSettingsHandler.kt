@@ -10,7 +10,7 @@ class SystemSettingsHandler constructor(private val on: On) {
     fun showSystemSettings() {
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        val uri = Uri.fromParts("package", on<ApplicationHandler>().app!!.packageName, null)
+        val uri = Uri.fromParts("package", on<ApplicationHandler>().app.packageName, null)
         intent.data = uri
         on<ActivityHandler>().activity!!.startActivity(intent)
     }

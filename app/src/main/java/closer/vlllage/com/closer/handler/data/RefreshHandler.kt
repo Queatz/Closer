@@ -155,6 +155,7 @@ class RefreshHandler constructor(private val on: On) {
             is Group -> refreshObject(baseObject, Group::class.java, Group_.id)
             is Phone -> refreshObject(baseObject, Phone::class.java, Phone_.id)
             is GroupMessage -> refreshObject(baseObject, GroupMessage::class.java, GroupMessage_.id)
+            is GroupMember -> refreshObject(baseObject, GroupMember::class.java, GroupMember_.id)
         }
     }
 
