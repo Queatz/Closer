@@ -85,6 +85,11 @@ class GroupMemberHandler constructor(private val on: On) {
                 MenuHandler.MenuOption(muteIcon, muteText) {
                     updatedGroupMember.muted = !updatedGroupMember.muted
                     on<SyncHandler>().sync(updatedGroupMember)
+
+                    on<ToastHandler>().show(when (updatedGroupMember.muted) {
+                        true -> R.string.notifications_muted
+                        false -> R.string.notifications_unmuted
+                    })
                 },
                 MenuHandler.MenuOption(R.drawable.ic_person_add_black_24dp, if (group?.hasEvent() == true) R.string.join_this_event else R.string.join_this_group) {
                     if (group != null) {
