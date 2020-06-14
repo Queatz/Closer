@@ -99,6 +99,23 @@
             android:textSize="@dimen/textSize" />
 
         <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/launchGroupButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/saySomething"
+            app:layout_constraintBottom_toBottomOf="@id/saySomething"
+            app:layout_constraintEnd_toEndOf="@+id/saySomething"
+            app:layout_constraintDimensionRatio="1:1"
+            android:minWidth="0dp"
+            android:padding="@dimen/pad"
+            android:background="@drawable/clickable_light_rounded"
+            android:tint="@color/textInverse"
+            android:src="@drawable/ic_launch_black_24dp"
+            android:contentDescription="@string/open_group"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/sendSomethingButton"
             android:layout_width="wrap_content"
             android:layout_height="0dp"

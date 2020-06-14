@@ -53,6 +53,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var suggestionsRecyclerView: RecyclerView
     private lateinit var peopleRecyclerView: RecyclerView
     private lateinit var sendSomethingButton: ImageButton
+    private lateinit var launchGroupButton: ImageButton
     private lateinit var peopleContainer: ViewGroup
     private lateinit var appsToolbar: RecyclerView
 
@@ -60,6 +61,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit
     private lateinit var toolbarAdapter: ToolbarAdapter
 
+    private var nearestGroup: Group? = null
     private val state = ViewState()
 
     private val stateObservable = BehaviorSubject.createDefault(state)
@@ -84,6 +86,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         saySomething = itemView.saySomething
         saySomethingHeader = itemView.saySomethingHeader
         sendSomethingButton = itemView.sendSomethingButton
+        launchGroupButton = itemView.launchGroupButton
         peopleContainer = itemView.peopleContainer
         appsToolbar = itemView.appsToolbar
 
@@ -204,7 +207,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             loadSuggestions(cameraPosition.target)
             loadPeople(cameraPosition.target)
 
-            val nearestGroupName = on<ProximityHandler>().findGroupsNear(cameraPosition.target, true).firstOrNull()?.name
+            nearestGroup = on<ProximityHandler>().findGroupsNear(cameraPosition.target, true).firstOrNull()
+            updateLaunchGroupButton()
+
+            val nearestGroupName = nearestGroup?.name
 
             if (nearestGroupName.isNullOrBlank().not()) {
                 saySomething.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, nearestGroupName)
@@ -243,6 +249,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         saySomething.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                updateLaunchGroupButton()
                 if (s.isNullOrBlank()) {
                     sendSomethingButton.setImageResource(R.drawable.ic_camera_black_24dp)
                 } else {
@@ -259,6 +266,14 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         sendSomethingButton.setOnClickListener {
             saySomethingAtMapCenter()
+        }
+    }
+
+    private fun updateLaunchGroupButton() {
+        launchGroupButton.visible = saySomething.text.isBlank() && nearestGroup != null
+
+        launchGroupButton.setOnClickListener {
+            openGroup(nearestGroup?.id, launchGroupButton)
         }
     }
 
