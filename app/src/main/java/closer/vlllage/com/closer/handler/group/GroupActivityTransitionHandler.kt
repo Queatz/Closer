@@ -54,7 +54,7 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
         }
 
         if (isPhone) {
-            intent.putExtra(EXTRA_CONTENT, ContentViewType.PHONE_ABOUT)
+            intent.putExtra(EXTRA_CONTENT, ContentViewType.PHONE_ABOUT.name)
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)

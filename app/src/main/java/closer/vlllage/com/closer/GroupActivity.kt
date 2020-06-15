@@ -318,7 +318,7 @@ class GroupActivity : CircularRevealActivity() {
             }
 
             if (intent.hasExtra(EXTRA_CONTENT)) {
-                initialContent = intent.getSerializableExtra(EXTRA_CONTENT) as ContentViewType
+                initialContent = ContentViewType.valueOf(intent.getStringExtra(EXTRA_CONTENT)!!)
             }
 
             if (intent.hasExtra(EXTRA_NEW_MEMBER)) {

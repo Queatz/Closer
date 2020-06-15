@@ -221,7 +221,7 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     private fun editGroupActionFlow(groupAction: GroupAction) {
-        on<AlertHandler>().make()?.apply {
+        on<AlertHandler>().make().apply {
             theme = R.style.AppTheme_AlertDialog
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.save)
             positiveButtonCallback = { result ->
