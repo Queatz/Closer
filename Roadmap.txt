@@ -5,3 +5,48 @@ Top
 ❤ Next ❤
 ========
 
+Quests
+======
+
+[ QuestMap ]
+    Array<QuestProgress>
+        complete: boolean
+        active: boolean
+        created: Date
+        advent: '<date>'
+        group: Group
+        quest: Quest
+            isPublic: boolean
+            subquests: List<Quest>
+            items: List<QuestItem>
+                id: string
+                groupAction: GroupAction
+                config: { advent: '<date>', times: 100, percent: true, done: true }
+        progress: List<QuestItemProgress>
+            id: string
+            questItemId: 1
+            phones: [1, 2, 3]
+            data: { times 50, percent: 44, done: false }
+
+
+Implementation Notes
+====================
+
+Quest maps automagically connect and layout QuestProgresses
+  If a sub- or super- quest is not started, it shows as just name,
+    otherwise, it shows as the full QuestProgress
+      - Tap on just name = Start Quest / Open Quest
+
+What to show on Quest Cards:
+
+Looking at Quest group ->
+    22 times
+    Everyone you can see via friendships, including you
+    Quest map shows all relations collapsed
+        No checkmark
+Looking at QuestProgress group ->
+    22 remaining
+    Just friends are visible
+    Quest map only shows active quests as expanded
+        Completed get checkmark
+        Unstarted get collapsed version

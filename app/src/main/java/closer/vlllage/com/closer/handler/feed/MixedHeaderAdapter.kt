@@ -54,6 +54,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     return old.type == new.type && when (old) {
                         is HeaderMixedItem -> true
                         is GroupMixedItem -> old.group.objectBoxId == (new as GroupMixedItem).group.objectBoxId
+                        is QuestMixedItem -> old.quest.objectBoxId == (new as QuestMixedItem).quest.objectBoxId
                         is GroupActionMixedItem -> old.groupAction.objectBoxId == (new as GroupActionMixedItem).groupAction.objectBoxId
                         is NotificationMixedItem -> old.notification.objectBoxId == (new as NotificationMixedItem).notification.objectBoxId
                         is CalendarDayMixedItem -> false
@@ -69,6 +70,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     return old.type == new.type && when (old) {
                         is HeaderMixedItem -> true
                         is GroupMixedItem -> false
+                        is QuestMixedItem -> false
                         is NotificationMixedItem -> true
                         is GroupActionMixedItem -> old.groupAction.about == (new as GroupActionMixedItem).groupAction.about
                         is TextMixedItem -> false
@@ -84,6 +86,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         }
 
     var groups = mutableListOf<Group>()
+        set(value) {
+            field = value
+            generate()
+        }
+
+    var quests = mutableListOf<Quest>(Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest())
         set(value) {
             field = value
             generate()
@@ -139,6 +147,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     else forEach { add(GroupActionMixedItem(it)) }
 
                 }
+                FeedContent.QUESTS -> quests.apply {
+                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                    else forEach { add(QuestMixedItem(it)) }
+                }
                 FeedContent.NOTIFICATIONS -> notifications.forEach { add(NotificationMixedItem(it)) }
                 FeedContent.CALENDAR -> IntArray(14)
                         .mapIndexed { i, _ -> i }
@@ -177,24 +189,31 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             5 -> TextViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.text_item, parent, false))
             6 -> on<GroupMessageHelper>().createViewHolder(parent)
+            7 -> QuestViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.quest_item, parent, false))
             else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
         }
     }
 
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        super.onBindViewHolder(viewHolder, position)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
 
         val item = items[position]
 
-        when (viewHolder) {
-            is HeaderViewHolder -> bindHeader(viewHolder)
-            is GroupPreviewViewHolder -> bindGroupPreview(viewHolder, (item as GroupMixedItem).group)
-            is NotificationViewHolder -> bindNotification(viewHolder, (item as NotificationMixedItem).notification)
-            is CalendarDayViewHolder -> bindCalendarDay(viewHolder, (item as CalendarDayMixedItem).date, item.position)
-            is GroupActionViewHolder -> bindGroupAction(viewHolder, (item as GroupActionMixedItem).groupAction)
-            is GroupMessageViewHolder -> bindGroupMessage(viewHolder, (item as GroupMessageMixedItem).groupMessage)
-            is TextViewHolder -> bindText(viewHolder, (item as TextMixedItem).text)
+        when (holder) {
+            is HeaderViewHolder -> bindHeader(holder)
+            is GroupPreviewViewHolder -> bindGroupPreview(holder, (item as GroupMixedItem).group)
+            is NotificationViewHolder -> bindNotification(holder, (item as NotificationMixedItem).notification)
+            is CalendarDayViewHolder -> bindCalendarDay(holder, (item as CalendarDayMixedItem).date, item.position)
+            is GroupActionViewHolder -> bindGroupAction(holder, (item as GroupActionMixedItem).groupAction)
+            is GroupMessageViewHolder -> bindGroupMessage(holder, (item as GroupMessageMixedItem).groupMessage)
+            is QuestViewHolder -> bindQuest(holder, (item as QuestMixedItem).quest)
+            is TextViewHolder -> bindText(holder, (item as TextMixedItem).text)
         }
+    }
+
+    private fun bindQuest(holder: QuestViewHolder, quest: Quest) {
+
     }
 
     private fun bindGroupMessage(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
@@ -312,7 +331,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                     if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_group_black_18dp, 0, 0, 0
             )
 
-            view.setBackgroundResource(if (event.isPublic) R.drawable.clickable_red_8dp else R.drawable.clickable_blue_8dp)
+//            view.setBackgroundResource(if (event.isPublic) R.drawable.clickable_red_8dp else R.drawable.clickable_blue_8dp)
 
             view.setOnClickListener {
                 on<GroupActivityTransitionHandler>().showGroupForEvent(view, event)
@@ -530,6 +549,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class CalendarDayMixedItem(val position: Int, val date: Date) : MixedItem(3)
     class GroupActionMixedItem(val groupAction: GroupAction) : MixedItem(4)
     class TextMixedItem(val text: String) : MixedItem(5)
+    class QuestMixedItem(val quest: Quest) : MixedItem(7)
     open class MixedItem(val type: Int)
 
     class HeaderViewHolder(val view: ViewGroup): RecyclerView.ViewHolder(view) {
@@ -558,6 +578,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var on: On
         lateinit var disposableGroup: DisposableGroup
+    }
+
+    class QuestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val text = itemView.name!!
     }
 
     class TextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

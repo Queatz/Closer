@@ -290,6 +290,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             FeedContent.POSTS -> ContentViewType.HOME_POSTS
             FeedContent.ACTIVITIES -> ContentViewType.HOME_ACTIVITIES
             FeedContent.PLACES -> ContentViewType.HOME_PLACES
+            FeedContent.QUESTS -> ContentViewType.HOME_QUESTS
         })
 
         updateViews()
@@ -492,8 +493,29 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 peopleContainer.visible = false
                                 itemView.placesHeader.visible = false
                                 actionHeader.visible = false
-                                itemView.visible = true
                                 itemView.feedText.setText(R.string.conversations)
+                                searchGroups.visible = true
+                            }
+                            ContentViewType.HOME_QUESTS -> {
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = state.hasQuests
+                                actionRecyclerView.visible = false
+                                suggestionsRecyclerView.visible = false
+                                groupsRecyclerView.visible = false
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                searchGroups.visible = true
+                                searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_quests)
+                                itemView.historyButton.visible = true
+                                itemView.suggestionsHeader.visible = false
+                                itemView.placesHeader.visible = false
+                                itemView.feedText.visible = false
+                                saySomethingHeader.visible = false
+                                saySomething.visible = false
+                                sendSomethingButton.visible = false
+                                peopleContainer.visible = false
+                                itemView.placesHeader.visible = false
+                                actionHeader.visible = false
                                 searchGroups.visible = true
                             }
                             ContentViewType.HOME_GROUPS -> {
@@ -727,6 +749,7 @@ class ViewState {
     var hasGroupActions = false
     var hasEvents = false
     var hasPlaces = false
+    var hasQuests = false
     var hasSuggestions = false
     var hasPeople = false
     var privateOnly = false

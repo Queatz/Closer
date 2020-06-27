@@ -260,6 +260,7 @@ class FeedHandler constructor(private val on: On) {
             ContentViewType.HOME_GROUPS -> FeedContent.GROUPS
             ContentViewType.HOME_POSTS -> FeedContent.POSTS
             ContentViewType.HOME_PLACES -> FeedContent.PLACES
+            ContentViewType.HOME_QUESTS -> FeedContent.QUESTS
             else -> null
         }?.let {
             content.onNext(it)

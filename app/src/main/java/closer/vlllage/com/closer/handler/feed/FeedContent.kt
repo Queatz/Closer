@@ -4,6 +4,7 @@ enum class FeedContent {
     GROUPS,
     POSTS,
     PLACES,
+    QUESTS,
     CALENDAR,
     ACTIVITIES,
     FRIENDS,
