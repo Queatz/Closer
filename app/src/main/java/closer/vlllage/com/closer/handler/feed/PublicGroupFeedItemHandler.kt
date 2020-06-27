@@ -322,6 +322,15 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_PLACES,
                         color = R.color.purple),
                 GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.quests),
+                        R.drawable.ic_baseline_terrain_24,
+                        View.OnClickListener {
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_QUESTS)
+                            on<AccountHandler>().updatePrivateOnly(false)
+                        },
+                        value = ContentViewType.HOME_QUESTS,
+                        color = R.color.forestgreen),
+                GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.events),
                         R.drawable.ic_event_note_black_24dp,
                         View.OnClickListener {
@@ -708,7 +717,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         } ?: run { on<DefaultAlerts>().thatDidntWork() }
     }
 
-    fun openGroup(groupId: String?, view: View?) {
+    private fun openGroup(groupId: String?, view: View?) {
         on<GroupActivityTransitionHandler>().showGroupMessages(view, groupId)
     }
 

@@ -17,9 +17,9 @@ class TimeAgo constructor(private val on: On) {
         return thirtySixHoursAgo
     }
 
-    fun oneMonthAgo(): Date {
+    fun oneMonthAgo(months: Int = 1): Date {
         val oneMonthAgo = Date()
-        oneMonthAgo.time = oneMonthAgo.time - 30 * DAY_IN_MILLIS
+        oneMonthAgo.time = oneMonthAgo.time - (30 * DAY_IN_MILLIS * months)
         return oneMonthAgo
     }
 

@@ -42,7 +42,7 @@ class GroupMessageMentionHandler constructor(private val on: On) {
             }
             val phones = on<StoreHandler>().store.box(Phone::class).query()
                     .contains(Phone_.name, name.toString(), QueryBuilder.StringOrder.CASE_INSENSITIVE)
-                    .greater(Phone_.updated, on<TimeAgo>().oneMonthAgo())
+                    .greater(Phone_.updated, on<TimeAgo>().oneMonthAgo(6))
                     .sort(on<SortHandler>().sortPhones())
                     .build()
                     .find()
