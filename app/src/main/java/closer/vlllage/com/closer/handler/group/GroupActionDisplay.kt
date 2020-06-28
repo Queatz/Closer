@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +63,7 @@ class GroupActionDisplay constructor(private val on: On) {
         val target: View = when (layout) {
             Layout.PHOTO -> holder.itemView
             Layout.TEXT -> holder.actionName
-            Layout.QUEST -> holder.actionName
+            Layout.QUEST -> holder.rootView
         }
 
         target.setOnClickListener {
@@ -75,8 +76,18 @@ class GroupActionDisplay constructor(private val on: On) {
         }
 
         if (layout == Layout.QUEST) {
-//            progressText
+// todo            progressText.text = ""
             holder.progressBar?.progress = Random().nextInt(100)
+
+            on<LightDarkHandler>().onLightChanged.subscribe {
+                holder.progressText?.setTextColor(it.text)
+                holder.progressBar?.progressTintList = when (it.light) {
+                    true -> ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.forestgreen))
+                    false -> ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.colorAccent))
+                }
+            }.also {
+                on<DisposableHandler>().add(it)
+            }
         }
 
         if (layout == Layout.TEXT) {
@@ -331,7 +342,7 @@ class GroupActionDisplay constructor(private val on: On) {
 
     inner class GroupActionViewHolder(val itemView: View, val about: TextView? = null) {
 
-        var rootView: View? = if (itemView.id == R.id.rootView) itemView else itemView.findViewById(R.id.rootView)
+        var rootView: View = if (itemView.id == R.id.rootView) itemView else itemView.findViewById(R.id.rootView)
         var photo: ImageView? = itemView.findViewById(R.id.photo)
         var actionName: TextView = itemView.findViewById(R.id.actionName)
         var groupName: TextView? = itemView.findViewById(R.id.groupName)

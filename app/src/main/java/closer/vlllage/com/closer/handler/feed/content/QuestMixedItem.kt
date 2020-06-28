@@ -7,6 +7,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.handler.helpers.MenuHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupAction
@@ -53,13 +54,31 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.name.text = "Get abs"
 
+        holder.name.setOnClickListener {
+            // todo go to quest group
+        }
+
+        holder.on<LightDarkHandler>().onLightChanged.subscribe {
+            holder.name.setTextColor(it.text)
+            holder.name.setBackgroundResource(it.clickableRoundedBackground8dp)
+            holder.itemView.optionsButton.setTextColor(it.text)
+            holder.itemView.scopeIndicatorButton.imageTintList = it.tint
+            holder.itemView.goToGroup.imageTintList = it.tint
+            holder.card.setBackgroundResource(when (it.light) {
+                true -> R.drawable.clickable_white_rounded_12dp
+                false -> R.drawable.clickable_forestgreen_rounded_12dp
+            })
+        }.also {
+            holder.on<DisposableHandler>().add(it)
+        }
+
         on<StoreHandler>().store.box(GroupAction::class).query()
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { groupActions ->
-                    val random = Random(holder.adapterPosition)
+                    val random = Random(holder.adapterPosition + 12345678)
                     holder.on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(groupActions
                             .subList(random.nextInt(groupActions.size - 7), groupActions.size)
                             .take(random.nextInt(6) + 1), true)
