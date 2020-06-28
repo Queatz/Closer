@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import closer.vlllage.com.closer.R
@@ -61,6 +62,7 @@ class GroupActionDisplay constructor(private val on: On) {
         val target: View = when (layout) {
             Layout.PHOTO -> holder.itemView
             Layout.TEXT -> holder.actionName
+            Layout.QUEST -> holder.actionName
         }
 
         target.setOnClickListener {
@@ -72,22 +74,27 @@ class GroupActionDisplay constructor(private val on: On) {
             true
         }
 
+        if (layout == Layout.QUEST) {
+//            progressText
+            holder.progressBar?.progress = Random().nextInt(100)
+        }
+
         if (layout == Layout.TEXT) {
             on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.observeOn(AndroidSchedulers.mainThread()).subscribe {
                 holder.actionName.setBackgroundResource(it.clickableRoundedBackground)
                 holder.actionName.setTextColor(it.text)
             })
-        } else if (layout == Layout.PHOTO) {
-            if (showGroupName) {
+        } else if (layout == Layout.PHOTO || layout == Layout.QUEST) {
+            if (showGroupName &&  holder.groupName != null) {
                 on<DisplayNameHelper>().loadName(groupAction.group, holder.groupName!!) { it }
             } else {
                 holder.groupName?.visible = false
             }
             when (getRandom(groupAction).nextInt(4)) {
-                1 -> holder.itemView.setBackgroundResource(R.drawable.clickable_blue_8dp)
-                2 -> holder.itemView.setBackgroundResource(R.drawable.clickable_accent_8dp)
-                3 -> holder.itemView.setBackgroundResource(R.drawable.clickable_green_8dp)
-                else -> holder.itemView.setBackgroundResource(R.drawable.clickable_red_8dp)
+                1 -> holder.rootView?.setBackgroundResource(R.drawable.clickable_blue_8dp)
+                2 -> holder.rootView?.setBackgroundResource(R.drawable.clickable_accent_8dp)
+                3 -> holder.rootView?.setBackgroundResource(R.drawable.clickable_green_8dp)
+                else -> holder.rootView?.setBackgroundResource(R.drawable.clickable_red_8dp)
             }
 
             if (groupAction.photo != null) {
@@ -324,17 +331,21 @@ class GroupActionDisplay constructor(private val on: On) {
 
     inner class GroupActionViewHolder(val itemView: View, val about: TextView? = null) {
 
+        var rootView: View? = if (itemView.id == R.id.rootView) itemView else itemView.findViewById(R.id.rootView)
         var photo: ImageView? = itemView.findViewById(R.id.photo)
         var actionName: TextView = itemView.findViewById(R.id.actionName)
         var groupName: TextView? = itemView.findViewById(R.id.groupName)
+        var progressText: TextView? = itemView.findViewById(R.id.progressText)
+        var progressBar: ProgressBar? = itemView.findViewById(R.id.progressBar)
 
         init {
-            itemView.clipToOutline = true
+            rootView?.clipToOutline = true
         }
     }
 
     enum class Layout {
         TEXT,
-        PHOTO
+        PHOTO,
+        QUEST
     }
 }

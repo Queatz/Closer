@@ -182,19 +182,26 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         })
 
         itemView.historyButton.setOnClickListener {
-            on<MapHandler>().center?.let { center ->
-                on<AlertHandler>().make().apply {
-                    this.title = on<ResourcesHandler>().resources.getString(R.string.perform_archeology)
-                    this.message = on<ResourcesHandler>().resources.getString(R.string.perform_archeology_description)
-                    negativeButton = on<ResourcesHandler>().resources.getString(R.string.nevermind)
-                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.lets_go)
-                    positiveButtonCallback = {
-                        on<ShareActivityTransitionHandler>().performArcheology(center)
-                    }
-                    show()
+            when (toolbarAdapter.selectedContentView.value) {
+                ContentViewType.HOME_QUESTS -> {
+                    // todo add quest
                 }
-            } ?: run {
-                on<DefaultAlerts>().thatDidntWork()
+                else -> {
+                    on<MapHandler>().center?.let { center ->
+                        on<AlertHandler>().make().apply {
+                            this.title = on<ResourcesHandler>().resources.getString(R.string.perform_archeology)
+                            this.message = on<ResourcesHandler>().resources.getString(R.string.perform_archeology_description)
+                            negativeButton = on<ResourcesHandler>().resources.getString(R.string.nevermind)
+                            positiveButton = on<ResourcesHandler>().resources.getString(R.string.lets_go)
+                            positiveButtonCallback = {
+                                on<ShareActivityTransitionHandler>().performArcheology(center)
+                            }
+                            show()
+                        }
+                    } ?: run {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }
+                }
             }
         }
 
@@ -484,6 +491,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_places)
                                 itemView.historyButton.visible = true
+                                itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = true
@@ -507,6 +515,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_quests)
                                 itemView.historyButton.visible = true
+                                itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = false
@@ -530,6 +539,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
                                 itemView.historyButton.visible = explore
+                                itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
                                 actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
@@ -555,6 +565,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
                                 itemView.historyButton.visible = explore
+                                itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
                                 actionHeader.visible = state.hasGroupActions
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = state.hasPlaces

@@ -31,14 +31,20 @@ import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.calendar_day_item.view.*
 import kotlinx.android.synthetic.main.calendar_event_item.view.*
+import kotlinx.android.synthetic.main.calendar_event_item.view.name
 import kotlinx.android.synthetic.main.group_action_photo_large_item.view.*
 import kotlinx.android.synthetic.main.group_preview_item.view.*
+import kotlinx.android.synthetic.main.group_preview_item.view.backgroundColor
+import kotlinx.android.synthetic.main.group_preview_item.view.goToGroup
 import kotlinx.android.synthetic.main.group_preview_item.view.groupName
+import kotlinx.android.synthetic.main.group_preview_item.view.scopeIndicatorButton
 import kotlinx.android.synthetic.main.notification_item.view.*
+import kotlinx.android.synthetic.main.quest_item.view.*
 import kotlinx.android.synthetic.main.text_item.view.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
+import kotlin.random.Random
 
 class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
 
@@ -91,7 +97,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             generate()
         }
 
-    var quests = mutableListOf<Quest>(Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest())
+    var quests = mutableListOf<Quest>(Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest())
         set(value) {
             field = value
             generate()
@@ -213,7 +219,31 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     }
 
     private fun bindQuest(holder: QuestViewHolder, quest: Quest) {
+        holder.name.text = "Get abs"
+        holder.on = On(on).apply { use<DisposableHandler>() }
+        holder.on<GroupActionRecyclerViewHandler>().attach(holder.itemView.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
 
+        on<StoreHandler>().store.box(GroupAction::class).query()
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { groupActions ->
+                    val random = Random(holder.adapterPosition)
+                    holder.on<GroupActionRecyclerViewHandler>().adapter.setGroupActions(groupActions
+                            .subList(random.nextInt(groupActions.size - 7), groupActions.size)
+                            .take(random.nextInt(6) + 1), true)
+                }.also {
+                    holder.on<DisposableHandler>().add(it)
+                }
+
+        holder.card.setOnClickListener {
+            on<MenuHandler>().show(
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Start this quest") {},
+                    MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, title = "See people who did this quest") {},
+                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = "Open group") {}
+            )
+        }
     }
 
     private fun bindGroupMessage(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
@@ -532,6 +562,9 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 on<GroupMessageHelper>().recycleViewHolder(holder)
                 holder.on.off()
             }
+            is QuestViewHolder -> {
+                holder.on.off()
+            }
         }
     }
 
@@ -581,7 +614,9 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
     }
 
     class QuestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val text = itemView.name!!
+        lateinit var on: On
+        val name = itemView.name!!
+        val card = itemView.card!!
     }
 
     class TextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

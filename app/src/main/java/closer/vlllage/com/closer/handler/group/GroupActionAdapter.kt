@@ -10,6 +10,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupAction
 import com.queatz.on.On
+import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
 
@@ -22,6 +23,12 @@ class GroupActionAdapter(on: On,
         on<GroupActionDisplay>().onGroupActionClickListener = onGroupActionClickListener
     }
 
+    var scale = 1f
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     var layout: GroupActionDisplay.Layout = layout
         set(value) {
             if (field == value) return
@@ -31,13 +38,19 @@ class GroupActionAdapter(on: On,
             notifyDataSetChanged()
         }
 
+    val onItemsChanged = BehaviorSubject.create<List<GroupAction>>()
+
     private val groupActions = mutableListOf<GroupAction>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = GroupActionViewHolder(LayoutInflater.from(parent.context)
-                .inflate(if (layout == GroupActionDisplay.Layout.TEXT) R.layout.group_action_item else R.layout.group_action_photo_item, parent, false))
+                .inflate(when (layout) {
+                    GroupActionDisplay.Layout.TEXT -> R.layout.group_action_item
+                    GroupActionDisplay.Layout.PHOTO -> R.layout.group_action_photo_item
+                    GroupActionDisplay.Layout.QUEST -> R.layout.group_action_quest_item
+                }, parent, false))
 
     override fun onBindViewHolder(holder: GroupActionViewHolder, position: Int) {
-        on<GroupActionDisplay>().display(holder.itemView, groupActions[position], layout)
+        on<GroupActionDisplay>().display(holder.itemView, groupActions[position], layout, scale = scale)
     }
 
     override fun getItemViewType(position: Int) = layout.ordinal
@@ -62,6 +75,8 @@ class GroupActionAdapter(on: On,
 
         if (disableAnimation) notifyDataSetChanged()
         else diffResult.dispatchUpdatesTo(this)
+
+        onItemsChanged.onNext(this.groupActions)
     }
 
     inner class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

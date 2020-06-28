@@ -175,7 +175,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:textColor="@color/textHintInverse"
             android:textAppearance="?android:textAppearanceSmall"
-            android:text="8 AM"
+            android:text="8 PM"
             android:paddingBottom="@dimen/padHalf" />
 
         <TextView

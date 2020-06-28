@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="1.64:1"
+        android:layout_marginStart="@dimen/pad"
+        android:layout_marginEnd="@dimen/pad"
+        android:background="@drawable/clickable_red_8dp"
+        android:clipChildren="true"
+        android:isScrollContainer="true"
+        android:elevation="@dimen/elevationSmall">
+
+        <ImageView
+            android:id="@+id/photo"
+            android:importantForAccessibility="no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="@drawable/clickable_light_rounded_8dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/actionName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_shadow_top_rounded_8dp"
+            android:gravity="center"
+            android:padding="@dimen/pad"
+            android:textColor="@color/text"
+            android:maxLines="3"
+            android:textSize="@dimen/textSize"
+            android:textStyle="bold"
+            tools:text="Book a room or hotel tonight" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/progressText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/rootView"
+        app:layout_constraintStart_toStartOf="@+id/rootView"
+        app:layout_constraintTop_toBottomOf="@+id/rootView"
+        android:layout_marginTop="@dimen/padHalf"
+        android:text="22 remaining"
+        android:textColor="@color/text"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padHalf"
+        android:layout_marginBottom="@dimen/padDouble"
+        tools:progress="50"
+        app:layout_constraintEnd_toEndOf="@+id/rootView"
+        app:layout_constraintStart_toStartOf="@+id/rootView"
+        app:layout_constraintTop_toBottomOf="@+id/progressText"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
