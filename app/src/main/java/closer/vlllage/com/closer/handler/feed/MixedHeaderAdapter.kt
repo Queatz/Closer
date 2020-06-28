@@ -1,95 +1,17 @@
 package closer.vlllage.com.closer.handler.feed
 
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.inputmethod.EditorInfo
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.NotificationHandler
-import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.data.SyncHandler
-import closer.vlllage.com.closer.handler.event.EventDetailsHandler
-import closer.vlllage.com.closer.handler.group.*
-import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.handler.map.FeedHandler
+import closer.vlllage.com.closer.handler.feed.content.*
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.map.HeaderAdapter
-import closer.vlllage.com.closer.handler.map.MapActivityHandler
-import closer.vlllage.com.closer.handler.map.MapHandler
-import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
-import io.objectbox.android.AndroidScheduler
-import io.objectbox.reactive.DataSubscription
-import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.calendar_day_item.view.*
-import kotlinx.android.synthetic.main.calendar_event_item.view.*
-import kotlinx.android.synthetic.main.calendar_event_item.view.name
-import kotlinx.android.synthetic.main.group_action_photo_large_item.view.*
-import kotlinx.android.synthetic.main.group_preview_item.view.*
-import kotlinx.android.synthetic.main.group_preview_item.view.backgroundColor
-import kotlinx.android.synthetic.main.group_preview_item.view.goToGroup
-import kotlinx.android.synthetic.main.group_preview_item.view.groupName
-import kotlinx.android.synthetic.main.group_preview_item.view.scopeIndicatorButton
-import kotlinx.android.synthetic.main.notification_item.view.*
-import kotlinx.android.synthetic.main.quest_item.view.*
-import kotlinx.android.synthetic.main.text_item.view.*
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.math.min
-import kotlin.random.Random
 
-class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
-
-    var items = mutableListOf<MixedItem>()
-        set(value) {
-            val diffResult  = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun getOldListSize() = field.size
-                override fun getNewListSize() = value.size
-
-                override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                    val old = field[oldPosition]
-                    val new = value[newPosition]
-                    return old.type == new.type && when (old) {
-                        is HeaderMixedItem -> true
-                        is GroupMixedItem -> old.group.objectBoxId == (new as GroupMixedItem).group.objectBoxId
-                        is QuestMixedItem -> old.quest.objectBoxId == (new as QuestMixedItem).quest.objectBoxId
-                        is GroupActionMixedItem -> old.groupAction.objectBoxId == (new as GroupActionMixedItem).groupAction.objectBoxId
-                        is NotificationMixedItem -> old.notification.objectBoxId == (new as NotificationMixedItem).notification.objectBoxId
-                        is CalendarDayMixedItem -> false
-                        is TextMixedItem -> false
-                        is GroupMessageMixedItem -> on<GroupMessageHelper>().areItemsTheSame(old.groupMessage, (new as GroupMessageMixedItem).groupMessage)
-                        else -> false
-                    }
-                }
-
-                override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                    val old = field[oldPosition]
-                    val new = value[newPosition]
-                    return old.type == new.type && when (old) {
-                        is HeaderMixedItem -> true
-                        is GroupMixedItem -> false
-                        is QuestMixedItem -> false
-                        is NotificationMixedItem -> true
-                        is GroupActionMixedItem -> old.groupAction.about == (new as GroupActionMixedItem).groupAction.about
-                        is TextMixedItem -> false
-                        is CalendarDayMixedItem -> false
-                        is GroupMessageMixedItem -> on<GroupMessageHelper>().areContentsTheSame(old.groupMessage, (new as GroupMessageMixedItem).groupMessage)
-                        else -> false
-                    }
-                }
-            })
-            field.clear()
-            field.addAll(value)
-            diffResult.dispatchUpdatesTo(this)
-        }
+class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
 
     var groups = mutableListOf<Group>()
         set(value) {
@@ -127,6 +49,41 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
             generate()
         }
 
+    var items = mutableListOf<MixedItem>()
+        set(value) {
+            val diffResult  = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                override fun getOldListSize() = field.size
+                override fun getNewListSize() = value.size
+
+                override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
+                    val old = field[oldPosition]
+                    val new = value[newPosition]
+
+                    return old.type == new.type && adapters[old.type]?.areItemsTheSame(old, new) ?: false
+                }
+
+                override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
+                    val old = field[oldPosition]
+                    val new = value[newPosition]
+                    return old.type == new.type && adapters[old.type]?.areContentsTheSame(old, new) ?: false
+                }
+            })
+            field.clear()
+            field.addAll(value)
+            diffResult.dispatchUpdatesTo(this)
+        }
+
+    private val adapters = listOf(
+            on<HeaderMixedItemAdapter>(),
+            on<TextMixedItemAdapter>(),
+            on<GroupActionMixedItemAdapter>(),
+            on<GroupMessageMixedItemAdapter>(),
+            on<QuestMixedItemAdapter>(),
+            on<NotificationMixedItemAdapter>(),
+            on<GroupPreviewMixedItemAdapter>(),
+            on<CalendarDayMixedItemAdapter>()
+    ).map { Pair(it.getMixedItemType(), it as MixedItemAdapter<MixedItem, MixedItemViewHolder>) }.toMap()
+
     private fun generate() {
         items = mutableListOf<MixedItem>().apply {
             add(HeaderMixedItem())
@@ -134,11 +91,11 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
                 FeedContent.GROUPS, FeedContent.PLACES -> groups.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else {
-                        forEach { add(GroupMixedItem(it)) }
+                        forEach { add(GroupPreviewMixedItem(it)) }
                     }
                 }
                 FeedContent.FRIENDS -> groups.apply {
-                    forEach { add(GroupMixedItem(it)) }
+                    forEach { add(GroupPreviewMixedItem(it)) }
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_here)))
                 }
                 FeedContent.POSTS -> groupMessages.apply {
@@ -172,471 +129,24 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<RecyclerView.ViewHolder>(on) {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            0 -> HeaderViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.feed_item_public_groups, parent, false) as ViewGroup)
-            1 -> GroupPreviewViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.group_preview_item, parent, false)).also {
-                it.disposableGroup = on<DisposableHandler>().group()
-            }
-            2 -> NotificationViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.notification_item, parent, false)).also {
-                it.disposableGroup = on<DisposableHandler>().group()
-            }
-            3 -> CalendarDayViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.calendar_day_item, parent, false)).also {
-                it.disposableGroup = on<DisposableHandler>().group()
-            }
-            4 -> GroupActionViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.group_action_photo_large_item, parent, false)).also {
-                it.disposableGroup = on<DisposableHandler>().group()
-            }
-            5 -> TextViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.text_item, parent, false))
-            6 -> on<GroupMessageHelper>().createViewHolder(parent)
-            7 -> QuestViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.quest_item, parent, false))
-            else -> object : RecyclerView.ViewHolder(View(parent.context)) {}
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MixedItemViewHolder {
+        return adapters[MixedItemType.values()[viewType]]?.onCreateViewHolder(parent)
+                ?: object : MixedItemViewHolder(View(parent.context), MixedItemType.Text) {}
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MixedItemViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
 
         val item = items[position]
-
-        when (holder) {
-            is HeaderViewHolder -> bindHeader(holder)
-            is GroupPreviewViewHolder -> bindGroupPreview(holder, (item as GroupMixedItem).group)
-            is NotificationViewHolder -> bindNotification(holder, (item as NotificationMixedItem).notification)
-            is CalendarDayViewHolder -> bindCalendarDay(holder, (item as CalendarDayMixedItem).date, item.position)
-            is GroupActionViewHolder -> bindGroupAction(holder, (item as GroupActionMixedItem).groupAction)
-            is GroupMessageViewHolder -> bindGroupMessage(holder, (item as GroupMessageMixedItem).groupMessage)
-            is QuestViewHolder -> bindQuest(holder, (item as QuestMixedItem).quest)
-            is TextViewHolder -> bindText(holder, (item as TextMixedItem).text)
-        }
+        adapters[item.type]?.bind(holder, item, position)
     }
 
-    private fun bindQuest(holder: QuestViewHolder, quest: Quest) {
-        holder.name.text = "Get abs"
-        holder.on = On(on).apply { use<DisposableHandler>() }
-        holder.on<GroupActionRecyclerViewHandler>().attach(holder.itemView.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
+    override fun getItemViewType(position: Int) = items[position].type.ordinal
 
-        on<StoreHandler>().store.box(GroupAction::class).query()
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .single()
-                .observer { groupActions ->
-                    val random = Random(holder.adapterPosition)
-                    holder.on<GroupActionRecyclerViewHandler>().adapter.setGroupActions(groupActions
-                            .subList(random.nextInt(groupActions.size - 7), groupActions.size)
-                            .take(random.nextInt(6) + 1), true)
-                }.also {
-                    holder.on<DisposableHandler>().add(it)
-                }
-
-        holder.card.setOnClickListener {
-            on<MenuHandler>().show(
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Start this quest") {},
-                    MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, title = "See people who did this quest") {},
-                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = "Open group") {}
-            )
-        }
-    }
-
-    private fun bindGroupMessage(holder: GroupMessageViewHolder, groupMessage: GroupMessage) {
-        holder.on = On(on).apply {
-            use<DisposableHandler>()
-            use<LightDarkHandler>().setLight(true)
-            use<GroupMessageHelper> {
-                global = true
-                inFeed = true
-                onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
-                onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(null, event) }
-                onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
-            }
-        }
-        holder.on<GroupMessageHelper>().onBind(groupMessage, holder)
-    }
-
-    private fun bindText(holder: TextViewHolder, text: String) {
-        holder.text.text = text
-    }
-
-    private fun bindGroupAction(holder: GroupActionViewHolder, groupAction: GroupAction) {
-        holder.on = On(on).apply {
-            use<DisposableHandler>()
-            use<GroupActionDisplay>()
-        }
-        holder.on<GroupActionDisplay>().display(holder.itemView.groupAction, groupAction, GroupActionDisplay.Layout.PHOTO, holder.itemView.groupActionDescription, 1.5f)
-   }
-
-    private fun bindCalendarDay(holder: CalendarDayViewHolder, date: Date, position: Int) {
-        holder.on = On(on).apply {
-            use<DisposableHandler>()
-        }
-
-        holder.date.text = on<TimeStr>().day(date)
-
-        holder.itemView.headerPadding.visible = false && position == 0
-        holder.itemView.headerPadding.clipToOutline = true
-
-        holder.day.clipToOutline = true
-
-        val distance = on<HowFar>().about7Miles
-        val dateStart = Date(date.time + 1)
-        val dateEnd = Date(date.time + TimeUnit.DAYS.toMillis(1) - 1)
-
-        holder.disposableGroup.add(on<MapHandler>().onMapIdleObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { cameraPosition ->
-            holder.eventsObservable?.let { holder.disposableGroup.dispose(it) }
-            holder.eventsObservable = on<StoreHandler>().store.box(Event::class).query(
-                    Event_.startsAt.between(dateStart, dateEnd).or(Event_.endsAt.between(dateStart, dateEnd)
-                    ).and(
-                            Event_.latitude.between(cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance).and(
-                                    Event_.longitude.between(cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)
-                            ).or(
-                                    Event_.isPublic.equal(false)
-                            )
-                    )
-            )
-                    .build()
-                    .subscribe()
-                    .on(AndroidScheduler.mainThread())
-                    .observer { setCalendarDayEvents(holder, date, it) }.also {
-                        holder.disposableGroup.add(it)
-                    }
-        })
-    }
-
-    private fun setCalendarDayEvents(holder: CalendarDayViewHolder, date: Date, events: List<Event>? = null) {
-        holder.views.forEach { holder.day.removeView(it) }
-        holder.views.clear()
-
-        if (events != null) {
-            holder.events = events
-        }
-
-        val vH = holder.day.measuredHeight
-
-        if (vH == 0) {
-            holder.itemView.post { setCalendarDayEvents(holder, date, events) }
-            return
-        }
-
-        val dayOfYear = Calendar.getInstance(TimeZone.getDefault()).let {
-            it.time = date
-            it.get(Calendar.DAY_OF_YEAR)
-        }
-
-        holder.events?.forEach { event ->
-            val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.day, false)
-
-            view.name.text = event.name
-            view.about.text = on<EventDetailsHandler>().formatEventDetails(event)
-            (view.layoutParams as ConstraintLayout.LayoutParams).apply {
-                val h = (event.endsAt!!.time - event.startsAt!!.time).toFloat() / TimeUnit.DAYS.toMillis(1) * vH
-
-                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                width = MATCH_PARENT
-                height = h.toInt()
-                constrainedHeight = true
-                constrainedWidth = true
-                marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
-                marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
-            }
-
-            view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
-                it.time = event.startsAt!!
-                (it.get(Calendar.DAY_OF_YEAR) - dayOfYear).toFloat() +
-                        it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
-                        it.get(Calendar.MINUTE).toFloat() / TimeUnit.DAYS.toMinutes(1).toFloat()
-            })
-
-            view.name.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_group_black_18dp, 0, 0, 0
-            )
-
-//            view.setBackgroundResource(if (event.isPublic) R.drawable.clickable_red_8dp else R.drawable.clickable_blue_8dp)
-
-            view.setOnClickListener {
-                on<GroupActivityTransitionHandler>().showGroupForEvent(view, event)
-            }
-
-            holder.day.addView(view)
-            holder.views.add(view)
-        }
-    }
-
-    private fun bindNotification(holder: NotificationViewHolder, notification: Notification) {
-        holder.on = On(on).apply {
-            use<DisposableHandler>()
-        }
-        holder.name.text = notification.name ?: ""
-        holder.message.text = notification.message ?: ""
-        holder.time.text = on<TimeStr>().prettyDate(notification.created)
-        holder.itemView.setOnClickListener {
-            on<NotificationHandler>().launch(notification)
-        }
-
-        holder.itemView.setOnLongClickListener {
-            on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.sent_at, on<TimeStr>().pretty(notification.created)))
-            true
-        }
-    }
-
-    private fun bindGroupPreview(holder: GroupPreviewViewHolder, group: Group) {
-        holder.on = On(on).apply {
-            use<DisposableHandler>()
-            use<LightDarkHandler>()
-            use<GroupMessageHelper> {
-                onSuggestionClickListener = { suggestion -> on<MapActivityHandler>().showSuggestionOnMap(suggestion) }
-                onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event) }
-                onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(holder.itemView, group1.id) }
-            }
-        }
-
-        holder.groupName.text = on<Val>().of(group.name, on<ResourcesHandler>().resources.getString(R.string.talk_here))
-        holder.groupName.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupMessages(holder.groupName, group.id) }
-        holder.groupName.setOnLongClickListener {
-            on<GroupMemberHandler>().changeGroupSettings(group)
-            true
-        }
-
-        val groupMessagesAdapter = GroupMessagesAdapter(holder.on)
-
-        val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
-        holder.on<DisposableHandler>().add(queryBuilder
-                .sort(on<SortHandler>().sortGroupMessages())
-                .equal(GroupMessage_.to, group.id!!)
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .transform<List<GroupMessage>> { groupMessages -> groupMessages.subList(0, min(groupMessages.size, 5)) }
-                .observer { groupMessagesAdapter.setGroupMessages(it) })
-
-        holder.on<PinnedMessagesHandler>().attach(holder.pinnedMessagesRecyclerView)
-        holder.on<PinnedMessagesHandler>().show(group)
-
-        holder.messagesRecyclerView.adapter = groupMessagesAdapter
-        holder.messagesRecyclerView.layoutManager = LinearLayoutManager(holder.messagesRecyclerView.context, RecyclerView.VERTICAL, true)
-
-        if (holder.textWatcher != null) {
-            holder.replyMessage.removeTextChangedListener(holder.textWatcher)
-        }
-
-        holder.replyMessage.setText(on<GroupMessageParseHandler>().parseText(holder.replyMessage, on<GroupDraftHandler>().getDraft(group.id!!)?.message ?: ""))
-
-        holder.textWatcher = object : TextWatcher {
-
-            private var isDeleteMention: Boolean = false
-            private var shouldDeleteMention: Boolean = false
-
-            override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
-                shouldDeleteMention = !isDeleteMention && after == 0 && holder.on<GroupMessageParseHandler>().isMentionSelected(holder.replyMessage)
-                isDeleteMention = false
-            }
-
-            override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(text: Editable) {
-                on<GroupDraftHandler>().saveDraft(group.id!!, text.toString())
-                holder.on<GroupMessageMentionHandler>().showSuggestionsForName(holder.on<GroupMessageParseHandler>().extractName(text, holder.replyMessage.selectionStart))
-
-                if (shouldDeleteMention) {
-                    isDeleteMention = true
-                    holder.on<GroupMessageParseHandler>().deleteMention(holder.replyMessage)
-                }
-            }
-        }
-
-        if (group.name.isNullOrBlank()) {
-            holder.replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.say_something)
-        } else {
-            holder.replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, group.name)
-        }
-
-        holder.replyMessage.addTextChangedListener(holder.textWatcher)
-
-        holder.on<GroupMessageMentionHandler>().attach(holder.mentionSuggestionsLayout, holder.mentionSuggestionRecyclerView) {
-            mention -> holder.on<GroupMessageParseHandler>().insertMention(holder.replyMessage, mention)
-        }
-
-        holder.replyMessage.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_GO) {
-                holder.sendButton.callOnClick()
-            }
-
-            false
-        }
-
-        holder.sendButton.setOnClickListener { view ->
-            val message = holder.replyMessage.text.toString()
-
-            if (message.isBlank()) {
-                return@setOnClickListener
-            }
-
-            val groupMessage = GroupMessage()
-            groupMessage.text = message
-            groupMessage.from = on<PersistenceHandler>().phoneId
-            groupMessage.to = group.id
-            groupMessage.created = Date()
-            on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
-            on<SyncHandler>().sync(groupMessage)
-
-            holder.replyMessage.setText("")
-            on<KeyboardHandler>().showKeyboard(view, false)
-        }
-
-        on<ImageHandler>().get().clear(holder.backgroundPhoto)
-        if (group.photo != null) {
-            holder.backgroundPhoto.visible = true
-            holder.backgroundPhoto.setImageDrawable(null)
-            on<PhotoLoader>().softLoad(group.photo!!, holder.backgroundPhoto)
-        } else {
-            holder.backgroundPhoto.visible = false
-        }
-
-        on<GroupScopeHandler>().setup(group, holder.scopeIndicatorButton)
-
-        if (group.hasPhone()) {
-            holder.on<LightDarkHandler>().setLight(true)
-        } else {
-            holder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.observeOn(AndroidSchedulers.mainThread()).subscribe { holder.on<LightDarkHandler>().setLight(it.light) })
-        }
-
-        holder.disposableGroup.add(holder.on<LightDarkHandler>().onLightChanged
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    holder.groupName.setTextColor(it.text)
-                    holder.sendButton.imageTintList = it.tint
-                    holder.sendButton.setBackgroundResource(it.clickableRoundedBackground)
-                    holder.replyMessage.setTextColor(it.text)
-                    holder.replyMessage.setHintTextColor(it.hint)
-                    holder.replyMessage.setBackgroundResource(it.clickableRoundedBackground)
-                    holder.scopeIndicatorButton.imageTintList = it.tint
-                    holder.goToGroup.imageTintList = it.tint
-
-                    if (it.light) {
-                        holder.backgroundPhoto.alpha = .15f
-                        holder.itemView.setBackgroundResource(R.color.offwhite)
-                        holder.backgroundColor.setBackgroundResource(R.drawable.color_white_rounded)
-                    } else {
-                        holder.backgroundPhoto.alpha = 1f
-                        holder.itemView.setBackgroundResource(R.color.white)
-                        holder.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
-                    }
-
-                    holder.groupName.setBackgroundResource(it.clickableRoundedBackground8dp)
-                })
-    }
-
-    override fun getItemViewType(position: Int) = items[position].type
-
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+    override fun onViewRecycled(holder: MixedItemViewHolder) {
+        adapters[MixedItemType.values()[holder.itemViewType]]?.onViewRecycled(holder)
         super.onViewRecycled(holder)
-        when (holder) {
-            is HeaderViewHolder -> holder.on.off()
-            is GroupPreviewViewHolder -> {
-                holder.disposableGroup.clear()
-                holder.on.off()
-            }
-            is NotificationViewHolder -> {
-                holder.disposableGroup.clear()
-                holder.on.off()
-            }
-            is CalendarDayViewHolder -> {
-                holder.disposableGroup.clear()
-                holder.on.off()
-            }
-            is GroupActionViewHolder -> {
-                holder.disposableGroup.clear()
-                holder.on.off()
-            }
-            is GroupMessageViewHolder -> {
-                on<GroupMessageHelper>().recycleViewHolder(holder)
-                holder.on.off()
-            }
-            is QuestViewHolder -> {
-                holder.on.off()
-            }
-        }
     }
 
     override fun getItemCount() = items.size
-
-    private fun bindHeader(holder: HeaderViewHolder) {
-        holder.on = On(on).apply { use<DisposableHandler>() }
-        holder.on<PublicGroupFeedItemHandler>().attach(holder.view) { on<FeedHandler>().show(it) }
-    }
-
-    class HeaderMixedItem : MixedItem(0)
-    class GroupMixedItem(val group: Group) : MixedItem(1)
-    class GroupMessageMixedItem(val groupMessage: GroupMessage) : MixedItem(6)
-    class NotificationMixedItem(val notification: Notification) : MixedItem(2)
-    class CalendarDayMixedItem(val position: Int, val date: Date) : MixedItem(3)
-    class GroupActionMixedItem(val groupAction: GroupAction) : MixedItem(4)
-    class TextMixedItem(val text: String) : MixedItem(5)
-    class QuestMixedItem(val quest: Quest) : MixedItem(7)
-    open class MixedItem(val type: Int)
-
-    class HeaderViewHolder(val view: ViewGroup): RecyclerView.ViewHolder(view) {
-        lateinit var on: On
-    }
-
-    class CalendarDayViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        lateinit var on: On
-        lateinit var disposableGroup: DisposableGroup
-        var eventsObservable: DataSubscription? = null
-        val views = mutableSetOf<View>()
-        var date = itemView.date!!
-        var day = itemView.day!!
-        var events: List<Event>? = null
-    }
-
-    class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var on: On
-        lateinit var disposableGroup: DisposableGroup
-        var icon = itemView.icon!!
-        var name = itemView.notificationName!!
-        var message = itemView.notificationMessage!!
-        var time = itemView.notificationTime!!
-    }
-
-    class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var on: On
-        lateinit var disposableGroup: DisposableGroup
-    }
-
-    class QuestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var on: On
-        val name = itemView.name!!
-        val card = itemView.card!!
-    }
-
-    class TextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val text = itemView.text!!
-    }
-
-    class GroupPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var on: On
-        var groupName = itemView.groupName!!
-        var messagesRecyclerView = itemView.messagesRecyclerView!!
-        var pinnedMessagesRecyclerView = itemView.pinnedMessagesRecyclerView!!
-        var sendButton = itemView.sendButton!!
-        var replyMessage = itemView.replyMessage!!
-        var backgroundPhoto = itemView.backgroundPhoto!!
-        var scopeIndicatorButton = itemView.scopeIndicatorButton!!
-        var goToGroup = itemView.goToGroup!!
-        var mentionSuggestionsLayout = itemView.mentionSuggestionsLayout!!
-        var mentionSuggestionRecyclerView = itemView.mentionSuggestionRecyclerView!!
-        var backgroundColor = itemView.backgroundColor!!
-        var textWatcher: TextWatcher? = null
-        lateinit var disposableGroup: DisposableGroup
-    }
 }

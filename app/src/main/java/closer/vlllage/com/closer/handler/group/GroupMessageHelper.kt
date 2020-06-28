@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.feed.content.MixedItemType
+import closer.vlllage.com.closer.handler.feed.content.MixedItemViewHolder
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
@@ -187,7 +189,7 @@ class GroupMessageHelper constructor(private val on: On) {
     }
 }
 
-class GroupMessageViewHolder(on: On, itemView: View) : RecyclerView.ViewHolder(itemView) {
+class GroupMessageViewHolder(on: On, itemView: View) : MixedItemViewHolder(itemView, MixedItemType.GroupMessage) {
     lateinit var on: On
 
     internal var name: TextView
