@@ -6,21 +6,21 @@ import android.view.ViewGroup
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
-import closer.vlllage.com.closer.handler.helpers.MenuHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
+import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.Quest
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import kotlinx.android.synthetic.main.quest_item.view.*
+import kotlinx.android.synthetic.main.item_quest.view.*
 import kotlin.random.Random
 
 class QuestMixedItem(val quest: Quest) : MixedItem(MixedItemType.Quest)
 
 class QuestViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.Quest) {
     lateinit var on: On
+    val about = itemView.about!!
     val name = itemView.name!!
     val card = itemView.card!!
 }
@@ -38,7 +38,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
     override fun areContentsTheSame(old: QuestMixedItem, new: QuestMixedItem) = false
 
     override fun onCreateViewHolder(parent: ViewGroup) = QuestViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.quest_item, parent, false))
+            .inflate(R.layout.item_quest, parent, false))
 
     override fun onViewRecycled(holder: QuestViewHolder) {
         holder.on.off()
@@ -52,16 +52,39 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.on<GroupActionGridRecyclerViewHandler>().attach(holder.itemView.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
 
-        holder.name.text = "Get abs"
+        holder.about.text = listOf(
+                "Not started, finish by September 22nd, 2021 (in 6 months)",
+                "In Progress, finish by May 7th, 2021 (in 1 week)",
+                "Finished on October 6rd, 2021 (2 years ago)",
+                "In Progress, finish by May 3rd, 2021 (in 22 days)",
+                "Not started, no finish date"
+        ).random()
+
+        holder.about.setOnClickListener {
+            on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.quest_status), holder.about.text.toString())
+        }
+
+        holder.name.text = listOf(
+                "Pay off $8,000 debt",
+                "Get abs"
+        ).random()
 
         holder.name.setOnClickListener {
             // todo go to quest group
         }
 
+        // todo quest group
+        on<GroupScopeHandler>().setup(Group().apply { isPublic = Random.nextBoolean() }, holder.itemView.scopeIndicatorButton)
+
         holder.on<LightDarkHandler>().onLightChanged.subscribe {
             holder.name.setTextColor(it.text)
+            holder.about.setTextColor(it.text)
             holder.name.setBackgroundResource(it.clickableRoundedBackground8dp)
-            holder.itemView.optionsButton.setTextColor(it.text)
+            holder.about.setBackgroundResource(it.clickableRoundedBackground8dp)
+            holder.itemView.optionsButton.setTextColor(on<ResourcesHandler>().resources.getColor(when (it.light) {
+                true -> R.color.forestgreen
+                false -> R.color.text
+            }))
             holder.itemView.scopeIndicatorButton.imageTintList = it.tint
             holder.itemView.goToGroup.imageTintList = it.tint
             holder.card.setBackgroundResource(when (it.light) {
@@ -86,9 +109,29 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                     holder.on<DisposableHandler>().add(it)
                 }
 
+        holder.on<GroupActionDisplay>().onGroupActionClickListener = { it, proceed ->
+            if (true/* quest not started */) {
+                on<AlertHandler>().make().apply {
+                    title = "Start quest"
+                    message = "Would you like to start tracking this activity towards this quest?"
+                    positiveButton = "Start quest"
+                    negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+                    positiveButtonCallback = {
+                        on<ToastHandler>().show("You started questing!")
+                        proceed()
+                    }
+                    negativeButtonCallback = { proceed() }
+                    show()
+                }
+            }
+        }
+
         holder.card.setOnClickListener {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Start this quest") {},
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Stop this quest") {},
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Restart this quest") {},
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Finish this quest") {},
                     MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, title = "See people who did this quest") {},
                     MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = "Open group") {}
             )

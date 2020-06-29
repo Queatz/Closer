@@ -185,7 +185,7 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                     } else {
                         val view = LayoutInflater.from(context).inflate(R.layout.create_post_select_group_action, content, false)
 
-                        val adapter = GroupActionAdapter(holder.on, GroupActionDisplay.Layout.PHOTO) {
+                        val adapter = GroupActionAdapter(holder.on, GroupActionDisplay.Layout.PHOTO) { it, _ ->
                             item.attachment.add("activity", on<JsonHandler>().toJsonTree(it))
                             notifyDataSetChanged()
                         }

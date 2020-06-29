@@ -3,7 +3,6 @@ package closer.vlllage.com.closer.handler.group
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -11,12 +10,11 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupAction
 import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
-import java.util.*
 
 
 class GroupActionAdapter(on: On,
                          layout: GroupActionDisplay.Layout,
-                         onGroupActionClickListener: ((GroupAction) -> Unit)? = null)
+                         onGroupActionClickListener: GroupActionClickListener? = null)
     : PoolRecyclerAdapter<GroupActionAdapter.GroupActionViewHolder>(on) {
 
     init {

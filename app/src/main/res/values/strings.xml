@@ -415,6 +415,7 @@
     <string name="notifications_unmuted">Notifications unmuted</string>
     <string name="quests">Quests</string>
     <string name="search_quests">Search quests</string>
+    <string name="quest_status">Quest status</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

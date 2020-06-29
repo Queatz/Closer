@@ -38,7 +38,7 @@ class GroupActionDisplay constructor(private val on: On) {
 
     var showGroupName: Boolean = true
     var launchGroup: Boolean = true
-    var onGroupActionClickListener: ((GroupAction) -> Unit)? = null
+    var onGroupActionClickListener: GroupActionClickListener? = null
 
     fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
         render(GroupActionViewHolder(view, about), groupAction, layout, scale)
@@ -63,7 +63,7 @@ class GroupActionDisplay constructor(private val on: On) {
         val target: View = when (layout) {
             Layout.PHOTO -> holder.itemView
             Layout.TEXT -> holder.actionName
-            Layout.QUEST -> holder.rootView
+            Layout.QUEST -> holder.rootView!!
         }
 
         target.setOnClickListener {
@@ -78,6 +78,7 @@ class GroupActionDisplay constructor(private val on: On) {
         if (layout == Layout.QUEST) {
 // todo            progressText.text = ""
             holder.progressBar?.progress = Random().nextInt(100)
+            holder.progressBar?.visible = true
 
             on<LightDarkHandler>().onLightChanged.subscribe {
                 holder.progressText?.setTextColor(it.text)
@@ -101,6 +102,7 @@ class GroupActionDisplay constructor(private val on: On) {
             } else {
                 holder.groupName?.visible = false
             }
+
             when (getRandom(groupAction).nextInt(4)) {
                 1 -> holder.rootView?.setBackgroundResource(R.drawable.clickable_blue_8dp)
                 2 -> holder.rootView?.setBackgroundResource(R.drawable.clickable_accent_8dp)
@@ -129,11 +131,13 @@ class GroupActionDisplay constructor(private val on: On) {
 
     private fun onGroupActionClick(groupAction: GroupAction, view: View?) {
         onGroupActionClickListener?.let {
-            it(groupAction)
-        } ?: run {
-            startGroupActionFlow(groupAction, view, groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }
-                    ?: JsonArray(0))
-        }
+            it(groupAction) { proceedOnClick(groupAction, view) }
+        } ?: run { proceedOnClick(groupAction, view) }
+    }
+
+    private fun proceedOnClick(groupAction: GroupAction, view: View?) {
+        startGroupActionFlow(groupAction, view, groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }
+                ?: JsonArray(0))
     }
 
     private fun startGroupActionFlow(groupAction: GroupAction, view: View?, flowRemaining: JsonArray, accumulator: String? = null) {
@@ -342,7 +346,7 @@ class GroupActionDisplay constructor(private val on: On) {
 
     inner class GroupActionViewHolder(val itemView: View, val about: TextView? = null) {
 
-        var rootView: View = if (itemView.id == R.id.rootView) itemView else itemView.findViewById(R.id.rootView)
+        var rootView: View? = if (itemView.id == R.id.rootView) itemView else itemView.findViewById(R.id.rootView)
         var photo: ImageView? = itemView.findViewById(R.id.photo)
         var actionName: TextView = itemView.findViewById(R.id.actionName)
         var groupName: TextView? = itemView.findViewById(R.id.groupName)
@@ -360,3 +364,5 @@ class GroupActionDisplay constructor(private val on: On) {
         QUEST
     }
 }
+
+typealias GroupActionClickListener = (groupAction: (GroupAction), proceed: () -> Unit) -> Unit

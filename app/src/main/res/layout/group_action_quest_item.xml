@@ -52,8 +52,11 @@
         app:layout_constraintEnd_toEndOf="@+id/rootView"
         app:layout_constraintStart_toStartOf="@+id/rootView"
         app:layout_constraintTop_toBottomOf="@+id/rootView"
+        app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_goneMarginBottom="@dimen/padDouble"
+        app:layout_constraintVertical_bias="0"
         android:layout_marginTop="@dimen/padHalf"
-        android:text="22 remaining"
+        android:text="50 times"
         android:textColor="@color/text"/>
 
     <ProgressBar
@@ -62,8 +65,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padHalf"
-        android:layout_marginBottom="@dimen/padDouble"
+        android:layout_marginBottom="@dimen/pad"
+        app:layout_goneMarginBottom="@dimen/padDouble"
+        app:layout_constraintVertical_bias="0"
         tools:progress="50"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/rootView"
         app:layout_constraintStart_toStartOf="@+id/rootView"
         app:layout_constraintTop_toBottomOf="@+id/progressText"

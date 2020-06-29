@@ -30,7 +30,7 @@
             android:background="@drawable/clickable_light_rounded_8dp"
             android:clickable="true"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/groupActionsRecyclerViewContainer"
+            app:layout_constraintBottom_toTopOf="@+id/about"
             android:textAllCaps="true"
             android:textColor="@color/text"
             android:textSize="@dimen/textSizeSmall"
@@ -65,12 +65,38 @@
             android:importantForAccessibility="no"
             android:scaleType="centerInside"/>
 
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:background="@drawable/clickable_light"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/padDouble"
+            android:paddingBottom="@dimen/pad"
+            android:paddingTop="@dimen/padHalf"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            tools:text="3 months"
+            android:textColor="@color/text"
+            android:textSize="@dimen/textSizeSmall"
+            android:textStyle="bold"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toTopOf="@+id/groupActionsRecyclerViewContainer" />
 
         <closer.vlllage.com.closer.ui.SoftScrollStopper
             android:id="@+id/groupActionsRecyclerViewContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/name">
+            app:layout_constraintTop_toBottomOf="@id/about">
 
             <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/groupActionsRecyclerView"
