@@ -113,7 +113,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             if (true/* quest not started */) {
                 on<AlertHandler>().make().apply {
                     title = "Start quest"
-                    message = "Would you like to start tracking this activity towards this quest?"
+                    message = "Activities will contribute towards this quest."
                     positiveButton = "Start quest"
                     negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
                     positiveButtonCallback = {

@@ -29,8 +29,8 @@ class GroupActionGridRecyclerViewHandler constructor(private val on: On) {
         adapter = GroupActionAdapter(on, layout)
 
         adapter.onItemsChanged.map { it.size }.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread()).subscribe {
-            layoutManager.spanCount = when {
-                it == 1 -> 1
+            layoutManager.spanCount = when (it) {
+                1 -> 1
                 else -> it.coerceIn(2, 3)
             }
             adapter.scale = if (layoutManager.spanCount == 1) 1.5f else if (layoutManager.spanCount > 2) .75f else 1f

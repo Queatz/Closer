@@ -416,6 +416,14 @@
     <string name="quests">Quests</string>
     <string name="search_quests">Search quests</string>
     <string name="quest_status">Quest status</string>
+    <string name="create_a_quest">Create a quest</string>
+    <string name="create_quest">Create quest</string>
+    <string name="enter_quest_name">Name this quest</string>
+    <string name="edit_quest_activity">Edit quest activity</string>
+    <string name="percent">Percent</string>
+    <string name="repeat">Repeat</string>
+    <string name="times">Number of times</string>
+    <string name="quest_disclaimer">Quests can’t be modified after they’re created.</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

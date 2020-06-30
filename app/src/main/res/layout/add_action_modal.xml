@@ -45,10 +45,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/name"
         app:layout_constraintBottom_toTopOf="@+id/intentInfo"
-        android:layout_marginTop="@dimen/pad"
+        android:layout_marginTop="@dimen/padDouble"
         android:text="@string/action_intent"
         android:paddingStart="@dimen/pad"
         android:textColor="@color/textInverse"
+        android:textAllCaps="true"
         android:textStyle="bold"
         android:textAppearance="?android:textAppearance" />
 
@@ -58,7 +59,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/intentHeader"
         android:drawablePadding="@dimen/pad"
-        android:layout_marginTop="@dimen/padDouble"
+        android:layout_marginTop="@dimen/pad"
         android:drawableStart="@drawable/ic_help_black_18dp"
         android:gravity="top"
         android:padding="@dimen/pad"

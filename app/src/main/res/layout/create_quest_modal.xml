@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<closer.vlllage.com.closer.ui.InterceptableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/AppTheme.ForestGreen">
+
+    <LinearLayout
+        android:theme="@style/AppTheme.ForestGreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_quest_name"
+            android:imeOptions="actionGo"
+            android:padding="@dimen/padDialog"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:background="@null"
+            android:maxLength="128"
+            android:maxLines="1"
+            android:inputType="textCapSentences|textShortMessage" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:theme="@style/AppTheme.ForestGreen"
+            android:id="@+id/isPublicToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:checkedButton="@id/friendsToggleButton"
+            app:selectionRequired="true"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingEnd="@dimen/padDialog"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/friendsToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                app:icon="@drawable/ic_group_black_24dp"
+                app:iconPadding="@dimen/pad"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/friends" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/publicToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_public_black_24dp"
+                app:iconPadding="@dimen/pad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/is_public" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:theme="@style/AppTheme.ForestGreen"
+            android:id="@+id/finishDateToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            app:checkedButton="@id/noDateToggleButton"
+            app:selectionRequired="true"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingEnd="@dimen/padDialog"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/noDateToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSizeSmall"
+                android:text="No date" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/durationToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSizeSmall"
+                android:text="Duration" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/specificToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSizeSmall"
+                android:text="Specific" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/questActionsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toTopOf="@+id/intentInfo"
+            android:layout_marginTop="@dimen/padDouble"
+            android:text="Quest activities"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingEnd="@dimen/padDialog"
+            android:textColor="@color/textInverse"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:textAppearance="?android:textAppearance" />
+
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+            android:id="@+id/questActionRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/padDouble"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/padDialog"
+            android:paddingTop="@dimen/pad"
+            android:paddingBottom="@dimen/pad"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:orientation="horizontal"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/group_action_item"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toTopOf="@+id/intentInfo"
+            android:layout_marginTop="@dimen/padDouble"
+            android:text="Add an activity"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingEnd="@dimen/padDialog"
+            android:textColor="@color/textInverse"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textAppearance="?android:textAppearance" />
+
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+            android:id="@+id/actionRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/padDialog"
+            android:paddingTop="@dimen/pad"
+            android:paddingBottom="@dimen/pad"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            tools:orientation="horizontal"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/group_action_item"/>
+
+        <EditText
+            android:id="@+id/searchActivities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad"
+            android:layout_marginStart="@dimen/padDouble"
+            android:layout_marginEnd="@dimen/padDouble"
+            app:layout_goneMarginBottom="@dimen/padDouble"
+            app:layout_constraintTop_toBottomOf="@+id/actionRecyclerView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/clickable_dark_flat"
+            android:drawableStart="@drawable/ic_search_black_24dp"
+            android:drawablePadding="@dimen/pad"
+            android:drawableTint="@color/forestgreen"
+            android:hint="@string/search_for_things_to_do"
+            android:imeOptions="actionGo"
+            android:inputType="text|textCapWords"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingTop="@dimen/pad"
+            android:paddingEnd="@dimen/padDouble"
+            android:paddingBottom="@dimen/pad"
+            android:selectAllOnFocus="true"
+            android:textColor="@color/textInverse"
+            android:textColorHint="@color/textHintInverse"
+            android:textColorHighlight="@color/colorAccent_50"
+            android:textSize="@dimen/textSize" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toTopOf="@+id/intentInfo"
+            android:layout_marginTop="@dimen/padDouble"
+            android:text="@string/quest_disclaimer"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingEnd="@dimen/padDialog"
+            android:textColor="@color/textHintInverse"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/textSizeSmall" />
+
+    </LinearLayout>
+
+</closer.vlllage.com.closer.ui.InterceptableScrollView>

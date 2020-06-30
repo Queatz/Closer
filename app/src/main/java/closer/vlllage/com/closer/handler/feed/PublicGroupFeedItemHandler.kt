@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.feed
 
+import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -21,6 +22,7 @@ import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.FeedHandler
 import closer.vlllage.com.closer.handler.map.MapHandler
+import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
@@ -184,7 +186,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         itemView.historyButton.setOnClickListener {
             when (toolbarAdapter.selectedContentView.value) {
                 ContentViewType.HOME_QUESTS -> {
-                    // todo add quest
+                    on<QuestHandler>().createQuest()
                 }
                 else -> {
                     on<MapHandler>().center?.let { center ->
@@ -492,6 +494,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_places)
                                 itemView.historyButton.visible = true
                                 itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
+                                itemView.historyButton.imageTintList = null
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = true
@@ -516,6 +519,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_quests)
                                 itemView.historyButton.visible = true
                                 itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
+                                itemView.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.forestgreen))
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
                                 itemView.feedText.visible = false
@@ -540,6 +544,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
                                 itemView.historyButton.visible = explore
                                 itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
+                                itemView.historyButton.imageTintList = null
                                 actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
@@ -566,6 +571,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
                                 itemView.historyButton.visible = explore
                                 itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
+                                itemView.historyButton.imageTintList = null
                                 actionHeader.visible = state.hasGroupActions
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = state.hasPlaces

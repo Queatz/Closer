@@ -34,8 +34,18 @@
         <item name="colorAccent">@color/red</item>
     </style>
 
+    <style name="AppTheme.AlertDialog.ForestGreen">
+        <item name="colorPrimary">@color/forestgreen</item>
+        <item name="colorAccent">@color/forestgreen</item>
+    </style>
+
     <style name="AppTheme.Red">
         <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="AppTheme.ForestGreen">
+        <item name="colorPrimary">@color/forestgreen</item>
+        <item name="colorAccent">@color/forestgreen</item>
     </style>
 
     <style name="AppTheme.Translucent.Red">
@@ -45,6 +55,7 @@
     <style name="AlertDialogButton" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:gravity">end|center_vertical</item>
         <item name="android:lineSpacingMultiplier">1.125</item>
+        <item name="android:minWidth">0dp</item>
         <item name="android:radius">@dimen/cornerRadiusHalf</item>
     </style>
 
