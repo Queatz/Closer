@@ -56,7 +56,7 @@
             android:padding="@dimen/padDialog"
             android:textAppearance="?android:textAppearanceMedium"
             android:background="@null"
-            android:maxLength="6"
+            android:maxLength="5"
             android:maxLines="1"
             android:inputType="number|numberSigned" />
 

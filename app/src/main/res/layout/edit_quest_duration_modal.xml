@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<closer.vlllage.com.closer.ui.InterceptableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/AppTheme.ForestGreen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:theme="@style/AppTheme.ForestGreen">
+
+        <EditText
+            android:id="@+id/count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/number_of_x"
+            android:imeOptions="actionGo"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingEnd="@dimen/padDialog"
+            android:paddingTop="@dimen/padDialog"
+            android:paddingBottom="@dimen/pad"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:background="@null"
+            android:maxLength="5"
+            android:maxLines="1"
+            android:inputType="number|numberSigned" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/intervalToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingEnd="@dimen/padDialog"
+            android:theme="@style/AppTheme.ForestGreen"
+            app:checkedButton="@id/daysToggleButton"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/daysToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/days" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/weeksToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/weeks" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/monthsToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/months" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </LinearLayout>
+
+</closer.vlllage.com.closer.ui.InterceptableScrollView>

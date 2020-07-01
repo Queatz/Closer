@@ -424,6 +424,12 @@
     <string name="repeat">Repeat</string>
     <string name="times">Number of times</string>
     <string name="quest_disclaimer">Quests can’t be modified after they’re created.</string>
+    <string name="finish_in">Finish in</string>
+    <string name="finish_by">Finish by</string>
+    <string name="number_of_x">Number of %1$s</string>
+    <string name="days">Days</string>
+    <string name="weeks">Weeks</string>
+    <string name="months">Months</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

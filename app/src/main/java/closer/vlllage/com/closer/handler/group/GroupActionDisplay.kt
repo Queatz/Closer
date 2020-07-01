@@ -17,14 +17,13 @@ import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.quest.QuestAction
+import closer.vlllage.com.closer.handler.quest.QuestActionType
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
-import closer.vlllage.com.closer.store.models.Group_
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
@@ -39,6 +38,7 @@ class GroupActionDisplay constructor(private val on: On) {
     var showGroupName: Boolean = true
     var launchGroup: Boolean = true
     var onGroupActionClickListener: GroupActionClickListener? = null
+    var questActionConfigProvider: ((groupActionId: String) -> QuestAction?)? = null
 
     fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
         render(GroupActionViewHolder(view, about), groupAction, layout, scale)
@@ -76,9 +76,25 @@ class GroupActionDisplay constructor(private val on: On) {
         }
 
         if (layout == Layout.QUEST) {
-// todo            progressText.text = ""
-            holder.progressBar?.progress = Random().nextInt(100)
-            holder.progressBar?.visible = true
+            questActionConfigProvider?.invoke(groupAction.id!!)?.let { questAction ->
+                holder.progressBar?.visible = true
+                holder.progressText?.visible = true
+
+                when (questAction.type) {
+                    QuestActionType.Percent -> {
+                        holder.progressText?.text = "${on<NumberHelper>().format(100 - questAction.current)}% remaining"
+                        holder.progressBar?.progress = questAction.current
+                    }
+                    QuestActionType.Repeat -> {
+                        holder.progressText?.text = "${on<NumberHelper>().format(questAction.value - questAction.current)} remaining"
+                        holder.progressBar?.progress = ((questAction.current.toFloat() / questAction.value.toFloat()) * 100).toInt()
+                    }
+                }
+            } ?: run {
+                holder.progressBar?.visible = false
+                holder.progressText?.visible = false
+            }
+
 
             on<LightDarkHandler>().onLightChanged.subscribe {
                 holder.progressText?.setTextColor(it.text)

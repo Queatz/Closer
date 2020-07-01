@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:animateLayoutChanges="true"
         android:orientation="vertical">
 
         <EditText
@@ -60,12 +61,24 @@
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padDouble"
+            android:text="Finish by"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingEnd="@dimen/padDialog"
+            android:textColor="@color/textInverse"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textAppearance="?android:textAppearance" />
+
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:theme="@style/AppTheme.ForestGreen"
             android:id="@+id/finishDateToggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padDouble"
+            android:layout_marginTop="@dimen/pad"
             app:checkedButton="@id/noDateToggleButton"
             app:selectionRequired="true"
             android:paddingStart="@dimen/padDialog"
@@ -79,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="No date" />
+                android:text="None" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/durationToggleButton"
@@ -97,16 +110,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="Specific" />
+                android:text="Date" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/finishDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/clickable_light"
+            tools:text="22 days"
+            android:layout_gravity="start"
+            android:layout_marginStart="@dimen/padDouble"
+            android:layout_marginEnd="@dimen/padDouble"
+            android:drawablePadding="@dimen/pad"
+            android:drawableEnd="@drawable/ic_edit_black_24dp"
+            android:drawableTint="@color/forestgreen"
+            android:padding="@dimen/pad"
+            android:textColor="@color/textInverse"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:textAppearance="?android:textAppearanceMedium" />
 
         <TextView
             android:id="@+id/questActionsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/name"
-            app:layout_constraintBottom_toTopOf="@+id/intentInfo"
             android:layout_marginTop="@dimen/padDouble"
             android:text="Quest activities"
             android:paddingStart="@dimen/padDialog"
@@ -141,8 +170,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/name"
-            app:layout_constraintBottom_toTopOf="@+id/intentInfo"
             android:layout_marginTop="@dimen/padDouble"
             android:text="Add an activity"
             android:paddingStart="@dimen/padDialog"

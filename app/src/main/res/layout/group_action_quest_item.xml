@@ -67,7 +67,7 @@
         android:layout_marginTop="@dimen/padHalf"
         android:layout_marginBottom="@dimen/pad"
         app:layout_goneMarginBottom="@dimen/padDouble"
-        app:layout_constraintVertical_bias="0"
+        app:layout_constraintVertical_bias="1"
         tools:progress="50"
         android:visibility="gone"
         tools:visibility="visible"
