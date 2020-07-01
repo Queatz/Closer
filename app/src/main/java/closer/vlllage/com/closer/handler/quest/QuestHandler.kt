@@ -171,12 +171,7 @@ class QuestHandler(private val on: On) {
             title = on<ResourcesHandler>().resources.getString(R.string.finish_in)
             layoutResId = R.layout.edit_quest_duration_modal
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.save)
-            onAfterViewCreated = { alertConfig, view ->
-                view.intervalToggle.check(when (viewHolder.finish?.unit) {
-                    QuestDurationUnit.Month -> R.id.monthsToggleButton
-                    QuestDurationUnit.Week -> R.id.weeksToggleButton
-                    else -> R.id.daysToggleButton
-                })
+            onAfterViewCreated = { _, view ->
 
                 view.count.setText((viewHolder.finish?.duration ?: 1).toString())
 
@@ -192,6 +187,12 @@ class QuestHandler(private val on: On) {
                     updateToggleButtonWeights(group)
 
                     if (isChecked) {
+                        view.count.setHint(when (checkedId) {
+                            R.id.monthsToggleButton -> R.string.number_of_months
+                            R.id.weeksToggleButton -> R.string.number_of_weeks
+                            else -> R.string.number_of_days
+                        })
+
                         when (checkedId) {
                             R.id.monthsToggleButton -> {
                                 viewHolder.finish = QuestFinish(
@@ -219,6 +220,12 @@ class QuestHandler(private val on: On) {
                         onChange()
                     }
                 }
+
+                view.intervalToggle.check(when (viewHolder.finish?.unit) {
+                    QuestDurationUnit.Month -> R.id.monthsToggleButton
+                    QuestDurationUnit.Week -> R.id.weeksToggleButton
+                    else -> R.id.daysToggleButton
+                })
 
                 updateToggleButtonWeights(view.intervalToggle)
             }

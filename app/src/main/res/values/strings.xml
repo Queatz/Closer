@@ -426,7 +426,9 @@
     <string name="quest_disclaimer">Quests can’t be modified after they’re created.</string>
     <string name="finish_in">Finish in</string>
     <string name="finish_by">Finish by</string>
-    <string name="number_of_x">Number of %1$s</string>
+    <string name="number_of_days">Number of days</string>
+    <string name="number_of_weeks">Number of weeks</string>
+    <string name="number_of_months">Number of months</string>
     <string name="days">Days</string>
     <string name="weeks">Weeks</string>
     <string name="months">Months</string>

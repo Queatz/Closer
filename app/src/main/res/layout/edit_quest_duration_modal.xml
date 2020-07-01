@@ -17,7 +17,7 @@
             android:id="@+id/count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/number_of_x"
+            android:hint="@string/number_of_days"
             android:imeOptions="actionGo"
             android:paddingStart="@dimen/padDialog"
             android:paddingEnd="@dimen/padDialog"
