@@ -109,7 +109,11 @@ class QuestHandler(private val on: On) {
         viewHolder.view.finishDateText.visible = viewHolder.finish != null
         viewHolder.view.finishDateText.text = when {
             viewHolder.finish?.date != null -> on<TimeStr>().prettyDate(viewHolder.finish!!.date!!)
-            viewHolder.finish?.duration != null -> "${viewHolder.finish!!.duration} ${viewHolder.finish!!.unit!!.name}"
+            viewHolder.finish?.duration != null -> on<ResourcesHandler>().resources.getQuantityString(when (viewHolder.finish?.unit) {
+                QuestDurationUnit.Month -> R.plurals.date_approx_months
+                QuestDurationUnit.Week -> R.plurals.date_approx_weeks
+                else -> R.plurals.date_approx_days
+            }, viewHolder.finish?.duration ?: 1, viewHolder.finish?.duration ?: 1)
             else -> ""
         }
         viewHolder.view.finishDateText.setOnClickListener {
@@ -219,13 +223,12 @@ class QuestHandler(private val on: On) {
                 val cal = Calendar.getInstance(TimeZone.getDefault()).apply {
                     time = viewHolder.finish?.date ?: Date()
                 }
+                view.datePicker.minDate = Date().time
                 view.datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) { _, year, month, dayOfMonth ->
                     cal.set(Calendar.YEAR, year)
                     cal.set(Calendar.MONTH, month)
                     cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    viewHolder.finish = QuestFinish(
-                            date = cal.time
-                    )
+                    viewHolder.finish = QuestFinish(date = cal.time)
                     onChange()
                 }
             }

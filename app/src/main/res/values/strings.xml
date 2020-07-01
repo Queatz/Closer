@@ -460,6 +460,10 @@
         <item quantity="one">%1$s week</item>
         <item quantity="other">%1$s weeks</item>
     </plurals>
+    <plurals name="date_approx_months">
+        <item quantity="one">%1$s month</item>
+        <item quantity="other">%1$s months</item>
+    </plurals>
     <plurals name="date_approx_days">
         <item quantity="one">%1$s day</item>
         <item quantity="other">%1$s days</item>
