@@ -91,15 +91,31 @@ class QuestHandler(private val on: On) {
 
                 searchGroupActivities(viewHolder, adapter, null)
 
-                alertConfig.alertResult = viewHolder
-            }
-            buttonClickCallback = { alertResult ->
-                val viewHolder = alertResult as CreateQuestViewHolder
+                view.name.doOnTextChanged { text, _, _, _ ->
+                    viewHolder.name = text.toString().trim()
+                }
 
-                false
+                alertConfig.alertResult = viewHolder
             }
             positiveButtonCallback = { alertResult ->
                 val viewHolder = alertResult as CreateQuestViewHolder
+
+                
+            }
+            buttonClickCallback = {
+                val viewHolder = alertResult as CreateQuestViewHolder
+
+                when {
+                    viewHolder.name.isBlank() -> {
+                        on<DefaultAlerts>().message("Give this quest a name.")
+                        false
+                    }
+                    viewHolder.activities.isEmpty() -> {
+                        on<DefaultAlerts>().message("Quests must have at least 1 activity.")
+                        false
+                    }
+                    else -> true
+                }
             }
             show()
         }
@@ -299,6 +315,7 @@ class QuestHandler(private val on: On) {
 
     private class CreateQuestViewHolder internal constructor(val view: View) {
         var finish: QuestFinish? = null
+        var name = ""
         val activities = mutableListOf<GroupAction>()
         val activityConfig = mutableMapOf<String, QuestAction>()
         lateinit var searchGroupsAdapter: GroupActionAdapter
