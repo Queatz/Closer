@@ -97,6 +97,28 @@ class Search constructor(private val on: On) {
 
     }
 
+
+    fun quests(latLng: LatLng, queryString: String? = null, single: Boolean = false, callback: (List<Quest>) -> Unit): DataSubscription {
+        val distance = on<HowFar>().about7Miles
+
+        return on<StoreHandler>().store.box(Quest::class).query(
+                Quest_.latitude.between(latLng.latitude - distance, latLng.latitude + distance)
+                        .and(Quest_.longitude.between(latLng.longitude - distance, latLng.longitude + distance)).let { query ->
+                            queryString?.takeIf { it.isNotBlank() }?.let {
+                                query.and(Quest_.name.contains(queryString, QueryBuilder.StringOrder.CASE_INSENSITIVE))
+                            } ?: query
+                        })
+                .sort(on<SortHandler>().sortQuests(latLng))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .let { if (single) it.single() else it }
+                .observer {
+                    callback(it)
+                }
+
+    }
+
     fun groupActions(groups: List<Group>? = null, queryString: String? = null, single: Boolean = false, callback: (List<GroupAction>) -> Unit) = on<StoreHandler>().store.box(GroupAction::class).query(
             GroupAction_.group.notNull().let { query ->
                 (groups?.let {

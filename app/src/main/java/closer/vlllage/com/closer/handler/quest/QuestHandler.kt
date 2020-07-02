@@ -9,11 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.store.models.GroupAction
+import closer.vlllage.com.closer.handler.map.MapHandler
+import closer.vlllage.com.closer.store.StoreHandler
+import closer.vlllage.com.closer.store.models.*
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.actionRecyclerView
@@ -41,7 +44,7 @@ class QuestHandler(private val on: On) {
                 on<GroupActionGridRecyclerViewHandler>().attach(view.questActionRecyclerView, GroupActionDisplay.Layout.QUEST)
                 on<GroupActionDisplay>().onGroupActionClickListener = { it, _ ->
                     editQuestAction(viewHolder, it, viewHolder.activityConfig[it.id!!]
-                            ?: QuestAction().also { questAction ->
+                            ?: QuestAction(groupActionId = it.id!!).also { questAction ->
                                 viewHolder.activityConfig[it.id!!] = questAction
                             }) { refresh(viewHolder) } }
                 on<GroupActionDisplay>().questActionConfigProvider = { viewHolder.activityConfig[it] }
@@ -49,7 +52,7 @@ class QuestHandler(private val on: On) {
                 val adapter = GroupActionAdapter(On(on).apply { use<GroupActionDisplay>() }, GroupActionDisplay.Layout.PHOTO) { it, _ ->
                     viewHolder.activities.add(it)
 
-                    val questAction = viewHolder.activityConfig[it.id!!] ?: QuestAction().also { questAction ->
+                    val questAction = viewHolder.activityConfig[it.id!!] ?: QuestAction(groupActionId = it.id!!).also { questAction ->
                         viewHolder.activityConfig[it.id!!] = questAction
                     }
 
@@ -60,7 +63,13 @@ class QuestHandler(private val on: On) {
 
                 viewHolder.searchGroupsAdapter = adapter
 
-                view.isPublicToggle.addOnButtonCheckedListener { group, _, _ -> updateToggleButtonWeights(group) }
+                view.isPublicToggle.addOnButtonCheckedListener { group, checkedId, isChecked ->
+                    updateToggleButtonWeights(group)
+                    if (isChecked) {
+                        viewHolder.isPublic = checkedId == R.id.publicToggleButton
+                    }
+                }
+
                 view.finishDateToggle.addOnButtonCheckedListener { group, checkedId, isChecked ->
                     updateToggleButtonWeights(group)
 
@@ -99,8 +108,7 @@ class QuestHandler(private val on: On) {
             }
             positiveButtonCallback = { alertResult ->
                 val viewHolder = alertResult as CreateQuestViewHolder
-
-                
+                saveQuest(viewHolder)
             }
             buttonClickCallback = {
                 val viewHolder = alertResult as CreateQuestViewHolder
@@ -118,6 +126,31 @@ class QuestHandler(private val on: On) {
                 }
             }
             show()
+        }
+    }
+
+    private fun saveQuest(viewHolder: CreateQuestViewHolder) {
+        on<MapHandler>().center?.let { latLng ->
+            val quest = Quest()
+            quest.name = viewHolder.name
+            quest.isPublic = viewHolder.isPublic
+            quest.latitude = latLng.latitude
+            quest.longitude = latLng.longitude
+            quest.flow = QuestFlow(
+                    finish = viewHolder.finish,
+                    items = viewHolder.activities.map {
+                        QuestAction(
+                                groupActionId = it.id,
+                                type = viewHolder.activityConfig[it.id!!]!!.type,
+                                value = viewHolder.activityConfig[it.id!!]!!.value,
+                                current = viewHolder.activityConfig[it.id!!]!!.current
+                        )
+                    }
+            )
+            on<StoreHandler>().store.box(Quest::class).put(quest)
+            on<SyncHandler>().sync(quest) {
+                // TODO open quest
+            }
         }
     }
 
@@ -321,6 +354,7 @@ class QuestHandler(private val on: On) {
     }
 
     private class CreateQuestViewHolder internal constructor(val view: View) {
+        var isPublic: Boolean = false
         var finish: QuestFinish? = null
         var name = ""
         val activities = mutableListOf<GroupAction>()
@@ -333,26 +367,3 @@ class QuestHandler(private val on: On) {
         var times = 1
     }
 }
-
-enum class QuestActionType {
-    Percent,
-    Repeat
-}
-
-data class QuestFinish constructor(
-        var date: Date? = null,
-        var duration: Int? = null,
-        var unit: QuestDurationUnit? = null
-)
-
-enum class QuestDurationUnit {
-    Day,
-    Week,
-    Month
-}
-
-data class QuestAction constructor(
-        var type: QuestActionType = QuestActionType.Repeat,
-        var value: Int = 1,
-        var current: Int = 0
-)

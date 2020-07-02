@@ -131,4 +131,16 @@ class SortHandler constructor(private val on: On) {
     fun sortNotifications(): Comparator<Notification> {
         return Comparator { o1, o2 -> (o2.created ?: Date(0)).compareTo(o1.created ?: Date(0)) }
     }
+
+    fun sortQuests(latLng: LatLng): Comparator<Quest> {
+        return Comparator { o1, o2 ->
+            val d1 = FloatArray(1)
+            val d2 = FloatArray(1)
+
+            distanceBetween(o1.latitude!!, o1.longitude!!, latLng.latitude, latLng.longitude, d1)
+            distanceBetween(o2.latitude!!, o2.longitude!!, latLng.latitude, latLng.longitude, d2)
+
+            return@Comparator if (d1[0] == d2[0]) 0 else if (d1[0] < d2[0]) -1 else 1
+        }
+    }
 }

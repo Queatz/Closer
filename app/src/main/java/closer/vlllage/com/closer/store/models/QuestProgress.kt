@@ -8,3 +8,10 @@ class QuestProgress : BaseObject() {
     var groupId: String? = null
     var progress: String? = null
 }
+
+@Entity
+class QuestProgressAction : BaseObject() {
+    var questId: String? = null
+    var groupActionId: String? = null
+    var progress: Int? = null
+}

@@ -17,12 +17,12 @@ import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import closer.vlllage.com.closer.handler.quest.QuestAction
-import closer.vlllage.com.closer.handler.quest.QuestActionType
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
+import closer.vlllage.com.closer.store.models.QuestAction
+import closer.vlllage.com.closer.store.models.QuestActionType
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject

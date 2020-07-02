@@ -10,6 +10,7 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
+import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.store.models.Quest
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
@@ -64,10 +65,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.quest_status), holder.about.text.toString())
         }
 
-        holder.name.text = listOf(
-                "Pay off $8,000 debt",
-                "Get abs"
-        ).random()
+        holder.name.text = quest.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown)
 
         holder.name.setOnClickListener {
             // todo go to quest group
@@ -95,16 +93,13 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             holder.on<DisposableHandler>().add(it)
         }
 
-        on<StoreHandler>().store.box(GroupAction::class).query()
+        on<StoreHandler>().store.box(GroupAction::class).query(GroupAction_.id.oneOf(quest.flow!!.items.map { it.groupActionId!! }.toTypedArray()))
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { groupActions ->
-                    val random = Random(holder.adapterPosition + 12345678)
-                    holder.on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(groupActions
-                            .subList(random.nextInt(groupActions.size - 7), groupActions.size)
-                            .take(random.nextInt(6) + 1), true)
+                    holder.on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(groupActions, true)
                 }.also {
                     holder.on<DisposableHandler>().add(it)
                 }

@@ -135,6 +135,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             override fun afterTextChanged(s: Editable) {
                 on<FeedHandler>().searchGroupActions(searchGroups.text.toString())
                 on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
+                on<FeedHandler>().searchQuests(searchGroups.text.toString())
             }
         })
 

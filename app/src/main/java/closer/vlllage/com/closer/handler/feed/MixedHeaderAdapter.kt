@@ -19,7 +19,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
             generate()
         }
 
-    var quests = mutableListOf<Quest>(Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest(), Quest())
+    var quests = mutableListOf<Quest>()
         set(value) {
             field = value
             generate()

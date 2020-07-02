@@ -38,8 +38,9 @@ class FeedHandler constructor(private val on: On) {
     private lateinit var mixedAdapter: MixedHeaderAdapter
 
     private var groupActionsObservable: DataSubscription? = null
+    private var questsObservable: DataSubscription? = null
     private var groupMessagesObservable: DataSubscription? = null
-    private var groupActionsQueryString = ""
+    private var lastKnownQueryString = ""
     private var groupActionsGroups = listOf<Group>()
     private var isToTheTopVisible = false
     private var content = BehaviorSubject.create<FeedContent>()
@@ -144,12 +145,13 @@ class FeedHandler constructor(private val on: On) {
         on<DisposableHandler>().add(content.switchMap { on<MapHandler>().onMapIdleObservable() }.subscribe({
             on<MapHandler>().center?.let { center ->
                 loadGroups(center)
+                loadQuests(center, lastKnownQueryString)
             }
         }, {}))
     }
 
     fun searchGroupActions(queryString: String) {
-        groupActionsQueryString = queryString
+        lastKnownQueryString = queryString
         setGroupActions(groupActionsGroups)
     }
 
@@ -157,6 +159,19 @@ class FeedHandler constructor(private val on: On) {
         mixedAdapter.groups = groups.toMutableList()
         setGroupMessages(groups)
         setGroupActions(groups)
+    }
+
+    fun searchQuests(queryString: String) {
+        lastKnownQueryString = queryString
+        loadQuests(on<MapHandler>().center!!, lastKnownQueryString)
+    }
+
+    private fun loadQuests(target: LatLng, queryString: String) {
+        questsObservable?.cancel()
+
+        on<Search>().quests(target, queryString) { quests ->
+            mixedAdapter.quests = quests.toMutableList()
+        }.also { questsObservable = it }
     }
 
     private fun loadGroups(target: LatLng) {
@@ -224,7 +239,7 @@ class FeedHandler constructor(private val on: On) {
         groupActionsGroups = groups
         groupActionsObservable?.let { on<DisposableHandler>().dispose(it) }
 
-        groupActionsObservable = on<Search>().groupActions(groupActionsGroups, groupActionsQueryString) { groupActions ->
+        groupActionsObservable = on<Search>().groupActions(groupActionsGroups, lastKnownQueryString) { groupActions ->
             mixedAdapter.groupActions = groupActions.toMutableList()
         }
 

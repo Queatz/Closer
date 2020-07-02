@@ -48,6 +48,7 @@ class SyncHandler constructor(private val on: On) {
             is Event -> sendCreateEvent(obj as Event, onSyncResult)
             is GroupAction -> sendCreateGroupAction(obj as GroupAction, onSyncResult)
             is GroupMember -> sendUpdateGroupMember(obj as GroupMember, onSyncResult)
+            is Quest -> { /* TODO sned Quest to API*/ }
             else -> throw RuntimeException("Unknown object type for sync: $obj")
         }
     }

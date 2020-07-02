@@ -12,7 +12,7 @@ Quests
     Array<QuestProgress>
         complete: boolean
         active: boolean
-        created: Date
+        created: Date               // started
         advent: '<date>'
         group: Group
         quest: Quest
