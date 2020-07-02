@@ -6,4 +6,5 @@ import io.objectbox.annotation.Entity
 class QuestProgress : BaseObject() {
     var questId: String? = null
     var groupId: String? = null
+    var progress: String? = null
 }
