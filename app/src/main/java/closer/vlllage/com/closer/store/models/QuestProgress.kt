@@ -3,18 +3,23 @@ package closer.vlllage.com.closer.store.models
 import closer.vlllage.com.closer.store.QuestProgressFlowJsonConverter
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Uid
+import java.util.*
 
 @Entity
 class QuestProgress : BaseObject() {
     var questId: String? = null
     var ofId: String? = null
+    @Uid(4546529961485216873L) var finished: Date? = null
+    var stopped: Date? = null
+    var active: Boolean? = null
 
     @Convert(converter = QuestProgressFlowJsonConverter::class, dbType = String::class)
-    var progress: QuestProgressFlow? = null
+    var progress: QuestProgressFlow? = QuestProgressFlow()
 }
 
 class QuestProgressFlow {
-    var items: List<QuestProgressAction> = listOf()
+    var items: MutableMap<String, QuestProgressAction> = mutableMapOf()
 }
 
 class QuestProgressAction {

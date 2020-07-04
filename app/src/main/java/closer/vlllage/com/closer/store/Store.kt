@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.store
 import android.app.Application
 
 import closer.vlllage.com.closer.store.models.MyObjectBox
+import closer.vlllage.com.closer.store.models.QuestProgress
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.TxCallback

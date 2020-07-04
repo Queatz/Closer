@@ -4,14 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.GroupAction
-import closer.vlllage.com.closer.store.models.GroupAction_
-import closer.vlllage.com.closer.store.models.Quest
+import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.item_quest.view.*
@@ -21,6 +20,8 @@ class QuestMixedItem(val quest: Quest) : MixedItem(MixedItemType.Quest)
 
 class QuestViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.Quest) {
     lateinit var on: On
+    var progress: List<QuestProgress> = listOf()
+    var progressByMe: QuestProgress? = null
     val about = itemView.about!!
     val name = itemView.name!!
     val card = itemView.card!!
@@ -46,19 +47,28 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
     private fun bindQuest(holder: QuestViewHolder, quest: Quest) {
         holder.on = On(on).apply {
             use<DisposableHandler>()
+            use<QuestHandler>()
             use<GroupActionGridRecyclerViewHandler>()
         }
 
-        holder.on<GroupActionGridRecyclerViewHandler>().attach(holder.itemView.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
+        holder.on<QuestHandler>().questProgress(quest) {
+            holder.progress = it
 
-        holder.about.text = listOf(
-                "Not started, finish by September 22nd, 2021 (in 6 months)",
-                "Not started, finish in 5 weeks",
-                "In Progress, finish by May 7th, 2021 (in 1 week)",
-                "Finished on October 6rd, 2021 (2 years ago)",
-                "In Progress, finish by May 3rd, 2021 (in 22 days)",
-                "Not started, no finish date"
-        ).random()
+            holder.progressByMe = holder.progress.find { it.ofId == on<PersistenceHandler>().phoneId }
+
+            holder.about.text = holder.progressByMe?.let { progress ->
+                when {
+                    progress.finished != null -> "Finished ${on<TimeStr>().prettyDate(progress.finished!!)}"
+                    progress.active == true -> "In progress, ${on<QuestHandler>().questFinishText(quest, progress.created)}"
+                    progress.stopped != null -> "Stopped ${on<TimeStr>().prettyDate(progress.stopped!!)}"
+                    else -> "Unknown, ${on<QuestHandler>().questFinishText(quest)}"
+                }
+            } ?: let {
+                "Not started, ${on<QuestHandler>().questFinishText(quest)}"
+            }
+        }
+
+        holder.on<GroupActionGridRecyclerViewHandler>().attach(holder.itemView.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
 
         holder.about.setOnClickListener {
             on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.quest_status), holder.about.text.toString())
@@ -67,7 +77,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.name.text = quest.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown)
 
         holder.name.setOnClickListener {
-            // todo go to quest group
+            on<QuestHandler>().openQuest(quest)
         }
 
         // todo quest group
@@ -105,33 +115,34 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.on<GroupActionDisplay>().questActionConfigProvider = { groupAction ->
             quest.flow?.items?.first { it.groupActionId == groupAction.id!! }.also {
-                it?.current = 1
+                it?.current = holder.progressByMe?.progress?.items?.get(groupAction.id!!)?.current ?: 0
             }
         }
 
         holder.on<GroupActionDisplay>().onGroupActionClickListener = { it, proceed ->
-            if (true/* quest not started */) {
-                on<AlertHandler>().make().apply {
-                    title = on<ResourcesHandler>().resources.getString(R.string.start_quest)
-                    message = on<ResourcesHandler>().resources.getString(R.string.start_quest_details)
-                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.start_quest)
-                    negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
-                    positiveButtonCallback = {
-                        on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.start_quest_confirmation))
-                        proceed()
-                    }
-                    negativeButtonCallback = { proceed() }
-                    show()
+            if (holder.progressByMe == null) {
+                on<QuestHandler>().startQuest(quest) { quest ->
+                    // TODO add progress along side group action taken
+                    on<QuestHandler>().addProgress(holder.progressByMe!!, it)
+                    proceed()
                 }
+            } else {
+                // TODO add progress along side group action taken
+                on<QuestHandler>().addProgress(holder.progressByMe!!, it)
+                proceed()
             }
         }
 
         holder.card.setOnClickListener {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Start this quest") {},
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Stop this quest") {},
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Stop this quest") {
+                        on<QuestHandler>().endQuest(holder.progressByMe!!, false)
+                    },
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Restart this quest") {},
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Finish this quest") {},
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Finish this quest") {
+                        on<QuestHandler>().endQuest(holder.progressByMe!!)
+                    },
                     MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, title = "See people who did this quest") {},
                     MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {}
             )

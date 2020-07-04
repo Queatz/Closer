@@ -9,16 +9,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
+import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.actionRecyclerView
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.searchActivities
 import kotlinx.android.synthetic.main.create_quest_modal.view.*
@@ -28,6 +31,67 @@ import kotlinx.android.synthetic.main.edit_quest_finish_date_modal.view.*
 import java.util.*
 
 class QuestHandler(private val on: On) {
+
+    fun questProgress(quest: Quest, single: Boolean = false, callback: (List<QuestProgress>) -> Unit) {
+        // todo delete this block
+        if (quest.id == null) {
+            quest.id = on<Val>().rndId()
+            on<StoreHandler>().store.box(Quest::class).put(quest)
+        }
+
+        on<StoreHandler>().store.box(QuestProgress::class).query(
+                QuestProgress_.questId.equal(quest.id!!)
+        ).build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .let {
+                    if (single) it.single()
+                    else it
+                }
+                .observer {
+                    // todo delete
+                    it.forEach {
+                        if (it.created == null) {
+                            it.created = Date()
+                            on<StoreHandler>().store.box(QuestProgress::class).put(it)
+                        }
+                    }
+
+                    callback(it)
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
+    }
+
+    fun startQuest(quest: Quest, callback: (result: Boolean) -> Unit) {
+        on<AlertHandler>().make().apply {
+            title = on<ResourcesHandler>().resources.getString(R.string.start_quest)
+            message = on<ResourcesHandler>().resources.getString(R.string.start_quest_details)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.start_quest)
+            negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+            positiveButtonCallback = {
+                val questProgress = on<StoreHandler>().create(QuestProgress::class.java)!!.apply {
+                    questId = quest.id!!
+                    ofId = on<PersistenceHandler>().phoneId!!
+                    active = true
+                }
+
+                on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+                on<SyncHandler>().sync(questProgress) { openQuest(quest) }
+
+                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.start_quest_confirmation))
+                callback(true)
+            }
+            negativeButtonCallback = { callback(false) }
+            cancelIsNegative = true
+            show()
+        }
+    }
+
+    fun openQuest(quest: Quest) {
+        on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
+    }
+
     fun createQuest() {
         on<AlertHandler>().make().apply {
             theme = R.style.AppTheme_AlertDialog_ForestGreen
@@ -129,9 +193,68 @@ class QuestHandler(private val on: On) {
         }
     }
 
+    fun endQuest(questProgress: QuestProgress, finished: Boolean = true) {
+        questProgress.finished = if (finished) Date() else null
+        questProgress.stopped = if (!finished) Date() else null
+        questProgress.active = false
+
+        if (finished) {
+            on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.finished_quest_confirmation))
+        } else {
+            on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.stopped_quest_confirmation))
+        }
+        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+        on<SyncHandler>().sync(questProgress)
+    }
+
+    fun addProgress(questProgress: QuestProgress, groupAction: GroupAction, amount: Int = 1) {
+        if (!questProgress.progress!!.items.containsKey(groupAction.id!!)) {
+            questProgress.progress!!.items[groupAction.id!!] = QuestProgressAction().apply {
+                groupActionId = groupAction.id!!
+                current = amount
+            }
+        } else {
+            questProgress.progress!!.items[groupAction.id!!]!!.current =
+                    questProgress.progress!!.items[groupAction.id!!]!!.current?.plus(amount)
+                            ?: amount
+        }
+
+        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+        on<SyncHandler>().sync(questProgress)
+    }
+
+    fun questFinishText(quest: Quest, relativeToDate: Date? = null): String {
+        val finish = quest.flow!!.finish!!
+
+        return if (relativeToDate == null) {
+            when {
+                finish.date != null -> "finish by ${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})"
+                else -> "finish in ${durationText(finish)}"
+            }
+        } else {
+            when {
+                finish.date != null -> "finish by ${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})"
+                else -> {
+                    val calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
+                        time = relativeToDate
+
+                        add(when (finish.unit) {
+                            QuestDurationUnit.Month -> Calendar.MONTH
+                            QuestDurationUnit.Week -> Calendar.WEEK_OF_YEAR
+                            else -> Calendar.DAY_OF_MONTH
+                        }, finish.duration!!)
+                    }
+
+                    "finish ${on<TimeStr>().approx(calendar.time)} (${on<TimeStr>().prettyDate(calendar.time)})"
+                }
+            }
+
+        }
+    }
+
     private fun saveQuest(viewHolder: CreateQuestViewHolder) {
         on<MapHandler>().center?.let { latLng ->
-            val quest = Quest()
+            val quest = on<StoreHandler>().create(Quest::class.java)!!
             quest.name = viewHolder.name
             quest.isPublic = viewHolder.isPublic
             quest.latitude = latLng.latitude
@@ -158,11 +281,7 @@ class QuestHandler(private val on: On) {
         viewHolder.view.finishDateText.visible = viewHolder.finish != null
         viewHolder.view.finishDateText.text = when {
             viewHolder.finish?.date != null -> on<TimeStr>().prettyDate(viewHolder.finish!!.date!!)
-            viewHolder.finish?.duration != null -> on<ResourcesHandler>().resources.getQuantityString(when (viewHolder.finish?.unit) {
-                QuestDurationUnit.Month -> R.plurals.date_approx_months
-                QuestDurationUnit.Week -> R.plurals.date_approx_weeks
-                else -> R.plurals.date_approx_days
-            }, viewHolder.finish?.duration ?: 1, viewHolder.finish?.duration ?: 1)
+            viewHolder.finish?.duration != null -> durationText(viewHolder.finish!!)
             else -> ""
         }
         viewHolder.view.finishDateText.setOnClickListener {
@@ -176,6 +295,12 @@ class QuestHandler(private val on: On) {
             }
         }
     }
+
+    private fun durationText(finish: QuestFinish) = on<ResourcesHandler>().resources.getQuantityString(when (finish.unit) {
+        QuestDurationUnit.Month -> R.plurals.date_approx_months
+        QuestDurationUnit.Week -> R.plurals.date_approx_weeks
+        else -> R.plurals.date_approx_days
+    }, finish.duration ?: 1, finish.duration ?: 1)
 
     private fun updateToggleButtonWeights(group: MaterialButtonToggleGroup) {
         group.children.forEach {

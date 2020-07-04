@@ -21,6 +21,7 @@ class AlertConfig(private val showCallback: (AlertConfig) -> Unit) {
     var onTextViewSubmitCallback: ((value: String) -> Unit)? = null
     var onAfterViewCreated: ((alertConfig: AlertConfig, view: View) -> Unit)? = null
     var buttonClickCallback: ((alertResult: Any?) -> Boolean)? = null
+    var cancelIsNegative: Boolean = false
     var alertResult: Any? = null
     @StyleRes var theme = R.style.AppTheme_AlertDialog
     var dialog: AlertDialog? = null

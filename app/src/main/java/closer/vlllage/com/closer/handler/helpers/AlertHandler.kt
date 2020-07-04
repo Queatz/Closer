@@ -80,6 +80,12 @@ class AlertHandler constructor(private val on: On) {
             dialogBuilder.setTitle(alertConfig.title)
         }
 
+        if (alertConfig.cancelIsNegative) {
+            dialogBuilder.setOnCancelListener {
+                alertConfig.negativeButtonCallback?.invoke(alertConfig.alertResult)
+            }
+        }
+
         val alertDialog = dialogBuilder.create()
 
         textView?.setOnEditorActionListener { v, actionId, event ->

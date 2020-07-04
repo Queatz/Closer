@@ -438,6 +438,8 @@
     <string name="start_quest_confirmation">You started questing!</string>
     <string name="name_this_quest">Give this quest a name.</string>
     <string name="quests_need_one_activity">Quests must have at least one activity.</string>
+    <string name="stopped_quest_confirmation">You stopped questing</string>
+    <string name="finished_quest_confirmation">You finished the quest!</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
