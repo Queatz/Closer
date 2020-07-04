@@ -146,16 +146,16 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.start_quest)) {
                         on<QuestHandler>().startQuest(quest) {}
-                    },
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.stop_quest)) {
-                        on<QuestHandler>().stopQuest(holder.progressByMe!!) {}
-                    },
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)) {
-                        on<QuestHandler>().resumeQuest(holder.progressByMe!!) {}
-                    },
+                    }.visible(holder.progressByMe == null),
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.finish_quest)) {
                         on<QuestHandler>().finishQuest(holder.progressByMe!!) {}
-                    },
+                    }.visible(holder.progressByMe?.let { it.finished == null && it.active == true } ?: false),
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.stop_quest)) {
+                        on<QuestHandler>().stopQuest(holder.progressByMe!!) {}
+                    }.visible(holder.progressByMe?.active ?: false),
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)) {
+                        on<QuestHandler>().resumeQuest(holder.progressByMe!!) {}
+                    }.visible(holder.progressByMe?.let { it.finished == null && it.active?.let { !it } ?: false } ?: false),
                     MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {}
             )
         }
