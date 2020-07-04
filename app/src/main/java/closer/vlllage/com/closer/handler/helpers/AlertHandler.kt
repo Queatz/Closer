@@ -86,6 +86,10 @@ class AlertHandler constructor(private val on: On) {
             }
         }
 
+        if (alertConfig.iconResId != null) {
+            dialogBuilder.setIcon(alertConfig.iconResId!!)
+        }
+
         val alertDialog = dialogBuilder.create()
 
         textView?.setOnEditorActionListener { v, actionId, event ->

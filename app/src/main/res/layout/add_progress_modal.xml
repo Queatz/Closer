@@ -10,15 +10,15 @@
         android:id="@+id/progressText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padDouble"
-        android:layout_marginEnd="@dimen/padDouble"
+        android:layout_marginStart="@dimen/padDialog"
+        android:layout_marginEnd="@dimen/padDialog"
         android:layout_marginTop="@dimen/padDouble"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/progressSeekBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/textInverse"
-        android:textAppearance="?android:textAppearanceMedium"
+        android:textAppearance="?android:textAppearanceSmall"
         tools:text="50% progress"
         android:paddingBottom="@dimen/padHalf" />
 

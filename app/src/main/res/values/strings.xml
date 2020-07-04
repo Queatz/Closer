@@ -442,11 +442,24 @@
     <string name="quests_need_one_activity">Quests must have at least one activity.</string>
     <string name="stopped_quest_confirmation">You stopped questing</string>
     <string name="finished_quest_confirmation">You finished the quest!</string>
+    <string name="resume_quest_confirmation">You resumed the quest!</string>
     <string name="finish_x">finish %1$s</string>
     <string name="finish_by_x">finish by %1$s</string>
     <string name="finish_in_x">finish in %1$s</string>
     <string name="update_progress">Update progress</string>
+    <string name="update_x">Update %1$s</string>
     <string name="no_finish_date">no finish date</string>
+    <string name="done">☑ Done</string>
+    <string name="x_remaining">%1$s remaining</string>
+    <string name="x_percent_remaining">%1$s%% remaining</string>
+    <string name="x_of_y_done">%1$s of %2$s done</string>
+    <string name="stop_quest">Stop quest</string>
+    <string name="resume_quest">Resume quest</string>
+    <string name="finish_quest">Finish quest</string>
+    <string name="finished_x">Finished %1$s</string>
+    <string name="in_progress_x">In progress, %1$s</string>
+    <string name="stopped_x">Stopped %1$s</string>
+    <string name="not_started_x">Not started, %1$s</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

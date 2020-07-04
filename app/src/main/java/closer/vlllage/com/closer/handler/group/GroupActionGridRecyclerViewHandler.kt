@@ -40,8 +40,4 @@ class GroupActionGridRecyclerViewHandler constructor(private val on: On) {
 
         actionRecyclerView.adapter = adapter
     }
-
-    fun setLayout(layout: GroupActionDisplay.Layout) {
-        adapter.layout = layout
-    }
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter
@@ -18,6 +19,7 @@ import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandle
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapHandler
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -44,7 +46,7 @@ class QuestHandler(private val on: On) {
         on<StoreHandler>().store.box(QuestProgress::class).query(
                 QuestProgress_.questId.equal(quest.id!!)
         )
-                .orderDesc(QuestProgress_.created)
+                .orderDesc(QuestProgress_.updated)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
@@ -67,7 +69,7 @@ class QuestHandler(private val on: On) {
                 }
     }
 
-    fun startQuest(quest: Quest, callback: (result: Boolean) -> Unit) {
+    fun startQuest(quest: Quest, callback: (result: QuestProgress?) -> Unit) {
         on<AlertHandler>().make().apply {
             title = on<ResourcesHandler>().resources.getString(R.string.start_quest)
             message = on<ResourcesHandler>().resources.getString(R.string.start_quest_details)
@@ -84,12 +86,23 @@ class QuestHandler(private val on: On) {
                 on<SyncHandler>().sync(questProgress) { openQuest(quest) }
 
                 on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.start_quest_confirmation))
-                callback(true)
+                callback(questProgress)
             }
-            negativeButtonCallback = { callback(false) }
+            negativeButtonCallback = { callback(null) }
             cancelIsNegative = true
             show()
         }
+    }
+
+    fun resumeQuest(questProgress: QuestProgress, callback: () -> Unit) {
+        questProgress.finished = null
+        questProgress.stopped = null
+        questProgress.active = true
+
+        on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.resume_quest_confirmation))
+        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+        on<SyncHandler>().sync(questProgress)
+        callback()
     }
 
     fun openQuest(quest: Quest) {
@@ -218,6 +231,8 @@ class QuestHandler(private val on: On) {
             when (it.type) {
                 QuestActionType.Percent -> {
                     on<AlertHandler>().make().apply {
+                        title = "${on<AccountHandler>().name} ${groupAction.intent}"
+                        message = groupAction.about
                         layoutResId = R.layout.add_progress_modal
                         onAfterViewCreated = { alertConfig, view ->
                             alertConfig.alertResult = questProgress.progress?.items?.get(groupAction.id!!)?.current ?: 0
@@ -233,7 +248,9 @@ class QuestHandler(private val on: On) {
                                 override fun onStopTrackingTouch(seekBar: SeekBar?) {}
                             })
                         }
-                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_progress)
+                        negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
+                        negativeButtonCallback = { callback?.invoke() }
+                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_x, quest.name)
                         positiveButtonCallback = {
                             addProgressInternal(questProgress, groupAction, it as Int, set = true)
                             callback?.invoke()
@@ -242,8 +259,18 @@ class QuestHandler(private val on: On) {
                     }
                 }
                 else -> {
-                    addProgressInternal(questProgress, groupAction, 1)
-                    callback?.invoke()
+                    on<AlertHandler>().make().apply {
+                        title = "${on<AccountHandler>().name} ${groupAction.intent}"
+                        message = "${groupAction.about?.let { "${it}\n\n" } ?: ""}${on<ResourcesHandler>().resources.getString(R.string.x_of_y_done, it.current + 1, it.value)}"
+                        negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
+                        negativeButtonCallback = { callback?.invoke() }
+                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_x, quest.name)
+                        positiveButtonCallback = {
+                            addProgressInternal(questProgress, groupAction, 1)
+                            callback?.invoke()
+                        }
+                        show()
+                    }
                 }
             }
         } ?: on<DefaultAlerts>().thatDidntWork()

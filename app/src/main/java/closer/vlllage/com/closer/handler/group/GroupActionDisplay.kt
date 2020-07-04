@@ -82,11 +82,13 @@ class GroupActionDisplay constructor(private val on: On) {
 
                 when (questAction.type) {
                     QuestActionType.Percent -> {
-                        holder.progressText?.text = if (questAction.current >= 100) "☑ Done" else "${on<NumberHelper>().format(100 - questAction.current)}% remaining"
+                        holder.progressText?.text = if (questAction.current >= 100) on<ResourcesHandler>().resources.getString(R.string.done)
+                        else on<ResourcesHandler>().resources.getString(R.string.x_percent_remaining, on<NumberHelper>().format(100 - questAction.current))
                         holder.progressBar?.progress = questAction.current
                     }
                     QuestActionType.Repeat -> {
-                        holder.progressText?.text = if (questAction.current >= questAction.value) "☑ Done" else "${on<NumberHelper>().format(questAction.value - questAction.current)} remaining"
+                        holder.progressText?.text = if (questAction.current >= questAction.value) on<ResourcesHandler>().resources.getString(R.string.done)
+                        else on<ResourcesHandler>().resources.getString(R.string.x_remaining, on<NumberHelper>().format(questAction.value - questAction.current))
                         holder.progressBar?.progress = ((questAction.current.toFloat() / questAction.value.toFloat()) * 100).toInt()
                     }
                 }
@@ -213,7 +215,7 @@ class GroupActionDisplay constructor(private val on: On) {
                     }
                 }
 
-                title = on<AccountHandler>().name + " " + groupAction.intent
+                title = "${on<AccountHandler>().name} ${groupAction.intent}"
                 message = "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it"} ?: ""}".let { if (it.isBlank()) null else it }
                 positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_in, group.name ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
                 show()

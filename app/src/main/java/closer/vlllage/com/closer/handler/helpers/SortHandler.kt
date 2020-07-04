@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import java.util.*
+import kotlin.math.abs
 
 class SortHandler constructor(private val on: On) {
 
@@ -139,6 +140,10 @@ class SortHandler constructor(private val on: On) {
 
             distanceBetween(o1.latitude!!, o1.longitude!!, latLng.latitude, latLng.longitude, d1)
             distanceBetween(o2.latitude!!, o2.longitude!!, latLng.latitude, latLng.longitude, d2)
+
+            if (abs(d1[0] - d2[0]) < on<HowFar>().about1Mile) {
+                return@Comparator (o2.updated ?: Date(0)).compareTo(o1.updated ?: Date(0))
+            }
 
             return@Comparator if (d1[0] == d2[0]) 0 else if (d1[0] < d2[0]) -1 else 1
         }
