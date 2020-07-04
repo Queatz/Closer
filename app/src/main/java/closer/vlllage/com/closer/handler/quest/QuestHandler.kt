@@ -266,32 +266,36 @@ class QuestHandler(private val on: On) {
     }
 
     fun questFinishText(quest: Quest, relativeToDate: Date? = null): String {
-        val finish = quest.flow!!.finish!!
-
-        return if (relativeToDate == null) {
-            when {
-                finish.date != null -> on<ResourcesHandler>().resources.getString(R.string.finish_by_x, "${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})")
-                else -> on<ResourcesHandler>().resources.getString(R.string.finish_in_x, durationText(finish))
-            }
-        } else {
-            when {
-                finish.date != null -> on<ResourcesHandler>().resources.getString(R.string.finish_by_x, "${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})")
-                else -> {
-                    val calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
-                        time = relativeToDate
-
-                        add(when (finish.unit) {
-                            QuestDurationUnit.Month -> Calendar.MONTH
-                            QuestDurationUnit.Week -> Calendar.WEEK_OF_YEAR
-                            else -> Calendar.DAY_OF_MONTH
-                        }, finish.duration!!)
-                    }
-
-                    on<ResourcesHandler>().resources.getString(R.string.finish_x,
-                            "${on<TimeStr>().approx(calendar.time, preposition = true)} (${on<TimeStr>().prettyDate(calendar.time)})")
+        val finish = quest.flow?.finish
+        
+        return when {
+            finish == null -> on<ResourcesHandler>().resources.getString(R.string.no_finish_date)
+            relativeToDate == null -> {
+                when {
+                    finish.date != null -> on<ResourcesHandler>().resources.getString(R.string.finish_by_x, "${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})")
+                    else -> on<ResourcesHandler>().resources.getString(R.string.finish_in_x, durationText(finish))
                 }
             }
+            else -> {
+                when {
+                    finish.date != null -> on<ResourcesHandler>().resources.getString(R.string.finish_by_x, "${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})")
+                    else -> {
+                        val calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
+                            time = relativeToDate
 
+                            add(when (finish.unit) {
+                                QuestDurationUnit.Month -> Calendar.MONTH
+                                QuestDurationUnit.Week -> Calendar.WEEK_OF_YEAR
+                                else -> Calendar.DAY_OF_MONTH
+                            }, finish.duration!!)
+                        }
+
+                        on<ResourcesHandler>().resources.getString(R.string.finish_x,
+                                "${on<TimeStr>().approx(calendar.time, preposition = true)} (${on<TimeStr>().prettyDate(calendar.time)})")
+                    }
+                }
+
+            }
         }
     }
 

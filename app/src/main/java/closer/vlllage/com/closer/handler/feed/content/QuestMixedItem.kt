@@ -47,6 +47,9 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
     override fun onViewRecycled(holder: QuestViewHolder) {
         holder.on.off()
+        holder.progress = listOf()
+        holder.progressByMe = null
+        holder.activeProgress = null
     }
 
     private fun bindQuest(holder: QuestViewHolder, quest: Quest) {
@@ -120,8 +123,8 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         }
 
         holder.on<GroupActionDisplay>().questActionConfigProvider = { groupAction ->
-            quest.flow?.items?.first { it.groupActionId == groupAction.id!! }.also {
-                it?.current = holder.activeProgress?.progress?.items?.get(groupAction.id!!)?.current ?: 0
+            quest.flow?.items?.firstOrNull { it.groupActionId == groupAction.id!! }?.also {
+                it.current = holder.activeProgress?.progress?.items?.get(groupAction.id!!)?.current ?: 0
             }
         }
 
