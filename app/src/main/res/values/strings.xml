@@ -422,6 +422,7 @@
     <string name="enter_quest_name">Name this quest</string>
     <string name="edit_quest_activity">Edit quest activity</string>
     <string name="percent">Percent</string>
+    <string name="x_progress">%1$s%% progress</string>
     <string name="repeat">Repeat</string>
     <string name="times">Number of times</string>
     <string name="quest_disclaimer">Quests can’t be modified after they’re created.</string>
@@ -444,6 +445,7 @@
     <string name="finish_x">finish %1$s</string>
     <string name="finish_by_x">finish by %1$s</string>
     <string name="finish_in_x">finish in %1$s</string>
+    <string name="update_progress">Update progress</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

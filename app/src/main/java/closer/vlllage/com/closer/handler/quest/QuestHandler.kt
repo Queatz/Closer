@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.quest
 
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
@@ -22,6 +23,7 @@ import closer.vlllage.com.closer.store.models.*
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import kotlinx.android.synthetic.main.add_progress_modal.view.*
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.actionRecyclerView
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.searchActivities
 import kotlinx.android.synthetic.main.create_quest_modal.view.*
@@ -211,16 +213,52 @@ class QuestHandler(private val on: On) {
         on<SyncHandler>().sync(questProgress)
     }
 
-    fun addProgress(questProgress: QuestProgress, groupAction: GroupAction, amount: Int = 1) {
+    fun addProgress(quest: Quest, questProgress: QuestProgress, groupAction: GroupAction, callback: (() -> Unit)? = null) {
+        quest.flow?.items?.firstOrNull { it.groupActionId == groupAction.id }?.let {
+            when (it.type) {
+                QuestActionType.Percent -> {
+                    on<AlertHandler>().make().apply {
+                        layoutResId = R.layout.add_progress_modal
+                        onAfterViewCreated = { alertConfig, view ->
+                            alertConfig.alertResult = questProgress.progress?.items?.get(groupAction.id!!)?.current ?: 0
+                            view.progressSeekBar.progress = alertConfig.alertResult as Int
+                            view.progressText.text = on<ResourcesHandler>().resources.getString(R.string.x_progress, view.progressSeekBar.progress.toString())
+                            view.progressSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                                    alertConfig.alertResult = progress
+                                    view.progressText.text = on<ResourcesHandler>().resources.getString(R.string.x_progress, progress.toString())
+                                }
+
+                                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                            })
+                        }
+                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_progress)
+                        positiveButtonCallback = {
+                            addProgressInternal(questProgress, groupAction, it as Int, set = true)
+                            callback?.invoke()
+                        }
+                        show()
+                    }
+                }
+                else -> {
+                    addProgressInternal(questProgress, groupAction, 1)
+                    callback?.invoke()
+                }
+            }
+        } ?: on<DefaultAlerts>().thatDidntWork()
+    }
+
+    private fun addProgressInternal(questProgress: QuestProgress, groupAction: GroupAction, amount: Int, set: Boolean = false) {
         if (!questProgress.progress!!.items.containsKey(groupAction.id!!)) {
             questProgress.progress!!.items[groupAction.id!!] = QuestProgressAction().apply {
                 groupActionId = groupAction.id!!
                 current = amount
             }
         } else {
-            questProgress.progress!!.items[groupAction.id!!]!!.current =
-                    questProgress.progress!!.items[groupAction.id!!]!!.current?.plus(amount)
-                            ?: amount
+            questProgress.progress!!.items[groupAction.id!!]!!.current = if (set) amount else
+                questProgress.progress!!.items[groupAction.id!!]!!.current?.plus(amount)
+                        ?: amount
         }
 
         on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)

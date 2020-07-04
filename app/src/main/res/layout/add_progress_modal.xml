@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/progressText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padDouble"
+        android:layout_marginEnd="@dimen/padDouble"
+        android:layout_marginTop="@dimen/padDouble"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/progressSeekBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/textInverse"
+        android:textAppearance="?android:textAppearanceMedium"
+        tools:text="50% progress"
+        android:paddingBottom="@dimen/padHalf" />
+
+    <SeekBar
+        android:id="@+id/progressSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/pad"
+        android:layout_marginEnd="@dimen/pad"
+        android:layout_marginTop="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/progressText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:max="100" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

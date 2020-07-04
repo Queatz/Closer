@@ -127,15 +127,13 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.on<GroupActionDisplay>().onGroupActionClickListener = { it, proceed ->
             if (holder.progressByMe == null) {
-                on<QuestHandler>().startQuest(quest) { quest ->
+                on<QuestHandler>().startQuest(quest) { _ ->
                     // TODO add progress along side group action taken
-                    on<QuestHandler>().addProgress(holder.progressByMe!!, it)
-                    proceed()
+                    on<QuestHandler>().addProgress(quest, holder.progressByMe!!, it) { proceed() }
                 }
             } else {
                 // TODO add progress along side group action taken
-                on<QuestHandler>().addProgress(holder.progressByMe!!, it)
-                proceed()
+                on<QuestHandler>().addProgress(quest, holder.progressByMe!!, it) { proceed() }
             }
         }
 
