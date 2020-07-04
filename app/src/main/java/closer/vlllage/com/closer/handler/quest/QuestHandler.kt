@@ -95,14 +95,25 @@ class QuestHandler(private val on: On) {
     }
 
     fun resumeQuest(questProgress: QuestProgress, callback: () -> Unit) {
-        questProgress.finished = null
-        questProgress.stopped = null
-        questProgress.active = true
+        on<AlertHandler>().make().apply {
+            title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)
+            message = on<ResourcesHandler>().resources.getString(R.string.resume_quest_details)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.resume_quest)
+            negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+            positiveButtonCallback = {
+                questProgress.finished = null
+                questProgress.stopped = null
+                questProgress.active = true
 
-        on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.resume_quest_confirmation))
-        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-        on<SyncHandler>().sync(questProgress)
-        callback()
+                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.resume_quest_confirmation))
+                on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+                on<SyncHandler>().sync(questProgress)
+                callback()
+            }
+            negativeButtonCallback = { callback() }
+            cancelIsNegative = true
+            show()
+        }
     }
 
     fun openQuest(quest: Quest) {
@@ -212,18 +223,48 @@ class QuestHandler(private val on: On) {
         }
     }
 
-    fun endQuest(questProgress: QuestProgress, finished: Boolean = true) {
-        questProgress.finished = if (finished) Date() else null
-        questProgress.stopped = if (!finished) Date() else null
-        questProgress.active = false
+    fun finishQuest(questProgress: QuestProgress, callback: () -> Unit) {
+        on<AlertHandler>().make().apply {
+            title = on<ResourcesHandler>().resources.getString(R.string.finish_quest)
+            message = on<ResourcesHandler>().resources.getString(R.string.finish_quest_details)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.finish_quest)
+            negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+            positiveButtonCallback = {
+                questProgress.finished = Date()
+                questProgress.active = false
 
-        if (finished) {
-            on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.finished_quest_confirmation))
-        } else {
-            on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.stopped_quest_confirmation))
+                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.finished_quest_confirmation))
+
+                on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+                on<SyncHandler>().sync(questProgress)
+                callback()
+            }
+            negativeButtonCallback = { callback() }
+            cancelIsNegative = true
+            show()
         }
-        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-        on<SyncHandler>().sync(questProgress)
+    }
+
+    fun stopQuest(questProgress: QuestProgress, callback: () -> Unit) {
+        on<AlertHandler>().make().apply {
+            title = on<ResourcesHandler>().resources.getString(R.string.stop_quest)
+            message = on<ResourcesHandler>().resources.getString(R.string.stop_quest_details)
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.stop_quest)
+            negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+            positiveButtonCallback = {
+                questProgress.stopped = Date()
+                questProgress.active = false
+
+                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.stopped_quest_confirmation))
+
+                on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+                on<SyncHandler>().sync(questProgress)
+                callback()
+            }
+            negativeButtonCallback = { callback() }
+            cancelIsNegative = true
+            show()
+        }
     }
 
     fun addProgress(quest: Quest, questProgress: QuestProgress, groupAction: GroupAction, callback: (() -> Unit)? = null) {
@@ -261,7 +302,7 @@ class QuestHandler(private val on: On) {
                 else -> {
                     on<AlertHandler>().make().apply {
                         title = "${on<AccountHandler>().name} ${groupAction.intent}"
-                        message = "${groupAction.about?.let { "${it}\n\n" } ?: ""}${on<ResourcesHandler>().resources.getString(R.string.x_of_y_done, it.current + 1, it.value)}"
+                        message = "${groupAction.about?.let { "${it}\n\n" } ?: ""}${on<ResourcesHandler>().resources.getString(R.string.x_of_y_done, (it.current + 1).toString(), it.value.toString())}"
                         negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
                         negativeButtonCallback = { callback?.invoke() }
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_x, quest.name)

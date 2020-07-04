@@ -148,13 +148,13 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                         on<QuestHandler>().startQuest(quest) {}
                     },
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.stop_quest)) {
-                        on<QuestHandler>().endQuest(holder.progressByMe!!, false)
+                        on<QuestHandler>().stopQuest(holder.progressByMe!!) {}
                     },
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)) {
                         on<QuestHandler>().resumeQuest(holder.progressByMe!!) {}
                     },
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.finish_quest)) {
-                        on<QuestHandler>().endQuest(holder.progressByMe!!)
+                        on<QuestHandler>().finishQuest(holder.progressByMe!!) {}
                     },
                     MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {}
             )

@@ -460,6 +460,9 @@
     <string name="in_progress_x">In progress, %1$s</string>
     <string name="stopped_x">Stopped %1$s</string>
     <string name="not_started_x">Not started, %1$s</string>
+    <string name="resume_quest_details">You\'ll start off where you left off.</string>
+    <string name="stop_quest_details">You\'ll be able to resume this quest.</string>
+    <string name="finish_quest_details">Mark this quest as finished when this quest\'s objective is completed.</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
