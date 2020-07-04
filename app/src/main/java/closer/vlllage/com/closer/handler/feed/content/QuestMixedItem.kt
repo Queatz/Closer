@@ -33,9 +33,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
     override fun getMixedItemClass() = QuestMixedItem::class
     override fun getMixedItemType() = MixedItemType.Quest
-
     override fun areItemsTheSame(old: QuestMixedItem, new: QuestMixedItem) = old.quest.objectBoxId == new.quest.objectBoxId
-
     override fun areContentsTheSame(old: QuestMixedItem, new: QuestMixedItem) = false
 
     override fun onCreateViewHolder(parent: ViewGroup) = QuestViewHolder(LayoutInflater.from(parent.context)
@@ -55,6 +53,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.about.text = listOf(
                 "Not started, finish by September 22nd, 2021 (in 6 months)",
+                "Not started, finish in 5 weeks",
                 "In Progress, finish by May 7th, 2021 (in 1 week)",
                 "Finished on October 6rd, 2021 (2 years ago)",
                 "In Progress, finish by May 3rd, 2021 (in 22 days)",
@@ -104,15 +103,21 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                     holder.on<DisposableHandler>().add(it)
                 }
 
+        holder.on<GroupActionDisplay>().questActionConfigProvider = { groupAction ->
+            quest.flow?.items?.first { it.groupActionId == groupAction.id!! }.also {
+                it?.current = 1
+            }
+        }
+
         holder.on<GroupActionDisplay>().onGroupActionClickListener = { it, proceed ->
             if (true/* quest not started */) {
                 on<AlertHandler>().make().apply {
-                    title = "Start quest"
-                    message = "Activities will contribute towards this quest."
-                    positiveButton = "Start quest"
+                    title = on<ResourcesHandler>().resources.getString(R.string.start_quest)
+                    message = on<ResourcesHandler>().resources.getString(R.string.start_quest_details)
+                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.start_quest)
                     negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
                     positiveButtonCallback = {
-                        on<ToastHandler>().show("You started questing!")
+                        on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.start_quest_confirmation))
                         proceed()
                     }
                     negativeButtonCallback = { proceed() }
@@ -128,7 +133,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Restart this quest") {},
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Finish this quest") {},
                     MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, title = "See people who did this quest") {},
-                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = "Open group") {}
+                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {}
             )
         }
     }

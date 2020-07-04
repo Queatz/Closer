@@ -1057,7 +1057,7 @@
     },
     {
       "id": "18:1713986148483733624",
-      "lastPropertyId": "9:1092895068996831765",
+      "lastPropertyId": "12:1344675403384950838",
       "name": "Quest",
       "properties": [
         {
@@ -1101,12 +1101,81 @@
           "id": "8:6488650479512816231",
           "name": "flow",
           "type": 9
+        },
+        {
+          "id": "10:6065471255460035283",
+          "name": "isPublic",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "11:5258424651913102558",
+          "name": "latitude",
+          "type": 8,
+          "flags": 2
+        },
+        {
+          "id": "12:1344675403384950838",
+          "name": "longitude",
+          "type": 8,
+          "flags": 2
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "19:4548151045589213870",
+      "lastPropertyId": "8:572548131751482389",
+      "name": "QuestProgressAction",
+      "properties": [
+        {
+          "id": "1:6663730418099283105",
+          "name": "objectBoxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5220772922502646804",
+          "name": "id",
+          "type": 9
+        },
+        {
+          "id": "3:2140677550257459784",
+          "name": "localOnly",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "4:591676073078202689",
+          "name": "updated",
+          "type": 10
+        },
+        {
+          "id": "5:7004151386177069014",
+          "name": "created",
+          "type": 10
+        },
+        {
+          "id": "6:5191214246192446441",
+          "name": "questId",
+          "type": 9
+        },
+        {
+          "id": "7:5750299220384291330",
+          "name": "groupActionId",
+          "type": 9
+        },
+        {
+          "id": "8:572548131751482389",
+          "name": "progress",
+          "type": 5,
+          "flags": 2
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "18:1713986148483733624",
+  "lastEntityId": "19:4548151045589213870",
   "lastIndexId": "10:9008007724142274179",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

@@ -47,7 +47,7 @@ class QuestHandler(private val on: On) {
                             ?: QuestAction(groupActionId = it.id!!).also { questAction ->
                                 viewHolder.activityConfig[it.id!!] = questAction
                             }) { refresh(viewHolder) } }
-                on<GroupActionDisplay>().questActionConfigProvider = { viewHolder.activityConfig[it] }
+                on<GroupActionDisplay>().questActionConfigProvider = { viewHolder.activityConfig[it.id!!] }
 
                 val adapter = GroupActionAdapter(On(on).apply { use<GroupActionDisplay>() }, GroupActionDisplay.Layout.PHOTO) { it, _ ->
                     viewHolder.activities.add(it)
@@ -115,11 +115,11 @@ class QuestHandler(private val on: On) {
 
                 when {
                     viewHolder.name.isBlank() -> {
-                        on<DefaultAlerts>().message("Give this quest a name.")
+                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.name_this_quest))
                         false
                     }
                     viewHolder.activities.isEmpty() -> {
-                        on<DefaultAlerts>().message("Quests must have at least 1 activity.")
+                        on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.quests_need_one_activity))
                         false
                     }
                     else -> true

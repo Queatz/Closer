@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.store.models
 
 import closer.vlllage.com.closer.store.QuestFlowJsonConverter
-import com.google.android.gms.maps.model.LatLng
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import java.util.*
@@ -20,7 +19,7 @@ class Quest : BaseObject() {
 
 data class QuestFlow constructor(
         var finish: QuestFinish? = null,
-        var items: List<QuestAction> = listOf<QuestAction>()
+        var items: List<QuestAction> = listOf()
 )
 
 data class QuestAction constructor(

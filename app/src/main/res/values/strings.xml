@@ -433,6 +433,11 @@
     <string name="weeks">Weeks</string>
     <string name="months">Months</string>
     <string name="add_an_activity">Add an activity</string>
+    <string name="start_quest">Start quest</string>
+    <string name="start_quest_details">Activities will contribute towards this quest.</string>
+    <string name="start_quest_confirmation">You started questing!</string>
+    <string name="name_this_quest">Give this quest a name.</string>
+    <string name="quests_need_one_activity">Quests must have at least one activity.</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

@@ -38,7 +38,7 @@ class GroupActionDisplay constructor(private val on: On) {
     var showGroupName: Boolean = true
     var launchGroup: Boolean = true
     var onGroupActionClickListener: GroupActionClickListener? = null
-    var questActionConfigProvider: ((groupActionId: String) -> QuestAction?)? = null
+    var questActionConfigProvider: ((groupAction: GroupAction) -> QuestAction?)? = null
 
     fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
         render(GroupActionViewHolder(view, about), groupAction, layout, scale)
@@ -76,17 +76,17 @@ class GroupActionDisplay constructor(private val on: On) {
         }
 
         if (layout == Layout.QUEST) {
-            questActionConfigProvider?.invoke(groupAction.id!!)?.let { questAction ->
+            questActionConfigProvider?.invoke(groupAction)?.let { questAction ->
                 holder.progressBar?.visible = true
                 holder.progressText?.visible = true
 
                 when (questAction.type) {
                     QuestActionType.Percent -> {
-                        holder.progressText?.text = "${on<NumberHelper>().format(100 - questAction.current)}% remaining"
+                        holder.progressText?.text = if (questAction.current == 100) "☑ Done" else "${on<NumberHelper>().format(100 - questAction.current)}% remaining"
                         holder.progressBar?.progress = questAction.current
                     }
                     QuestActionType.Repeat -> {
-                        holder.progressText?.text = "${on<NumberHelper>().format(questAction.value - questAction.current)} remaining"
+                        holder.progressText?.text = if (questAction.value == questAction.current) "☑ Done" else "${on<NumberHelper>().format(questAction.value - questAction.current)} remaining"
                         holder.progressBar?.progress = ((questAction.current.toFloat() / questAction.value.toFloat()) * 100).toInt()
                     }
                 }

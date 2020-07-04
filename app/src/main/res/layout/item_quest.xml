@@ -7,6 +7,7 @@
     android:clipToPadding="false"
     android:elevation="@dimen/elevation"
     android:background="@color/white"
+    android:isScrollContainer="true"
     android:clickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,6 +17,7 @@
         android:layout_marginBottom="@dimen/padDouble"
         android:background="@drawable/clickable_forestgreen_rounded_12dp"
         android:clickable="true"
+        android:isScrollContainer="true"
         android:elevation="@dimen/elevation">
 
         <TextView
