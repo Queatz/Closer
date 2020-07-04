@@ -82,11 +82,11 @@ class GroupActionDisplay constructor(private val on: On) {
 
                 when (questAction.type) {
                     QuestActionType.Percent -> {
-                        holder.progressText?.text = if (questAction.current == 100) "☑ Done" else "${on<NumberHelper>().format(100 - questAction.current)}% remaining"
+                        holder.progressText?.text = if (questAction.current >= 100) "☑ Done" else "${on<NumberHelper>().format(100 - questAction.current)}% remaining"
                         holder.progressBar?.progress = questAction.current
                     }
                     QuestActionType.Repeat -> {
-                        holder.progressText?.text = if (questAction.value == questAction.current) "☑ Done" else "${on<NumberHelper>().format(questAction.value - questAction.current)} remaining"
+                        holder.progressText?.text = if (questAction.current >= questAction.value) "☑ Done" else "${on<NumberHelper>().format(questAction.value - questAction.current)} remaining"
                         holder.progressBar?.progress = ((questAction.current.toFloat() / questAction.value.toFloat()) * 100).toInt()
                     }
                 }

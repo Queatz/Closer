@@ -17,12 +17,11 @@ import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.person_item.view.*
 
-class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>() {
+class PeopleAdapter(private val on: On, private val small: Boolean = false) : RecyclerView.Adapter<PeopleViewHolder>() {
 
     var people = mutableListOf<Phone>()
         set(value) {
             if (field.isEmpty()) {
-                field.clear()
                 field.addAll(value)
                 notifyDataSetChanged()
                 return
@@ -47,7 +46,8 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeopleViewHolder {
-        return PeopleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.person_item, parent, false))
+        return PeopleViewHolder(LayoutInflater.from(parent.context).inflate(
+                if (small) R.layout.person_item_small else R.layout.person_item, parent, false))
     }
 
     override fun getItemCount() = people.size
@@ -55,8 +55,8 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
     override fun onBindViewHolder(holder: PeopleViewHolder, position: Int) {
         val person = people[position]
 
-        holder.itemView.name.text = on<NameHandler>().getName(person)
-        holder.itemView.active.text = on<TimeStr>().tiny(person.updated)
+        holder.itemView.name?.text = on<NameHandler>().getName(person)
+        holder.itemView.active?.text = on<TimeStr>().tiny(person.updated)
         holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(person.updated)
 
         if (person.photo == null) {
@@ -65,6 +65,10 @@ class PeopleAdapter(private val on: On) : RecyclerView.Adapter<PeopleViewHolder>
         } else {
             on<PhotoHelper>().loadCircle(holder.itemView.photo, "${person.photo}?s=256")
             holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_CROP
+        }
+
+        holder.itemView.setOnClickListener {
+            on<GroupActivityTransitionHandler>().showGroupForPhone(holder.itemView, person.id!!)
         }
 
         holder.itemView.photo.setOnClickListener {

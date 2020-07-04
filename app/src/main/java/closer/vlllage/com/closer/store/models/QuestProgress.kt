@@ -10,7 +10,8 @@ import java.util.*
 class QuestProgress : BaseObject() {
     var questId: String? = null
     var ofId: String? = null
-    @Uid(4546529961485216873L) var finished: Date? = null
+    val groupId: String? = null
+    var finished: Date? = null
     var stopped: Date? = null
     var active: Boolean? = null
 

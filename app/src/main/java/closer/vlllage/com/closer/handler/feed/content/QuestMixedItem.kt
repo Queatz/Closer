@@ -3,12 +3,15 @@ package closer.vlllage.com.closer.handler.feed.content
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.quest.QuestHandler
+import closer.vlllage.com.closer.handler.quest.QuestProgressAdapter
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
@@ -22,6 +25,8 @@ class QuestViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemT
     lateinit var on: On
     var progress: List<QuestProgress> = listOf()
     var progressByMe: QuestProgress? = null
+    var activeProgress: QuestProgress? = null
+    lateinit var questProgressAdapter: QuestProgressAdapter
     val about = itemView.about!!
     val name = itemView.name!!
     val card = itemView.card!!
@@ -51,21 +56,33 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             use<GroupActionGridRecyclerViewHandler>()
         }
 
+        holder.questProgressAdapter = QuestProgressAdapter(holder.on) { it, view ->
+            if (holder.activeProgress == it) {
+                on<GroupActivityTransitionHandler>().showGroupMessages(view, it.groupId)
+            } else {
+                holder.activeProgress = it
+                refreshProgress(holder, quest)
+            }
+        }
+
+        holder.itemView.peopleRecyclerView.adapter = holder.questProgressAdapter
+        holder.itemView.peopleRecyclerView.layoutManager = LinearLayoutManager(
+                holder.itemView.peopleRecyclerView.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+        )
+
         holder.on<QuestHandler>().questProgress(quest) {
             holder.progress = it
+            holder.questProgressAdapter.questProgresses = it.toMutableList()
 
             holder.progressByMe = holder.progress.find { it.ofId == on<PersistenceHandler>().phoneId }
 
-            holder.about.text = holder.progressByMe?.let { progress ->
-                when {
-                    progress.finished != null -> "Finished ${on<TimeStr>().prettyDate(progress.finished!!)}"
-                    progress.active == true -> "In progress, ${on<QuestHandler>().questFinishText(quest, progress.created)}"
-                    progress.stopped != null -> "Stopped ${on<TimeStr>().prettyDate(progress.stopped!!)}"
-                    else -> "Unknown, ${on<QuestHandler>().questFinishText(quest)}"
-                }
-            } ?: let {
-                "Not started, ${on<QuestHandler>().questFinishText(quest)}"
+            if (holder.activeProgress == null) {
+                holder.activeProgress = holder.progressByMe
             }
+
+            refreshProgress(holder, quest)
         }
 
         holder.on<GroupActionGridRecyclerViewHandler>().attach(holder.itemView.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
@@ -80,7 +97,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             on<QuestHandler>().openQuest(quest)
         }
 
-        // todo quest group
+        // todo load quest group
         on<GroupScopeHandler>().setup(Group().apply { isPublic = Random.nextBoolean() }, holder.itemView.scopeIndicatorButton)
 
         holder.on<LightDarkHandler>().onLightChanged.subscribe {
@@ -102,20 +119,9 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             holder.on<DisposableHandler>().add(it)
         }
 
-        on<StoreHandler>().store.box(GroupAction::class).query(GroupAction_.id.oneOf(quest.flow!!.items.map { it.groupActionId!! }.toTypedArray()))
-                .build()
-                .subscribe()
-                .on(AndroidScheduler.mainThread())
-                .single()
-                .observer { groupActions ->
-                    holder.on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(groupActions, true)
-                }.also {
-                    holder.on<DisposableHandler>().add(it)
-                }
-
         holder.on<GroupActionDisplay>().questActionConfigProvider = { groupAction ->
             quest.flow?.items?.first { it.groupActionId == groupAction.id!! }.also {
-                it?.current = holder.progressByMe?.progress?.items?.get(groupAction.id!!)?.current ?: 0
+                it?.current = holder.activeProgress?.progress?.items?.get(groupAction.id!!)?.current ?: 0
             }
         }
 
@@ -135,17 +141,47 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.card.setOnClickListener {
             on<MenuHandler>().show(
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Start this quest") {},
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Stop this quest") {
-                        on<QuestHandler>().endQuest(holder.progressByMe!!, false)
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Start this quest") {
+                        on<QuestHandler>().startQuest(quest) {}
                     },
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Restart this quest") {},
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Stop this quest") {
+                        on<QuestHandler>().endQuest(holder.activeProgress!!, false)
+                    },
+                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Restart this quest") {
+                        on<QuestHandler>().startQuest(quest) {}
+                    },
                     MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = "Finish this quest") {
-                        on<QuestHandler>().endQuest(holder.progressByMe!!)
+                        on<QuestHandler>().endQuest(holder.activeProgress!!)
                     },
                     MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, title = "See people who did this quest") {},
                     MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {}
             )
+        }
+    }
+
+    private fun refreshProgress(holder: QuestViewHolder, quest: Quest) {
+        holder.questProgressAdapter.active = holder.activeProgress
+
+        on<StoreHandler>().store.box(GroupAction::class).query(GroupAction_.id.oneOf(quest.flow!!.items.map { it.groupActionId!! }.toTypedArray()))
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { groupActions ->
+                    holder.on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(groupActions, true)
+                }.also {
+                    holder.on<DisposableHandler>().add(it)
+                }
+
+        holder.about.text = holder.activeProgress?.let { progress ->
+            when {
+                progress.finished != null -> "Finished ${on<TimeStr>().prettyDate(progress.finished!!)}"
+                progress.active == true -> "In progress, ${on<QuestHandler>().questFinishText(quest, progress.created)}"
+                progress.stopped != null -> "Stopped ${on<TimeStr>().prettyDate(progress.stopped!!)}"
+                else -> "Unknown, ${on<QuestHandler>().questFinishText(quest)}"
+            }
+        } ?: let {
+            "Not started, ${on<QuestHandler>().questFinishText(quest)}"
         }
     }
 }

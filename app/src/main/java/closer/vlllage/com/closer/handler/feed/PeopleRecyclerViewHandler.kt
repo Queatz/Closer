@@ -9,9 +9,10 @@ import com.queatz.on.On
 class PeopleRecyclerViewHandler constructor(private val on: On) {
 
     private lateinit var peopleRecyclerView: RecyclerView
-    private val peopleAdapter = PeopleAdapter(on)
+    private lateinit var peopleAdapter: PeopleAdapter
 
-    fun attach(peopleRecyclerView: RecyclerView) {
+    fun attach(peopleRecyclerView: RecyclerView, small: Boolean = false) {
+        this.peopleAdapter = PeopleAdapter(on, small)
         this.peopleRecyclerView = peopleRecyclerView
         peopleRecyclerView.adapter = peopleAdapter
         peopleRecyclerView.layoutManager = LinearLayoutManager(

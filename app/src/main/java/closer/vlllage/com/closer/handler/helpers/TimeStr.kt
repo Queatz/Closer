@@ -27,7 +27,7 @@ class TimeStr constructor(private val on: On) {
         }
     }
 
-    fun approx(date: Date?): String {
+    fun approx(date: Date?, preposition: Boolean = false): String {
         if (date == null) {
             return "-"
         }
@@ -42,9 +42,12 @@ class TimeStr constructor(private val on: On) {
             else -> on<ResourcesHandler>().resources.getQuantityString(R.plurals.date_approx_years, (millis / YEAR_IN_MILLIS).toInt(), (millis / YEAR_IN_MILLIS).toString())
         }
 
-        return if (Date().time < date.time)
-            on<ResourcesHandler>().resources.getString(R.string.in_x, result)
-        else result
+        return when (preposition) {
+            true -> if (Date().time < date.time)
+                on<ResourcesHandler>().resources.getString(R.string.in_x, result)
+            else on<ResourcesHandler>().resources.getString(R.string.x_ago, result)
+            false -> result
+        }
     }
 
     fun pretty(date: Date?): String {

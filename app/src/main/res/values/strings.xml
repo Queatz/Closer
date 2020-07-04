@@ -238,6 +238,7 @@
     <string name="goal">Goal</string>
     <string name="remove_from_group">Remove from group</string>
     <string name="in_x">in %1$s</string>
+    <string name="x_ago">%1$s ago</string>
     <string name="create_event_in_group_instructions">Tap anywhere on the map and choose \"Host event\"</string>
     <string name="enter_welcome_message">Pinned message (optional)</string>
     <string name="occupation_hint">What are your primary occupation(s)?</string>
@@ -440,6 +441,9 @@
     <string name="quests_need_one_activity">Quests must have at least one activity.</string>
     <string name="stopped_quest_confirmation">You stopped questing</string>
     <string name="finished_quest_confirmation">You finished the quest!</string>
+    <string name="finish_x">finish %1$s</string>
+    <string name="finish_by_x">finish by %1$s</string>
+    <string name="finish_in_x">finish in %1$s</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

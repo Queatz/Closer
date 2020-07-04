@@ -41,7 +41,9 @@ class QuestHandler(private val on: On) {
 
         on<StoreHandler>().store.box(QuestProgress::class).query(
                 QuestProgress_.questId.equal(quest.id!!)
-        ).build()
+        )
+                .orderDesc(QuestProgress_.created)
+                .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .let {
@@ -110,15 +112,17 @@ class QuestHandler(private val on: On) {
                     editQuestAction(viewHolder, it, viewHolder.activityConfig[it.id!!]
                             ?: QuestAction(groupActionId = it.id!!).also { questAction ->
                                 viewHolder.activityConfig[it.id!!] = questAction
-                            }) { refresh(viewHolder) } }
+                            }) { refresh(viewHolder) }
+                }
                 on<GroupActionDisplay>().questActionConfigProvider = { viewHolder.activityConfig[it.id!!] }
 
                 val adapter = GroupActionAdapter(On(on).apply { use<GroupActionDisplay>() }, GroupActionDisplay.Layout.PHOTO) { it, _ ->
                     viewHolder.activities.add(it)
 
-                    val questAction = viewHolder.activityConfig[it.id!!] ?: QuestAction(groupActionId = it.id!!).also { questAction ->
-                        viewHolder.activityConfig[it.id!!] = questAction
-                    }
+                    val questAction = viewHolder.activityConfig[it.id!!]
+                            ?: QuestAction(groupActionId = it.id!!).also { questAction ->
+                                viewHolder.activityConfig[it.id!!] = questAction
+                            }
 
                     editQuestAction(viewHolder, it, questAction) { refresh(viewHolder) }
 
@@ -228,12 +232,12 @@ class QuestHandler(private val on: On) {
 
         return if (relativeToDate == null) {
             when {
-                finish.date != null -> "finish by ${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})"
-                else -> "finish in ${durationText(finish)}"
+                finish.date != null -> on<ResourcesHandler>().resources.getString(R.string.finish_by_x, "${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})")
+                else -> on<ResourcesHandler>().resources.getString(R.string.finish_in_x, durationText(finish))
             }
         } else {
             when {
-                finish.date != null -> "finish by ${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})"
+                finish.date != null -> on<ResourcesHandler>().resources.getString(R.string.finish_by_x, "${on<TimeStr>().prettyDate(finish.date!!)} (${on<TimeStr>().pretty(finish.date!!)})")
                 else -> {
                     val calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
                         time = relativeToDate
@@ -245,7 +249,8 @@ class QuestHandler(private val on: On) {
                         }, finish.duration!!)
                     }
 
-                    "finish ${on<TimeStr>().approx(calendar.time)} (${on<TimeStr>().prettyDate(calendar.time)})"
+                    on<ResourcesHandler>().resources.getString(R.string.finish_x,
+                            "${on<TimeStr>().approx(calendar.time, preposition = true)} (${on<TimeStr>().prettyDate(calendar.time)})")
                 }
             }
 
