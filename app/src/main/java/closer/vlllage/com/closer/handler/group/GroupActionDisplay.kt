@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupAction
@@ -39,6 +40,22 @@ class GroupActionDisplay constructor(private val on: On) {
     var launchGroup: Boolean = true
     var onGroupActionClickListener: GroupActionClickListener? = null
     var questActionConfigProvider: ((groupAction: GroupAction) -> QuestAction?)? = null
+
+    private val fallbackGroupActionClickListener: GroupActionClickListener = { groupAction, proceed ->
+        on<QuestHandler>().groupActionQuestProgress(groupAction.id!!) {
+            if (it.isEmpty()) proceed() else {
+                val questProgresses = it.toMutableList()
+
+                var handleQuestProgress: () -> Unit = { on<DefaultAlerts>().thatDidntWork() }
+                handleQuestProgress = {
+                    if (questProgresses.isEmpty()) proceed() else {
+                        val questProgress = questProgresses.removeAt(0)
+                        on<QuestHandler>().addProgress(questProgress, groupAction) { handleQuestProgress() }
+                    }
+                }.also { it.invoke() }
+            }
+        }
+    }
 
     fun display(view: View, groupAction: GroupAction, layout: Layout, about: TextView? = null, scale: Float = 1f) {
         render(GroupActionViewHolder(view, about), groupAction, layout, scale)
@@ -148,9 +165,7 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     private fun onGroupActionClick(groupAction: GroupAction, view: View?) {
-        onGroupActionClickListener?.let {
-            it(groupAction) { proceedOnClick(groupAction, view) }
-        } ?: run { proceedOnClick(groupAction, view) }
+        (onGroupActionClickListener ?: fallbackGroupActionClickListener)(groupAction) { proceedOnClick(groupAction, view) }
     }
 
     private fun proceedOnClick(groupAction: GroupAction, view: View?) {

@@ -83,6 +83,8 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
             if (holder.activeProgress == null) {
                 holder.activeProgress = holder.progressByMe
+            } else {
+                holder.activeProgress = holder.progress.find { it.id == holder.activeProgress?.id }
             }
 
             refreshProgress(holder, quest)
@@ -100,8 +102,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             on<QuestHandler>().openQuest(quest)
         }
 
-        // todo load quest group
-        on<GroupScopeHandler>().setup(Group().apply { isPublic = Random.nextBoolean() }, holder.itemView.scopeIndicatorButton)
+        on<GroupScopeHandler>().setup(quest, holder.itemView.scopeIndicatorButton)
 
         holder.on<LightDarkHandler>().onLightChanged.subscribe {
             holder.name.setTextColor(it.text)

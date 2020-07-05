@@ -19,7 +19,6 @@ import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandle
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapHandler
-import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -37,15 +36,7 @@ import java.util.*
 class QuestHandler(private val on: On) {
 
     fun questProgress(quest: Quest, single: Boolean = false, callback: (List<QuestProgress>) -> Unit) {
-        // todo delete this block
-        if (quest.id == null) {
-            quest.id = on<Val>().rndId()
-            on<StoreHandler>().store.box(Quest::class).put(quest)
-        }
-
-        on<StoreHandler>().store.box(QuestProgress::class).query(
-                QuestProgress_.questId.equal(quest.id!!)
-        )
+        on<StoreHandler>().store.box(QuestProgress::class).query(QuestProgress_.questId.equal(quest.id!!))
                 .orderDesc(QuestProgress_.updated)
                 .build()
                 .subscribe()
@@ -55,14 +46,6 @@ class QuestHandler(private val on: On) {
                     else it
                 }
                 .observer {
-                    // todo delete
-                    it.forEach {
-                        if (it.created == null) {
-                            it.created = Date()
-                            on<StoreHandler>().store.box(QuestProgress::class).put(it)
-                        }
-                    }
-
                     callback(it)
                 }.also {
                     on<DisposableHandler>().add(it)
@@ -82,6 +65,11 @@ class QuestHandler(private val on: On) {
                     active = true
                 }
 
+                // Initialize with 0s so we can search for QuestProgresses with this groupActionId easily
+                quest.flow?.items?.forEach {
+                    addProgressInternal(questProgress, it.groupActionId!!, 0, set = true, sync = false)
+                }
+
                 on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
                 on<SyncHandler>().sync(questProgress) { openQuest(quest) }
 
@@ -89,7 +77,6 @@ class QuestHandler(private val on: On) {
                 callback(questProgress)
             }
             negativeButtonCallback = { callback(null) }
-            cancelIsNegative = true
             show()
         }
     }
@@ -111,7 +98,6 @@ class QuestHandler(private val on: On) {
                 callback()
             }
             negativeButtonCallback = { callback() }
-            cancelIsNegative = true
             show()
         }
     }
@@ -240,7 +226,6 @@ class QuestHandler(private val on: On) {
                 callback()
             }
             negativeButtonCallback = { callback() }
-            cancelIsNegative = true
             show()
         }
     }
@@ -262,13 +247,33 @@ class QuestHandler(private val on: On) {
                 callback()
             }
             negativeButtonCallback = { callback() }
-            cancelIsNegative = true
             show()
         }
     }
 
+    fun addProgress(questProgress: QuestProgress, groupAction: GroupAction, callback: (() -> Unit)? = null) {
+        // TODO replace with DataHandler.getQuest()
+        on<StoreHandler>().store.box(Quest::class).query(Quest_.id.equal(questProgress.questId!!))
+                .orderDesc(Quest_.updated)
+                .build()
+                .subscribe()
+                .single()
+                .on(AndroidScheduler.mainThread())
+                .observer {
+                    if (it.isEmpty()) {
+                        on<DefaultAlerts>().thatDidntWork()
+                    } else {
+                        addProgress(it.first(), questProgress, groupAction, callback)
+                    }
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
+    }
+
     fun addProgress(quest: Quest, questProgress: QuestProgress, groupAction: GroupAction, callback: (() -> Unit)? = null) {
         quest.flow?.items?.firstOrNull { it.groupActionId == groupAction.id }?.let {
+            val current = questProgress.progress?.items?.get(groupAction.id!!)?.current ?: 0
+
             when (it.type) {
                 QuestActionType.Percent -> {
                     on<AlertHandler>().make().apply {
@@ -276,7 +281,7 @@ class QuestHandler(private val on: On) {
                         message = groupAction.about
                         layoutResId = R.layout.add_progress_modal
                         onAfterViewCreated = { alertConfig, view ->
-                            alertConfig.alertResult = questProgress.progress?.items?.get(groupAction.id!!)?.current ?: 0
+                            alertConfig.alertResult = current
                             view.progressSeekBar.progress = alertConfig.alertResult as Int
                             view.progressText.text = on<ResourcesHandler>().resources.getString(R.string.x_progress, view.progressSeekBar.progress.toString())
                             view.progressSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -293,7 +298,7 @@ class QuestHandler(private val on: On) {
                         negativeButtonCallback = { callback?.invoke() }
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_x, quest.name)
                         positiveButtonCallback = {
-                            addProgressInternal(questProgress, groupAction, it as Int, set = true)
+                            addProgressInternal(questProgress, groupAction.id!!, it as Int, set = true)
                             callback?.invoke()
                         }
                         show()
@@ -302,12 +307,12 @@ class QuestHandler(private val on: On) {
                 else -> {
                     on<AlertHandler>().make().apply {
                         title = "${on<AccountHandler>().name} ${groupAction.intent}"
-                        message = "${groupAction.about?.let { "${it}\n\n" } ?: ""}${on<ResourcesHandler>().resources.getString(R.string.x_of_y_done, (it.current + 1).toString(), it.value.toString())}"
+                        message = "${groupAction.about?.let { "$it\n\n" } ?: ""}${on<ResourcesHandler>().resources.getString(R.string.x_of_y_done, (current + 1).toString(), it.value.toString())}"
                         negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
                         negativeButtonCallback = { callback?.invoke() }
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_x, quest.name)
                         positiveButtonCallback = {
-                            addProgressInternal(questProgress, groupAction, 1)
+                            addProgressInternal(questProgress, groupAction.id!!, 1)
                             callback?.invoke()
                         }
                         show()
@@ -317,25 +322,9 @@ class QuestHandler(private val on: On) {
         } ?: on<DefaultAlerts>().thatDidntWork()
     }
 
-    private fun addProgressInternal(questProgress: QuestProgress, groupAction: GroupAction, amount: Int, set: Boolean = false) {
-        if (!questProgress.progress!!.items.containsKey(groupAction.id!!)) {
-            questProgress.progress!!.items[groupAction.id!!] = QuestProgressAction().apply {
-                groupActionId = groupAction.id!!
-                current = amount
-            }
-        } else {
-            questProgress.progress!!.items[groupAction.id!!]!!.current = if (set) amount else
-                questProgress.progress!!.items[groupAction.id!!]!!.current?.plus(amount)
-                        ?: amount
-        }
-
-        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-        on<SyncHandler>().sync(questProgress)
-    }
-
     fun questFinishText(quest: Quest, relativeToDate: Date? = null): String {
         val finish = quest.flow?.finish
-        
+
         return when {
             finish == null -> on<ResourcesHandler>().resources.getString(R.string.no_finish_date)
             relativeToDate == null -> {
@@ -367,6 +356,44 @@ class QuestHandler(private val on: On) {
         }
     }
 
+    fun groupActionQuestProgress(groupActionId: String, single: Boolean = false, callback: (List<QuestProgress>) -> Unit) {
+        on<StoreHandler>().store.box(QuestProgress::class).query(QuestProgress_.active.equal(true).and(
+                QuestProgress_.progress.contains("\"groupActionId\":\"$groupActionId\"")
+        ))
+                .orderDesc(QuestProgress_.updated)
+                .build()
+                .subscribe()
+                .single()
+                .on(AndroidScheduler.mainThread())
+                .let {
+                    if (single) it.single()
+                    else it
+                }
+                .observer {
+                    callback(it)
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
+    }
+
+    private fun addProgressInternal(questProgress: QuestProgress, groupActionId: String, amount: Int, set: Boolean = false, sync: Boolean = true) {
+        if (!questProgress.progress!!.items.containsKey(groupActionId)) {
+            questProgress.progress!!.items[groupActionId] = QuestProgressAction().apply {
+                this.groupActionId = groupActionId
+                current = amount
+            }
+        } else {
+            questProgress.progress!!.items[groupActionId]!!.current = if (set) amount else
+                questProgress.progress!!.items[groupActionId]!!.current?.plus(amount)
+                        ?: amount
+        }
+
+        if (sync) {
+            on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+            on<SyncHandler>().sync(questProgress)
+        }
+    }
+
     private fun saveQuest(viewHolder: CreateQuestViewHolder) {
         on<MapHandler>().center?.let { latLng ->
             val quest = on<StoreHandler>().create(Quest::class.java)!!
@@ -387,7 +414,7 @@ class QuestHandler(private val on: On) {
             )
             on<StoreHandler>().store.box(Quest::class).put(quest)
             on<SyncHandler>().sync(quest) {
-                // TODO open quest
+                on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
             }
         }
     }
