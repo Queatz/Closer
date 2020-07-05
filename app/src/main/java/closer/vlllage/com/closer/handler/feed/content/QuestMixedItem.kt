@@ -145,19 +145,21 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.card.setOnClickListener {
             on<MenuHandler>().show(
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.start_quest)) {
+                    MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.start_quest)) {
                         on<QuestHandler>().startQuest(quest) {}
-                    }.visible(holder.progressByMe == null),
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.finish_quest)) {
+                    }.visible(holder.progressByMe == null || holder.progressByMe?.finished != null),
+                    MenuHandler.MenuOption(R.drawable.ic_check_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.finish_quest)) {
                         on<QuestHandler>().finishQuest(holder.progressByMe!!) {}
                     }.visible(holder.progressByMe?.let { it.finished == null && it.active == true } ?: false),
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.stop_quest)) {
+                    MenuHandler.MenuOption(R.drawable.ic_baseline_stop_24, title = on<ResourcesHandler>().resources.getString(R.string.stop_quest)) {
                         on<QuestHandler>().stopQuest(holder.progressByMe!!) {}
                     }.visible(holder.progressByMe?.active ?: false),
-                    MenuHandler.MenuOption(R.drawable.ic_star_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)) {
+                    MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)) {
                         on<QuestHandler>().resumeQuest(holder.progressByMe!!) {}
                     }.visible(holder.progressByMe?.let { it.finished == null && it.active?.let { !it } ?: false } ?: false),
-                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {}
+                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {
+                        on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
+                    }
             )
         }
     }
