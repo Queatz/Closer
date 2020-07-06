@@ -126,7 +126,7 @@ class MapSlideFragment : PoolFragment() {
         val verifiedNumber = on<PersistenceHandler>().isVerified
         on<MyGroupsLayoutActionsHandler>().showVerifyMyNumber(!verifiedNumber)
         if (!verifiedNumber) {
-            on<DisposableHandler>().add(on<ApiHandler>().isVerified.subscribe({ verified ->
+            on<DisposableHandler>().add(on<ApiHandler>().isVerified().subscribe({ verified ->
                 on<PersistenceHandler>().isVerified = verified
                 on<MyGroupsLayoutActionsHandler>().showVerifyMyNumber(!verified)
             }, { networkError(it) }))

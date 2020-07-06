@@ -3,7 +3,6 @@ package closer.vlllage.com.closer.store.models
 import closer.vlllage.com.closer.store.QuestProgressFlowJsonConverter
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
-import io.objectbox.annotation.Uid
 import java.util.*
 
 @Entity

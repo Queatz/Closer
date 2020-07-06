@@ -2,22 +2,19 @@ package closer.vlllage.com.closer.api
 
 import closer.vlllage.com.closer.api.models.*
 import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface Backend {
 
     // Verify Number
 
-    @get:GET("verify")
-    val isVerified: Single<VerifiedResult>
+    @GET("verify")
+    fun isVerified(): Single<VerifiedResult>
 
     // Member
 
-    @get:GET("member")
-    val allGroupMembers: Single<List<GroupMemberResult>>
+    @GET("member")
+    fun allGroupMembers(): Single<List<GroupMemberResult>>
 
     // Phone
 
@@ -212,6 +209,34 @@ interface Backend {
 
     @POST("action/{id}")
     fun setGroupActionPhoto(@Path("id") groupActionId: String, @Query("photo") photo: String): Single<SuccessResult>
+
+    // Quest
+
+    @POST("quest")
+    fun createQuest(@Body quest: QuestResult): Single<CreateResult>
+
+    @GET("quest")
+    fun getQuests(@Query("geo") latLng: String): Single<List<QuestResult>>
+
+    @GET("quest/{id}")
+    fun getQuest(@Path("id") questId: String): Single<QuestResult>
+
+    @GET("quest/{id}/progress")
+    fun getQuestProgresses(@Path("id") questId: String): Single<List<QuestProgressResult                                              >>
+
+    // QuestProgress
+
+    @POST("quest-progress")
+    fun createQuestProgress(@Body quest: QuestProgressResult): Single<CreateResult>
+
+    @GET("quest-progress")
+    fun getQuestProgresses(): Single<List<QuestProgressResult>>
+
+    @GET("quest-progress/{id}")
+    fun getQuestProgress(@Path("id") questProgressId: String): Single<QuestProgressResult>
+
+    @POST("quest-progress/{id}")
+    fun updateQuestProgress(@Path("id") questProgressId: String, @Body quest: QuestProgressResult): Single<QuestProgressResult>
 
     // Event
 
