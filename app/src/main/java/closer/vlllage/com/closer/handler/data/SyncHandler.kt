@@ -1,10 +1,7 @@
 package closer.vlllage.com.closer.handler.data
 
 import closer.vlllage.com.closer.api.models.CreateResult
-import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.HttpEncode
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
@@ -42,15 +39,60 @@ class SyncHandler constructor(private val on: On) {
 
     private fun <T : BaseObject> send(obj: T, onSyncResult: OnSyncResult?) {
         when (obj) {
-            is Group -> sendCreateGroup(obj as Group, onSyncResult)
-            is Suggestion -> sendCreateSuggestion(obj as Suggestion, onSyncResult)
-            is GroupMessage -> sendCreateGroupMessage(obj as GroupMessage, onSyncResult)
-            is Event -> sendCreateEvent(obj as Event, onSyncResult)
-            is GroupAction -> sendCreateGroupAction(obj as GroupAction, onSyncResult)
-            is GroupMember -> sendUpdateGroupMember(obj as GroupMember, onSyncResult)
-            is Quest -> { /* TODO sned Quest to API*/ }
-            is QuestProgress -> { /* TODO sned Quest to API*/ }
+            is Group -> sendCreateGroup(obj, onSyncResult)
+            is Suggestion -> sendCreateSuggestion(obj, onSyncResult)
+            is GroupMessage -> sendCreateGroupMessage(obj, onSyncResult)
+            is Event -> sendCreateEvent(obj, onSyncResult)
+            is GroupAction -> sendCreateGroupAction(obj, onSyncResult)
+            is GroupMember -> sendUpdateGroupMember(obj, onSyncResult)
+            is Quest -> { sendCreateQuest(obj, onSyncResult) }
+            is QuestProgress -> { sendCreateQuestProgress(obj, onSyncResult) }
             else -> throw RuntimeException("Unknown object type for sync: $obj")
+        }
+    }
+
+    private fun sendCreateQuest(quest: Quest, onSyncResult: OnSyncResult?) {
+        quest.localOnly = true
+        on<StoreHandler>().store.box(Quest::class).put(quest)
+
+        on<ApiHandler>().createQuest(
+                quest.name!!,
+                quest.isPublic,
+                on<LatLngStr>().to(quest.latitude!!, quest.longitude!!),
+                quest.flow!!
+        ).subscribe({ createResult ->
+            if (createResult.success) {
+                quest.id = createResult.id
+                quest.localOnly = false
+                on<StoreHandler>().store.box(Quest::class).put(quest)
+                onSyncResult?.invoke(createResult.id!!)
+            }
+        }, {
+            on<ConnectionErrorHandler>().notifyConnectionError()
+        }).also {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(it)
+        }
+    }
+
+    private fun sendCreateQuestProgress(questProgress: QuestProgress, onSyncResult: OnSyncResult?) {
+        questProgress.localOnly = true
+        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+
+        on<ApiHandler>().createQuestProgress(
+                questProgress.questId!!,
+                questProgress.ofId!!,
+                questProgress.progress!!
+        ).subscribe({ createResult ->
+            if (createResult.success) {
+                questProgress.id = createResult.id
+                questProgress.localOnly = false
+                on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+                onSyncResult?.invoke(createResult.id!!)
+            }
+        }, {
+            on<ConnectionErrorHandler>().notifyConnectionError()
+        }).also {
+            on<ApplicationHandler>().app.on<DisposableHandler>().add(it)
         }
     }
 
