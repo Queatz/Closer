@@ -287,6 +287,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun setupAppsToolbar(appsToolbar: RecyclerView) {
+        on<DragDropHandler>().attach(appsToolbar, {
+            itemView.appsToolbarContainer.preventScrolling = it
+        }) { from, to ->
+            toolbarAdapter.moveItem(from, to)
+            on<PersistenceHandler>().appsToolbarOrder = toolbarAdapter.items.mapNotNull { it.value }
+        }
+
         toolbarAdapter = ToolbarAdapter(on, onToolbarItemSelected)
 
         appsToolbar.layoutManager = LinearLayoutManager(appsToolbar.context, RecyclerView.HORIZONTAL, false)
@@ -305,7 +312,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         updateViews()
 
-        toolbarAdapter.items = mutableListOf(
+        val appsToolbarOrder = on<PersistenceHandler>().appsToolbarOrder
+
+        toolbarAdapter.items = listOf(
                 GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.posts),
                         R.drawable.ic_whatshot_black_24dp,
@@ -378,7 +387,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         },
                         value = ContentViewType.HOME_FRIENDS,
                         color = R.color.colorPrimary)
-        )
+        ).sortedBy {
+            appsToolbarOrder.indexOf(it.value)
+        }.toMutableList()
     }
 
     private fun scrollToolbarTo(content: ContentViewType) {

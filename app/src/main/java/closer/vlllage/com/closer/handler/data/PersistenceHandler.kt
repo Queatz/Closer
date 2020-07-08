@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.Val
@@ -13,6 +14,13 @@ import com.queatz.on.OnLifecycle
 class PersistenceHandler constructor(private val on: On) : OnLifecycle {
 
     private lateinit var sharedPreferences: SharedPreferences
+
+    var appsToolbarOrder: List<ContentViewType>
+        get() = sharedPreferences.getString(PREFERENCE_APPS_TOOLBAR_ORDER, null)?.split(",")?.map { ContentViewType.valueOf(it) } ?: listOf()
+        @SuppressLint("ApplySharedPref")
+        set(value) {
+            sharedPreferences.edit().putString(PREFERENCE_APPS_TOOLBAR_ORDER, value.joinToString(",") { it.name }).commit()
+        }
 
     var myStatus: String
         get() = sharedPreferences.getString(PREFERENCE_MY_STATUS, "")!!
@@ -130,6 +138,7 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
 
     companion object {
         private const val SHARED_PREFERENCES = "closer.prefs"
+        private const val PREFERENCE_APPS_TOOLBAR_ORDER = "closer.apps.toolbar.order"
         private const val PREFERENCE_MY_STATUS = "closer.me.status"
         private const val PREFERENCE_MY_NAME = "closer.me.name"
         private const val PREFERENCE_MY_ACTIVE = "closer.me.active"

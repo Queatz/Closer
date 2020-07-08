@@ -12,6 +12,8 @@ import java.lang.Math.abs
 
 class SoftScrollStopper : ConstraintLayout {
 
+    var preventScrolling: Boolean = false
+
     private var isChildScrolling: Boolean = false
     private val originPosition = Point()
 
@@ -47,7 +49,7 @@ class SoftScrollStopper : ConstraintLayout {
         }
 
         if (parent != null) {
-            parent.requestDisallowInterceptTouchEvent(isChildScrolling)
+            parent.requestDisallowInterceptTouchEvent(preventScrolling || isChildScrolling)
         }
 
         return false

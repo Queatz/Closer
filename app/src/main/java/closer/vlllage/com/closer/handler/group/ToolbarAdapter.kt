@@ -30,6 +30,12 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
             recyclerView?.layoutManager?.isAutoMeasureEnabled = false
         }
 
+    fun moveItem(from: Int, to: Int) {
+        val item = items.removeAt(from)
+        items.add(to, item)
+        notifyItemMoved(from, to)
+    }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
     }
