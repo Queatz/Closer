@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter
@@ -24,6 +25,7 @@ import closer.vlllage.com.closer.store.models.*
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.add_progress_modal.view.*
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.actionRecyclerView
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.searchActivities
@@ -277,8 +279,8 @@ class QuestHandler(private val on: On) {
             when (it.type) {
                 QuestActionType.Percent -> {
                     on<AlertHandler>().make().apply {
-                        title = "${on<AccountHandler>().name} ${groupAction.intent}"
-                        message = groupAction.about
+                        title = quest.name
+                        message = "${on<AccountHandler>().name} ${groupAction.intent}"
                         layoutResId = R.layout.add_progress_modal
                         onAfterViewCreated = { alertConfig, view ->
                             alertConfig.alertResult = current
@@ -296,7 +298,7 @@ class QuestHandler(private val on: On) {
                         }
                         negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
                         negativeButtonCallback = { callback?.invoke() }
-                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_x, quest.name)
+                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_quest)
                         positiveButtonCallback = {
                             addProgressInternal(questProgress, groupAction.id!!, it as Int, set = true)
                             callback?.invoke()
@@ -306,11 +308,11 @@ class QuestHandler(private val on: On) {
                 }
                 else -> {
                     on<AlertHandler>().make().apply {
-                        title = "${on<AccountHandler>().name} ${groupAction.intent}"
-                        message = "${groupAction.about?.let { "$it\n\n" } ?: ""}${on<ResourcesHandler>().resources.getString(R.string.x_of_y_done, (current + 1).toString(), it.value.toString())}"
+                        title = quest.name
+                        message = "${on<AccountHandler>().name} ${groupAction.intent}\n\n${on<ResourcesHandler>().resources.getString(R.string.x_of_y_done, (current + 1).toString(), it.value.toString())}"
                         negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
                         negativeButtonCallback = { callback?.invoke() }
-                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_x, quest.name)
+                        positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_quest)
                         positiveButtonCallback = {
                             addProgressInternal(questProgress, groupAction.id!!, 1)
                             callback?.invoke()
@@ -618,6 +620,11 @@ class QuestHandler(private val on: On) {
         on<Search>().groupActions(queryString = queryString) { groupActions ->
             adapter.setGroupActions(groupActions.filter { !holder.activityConfig.containsKey(it.id) })
         }.also { holder.disposableGroup.add(it) }
+    }
+
+    fun openGroupForQuestProgress(view: View?, questProgress: QuestProgress) {
+        // todo handle ofId being a Group
+        on<GroupActivityTransitionHandler>().showGroupForPhone(view, questProgress.ofId!!)
     }
 
     private class CreateQuestViewHolder internal constructor(val view: View) {

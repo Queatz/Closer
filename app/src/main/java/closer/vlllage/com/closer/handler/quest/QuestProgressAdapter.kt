@@ -8,10 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.TimeAgo
+import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.QuestProgress
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -65,16 +63,22 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
     override fun onBindViewHolder(holder: QuestProgressViewHolder, position: Int) {
         val questProgress = questProgresses[position]
 
-        // todo only show if it's a person
-        holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(questProgress.updated ?: Date(0))
+        holder.itemView.activeNowIndicator.visible = false
 
-        // todo load group or person photo
-        if (true) {
-            holder.itemView.photo.setImageResource(R.drawable.ic_person_black_24dp)
-            holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
-        } else {
-//            on<PhotoHelper>().loadCircle(holder.itemView.photo, "${person.photo}?s=256")
-            holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_CROP
+        // todo don't make call if ofId is a Group
+        on<DataHandler>().getPhone(questProgress.ofId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(it.updated
+                    ?: Date(0))
+
+            if (it.photo.isNullOrBlank()) {
+                holder.itemView.photo.setImageResource(R.drawable.ic_person_black_24dp)
+                holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            } else {
+                holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_CROP
+                on<PhotoHelper>().loadCircle(holder.itemView.photo, "${it.photo}?s=256")
+            }
+        }, {}).also {
+            on<DisposableHandler>().add(it)
         }
 
         activeObservable.switchMap { active ->

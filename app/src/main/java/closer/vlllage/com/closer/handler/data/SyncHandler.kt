@@ -18,6 +18,8 @@ class SyncHandler constructor(private val on: On) {
         syncAll(Event::class.java, Event_.localOnly)
         syncAll(GroupAction::class.java, GroupAction_.localOnly)
         syncAll(GroupMember::class.java, GroupMember_.localOnly)
+        syncAll(Quest::class.java, Quest_.localOnly)
+        syncAll(QuestProgress::class.java, QuestProgress_.localOnly)
     }
 
     fun <T : BaseObject> sync(obj: T, onSyncResult: OnSyncResult? = null) {

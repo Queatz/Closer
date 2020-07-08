@@ -463,6 +463,7 @@
     <string name="resume_quest_details">You\'ll start off where you left off.</string>
     <string name="stop_quest_details">You\'ll be able to resume this quest.</string>
     <string name="finish_quest_details">Mark this quest as finished when this quest\'s objective is completed.</string>
+    <string name="update_quest">Update quest</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

@@ -61,7 +61,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.questProgressAdapter = QuestProgressAdapter(holder.on) { it, view ->
             if (holder.activeProgress == it) {
-                on<GroupActivityTransitionHandler>().showGroupMessages(view, it.groupId)
+                on<QuestHandler>().openGroupForQuestProgress(view, it)
             } else {
                 holder.activeProgress = it
                 refreshProgress(holder, quest)
