@@ -389,6 +389,7 @@ class QuestHandler(private val on: On) {
         }
 
         if (sync) {
+            on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.quest_updated))
             on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
             on<SyncHandler>().sync(questProgress)
         }

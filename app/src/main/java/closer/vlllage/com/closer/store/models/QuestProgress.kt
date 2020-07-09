@@ -9,6 +9,7 @@ import java.util.*
 class QuestProgress : BaseObject() {
     var questId: String? = null
     var ofId: String? = null
+    var isPublic: Boolean = false
     val groupId: String? = null
     var finished: Date? = null
     var stopped: Date? = null

@@ -83,6 +83,7 @@ class SyncHandler constructor(private val on: On) {
         on<ApiHandler>().createQuestProgress(
                 questProgress.questId!!,
                 questProgress.ofId!!,
+                questProgress.isPublic,
                 questProgress.progress!!
         ).subscribe({ createResult ->
             if (createResult.success) {

@@ -1007,7 +1007,7 @@
     },
     {
       "id": "17:3641991130278661963",
-      "lastPropertyId": "13:2042531171086327581",
+      "lastPropertyId": "14:493256608939310698",
       "name": "QuestProgress",
       "properties": [
         {
@@ -1067,6 +1067,11 @@
           "id": "13:2042531171086327581",
           "name": "stopped",
           "type": 10
+        },
+        {
+          "id": "14:493256608939310698",
+          "name": "groupId",
+          "type": 9
         }
       ],
       "relations": []
