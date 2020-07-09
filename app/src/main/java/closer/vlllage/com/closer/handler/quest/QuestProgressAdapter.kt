@@ -15,6 +15,9 @@ import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.person_item.view.*
+import kotlinx.android.synthetic.main.person_item.view.activeNowIndicator
+import kotlinx.android.synthetic.main.person_item.view.photo
+import kotlinx.android.synthetic.main.person_item_small.view.*
 import java.util.*
 
 class QuestProgressAdapter constructor(private val on: On, private val onClick: (QuestProgress, View) -> Unit) : RecyclerView.Adapter<QuestProgressViewHolder>() {
@@ -65,6 +68,13 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
 
         holder.itemView.activeNowIndicator.visible = false
 
+        holder.itemView.status.visible = questProgress.active!!.not()
+
+        holder.itemView.status.setImageResource(when {
+            questProgress.stopped != null -> R.drawable.ic_baseline_stop_24
+            else -> R.drawable.ic_check_black_24dp
+        })
+
         // todo don't make call if ofId is a Group
         on<DataHandler>().getPhone(questProgress.ofId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
             holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(it.updated
@@ -85,13 +95,15 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
             on<LightDarkHandler>().onLightChanged.map { Pair(active, it) }
         }.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-            if (it.first == questProgress || it.first.id == questProgress.id) {
-                holder.itemView.photo.foreground = on<ResourcesHandler>().resources.getDrawable(if (it.second.light)
-                    R.drawable.outline_forestgreen_rounded
-                else
-                    R.drawable.outline_accent_rounded)
-            } else {
-                holder.itemView.photo.foreground = null
+            listOf(holder.itemView.photo, holder.itemView.status).forEach { view ->
+                if (it.first == questProgress || it.first.id == questProgress.id) {
+                    view.foreground = on<ResourcesHandler>().resources.getDrawable(if (it.second.light)
+                        R.drawable.outline_forestgreen_rounded
+                    else
+                        R.drawable.outline_accent_rounded)
+                } else {
+                    view.foreground = null
+                }
             }
         }.also {
             holder.disposableGroup.add(it)
