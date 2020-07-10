@@ -9,8 +9,10 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.api.models.QuestProgressResult
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter
@@ -24,6 +26,7 @@ import closer.vlllage.com.closer.store.models.*
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.add_progress_modal.view.*
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.actionRecyclerView
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.searchActivities
@@ -390,9 +393,16 @@ class QuestHandler(private val on: On) {
         }
 
         if (sync) {
-            on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.quest_updated))
-            on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-            on<SyncHandler>().sync(questProgress)
+            on<ApiHandler>().updateQuestProgress(questProgress.id!!, questProgress.finished, questProgress.stopped, questProgress.active, questProgress.progress).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.quest_updated))
+                        QuestProgressResult.updateFrom(questProgress, it)
+                        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }).also {
+                        on<DisposableHandler>().add(it)
+                    }
         }
     }
 

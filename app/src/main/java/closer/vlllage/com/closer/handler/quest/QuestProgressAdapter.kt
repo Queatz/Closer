@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.QuestProgress
 import com.queatz.on.On
@@ -67,9 +69,7 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
         val questProgress = questProgresses[position]
 
         holder.itemView.activeNowIndicator.visible = false
-
         holder.itemView.status.visible = questProgress.active!!.not()
-
         holder.itemView.status.setImageResource(when {
             questProgress.stopped != null -> R.drawable.ic_baseline_stop_24
             else -> R.drawable.ic_check_black_24dp

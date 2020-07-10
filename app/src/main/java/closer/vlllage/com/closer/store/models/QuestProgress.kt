@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.store.models
 
+import closer.vlllage.com.closer.api.models.QuestProgressResult
+import closer.vlllage.com.closer.api.models.QuestResult
 import closer.vlllage.com.closer.store.QuestProgressFlowJsonConverter
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
@@ -10,7 +12,7 @@ class QuestProgress : BaseObject() {
     var questId: String? = null
     var ofId: String? = null
     var isPublic: Boolean = false
-    val groupId: String? = null
+    var groupId: String? = null
     var finished: Date? = null
     var stopped: Date? = null
     var active: Boolean? = null

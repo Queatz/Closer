@@ -107,6 +107,7 @@ class MapSlideFragment : PoolFragment() {
 
             on<RefreshHandler>().refreshEvents(latLng)
             on<RefreshHandler>().refreshPhysicalGroups(latLng)
+            on<RefreshHandler>().refreshQuests(latLng)
 
             on<MapZoomHandler>().update(on<MapHandler>().zoom)
 

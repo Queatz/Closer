@@ -222,7 +222,7 @@ interface Backend {
     fun getQuest(@Path("id") questId: String): Single<QuestResult>
 
     @GET("quest/{id}/progress")
-    fun getQuestProgresses(@Path("id") questId: String): Single<List<QuestProgressResult                                              >>
+    fun getQuestProgresses(@Path("id") questId: String): Single<List<QuestProgressResult>>
 
     // QuestProgress
 

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
@@ -58,6 +59,8 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             use<QuestHandler>()
             use<GroupActionGridRecyclerViewHandler>()
         }
+
+        on<RefreshHandler>().refreshQuestProgresses(quest.id!!)
 
         holder.questProgressAdapter = QuestProgressAdapter(holder.on) { it, view ->
             if (holder.activeProgress == it) {
