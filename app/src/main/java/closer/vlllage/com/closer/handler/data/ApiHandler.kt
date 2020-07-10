@@ -172,11 +172,12 @@ class ApiHandler constructor(private val on: On) {
 
     fun getQuestProgresses(questId: String) = api { getQuestProgresses(questId) }
 
-    fun createQuestProgress(questId: String, ofId: String, isPublic: Boolean, progress: QuestProgressFlow) = api { createQuestProgress(QuestProgressResult().also {
+    fun createQuestProgress(questId: String, ofId: String, isPublic: Boolean, active: Boolean, progress: QuestProgressFlow) = api { createQuestProgress(QuestProgressResult().also {
         it.questId = questId
         it.ofId = ofId
         it.isPublic = isPublic
         it.progress = progress
+        it.active = active
     }) }
 
     fun updateQuestProgress(questProgressId: String, finished: Date? = null, stopped: Date? = null, active: Boolean? = null, progress: QuestProgressFlow? = null) = api {

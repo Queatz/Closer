@@ -11,10 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.QuestProgressResult
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.AccountHandler
-import closer.vlllage.com.closer.handler.data.ApiHandler
-import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.group.GroupActionAdapter
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
@@ -65,6 +62,7 @@ class QuestHandler(private val on: On) {
             positiveButtonCallback = {
                 val questProgress = on<StoreHandler>().create(QuestProgress::class.java)!!.apply {
                     questId = quest.id!!
+                    isPublic = true
                     ofId = on<PersistenceHandler>().phoneId!!
                     active = true
                 }
@@ -75,7 +73,7 @@ class QuestHandler(private val on: On) {
                 }
 
                 on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-                on<SyncHandler>().sync(questProgress) { openQuest(quest) }
+                on<SyncHandler>().sync(questProgress)
 
                 on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.start_quest_confirmation))
                 callback(questProgress)
@@ -256,22 +254,13 @@ class QuestHandler(private val on: On) {
     }
 
     fun addProgress(questProgress: QuestProgress, groupAction: GroupAction, callback: (() -> Unit)? = null) {
-        // TODO replace with DataHandler.getQuest()
-        on<StoreHandler>().store.box(Quest::class).query(Quest_.id.equal(questProgress.questId!!))
-                .orderDesc(Quest_.updated)
-                .build()
-                .subscribe()
-                .single()
-                .on(AndroidScheduler.mainThread())
-                .observer {
-                    if (it.isEmpty()) {
-                        on<DefaultAlerts>().thatDidntWork()
-                    } else {
-                        addProgress(it.first(), questProgress, groupAction, callback)
-                    }
-                }.also {
-                    on<DisposableHandler>().add(it)
-                }
+        on<DataHandler>().getQuest(questProgress.questId!!).subscribe({
+            addProgress(it, questProgress, groupAction, callback)
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        }).also {
+            on<DisposableHandler>().add(it)
+        }
     }
 
     fun addProgress(quest: Quest, questProgress: QuestProgress, groupAction: GroupAction, callback: (() -> Unit)? = null) {
@@ -426,8 +415,10 @@ class QuestHandler(private val on: On) {
             )
             on<StoreHandler>().store.box(Quest::class).put(quest)
             on<SyncHandler>().sync(quest) {
-                on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
+                on<GroupActivityTransitionHandler>().showGroupForQuest(null, quest)
             }
+        } ?: run {
+            on<DefaultAlerts>().thatDidntWork()
         }
     }
 
@@ -633,8 +624,11 @@ class QuestHandler(private val on: On) {
     }
 
     fun openGroupForQuestProgress(view: View?, questProgress: QuestProgress) {
-        // todo handle ofId being a Group
-        on<GroupActivityTransitionHandler>().showGroupForPhone(view, questProgress.ofId!!)
+        questProgress.groupId ?.let {
+            on<GroupActivityTransitionHandler>().showGroupMessages(view, it)
+        } ?: run {
+            on<DefaultAlerts>().thatDidntWork()
+        }
     }
 
     private class CreateQuestViewHolder internal constructor(val view: View) {

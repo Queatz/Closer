@@ -1,7 +1,5 @@
 package closer.vlllage.com.closer.store.models
 
-import closer.vlllage.com.closer.api.models.QuestProgressResult
-import closer.vlllage.com.closer.api.models.QuestResult
 import closer.vlllage.com.closer.store.QuestProgressFlowJsonConverter
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity

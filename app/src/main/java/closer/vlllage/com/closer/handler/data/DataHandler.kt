@@ -82,6 +82,17 @@ class DataHandler constructor(private val on: On) {
                 .map { GroupMemberResult.from(it) }
     })
 
+    fun getQuest(questId: String) = chain({
+        on<StoreHandler>().store.box(Quest::class).query()
+                .equal(Quest_.id, questId)
+                .notNull(Quest_.groupId)
+                .build()
+    }, {
+        on<ApiHandler>()
+                .getQuest(questId)
+                .map { QuestResult.from(it) }
+    })
+
     fun getEvent(eventId: String) = chain({
         on<StoreHandler>().store.box(Event::class).query()
                 .equal(Event_.id, eventId)

@@ -18,7 +18,6 @@ import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.item_quest.view.*
-import kotlin.random.Random
 
 class QuestMixedItem(val quest: Quest) : MixedItem(MixedItemType.Quest)
 
@@ -150,7 +149,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.start_quest)) {
                         on<QuestHandler>().startQuest(quest) {}
-                    }.visible(holder.progressByMe == null || holder.progressByMe?.finished != null),
+                    }.visible(holder.progressByMe == null || !(holder.progressByMe?.active ?: false)),
                     MenuHandler.MenuOption(R.drawable.ic_check_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.finish_quest)) {
                         on<QuestHandler>().finishQuest(holder.progressByMe!!) {}
                     }.visible(holder.progressByMe?.let { it.finished == null && it.active == true } ?: false),

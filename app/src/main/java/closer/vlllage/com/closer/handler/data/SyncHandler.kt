@@ -84,6 +84,7 @@ class SyncHandler constructor(private val on: On) {
                 questProgress.questId!!,
                 questProgress.ofId!!,
                 questProgress.isPublic,
+                questProgress.active ?: true,
                 questProgress.progress!!
         ).subscribe({ createResult ->
             if (createResult.success) {

@@ -69,7 +69,7 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
         val questProgress = questProgresses[position]
 
         holder.itemView.activeNowIndicator.visible = false
-        holder.itemView.status.visible = questProgress.active!!.not()
+        holder.itemView.status.visible = questProgress.active?.not() ?: false
         holder.itemView.status.setImageResource(when {
             questProgress.stopped != null -> R.drawable.ic_baseline_stop_24
             else -> R.drawable.ic_check_black_24dp

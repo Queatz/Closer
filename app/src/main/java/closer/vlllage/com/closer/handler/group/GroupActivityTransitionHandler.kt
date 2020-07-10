@@ -14,6 +14,7 @@ import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_RESPOND
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.Event
+import closer.vlllage.com.closer.store.models.Quest
 import com.queatz.on.On
 
 class GroupActivityTransitionHandler constructor(private val on: On) {
@@ -60,6 +61,25 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
         intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         return intent
+    }
+
+    fun showGroupForQuest(view: View?, quest: Quest) {
+        if (quest.groupId != null) {
+            on<GroupActivityTransitionHandler>().showGroupMessages(view, quest.groupId)
+        } else if (quest.id != null) {
+            on<DisposableHandler>().add(on<DataHandler>().getQuest(quest.id!!)
+                    .subscribe({
+                        if (it.groupId != null) {
+                            on<GroupActivityTransitionHandler>().showGroupMessages(view, it.groupId)
+                        } else {
+                            on<DefaultAlerts>().thatDidntWork()
+                        }
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }))
+        } else {
+            on<DefaultAlerts>().thatDidntWork()
+        }
     }
 
     fun showGroupForEvent(view: View?, event: Event) {

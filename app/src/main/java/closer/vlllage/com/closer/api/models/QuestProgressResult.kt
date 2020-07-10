@@ -32,7 +32,7 @@ class QuestProgressResult : ModelResult() {
             questProgress.groupId = questProgressResult.groupId
             questProgress.finished = questProgressResult.finished
             questProgress.stopped = questProgressResult.stopped
-            questProgress.active = questProgressResult.active
+            questProgress.active = questProgressResult.active ?: false
             return questProgress
         }
     }
