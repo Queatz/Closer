@@ -276,11 +276,11 @@ class QuestHandler(private val on: On) {
                         onAfterViewCreated = { alertConfig, view ->
                             alertConfig.alertResult = current
                             view.progressSeekBar.progress = alertConfig.alertResult as Int
-                            view.progressText.text = on<ResourcesHandler>().resources.getString(R.string.x_progress, view.progressSeekBar.progress.toString())
+                            view.progressText.text = on<ResourcesHandler>().resources.getString(R.string.x_done, view.progressSeekBar.progress.toString())
                             view.progressSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                                     alertConfig.alertResult = progress
-                                    view.progressText.text = on<ResourcesHandler>().resources.getString(R.string.x_progress, progress.toString())
+                                    view.progressText.text = on<ResourcesHandler>().resources.getString(R.string.x_done, progress.toString())
                                 }
 
                                 override fun onStartTrackingTouch(seekBar: SeekBar?) {}
