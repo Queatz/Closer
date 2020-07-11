@@ -50,6 +50,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.progress = listOf()
         holder.progressByMe = null
         holder.activeProgress = null
+        holder.questProgressAdapter.questProgresses = mutableListOf()
         holder.itemView.peopleRecyclerView.adapter = null
     }
 

@@ -38,6 +38,12 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
                 return
             }
 
+            if (value.isEmpty()) {
+                field.clear()
+                notifyDataSetChanged()
+                return
+            }
+
             val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                     return field[oldItemPosition].id == value[newItemPosition].id
