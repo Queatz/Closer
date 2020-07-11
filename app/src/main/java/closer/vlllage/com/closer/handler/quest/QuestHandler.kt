@@ -96,7 +96,7 @@ class QuestHandler(private val on: On) {
 
                 on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.resume_quest_confirmation))
                 on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-                on<SyncHandler>().sync(questProgress)
+                updateQuestProgress(questProgress, active = true) {}
                 callback()
             }
             negativeButtonCallback = { callback() }
@@ -224,7 +224,7 @@ class QuestHandler(private val on: On) {
                 on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.finished_quest_confirmation))
 
                 on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-                on<SyncHandler>().sync(questProgress)
+                updateQuestProgress(questProgress, finished = questProgress.finished, active = questProgress.active) {}
                 callback()
             }
             negativeButtonCallback = { callback() }
@@ -245,7 +245,7 @@ class QuestHandler(private val on: On) {
                 on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.stopped_quest_confirmation))
 
                 on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-                on<SyncHandler>().sync(questProgress)
+                updateQuestProgress(questProgress, stopped = questProgress.stopped, active = questProgress.active) {}
                 callback()
             }
             negativeButtonCallback = { callback() }
@@ -369,6 +369,14 @@ class QuestHandler(private val on: On) {
                 }
     }
 
+    fun openGroupForQuestProgress(view: View?, questProgress: QuestProgress) {
+        questProgress.groupId ?.let {
+            on<GroupActivityTransitionHandler>().showGroupMessages(view, it)
+        } ?: run {
+            on<DefaultAlerts>().thatDidntWork()
+        }
+    }
+
     private fun addProgressInternal(questProgress: QuestProgress, groupActionId: String, amount: Int, set: Boolean = false, sync: Boolean = true) {
         if (!questProgress.progress!!.items.containsKey(groupActionId)) {
             questProgress.progress!!.items[groupActionId] = QuestProgressAction().apply {
@@ -382,16 +390,9 @@ class QuestHandler(private val on: On) {
         }
 
         if (sync) {
-            on<ApiHandler>().updateQuestProgress(questProgress.id!!, questProgress.finished, questProgress.stopped, questProgress.active, questProgress.progress).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.quest_updated))
-                        QuestProgressResult.updateFrom(questProgress, it)
-                        on<StoreHandler>().store.box(QuestProgress::class).put(questProgress)
-                    }, {
-                        on<DefaultAlerts>().thatDidntWork()
-                    }).also {
-                        on<DisposableHandler>().add(it)
-                    }
+            updateQuestProgress(questProgress, progress = questProgress.progress) {
+                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.quest_updated))
+            }
         }
     }
 
@@ -615,20 +616,26 @@ class QuestHandler(private val on: On) {
         }
     }
 
+    private fun updateQuestProgress(questProgress: QuestProgress, finished: Date? = null, stopped: Date? = null, active: Boolean? = null, progress: QuestProgressFlow? = null, callback: (QuestProgress) -> Unit) {
+        on<ApiHandler>().updateQuestProgress(questProgress.id!!, finished, stopped, active, progress)
+                .observeOn(AndroidSchedulers.mainThread()).map {
+                    QuestProgressResult.from(it)
+                }.subscribe({
+                    on<RefreshHandler>().refresh(it)
+                    callback(it)
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                }).also {
+                    on<DisposableHandler>().add(it)
+                }
+    }
+
     private fun searchGroupActivities(holder: CreateQuestViewHolder, adapter: GroupActionAdapter, queryString: String?) {
         holder.disposableGroup.clear()
 
         on<Search>().groupActions(queryString = queryString) { groupActions ->
             adapter.setGroupActions(groupActions.filter { !holder.activityConfig.containsKey(it.id) })
         }.also { holder.disposableGroup.add(it) }
-    }
-
-    fun openGroupForQuestProgress(view: View?, questProgress: QuestProgress) {
-        questProgress.groupId ?.let {
-            on<GroupActivityTransitionHandler>().showGroupMessages(view, it)
-        } ?: run {
-            on<DefaultAlerts>().thatDidntWork()
-        }
     }
 
     private class CreateQuestViewHolder internal constructor(val view: View) {

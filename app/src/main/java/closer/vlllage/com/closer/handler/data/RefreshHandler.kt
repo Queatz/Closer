@@ -175,34 +175,36 @@ class RefreshHandler constructor(private val on: On) {
             is Event -> refreshObject(baseObject, Event::class.java, Event_.id)
             is Group -> refreshObject(baseObject, Group::class.java, Group_.id)
             is Phone -> refreshObject(baseObject, Phone::class.java, Phone_.id)
+            is Quest -> refreshObject(baseObject, Quest::class.java, Quest_.id)
+            is QuestProgress -> refreshObject(baseObject, QuestProgress::class.java, QuestProgress_.id)
             is GroupMessage -> refreshObject(baseObject, GroupMessage::class.java, GroupMessage_.id)
             is GroupMember -> refreshObject(baseObject, GroupMember::class.java, GroupMember_.id)
         }
     }
 
-    fun <T : BaseObject> refreshObject(`object`: T, clazz: Class<T>, idProperty: Property<T>) {
+    private fun <T : BaseObject> refreshObject(obj: T, clazz: Class<T>, idProperty: Property<T>) {
         (on<StoreHandler>().store.box(clazz)
                 .query()
-                .equal(idProperty, `object`.id!!)
+                .equal(idProperty, obj.id!!)
                 .build()
                 .subscribe()
                 .single()
                 .on(AndroidScheduler.mainThread()) as SubscriptionBuilder<List<T>>)
                 .observer { results ->
                     if (results.isNotEmpty()) {
-                        `object`.objectBoxId = results.first().objectBoxId
+                        obj.objectBoxId = results.first().objectBoxId
 
-                        if (`object` is Phone) {
-                            if (`object`.goals == null) {
-                                `object`.goals = (results.first() as Phone).goals
+                        if (obj is Phone) {
+                            if (obj.goals == null) {
+                                obj.goals = (results.first() as Phone).goals
                             }
 
-                            if (`object`.lifestyles == null) {
-                                `object`.lifestyles = (results.first() as Phone).lifestyles
+                            if (obj.lifestyles == null) {
+                                obj.lifestyles = (results.first() as Phone).lifestyles
                             }
                         }
                     }
-                    on<StoreHandler>().store.box(clazz).put(`object`)
+                    on<StoreHandler>().store.box(clazz).put(obj)
                 }
     }
 
