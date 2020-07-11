@@ -39,8 +39,8 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
     override fun getMixedItemClass() = QuestMixedItem::class
     override fun getMixedItemType() = MixedItemType.Quest
-    override fun areItemsTheSame(old: QuestMixedItem, new: QuestMixedItem) = old.quest.objectBoxId == new.quest.objectBoxId
-    override fun areContentsTheSame(old: QuestMixedItem, new: QuestMixedItem) = false
+    override fun areItemsTheSame(old: QuestMixedItem, new: QuestMixedItem) = old.quest.id == new.quest.id
+    override fun areContentsTheSame(old: QuestMixedItem, new: QuestMixedItem) = old.quest.name == new.quest.name
 
     override fun onCreateViewHolder(parent: ViewGroup) = QuestViewHolder(LayoutInflater.from(parent.context)
             .inflate(R.layout.item_quest, parent, false))
@@ -95,6 +95,8 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         }
 
         holder.on<GroupActionGridRecyclerViewHandler>().attach(holder.itemView.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
+
+        refreshProgress(holder, quest)
 
         holder.about.setOnClickListener {
             on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.quest_status), holder.about.text.toString())
