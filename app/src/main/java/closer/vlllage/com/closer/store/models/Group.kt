@@ -13,6 +13,8 @@ class Group : BaseObject() {
     var physical: Boolean = false
     var eventId: String? = null
     var phoneId: String? = null
+    var ofId: String? = null
+    var ofKind: String? = null
     var groupMessageId: String? = null
     var latitude: Double? = null
     var longitude: Double? = null

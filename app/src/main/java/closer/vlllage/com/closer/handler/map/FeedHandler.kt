@@ -184,6 +184,7 @@ class FeedHandler constructor(private val on: On) {
             else -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true)
                     .and(Group_.eventId.isNull)
                     .and(Group_.phoneId.isNull)
+                    .and(Group_.ofId.isNull)
                     .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo(3)))
                     .and(Group_.latitude.between(target.latitude - distance, target.latitude + distance)
                             .and(Group_.longitude.between(target.longitude - distance, target.longitude + distance)))

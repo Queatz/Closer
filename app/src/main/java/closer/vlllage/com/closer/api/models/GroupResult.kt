@@ -12,6 +12,8 @@ class GroupResult : ModelResult() {
     var hub: Boolean? = null
     var eventId: String? = null
     var phoneId: String? = null
+    var ofId: String? = null
+    var ofKind: String? = null
     var groupMessageId: String? = null
     var ratingAverage: Double? = null
     var ratingCount: Int? = null
@@ -38,6 +40,8 @@ class GroupResult : ModelResult() {
             group.hub = true == groupResult.hub
             group.eventId = groupResult.eventId
             group.phoneId = groupResult.phoneId
+            group.ofId = groupResult.ofId
+            group.ofKind = groupResult.ofKind
             group.groupMessageId = groupResult.groupMessageId
             group.photo = groupResult.photo
 
