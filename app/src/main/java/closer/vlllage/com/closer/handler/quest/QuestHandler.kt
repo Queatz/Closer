@@ -39,6 +39,7 @@ class QuestHandler(private val on: On) {
         on<StoreHandler>().store.box(QuestProgress::class).query(QuestProgress_.questId.equal(quest.id!!))
                 .orderDesc(QuestProgress_.updated)
                 .orderDesc(QuestProgress_.active)
+                .sort(on<SortHandler>().sortQuestProgresses())
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())

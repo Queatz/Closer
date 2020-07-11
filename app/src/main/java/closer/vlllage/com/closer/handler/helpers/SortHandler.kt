@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.helpers
 
 import android.location.Location.distanceBetween
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
@@ -146,6 +147,26 @@ class SortHandler constructor(private val on: On) {
             }
 
             return@Comparator if (d1[0] == d2[0]) 0 else if (d1[0] < d2[0]) -1 else 1
+        }
+    }
+
+    fun sortQuestProgresses(): Comparator<QuestProgress> {
+        return Comparator { o1, o2 ->
+            val me = on<PersistenceHandler>().phoneId
+
+            if (o1.active == true && o2.active == false) {
+                return@Comparator -1
+            } else if (o1.active == false && o2.active == true) {
+                return@Comparator 1
+            }
+
+            if (o1.ofId == me && o2.ofId != me) {
+                return@Comparator -1
+            } else if (o1.ofId != me && o2.ofId == me) {
+                return@Comparator 1
+            }
+
+            return@Comparator 0
         }
     }
 }
