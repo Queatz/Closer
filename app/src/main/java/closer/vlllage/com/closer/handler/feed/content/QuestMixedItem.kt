@@ -150,19 +150,23 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         }
 
         holder.card.setOnClickListener {
+            val me = on<PersistenceHandler>().phoneId
+            val questProgress = if (holder.activeProgress?.ofId == me) holder.activeProgress else holder.progressByMe
+
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.start_quest)) {
                         holder.on<QuestHandler>().startQuest(quest) {}
-                    }.visible(holder.progressByMe == null || !(holder.progressByMe?.active ?: false)),
+                    }.visible(questProgress == null || !(questProgress.active ?: false)),
                     MenuHandler.MenuOption(R.drawable.ic_check_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.finish_quest)) {
-                        holder.on<QuestHandler>().finishQuest(holder.progressByMe!!) {}
-                    }.visible(holder.progressByMe?.let { it.finished == null && it.active == true } ?: false),
+
+                        holder.on<QuestHandler>().finishQuest(questProgress!!) {}
+                    }.visible(questProgress?.let { it.finished == null && it.active == true } ?: false),
                     MenuHandler.MenuOption(R.drawable.ic_baseline_stop_24, title = on<ResourcesHandler>().resources.getString(R.string.stop_quest)) {
-                        holder.on<QuestHandler>().stopQuest(holder.progressByMe!!) {}
-                    }.visible(holder.progressByMe?.active ?: false),
+                        holder.on<QuestHandler>().stopQuest(questProgress!!) {}
+                    }.visible(questProgress?.active ?: false),
                     MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)) {
-                        holder.on<QuestHandler>().resumeQuest(holder.progressByMe!!) {}
-                    }.visible(holder.progressByMe?.let { it.finished == null && it.active?.let { !it } ?: false } ?: false),
+                        holder.on<QuestHandler>().resumeQuest(questProgress!!) {}
+                    }.visible(questProgress?.let { it.finished == null && it.active?.let { !it } ?: false } ?: false),
                     MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {
                         holder.on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
                     }
