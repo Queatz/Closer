@@ -88,7 +88,7 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
                 on<PhotoHelper>().loadCircle(holder.itemView.photo, "${it.photo}?s=256")
             }
         }, {}).also {
-            on<DisposableHandler>().add(it)
+            holder.disposableGroup.add(it)
         }
 
         activeObservable.switchMap { active ->

@@ -50,6 +50,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.progress = listOf()
         holder.progressByMe = null
         holder.activeProgress = null
+        holder.itemView.peopleRecyclerView.adapter = null
     }
 
     private fun bindQuest(holder: QuestViewHolder, quest: Quest) {
@@ -63,7 +64,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.questProgressAdapter = QuestProgressAdapter(holder.on) { it, view ->
             if (holder.activeProgress == it) {
-                on<QuestHandler>().openGroupForQuestProgress(view, it)
+                holder.on<QuestHandler>().openGroupForQuestProgress(view, it)
             } else {
                 holder.activeProgress = it
                 refreshProgress(holder, quest)
@@ -133,34 +134,34 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.on<GroupActionDisplay>().onGroupActionClickListener = { it, proceed ->
             if (holder.progressByMe == null) {
-                on<QuestHandler>().startQuest(quest) { questProgress ->
+                holder.on<QuestHandler>().startQuest(quest) { questProgress ->
                     if (questProgress != null) {
-                        on<QuestHandler>().addProgress(quest, questProgress, it) { proceed() }
+                        holder.on<QuestHandler>().addProgress(quest, questProgress, it) { proceed() }
                     } else {
                         proceed()
                     }
                 }
             } else {
-                on<QuestHandler>().addProgress(quest, holder.progressByMe!!, it) { proceed() }
+                holder.on<QuestHandler>().addProgress(quest, holder.progressByMe!!, it) { proceed() }
             }
         }
 
         holder.card.setOnClickListener {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.start_quest)) {
-                        on<QuestHandler>().startQuest(quest) {}
+                        holder.on<QuestHandler>().startQuest(quest) {}
                     }.visible(holder.progressByMe == null || !(holder.progressByMe?.active ?: false)),
                     MenuHandler.MenuOption(R.drawable.ic_check_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.finish_quest)) {
-                        on<QuestHandler>().finishQuest(holder.progressByMe!!) {}
+                        holder.on<QuestHandler>().finishQuest(holder.progressByMe!!) {}
                     }.visible(holder.progressByMe?.let { it.finished == null && it.active == true } ?: false),
                     MenuHandler.MenuOption(R.drawable.ic_baseline_stop_24, title = on<ResourcesHandler>().resources.getString(R.string.stop_quest)) {
-                        on<QuestHandler>().stopQuest(holder.progressByMe!!) {}
+                        holder.on<QuestHandler>().stopQuest(holder.progressByMe!!) {}
                     }.visible(holder.progressByMe?.active ?: false),
                     MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)) {
-                        on<QuestHandler>().resumeQuest(holder.progressByMe!!) {}
+                        holder.on<QuestHandler>().resumeQuest(holder.progressByMe!!) {}
                     }.visible(holder.progressByMe?.let { it.finished == null && it.active?.let { !it } ?: false } ?: false),
                     MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {
-                        on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
+                        holder.on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
                     }
             )
         }
@@ -169,7 +170,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
     private fun refreshProgress(holder: QuestViewHolder, quest: Quest) {
         holder.questProgressAdapter.active = holder.activeProgress
 
-        on<StoreHandler>().store.box(GroupAction::class).query(GroupAction_.id.oneOf(quest.flow!!.items.map { it.groupActionId!! }.toTypedArray()))
+        holder.on<StoreHandler>().store.box(GroupAction::class).query(GroupAction_.id.oneOf(quest.flow!!.items.map { it.groupActionId!! }.toTypedArray()))
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
