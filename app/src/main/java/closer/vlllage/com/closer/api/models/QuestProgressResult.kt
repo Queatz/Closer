@@ -26,6 +26,7 @@ class QuestProgressResult : ModelResult() {
         }
 
         fun updateFrom(questProgress: QuestProgress, questProgressResult: QuestProgressResult): QuestProgress {
+            questProgress.progress = questProgressResult.progress
             questProgress.isPublic = questProgressResult.isPublic
             questProgress.ofId = questProgressResult.ofId
             questProgress.questId = questProgressResult.questId

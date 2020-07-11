@@ -204,6 +204,7 @@ class RefreshHandler constructor(private val on: On) {
                             }
                         }
                     }
+
                     on<StoreHandler>().store.box(clazz).put(obj)
                 }
     }
