@@ -83,19 +83,26 @@ class GroupMessageHelper constructor(private val on: On) {
 
             holder.reactionsRecyclerView.setPadding(pad, 0, pad, 0)
 
-            params = holder.action.layoutParams as ViewGroup.MarginLayoutParams
+            params = holder.action.layoutParams as ConstraintLayout.LayoutParams
             params.leftMargin = pad
             params.bottomMargin = pad
             holder.action.layoutParams = params
 
-            params = holder.reactionsRecyclerView.layoutParams as ViewGroup.MarginLayoutParams
+            params = holder.reactionsRecyclerView.layoutParams as ConstraintLayout.LayoutParams
             params.topMargin = 0
             holder.reactionsRecyclerView.layoutParams = params
 
-            params = holder.messageRepliesCount.layoutParams as ViewGroup.MarginLayoutParams
+            params = holder.messageRepliesCount.layoutParams as ConstraintLayout.LayoutParams
             params.leftMargin = pad
             params.bottomMargin = pad
             holder.messageRepliesCount.layoutParams = params
+
+            params = holder.eventMessage.layoutParams as ConstraintLayout.LayoutParams
+            params.topMargin = pad
+            params.goneTopMargin = pad
+            params.bottomMargin = pad
+            params.goneBottomMargin = pad
+            holder.eventMessage.layoutParams = params
         }
 
         holder.photo.visible = false
@@ -113,6 +120,14 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.itemView.setOnLongClickListener {
             on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
             true
+        }
+
+        holder.eventMessage.setOnClickListener {
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+        }
+
+        holder.time.setOnClickListener {
+            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
         }
 
         holder.messageActionLayout.visible = false

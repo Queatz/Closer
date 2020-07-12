@@ -11,7 +11,6 @@ import kotlin.math.abs
 
 class SortHandler constructor(private val on: On) {
 
-
     fun sortGroupsByDistance(latLng: LatLng): Comparator<Group> = Comparator { o1, o2 ->
         if (o1.latitude == null || o1.longitude == null) {
             if (o2.latitude == null || o2.longitude == null) {
