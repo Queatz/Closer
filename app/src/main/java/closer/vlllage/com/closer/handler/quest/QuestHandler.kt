@@ -116,22 +116,26 @@ class QuestHandler(private val on: On) {
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_quest)
             layoutResId = R.layout.create_quest_modal
             onAfterViewCreated = { alertConfig, view ->
-                val viewHolder = CreateQuestViewHolder(view).apply {
-                    disposableGroup = on<DisposableHandler>().group()
+                val viewHolder = CreateQuestViewHolder(view).also {
+                    it.disposableGroup = on<DisposableHandler>().group()
+                    it.on = On(on).apply {
+                        use<GroupActionGridRecyclerViewHandler>()
+                        use<GroupActionDisplay>()
+                    }
                 }
 
-                on<LightDarkHandler>().setLight(true)
+                viewHolder.on<LightDarkHandler>().setLight(true)
 
-                on<GroupActionGridRecyclerViewHandler>().attach(view.questActionRecyclerView, GroupActionDisplay.Layout.QUEST)
-                on<GroupActionDisplay>().onGroupActionClickListener = { it, _ ->
+                viewHolder.on<GroupActionGridRecyclerViewHandler>().attach(view.questActionRecyclerView, GroupActionDisplay.Layout.QUEST)
+                viewHolder.on<GroupActionDisplay>().onGroupActionClickListener = { it, _ ->
                     editQuestAction(viewHolder, it, viewHolder.activityConfig[it.id!!]
                             ?: QuestAction(groupActionId = it.id!!).also { questAction ->
                                 viewHolder.activityConfig[it.id!!] = questAction
                             }) { refresh(viewHolder) }
                 }
-                on<GroupActionDisplay>().questActionConfigProvider = { viewHolder.activityConfig[it.id!!] }
+                viewHolder.on<GroupActionDisplay>().questActionConfigProvider = { viewHolder.activityConfig[it.id!!] }
 
-                val adapter = GroupActionAdapter(On(on).apply { use<GroupActionDisplay>() }, GroupActionDisplay.Layout.PHOTO) { it, _ ->
+                val adapter = GroupActionAdapter(On(viewHolder.on).apply { use<GroupActionDisplay>() }, GroupActionDisplay.Layout.PHOTO) { it, _ ->
                     viewHolder.activities.add(it)
 
                     val questAction = viewHolder.activityConfig[it.id!!]
@@ -459,7 +463,7 @@ class QuestHandler(private val on: On) {
 
     private fun refresh(viewHolder: CreateQuestViewHolder) {
         searchGroupActivities(viewHolder, viewHolder.searchGroupsAdapter, viewHolder.view.searchActivities.text.toString())
-        on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(viewHolder.activities, true)
+        viewHolder.on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(viewHolder.activities, true)
         viewHolder.view.questActionsHeader.visible = viewHolder.activities.isNotEmpty()
         viewHolder.view.questActionRecyclerView.visible = viewHolder.activities.isNotEmpty()
     }
@@ -640,6 +644,7 @@ class QuestHandler(private val on: On) {
     }
 
     private class CreateQuestViewHolder internal constructor(val view: View) {
+        lateinit var on: On
         var isPublic: Boolean = false
         var finish: QuestFinish? = null
         var name = ""
