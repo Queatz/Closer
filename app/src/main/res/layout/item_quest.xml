@@ -98,8 +98,8 @@
             android:id="@+id/groupActionsRecyclerViewContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/peopleContainer"
-            app:layout_constraintTop_toBottomOf="@id/about">
+            app:layout_constraintTop_toBottomOf="@id/about"
+            app:layout_constraintBottom_toTopOf="@id/peopleContainer">
 
             <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                 android:id="@+id/groupActionsRecyclerView"
@@ -121,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/groupActionsRecyclerViewContainer"
-            app:layout_constraintBottom_toTopOf="@id/optionsButton"
+            app:layout_constraintBottom_toTopOf="@id/nextQuestsHeader"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -144,10 +144,52 @@
         </closer.vlllage.com.closer.ui.SoftScrollStopper>
 
         <TextView
+            android:id="@+id/nextQuestsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/peopleContainer"
+            app:layout_constraintBottom_toTopOf="@id/nextQuestsRecyclerViewContainer"
+            android:layout_marginTop="@dimen/padDouble"
+            android:layout_marginStart="@dimen/padDouble"
+            android:layout_marginEnd="@dimen/padDouble"
+            android:layout_marginBottom="@dimen/pad"
+            android:textColor="@color/textHintInverse"
+            android:textSize="@dimen/textSize"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:text="@string/what_to_do_next" />
+
+        <closer.vlllage.com.closer.ui.SoftScrollStopper
+            android:id="@+id/nextQuestsRecyclerViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/optionsButton"
+            app:layout_constraintTop_toBottomOf="@id/nextQuestsHeader">
+
+            <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+                android:id="@+id/nextQuestsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/pad"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingBottom="@dimen/pad"
+                tools:itemCount="6"
+                tools:listitem="@layout/group_action_item"
+                tools:layoutManager="LinearLayoutManager"
+                tools:orientation="horizontal" />
+
+        </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
+        <TextView
             android:id="@+id/optionsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/peopleContainer"
+            app:layout_constraintTop_toBottomOf="@+id/nextQuestsRecyclerViewContainer"
             app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="@color/text"
             android:gravity="center_horizontal"

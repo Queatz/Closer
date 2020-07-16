@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padDouble"
-            android:text="Finish by"
+            android:text="@string/finish_by"
             android:paddingStart="@dimen/padDialog"
             android:paddingEnd="@dimen/padDialog"
             android:textColor="@color/textInverse"
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="None" />
+                android:text="@string/none" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/durationToggleButton"
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="Duration" />
+                android:text="@string/duration" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/specificToggleButton"
@@ -110,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textSizeSmall"
-                android:text="Date" />
+                android:text="@string/date" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -137,7 +137,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padDouble"
-            android:text="Quest activities"
+            android:text="@string/quest_activities"
             android:paddingStart="@dimen/padDialog"
             android:paddingEnd="@dimen/padDialog"
             android:textColor="@color/textInverse"

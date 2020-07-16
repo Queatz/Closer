@@ -12,6 +12,7 @@ import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandle
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.quest.QuestHandler
+import closer.vlllage.com.closer.handler.quest.QuestLinkAdapter
 import closer.vlllage.com.closer.handler.quest.QuestProgressAdapter
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
@@ -79,6 +80,18 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                 false
         )
 
+        val nextQuestsAdapter = QuestLinkAdapter(holder.on) {
+
+        }
+
+        nextQuestsAdapter.setQuests(listOf(quest, quest, quest, quest))
+
+        holder.itemView.nextQuestsRecyclerView.adapter = nextQuestsAdapter
+        holder.itemView.nextQuestsRecyclerView.layoutManager = LinearLayoutManager(
+                holder.itemView.nextQuestsRecyclerView.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+        )
         holder.on<QuestHandler>().questProgress(quest) {
             holder.progress = it
             holder.questProgressAdapter.questProgresses = it.toMutableList()
@@ -113,6 +126,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.on<LightDarkHandler>().onLightChanged.subscribe {
             holder.name.setTextColor(it.text)
             holder.about.setTextColor(it.text)
+            holder.itemView.nextQuestsHeader.setTextColor(it.hint)
             holder.name.setBackgroundResource(it.clickableRoundedBackground8dp)
             holder.about.setBackgroundResource(it.clickableRoundedBackground8dp)
             holder.itemView.optionsButton.setTextColor(on<ResourcesHandler>().resources.getColor(when (it.light) {
