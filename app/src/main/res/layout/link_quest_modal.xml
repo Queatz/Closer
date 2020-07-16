@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+        android:id="@+id/questRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingEnd="@dimen/padDialog"
+        android:paddingTop="@dimen/pad"
+        android:paddingBottom="@dimen/pad"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        tools:orientation="horizontal"
+        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/group_action_item"/>
+
+    <EditText
+        android:id="@+id/searchQuests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad"
+        android:layout_marginStart="@dimen/padDouble"
+        android:layout_marginEnd="@dimen/padDouble"
+        app:layout_goneMarginBottom="@dimen/padDouble"
+        app:layout_constraintTop_toBottomOf="@+id/questRecyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/clickable_dark_flat"
+        android:drawableStart="@drawable/ic_search_black_24dp"
+        android:drawablePadding="@dimen/pad"
+        android:drawableTint="@color/forestgreen"
+        android:hint="@string/search_quests"
+        android:imeOptions="actionGo"
+        android:inputType="text|textCapWords"
+        android:maxLines="1"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingTop="@dimen/pad"
+        android:paddingEnd="@dimen/padDouble"
+        android:paddingBottom="@dimen/pad"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/textInverse"
+        android:textColorHint="@color/textHintInverse"
+        android:textColorHighlight="@color/colorAccent_50"
+        android:textSize="@dimen/textSize" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

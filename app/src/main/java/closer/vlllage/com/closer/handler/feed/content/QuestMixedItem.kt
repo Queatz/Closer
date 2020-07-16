@@ -5,6 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.api.models.QuestResult
+import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
@@ -28,6 +31,7 @@ class QuestViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemT
     var progressByMe: QuestProgress? = null
     var activeProgress: QuestProgress? = null
     lateinit var questProgressAdapter: QuestProgressAdapter
+    lateinit var nextQuestsAdapter: QuestLinkAdapter
     val about = itemView.about!!
     val name = itemView.name!!
     val card = itemView.card!!
@@ -80,18 +84,39 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                 false
         )
 
-        val nextQuestsAdapter = QuestLinkAdapter(holder.on) {
-
+        holder.nextQuestsAdapter = QuestLinkAdapter(holder.on, {
+            on<MenuHandler>().show(
+                    MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.remove_quest_link)) {
+                        on<ApiHandler>().removeQuestLink(quest.id!!, it.id!!).subscribe({
+                            if (it.success) {
+                                on<ToastHandler>().show(R.string.quest_unlinked)
+                                loadLinks(holder, quest)
+                            } else {
+                                on<DefaultAlerts>().thatDidntWork()
+                            }
+                        }, {
+                            on<DefaultAlerts>().thatDidntWork()
+                        }).also {
+                            on<DisposableHandler>().add(it)
+                        }
+                    }
+            )
+        }) { it, view ->
+            on<GroupActivityTransitionHandler>().showGroupForQuest(view, it)
         }
 
-        nextQuestsAdapter.setQuests(listOf(quest, quest, quest, quest))
-
-        holder.itemView.nextQuestsRecyclerView.adapter = nextQuestsAdapter
+        holder.itemView.nextQuestsRecyclerView.adapter = holder.nextQuestsAdapter
         holder.itemView.nextQuestsRecyclerView.layoutManager = LinearLayoutManager(
                 holder.itemView.nextQuestsRecyclerView.context,
                 LinearLayoutManager.HORIZONTAL,
                 false
         )
+
+        holder.itemView.nextQuestsHeader.visible = false
+        holder.itemView.nextQuestsRecyclerViewContainer.visible = false
+
+        loadLinks(holder, quest)
+
         holder.on<QuestHandler>().questProgress(quest) {
             holder.progress = it
             holder.questProgressAdapter.questProgresses = it.toMutableList()
@@ -168,6 +193,9 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             val questProgress = if (holder.activeProgress?.ofId == me) holder.activeProgress else holder.progressByMe
 
             on<MenuHandler>().show(
+                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {
+                        holder.on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
+                    },
                     MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.start_quest)) {
                         holder.on<QuestHandler>().startQuest(quest) {}
                     }.visible(questProgress == null || !(questProgress.active ?: false)),
@@ -181,10 +209,22 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                     MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.resume_quest)) {
                         holder.on<QuestHandler>().resumeQuest(questProgress!!) {}
                     }.visible(questProgress?.let { it.finished == null && it.active?.let { !it } ?: false } ?: false),
-                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {
-                        holder.on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
+                    MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.add_next_quest)) {
+                        on<QuestHandler>().addLinkedQuest(quest) { loadLinks(holder, quest) }
                     }
             )
+        }
+    }
+
+    private fun loadLinks(holder: QuestViewHolder, quest: Quest) {
+        on<ApiHandler>().getQuestLinks(quest.id!!).subscribe({
+            holder.nextQuestsAdapter.setQuests(it.map { QuestResult.from(it) }, true)
+            holder.itemView.nextQuestsHeader.visible = it.isNotEmpty()
+            holder.itemView.nextQuestsRecyclerViewContainer.visible = it.isNotEmpty()
+        }, {
+            // ignored
+        }).also {
+            holder.on<DisposableHandler>().add(it)
         }
     }
 

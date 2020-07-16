@@ -224,6 +224,15 @@ interface Backend {
     @GET("quest/{id}/progress")
     fun getQuestProgresses(@Path("id") questId: String): Single<List<QuestProgressResult>>
 
+    @GET("quest/{id}/links")
+    fun getQuestLinks(@Path("id") questId: String): Single<List<QuestResult>>
+
+    @POST("quest/{id}")
+    fun addQuestLink(@Path("id") questId: String, @Query("link") toQuestId: String): Single<SuccessResult>
+
+    @POST("quest/{id}")
+    fun removeQuestLink(@Path("id") questId: String, @Query("unlink") toQuestId: String): Single<SuccessResult>
+
     // QuestProgress
 
     @POST("quest-progress")

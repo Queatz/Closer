@@ -470,6 +470,12 @@
     <string name="date">Date</string>
     <string name="quest_activities">Quest activities</string>
     <string name="what_to_do_next">What to do next</string>
+    <string name="add_next_quest">Add next quest</string>
+    <string name="quest_linked">Quest linked!</string>
+    <string name="add_next_quest_description">Let people know what to do next after completing this quest.</string>
+    <string name="search_communities">Search communities</string>
+    <string name="remove_quest_link">Remove quest link</string>
+    <string name="quest_unlinked">Quest unlinked</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

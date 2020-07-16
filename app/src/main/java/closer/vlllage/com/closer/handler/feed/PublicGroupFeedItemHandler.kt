@@ -553,7 +553,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 eventsHeader.visible = false
                                 groupsHeader.visible = false
                                 searchGroups.visible = true
-                                searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
+                                searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_communities)
                                 itemView.historyButton.visible = explore
                                 itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
                                 itemView.historyButton.imageTintList = null

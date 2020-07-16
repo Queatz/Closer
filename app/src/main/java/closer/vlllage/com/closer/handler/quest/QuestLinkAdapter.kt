@@ -14,7 +14,7 @@ import com.queatz.on.On
 import kotlinx.android.synthetic.main.quest_link_item.view.*
 
 
-class QuestLinkAdapter(on: On, onQuestClickListener: ((Quest) -> Unit)? = null) : PoolRecyclerAdapter<QuestLinkAdapter.QuestLinkViewHolder>(on) {
+class QuestLinkAdapter(on: On, private val onQuestLongClickListener: ((Quest) -> Unit)? = null, private val onQuestClickListener: ((Quest, View) -> Unit)? = null) : PoolRecyclerAdapter<QuestLinkAdapter.QuestLinkViewHolder>(on) {
 
     private val quests = mutableListOf<Quest>()
 
@@ -37,6 +37,14 @@ class QuestLinkAdapter(on: On, onQuestClickListener: ((Quest) -> Unit)? = null) 
         }
 
         holder.itemView.name.text = quest.name ?: ""
+
+        holder.itemView.name.setOnClickListener {
+            onQuestClickListener?.invoke(quest, holder.itemView.name)
+        }
+        holder.itemView.name.setOnLongClickListener {
+            onQuestLongClickListener?.invoke(quest)
+            true
+        }
     }
 
     override fun getItemCount() = quests.size

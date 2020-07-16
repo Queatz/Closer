@@ -191,6 +191,12 @@ class ApiHandler constructor(private val on: On) {
 
     fun getQuestProgresses() = api { getQuestProgresses() }
 
+    fun addQuestLink(questId: String, toQuestId: String) = api { addQuestLink(questId, toQuestId) }
+
+    fun removeQuestLink(questId: String, toQuestId: String) = api { removeQuestLink(questId, toQuestId) }
+
+    fun getQuestLinks(questId: String) = api { getQuestLinks(questId) }
+
     fun getQuestProgress(questProgressId: String) = api { getQuestProgress(questProgressId) }
 
     fun createEvent(name: String, about: String, isPublic: Boolean, latLng: LatLng, startsAt: Date, endsAt: Date) = api { createEvent(name, about, isPublic, on<LatLngStr>().from(latLng), on<HttpEncode>().encode(on<DateFormatter>().format(startsAt))!!, on<HttpEncode>().encode(on<DateFormatter>().format(endsAt))!!) }

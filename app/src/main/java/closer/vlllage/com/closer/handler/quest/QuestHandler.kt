@@ -5,6 +5,7 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
+import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
@@ -28,9 +30,12 @@ import kotlinx.android.synthetic.main.add_progress_modal.view.*
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.actionRecyclerView
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.searchActivities
 import kotlinx.android.synthetic.main.create_quest_modal.view.*
+import kotlinx.android.synthetic.main.create_quest_modal.view.name
 import kotlinx.android.synthetic.main.edit_quest_action_modal.view.*
 import kotlinx.android.synthetic.main.edit_quest_duration_modal.view.*
 import kotlinx.android.synthetic.main.edit_quest_finish_date_modal.view.*
+import kotlinx.android.synthetic.main.item_quest.view.*
+import kotlinx.android.synthetic.main.link_quest_modal.view.*
 import java.util.*
 
 class QuestHandler(private val on: On) {
@@ -374,11 +379,61 @@ class QuestHandler(private val on: On) {
                 }
     }
 
+    fun addLinkedQuest(quest: Quest, success: () -> Unit) {
+        on<AlertHandler>().make().apply {
+            val close = { dialog?.dismiss() }
+
+            title = on<ResourcesHandler>().resources.getString(R.string.add_next_quest)
+            message = on<ResourcesHandler>().resources.getString(R.string.add_next_quest_description)
+            layoutResId = R.layout.link_quest_modal
+            onAfterViewCreated = { alertConfig, view ->
+                val holder = LinkQuestViewHolder(view).also {
+                    it.disposableGroup = on<DisposableHandler>().group()
+                }
+
+                val adapter = QuestLinkAdapter(on) { it, _ -> addLinkedQuestInternal(quest, it) {
+                    close()
+                    success()
+                } }
+
+                view.questRecyclerView.adapter = adapter
+                view.questRecyclerView.layoutManager = LinearLayoutManager(
+                        view.questRecyclerView.context,
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                )
+
+                view.searchQuests.doOnTextChanged { text, _, _, _ ->
+                    searchQuestsForQuest(quest, holder, adapter, text.toString())
+                }
+
+                searchQuestsForQuest(quest, holder, adapter)
+            }
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.close)
+            show()
+        }
+    }
+
     fun openGroupForQuestProgress(view: View?, questProgress: QuestProgress) {
         questProgress.groupId ?.let {
             on<GroupActivityTransitionHandler>().showGroupMessages(view, it)
         } ?: run {
             on<DefaultAlerts>().thatDidntWork()
+        }
+    }
+
+    private fun addLinkedQuestInternal(quest: Quest, toQuest: Quest, success: () -> Unit) {
+        on<ApiHandler>().addQuestLink(quest.id!!, toQuest.id!!).subscribe({
+            if (it.success) {
+                on<ToastHandler>().show(R.string.quest_linked)
+                success()
+            } else {
+                on<DefaultAlerts>().thatDidntWork()
+            }
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        }).also {
+            on<DisposableHandler>().add(it)
         }
     }
 
@@ -635,11 +690,19 @@ class QuestHandler(private val on: On) {
                 }
     }
 
-    private fun searchGroupActivities(holder: CreateQuestViewHolder, adapter: GroupActionAdapter, queryString: String?) {
+    private fun searchGroupActivities(holder: CreateQuestViewHolder, adapter: GroupActionAdapter, queryString: String? = null) {
         holder.disposableGroup.clear()
 
         on<Search>().groupActions(queryString = queryString) { groupActions ->
             adapter.setGroupActions(groupActions.filter { !holder.activityConfig.containsKey(it.id) })
+        }.also { holder.disposableGroup.add(it) }
+    }
+
+    private fun searchQuestsForQuest(quest: Quest, holder: LinkQuestViewHolder, adapter: QuestLinkAdapter, queryString: String? = null) {
+        holder.disposableGroup.clear()
+
+        on<Search>().quests(LatLng(quest.latitude!!, quest.longitude!!), queryString = queryString) { quests ->
+            adapter.setQuests(quests.filter { it.id != quest.id })
         }.also { holder.disposableGroup.add(it) }
     }
 
@@ -651,6 +714,10 @@ class QuestHandler(private val on: On) {
         val activities = mutableListOf<GroupAction>()
         val activityConfig = mutableMapOf<String, QuestAction>()
         lateinit var searchGroupsAdapter: GroupActionAdapter
+        lateinit var disposableGroup: DisposableGroup
+    }
+
+    private class LinkQuestViewHolder internal constructor(val view: View) {
         lateinit var disposableGroup: DisposableGroup
     }
 
