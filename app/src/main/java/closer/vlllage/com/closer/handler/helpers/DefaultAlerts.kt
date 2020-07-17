@@ -9,7 +9,6 @@ import com.queatz.on.On
 
 class DefaultAlerts constructor(private val on: On) {
 
-    @JvmOverloads
     fun thatDidntWork(message: String? = null) {
         on<AlertHandler>().make().apply {
                     title = on<ResourcesHandler>().resources.getString(R.string.that_didnt_work)
@@ -59,11 +58,14 @@ class DefaultAlerts constructor(private val on: On) {
         }
     }
 
-    fun message(title: String, message: String) {
+    fun message(title: String, message: String, closeCallback: (() -> Unit)? = null) {
         on<AlertHandler>().make().apply {
             this.title = title
             this.message = message
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.ok)
+            positiveButtonCallback = { closeCallback?.invoke() }
+            negativeButtonCallback = { closeCallback?.invoke() }
+            cancelIsNegative = true
             show()
         }
     }

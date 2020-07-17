@@ -111,6 +111,10 @@ class GroupActivity : CircularRevealActivity() {
                 on<LightDarkHandler>().setLight(true)
             }
 
+            onGroupNotFound {
+               finish()
+            }
+
             onGroupMemberChanged { groupMember ->
                 view.notificationSettingsButton.visible = groupMember.muted
             }
@@ -311,7 +315,6 @@ class GroupActivity : CircularRevealActivity() {
         if (intent.hasExtra(EXTRA_GROUP_ID)) {
             groupId = intent.getStringExtra(EXTRA_GROUP_ID)!!
             on<GroupHandler>().setGroupById(groupId)
-            on<RefreshHandler>().refreshGroup(groupId)
 
             if (intent.hasExtra(EXTRA_RESPOND)) {
                 on<GroupMessagesHandler>().setIsRespond()

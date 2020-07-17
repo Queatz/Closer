@@ -79,8 +79,10 @@ class GroupHandler constructor(private val on: On) {
 
     var groupContact: GroupContact? = null
         private set
+
     private val groupChanged = BehaviorSubject.create<Group>()
     private val groupUpdated = PublishSubject.create<Group>()
+    private val groupNotFound = PublishSubject.create<Unit>()
     private val eventChanged = BehaviorSubject.create<Event>()
     private val phoneChanged = BehaviorSubject.create<Phone>()
     private val phoneUpdated = BehaviorSubject.create<Phone>()
@@ -96,7 +98,11 @@ class GroupHandler constructor(private val on: On) {
 
         disposableGroup.add(on<DataHandler>().getGroup(groupId).subscribe({
             group = it
-        }, { on<DefaultAlerts>().thatDidntWork() }))
+
+            on<RefreshHandler>().refreshGroup(groupId)
+        }, { on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.group_not_found), on<ResourcesHandler>().resources.getString(R.string.group_not_found_description)) {
+            groupNotFound.onNext(Unit)
+        } }))
     }
 
     private fun onGroupSet(group: Group) {
@@ -168,6 +174,7 @@ class GroupHandler constructor(private val on: On) {
                 })
     }
 
+    fun onGroupNotFound(disposableGroup: DisposableGroup? = null, callback: (Unit) -> Unit) = onChangeCallback(groupNotFound, callback, disposableGroup)
     fun onGroupChanged(disposableGroup: DisposableGroup? = null, callback: (Group) -> Unit) = onChangeCallback(groupChanged, callback, disposableGroup)
     fun onGroupUpdated(disposableGroup: DisposableGroup? = null, callback: (Group) -> Unit) = onChangeCallback(groupUpdated, callback, disposableGroup)
     fun onEventChanged(disposableGroup: DisposableGroup? = null, callback: (Event) -> Unit) = onChangeCallback(eventChanged, callback, disposableGroup)
