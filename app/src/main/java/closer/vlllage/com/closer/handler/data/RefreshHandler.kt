@@ -106,6 +106,10 @@ class RefreshHandler constructor(private val on: On) {
         on<DisposableHandler>().add(on<ApiHandler>().getQuestProgresses().subscribe({ questProgressResults -> handleFullListResult(questProgressResults, QuestProgress::class.java, QuestProgress_.id, false, { QuestProgressResult.from(it) }, { questProgress, questProgressResult -> QuestProgressResult.updateFrom(questProgress, questProgressResult) }) }, connectionError))
     }
 
+    fun refreshQuestActions(questId: String) {
+        on<DisposableHandler>().add(on<ApiHandler>().getQuestActions(questId).subscribe({ groupActionResults -> handleFullListResult(groupActionResults, GroupAction::class.java, GroupAction_.id, false, { GroupActionResult.from(it) }, { groupAction, groupActionResult -> GroupActionResult.updateFrom(groupAction, groupActionResult) }) }, connectionError))
+    }
+
     fun refreshQuestProgresses(questId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getQuestProgresses(questId).subscribe({ questProgressResults -> handleFullListResult(questProgressResults, QuestProgress::class.java, QuestProgress_.id, false, { QuestProgressResult.from(it) }, { questProgress, questProgressResult -> QuestProgressResult.updateFrom(questProgress, questProgressResult) }) }, connectionError))
     }

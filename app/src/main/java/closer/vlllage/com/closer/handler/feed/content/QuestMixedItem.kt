@@ -116,6 +116,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.itemView.nextQuestsRecyclerViewContainer.visible = false
 
         loadLinks(holder, quest)
+        loadQuestActions(quest)
 
         holder.on<QuestHandler>().questProgress(quest) {
             holder.progress = it
@@ -214,6 +215,10 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                     }
             )
         }
+    }
+
+    private fun loadQuestActions(quest: Quest) {
+        on<RefreshHandler>().refreshQuestActions(quest.id!!)
     }
 
     private fun loadLinks(holder: QuestViewHolder, quest: Quest) {

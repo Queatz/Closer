@@ -224,6 +224,9 @@ interface Backend {
     @GET("quest/{id}/progress")
     fun getQuestProgresses(@Path("id") questId: String): Single<List<QuestProgressResult>>
 
+    @GET("quest/{id}/actions")
+    fun getQuestActions(@Path("id") questId: String): Single<List<GroupActionResult>>
+
     @GET("quest/{id}/links")
     fun getQuestLinks(@Path("id") questId: String): Single<List<QuestResult>>
 
