@@ -209,7 +209,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
 
                 if (editable) {
                     actionEditIntroduction.setOnClickListener {
-                        on<DefaultInput>().show(R.string.introduction_hint, hintRes = R.string.write_here, prefill = phone.introduction) {
+                        on<DefaultInput>().show(R.string.introduction_hint, hintRes = R.string.write_here, prefill = phone.introduction, multiline = true) {
                             on<AccountHandler>().updateAbout(introduction = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }
@@ -229,7 +229,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
 
                     actionEditOfftime.setOnClickListener {
-                        on<DefaultInput>().show(R.string.offtime_hint, hintRes = R.string.write_here, prefill = phone.offtime) {
+                        on<DefaultInput>().show(R.string.offtime_hint, hintRes = R.string.write_here, prefill = phone.offtime, multiline = true) {
                             on<AccountHandler>().updateAbout(offtime = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }
@@ -237,7 +237,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
 
                     actionEditOccupation.setOnClickListener {
-                        on<DefaultInput>().show(R.string.occupation_hint, hintRes = R.string.write_here, prefill = phone.occupation) {
+                        on<DefaultInput>().show(R.string.occupation_hint, hintRes = R.string.write_here, prefill = phone.occupation, multiline = true) {
                             on<AccountHandler>().updateAbout(occupation = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }
@@ -245,7 +245,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     }
 
                     actionEditHistory.setOnClickListener {
-                        on<DefaultInput>().show(R.string.history_hint, hintRes = R.string.write_here, prefill = phone.history) {
+                        on<DefaultInput>().show(R.string.history_hint, hintRes = R.string.write_here, prefill = phone.history, multiline = true) {
                             on<AccountHandler>().updateAbout(history = it) {
                                 on<RefreshHandler>().refreshPhone(phone.id!!)
                             }

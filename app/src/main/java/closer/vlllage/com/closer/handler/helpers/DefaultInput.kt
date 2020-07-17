@@ -17,6 +17,7 @@ class DefaultInput constructor(private val on: On) {
              @StringRes buttonRes: Int = R.string.ok,
              prefill: String? = null,
              inputType: Int? = null,
+             multiline: Boolean = false,
              callback: (String) -> Unit) {
         show(
                 on<ResourcesHandler>().resources.getString(titleRes),
@@ -24,6 +25,7 @@ class DefaultInput constructor(private val on: On) {
                 on<ResourcesHandler>().resources.getString(buttonRes),
                 prefill,
                 inputType,
+                multiline,
                 callback
         )
     }
@@ -33,6 +35,7 @@ class DefaultInput constructor(private val on: On) {
              button: String? = null,
              prefill: String? = null,
              inputType: Int? = null,
+             multiline: Boolean = false,
              callback: (String) -> Unit) {
         on<AlertHandler>().make().apply {
             layoutResId = R.layout.simple_input_modal
@@ -42,6 +45,10 @@ class DefaultInput constructor(private val on: On) {
                 input.hint = hint
                 input.text = prefill ?: ""
                 inputType?.let { input.inputType = it }
+                if (multiline) {
+                    input.inputType = input.inputType or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                    input.maxLines = Integer.MAX_VALUE
+                }
             }
             onTextViewSubmitCallback = callback
             title = titleString
