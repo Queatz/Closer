@@ -41,7 +41,7 @@ class PhotosAdapter(on: On) : PoolRecyclerAdapter<PhotoViewHolder>(on) {
         holder.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, photo) }
         holder.photo.setOnLongClickListener { view ->
             on<MenuHandler>().show(
-                    MenuHandler.MenuOption(R.drawable.ic_group_black_24dp, R.string.open_group) {
+                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.open_group) {
                         on<GroupActivityTransitionHandler>().showGroupMessages(view, groupMessage.to!!)
 
                     })

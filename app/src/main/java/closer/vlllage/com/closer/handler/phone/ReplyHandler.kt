@@ -8,7 +8,7 @@ import com.queatz.on.On
 
 class ReplyHandler constructor(private val on: On) {
     fun reply(phone: Phone) {
-        reply(phone.id!!, phone.name)
+        reply(phone.id!!, on<NameHandler>().getName(phone))
     }
 
     private fun reply(phoneId: String, phoneName: String? = null) {
