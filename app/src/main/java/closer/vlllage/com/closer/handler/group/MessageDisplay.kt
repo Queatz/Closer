@@ -425,7 +425,7 @@ class MessageDisplay constructor(private val on: On) {
             toggleMessageActionLayout(groupMessage, holder, true, shorthand = true)
         }
 
-        holder.profilePhoto.visible = showProfile
+        holder.profilePhoto.visible = showProfile && !holder.pinned
         holder.activeNowIndicator.visible = false
 
         if (showProfile && !holder.pinned) {
