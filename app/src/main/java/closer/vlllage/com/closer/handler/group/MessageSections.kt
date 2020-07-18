@@ -61,6 +61,13 @@ class MessageSections constructor(private val on: On) {
             rootView.photo.maxHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.maxPhotoHeight)
         }
 
+        // Android WRAP_CONTENT bug
+        rootView.photo.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            rootView.updateLayoutParams {
+                height = bottom - top + (rootView.photo.layoutParams as ViewGroup.MarginLayoutParams).let { it.topMargin + it.bottomMargin }
+            }
+        }
+
         rootView.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, url) }
         on<ImageHandler>().get().clear(rootView.photo)
         on<ImageHandler>().get().load(url)

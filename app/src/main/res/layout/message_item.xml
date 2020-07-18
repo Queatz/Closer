@@ -26,14 +26,49 @@
         tools:visibility="visible"
         tools:text="Where are we going this weekend?" />
 
-    <LinearLayout
-        android:id="@+id/messageLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+
+    <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/profilePhoto"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/clickable_dark_flat"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintTop_toBottomOf="@+id/eventMessage"
         app:layout_constraintBottom_toTopOf="@+id/reactionsRecyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/messageLayout"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
         android:layout_marginTop="@dimen/padDouble"
+        android:layout_marginBottom="@dimen/pad"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_person_black_24dp"/>
+
+    <View
+        android:id="@+id/activeNowIndicator"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/profilePhoto"
+        app:layout_constraintTop_toTopOf="@+id/profilePhoto"
+        android:translationX="2dp"
+        android:translationY="-2dp"
+        android:background="@drawable/color_green_stroke"
+        tools:visibility="visible"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/messageLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/profilePhoto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintTop_toBottomOf="@+id/eventMessage"
+        app:layout_constraintWidth_default="spread"
+        app:layout_constraintBottom_toTopOf="@+id/reactionsRecyclerView"
+        app:layout_constrainedWidth="true"
+        android:layout_marginTop="@dimen/padDouble"
+        android:layout_marginStart="@dimen/pad"
         android:background="@drawable/rounded_dim_12dp"
         android:padding="@dimen/pad"
         android:orientation="vertical">
@@ -71,7 +106,6 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:maxHeight="256dp"
-            android:transitionName="photo"
             android:contentDescription="@string/photo"
             android:visibility="gone" />
 
@@ -110,7 +144,7 @@
         android:layout_marginTop="@dimen/padHalf"
         app:layout_constraintTop_toBottomOf="@+id/messageLayout"
         app:layout_constraintBottom_toTopOf="@+id/messageActionLayout"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/messageLayout"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
         tools:visibility="visible"
@@ -376,7 +410,7 @@
         android:layout_marginBottom="@dimen/padHalf"
         app:layout_constraintTop_toBottomOf="@+id/messageActionLayout"
         app:layout_constraintBottom_toTopOf="@+id/time"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/messageLayout"
         app:layout_goneMarginTop="@dimen/pad"
         android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/text"
@@ -399,7 +433,7 @@
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/messageLayout"
         app:layout_constraintTop_toBottomOf="@+id/messageRepliesCount"
         app:layout_constraintBottom_toTopOf="@+id/action"
         android:layout_marginStart="@dimen/padHalf"
@@ -410,16 +444,22 @@
 
     <TextView
         android:id="@+id/group"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/padHalf"
         app:layout_constraintStart_toEndOf="@+id/time"
         app:layout_constraintTop_toTopOf="@+id/time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_default="wrap"
         app:layout_constraintBottom_toBottomOf="@+id/time"
         android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/text"
         android:visibility="gone"
         tools:visibility="visible"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:gravity="bottom"
         tools:text="Matcha Club" />
 
@@ -430,7 +470,7 @@
         android:layout_marginTop="@dimen/pad"
         android:layout_marginBottom="@dimen/padHalf"
         app:layout_constraintTop_toBottomOf="@+id/time"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/messageLayout"
         app:layout_constraintBottom_toBottomOf="parent"
         android:paddingStart="@dimen/padDouble"
         android:paddingEnd="@dimen/padDouble"

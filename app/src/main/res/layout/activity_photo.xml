@@ -16,8 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:scaleType="fitCenter"
-        android:contentDescription="@string/photo"
-        android:transitionName="photo" />
+        android:contentDescription="@string/photo" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

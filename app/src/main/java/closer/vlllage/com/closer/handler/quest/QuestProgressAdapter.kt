@@ -8,15 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
-import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.QuestProgress
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.person_item.view.*
 import kotlinx.android.synthetic.main.person_item.view.activeNowIndicator
 import kotlinx.android.synthetic.main.person_item.view.photo
 import kotlinx.android.synthetic.main.person_item_small.view.*
@@ -82,7 +79,10 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
         })
 
         // todo don't make call if ofId is a Group
-        on<DataHandler>().getPhone(questProgress.ofId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
+        holder.itemView.photo.setImageResource(R.drawable.ic_person_black_24dp)
+        holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
+
+        on<DataHandler>().getPhone(questProgress.ofId!!).subscribe({
             holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(it.updated
                     ?: Date(0))
 

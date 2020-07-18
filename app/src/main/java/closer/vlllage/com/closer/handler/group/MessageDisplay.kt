@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -34,6 +35,10 @@ import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
 import com.vdurmont.emoji.EmojiManager
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.message_item.view.*
+import kotlinx.android.synthetic.main.person_item.view.*
+import kotlinx.android.synthetic.main.person_item.view.activeNowIndicator
 import java.util.*
 
 class MessageDisplay constructor(private val on: On) {
@@ -94,14 +99,13 @@ class MessageDisplay constructor(private val on: On) {
 
         if (sections.any { on<MessageSections>().isFullWidth(it.asJsonObject) }) {
             holder.messageLayout.updateLayoutParams { width = MATCH_PARENT }
-            holder.custom.updateLayoutParams { width = MATCH_PARENT }
         }
 
         holder.custom.removeAllViews()
 
         val layout = LinearLayout(holder.custom.context).also {
             it.orientation = LinearLayout.VERTICAL
-            it.layoutParams = ConstraintLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+            it.layoutParams = ConstraintLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
                 topToTop = PARENT_ID
                 bottomToBottom = PARENT_ID
                 startToStart = PARENT_ID
@@ -373,6 +377,8 @@ class MessageDisplay constructor(private val on: On) {
                 onSuggestionClickListener: (Suggestion) -> Unit) {
         holder.group.visible = false
 
+        var showProfile = true
+
         if (groupMessage.attachment != null) {
             try {
                 val jsonObject = on<JsonHandler>().from(groupMessage.attachment!!, JsonObject::class.java)
@@ -380,7 +386,7 @@ class MessageDisplay constructor(private val on: On) {
                     jsonObject.has("activity") -> displayGroupAction(holder, jsonObject, groupMessage)
                     jsonObject.has("action") -> displayAction(holder, jsonObject, groupMessage)
                     jsonObject.has("review") -> displayReview(holder, jsonObject, groupMessage)
-                    jsonObject.has("message") -> displayMessage(holder, jsonObject, groupMessage)
+                    jsonObject.has("message") -> { displayMessage(holder, jsonObject, groupMessage); showProfile = false }
                     jsonObject.has("event") -> displayEvent(holder, jsonObject, groupMessage, onEventClickListener)
                     jsonObject.has("group") -> displayGroup(holder, jsonObject, groupMessage, onGroupClickListener)
                     jsonObject.has("suggestion") -> displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener)
@@ -417,6 +423,32 @@ class MessageDisplay constructor(private val on: On) {
                 !hasMyReaction(groupMessage)
         ) {
             toggleMessageActionLayout(groupMessage, holder, true, shorthand = true)
+        }
+
+        holder.profilePhoto.visible = showProfile
+        holder.activeNowIndicator.visible = false
+
+        if (showProfile && !holder.pinned) {
+            holder.profilePhoto.setOnClickListener {
+                on<GroupActivityTransitionHandler>().showGroupForPhone(holder.profilePhoto, groupMessage.from!!)
+            }
+
+            holder.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
+            holder.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
+
+            on<DataHandler>().getPhone(groupMessage.from!!).subscribe({
+                holder.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(it.updated ?: Date(0))
+
+                if (it.photo.isNullOrBlank()) {
+                    holder.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
+                    holder.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                } else {
+                    holder.profilePhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+                    on<PhotoHelper>().loadCircle(holder.profilePhoto, "${it.photo}?s=256")
+                }
+            }, {}).also {
+                holder.disposableGroup.add(it)
+            }
         }
     }
 

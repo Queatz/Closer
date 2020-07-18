@@ -215,6 +215,8 @@ class GroupMessageViewHolder(on: On, itemView: View) : MixedItemViewHolder(itemV
     internal var time: TextView
     internal var group: TextView
     internal var photo: ImageView
+    internal var profilePhoto: ImageView
+    internal var activeNowIndicator: View
     internal var rating: RatingBar
     internal var custom: ConstraintLayout
     internal var pinnedIndicator: ImageView
@@ -250,6 +252,8 @@ class GroupMessageViewHolder(on: On, itemView: View) : MixedItemViewHolder(itemV
         time = itemView.findViewById(R.id.time)
         group = itemView.findViewById(R.id.group)
         photo = itemView.findViewById(R.id.photo)
+        profilePhoto = itemView.findViewById(R.id.profilePhoto)
+        activeNowIndicator = itemView.findViewById(R.id.activeNowIndicator)
         rating = itemView.findViewById(R.id.rating)
         custom = itemView.findViewById(R.id.custom)
         pinnedIndicator = itemView.findViewById(R.id.pinnedIndicator)
