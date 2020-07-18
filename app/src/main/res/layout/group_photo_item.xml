@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -7,10 +7,9 @@
     <closer.vlllage.com.closer.ui.ScalingImageView
         android:id="@+id/photo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/pad"
-        android:nestedScrollingEnabled="false"
         android:scaleType="fitCenter"
         android:contentDescription="@string/photo" />
 
-</androidx.core.widget.NestedScrollView>
+</FrameLayout>
