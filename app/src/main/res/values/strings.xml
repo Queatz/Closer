@@ -378,7 +378,7 @@
     <string name="heading">Heading</string>
     <string name="write_here">Write here</string>
     <string name="edit">Edit</string>
-    <string name="resize">Resize photo</string>
+    <string name="resize_photo">Resize photo</string>
     <string name="cannot_delete_last_message">Your post must contain at least one section.</string>
     <string name="blank_sections_error">Fill out or remove blank sections before posting.</string>
     <string name="public_group_in_x">Public group in %1$s</string>
@@ -478,6 +478,7 @@
     <string name="quest_unlinked">Quest unlinked</string>
     <string name="group_not_found_description">This group is private or unavailable.</string>
     <string name="group_not_found">Group not found</string>
+    <string name="travel">Travel</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

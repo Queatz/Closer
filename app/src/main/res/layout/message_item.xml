@@ -26,7 +26,6 @@
         tools:visibility="visible"
         tools:text="Where are we going this weekend?" />
 
-
     <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/profilePhoto"
         android:layout_width="36dp"
@@ -54,7 +53,7 @@
         tools:visibility="visible"
         android:visibility="gone" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messageLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -62,10 +61,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintTop_toBottomOf="@+id/eventMessage"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintWidth_default="spread"
         app:layout_constraintBottom_toTopOf="@+id/reactionsRecyclerView"
-        app:layout_constrainedWidth="true"
+        app:layout_constrainedWidth="false"
         android:layout_marginTop="@dimen/padDouble"
         android:layout_marginStart="@dimen/pad"
         android:background="@drawable/rounded_dim_12dp"
@@ -76,6 +73,10 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/custom"
+            app:layout_constraintVertical_chainStyle="packed"
             android:textSize="@dimen/textSizeSmall"
             android:textColor="@color/text"
             android:textStyle="bold"
@@ -83,16 +84,27 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/custom"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:isScrollContainer="true"
-            android:visibility="gone" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toTopOf="@+id/rating"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constrainedWidth="false"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <RatingBar style="?android:attr/ratingBarStyleSmall"
             android:id="@+id/rating"
             android:layout_marginTop="@dimen/padHalf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/custom"
+            app:layout_constraintBottom_toTopOf="@+id/photo"
+            app:layout_constraintVertical_chainStyle="packed"
             android:stepSize="1"
             android:visibility="gone"
             tools:visibility="visible"
@@ -103,6 +115,10 @@
             android:id="@+id/photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rating"
+            app:layout_constraintBottom_toTopOf="@+id/message"
+            app:layout_constraintVertical_chainStyle="packed"
             android:layout_marginTop="@dimen/pad"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
@@ -114,6 +130,13 @@
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/photo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constrainedWidth="true"
             android:textSize="@dimen/textSize"
             android:textColor="@color/text"
             android:textIsSelectable="true"
@@ -121,7 +144,7 @@
             android:autoLink="all"
             tools:text="Where are we going this weekend?" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/pinnedIndicator"
@@ -441,6 +464,7 @@
         app:layout_constraintTop_toBottomOf="@+id/messageRepliesCount"
         app:layout_constraintBottom_toTopOf="@+id/action"
         android:layout_marginStart="@dimen/padHalf"
+        app:layout_constrainedWidth="true"
         android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/text"
         android:gravity="bottom"
@@ -448,7 +472,7 @@
 
     <TextView
         android:id="@+id/group"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/padHalf"
         app:layout_constraintStart_toEndOf="@+id/time"
@@ -456,9 +480,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintWidth_default="wrap"
         app:layout_constraintBottom_toBottomOf="@+id/time"
+        app:layout_constrainedWidth="true"
         android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/text"
         android:visibility="gone"

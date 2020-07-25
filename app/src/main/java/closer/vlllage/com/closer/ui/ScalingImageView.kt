@@ -12,6 +12,8 @@ class ScalingImageView : AppCompatImageView {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var heightMeasureSpec = heightMeasureSpec
+        var widthMeasureSpec = widthMeasureSpec
+
         if (drawable != null) {
             val mDrawableWidth = drawable.intrinsicWidth
             val mDrawableHeight = drawable.intrinsicHeight
@@ -19,9 +21,16 @@ class ScalingImageView : AppCompatImageView {
 
             // Assuming the width is ok, so we calculate the height.
             val actualWidth = MeasureSpec.getSize(widthMeasureSpec)
-            val height = (actualWidth / actualAspect).toInt()
+            var height = (actualWidth / actualAspect).toInt()
+
+            if (height > maxHeight) {
+                height = maxHeight
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec((actualWidth * actualAspect).toInt(), MeasureSpec.EXACTLY)
+            }
+
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
         }
+
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 }

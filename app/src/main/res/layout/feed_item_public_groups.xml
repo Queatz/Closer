@@ -31,11 +31,11 @@
 
         <closer.vlllage.com.closer.ui.SoftScrollStopper
             android:id="@+id/appsToolbarContainer"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/pad"
             android:layout_marginBottom="@dimen/padDouble"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

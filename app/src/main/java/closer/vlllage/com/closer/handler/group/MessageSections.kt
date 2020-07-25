@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.DataHandler
@@ -61,13 +60,6 @@ class MessageSections constructor(private val on: On) {
             rootView.photo.maxHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.maxPhotoHeight)
         }
 
-        // Android WRAP_CONTENT bug
-        rootView.photo.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            rootView.updateLayoutParams {
-                height = bottom - top + (rootView.photo.layoutParams as ViewGroup.MarginLayoutParams).let { it.topMargin + it.bottomMargin }
-            }
-        }
-
         rootView.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, url) }
         on<ImageHandler>().get().clear(rootView.photo)
         on<ImageHandler>().get().load(url)
@@ -100,27 +92,17 @@ class MessageSections constructor(private val on: On) {
             .observeOn(AndroidSchedulers.mainThread())
             .map { groupAction ->
                 val rootView = LayoutInflater.from(parent.context).inflate(R.layout.group_action_photo_item, parent, false)
-                (rootView.layoutParams as ConstraintLayout.LayoutParams).apply {
+                (rootView.layoutParams as ViewGroup.MarginLayoutParams).apply {
                     topMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
                     marginStart = 0
-                    startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                    endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                    topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                    bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                    horizontalBias = 0f
                 }
                 on<GroupActionDisplay>().display(rootView, groupAction, GroupActionDisplay.Layout.PHOTO)
                 return@map rootView
             }.onErrorReturn {
                 val rootView = LayoutInflater.from(parent.context).inflate(R.layout.group_action_photo_unavailable, parent, false)
-                (rootView.layoutParams as ConstraintLayout.LayoutParams).apply {
+                (rootView.layoutParams as ViewGroup.MarginLayoutParams).apply {
                     topMargin = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
                     marginStart = 0
-                    startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                    endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                    topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                    bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                    horizontalBias = 0f
                 }
                 return@onErrorReturn rootView
             }

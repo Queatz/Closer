@@ -5,6 +5,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -134,8 +135,27 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.time.movementMethod = LinkMovementMethod.getInstance()
         holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()
 
-        holder.messageLayout.updateLayoutParams { width = ViewGroup.LayoutParams.WRAP_CONTENT }
-        holder.custom.updateLayoutParams { width = ViewGroup.LayoutParams.WRAP_CONTENT }
+        if (on<MessageDisplay>().isFullWidth(groupMessage)) {
+            holder.messageLayout.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                width = 0
+                constrainedWidth = false
+            }
+
+            holder.custom.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                width = 0
+                constrainedWidth = false
+            }
+        } else {
+            holder.messageLayout.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                width = ViewGroup.LayoutParams.WRAP_CONTENT
+                constrainedWidth = true
+            }
+
+            holder.custom.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                width = ViewGroup.LayoutParams.WRAP_CONTENT
+                constrainedWidth = true
+            }
+        }
 
         val replyCount = groupMessage.replies?.let { it - 1 } ?: 0
 

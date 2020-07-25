@@ -50,7 +50,7 @@ class DataVisualsHandler constructor(private val on: On) {
     }
 
     private fun gradient(layer: Layer) = when (layer) {
-        Layer.PHONE -> Gradient(intArrayOf(Color.rgb(0, 102, 225), Color.rgb(255, 255, 255)), floatArrayOf(0.1f, 1.0f))
+        Layer.PHONE -> Gradient(intArrayOf(Color.rgb(102, 225, 0), Color.rgb(255, 0, 0)), floatArrayOf(0.1f, 1.0f))
         Layer.GROUP -> Gradient(intArrayOf(Color.rgb(102, 225, 0), Color.rgb(255, 0, 0)), floatArrayOf(0.1f, 1.0f))
     }
 }

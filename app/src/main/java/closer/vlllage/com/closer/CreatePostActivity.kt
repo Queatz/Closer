@@ -61,7 +61,7 @@ class CreatePostActivity : ListActivity() {
                 }
                 CreatePostActionType.EditPhoto -> {
                     on<MenuHandler>().show(
-                            MenuHandler.MenuOption(0, R.string.resize) {
+                            MenuHandler.MenuOption(R.drawable.ic_baseline_photo_size_select_large_24, R.string.resize_photo) {
                                 val photo = adapter.items[it.position].attachment.get("photo").asJsonObject
                                 val large = photo.get("large")?.asBoolean ?: false
 

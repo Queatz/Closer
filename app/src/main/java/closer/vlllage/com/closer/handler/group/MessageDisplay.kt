@@ -4,6 +4,7 @@ import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
@@ -11,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
@@ -36,10 +38,8 @@ import com.queatz.on.On
 import com.vdurmont.emoji.EmojiManager
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.message_item.view.*
-import kotlinx.android.synthetic.main.person_item.view.*
-import kotlinx.android.synthetic.main.person_item.view.activeNowIndicator
 import java.util.*
+
 
 class MessageDisplay constructor(private val on: On) {
 
@@ -89,34 +89,37 @@ class MessageDisplay constructor(private val on: On) {
             on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_post, it)
         }
 
-        val post = jsonObject.get("post").asJsonObject
-        val sections = post.get("sections").asJsonArray
-
         holder.message.visible = false
         holder.time.visible = true
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
         holder.action.visible = false
 
-        if (sections.any { on<MessageSections>().isFullWidth(it.asJsonObject) }) {
-            holder.messageLayout.updateLayoutParams { width = MATCH_PARENT }
-        }
+        val post = jsonObject.get("post").asJsonObject
+        val sections = post.get("sections").asJsonArray
+        val containsFullWidthPhoto = sections.any { on<MessageSections>().isFullWidth(it.asJsonObject) }
 
         holder.custom.removeAllViews()
 
-        val layout = LinearLayout(holder.custom.context).also {
-            it.orientation = LinearLayout.VERTICAL
-            it.layoutParams = ConstraintLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                topToTop = PARENT_ID
-                bottomToBottom = PARENT_ID
-                startToStart = PARENT_ID
-                endToEnd = PARENT_ID
-            }
-        }
+        val layout = LinearLayout(holder.custom.context).also { it.orientation = LinearLayout.VERTICAL }
 
-        holder.disposableGroup.add(Single.concat(sections.map { on<MessageSections>().renderSection(it.asJsonObject, holder.custom) }).doOnComplete {
-            holder.custom.addView(layout)
-            holder.custom.visible = true
-        }.subscribe { layout.addView(it) })
+        holder.custom.addView(layout, ConstraintLayout.LayoutParams(if (containsFullWidthPhoto) 0 else WRAP_CONTENT, WRAP_CONTENT).apply {
+            constrainedWidth = false
+            topToTop = PARENT_ID
+            bottomToBottom = PARENT_ID
+            startToStart = PARENT_ID
+            endToEnd = PARENT_ID
+        })
+
+        Single.concat(sections.map { on<MessageSections>().renderSection(it.asJsonObject, layout) })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete {
+                    holder.custom.visible = true
+                    holder.custom.requestLayout()
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { layout.addView(it) }.also {
+                    holder.disposableGroup.add(it)
+                }
 
         if (
                 groupMessage.from != on<PersistenceHandler>().phoneId &&
@@ -628,4 +631,20 @@ class MessageDisplay constructor(private val on: On) {
             .firstOrNull { it.reaction == reaction }
             ?.preview
             ?.any { it == on<PersistenceHandler>().phoneId } ?: false
+
+    fun isFullWidth(groupMessage: GroupMessage): Boolean {
+        if (groupMessage.attachment != null) {
+            try {
+                val jsonObject = on<JsonHandler>().from(groupMessage.attachment!!, JsonObject::class.java)
+
+                when {
+                    jsonObject.has("post") -> {
+                        return jsonObject.get("post").asJsonObject.get("sections").asJsonArray.any { on<MessageSections>().isFullWidth(it.asJsonObject) }
+                    }
+                }
+            } catch (throwable: Throwable) { }
+        }
+
+        return false
+    }
 }

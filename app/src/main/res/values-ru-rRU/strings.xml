@@ -380,7 +380,7 @@
     <string name="heading">Заголовок</string>
     <string name="write_here">Пишите здесь</string>
     <string name="edit">Редактировать</string>
-    <string name="resize">Изменить размер фото</string>
+    <string name="resize_photo">Изменить размер фото</string>
     <string name="cannot_delete_last_message">Ваше сообщение должно содержать хотя бы один раздел.</string>
     <string name="blank_sections_error">Заполните или удалите пустые разделы перед публикацией.</string>
     <string name="public_group_in_x">Общедоступная группа в %1$s</string>
