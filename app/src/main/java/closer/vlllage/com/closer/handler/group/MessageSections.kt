@@ -3,9 +3,6 @@ package closer.vlllage.com.closer.handler.group
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
