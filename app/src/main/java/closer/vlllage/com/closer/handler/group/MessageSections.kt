@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.group
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.R
@@ -48,16 +49,8 @@ class MessageSections constructor(private val on: On) {
         val isFullWidth = photo.get("large")?.asBoolean == true
         val url = photo.get("photo").asString + "?s=500"
 
-        if (!isFullWidth) {
-            rootView.updateLayoutParams {
-                width = WRAP_CONTENT
-            }
-
-            rootView.photo.updateLayoutParams {
-                width = WRAP_CONTENT
-            }
-
-            rootView.photo.maxHeight = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.maxPhotoHeight)
+        if (isFullWidth) {
+            rootView.photo.maxHeight = Int.MAX_VALUE
         }
 
         rootView.photo.setOnClickListener { view -> on<PhotoActivityTransitionHandler>().show(view, url) }

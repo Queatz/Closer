@@ -96,14 +96,13 @@ class MessageDisplay constructor(private val on: On) {
 
         val post = jsonObject.get("post").asJsonObject
         val sections = post.get("sections").asJsonArray
-        val containsFullWidthPhoto = sections.any { on<MessageSections>().isFullWidth(it.asJsonObject) }
 
         holder.custom.removeAllViews()
 
         val layout = LinearLayout(holder.custom.context).also { it.orientation = LinearLayout.VERTICAL }
 
-        holder.custom.addView(layout, ConstraintLayout.LayoutParams(if (containsFullWidthPhoto) 0 else WRAP_CONTENT, WRAP_CONTENT).apply {
-            constrainedWidth = false
+        holder.custom.addView(layout, ConstraintLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
+            constrainedWidth = true
             topToTop = PARENT_ID
             bottomToBottom = PARENT_ID
             startToStart = PARENT_ID

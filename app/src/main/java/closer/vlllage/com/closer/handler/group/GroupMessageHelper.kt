@@ -135,28 +135,6 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.time.movementMethod = LinkMovementMethod.getInstance()
         holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()
 
-        if (on<MessageDisplay>().isFullWidth(groupMessage)) {
-            holder.messageLayout.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                width = 0
-                constrainedWidth = false
-            }
-
-            holder.custom.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                width = 0
-                constrainedWidth = false
-            }
-        } else {
-            holder.messageLayout.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                width = ViewGroup.LayoutParams.WRAP_CONTENT
-                constrainedWidth = true
-            }
-
-            holder.custom.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                width = ViewGroup.LayoutParams.WRAP_CONTENT
-                constrainedWidth = true
-            }
-        }
-
         val replyCount = groupMessage.replies?.let { it - 1 } ?: 0
 
         holder.messageRepliesCount.visible = replyCount > 0

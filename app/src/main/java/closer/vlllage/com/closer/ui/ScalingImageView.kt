@@ -10,25 +10,11 @@ class ScalingImageView : AppCompatImageView {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var heightMeasureSpec = heightMeasureSpec
-        var widthMeasureSpec = widthMeasureSpec
+    override fun onMeasure(initialWidthMeasureSpec: Int, heightMeasureSpec: Int) {
+        var widthMeasureSpec = initialWidthMeasureSpec
 
-        if (drawable != null) {
-            val mDrawableWidth = drawable.intrinsicWidth
-            val mDrawableHeight = drawable.intrinsicHeight
-            val actualAspect = mDrawableWidth.toFloat() / mDrawableHeight.toFloat()
-
-            // Assuming the width is ok, so we calculate the height.
-            val actualWidth = MeasureSpec.getSize(widthMeasureSpec)
-            var height = (actualWidth / actualAspect).toInt()
-
-            if (height > maxHeight) {
-                height = maxHeight
-                widthMeasureSpec = MeasureSpec.makeMeasureSpec((actualWidth * actualAspect).toInt(), MeasureSpec.EXACTLY)
-            }
-
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        if (maxHeight == Int.MAX_VALUE) {
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.EXACTLY)
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)

@@ -55,19 +55,18 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messageLayout"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/profilePhoto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintTop_toBottomOf="@+id/eventMessage"
         app:layout_constraintBottom_toTopOf="@+id/reactionsRecyclerView"
-        app:layout_constrainedWidth="false"
+        app:layout_constrainedWidth="true"
         android:layout_marginTop="@dimen/padDouble"
         android:layout_marginStart="@dimen/pad"
         android:background="@drawable/rounded_dim_12dp"
-        android:padding="@dimen/pad"
-        android:orientation="vertical">
+        android:padding="@dimen/pad">
 
         <TextView
             android:id="@+id/name"
@@ -84,7 +83,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/custom"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +91,7 @@
             app:layout_constraintTop_toBottomOf="@+id/name"
             app:layout_constraintBottom_toTopOf="@+id/rating"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constrainedWidth="false"
+            app:layout_constrainedWidth="true"
             android:visibility="gone"
             tools:visibility="visible"/>
 
