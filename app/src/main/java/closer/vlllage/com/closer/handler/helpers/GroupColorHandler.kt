@@ -53,7 +53,7 @@ class GroupColorHandler constructor(private val on: On) {
     }
 
     @DrawableRes
-    fun getColorClickable4dp(group: Group): Int {
+    fun getColorClickable8dp(group: Group): Int {
         return when {
             group.hasEvent() -> R.drawable.clickable_red_8dp
             group.hasPhone() -> R.drawable.clickable_white_8dp

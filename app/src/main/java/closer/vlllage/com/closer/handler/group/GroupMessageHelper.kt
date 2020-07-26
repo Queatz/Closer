@@ -121,14 +121,6 @@ class GroupMessageHelper constructor(private val on: On) {
             true
         }
 
-        holder.eventMessage.setOnClickListener {
-            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
-        }
-
-        holder.time.setOnClickListener {
-            on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
-        }
-
         holder.messageActionLayout.visible = false
         holder.time.movementMethod = LinkMovementMethod.getInstance()
         holder.eventMessage.movementMethod = LinkMovementMethod.getInstance()

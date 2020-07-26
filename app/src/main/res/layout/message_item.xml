@@ -465,14 +465,16 @@
         android:layout_marginStart="@dimen/padHalf"
         app:layout_constrainedWidth="true"
         android:textSize="@dimen/textSizeSmall"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/text"
         android:gravity="bottom"
         tools:text="8:45pm" />
 
     <TextView
         android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padHalf"
         app:layout_constraintStart_toEndOf="@+id/time"
         app:layout_constraintTop_toTopOf="@+id/time"

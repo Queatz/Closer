@@ -80,7 +80,7 @@ open class SearchGroupsAdapter constructor(
                         onCreateGroupClickListener?.invoke(createGroupName.value ?: "", createIsPublic)
                     }
                     holder.cardView.setOnLongClickListener(null)
-                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else if (createIsPublic) R.drawable.clickable_green_4dp else R.drawable.clickable_blue_4dp)
+                    holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else if (createIsPublic) R.drawable.clickable_green_8dp else R.drawable.clickable_blue_8dp)
 
                     createGroupName.observeOn(AndroidSchedulers.mainThread()).subscribe {
                         holder.name.text = if (it.isNullOrBlank()) "+" else it
@@ -91,7 +91,9 @@ open class SearchGroupsAdapter constructor(
                 val group = groups[position]
 
                 holder.cardView.setBackgroundResource(if (isSmall)
-                    backgroundResId else on<GroupColorHandler>().getColorClickable4dp(group))
+                    backgroundResId else on<GroupColorHandler>().getColorClickable8dp(group))
+
+                holder.cardView.clipToOutline = true
 
                 on<DisplayNameHelper>().loadName(group, holder.name) { it }
 

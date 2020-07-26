@@ -70,6 +70,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.time.text = on<GroupMessageParseHandler>().parseText(holder.time, on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
     }
+
     private fun displayPost(holder: GroupMessageViewHolder,
                             jsonObject: JsonObject,
                             groupMessage: GroupMessage,
