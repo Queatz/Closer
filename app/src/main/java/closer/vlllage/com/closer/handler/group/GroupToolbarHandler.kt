@@ -342,7 +342,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (group.physical || group.hasEvent()) {
+        if (group.ofKind == "quest" || group.physical || group.hasEvent()) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.write_review),
                     R.drawable.ic_star_half_black_24dp,
