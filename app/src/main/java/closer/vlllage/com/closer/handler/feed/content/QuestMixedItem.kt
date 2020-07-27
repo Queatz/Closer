@@ -14,6 +14,7 @@ import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.quest.QuestDisplaySettings
 import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.handler.quest.QuestLinkAdapter
 import closer.vlllage.com.closer.handler.quest.QuestProgressAdapter
@@ -64,6 +65,16 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             use<DisposableHandler>()
             use<QuestHandler>()
             use<GroupActionGridRecyclerViewHandler>()
+        }
+
+        if (on<QuestDisplaySettings>().isAbout) {
+            holder.itemView.background = null
+            holder.itemView.name.visible = false
+            holder.itemView.scopeIndicatorButton.visible = false
+            holder.itemView.goToGroup.visible = false
+            holder.itemView.card.elevation = 0f
+        } else {
+            on<GroupScopeHandler>().setup(quest, holder.itemView.scopeIndicatorButton)
         }
 
         on<RefreshHandler>().refreshQuestProgresses(quest.id!!)
@@ -124,7 +135,9 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
             holder.progressByMe = holder.progress.find { it.ofId == on<PersistenceHandler>().phoneId }
 
-            if (holder.activeProgress == null) {
+            if (on<QuestDisplaySettings>().stageQuestProgressId != null) {
+                holder.activeProgress = holder.progress.find { it.id == on<QuestDisplaySettings>().stageQuestProgressId }
+            } else if (holder.activeProgress == null) {
                 holder.activeProgress = holder.progressByMe
             } else {
                 holder.activeProgress = holder.progress.find { it.id == holder.activeProgress?.id }
@@ -146,8 +159,6 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.name.setOnClickListener {
             on<QuestHandler>().openQuest(quest)
         }
-
-        on<GroupScopeHandler>().setup(quest, holder.itemView.scopeIndicatorButton)
 
         holder.on<LightDarkHandler>().onLightChanged.subscribe {
             holder.name.setTextColor(it.text)

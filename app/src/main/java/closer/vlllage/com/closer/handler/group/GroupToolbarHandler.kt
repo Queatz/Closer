@@ -72,7 +72,11 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         val items = mutableListOf<ToolbarItem>()
 
+        var aboutIsFirstItem = false
+
         if (group.hasPhone()) {
+            aboutIsFirstItem = true
+
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getString(R.string.about),
                     R.drawable.ic_person_black_24dp,
@@ -145,6 +149,19 @@ class GroupToolbarHandler constructor(private val on: On) {
                             on<DefaultAlerts>().thatDidntWork()
                         })
                     }
+            ))
+        }
+
+        if (listOf("quest", "quest.progress").contains(group.ofKind)) {
+            aboutIsFirstItem = true
+
+            items.add(ToolbarItem(
+                    on<ResourcesHandler>().resources.getString(R.string.about),
+                    R.drawable.ic_person_black_24dp,
+                    View.OnClickListener {
+                        contentView.onNext(ContentViewType.GROUP_ABOUT)
+                    },
+                    ContentViewType.GROUP_ABOUT
             ))
         }
 
@@ -335,7 +352,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        items.add(if (group.hasPhone()) 1 else 0, ToolbarItem(
+        items.add(if (aboutIsFirstItem) 1 else 0, ToolbarItem(
                 on<ResourcesHandler>().resources.getString(R.string.talk),
                 R.drawable.ic_message_black_24dp,
                 View.OnClickListener {

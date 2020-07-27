@@ -18,4 +18,5 @@ enum class ContentViewType {
     HOME_NOTIFICATIONS,
     HOME_QUESTS,
     GROUP_PHOTOS,
+    GROUP_ABOUT
 }

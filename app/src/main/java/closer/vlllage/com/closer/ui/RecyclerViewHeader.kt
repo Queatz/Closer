@@ -19,6 +19,8 @@ class RecyclerViewHeader(private val on: On) {
     private var originalHeaderPadding: Int = 0
     private var originalFooterPadding: Int = 0
 
+    private var enabled: Boolean = true
+
     private val headerLayoutChangeListener = View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
         setHeaderMargin()
     }
@@ -107,7 +109,7 @@ class RecyclerViewHeader(private val on: On) {
     }
 
     private fun setHeaderMargin() {
-        if (headerViewHolder == null || recyclerView == null) {
+        if (headerViewHolder == null || recyclerView == null || !enabled) {
             return
         }
 
@@ -122,5 +124,9 @@ class RecyclerViewHeader(private val on: On) {
 
         recyclerView?.postInvalidate()
         headerViewHolder?.itemView?.postInvalidate()
+    }
+
+    fun enable(enabled: Boolean) {
+        this.enabled = enabled
     }
 }

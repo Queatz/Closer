@@ -49,6 +49,12 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
             generate()
         }
 
+    var showFeedHeader: Boolean = true
+        set(value) {
+            field = value
+            generate()
+        }
+
     var items = mutableListOf<MixedItem>()
         set(value) {
             val diffResult  = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
@@ -86,7 +92,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
 
     private fun generate() {
         items = mutableListOf<MixedItem>().apply {
-            add(HeaderMixedItem())
+            if (showFeedHeader) add(HeaderMixedItem())
             when (content) {
                 FeedContent.GROUPS, FeedContent.PLACES -> groups.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))

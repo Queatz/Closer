@@ -93,6 +93,17 @@ class DataHandler constructor(private val on: On) {
                 .map { QuestResult.from(it) }
     })
 
+    fun getQuestProgress(questProgressId: String) = chain({
+        on<StoreHandler>().store.box(QuestProgress::class).query()
+                .equal(QuestProgress_.id, questProgressId)
+                .notNull(QuestProgress_.groupId)
+                .build()
+    }, {
+        on<ApiHandler>()
+                .getQuestProgress(questProgressId)
+                .map { QuestProgressResult.from(it) }
+    })
+
     fun getEvent(eventId: String) = chain({
         on<StoreHandler>().store.box(Event::class).query()
                 .equal(Event_.id, eventId)

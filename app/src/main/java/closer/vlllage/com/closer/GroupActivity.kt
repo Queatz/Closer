@@ -40,6 +40,7 @@ class GroupActivity : CircularRevealActivity() {
                 ContentViewType.EVENTS -> GroupEventsFragment()
                 ContentViewType.REVIEWS -> GroupReviewsFragment()
                 ContentViewType.GROUP_PHOTOS -> GroupPhotosFragment()
+                ContentViewType.GROUP_ABOUT -> GroupAboutFragment()
                 ContentViewType.PHONE_MESSAGES -> PhoneMessagesFragment()
                 ContentViewType.PHONE_PHOTOS -> PhonePhotosFragment()
                 ContentViewType.PHONE_GROUPS -> PhoneGroupsFragment()

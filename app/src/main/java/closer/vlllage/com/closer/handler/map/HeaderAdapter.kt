@@ -11,6 +11,12 @@ abstract class HeaderAdapter<T : RecyclerView.ViewHolder>(on: On) : PoolRecycler
 
     private val header = RecyclerViewHeader(on)
 
+    var useHeader: Boolean = true
+        set(value) {
+            field = value
+            header.enable(field)
+        }
+
     override fun onBindViewHolder(holder: T, position: Int) {
         header.onBind(holder, position)
     }
