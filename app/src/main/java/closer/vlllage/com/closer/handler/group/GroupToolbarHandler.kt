@@ -187,7 +187,7 @@ class GroupToolbarHandler constructor(private val on: On) {
             ))
         }
 
-        if (group.ratingCount ?: 0 > 0 && (group.physical || group.hasEvent())) {
+        if (group.ratingCount ?: 0 > 0) {
             items.add(ToolbarItem(
                     on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count, group.ratingCount!!, group.ratingCount!!),
                     R.drawable.ic_star_black_24dp,
