@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.helpers.DisposableGroup
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupAction
 import com.queatz.on.On
@@ -50,9 +51,10 @@ class GroupActionAdapter(on: On,
             }, parent, false)).also { it ->
         it.on = On(on).apply {
             use<DisposableHandler>()
+            use<QuestHandler>()
             use<GroupActionDisplay>().also {
                 it.onGroupActionClickListener = { groupAction, proceed ->
-                    (on<GroupActionDisplay>().onGroupActionClickListener ?: it.fallbackGroupActionClickListener).invoke(groupAction, proceed)
+                    (on<GroupActionDisplay>().onGroupActionClickListener ?: on<GroupActionDisplay>().fallbackGroupActionClickListener).invoke(groupAction, proceed)
                 }
                 it.questActionConfigProvider = { on<GroupActionDisplay>().questActionConfigProvider?.invoke(it) }
             }

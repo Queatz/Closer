@@ -268,6 +268,7 @@ class QuestHandler(private val on: On) {
             addProgress(it, questProgress, groupAction, callback)
         }, {
             on<DefaultAlerts>().thatDidntWork()
+            callback?.invoke()
         }).also {
             on<DisposableHandler>().add(it)
         }
