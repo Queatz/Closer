@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.handler.FeatureType
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
@@ -41,8 +42,8 @@ class GroupActionDisplay constructor(private val on: On) {
     var onGroupActionClickListener: GroupActionClickListener? = null
     var questActionConfigProvider: ((groupAction: GroupAction) -> QuestAction?)? = null
 
-    private val fallbackGroupActionClickListener: GroupActionClickListener = { groupAction, proceed ->
-        on<QuestHandler>().groupActionQuestProgress(groupAction.id!!) {
+    val fallbackGroupActionClickListener: GroupActionClickListener = { groupAction, proceed ->
+        on<QuestHandler>().groupActionQuestProgress(groupAction.id!!, on<PersistenceHandler>().phoneId) {
             if (it.isEmpty()) proceed() else {
                 val questProgresses = it.toMutableList()
 

@@ -359,10 +359,12 @@ class QuestHandler(private val on: On) {
         }
     }
 
-    fun groupActionQuestProgress(groupActionId: String, single: Boolean = false, callback: (List<QuestProgress>) -> Unit) {
+    fun groupActionQuestProgress(groupActionId: String, phoneId: String? = null, single: Boolean = false, callback: (List<QuestProgress>) -> Unit) {
         on<StoreHandler>().store.box(QuestProgress::class).query(QuestProgress_.active.equal(true).and(
                 QuestProgress_.progress.contains("\"groupActionId\":\"$groupActionId\"")
-        ))
+        ).let {
+            if (phoneId != null) it.and(QuestProgress_.ofId.equal(phoneId)) else it
+        })
                 .orderDesc(QuestProgress_.updated)
                 .build()
                 .subscribe()

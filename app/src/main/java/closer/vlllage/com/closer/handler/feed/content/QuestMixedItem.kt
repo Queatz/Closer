@@ -68,6 +68,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             use<DisposableHandler>()
             use<QuestHandler>()
             use<GroupActionGridRecyclerViewHandler>()
+            use<GroupActionDisplay>()
         }
 
         if (on<QuestDisplaySettings>().isAbout) {
@@ -131,6 +132,8 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         loadLinks(holder, quest)
         loadQuestActions(quest)
+
+        holder.description.visible = false
 
         if (quest.groupId != null) {
             holder.on<DataHandler>().getGroup(quest.groupId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({

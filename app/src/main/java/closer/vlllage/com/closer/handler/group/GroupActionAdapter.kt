@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.helpers.DisposableGroup
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupAction
 import com.queatz.on.On
@@ -41,14 +43,29 @@ class GroupActionAdapter(on: On,
     private val groupActions = mutableListOf<GroupAction>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = GroupActionViewHolder(LayoutInflater.from(parent.context)
-                .inflate(when (layout) {
-                    GroupActionDisplay.Layout.TEXT -> R.layout.group_action_item
-                    GroupActionDisplay.Layout.PHOTO -> R.layout.group_action_photo_item
-                    GroupActionDisplay.Layout.QUEST -> R.layout.group_action_quest_item
-                }, parent, false))
+            .inflate(when (layout) {
+                GroupActionDisplay.Layout.TEXT -> R.layout.group_action_item
+                GroupActionDisplay.Layout.PHOTO -> R.layout.group_action_photo_item
+                GroupActionDisplay.Layout.QUEST -> R.layout.group_action_quest_item
+            }, parent, false)).also { it ->
+        it.on = On(on).apply {
+            use<DisposableHandler>()
+            use<GroupActionDisplay>().also {
+                it.onGroupActionClickListener = { groupAction, proceed ->
+                    (on<GroupActionDisplay>().onGroupActionClickListener ?: it.fallbackGroupActionClickListener).invoke(groupAction, proceed)
+                }
+                it.questActionConfigProvider = { on<GroupActionDisplay>().questActionConfigProvider?.invoke(it) }
+            }
+        }
+    }
 
     override fun onBindViewHolder(holder: GroupActionViewHolder, position: Int) {
-        on<GroupActionDisplay>().display(holder.itemView, groupActions[position], layout, scale = scale)
+        holder.on<GroupActionDisplay>().display(holder.itemView, groupActions[position], layout, scale = scale)
+    }
+
+    override fun onViewRecycled(holder: GroupActionViewHolder) {
+        holder.on.off()
+        super.onViewRecycled(holder)
     }
 
     override fun getItemViewType(position: Int) = layout.ordinal
@@ -77,5 +94,7 @@ class GroupActionAdapter(on: On,
         onItemsChanged.onNext(this.groupActions)
     }
 
-    inner class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class GroupActionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        lateinit var on: On
+    }
 }
