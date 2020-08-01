@@ -48,20 +48,20 @@ class GroupActionAdapter(on: On,
                 GroupActionDisplay.Layout.TEXT -> R.layout.group_action_item
                 GroupActionDisplay.Layout.PHOTO -> R.layout.group_action_photo_item
                 GroupActionDisplay.Layout.QUEST -> R.layout.group_action_quest_item
-            }, parent, false)).also { it ->
-        it.on = On(on).apply {
+            }, parent, false))
+
+    override fun onBindViewHolder(holder: GroupActionViewHolder, position: Int) {
+        holder.on = On(on).apply {
             use<DisposableHandler>()
             use<QuestHandler>()
             use<GroupActionDisplay>().also {
                 it.onGroupActionClickListener = { groupAction, proceed ->
-                    (on<GroupActionDisplay>().onGroupActionClickListener ?: on<GroupActionDisplay>().fallbackGroupActionClickListener).invoke(groupAction, proceed)
+                    (on<GroupActionDisplay>().onGroupActionClickListener ?: this<GroupActionDisplay>().fallbackGroupActionClickListener).invoke(groupAction, proceed)
                 }
                 it.questActionConfigProvider = { on<GroupActionDisplay>().questActionConfigProvider?.invoke(it) }
             }
         }
-    }
 
-    override fun onBindViewHolder(holder: GroupActionViewHolder, position: Int) {
         holder.on<GroupActionDisplay>().display(holder.itemView, groupActions[position], layout, scale = scale)
     }
 

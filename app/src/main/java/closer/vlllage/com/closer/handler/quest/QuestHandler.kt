@@ -5,7 +5,6 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
-import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +33,6 @@ import kotlinx.android.synthetic.main.create_quest_modal.view.name
 import kotlinx.android.synthetic.main.edit_quest_action_modal.view.*
 import kotlinx.android.synthetic.main.edit_quest_duration_modal.view.*
 import kotlinx.android.synthetic.main.edit_quest_finish_date_modal.view.*
-import kotlinx.android.synthetic.main.item_quest.view.*
 import kotlinx.android.synthetic.main.link_quest_modal.view.*
 import java.util.*
 

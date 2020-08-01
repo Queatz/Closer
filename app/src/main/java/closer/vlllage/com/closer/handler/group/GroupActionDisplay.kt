@@ -198,7 +198,7 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     private fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
-        on<DataHandler>().getGroup(groupAction.group!!).subscribe({ group ->
+        on<DataHandler>().getGroup(groupAction.group!!).observeOn(AndroidSchedulers.mainThread()).subscribe({ group ->
             on<AlertHandler>().make().apply {
                 val noComment = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.firstOrNull()?.asJsonObject?.let {
                     if (it.has("noComment")) it["noComment"].asBoolean else false
