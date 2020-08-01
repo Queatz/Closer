@@ -92,13 +92,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toTopOf="@+id/description" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="start"
+            android:paddingStart="@dimen/padDouble"
+            android:paddingEnd="@dimen/padDouble"
+            android:paddingBottom="@dimen/pad"
+            android:paddingTop="@dimen/pad"
+            tools:text="This is an epic quest."
+            android:textColor="@color/text"
+            android:lineSpacingMultiplier="1.5"
+            android:textSize="@dimen/textSizeLarge"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/about"
             app:layout_constraintBottom_toTopOf="@+id/groupActionsRecyclerViewContainer" />
 
         <closer.vlllage.com.closer.ui.SoftScrollStopper
             android:id="@+id/groupActionsRecyclerViewContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/about"
+            app:layout_constraintTop_toBottomOf="@id/description"
             app:layout_constraintBottom_toTopOf="@id/peopleContainer">
 
             <closer.vlllage.com.closer.ui.FixedUpRecyclerView

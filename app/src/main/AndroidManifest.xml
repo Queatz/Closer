@@ -150,6 +150,8 @@
             </intent-filter>
         </service>
 
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

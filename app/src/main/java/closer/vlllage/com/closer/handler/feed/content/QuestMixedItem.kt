@@ -8,6 +8,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.QuestResult
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
@@ -22,6 +23,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.item_quest.view.*
 
 class QuestMixedItem(val quest: Quest) : MixedItem(MixedItemType.Quest)
@@ -34,6 +36,7 @@ class QuestViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemT
     lateinit var questProgressAdapter: QuestProgressAdapter
     lateinit var nextQuestsAdapter: QuestLinkAdapter
     val about = itemView.about!!
+    val description = itemView.description!!
     val name = itemView.name!!
     val card = itemView.card!!
 }
@@ -129,6 +132,19 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         loadLinks(holder, quest)
         loadQuestActions(quest)
 
+        if (quest.groupId != null) {
+            holder.on<DataHandler>().getGroup(quest.groupId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
+                if (!on<QuestDisplaySettings>().isAbout) {
+                    holder.description.visible = it.about.isNullOrEmpty().not()
+                    holder.description.text = it.about ?: ""
+                }
+            }, {
+                on<ConnectionErrorHandler>().notifyConnectionError()
+            }).also {
+                on<DisposableHandler>().add(it)
+            }
+        }
+
         holder.on<QuestHandler>().questProgress(quest) {
             holder.progress = it
             holder.questProgressAdapter.questProgresses = it.toMutableList()
@@ -163,6 +179,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.on<LightDarkHandler>().onLightChanged.subscribe {
             holder.name.setTextColor(it.text)
             holder.about.setTextColor(it.text)
+            holder.description.setTextColor(it.text)
             holder.itemView.nextQuestsHeader.setTextColor(it.hint)
             holder.name.setBackgroundResource(it.clickableRoundedBackground8dp)
             holder.about.setBackgroundResource(it.clickableRoundedBackground8dp)

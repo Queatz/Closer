@@ -213,4 +213,29 @@
         app:layout_constraintTop_toBottomOf="@+id/pinnedMessagesRecyclerView"
         tools:listitem="@layout/message_item" />
 
+    <TextView
+        android:id="@+id/typingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/messagesRecyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/messagesRecyclerView"
+        app:layout_constraintBottom_toBottomOf="@+id/messagesRecyclerView"
+        android:layout_margin="@dimen/pad"
+        android:clickable="true"
+        android:background="@drawable/clickable_white_rounded_flat"
+        android:elevation="@dimen/elevation"
+        android:gravity="center"
+        android:drawableTint="@color/textHintInverse"
+        android:textColor="@color/textInverse"
+        android:textSize="@dimen/textSize"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingEnd="@dimen/padDouble"
+        android:paddingBottom="@dimen/padHalf"
+        android:paddingTop="@dimen/padHalf"
+        android:drawableStart="@drawable/ic_typing_24px_animated"
+        android:drawablePadding="@dimen/padHalf"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Allen, Mai" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

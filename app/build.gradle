@@ -1,3 +1,4 @@
+import com.google.gms.googleservices.GoogleServicesPlugin
 
 plugins {
     id 'com.github.triplet.play' version '2.7.2'
@@ -83,12 +84,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.18'
-    implementation 'com.google.firebase:firebase-core:17.4.3'
-    implementation 'com.google.firebase:firebase-messaging:20.2.1'
+    implementation 'com.google.firebase:firebase-core:17.4.4'
+    implementation 'com.google.firebase:firebase-messaging:20.2.3'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'jp.wasabeef:glide-transformations:4.1.0'
     implementation group: 'com.journeyapps', name: 'zxing-android-embedded', version: '4.1.0'
-
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.4'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
     implementation ('com.github.chrisbanes:PhotoView:2.3.0') {
         exclude group: 'com.android.support'
     }
@@ -146,7 +148,7 @@ tasks.whenTaskAdded { task ->
     }
 }
 
-apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
+apply plugin: GoogleServicesPlugin
 repositories {
     mavenCentral()
 }

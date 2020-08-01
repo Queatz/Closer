@@ -20,8 +20,8 @@ class TimerHandler constructor(private val on: On) : OnLifecycle {
         handler.post(runnable)
     }
 
-    fun postDisposable(runnable: Runnable, millis: Long) {
-        on<DisposableHandler>().add(post(runnable, millis))
+    fun postDisposable(runnable: Runnable, millis: Long) = post(runnable, millis).also {
+        on<DisposableHandler>().add(it)
     }
 
     private fun post(runnable: Runnable, millis: Long): Disposable {
@@ -34,7 +34,7 @@ class TimerHandler constructor(private val on: On) : OnLifecycle {
         private var disposed: Boolean = false
 
         override fun dispose() {
-            handler.removeCallbacks(runnable)
+            handler.removeCallbacks(this)
             disposed = true
         }
 

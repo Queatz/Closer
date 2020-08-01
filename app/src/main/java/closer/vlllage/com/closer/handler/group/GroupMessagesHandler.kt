@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -24,6 +25,7 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_group_messages.view.*
 import java.util.*
 
@@ -98,12 +100,26 @@ class GroupMessagesHandler constructor(private val on: On) {
 
         updateSendButton()
         on<GroupHandler>().onGroupChanged { group ->
+            on<TypingHandler>().setGroup(group.id!!)
             replyMessage.setText(on<GroupMessageParseHandler>().parseText(replyMessage, on<GroupDraftHandler>().getDraft(group.id!!)?.message ?: ""))
             updateSendButton()
         }
 
         sendMoreLayout.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             updatePadding()
+        }
+
+        var stopTypingDisposable: Disposable? = null
+
+        this.replyMessage.doAfterTextChanged {
+            on<TypingHandler>().isTyping = it!!.isNotEmpty()
+
+            if (on<TypingHandler>().isTyping) {
+                stopTypingDisposable?.let { on<DisposableHandler>().dispose(it) }
+                stopTypingDisposable = on<TimerHandler>().postDisposable(Runnable {
+                    on<TypingHandler>().isTyping = false
+                }, 5000)
+            }
         }
 
         this.replyMessage.addTextChangedListener(object : TextWatcher {
