@@ -40,59 +40,6 @@
                 android:padding="@dimen/padDouble">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/pad"
-                    android:text="@string/introduction"
-                    android:textColor="@color/textInverse"
-                    android:textSize="@dimen/textSizeSmall"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/introductionTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textInverse"
-                    android:lineSpacingMultiplier="1.25"
-                    android:textSize="@dimen/textSize"
-                    tools:text="Something here..." />
-
-                <TextView
-                    android:id="@+id/actionEditIntroduction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/pad"
-                    android:background="@drawable/clickable_accent"
-                    android:drawableStart="@drawable/ic_edit_black_18dp"
-                    android:drawablePadding="@dimen/pad"
-                    android:elevation="2dp"
-                    android:gravity="center_vertical"
-                    android:minHeight="0dp"
-                    android:paddingStart="@dimen/padDouble"
-                    android:paddingTop="@dimen/pad"
-                    android:paddingEnd="@dimen/padDouble"
-                    android:paddingBottom="@dimen/pad"
-                    android:text="@string/edit"
-                    android:textAllCaps="true"
-                    android:textColor="@color/textInverse"
-                    android:textSize="@dimen/textSizeSmall"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padDouble"
-                android:background="@drawable/color_white_rounded"
-                android:clipToPadding="false"
-                android:elevation="@dimen/elevation"
-                android:orientation="vertical"
-                android:padding="@dimen/padDouble">
-
-                <TextView
                     android:id="@+id/phoneVerifiedTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -132,26 +79,108 @@
                     tools:text="near Paris, France"
                     tools:visibility="visible" />
 
-                <Button
-                    android:id="@+id/sendDirectMessageButton"
-                    style="@style/Widget.AppCompat.Button"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/startCallMessageButton"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/pad"
+                        android:background="@drawable/clickable_green_8dp"
+                        android:drawableStart="@drawable/ic_baseline_phone_24"
+                        android:drawablePadding="@dimen/pad"
+                        android:drawableTint="@color/text"
+                        android:elevation="@dimen/elevationSmall"
+                        android:gravity="center"
+                        android:minHeight="0dp"
+                        android:paddingStart="@dimen/pad"
+                        android:paddingTop="@dimen/pad"
+                        android:paddingEnd="@dimen/padDouble"
+                        android:paddingBottom="@dimen/pad"
+                        android:text="@string/call"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="@color/text" />
+
+                    <Button
+                        android:id="@+id/sendDirectMessageButton"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/pad"
+                        android:background="@drawable/clickable_blue_8dp"
+                        android:drawableStart="@drawable/ic_mail_black_24dp"
+                        android:drawablePadding="@dimen/pad"
+                        android:drawableTint="@color/text"
+                        android:layout_marginStart="@dimen/pad"
+                        android:elevation="@dimen/elevationSmall"
+                        android:gravity="center"
+                        android:minHeight="0dp"
+                        android:paddingStart="@dimen/pad"
+                        android:paddingTop="@dimen/pad"
+                        android:paddingEnd="@dimen/padDouble"
+                        android:paddingBottom="@dimen/pad"
+                        android:text="@string/message"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="@color/text" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/color_white_rounded"
+                android:layout_marginTop="@dimen/padDouble"
+                android:clipToPadding="false"
+                android:elevation="@dimen/elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/padDouble">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad"
+                    android:text="@string/introduction"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/introductionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textInverse"
+                    android:lineSpacingMultiplier="1.25"
+                    android:textSize="@dimen/textSize"
+                    tools:text="Something here..." />
+
+                <TextView
+                    android:id="@+id/actionEditIntroduction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/pad"
-                    android:background="@drawable/clickable_blue_8dp"
-                    android:drawableStart="@drawable/ic_mail_black_24dp"
+                    android:background="@drawable/clickable_accent"
+                    android:drawableStart="@drawable/ic_edit_black_18dp"
                     android:drawablePadding="@dimen/pad"
-                    android:drawableTint="@color/text"
-                    android:elevation="@dimen/elevationSmall"
-                    android:gravity="center"
+                    android:elevation="2dp"
+                    android:gravity="center_vertical"
                     android:minHeight="0dp"
-                    android:paddingStart="@dimen/pad"
+                    android:paddingStart="@dimen/padDouble"
                     android:paddingTop="@dimen/pad"
                     android:paddingEnd="@dimen/padDouble"
                     android:paddingBottom="@dimen/pad"
-                    android:text="@string/direct_message"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="@color/text" />
+                    android:text="@string/edit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/textInverse"
+                    android:textSize="@dimen/textSizeSmall"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
             </LinearLayout>
 

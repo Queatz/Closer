@@ -390,7 +390,7 @@
     <string name="activity_intent_info">This is the message that gets posted when someone taps on this activity.  For example, if Samantha tapped \"Go into the cave\", then \"Samantha went into the cave\" might be what gets posted to the group.</string>
     <string name="show_more">Show more</string>
     <string name="no_comment">Don\'t show comment box</string>
-    <string name="direct_message">Direct message</string>
+    <string name="message">Message</string>
     <string name="talk_to">Talk to %1$s</string>
     <string name="subscribed_message">You will always get notifications from \"%1$s\"</string>
     <string name="unsubscribed_message">You will only get notifications from \"%1$s\" when you are close by</string>
@@ -479,6 +479,7 @@
     <string name="group_not_found_description">This group is private or unavailable.</string>
     <string name="group_not_found">Group not found</string>
     <string name="travel">Travel</string>
+    <string name="call">Call</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

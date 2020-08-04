@@ -258,33 +258,6 @@
             </closer.vlllage.com.closer.ui.SoftScrollStopper>
 
             <TextView
-                android:id="@+id/placesHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/padDialog"
-                android:paddingStart="@dimen/padDouble"
-                android:paddingEnd="@dimen/padDouble"
-                android:paddingBottom="@dimen/pad"
-                android:text="@string/places"
-                android:textColor="@color/black_50"
-                android:textStyle="bold"
-                android:textAllCaps="true"/>
-
-            <closer.vlllage.com.closer.ui.SoftScrollStopper
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <closer.vlllage.com.closer.ui.FixedUpRecyclerView
-                    android:id="@+id/publicHubsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/padHalf"
-                    android:paddingEnd="@dimen/padHalf"
-                    android:clipToPadding="false" />
-
-            </closer.vlllage.com.closer.ui.SoftScrollStopper>
-
-            <TextView
                 android:id="@+id/publicGroupsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -303,6 +276,33 @@
 
                 <closer.vlllage.com.closer.ui.FixedUpRecyclerView
                     android:id="@+id/publicGroupsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/padHalf"
+                    android:paddingEnd="@dimen/padHalf"
+                    android:clipToPadding="false" />
+
+            </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
+            <TextView
+                android:id="@+id/placesHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padDialog"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:text="@string/places"
+                android:textColor="@color/black_50"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
+
+            <closer.vlllage.com.closer.ui.SoftScrollStopper
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+                    android:id="@+id/publicHubsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/padHalf"

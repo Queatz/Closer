@@ -57,6 +57,12 @@ class PhoneAboutFragment : PoolActivityFragment() {
                     on<ReplyHandler>().reply(phone)
                 }
 
+                startCallMessageButton.visible = phone.id != on<PersistenceHandler>().phoneId
+
+                startCallMessageButton.setOnClickListener {
+                    on<ReplyHandler>().reply(phone)
+                }
+
                 val nothing = on<ResourcesHandler>().resources.getString(R.string.nothing_here)
                 introductionTextView.text = phone.introduction?.takeIf { it.isNotBlank() } ?: nothing
                 offtimeTextView.text = phone.offtime?.takeIf { it.isNotBlank() } ?: nothing

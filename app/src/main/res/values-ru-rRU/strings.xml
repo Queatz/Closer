@@ -392,7 +392,7 @@
     <string name="activity_intent_info">Это сообщение публикуется, когда кто-то нажимает на это мероприятие.  Например, если Саманта нажала «Перейти в пещеру», то в группе может быть опубликовано «Саманта попала в пещеру».</string>
     <string name="show_more">Показать больше</string>
     <string name="no_comment">Не показывать поле для комментариев</string>
-    <string name="direct_message">Прямое сообщение</string>
+    <string name="message">Прямое сообщение</string>
     <string name="talk_to">Говорить с %1$s</string>
     <string name="subscribed_message">Вы всегда будете получать уведомления от \"%1$s\"</string>
     <string name="unsubscribed_message">Вы будете получать уведомления от \"%1$s\" только когда вы рядом</string>

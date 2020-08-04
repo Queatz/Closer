@@ -13,7 +13,7 @@ class ReplyHandler constructor(private val on: On) {
 
     private fun reply(phoneId: String, phoneName: String? = null) {
         on<DefaultInput>().show(
-                on<ResourcesHandler>().resources.getString(R.string.direct_message),
+                on<ResourcesHandler>().resources.getString(R.string.message),
                 if (phoneName == null) on<ResourcesHandler>().resources.getString(R.string.talk) else on<ResourcesHandler>().resources.getString(R.string.talk_to, phoneName),
                 on<ResourcesHandler>().resources.getString(R.string.send_message)
         ) { message ->
