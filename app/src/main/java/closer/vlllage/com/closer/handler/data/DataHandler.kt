@@ -52,6 +52,16 @@ class DataHandler constructor(private val on: On) {
                 .map { GroupResult.from(it) }
     })
 
+    fun getDirectGroup(phoneId: String) = chain({
+        on<StoreHandler>().store.box(Group::class).query()
+                .equal(Group_.id, "") // todo always fail for now
+                .build()
+    }, {
+        on<ApiHandler>()
+                .getDirectGroup(phoneId)
+                .map { GroupResult.from(it) }
+    })
+
     fun getGroupMessage(groupMessageId: String) = chain({
         on<StoreHandler>().store.box(GroupMessage::class).query()
                 .equal(GroupMessage_.id, groupMessageId)

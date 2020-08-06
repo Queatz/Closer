@@ -61,6 +61,9 @@ interface Backend {
     @GET("phone/{phone}/groups")
     fun getGroupContactsFromPhone(@Path("phone") phoneId: String): Single<List<GroupContactResult>>
 
+    @GET("phone/{id}/direct")
+    fun getDirectGroup(@Path("id") phoneId: String): Single<GroupResult>
+
     @POST("verify")
     fun setPhoneNumber(@Query("set-number") phoneNumber: String): Single<SuccessResult>
 

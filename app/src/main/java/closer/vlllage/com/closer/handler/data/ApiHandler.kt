@@ -68,6 +68,8 @@ class ApiHandler constructor(private val on: On) {
 
     fun getGroup(groupId: String) = api { getGroup(groupId) }
 
+    fun getDirectGroup(phoneId: String) = api { getDirectGroup(phoneId) }
+
     fun setPhoneNumber(phoneNumber: String) = api { setPhoneNumber(phoneNumber) }
 
     fun sendVerificationCode(verificationCode: String) = api { sendVerificationCode(verificationCode) }

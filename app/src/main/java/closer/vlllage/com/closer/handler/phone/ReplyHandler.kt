@@ -2,9 +2,12 @@ package closer.vlllage.com.closer.handler.phone
 
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class ReplyHandler constructor(private val on: On) {
     fun reply(phone: Phone) {
@@ -12,22 +15,12 @@ class ReplyHandler constructor(private val on: On) {
     }
 
     private fun reply(phoneId: String, phoneName: String? = null) {
-        on<DefaultInput>().show(
-                on<ResourcesHandler>().resources.getString(R.string.message),
-                if (phoneName == null) on<ResourcesHandler>().resources.getString(R.string.talk) else on<ResourcesHandler>().resources.getString(R.string.talk_to, phoneName),
-                on<ResourcesHandler>().resources.getString(R.string.send_message)
-        ) { message ->
-            if (message.isBlank()) {
-                return@show
-            }
-
-            on<DisposableHandler>().add(on<ApiHandler>().sendMessage(phoneId, message).subscribe({ successResult ->
-                if (!successResult.success) {
-                    on<DefaultAlerts>().thatDidntWork()
-                } else {
-                    on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.sent_to_x, phoneName))
-                }
-            }, { on<DefaultAlerts>().thatDidntWork() }))
+        on<DataHandler>().getDirectGroup(phoneId).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            on<GroupActivityTransitionHandler>().showGroupMessages(null, it.id!!, true)
+        }, {
+            on<DefaultAlerts>().thatDidntWork()
+        }).also {
+            on<DisposableHandler>().add(it)
         }
     }
 }
