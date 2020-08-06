@@ -14,6 +14,7 @@ enum class MixedItemType {
     Header,
     Text,
     Notification,
+    MessageContact,
 }
 
 abstract class MixedItem(val type: MixedItemType)

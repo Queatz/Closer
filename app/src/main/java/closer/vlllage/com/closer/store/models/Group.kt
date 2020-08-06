@@ -9,6 +9,7 @@ class Group : BaseObject() {
     var ratingAverage: Double? = null
     var ratingCount: Int? = null
     var isPublic: Boolean = false
+    var direct: Boolean = false
     var hub: Boolean = false
     var physical: Boolean = false
     var eventId: String? = null

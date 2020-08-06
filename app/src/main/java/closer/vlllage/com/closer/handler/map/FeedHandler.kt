@@ -116,6 +116,17 @@ class FeedHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .observer { setNotifications(it) })
 
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Group::class).query(
+                Group_.direct.equal(true)
+        )
+                .sort(on<SortHandler>().sortGroups())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .observer {
+                    mixedAdapter.contacts = it.toMutableList()
+                })
+
         on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { visible ->
@@ -277,6 +288,7 @@ class FeedHandler constructor(private val on: On) {
             ContentViewType.HOME_POSTS -> FeedContent.POSTS
             ContentViewType.HOME_PLACES -> FeedContent.PLACES
             ContentViewType.HOME_QUESTS -> FeedContent.QUESTS
+            ContentViewType.HOME_CONTACTS -> FeedContent.CONTACTS
             else -> null
         }?.let {
             content.onNext(it)

@@ -17,7 +17,6 @@ import okhttp3.internal.Util
 import okio.BufferedSink
 import okio.Okio
 import retrofit2.HttpException
-import retrofit2.http.Path
 import java.io.IOException
 import java.io.InputStream
 import java.lang.RuntimeException
@@ -209,9 +208,11 @@ class ApiHandler constructor(private val on: On) {
 
     fun cancelEvent(eventId: String) = api { cancelEvent(eventId, true) }
 
-    fun getPhysicalGroups(latLng: LatLng) = api { getPhysicalGroups(on<LatLngStr>().from(latLng), "physical") }
+    fun getPhysicalGroups(latLng: LatLng) = api { getGroups("physical", on<LatLngStr>().from(latLng)) }
 
-    fun getInactiveGroups(latLng: LatLng) = api { getPhysicalGroups(on<LatLngStr>().from(latLng), "inactive") }
+    fun getInactiveGroups(latLng: LatLng) = api { getGroups("inactive", on<LatLngStr>().from(latLng)) }
+
+    fun getDirectGroups() = api { getGroups("direct") }
 
     fun uploadPhoto(photo: InputStream): Single<String> {
         val body = object : RequestBody() {

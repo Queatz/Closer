@@ -60,6 +60,14 @@ class RefreshHandler constructor(private val on: On) {
         }
     }
 
+    fun refreshDirectGroups() {
+        on<ApiHandler>().getDirectGroups().subscribe({ groups ->
+            handleGroups(groups)
+        }, connectionError).also {
+            on<DisposableHandler>().add(it)
+        }
+    }
+
     fun refreshGroup(groupId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getGroup(groupId).subscribe({
             handleGroups(listOf(it))

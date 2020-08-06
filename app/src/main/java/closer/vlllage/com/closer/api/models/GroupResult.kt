@@ -8,6 +8,7 @@ class GroupResult : ModelResult() {
     var about: String? = null
     @SerializedName("public")
     var isPublic: Boolean? = null
+    var direct: Boolean? = null
     var physical: Boolean? = null
     var hub: Boolean? = null
     var eventId: String? = null
@@ -36,6 +37,7 @@ class GroupResult : ModelResult() {
             group.ratingAverage = groupResult.ratingAverage
             group.ratingCount = groupResult.ratingCount
             group.isPublic = true == groupResult.isPublic
+            group.direct = true == groupResult.direct
             group.physical = true == groupResult.physical
             group.hub = true == groupResult.hub
             group.eventId = groupResult.eventId

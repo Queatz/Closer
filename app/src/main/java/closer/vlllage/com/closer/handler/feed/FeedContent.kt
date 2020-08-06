@@ -9,4 +9,5 @@ enum class FeedContent {
     ACTIVITIES,
     FRIENDS,
     NOTIFICATIONS,
+    CONTACTS,
 }

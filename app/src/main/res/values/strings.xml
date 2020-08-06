@@ -480,6 +480,9 @@
     <string name="group_not_found">Group not found</string>
     <string name="travel">Travel</string>
     <string name="call">Call</string>
+    <string name="messages">Messages</string>
+    <string name="contacts">Contacts</string>
+    <string name="no_contacts">You\'ve got no contacts yet.\n\nWhy not make some?</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

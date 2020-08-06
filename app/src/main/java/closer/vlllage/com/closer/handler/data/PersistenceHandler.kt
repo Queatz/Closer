@@ -10,13 +10,20 @@ import closer.vlllage.com.closer.handler.helpers.Val
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
+import java.lang.Exception
 
 class PersistenceHandler constructor(private val on: On) : OnLifecycle {
 
     private lateinit var sharedPreferences: SharedPreferences
 
     var appsToolbarOrder: List<ContentViewType>
-        get() = sharedPreferences.getString(PREFERENCE_APPS_TOOLBAR_ORDER, null)?.split(",")?.map { ContentViewType.valueOf(it) } ?: listOf()
+        get() = sharedPreferences.getString(PREFERENCE_APPS_TOOLBAR_ORDER, null)?.split(",")?.mapNotNull {
+            try {
+                ContentViewType.valueOf(it)
+            } catch (e: Exception) {
+                null
+            }
+        } ?: listOf()
         @SuppressLint("ApplySharedPref")
         set(value) {
             sharedPreferences.edit().putString(PREFERENCE_APPS_TOOLBAR_ORDER, value.joinToString(",") { it.name }).commit()

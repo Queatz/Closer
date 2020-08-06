@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
@@ -172,13 +173,19 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             showGroupActions(groups)
         })
 
-        on<DisposableHandler>().add(toolbarAdapter.selectedContentView
+        toolbarAdapter.selectedContentView
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { content ->
-            if ((content == ContentViewType.HOME_POSTS || content == ContentViewType.HOME_NOTIFICATIONS) && searchGroups.text.isNotEmpty()) {
-                searchGroups.setText("")
-            }
-        })
+                    if ((content == ContentViewType.HOME_POSTS || content == ContentViewType.HOME_NOTIFICATIONS) && searchGroups.text.isNotEmpty()) {
+                        searchGroups.setText("")
+                    }
+
+                    if (content == ContentViewType.HOME_CONTACTS) {
+                        on<RefreshHandler>().refreshDirectGroups()
+                    }
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
 
         on<DisposableHandler>().add(on<SearchGroupHandler>().createGroupName.subscribe {
             searchGroupsAdapter.setCreatePublicGroupName(it)
@@ -279,7 +286,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 
     private fun updateLaunchGroupButton() {
-        launchGroupButton.visible = saySomething.text.isBlank() && nearestGroup != null
+        launchGroupButton.visible = toolbarAdapter.selectedContentView.value == ContentViewType.HOME_POSTS && saySomething.text.isBlank() && nearestGroup != null
 
         launchGroupButton.setOnClickListener {
             openGroup(nearestGroup?.id, launchGroupButton)
@@ -308,88 +315,12 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             FeedContent.ACTIVITIES -> ContentViewType.HOME_ACTIVITIES
             FeedContent.PLACES -> ContentViewType.HOME_PLACES
             FeedContent.QUESTS -> ContentViewType.HOME_QUESTS
+            FeedContent.CONTACTS -> ContentViewType.HOME_CONTACTS
         })
 
         updateViews()
 
-        val appsToolbarOrder = on<PersistenceHandler>().appsToolbarOrder
-
-        toolbarAdapter.items = listOf(
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.posts),
-                        R.drawable.ic_whatshot_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_POSTS)
-                            on<AccountHandler>().updatePrivateOnly(false)
-                        },
-                        value = ContentViewType.HOME_POSTS,
-                        color = R.color.orange),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.notifications),
-                        R.drawable.ic_notifications_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_NOTIFICATIONS)
-                        },
-                        value = ContentViewType.HOME_NOTIFICATIONS,
-                        color = R.color.colorAccent),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.places),
-                        R.drawable.ic_location_on_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_PLACES)
-                            on<AccountHandler>().updatePrivateOnly(false)
-                        },
-                        value = ContentViewType.HOME_PLACES,
-                        color = R.color.purple),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.events),
-                        R.drawable.ic_event_note_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CALENDAR)
-                            on<AccountHandler>().updatePrivateOnly(false)
-                        },
-                        value = ContentViewType.HOME_CALENDAR,
-                        color = R.color.red,
-                        indicator = showCalendarIndicator),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.communities),
-                        R.drawable.ic_location_city_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_GROUPS)
-                            on<AccountHandler>().updatePrivateOnly(false)
-                        },
-                        value = ContentViewType.HOME_GROUPS,
-                        color = R.color.green),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.quests),
-                        R.drawable.ic_baseline_terrain_24,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_QUESTS)
-                            on<AccountHandler>().updatePrivateOnly(false)
-                        },
-                        value = ContentViewType.HOME_QUESTS,
-                        color = R.color.forestgreen),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.things_to_do),
-                        R.drawable.ic_beach_access_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITIES)
-                            on<AccountHandler>().updatePrivateOnly(false)
-                        },
-                        value = ContentViewType.HOME_ACTIVITIES,
-                        color = R.color.colorAccent),
-                GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.friends),
-                        R.drawable.ic_group_black_24dp,
-                        View.OnClickListener {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_FRIENDS)
-                            on<AccountHandler>().updatePrivateOnly(true)
-                        },
-                        value = ContentViewType.HOME_FRIENDS,
-                        color = R.color.colorPrimary)
-        ).sortedBy {
-            appsToolbarOrder.indexOf(it.value)
-        }.toMutableList()
+        on<AppsToolbarHandler>().attach(toolbarAdapter, showCalendarIndicator)
     }
 
     private fun scrollToolbarTo(content: ContentViewType) {
@@ -409,7 +340,28 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         val content = it.first
                         val state = it.second
 
+                        updateLaunchGroupButton()
+
                         when (content) {
+                            ContentViewType.HOME_CONTACTS -> {
+                                saySomethingHeader.visible = false
+                                saySomething.visible = false
+                                sendSomethingButton.visible = false
+                                peopleContainer.visible = false
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = false
+                                actionRecyclerView.visible = false
+                                suggestionsRecyclerView.visible = false
+                                groupsRecyclerView.visible = false
+                                searchGroups.visible = false
+                                itemView.historyButton.visible = false
+                                actionHeader.visible = false
+                                itemView.suggestionsHeader.visible = false
+                                itemView.placesHeader.visible = false
+                                itemView.feedText.visible = false
+                            }
                             ContentViewType.HOME_NOTIFICATIONS -> {
                                 saySomethingHeader.visible = false
                                 saySomething.visible = false
