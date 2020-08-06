@@ -35,7 +35,7 @@ class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult
                     headerViewHolder = holder
                     holder.name.text = headerText
                     holder.loadingText.visible = isLoading || items.isEmpty()
-                    holder.loadingText.setText(if (isLoading) R.string.loading else R.string.nobody)
+                    holder.loadingText.setText(if (isLoading) R.string.loading_people else R.string.nobody)
                     holder.itemView.searchGroups.visible = false
                 }
             }

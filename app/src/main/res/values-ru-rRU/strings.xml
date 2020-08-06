@@ -328,7 +328,7 @@
     <string name="reactions">Реакции</string>
     <string name="people">Люди</string>
     <string name="phone_verified">Телефон подтвержден</string>
-    <string name="loading">Загрузка людей. Пожалуйста, подождите…</string>
+    <string name="loading_people">Загрузка людей. Пожалуйста, подождите…</string>
     <string name="loading_location">Загрузка места…</string>
     <string name="nobody">Никого нет</string>
     <string name="no_details">Нет подробностей</string>

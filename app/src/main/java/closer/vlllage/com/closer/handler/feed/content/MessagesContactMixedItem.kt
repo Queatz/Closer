@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.feed.content
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,8 @@ import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.TimeStr
 import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.store.Store
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupContact
@@ -26,6 +27,7 @@ import kotlinx.android.synthetic.main.messages_contact_item.view.*
 class MessagesContactMixedItem(val group: Group) : MixedItem(MixedItemType.MessageContact)
 
 class MessagesContactViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.MessageContact) {
+    lateinit var on: On
     val click = itemView.click!!
     val photo = itemView.photo!!
     val name = itemView.name!!
@@ -35,7 +37,11 @@ class MessagesContactViewHolder(itemView: View) : MixedItemViewHolder(itemView, 
 
 class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<MessagesContactMixedItem, MessagesContactViewHolder> {
     override fun bind(holder: MessagesContactViewHolder, item: MessagesContactMixedItem, position: Int) {
-        holder.name.text = ""
+        holder.on = On(on).apply {
+            use<DisposableHandler>()
+        }
+        holder.name.setTextColor(ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)))
+        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.loading)
         holder.lastMessage.text = ""
 
         holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
@@ -57,37 +63,39 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
                 .on(AndroidScheduler.mainThread())
                 .observer {
                     it.firstOrNull()?.let { groupContact ->
-                        on<DataHandler>().getPhone(groupContact.contactId!!)
+                        holder.on<DataHandler>().getPhone(groupContact.contactId!!)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({
-                                    setContact(holder, groupContact, it)
-                                }, {})
+                                    setContact(holder, item.group, groupContact, it)
+                                }, {}).also {
+                                    holder.on<DisposableHandler>().add(it)
+                                }
                     }
                 }.also {
-                    on<DisposableHandler>().add(it)
+                    holder.on<DisposableHandler>().add(it)
                 }
     }
 
-    private fun setContact(holder: MessagesContactViewHolder, groupContact: GroupContact, phone: Phone) {
+    private fun setContact(holder: MessagesContactViewHolder, group: Group, groupContact: GroupContact, phone: Phone) {
         if (groupContact.photo != null) {
             holder.photo.imageTintList = null
             holder.photo.alpha = 1f
-            on<PhotoHelper>().loadCircle(holder.photo, groupContact.photo!!, R.dimen.profilePhotoSmall)
+            holder.on<PhotoHelper>().loadCircle(holder.photo, groupContact.photo!!, R.dimen.profilePhotoSmall)
             holder.photo.setOnClickListener { on<PhotoActivityTransitionHandler>().show(holder.photo, groupContact.photo!!) }
         } else if (phone.photo != null) {
             holder.photo.imageTintList = null
             holder.photo.alpha = 1f
-            on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!, R.dimen.profilePhotoSmall)
+            holder.on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!, R.dimen.profilePhotoSmall)
             holder.photo.setOnClickListener { on<PhotoActivityTransitionHandler>().show(holder.photo, phone.photo!!) }
         }
 
-        val isMe = on<PersistenceHandler>().phoneId == phone.id
         holder.name.text = on<NameHandler>().getName(groupContact)
+        holder.name.setTextColor(ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textInverse)))
 
         if (groupContact.status != null) {
-            holder.lastMessage.text = if (isMe) on<ResourcesHandler>().resources.getString(R.string.text_you, groupContact.status) else groupContact.status
+            holder.lastMessage.text = "${groupContact.status} • ${on<TimeStr>().prettyDate(group.updated)}"
         } else {
-            holder.lastMessage.text = on<ResourcesHandler>().resources.getString(if (isMe) R.string.member_you else R.string.member)
+            holder.lastMessage.text = on<TimeStr>().prettyDate(group.updated)
         }
     }
 
@@ -102,5 +110,6 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
             .inflate(R.layout.messages_contact_item, parent, false))
 
     override fun onViewRecycled(holder: MessagesContactViewHolder) {
+        holder.on.off()
     }
 }

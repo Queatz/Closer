@@ -61,6 +61,6 @@
         android:padding="@dimen/padDouble"
         android:visibility="gone"
         tools:visibility="visible"
-        tools:text="@string/loading"/>
+        tools:text="@string/loading_people"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

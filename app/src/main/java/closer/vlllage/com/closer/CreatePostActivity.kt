@@ -87,7 +87,7 @@ class CreatePostActivity : ListActivity() {
             }
         }
 
-        adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.loading))
+        adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.loading_people))
 
         on<DataHandler>().getGroup(groupId!!).subscribe({
             setGroup(it)
