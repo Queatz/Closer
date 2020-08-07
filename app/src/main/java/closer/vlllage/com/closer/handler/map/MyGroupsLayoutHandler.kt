@@ -48,6 +48,7 @@ class MyGroupsLayoutHandler constructor(private val on: On) {
         myGroupsRecyclerView!!.adapter = myGroupsAdapter
         on<DisposableHandler>().add(on<StoreHandler>().store.box(Group::class).query()
                 .notEqual(Group_.isPublic, true)
+                .notEqual(Group_.direct, true)
                 .sort(on<SortHandler>().sortGroups())
                 .build().subscribe().on(AndroidScheduler.mainThread())
                 .observer { this.setGroups(it) })

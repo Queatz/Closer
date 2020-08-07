@@ -74,6 +74,12 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         var aboutIsFirstItem = false
 
+        if (group.direct) {
+            adapter.items = mutableListOf()
+
+            return
+        }
+
         if (group.hasPhone()) {
             aboutIsFirstItem = true
 

@@ -40,7 +40,8 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
                             app.on<NotificationHandler>().showGroupMessageNotification(
                                     data["text"]!!,
                                     data["messageFrom"]!!,
-                                    data["groupName"]!!,
+                                    data["groupName"],
+                                    data["direct"],
                                     data["groupId"]!!,
                                     data["passive"])
                         }
@@ -51,7 +52,7 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
                         if (!app.on<TopHandler>().isGroupActive(data["groupId"]!!)) {
                             app.on<NotificationHandler>().showGroupMessageReactionNotification(
                                     data["reactionFrom"]!!,
-                                    data["groupName"]!!,
+                                    data["groupName"],
                                     data["reaction"]!!,
                                     data["groupId"]!!,
                                     data["passive"])

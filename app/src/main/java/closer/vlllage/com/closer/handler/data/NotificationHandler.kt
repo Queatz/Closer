@@ -117,7 +117,7 @@ class NotificationHandler constructor(private val on: On) {
                 "$groupId/invited", true)
     }
 
-    fun showGroupMessageNotification(text: String, messageFrom: String, groupName: String, groupId: String, isPassive: String?) {
+    fun showGroupMessageNotification(text: String, messageFrom: String, groupName: String?, direct: String?, groupId: String, isPassive: String?) {
         val context = on<ApplicationHandler>().app
 
         val intent = Intent(context, GroupActivity::class.java)
@@ -136,7 +136,7 @@ class NotificationHandler constructor(private val on: On) {
             val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
                 created = Date()
                 updated = Date()
-                name = on<ResourcesHandler>().resources.getString(R.string.group_message_notification, messageFrom, groupName)
+                name = groupName?.let { on<ResourcesHandler>().resources.getString(R.string.group_message_notification, messageFrom, it) } ?: messageFrom
                 message = parsedText
                 intentTarget = intent.component!!.className
                 intentAction = intent.action
@@ -152,7 +152,7 @@ class NotificationHandler constructor(private val on: On) {
 
     }
 
-    fun showGroupMessageReactionNotification(from: String, groupName: String, reaction: String, groupId: String, isPassive: String?) {
+    fun showGroupMessageReactionNotification(from: String, groupName: String?, reaction: String, groupId: String, isPassive: String?) {
         val context = on<ApplicationHandler>().app
 
         val intent = Intent(context, GroupActivity::class.java)
@@ -170,11 +170,15 @@ class NotificationHandler constructor(private val on: On) {
         val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
             created = Date()
             updated = Date()
-            name = on<ResourcesHandler>().resources.getString(
+            name = groupName?.let {
+                on<ResourcesHandler>().resources.getString(
+                        R.string.group_message_reaction_notification_in,
+                        from,
+                        it.ifBlank { on<ResourcesHandler>().resources.getString(R.string.unknown) }
+                )
+            } ?: on<ResourcesHandler>().resources.getString(
                     R.string.group_message_reaction_notification,
-                    from,
-                    groupName.ifBlank { on<ResourcesHandler>().resources.getString(R.string.unknown) }
-            )
+                    from)
             message = reaction
             intentTarget = intent.component!!.className
             intentAction = intent.action

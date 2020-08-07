@@ -12,7 +12,7 @@ class GroupScopeHandler constructor(private val on: On) {
         imageButton.visible = true
 
         when {
-            group.hasPhone() -> {
+            group.direct || group.hasPhone() -> {
                 imageButton.setImageResource(R.drawable.ic_person_black_24dp)
                 imageButton.setOnClickListener { on<DefaultAlerts>().message(R.string.human_found) }
             }

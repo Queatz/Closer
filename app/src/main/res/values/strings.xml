@@ -75,7 +75,8 @@
     <string name="skip">Skip</string>
     <string name="invited_to_group_notification">%1$s added you to %2$s</string>
     <string name="group_message_notification">%1$s (%2$s)</string>
-    <string name="group_message_reaction_notification">%1$s reacted to your message in %2$s</string>
+    <string name="group_message_reaction_notification_in">%1$s reacted to your message in %2$s</string>
+    <string name="group_message_reaction_notification">%1$s reacted to your message</string>
     <string name="invited">Invited</string>
     <string name="cancel_invite">Cancel invite</string>
     <string name="confirm_cancel_invite">Cancel %1$s\'s invite?</string>
@@ -484,6 +485,7 @@
     <string name="messages">Messages</string>
     <string name="contacts">Contacts</string>
     <string name="no_contacts">You\'ve got no contacts yet.\n\nWhy not make some?</string>
+    <string name="talk_with_x">Talk with %1$s…</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

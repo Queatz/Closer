@@ -134,7 +134,7 @@ class GroupActionDisplay constructor(private val on: On) {
             })
         } else if (layout == Layout.PHOTO || layout == Layout.QUEST) {
             if (showGroupName &&  holder.groupName != null) {
-                on<DisplayNameHelper>().loadName(groupAction.group, holder.groupName!!) { it }
+                on<GroupNameHelper>().loadName(groupAction.group, holder.groupName!!) { it }
             } else {
                 holder.groupName?.visible = false
             }

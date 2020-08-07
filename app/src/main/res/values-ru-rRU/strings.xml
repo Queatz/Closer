@@ -74,7 +74,7 @@
     <string name="skip">Пропустить</string>
     <string name="invited_to_group_notification">%1$s добавил(а) вас в %2$s</string>
     <string name="group_message_notification">%1$s (%2$s)</string>
-    <string name="group_message_reaction_notification">%1$s отреагировал(а) на ваше сообщение в %2$s</string>
+    <string name="group_message_reaction_notification_in">%1$s отреагировал(а) на ваше сообщение в %2$s</string>
     <string name="invited">Приглашенные</string>
     <string name="cancel_invite">Отменить приглашение</string>
     <string name="confirm_cancel_invite">Отменить приглашение %1$s?</string>

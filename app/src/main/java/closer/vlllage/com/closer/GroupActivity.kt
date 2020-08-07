@@ -191,6 +191,7 @@ class GroupActivity : CircularRevealActivity() {
 
     private fun redrawContacts(contactInfo: ContactInfo) {
         val names = mutableListOf<String>()
+
         names.addAll(contactInfo.contactNames)
         names.addAll(contactInfo.contactInvites)
 
@@ -215,7 +216,7 @@ class GroupActivity : CircularRevealActivity() {
                     { view.groupName.text = on<NameHandler>().getName(it) }, { on<DefaultAlerts>().thatDidntWork() }
             ))
         } else {
-            on<DisplayNameHelper>().loadName(group, view.groupName) { it }
+            on<GroupNameHelper>().loadName(group, view.groupName) { it }
         }
     }
 

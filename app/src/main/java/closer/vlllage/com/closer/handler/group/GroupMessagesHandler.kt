@@ -190,10 +190,8 @@ class GroupMessagesHandler constructor(private val on: On) {
                 on<DisposableHandler>().dispose(groupMessagesSubscription!!)
             }
 
-            if (group.name.isNullOrBlank()) {
-                replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.say_something)
-            } else {
-                replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.say_something_in, group.name)
+            on<GroupNameHelper>().loadName(group, replyMessage, true) {
+                on<ResourcesHandler>().resources.getString(R.string.talk_with_x, it)
             }
 
             groupMessagesSubscription = on<StoreHandler>().store.box(GroupMessage::class).query(
@@ -277,12 +275,6 @@ class GroupMessagesHandler constructor(private val on: On) {
         if (on<GroupHandler>().group == null) {
             on<DefaultAlerts>().thatDidntWork()
             return false
-        }
-
-        if (on<GroupHandler>().groupContact == null) {
-            if (!on<GroupHandler>().group!!.isPublic && !on<GroupHandler>().group!!.hasEvent()) {
-                return false
-            }
         }
 
         val groupMessage = GroupMessage()

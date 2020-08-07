@@ -106,6 +106,13 @@ class GroupHandler constructor(private val on: On) {
     }
 
     private fun onGroupSet(group: Group) {
+        if (group.direct) {
+            contactInfoChanged.onNext(contactInfo.also {
+                it.contactNames.clear()
+                it.contactInvites.clear()
+            })
+        }
+
         disposableGroup.add(on<StoreHandler>().store.box(GroupContact::class)
                 .query()
                 .equal(GroupContact_.groupId, group.id!!)
@@ -116,12 +123,15 @@ class GroupHandler constructor(private val on: On) {
                     groupContact = groupContacts.firstOrNull { it.contactId == on<PersistenceHandler>().phoneId!! }
 
                     on<GroupContactsHandler>().setCurrentGroupContacts(groupContacts)
-                    contactInfo.contactNames.clear()
-                    for (groupContact in groupContacts) {
-                        contactInfo.contactNames.add(on<NameHandler>().getName(groupContact))
-                    }
 
-                    contactInfoChanged.onNext(contactInfo)
+                    if (!group.direct) {
+                        contactInfo.contactNames.clear()
+                        for (groupContact in groupContacts) {
+                            contactInfo.contactNames.add(on<NameHandler>().getName(groupContact))
+                        }
+
+                        contactInfoChanged.onNext(contactInfo)
+                    }
                 })
 
         disposableGroup.add(on<StoreHandler>().store.box(GroupInvite::class)
@@ -131,11 +141,13 @@ class GroupHandler constructor(private val on: On) {
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer { groupInvites ->
-                    contactInfo.contactInvites.clear()
-                    for (groupInvite in groupInvites) {
-                        contactInfo.contactInvites.add(on<ResourcesHandler>().resources.getString(R.string.contact_invited_inline, on<NameHandler>().getName(groupInvite)))
+                    if (!group.direct) {
+                        contactInfo.contactInvites.clear()
+                        for (groupInvite in groupInvites) {
+                            contactInfo.contactInvites.add(on<ResourcesHandler>().resources.getString(R.string.contact_invited_inline, on<NameHandler>().getName(groupInvite)))
+                        }
+                        contactInfoChanged.onNext(contactInfo)
                     }
-                    contactInfoChanged.onNext(contactInfo)
                 })
     }
 

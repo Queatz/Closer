@@ -9,10 +9,7 @@ import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.PhotoHelper
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.TimeStr
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
@@ -47,6 +44,9 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
         holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
 
         holder.photo.setOnClickListener(null)
+        holder.callButton.setOnClickListener {
+            on<DefaultAlerts>().message("Woah matey!")
+        }
 
         holder.click.setOnClickListener {
             on<GroupActivityTransitionHandler>().showGroupMessages(holder.click, item.group.id!!)

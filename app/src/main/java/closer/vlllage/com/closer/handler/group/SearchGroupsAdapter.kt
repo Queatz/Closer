@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
-import closer.vlllage.com.closer.handler.helpers.DisplayNameHelper
+import closer.vlllage.com.closer.handler.helpers.GroupNameHelper
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.StoreHandler
@@ -95,7 +95,7 @@ open class SearchGroupsAdapter constructor(
 
                 holder.cardView.clipToOutline = true
 
-                on<DisplayNameHelper>().loadName(group, holder.name) { it }
+                on<GroupNameHelper>().loadName(group, holder.name) { it }
 
                 val recentActivity = (group.updated ?: Date(0)).after(on<TimeAgo>().weeksAgo())
 
