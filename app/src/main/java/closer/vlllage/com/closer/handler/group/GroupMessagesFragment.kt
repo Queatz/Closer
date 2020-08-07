@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.call.CallHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableGroup
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
@@ -47,12 +49,27 @@ class GroupMessagesFragment : PoolActivityFragment() {
         disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             sendButton.imageTintList = it.tint
             sendButton.setBackgroundResource(it.clickableRoundedBackground)
+            callButton.setBackgroundResource(it.clickableRoundedBackground)
             replyMessage.setTextColor(it.text)
             replyMessage.setHintTextColor(it.hint)
             replyMessage.setBackgroundResource(it.clickableRoundedBackground)
         })
 
         on<GroupHandler> {
+            onGroupChanged {
+                callButton.visible = it.direct
+
+                if (it.direct) {
+                    callButton.setOnClickListener { _ ->
+                        on<DirectGroupHandler>().getContactPhone(it.id!!).subscribe({
+                            on<CallHandler>().startCall(it.id!!)
+                        }, {
+                            on<DefaultAlerts>().thatDidntWork()
+                        })
+                    }
+                }
+            }
+
             onGroupUpdated(disposableGroup) {
                 on<PinnedMessagesHandler>().show(it)
             }

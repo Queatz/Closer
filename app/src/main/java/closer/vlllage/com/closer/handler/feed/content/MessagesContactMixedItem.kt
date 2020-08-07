@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.call.CallHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
@@ -44,9 +45,7 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
         holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
 
         holder.photo.setOnClickListener(null)
-        holder.callButton.setOnClickListener {
-            on<DefaultAlerts>().message("Woah matey!")
-        }
+        holder.callButton.setOnClickListener(null)
 
         holder.click.setOnClickListener {
             on<GroupActivityTransitionHandler>().showGroupMessages(holder.click, item.group.id!!)
@@ -77,6 +76,10 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
     }
 
     private fun setContact(holder: MessagesContactViewHolder, group: Group, groupContact: GroupContact, phone: Phone) {
+        holder.callButton.setOnClickListener {
+            on<CallHandler>().startCall(phone.id!!)
+        }
+
         if (groupContact.photo != null) {
             holder.photo.imageTintList = null
             holder.photo.alpha = 1f
