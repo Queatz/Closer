@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupContact_
 import closer.vlllage.com.closer.store.models.GroupMember
 import com.queatz.on.On
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class GroupMemberHandler constructor(private val on: On) {
     fun changeGroupSettings(group: Group?) {
@@ -34,6 +35,33 @@ class GroupMemberHandler constructor(private val on: On) {
                 on<MenuHandler>().show(
                         MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) { on<GroupActionHandler>().addActionToGroup(group) },
                         MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.add_a_shortcut) { on<InstallShortcutHandler>().installShortcut(group) },
+                        MenuHandler.MenuOption(R.drawable.ic_chat_black_24dp, R.string.change_your_group_status) {
+                            on<DataHandler>().getGroupContact(group.id!!, on<PersistenceHandler>().phoneId!!)
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe({ groupContact ->
+                                        on<DefaultInput>().show(
+                                                R.string.your_group_status,
+                                                buttonRes = R.string.update,
+                                                prefill = groupContact.status
+                                        ) {
+                                            on<GroupContactHandler>().updateGroupStatus(groupContact, it)
+                                        }
+                                    }, {
+                                        on<DefaultAlerts>().thatDidntWork()
+                                    })
+                        }.visible(group.direct),
+                        MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.change_your_group_photo) {
+                            on<DataHandler>().getGroupContact(group.id!!, on<PersistenceHandler>().phoneId!!)
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe({ groupContact ->
+                                        on<DefaultMenus>().uploadPhoto { photoId ->
+                                            val photo = on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)
+                                            on<GroupContactHandler>().updateGroupPhoto(groupContact, photo)
+                                        }
+                                    }, {
+                                        on<DefaultAlerts>().thatDidntWork()
+                                    })
+                        }.visible(group.direct),
                         MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.view_background) {
                             group.photo?.let { on<PhotoActivityTransitionHandler>().show(null, it) }
                         }.visible(group.photo != null),

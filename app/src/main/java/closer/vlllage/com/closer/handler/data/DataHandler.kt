@@ -156,6 +156,15 @@ class DataHandler constructor(private val on: On) {
                 }
             }
 
+    fun getGroupContact(groupId: String, phoneId: String) = chain({
+        on<StoreHandler>().store.box(GroupContact::class).query()
+                .equal(GroupContact_.groupId, groupId)
+                .equal(GroupContact_.contactId, phoneId)
+                .build()
+    }, {
+        Single.error(Throwable("Not found"))
+    })
+
     private fun <T : BaseObject> chain(local: () -> Query<T>, remote: () -> Single<T>): Single<T> {
         return RxQuery.single(local()).flatMap {
             if (it.isNotEmpty()) {
