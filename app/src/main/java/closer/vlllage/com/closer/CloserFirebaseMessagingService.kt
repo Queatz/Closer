@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer
 
+import closer.vlllage.com.closer.handler.call.CallEvent
+import closer.vlllage.com.closer.handler.call.CallEventHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
@@ -20,10 +22,15 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val app = application as App
-        val data = remoteMessage!!.data
+        val data = remoteMessage.data
         if (data.isNotEmpty()) {
             if (data.containsKey("action")) {
                 when (data["action"]) {
+                    "call" -> app.on<CallEventHandler>().handle(CallEvent(
+                            data["phone"]!!,
+                            data["event"]!!,
+                            app.on<JsonHandler>().from(data["data"]!!, String::class.java)
+                    ))
                     "event" -> app.on<NotificationHandler>().showEventNotification(
                             app.on<JsonHandler>().from(data["event"]!!, Event::class.java))
                     "group.invited" -> {

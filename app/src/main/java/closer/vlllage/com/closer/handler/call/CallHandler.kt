@@ -6,4 +6,8 @@ class CallHandler constructor(private val on: On) {
     fun startCall(phoneId: String) {
         on<CallActivityTransitionHandler>().show(null, phoneId)
     }
+
+    fun onReceiveCall(phoneId: String) {
+        on<CallActivityTransitionHandler>().show(null, phoneId, incoming = true)
+    }
 }

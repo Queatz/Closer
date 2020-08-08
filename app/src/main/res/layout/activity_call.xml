@@ -20,6 +20,30 @@
         android:visibility="gone"
         android:importantForAccessibility="no" />
 
+    <org.webrtc.SurfaceViewRenderer
+        android:id="@+id/localView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/pad"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent=".333"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintDimensionRatio="1:1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <org.webrtc.SurfaceViewRenderer
+        android:id="@+id/remoteView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/name"
@@ -41,5 +65,22 @@
         android:textStyle="bold"
         tools:text="Mai Pham" />
 
+    <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/answerButton"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".85"
+        android:minWidth="0dp"
+        android:scaleType="centerInside"
+        android:background="@drawable/clickable_white_rounded_flat"
+        android:padding="@dimen/pad"
+        android:tint="@color/green"
+        android:src="@drawable/ic_baseline_phone_24"
+        android:contentDescription="@string/call" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

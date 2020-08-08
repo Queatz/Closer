@@ -16,6 +16,11 @@ interface Backend {
     @GET("member")
     fun allGroupMembers(): Single<List<GroupMemberResult>>
 
+    // Call
+
+    @POST("call/{phone}/{event}")
+    fun call(@Path("phone") phone: String, @Path("event") event: String, @Body data: String): Single<SuccessResult>
+
     // Phone
 
     @GET("map/{geo}")

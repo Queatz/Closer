@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.call.CallHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -60,7 +61,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 startCallMessageButton.visible = phone.id != on<PersistenceHandler>().phoneId
 
                 startCallMessageButton.setOnClickListener {
-                    on<ReplyHandler>().reply(phone)
+                    on<CallHandler>().startCall(phone.id!!)
                 }
 
                 val nothing = on<ResourcesHandler>().resources.getString(R.string.nothing_here)

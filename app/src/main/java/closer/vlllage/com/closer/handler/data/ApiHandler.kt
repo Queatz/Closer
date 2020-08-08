@@ -34,6 +34,8 @@ class ApiHandler constructor(private val on: On) {
         api.authorization = auth
     }
 
+    fun call(phoneId: String, event: String, data: String) = api { call(phoneId, event, data) }
+
     fun getPhonesNear(latLng: LatLng) = api { getPhonesNear(on<LatLngStr>().from(latLng)) }
 
     fun getSuggestionsNear(latLng: LatLng) = api { getSuggestionsNear(on<LatLngStr>().from(latLng)) }

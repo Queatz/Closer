@@ -1,17 +1,16 @@
 package closer.vlllage.com.closer
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.call.CallConnectionHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
-import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.ImageHandler
-import closer.vlllage.com.closer.handler.helpers.TimerHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.pool.PoolActivity
 import com.bumptech.glide.load.DataSource
@@ -25,7 +24,15 @@ import kotlinx.android.synthetic.main.activity_call.*
 class CallActivity : PoolActivity() {
 
     companion object {
+        /**
+         * The ID of the other phone
+         */
         const val EXTRA_CALL_PHONE_ID = "callPhoneId"
+
+        /**
+         * True if I'm being called, false if I'm the one calling
+         */
+        const val EXTRA_INCOMING = "incoming"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +53,32 @@ class CallActivity : PoolActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
+        var incoming = intent.getBooleanExtra(EXTRA_INCOMING, false)
+
+        showAnswer(incoming)
+
         if (intent.hasExtra(EXTRA_CALL_PHONE_ID)) {
-            on<DataHandler>().getPhone(intent.getStringExtra(EXTRA_CALL_PHONE_ID)!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            val otherPhoneId = intent.getStringExtra(EXTRA_CALL_PHONE_ID)!!
+
+            on<CallConnectionHandler>().attach(otherPhoneId, localView, remoteView)
+
+            if (incoming) {
+                answerButton.setOnClickListener {
+                    showAnswer(false)
+
+                    if (incoming) {
+                        incoming = false
+                        on<CallConnectionHandler>().answerIncomingCall()
+                    } else {
+                        on<CallConnectionHandler>().endCall()
+                        finish()
+                    }
+                }
+            } else {
+                on<CallConnectionHandler>().call()
+            }
+
+            on<DataHandler>().getPhone(otherPhoneId).observeOn(AndroidSchedulers.mainThread()).subscribe({
                 it.photo?.let {
                     background.visible = true
                     on<ImageHandler>().get().load("$it?s=12")
@@ -74,6 +105,13 @@ class CallActivity : PoolActivity() {
         } else {
             finish()
         }
+    }
+
+    private fun showAnswer(show: Boolean) {
+        answerButton.setImageResource(if (show) R.drawable.ic_baseline_phone_24 else R.drawable.ic_baseline_call_end_24)
+        answerButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(
+                if (show) R.color.green else R.color.red
+        ))
     }
 
     private fun loadHighRes(photoUrl: String) {
