@@ -57,25 +57,25 @@ class CallActivity : PoolActivity() {
 
         showAnswer(incoming)
 
+        answerButton.setOnClickListener {
+            showAnswer(false)
+
+            if (incoming) {
+                incoming = false
+                on<ApplicationHandler>().app.on<CallConnectionHandler>().answerIncomingCall()
+            } else {
+                on<ApplicationHandler>().app.on<CallConnectionHandler>().endCall()
+                finish()
+            }
+        }
+
         if (intent.hasExtra(EXTRA_CALL_PHONE_ID)) {
             val otherPhoneId = intent.getStringExtra(EXTRA_CALL_PHONE_ID)!!
 
-            on<CallConnectionHandler>().attach(otherPhoneId, localView, remoteView)
+            on<ApplicationHandler>().app.on<CallConnectionHandler>().attach(otherPhoneId, localView, remoteView)
 
-            if (incoming) {
-                answerButton.setOnClickListener {
-                    showAnswer(false)
-
-                    if (incoming) {
-                        incoming = false
-                        on<CallConnectionHandler>().answerIncomingCall()
-                    } else {
-                        on<CallConnectionHandler>().endCall()
-                        finish()
-                    }
-                }
-            } else {
-                on<CallConnectionHandler>().call()
+            if (!incoming) {
+                on<ApplicationHandler>().app.on<CallConnectionHandler>().call()
             }
 
             on<DataHandler>().getPhone(otherPhoneId).observeOn(AndroidSchedulers.mainThread()).subscribe({

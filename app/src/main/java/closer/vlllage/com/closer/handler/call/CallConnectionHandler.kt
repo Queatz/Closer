@@ -1,6 +1,5 @@
 package closer.vlllage.com.closer.handler.call
 
-import android.app.Application
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import com.queatz.on.On
@@ -14,7 +13,11 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     init {
-        initPeerConnectionFactory(on<ApplicationHandler>().app)
+        val options = PeerConnectionFactory.InitializationOptions.builder(on<ApplicationHandler>().app)
+                .setEnableInternalTracer(true)
+                .setFieldTrials("WebRTC-H264HighProfile/Enabled/")
+                .createInitializationOptions()
+        PeerConnectionFactory.initialize(options)
     }
 
     private lateinit var otherPhoneId: String
@@ -22,11 +25,11 @@ class CallConnectionHandler constructor(private val on: On) {
     private var remoteView: SurfaceViewRenderer? = null
 
     private val iceServers = listOf(
+            // todo host own STUN server
             PeerConnection.IceServer.builder("stun:stun.l.google.com:19302").createIceServer(),
-            PeerConnection.IceServer.builder("stun:stun1.l.google.com:19302").createIceServer(),
-            PeerConnection.IceServer.builder("stun:stun2.l.google.com:19302").createIceServer(),
-            PeerConnection.IceServer.builder("stun:stun3.l.google.com:19302").createIceServer(),
-            PeerConnection.IceServer.builder("stun:stun4.l.google.com:19302").createIceServer()
+
+            // todo host own TURN server
+            PeerConnection.IceServer.builder("turn:numb.viagenie.ca").setUsername("webrtc@live.com").setPassword("muazkh").createIceServer()
     )
 
     private val rootEglBase: EglBase = EglBase.create()
@@ -34,13 +37,15 @@ class CallConnectionHandler constructor(private val on: On) {
     private var remoteMediaStream: MediaStream? = null
 
     private val sdpObserver = object : SdpObserver {
-        override fun onCreateSuccess(sessionDescription: SessionDescription) {
-            send("start", sessionDescription)
-        }
+        override fun onCreateSuccess(sessionDescription: SessionDescription) {}
 
-        override fun onSetFailure(p0: String?) {}
+        override fun onSetFailure(message: String?) {
+            displayError(message)
+        }
         override fun onSetSuccess() {}
-        override fun onCreateFailure(p0: String?) {}
+        override fun onCreateFailure(message: String?) {
+            displayError(message)
+        }
     }
 
     private val peerConnectionFactory = PeerConnectionFactory
@@ -56,6 +61,7 @@ class CallConnectionHandler constructor(private val on: On) {
     private val peerConnection = peerConnectionFactory.createPeerConnection(iceServers, object : PeerConnection.Observer {
         override fun onIceCandidate(iceCandidate: IceCandidate) {
             send("connect", iceCandidate)
+            addIceCandidate(iceCandidate)
         }
 
         override fun onDataChannel(p0: DataChannel?) {}
@@ -78,6 +84,8 @@ class CallConnectionHandler constructor(private val on: On) {
         override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {}
     })!!
 
+    private fun addIceCandidate(iceCandidate: IceCandidate) { peerConnection.addIceCandidate(iceCandidate) }
+
     private val videoCapturer = Camera2Enumerator(on<ApplicationHandler>().app).run {
         deviceNames.find {
             isFrontFacing(it)
@@ -89,14 +97,6 @@ class CallConnectionHandler constructor(private val on: On) {
     private val localVideoSource = peerConnectionFactory.createVideoSource(false)
 //    private val localScreencastVideoSource = peerConnectionFactory.createVideoSource(true) // todo screencast
 //    private val localAudioSource = peerConnectionFactory.createAudioSource(MediaConstraints()) // todo audio
-
-    private fun initPeerConnectionFactory(context: Application) {
-        val options = PeerConnectionFactory.InitializationOptions.builder(context)
-                .setEnableInternalTracer(true)
-                .setFieldTrials("WebRTC-H264HighProfile/Enabled/")
-                .createInitializationOptions()
-        PeerConnectionFactory.initialize(options)
-    }
 
     fun attach(otherPhoneId: String, localView: SurfaceViewRenderer, remoteView: SurfaceViewRenderer) {
         this.otherPhoneId = otherPhoneId
@@ -117,14 +117,18 @@ class CallConnectionHandler constructor(private val on: On) {
 
     fun call() {
         peerConnection.createOffer(object : SdpObserver by sdpObserver {
-            override fun onCreateSuccess(desc: SessionDescription?) {
+            override fun onCreateSuccess(sessionDescription: SessionDescription) {
                 peerConnection.setLocalDescription(object : SdpObserver {
-                    override fun onSetFailure(message: String?) {}
+                    override fun onSetFailure(message: String?) {
+                        displayError(message)
+                    }
                     override fun onSetSuccess() {}
                     override fun onCreateSuccess(sessionDescription: SessionDescription?) {}
-                    override fun onCreateFailure(message: String?) {}
-                }, desc)
-                sdpObserver.onCreateSuccess(desc!!)
+                    override fun onCreateFailure(message: String?) {
+                        displayError(message)
+                    }
+                }, sessionDescription)
+                send("start", sessionDescription)
             }
         }, MediaConstraints().apply {
             mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
@@ -135,28 +139,38 @@ class CallConnectionHandler constructor(private val on: On) {
         peerConnection.createAnswer(object : SdpObserver by sdpObserver {
             override fun onCreateSuccess(sessionDescription: SessionDescription) {
                 peerConnection.setLocalDescription(object : SdpObserver {
-                    override fun onSetFailure(p0: String?) {}
-
-                    override fun onSetSuccess() {
+                    override fun onSetFailure(message: String?) {
+                        displayError(message)
                     }
-
+                    override fun onSetSuccess() {}
                     override fun onCreateSuccess(p0: SessionDescription?) {}
-
-                    override fun onCreateFailure(p0: String?) {}
+                    override fun onCreateFailure(message: String?) {
+                        displayError(message)
+                    }
                 }, sessionDescription)
-                sdpObserver.onCreateSuccess(sessionDescription)
+                send("accept", sessionDescription)
             }
         }, MediaConstraints().apply {
             mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
         })
     }
 
+    private fun displayError(message: String?) {
+        on<TimerHandler>().post(Runnable {
+            on<DefaultAlerts>().thatDidntWork(message)
+        })
+    }
+
     private fun onRemoteSessionReceived(sessionDescription: SessionDescription) {
         peerConnection.setRemoteDescription(object : SdpObserver {
-            override fun onSetFailure(p0: String?) {}
+            override fun onSetFailure(message: String?) {
+                displayError(message)
+            }
             override fun onSetSuccess() {}
             override fun onCreateSuccess(p0: SessionDescription?) {}
-            override fun onCreateFailure(p0: String?) {}
+            override fun onCreateFailure(message: String?) {
+                displayError(message)
+            }
         }, sessionDescription)
     }
 
@@ -179,7 +193,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
     fun send(event: String, data: Any) {
         on<ApiHandler>().call(otherPhoneId, event, on<JsonHandler>().to(data)).subscribe({}, {
-            on<DefaultAlerts>().thatDidntWork()
+            displayError(null)
         }).also {
             on<DisposableHandler>().add(it)
         }
