@@ -6,6 +6,8 @@ import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import com.queatz.on.On
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 import org.webrtc.*
 
 
@@ -25,6 +27,9 @@ class CallConnectionHandler constructor(private val on: On) {
         PeerConnectionFactory.initialize(options)
     }
 
+    val active = PublishSubject.create<Boolean>()
+
+    private var callTimeoutDisposable: Disposable? = null
     private lateinit var otherPhoneId: String
     private var localView: SurfaceViewRenderer? = null
     private var remoteView: SurfaceViewRenderer? = null
@@ -84,7 +89,11 @@ class CallConnectionHandler constructor(private val on: On) {
             }
         }
 
-        override fun onSignalingChange(p0: PeerConnection.SignalingState?) {}
+        override fun onSignalingChange(signalingState: PeerConnection.SignalingState?) {
+            if (signalingState == PeerConnection.SignalingState.STABLE) {
+                callTimeoutDisposable?.dispose()
+            }
+        }
         override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {}
         override fun onRemoveStream(p0: MediaStream?) {}
         override fun onRenegotiationNeeded() {}
@@ -141,6 +150,9 @@ class CallConnectionHandler constructor(private val on: On) {
                     }
                 }, sessionDescription)
                 send("start", sessionDescription)
+                callTimeoutDisposable = on<TimerHandler>().postDisposable(Runnable {
+                    endCall()
+                }, 45000)
             }
         }, MediaConstraints().apply {
             mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
@@ -259,9 +271,13 @@ class CallConnectionHandler constructor(private val on: On) {
         remoteMediaStream?.videoTracks?.firstOrNull()?.removeSink(remoteView)
         remoteMediaStream = null
         audioManager?.mode = AudioManager.MODE_NORMAL
+
+        active.onNext(false)
     }
 
     fun endCall() {
         send("end", "")
+
+        active.onNext(false)
     }
 }
