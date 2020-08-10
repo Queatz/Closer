@@ -9,6 +9,8 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
         android:name=".App"
@@ -135,6 +137,7 @@
             android:theme="@style/AppTheme.Translucent"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
+            android:showWhenLocked="true"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.CALL" />

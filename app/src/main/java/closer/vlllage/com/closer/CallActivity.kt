@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer
 
+import android.Manifest
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
@@ -10,6 +11,7 @@ import android.view.WindowManager
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallConnectionHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.data.PermissionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.pool.PoolActivity
@@ -47,7 +49,18 @@ class CallActivity : PoolActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_call)
 
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+
         if (intent != null) onNewIntent(intent)
+
+        on<PermissionHandler>().check(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO).`when` {
+            if (!it) {
+                on<DefaultAlerts>().thatDidntWork("No audio permission")
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -78,7 +91,9 @@ class CallActivity : PoolActivity() {
                 on<ApplicationHandler>().app.on<CallConnectionHandler>().call()
             }
 
-            on<DataHandler>().getPhone(otherPhoneId).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            on<DataHandler>().getPhone(otherPhoneId)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
                 it.photo?.let {
                     background.visible = true
                     on<ImageHandler>().get().load("$it?s=12")

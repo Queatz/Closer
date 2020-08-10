@@ -1,15 +1,20 @@
 package closer.vlllage.com.closer.handler.call
 
+import android.content.Context
+import android.media.AudioManager
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import com.queatz.on.On
 import org.webrtc.*
 
+
 class CallConnectionHandler constructor(private val on: On) {
 
     companion object {
-        private const val LOCAL_TRACK_ID = "local_track"
+        private const val LOCAL_VIDEO_TRACK_ID = "local_track"
         private const val LOCAL_STREAM_ID = "local_track"
+        private const val LOCAL_AUDIO_TRACK_ID = "local_audio_track"
     }
 
     init {
@@ -23,6 +28,7 @@ class CallConnectionHandler constructor(private val on: On) {
     private lateinit var otherPhoneId: String
     private var localView: SurfaceViewRenderer? = null
     private var remoteView: SurfaceViewRenderer? = null
+    private var audioManager: AudioManager? = null
 
     private val iceServers = listOf(
             // todo host own STUN server
@@ -71,7 +77,8 @@ class CallConnectionHandler constructor(private val on: On) {
 
         override fun onAddStream(mediaStream: MediaStream?) {
             remoteView?.let {
-                mediaStream?.videoTracks?.get(0)?.addSink(it)
+                mediaStream?.videoTracks?.getOrNull(0)?.addSink(it)
+                it.post { it.visible = true }
             } ?: run {
                 remoteMediaStream = mediaStream
             }
@@ -86,17 +93,16 @@ class CallConnectionHandler constructor(private val on: On) {
 
     private fun addIceCandidate(iceCandidate: IceCandidate) { peerConnection.addIceCandidate(iceCandidate) }
 
-    private val videoCapturer = Camera2Enumerator(on<ApplicationHandler>().app).run {
-        deviceNames.find {
-            isFrontFacing(it)
-        }?.let {
-            createCapturer(it, null)
-        } ?: throw IllegalStateException()
-    }
+    private var videoCapturer: VideoCapturer? = null
 
     private val localVideoSource = peerConnectionFactory.createVideoSource(false)
 //    private val localScreencastVideoSource = peerConnectionFactory.createVideoSource(true) // todo screencast
-//    private val localAudioSource = peerConnectionFactory.createAudioSource(MediaConstraints()) // todo audio
+    private val localAudioSource = peerConnectionFactory.createAudioSource(MediaConstraints().apply {
+        mandatory.add(MediaConstraints.KeyValuePair("googEchoCancellation", "false"))
+        mandatory.add(MediaConstraints.KeyValuePair("googAutoGainControl", "false"))
+        mandatory.add(MediaConstraints.KeyValuePair("googHighpassFilter", "false"))
+        mandatory.add(MediaConstraints.KeyValuePair("googNoiseSuppression", "false"))
+    })
 
     fun attach(otherPhoneId: String, localView: SurfaceViewRenderer, remoteView: SurfaceViewRenderer) {
         this.otherPhoneId = otherPhoneId
@@ -109,8 +115,14 @@ class CallConnectionHandler constructor(private val on: On) {
         this.remoteView?.let { view ->
             remoteMediaStream?.let {
                 it.videoTracks.firstOrNull()?.addSink(view)
+                view.post { view.visible = true }
             }
         }
+
+        audioManager = on<ApplicationHandler>().app.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
+        audioManager?.mode = AudioManager.MODE_IN_COMMUNICATION
+        audioManager?.isMicrophoneMute = false
+        audioManager?.isSpeakerphoneOn = true
 
         startLocalVideoCapture(localView)
     }
@@ -132,6 +144,7 @@ class CallConnectionHandler constructor(private val on: On) {
             }
         }, MediaConstraints().apply {
             mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
+            mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
         })
     }
 
@@ -152,6 +165,7 @@ class CallConnectionHandler constructor(private val on: On) {
             }
         }, MediaConstraints().apply {
             mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
+            mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
         })
     }
 
@@ -182,13 +196,31 @@ class CallConnectionHandler constructor(private val on: On) {
 
     private fun startLocalVideoCapture(localVideoOutput: SurfaceViewRenderer) {
         val surfaceTextureHelper = SurfaceTextureHelper.create(Thread.currentThread().name, rootEglBase.eglBaseContext)
-        (videoCapturer as VideoCapturer).initialize(surfaceTextureHelper, localVideoOutput.context, localVideoSource.capturerObserver)
-        videoCapturer.startCapture(720, 1280, 60)
-        val localVideoTrack = peerConnectionFactory.createVideoTrack(LOCAL_TRACK_ID, localVideoSource)
-        localVideoTrack.addSink(localVideoOutput)
+
+        localView?.setZOrderMediaOverlay(true)
+
         val localStream = peerConnectionFactory.createLocalMediaStream(LOCAL_STREAM_ID)
-        localStream.addTrack(localVideoTrack)
+
+        videoCapturer = Camera2Enumerator(on<ApplicationHandler>().app).let {
+            it.deviceNames.find { device ->
+                it.isFrontFacing(device)
+            }?.let { device ->
+                it.createCapturer(device, null)
+            } ?: throw IllegalStateException()
+        }.also { videoCapturer ->
+            videoCapturer.initialize(surfaceTextureHelper, localVideoOutput.context, localVideoSource.capturerObserver)
+            videoCapturer.startCapture(720, 1280, 60)
+            val localVideoTrack = peerConnectionFactory.createVideoTrack(LOCAL_VIDEO_TRACK_ID, localVideoSource)
+            localVideoTrack.addSink(localVideoOutput)
+            localStream.addTrack(localVideoTrack)
+        }
+
+        val localAudioTrack = peerConnectionFactory.createAudioTrack(LOCAL_AUDIO_TRACK_ID, localAudioSource)
+        localAudioTrack.setEnabled(true)
+        localStream.addTrack(localAudioTrack)
         peerConnection.addStream(localStream)
+        peerConnection.setAudioRecording(true)
+        peerConnection.setAudioPlayout(true)
     }
 
     fun send(event: String, data: Any) {
@@ -220,7 +252,13 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     fun onEnd(callEvent: CallEvent) {
-        peerConnection.close()
+//        peerConnection.close()
+//        peerConnectionFactory.dispose()
+        videoCapturer?.stopCapture()
+        videoCapturer = null
+        remoteMediaStream?.videoTracks?.firstOrNull()?.removeSink(remoteView)
+        remoteMediaStream = null
+        audioManager?.mode = AudioManager.MODE_NORMAL
     }
 
     fun endCall() {
