@@ -3,7 +3,7 @@ package closer.vlllage.com.closer.handler.group
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.mqtt.MqttEvent
+import closer.vlllage.com.closer.handler.mqtt.events.TypingMqttEvent
 import closer.vlllage.com.closer.handler.mqtt.MqttHandler
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
@@ -44,7 +44,7 @@ class TypingHandler constructor(private val on: On) : OnLifecycle {
 
         mqtt.subscribe(groupId)
 
-        mqtt.events.subscribe({
+        mqtt.events(TypingMqttEvent::class).subscribe({
             val modified = whoIsTyping.value!!.toMutableSet()
 
             it.stopTyping?.let { modified.remove(it) }
@@ -65,9 +65,9 @@ class TypingHandler constructor(private val on: On) : OnLifecycle {
         val me = on<PersistenceHandler>().phoneId!!
 
         if (isTyping) {
-            mqtt.publish(groupId!!, MqttEvent(typing = me))
+            mqtt.publish(groupId!!, TypingMqttEvent(typing = me))
         } else {
-            mqtt.publish(groupId!!, MqttEvent(stopTyping = me))
+            mqtt.publish(groupId!!, TypingMqttEvent(stopTyping = me))
         }
     }
 }

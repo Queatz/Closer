@@ -1,18 +1,29 @@
 package closer.vlllage.com.closer.handler.data
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.media.AudioManager
+import android.media.RingtoneManager
 import android.os.Build
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import closer.vlllage.com.closer.Background
+import closer.vlllage.com.closer.CallActivity.Companion.EXTRA_ANSWER
+import closer.vlllage.com.closer.CallActivity.Companion.EXTRA_CALL_PHONE_ID
+import closer.vlllage.com.closer.CallActivity.Companion.EXTRA_CALL_PHONE_NAME
 import closer.vlllage.com.closer.GroupActivity
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_GROUP_ID
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_PHONE_ID
@@ -28,11 +39,14 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.Val
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
+import io.objectbox.BoxStore.context
 import java.util.*
+
 
 class NotificationHandler constructor(private val on: On) {
 
@@ -224,9 +238,35 @@ class NotificationHandler constructor(private val on: On) {
                 event.id!! + "/group", false)
     }
 
+    fun showIncomingCallNotification(phoneId: String, intent: Intent) {
+        val context = on<ApplicationHandler>().app
+
+        val contentIntent = PendingIntent.getActivity(
+                context,
+                REQUEST_CODE_NOTIFICATION,
+                intent,
+                PendingIntent.FLAG_ONE_SHOT
+        )
+
+        val phoneName = on<NameHandler>().getFallbackName(
+                intent.getStringExtra(EXTRA_CALL_PHONE_ID),
+                intent.getStringExtra(EXTRA_CALL_PHONE_NAME)
+        )
+
+        show(contentIntent, null, null,
+                "Call from $phoneName",
+                "",
+                "$phoneId/call", false, intent)
+    }
+
     fun hide(notificationTag: String) {
         val notificationManager = NotificationManagerCompat.from(on<ApplicationHandler>().app)
         notificationManager.cancel(notificationTag, NOTIFICATION_ID)
+    }
+
+    fun hideFullScreen() {
+        val notificationManager = NotificationManagerCompat.from(on<ApplicationHandler>().app)
+        notificationManager.cancel(null, FULLSCREEN_NOTIFICATION_ID)
     }
 
     fun launch(notification: closer.vlllage.com.closer.store.models.Notification) {
@@ -243,27 +283,38 @@ class NotificationHandler constructor(private val on: On) {
         context.startActivity(intent)
     }
 
-    private fun show(contentIntent: PendingIntent, backgroundIntent: Intent?,
+    private fun show(contentIntent: PendingIntent,
+                     backgroundIntent: Intent?,
                      remoteInput: RemoteInput?,
                      name: String,
                      message: String,
                      notificationTag: String,
-                     sound: Boolean) {
+                     sound: Boolean,
+                     fullScreenIntent: Intent? = null) {
         val context = on<ApplicationHandler>().app
 
         if (on<PersistenceHandler>().isNotificationsPaused) {
             return
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
             val channel = NotificationChannel(notificationChannel(),
                     context.getString(R.string.closer_notifications),
                     NotificationManager.IMPORTANCE_DEFAULT)
             (context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
                     .createNotificationChannel(channel)
+
+            val channel2 = NotificationChannel(callNotificationChannel(),
+                    context.getString(R.string.closer_calls),
+                    NotificationManager.IMPORTANCE_HIGH)
+            (context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+                    .createNotificationChannel(channel2)
         }
 
-        val builder = NotificationCompat.Builder(context, notificationChannel())
+        val builder = NotificationCompat.Builder(context, when (fullScreenIntent) {
+            null -> notificationChannel()
+            else -> callNotificationChannel()
+        })
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(name)
                 .setContentText(message)
@@ -271,9 +322,7 @@ class NotificationHandler constructor(private val on: On) {
                 .setContentIntent(contentIntent)
 
         if (sound) {
-            builder.setDefaults(Notification.DEFAULT_ALL)
-        } else {
-            builder.setDefaults(Notification.DEFAULT_LIGHTS)
+            builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION), AudioManager.STREAM_NOTIFICATION)
         }
 
         if (remoteInput != null) {
@@ -290,34 +339,85 @@ class NotificationHandler constructor(private val on: On) {
             builder.addAction(action)
         }
 
-        val muteBackgroundIntent = Intent(context, Background::class.java)
-        muteBackgroundIntent.putExtra(EXTRA_MUTE, true)
-        muteBackgroundIntent.putExtra(EXTRA_NOTIFICATION, notificationTag)
+        if (fullScreenIntent == null) {
+            val muteBackgroundIntent = Intent(context, Background::class.java)
+            muteBackgroundIntent.putExtra(EXTRA_MUTE, true)
+            muteBackgroundIntent.putExtra(EXTRA_NOTIFICATION, notificationTag)
 
-        val mutePendingIntent = PendingIntent.getBroadcast(context,
-                REQUEST_CODE_NOTIFICATION_MUTE,
-                muteBackgroundIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT)
+            val mutePendingIntent = PendingIntent.getBroadcast(context,
+                    REQUEST_CODE_NOTIFICATION_MUTE,
+                    muteBackgroundIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val muteAction = NotificationCompat.Action.Builder(R.drawable.ic_notifications_paused_white_24dp,
-                on<ResourcesHandler>().resources.getString(R.string.mute), mutePendingIntent)
-                .build()
+            val muteAction = NotificationCompat.Action.Builder(R.drawable.ic_notifications_paused_white_24dp,
+                    on<ResourcesHandler>().resources.getString(R.string.mute), mutePendingIntent)
+                    .build()
 
-        builder.addAction(muteAction)
+            builder.addAction(muteAction)
+        }
+
+        fullScreenIntent?.let { it ->
+            val pendingIntent = PendingIntent.getActivity(
+                    context,
+                    REQUEST_CODE_NOTIFICATION,
+                    it,
+                    PendingIntent.FLAG_ONE_SHOT
+            )
+
+            builder.addAction(R.drawable.ic_baseline_call_end_24,
+                    coloredText(R.string.ignore_call, R.color.red), null)
+
+            builder.addAction(R.drawable.common_full_open_on_phone,
+                    coloredText(R.string.answer_call, R.color.green), pendingIntent)
+
+            builder.setAutoCancel(true)
+            builder.setCategory(NotificationCompat.CATEGORY_CALL)
+            builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE), AudioManager.STREAM_RING)
+            builder.setVibrate(longArrayOf(500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500))
+
+            builder.setOngoing(true)
+            builder.setFullScreenIntent(pendingIntent, true)
+        }
 
         val newMessageNotification = builder.build()
 
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(notificationTag, NOTIFICATION_ID, newMessageNotification)
+
+        if (fullScreenIntent != null) {
+            notificationManager.cancel(null, FULLSCREEN_NOTIFICATION_ID)
+        }
+
+        notificationManager.notify(when (fullScreenIntent) {
+            null -> notificationTag
+            else -> null
+        }, when (fullScreenIntent) {
+            null -> NOTIFICATION_ID
+            else -> FULLSCREEN_NOTIFICATION_ID
+        }, newMessageNotification)
+    }
+
+    private fun coloredText(@StringRes stringRes: Int, @ColorRes colorRes: Int): Spannable? {
+        val spannable: Spannable = SpannableString(on<ResourcesHandler>().resources.getText(stringRes))
+        if (VERSION.SDK_INT >= VERSION_CODES.N_MR1) {
+            spannable.setSpan(
+                    ForegroundColorSpan(on<ResourcesHandler>().resources.getColor(colorRes)), 0, spannable.length, 0)
+        }
+        return spannable
     }
 
     private fun notificationChannel(): String {
         return on<ResourcesHandler>().resources.getString(R.string.notification_channel)
     }
 
+    private fun callNotificationChannel(): String {
+        return on<ResourcesHandler>().resources.getString(R.string.call_notification_channel)
+    }
+
     companion object {
         const val KEY_TEXT_REPLY = "key_text_reply"
         const val NOTIFICATION_ID = 0
+        const val FULLSCREEN_NOTIFICATION_ID = 1
         private const val REQUEST_CODE_NOTIFICATION = 101
         private const val REQUEST_CODE_NOTIFICATION_MUTE = 102
         const val EXTRA_NOTIFICATION = "notification"

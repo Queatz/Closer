@@ -28,6 +28,7 @@ class CloserFirebaseMessagingService : FirebaseMessagingService() {
                 when (data["action"]) {
                     "call" -> app.on<CallEventHandler>().handle(CallEvent(
                             data["phone"]!!,
+                            data["phoneName"],
                             data["event"]!!,
                             app.on<JsonHandler>().from(data["data"]!!, String::class.java)
                     ))

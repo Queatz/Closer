@@ -14,6 +14,7 @@ import android.view.WindowManager
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallConnectionHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.data.PermissionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
@@ -33,11 +34,20 @@ class CallActivity : PoolActivity() {
          * The ID of the other phone
          */
         const val EXTRA_CALL_PHONE_ID = "callPhoneId"
+        /**
+         * The name of the other phone
+         */
+        const val EXTRA_CALL_PHONE_NAME = "callPhoneName"
 
         /**
          * True if I'm being called, false if I'm the one calling
          */
         const val EXTRA_INCOMING = "incoming"
+
+        /**
+         * True if should answer the call
+         */
+        const val EXTRA_ANSWER = "answer"
     }
 
     private val ringtone: Ringtone? = RingtoneManager.getRingtone(this, DEFAULT_RINGTONE_URI)
@@ -60,27 +70,26 @@ class CallActivity : PoolActivity() {
 
         if (intent != null) onNewIntent(intent)
 
-        on<PermissionHandler>().check(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO).`when` {
-            if (!it) {
-                on<DefaultAlerts>().thatDidntWork("No audio permission")
-            }
-        }
-
-        on<ApplicationHandler>().app.on<CallConnectionHandler>().active.observeOn(AndroidSchedulers.mainThread()).subscribe {
+        on<ApplicationHandler>().app.on<CallConnectionHandler>().active
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
             if (!it) {
                 finish()
             }
         }.also {
             on<DisposableHandler>().add(it)
         }
+
+        on<NotificationHandler>().hideFullScreen()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
         var incoming = intent.getBooleanExtra(EXTRA_INCOMING, false)
+        val autoAnswer = intent.getBooleanExtra(EXTRA_ANSWER, false)
 
-        showAnswer(incoming)
+        showAnswer(incoming && !autoAnswer)
 
         if (incoming) {
             ringtone?.play()
@@ -89,7 +98,7 @@ class CallActivity : PoolActivity() {
         answerButton.setOnClickListener {
             showAnswer(false)
 
-            if (incoming) {
+            if (incoming && !autoAnswer) {
                 ringtone?.stop()
                 incoming = false
                 on<ApplicationHandler>().app.on<CallConnectionHandler>().answerIncomingCall()
@@ -102,11 +111,7 @@ class CallActivity : PoolActivity() {
         if (intent.hasExtra(EXTRA_CALL_PHONE_ID)) {
             val otherPhoneId = intent.getStringExtra(EXTRA_CALL_PHONE_ID)!!
 
-            on<ApplicationHandler>().app.on<CallConnectionHandler>().attach(otherPhoneId, localView, remoteView)
-
-            if (!incoming) {
-                on<ApplicationHandler>().app.on<CallConnectionHandler>().call()
-            }
+            handleCall(otherPhoneId, incoming, autoAnswer)
 
             on<DataHandler>().getPhone(otherPhoneId)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -136,6 +141,23 @@ class CallActivity : PoolActivity() {
             }
         } else {
             finish()
+        }
+    }
+
+    private fun handleCall(otherPhoneId: String, incoming: Boolean, answer: Boolean) {
+        on<PermissionHandler>().check(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO).`when` {
+            when (it) {
+                true -> {
+                    on<ApplicationHandler>().app.on<CallConnectionHandler>().attach(otherPhoneId, localView, remoteView)
+
+                    if (!incoming) {
+                        on<ApplicationHandler>().app.on<CallConnectionHandler>().call()
+                    } else if (answer) {
+                        on<ApplicationHandler>().app.on<CallConnectionHandler>().answerIncomingCall()
+                    }
+                }
+                false -> on<DefaultAlerts>().thatDidntWork("No calling permissions")
+            }
         }
     }
 

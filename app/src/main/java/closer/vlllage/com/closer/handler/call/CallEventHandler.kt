@@ -16,6 +16,7 @@ class CallEventHandler constructor(private val on: On) {
 
 data class CallEvent constructor(
         val phone: String,
+        val phoneName: String? = null,
         val event: String,
         val data: String
 )

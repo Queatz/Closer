@@ -3,17 +3,21 @@ package closer.vlllage.com.closer.handler.mqtt
 import android.util.Log
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.JsonHandler
+import closer.vlllage.com.closer.handler.mqtt.events.TypingMqttEvent
+import com.google.gson.JsonObject
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
 import io.reactivex.subjects.PublishSubject
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import java.nio.charset.Charset
+import kotlin.reflect.KClass
 
 class MqttHandler constructor(private val on: On) : OnLifecycle {
 
-    val events = PublishSubject.create<MqttEvent>()
+    private val events = PublishSubject.create<Any>()
 
     private val queue = mutableListOf<() -> Unit>()
 
@@ -27,9 +31,8 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
         mqttClient = MqttAndroidClient(on<ApplicationHandler>().app, MQTT_URI, on<PersistenceHandler>().phone)
 
         mqttClient.setCallback(object : MqttCallback {
-            override fun messageArrived(groupId: String, message: MqttMessage) {
-                events.onNext(on<JsonHandler>().from(String(message.payload, Charset.defaultCharset()), MqttEvent::class.java))
-                Log.d(TAG, "Receive message: $message from groupId: $groupId")
+            override fun messageArrived(channel: String, message: MqttMessage) {
+                handleMessage(on<JsonHandler>().from(String(message.payload, Charset.defaultCharset()), MqttEvent::class.java))
             }
 
             override fun connectionLost(cause: Throwable?) {
@@ -59,22 +62,33 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
         } catch (e: MqttException) {
             e.printStackTrace()
         }
-
     }
 
-    fun subscribe(groupId: String, qos: Int = 1) {
+    fun <T : Any> events(kClass: KClass<T>) = events.filter { it::class == kClass }.map { it as T }
+
+    private fun handleMessage(mqttEvent: MqttEvent) {
+        events.onNext(on<JsonHandler>().from(mqttEvent.data!!, when (mqttEvent.type) {
+            TypingMqttEvent::class.simpleName -> TypingMqttEvent::class.java
+            else -> {
+                on<DefaultAlerts>().syncError()
+                return
+            }
+        }))
+    }
+
+    fun subscribe(channel: String, qos: Int = 1) {
         if (!mqttClient.isConnected) {
-            queue.add { subscribe(groupId, qos) }
+            queue.add { subscribe(channel, qos) }
             return
         }
         try {
-            mqttClient.subscribe(groupId, qos, null, object : IMqttActionListener {
+            mqttClient.subscribe(channel, qos, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
-                    Log.d(TAG, "Subscribed to $groupId")
+                    Log.d(TAG, "Subscribed to $channel")
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    Log.d(TAG, "Failed to subscribe $groupId")
+                    Log.d(TAG, "Failed to subscribe $channel")
                 }
             })
         } catch (e: MqttException) {
@@ -82,17 +96,17 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
         }
     }
 
-    fun unsubscribe(groupId: String) {
+    fun unsubscribe(channel: String) {
         if (!mqttClient.isConnected) return
 
         try {
-            mqttClient.unsubscribe(groupId, null, object : IMqttActionListener {
+            mqttClient.unsubscribe(channel, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
-                    Log.d(TAG, "Unsubscribed to $groupId")
+                    Log.d(TAG, "Unsubscribed to $channel")
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    Log.d(TAG, "Failed to unsubscribe $groupId")
+                    Log.d(TAG, "Failed to unsubscribe $channel")
                 }
             })
         } catch (e: MqttException) {
@@ -100,26 +114,29 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
         }
     }
 
-    fun publish(groupId: String, event: MqttEvent, qos: Int = 1, retained: Boolean = false) {
+    fun publish(channel: String, event: Any, qos: Int = 1, retained: Boolean = false) {
         if (!mqttClient.isConnected) {
-            queue.add { publish(groupId, event, qos, retained) }
+            queue.add { publish(channel, event, qos, retained) }
             return
         }
 
-        val msg = on<JsonHandler>().to(event)
+        val msg = on<JsonHandler>().to(MqttEvent(
+                event::class.simpleName!!,
+                data = on<JsonHandler>().toJsonTree(event).asJsonObject
+        ))
 
         try {
             val message = MqttMessage()
             message.payload = msg.toByteArray()
             message.qos = qos
             message.isRetained = retained
-            mqttClient.publish(groupId, message, null, object : IMqttActionListener {
+            mqttClient.publish(channel, message, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
-                    Log.d(TAG, "$msg published to $groupId")
+                    Log.d(TAG, "$msg published to $channel")
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    Log.d(TAG, "Failed to publish $msg to $groupId")
+                    Log.d(TAG, "Failed to publish $msg to $channel")
                 }
             })
         } catch (e: MqttException) {
@@ -146,7 +163,7 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
     }
 }
 
-data class MqttEvent constructor(
-        val typing: String? = null,
-        val stopTyping: String? = null
+private data class MqttEvent constructor(
+        val type: String,
+        val data: JsonObject? = null
 )

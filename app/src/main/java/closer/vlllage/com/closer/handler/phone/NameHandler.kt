@@ -40,6 +40,8 @@ class NameHandler constructor(private val on: On) {
 
     fun getName(groupInvite: GroupInvite?): String = if (groupInvite?.name.isNullOrBlank()) noName() else groupInvite!!.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown)
 
+    fun getFallbackName(phoneId: String? = null, name: String? = null): String = if (name.isNullOrBlank()) fallbackName(phoneId) else name
+
     private fun fallbackName(phoneId: String?): String {
         if (phoneId == null) {
             return noName()

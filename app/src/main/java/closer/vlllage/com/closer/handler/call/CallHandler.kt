@@ -7,7 +7,7 @@ class CallHandler constructor(private val on: On) {
         on<CallActivityTransitionHandler>().show(null, phoneId)
     }
 
-    fun onReceiveCall(phoneId: String) {
-        on<CallActivityTransitionHandler>().show(null, phoneId, incoming = true)
+    fun onReceiveCall(phoneId: String, phoneName: String?) {
+        on<CallActivityTransitionHandler>().show(null, phoneId, phoneName, incoming = true)
     }
 }

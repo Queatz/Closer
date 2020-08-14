@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioManager
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import com.queatz.on.On
 import io.reactivex.disposables.Disposable
@@ -181,6 +182,8 @@ class CallConnectionHandler constructor(private val on: On) {
         })
     }
 
+    private fun isInCall() = peerConnection.signalingState() == PeerConnection.SignalingState.CLOSED
+
     private fun displayError(message: String?) {
         on<TimerHandler>().post(Runnable {
             on<DefaultAlerts>().thatDidntWork(message)
@@ -235,18 +238,21 @@ class CallConnectionHandler constructor(private val on: On) {
         peerConnection.setAudioPlayout(true)
     }
 
-    fun send(event: String, data: Any) {
-        on<ApiHandler>().call(otherPhoneId, event, on<JsonHandler>().to(data)).subscribe({}, {
+    fun send(event: String, data: Any, phoneId: String? = null) {
+        on<ApiHandler>().call(phoneId ?: otherPhoneId, event, on<JsonHandler>().to(data)).subscribe({}, {
             displayError(null)
-        }).also {
-            on<DisposableHandler>().add(it)
-        }
+        })
     }
 
     fun onStart(callEvent: CallEvent) {
+        if (isInCall()) {
+            send("end", EndCallEvent("In call"), callEvent.phone)
+            return
+        }
+
         // todo listen for started calls and launch activity from service
         // note: activity can be closed and opened anytime during the call
-        on<TimerHandler>().post(Runnable { on<CallHandler>().onReceiveCall(callEvent.phone) })
+        on<TimerHandler>().post(Runnable { on<CallHandler>().onReceiveCall(callEvent.phone, callEvent.phoneName) })
         // end todo //
 
         val sessionDescription = on<JsonHandler>().from(callEvent.data, SessionDescription::class.java)
@@ -273,11 +279,22 @@ class CallConnectionHandler constructor(private val on: On) {
         audioManager?.mode = AudioManager.MODE_NORMAL
 
         active.onNext(false)
+
+        on<TimerHandler>().post(Runnable {
+            val endCallEvent = on<JsonHandler>().from(callEvent.data, EndCallEvent::class.java)
+            on<ToastHandler>().show(endCallEvent.reason)
+
+            on<NotificationHandler>().hideFullScreen()
+        })
     }
 
     fun endCall() {
-        send("end", "")
+        send("end", EndCallEvent("Call ended"))
 
         active.onNext(false)
     }
 }
+
+data class EndCallEvent constructor(
+    val reason: String
+)
