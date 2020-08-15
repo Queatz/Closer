@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.Point
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-
 import java.lang.Math.abs
 
 class SoftScrollStopper : ConstraintLayout {

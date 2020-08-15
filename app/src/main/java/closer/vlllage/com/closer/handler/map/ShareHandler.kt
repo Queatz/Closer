@@ -11,7 +11,6 @@ import closer.vlllage.com.closer.store.models.Group_
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import java.util.*
 
 class ShareHandler constructor(private val on: On) {
 
@@ -29,7 +28,7 @@ class ShareHandler constructor(private val on: On) {
                     val menuBubble = MapBubble(latLng, BubbleType.MENU, true, true)
                     menuBubble.isPinned = true
                     menuBubble.isOnTop = true
-                    on<TimerHandler>().postDisposable(Runnable {
+                    on<TimerHandler>().postDisposable({
                         on<BubbleHandler>().add(menuBubble)
                         menuBubble.onViewReadyListener = {
                             on<MapBubbleMenuView>().setMenuTitle(menuBubble, on<ResourcesHandler>().resources.getString(R.string.share))

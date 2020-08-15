@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.post
 
 import android.content.Intent
-import android.view.View
 import closer.vlllage.com.closer.CreatePostActivity
 import closer.vlllage.com.closer.CreatePostActivity.Companion.EXTRA_GROUP_ID
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler

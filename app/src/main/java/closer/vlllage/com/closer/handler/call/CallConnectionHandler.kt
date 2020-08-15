@@ -151,7 +151,7 @@ class CallConnectionHandler constructor(private val on: On) {
                     }
                 }, sessionDescription)
                 send("start", sessionDescription)
-                callTimeoutDisposable = on<TimerHandler>().postDisposable(Runnable {
+                callTimeoutDisposable = on<TimerHandler>().postDisposable({
                     endCall()
                 }, 45000)
             }
@@ -185,9 +185,9 @@ class CallConnectionHandler constructor(private val on: On) {
     private fun isInCall() = peerConnection.signalingState() == PeerConnection.SignalingState.CLOSED
 
     private fun displayError(message: String?) {
-        on<TimerHandler>().post(Runnable {
+        on<TimerHandler>().post {
             on<DefaultAlerts>().thatDidntWork(message)
-        })
+        }
     }
 
     private fun onRemoteSessionReceived(sessionDescription: SessionDescription) {
@@ -252,7 +252,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
         // todo listen for started calls and launch activity from service
         // note: activity can be closed and opened anytime during the call
-        on<TimerHandler>().post(Runnable { on<CallHandler>().onReceiveCall(callEvent.phone, callEvent.phoneName) })
+        on<TimerHandler>().post { on<CallHandler>().onReceiveCall(callEvent.phone, callEvent.phoneName) }
         // end todo //
 
         val sessionDescription = on<JsonHandler>().from(callEvent.data, SessionDescription::class.java)
@@ -280,12 +280,12 @@ class CallConnectionHandler constructor(private val on: On) {
 
         active.onNext(false)
 
-        on<TimerHandler>().post(Runnable {
+        on<TimerHandler>().post {
             val endCallEvent = on<JsonHandler>().from(callEvent.data, EndCallEvent::class.java)
             on<ToastHandler>().show(endCallEvent.reason)
 
             on<NotificationHandler>().hideFullScreen()
-        })
+        }
     }
 
     fun endCall() {

@@ -6,7 +6,6 @@ import com.queatz.on.On
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 
 class PhoneContacts constructor(private val on: On) {
 
@@ -28,7 +27,7 @@ class PhoneContacts constructor(private val on: On) {
                         contactsList.add(PhoneContact(contactName, contactNumber))
                     } while (cursor.moveToNext())
 
-                    contactsList.sortWith(Comparator { c1, c2 -> c1.name!!.compareTo(c2.name!!) })
+                    contactsList.sortWith { c1, c2 -> c1.name!!.compareTo(c2.name!!) }
                     this.contacts = contactsList
                     return@fromCallable contactsList
                 }

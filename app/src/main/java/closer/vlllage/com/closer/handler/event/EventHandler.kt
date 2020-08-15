@@ -119,7 +119,7 @@ class EventHandler constructor(private val on: On) {
                     }
                 }
 
-                viewHolder.scrollView.setOnInterceptTouchListener(View.OnTouchListener { _, _ ->
+                viewHolder.scrollView.setOnInterceptTouchListener { _, _ ->
                     if (viewHolder.eventName.hasFocus()) {
                         viewHolder.eventName.clearFocus()
                         viewHolder.scrollView.requestFocus()
@@ -139,7 +139,7 @@ class EventHandler constructor(private val on: On) {
                     }
 
                     false
-                })
+                }
 
                 alertConfig.alertResult = viewHolder
             }
@@ -267,7 +267,7 @@ class EventHandler constructor(private val on: On) {
         return mapBubble
     }
 
-    private class CreateEventViewHolder internal constructor(view: View) {
+    private class CreateEventViewHolder(view: View) {
         var isPublicSwitch: Switch = view.isPublicSwitch
         var changeEndDateButton: View = view.changeEndDate
         var endDateTextView: TextView = view.endDateTextView
@@ -286,7 +286,7 @@ class EventHandler constructor(private val on: On) {
         var scrollView: InterceptableScrollView = view as InterceptableScrollView
     }
 
-    private inner class CreateEventViewState(internal var startsAt: Calendar, internal var endsAt: Calendar)
+    private class CreateEventViewState(var startsAt: Calendar, var endsAt: Calendar)
 }
 
 typealias OnEventCreatedListener = (event: Event) -> Unit

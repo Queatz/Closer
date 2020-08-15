@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.store.models
 
 import io.objectbox.annotation.Entity
-import java.util.*
 
 @Entity
 class Suggestion : BaseObject() {

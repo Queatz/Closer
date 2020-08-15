@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
 import android.content.res.ColorStateList
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

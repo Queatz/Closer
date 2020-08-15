@@ -3,8 +3,6 @@ package closer.vlllage.com.closer.handler.helpers
 import android.location.Address
 import android.location.Geocoder
 import closer.vlllage.com.closer.handler.map.PlacesHandler
-import closer.vlllage.com.closer.handler.map.SuggestionHandler
-import closer.vlllage.com.closer.store.models.Suggestion
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.reactivex.Observable

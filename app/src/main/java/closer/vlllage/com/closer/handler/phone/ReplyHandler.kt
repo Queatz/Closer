@@ -1,10 +1,9 @@
 package closer.vlllage.com.closer.handler.phone
 
-import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers

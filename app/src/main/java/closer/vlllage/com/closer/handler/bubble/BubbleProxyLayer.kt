@@ -219,8 +219,8 @@ class BubbleProxyLayer(private val bubbleMapLayer: BubbleMapLayer, private val m
 
 
     private class MergeBubblesResult {
-        internal var preCalculationProxyBubbles: MutableSet<MapBubble> = HashSet()
-        internal var postCalculationProxyBubbles: MutableSet<MapBubble> = HashSet()
+        var preCalculationProxyBubbles: MutableSet<MapBubble> = HashSet()
+        var postCalculationProxyBubbles: MutableSet<MapBubble> = HashSet()
     }
 
     companion object {

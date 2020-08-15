@@ -23,6 +23,6 @@ class SuggestionsRecyclerViewHandler constructor(private val on: On) {
 
     fun setSuggestions(suggestions: MutableList<Suggestion>) {
         suggestionsAdapter.suggestions = suggestions
-        on<TimerHandler>().post(Runnable { suggestionsRecyclerView.scrollBy(0, 0) })
+        on<TimerHandler>().post { suggestionsRecyclerView.scrollBy(0, 0) }
     }
 }

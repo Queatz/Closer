@@ -1,6 +1,5 @@
 package closer.vlllage.com.closer.handler.map
 
-import android.view.View
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
@@ -9,9 +8,7 @@ import closer.vlllage.com.closer.handler.group.MyGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.settings.HelpHandler
-import com.google.zxing.integration.android.IntentIntegrator
 import com.queatz.on.On
-import java.util.*
 
 class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
@@ -31,7 +28,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     private val meetPeopleHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getQuantityString(R.plurals.x_new_people_to_meet, on<MeetHandler>().total.value!!, on<MeetHandler>().total.value.toString())
-            meetPeopleButton = GroupActionBarButton(action, View.OnClickListener { on<MeetHandler>().next() },
+            meetPeopleButton = GroupActionBarButton(action, { on<MeetHandler>().next() },
                     backgroundDrawableRes = R.drawable.clickable_white_rounded,
                     textColorRes = R.color.textInverse).also {
                 it.icon = R.drawable.ic_person_black_24dp
@@ -46,7 +43,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     private val featureRequestsHandle = object : GroupActionBarButtonHandle {
         override fun set() {
-            featureRequestsButton = GroupActionBarButton(on<ResourcesHandler>().resources.getString(R.string.feature_requests), View.OnClickListener { on<FeatureRequestsHandler>().show() },
+            featureRequestsButton = GroupActionBarButton(on<ResourcesHandler>().resources.getString(R.string.feature_requests), { on<FeatureRequestsHandler>().show() },
                     backgroundDrawableRes = R.drawable.clickable_red,
                     textColorRes = R.color.text).also {
                 it.icon = R.drawable.ic_star_black_24dp
@@ -61,7 +58,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     private val scanInviteHandle = object : GroupActionBarButtonHandle {
         override fun set() {
-            scanInviteButton = GroupActionBarButton(on<ResourcesHandler>().resources.getString(R.string.scan_invite), View.OnClickListener { on<ScanQrCodeHandler>().scan() },
+            scanInviteButton = GroupActionBarButton(on<ResourcesHandler>().resources.getString(R.string.scan_invite), { on<ScanQrCodeHandler>().scan() },
                     backgroundDrawableRes = R.drawable.clickable_accent,
                     textColorRes = R.color.text).also {
                 it.icon = R.drawable.ic_qr_code_black_24dp
@@ -77,7 +74,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     private val verifyYourNumberButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.verify_your_number)
-            verifyYourNumberButton = GroupActionBarButton(action, View.OnClickListener { on<VerifyNumberHandler>().verify() }).also {
+            verifyYourNumberButton = GroupActionBarButton(action, { on<VerifyNumberHandler>().verify() }).also {
                 it.icon = R.drawable.ic_smartphone_black_24dp
             }
         }
@@ -91,7 +88,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     private val allowPermissionsButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.use_your_location)
-            allowPermissionsButton = GroupActionBarButton(action, View.OnClickListener { view ->
+            allowPermissionsButton = GroupActionBarButton(action, { view ->
                 on<AlertHandler>().make().apply {
                     title = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission)
                     message = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission_rationale)
@@ -110,7 +107,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     private val unmuteNotificationsButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.unmute_notifications)
-            unmuteNotificationsButton = GroupActionBarButton(action, View.OnClickListener {
+            unmuteNotificationsButton = GroupActionBarButton(action, {
                 on<PersistenceHandler>().isNotificationsPaused = false
                 on<ToastHandler>().show(R.string.notifications_on)
                 actions.remove(unmuteNotificationsButton)
@@ -127,7 +124,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     private val showHelpButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.show_help)
-            showHelpButton = GroupActionBarButton(action, View.OnClickListener { on<HelpHandler>().showHelp() }, View.OnClickListener {
+            showHelpButton = GroupActionBarButton(action, { on<HelpHandler>().showHelp() }, {
                 on<PersistenceHandler>().isHelpHidden = true
                 on<AlertHandler>().make().apply {
                     message = on<ResourcesHandler>().resources.getString(R.string.you_hid_the_help_bubble)
@@ -147,7 +144,7 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     private val setMyNameHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.set_my_name)
-            setMyName = GroupActionBarButton(action, View.OnClickListener {
+            setMyName = GroupActionBarButton(action, {
                 on<SetNameHandler>().modifyName(object : SetNameHandler.OnNameModifiedCallback {
                     override fun onNameModified(name: String?) {
                         if (!name.isNullOrBlank()) {

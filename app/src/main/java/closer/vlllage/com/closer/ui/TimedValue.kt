@@ -31,5 +31,5 @@ class TimedValue<T>(private val trackMsInPast: Int) {
         }
     }
 
-    private class Capture<T>(internal val value: T, internal val time: Date)
+    private class Capture<T>(val value: T, val time: Date)
 }

@@ -11,7 +11,6 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import java.util.*
 
 class PinnedMessagesHandler constructor(private val on: On) {
 

@@ -116,7 +116,7 @@ class GroupMessagesHandler constructor(private val on: On) {
 
             if (on<TypingHandler>().isTyping) {
                 stopTypingDisposable?.let { on<DisposableHandler>().dispose(it) }
-                stopTypingDisposable = on<TimerHandler>().postDisposable(Runnable {
+                stopTypingDisposable = on<TimerHandler>().postDisposable({
                     on<TypingHandler>().isTyping = false
                 }, 5000)
             }

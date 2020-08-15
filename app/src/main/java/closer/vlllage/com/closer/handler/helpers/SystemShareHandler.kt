@@ -46,7 +46,7 @@ class SystemShareHandler constructor(private val on: On) {
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        shareIntent.setDataAndType(contentUri, on<ApplicationHandler>().app!!.contentResolver.getType(contentUri))
+        shareIntent.setDataAndType(contentUri, on<ApplicationHandler>().app.contentResolver.getType(contentUri))
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
         shareIntent.type = "image/jpg"
         on<ActivityHandler>().activity!!.startActivity(Intent.createChooser(shareIntent, on<ResourcesHandler>().resources.getString(R.string.share_with)))

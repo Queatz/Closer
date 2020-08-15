@@ -14,7 +14,7 @@ class RevealAnimatorForConstraintLayout(private val container: ConstraintLayout,
     private var animatorIsHiding: Boolean = false
 
     fun cancel() {
-        animator?.removeAllListeners();
+        animator?.removeAllListeners()
         animator?.cancel()
         animator = null
     }

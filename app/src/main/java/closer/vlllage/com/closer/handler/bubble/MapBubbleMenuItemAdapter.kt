@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.bubble
 
 import android.content.res.ColorStateList
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import closer.vlllage.com.closer.handler.bubble.MapBubbleMenuItemAdapter.MenuIte
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
-import java.util.*
 
 class MapBubbleMenuItemAdapter(on: On,
                                private val mapBubble: MapBubble,

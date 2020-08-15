@@ -182,7 +182,7 @@ class ShareActivity : ListActivity() {
     }
 
     private fun open(group: Group) {
-        finish (Runnable { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) })
+        finish { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) }
     }
 
     companion object {

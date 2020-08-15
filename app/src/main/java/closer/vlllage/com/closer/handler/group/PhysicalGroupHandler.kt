@@ -6,14 +6,12 @@ import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.OnSyncResult
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
-import io.objectbox.query.OrderFlags
 import io.reactivex.Single
 
 class PhysicalGroupHandler constructor(private val on: On) {

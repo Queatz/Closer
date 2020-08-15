@@ -22,7 +22,6 @@ import com.google.android.gms.maps.model.*
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.activity_maps.view.*
 import java.util.*
 
 

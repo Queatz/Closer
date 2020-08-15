@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.ui
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet

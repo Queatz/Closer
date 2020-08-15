@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.api.models
 
 import closer.vlllage.com.closer.store.models.Suggestion
-import java.util.*
 
 class SuggestionResult : ModelResult() {
     var geo: List<Double>? = null

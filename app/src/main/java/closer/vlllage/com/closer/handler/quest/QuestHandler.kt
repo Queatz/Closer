@@ -707,7 +707,7 @@ class QuestHandler(private val on: On) {
         }.also { holder.disposableGroup.add(it) }
     }
 
-    private class CreateQuestViewHolder internal constructor(val view: View) {
+    private class CreateQuestViewHolder(val view: View) {
         lateinit var on: On
         var isPublic: Boolean = false
         var finish: QuestFinish? = null
@@ -718,11 +718,11 @@ class QuestHandler(private val on: On) {
         lateinit var disposableGroup: DisposableGroup
     }
 
-    private class LinkQuestViewHolder internal constructor(val view: View) {
+    private class LinkQuestViewHolder(val view: View) {
         lateinit var disposableGroup: DisposableGroup
     }
 
-    private class QuestActionViewHolder internal constructor(val view: View) {
+    private class QuestActionViewHolder(val view: View) {
         var times = 1
     }
 }

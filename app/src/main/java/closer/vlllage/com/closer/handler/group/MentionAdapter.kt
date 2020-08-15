@@ -13,7 +13,6 @@ import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
-import java.util.*
 
 class MentionAdapter(on: On, private val onMentionClickListener: ((Phone) -> Unit)?) : PoolRecyclerAdapter<MentionAdapter.ViewHolder>(on) {
 

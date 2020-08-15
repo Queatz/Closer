@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.share
 
 import android.content.Intent
-import android.location.Location
 import closer.vlllage.com.closer.ShareActivity
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_EVENT_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_GROUP_MESSAGE_ID
@@ -10,7 +9,6 @@ import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_LAT_LNG
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SHARE_GROUP_TO_GROUP_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SUGGESTION_ID
-import closer.vlllage.com.closer.extensions.latLng
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.LatLngStr

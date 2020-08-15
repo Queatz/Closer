@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.handler.feed
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import closer.vlllage.com.closer.handler.helpers.TimerHandler
 import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
 

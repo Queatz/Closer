@@ -8,7 +8,6 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.media.AudioManager
 import android.media.RingtoneManager
-import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -21,7 +20,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import closer.vlllage.com.closer.Background
-import closer.vlllage.com.closer.CallActivity.Companion.EXTRA_ANSWER
 import closer.vlllage.com.closer.CallActivity.Companion.EXTRA_CALL_PHONE_ID
 import closer.vlllage.com.closer.CallActivity.Companion.EXTRA_CALL_PHONE_NAME
 import closer.vlllage.com.closer.GroupActivity
@@ -44,7 +42,6 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
-import io.objectbox.BoxStore.context
 import java.util.*
 
 

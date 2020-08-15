@@ -18,8 +18,6 @@ import closer.vlllage.com.closer.store.models.Lifestyle_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.item_goal.view.*
-import kotlin.math.abs
-import kotlin.random.Random
 
 class GoalAdapter constructor(private val on: On, private val isLifestyleAdapter: Boolean, private val callback: (String) -> Unit) : RecyclerView.Adapter<GoalViewHolder>() {
 

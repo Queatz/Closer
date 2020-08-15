@@ -15,7 +15,7 @@ import java.util.*
 
 class PhoneListActivity : ListActivity() {
 
-    var isReactions = false
+    private var isReactions = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +37,9 @@ class PhoneListActivity : ListActivity() {
                 return@PhoneAdapterHeaderAdapter
             }
 
-            finish(Runnable {
+            finish {
                 on<NavigationHandler>().showProfile(reactionResult.phone!!.id!!)
-            })
+            }
         }
 
         recyclerView.adapter = adapter

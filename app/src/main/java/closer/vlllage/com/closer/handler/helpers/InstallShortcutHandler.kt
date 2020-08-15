@@ -4,9 +4,7 @@ import android.graphics.Color
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers

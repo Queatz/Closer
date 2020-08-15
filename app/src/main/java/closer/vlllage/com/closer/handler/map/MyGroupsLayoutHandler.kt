@@ -4,7 +4,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.AppShortcutsHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
@@ -20,7 +19,6 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import java.util.*
 
 class MyGroupsLayoutHandler constructor(private val on: On) {
     private var myGroupsLayout: ViewGroup? = null
@@ -57,7 +55,7 @@ class MyGroupsLayoutHandler constructor(private val on: On) {
         val endActions = mutableListOf<GroupActionBarButton>()
         endActions.add(GroupActionBarButton(
                 on<ResourcesHandler>().resources.getString(R.string.add_new_private_group),
-                View.OnClickListener { view ->
+                { view ->
                     on<AlertHandler>().make().apply {
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_private_group)
                         title = on<ResourcesHandler>().resources.getString(R.string.add_new_private_group)

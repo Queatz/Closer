@@ -24,9 +24,9 @@ class PhotoLoader constructor(private val on: On) {
                     }
 
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        on<TimerHandler>().post(Runnable {
+                        on<TimerHandler>().post {
                             on<ImageHandler>().get().load("$photoUrl?s=512").transition(DrawableTransitionOptions.withCrossFade()).into(imageView)
-                        })
+                        }
                         return false
                     }
 

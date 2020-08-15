@@ -41,7 +41,7 @@ class ReviewHandler constructor(private val on: On) {
                 on<GroupMessageAttachmentHandler>().postReview(
                         group.id!!,
                         (it as ReviewViewHolder).rating.rating.toInt(),
-                        (it as ReviewViewHolder).review.text.toString()
+                        it.review.text.toString()
                 )
             }
             show()

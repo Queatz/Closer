@@ -3,8 +3,6 @@ package closer.vlllage.com.closer.store
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.store.models.BaseObject
-import closer.vlllage.com.closer.store.models.Quest
-import closer.vlllage.com.closer.store.models.QuestProgress
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
 import io.objectbox.Property

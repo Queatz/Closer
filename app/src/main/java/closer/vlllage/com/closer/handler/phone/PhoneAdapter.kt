@@ -10,10 +10,8 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.ReactionResult
 import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
-import closer.vlllage.com.closer.handler.helpers.Val
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.person_item.view.*
 
 open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionResult) -> Unit) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
     var items: List<ReactionResult> = listOf()

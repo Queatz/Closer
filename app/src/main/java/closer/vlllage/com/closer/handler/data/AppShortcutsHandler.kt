@@ -2,15 +2,14 @@ package closer.vlllage.com.closer.handler.data
 
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Icon
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
-import com.queatz.on.On
 import closer.vlllage.com.closer.store.models.Group
+import com.queatz.on.On
 import java.util.*
 
 class AppShortcutsHandler constructor(private val on: On) {

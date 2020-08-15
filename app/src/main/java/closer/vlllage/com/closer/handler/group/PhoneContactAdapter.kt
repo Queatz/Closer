@@ -19,7 +19,6 @@ import closer.vlllage.com.closer.store.models.Phone_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import kotlinx.android.synthetic.main.phone_contact_item.view.*
-import java.util.*
 
 class PhoneContactAdapter(on: On,
                           private val onPhoneContactClickListener: ((phoneContact: PhoneContact) -> Unit)?,

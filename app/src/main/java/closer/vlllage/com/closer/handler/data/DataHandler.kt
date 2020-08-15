@@ -9,7 +9,6 @@ import io.objectbox.query.Query
 import io.objectbox.rx.RxQuery
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.*
 
 class DataHandler constructor(private val on: On) {
     fun getPhonesNear(latLng: LatLng) = on<ApiHandler>().getPhonesNear(latLng)

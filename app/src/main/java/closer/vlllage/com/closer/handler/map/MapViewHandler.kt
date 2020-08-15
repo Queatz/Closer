@@ -13,10 +13,10 @@ class MapViewHandler constructor(private val on: On) {
     val mapFragment: Fragment = mapSlideFragment
 
     fun onBackPressed(callback: (Boolean) -> Unit) {
-        mapSlideFragment.post(Runnable { callback.invoke(mapSlideFragment.onBackPressed()) })
+        mapSlideFragment.post { callback.invoke(mapSlideFragment.onBackPressed()) }
     }
 
     fun handleIntent(intent: Intent) {
-        mapSlideFragment.post(Runnable { mapSlideFragment.handleIntent(intent, onRequestMapOnScreenListener) })
+        mapSlideFragment.post { mapSlideFragment.handleIntent(intent, onRequestMapOnScreenListener) }
     }
 }

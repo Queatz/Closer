@@ -122,12 +122,12 @@ class CallActivity : PoolActivity() {
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .listener(object : RequestListener<Drawable> {
                                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                                    on<TimerHandler>().post(Runnable { loadHighRes(it) })
+                                    on<TimerHandler>().post { loadHighRes(it) }
                                     return false
                                 }
 
                                 override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                                    on<TimerHandler>().post(Runnable { loadHighRes(it) })
+                                    on<TimerHandler>().post { loadHighRes(it) }
                                     return false
                                 }
                             })

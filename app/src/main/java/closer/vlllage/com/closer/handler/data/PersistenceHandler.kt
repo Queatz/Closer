@@ -127,7 +127,7 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
         }
         @SuppressLint("ApplySharedPref")
         set(latLng) {
-            sharedPreferences.edit().putString(PREFERENCE_LAST_MAP_CENTER, latLng!!.latitude.toString() + "," + latLng!!.longitude).commit()
+            sharedPreferences.edit().putString(PREFERENCE_LAST_MAP_CENTER, latLng!!.latitude.toString() + "," + latLng.longitude).commit()
         }
 
     var lastFeedTab: FeedContent?

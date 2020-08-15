@@ -2,10 +2,8 @@ package closer.vlllage.com.closer.handler.map
 
 import android.view.View
 import closer.vlllage.com.closer.extensions.visible
-
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.activity_maps.view.*
 
 class NetworkConnectionViewHandler constructor(private val on: On) {
 

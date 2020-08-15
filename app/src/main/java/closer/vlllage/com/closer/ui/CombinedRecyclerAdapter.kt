@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.handler.helpers.TimerHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
-import java.util.*
 
 class CombinedRecyclerAdapter(on: On) : PoolRecyclerAdapter<RecyclerView.ViewHolder>(on) {
 
@@ -104,7 +103,7 @@ class CombinedRecyclerAdapter(on: On) : PoolRecyclerAdapter<RecyclerView.ViewHol
         adapterCursors.clear()
         for (ignored in adapters) adapterCursors.add(0)
         adapterItems.clear()
-        on<TimerHandler>().post(Runnable { notifyDataSetChanged() })
+        on<TimerHandler>().post { notifyDataSetChanged() }
     }
 
     fun notifyAdapterChanged(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
@@ -116,8 +115,8 @@ class CombinedRecyclerAdapter(on: On) : PoolRecyclerAdapter<RecyclerView.ViewHol
     }
 
     private class PriorityAdapterItem {
-        internal var adapterIndex: Int = 0
-        internal var adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
-        internal var localPosition: Int = 0
+        var adapterIndex: Int = 0
+        var adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
+        var localPosition: Int = 0
     }
 }

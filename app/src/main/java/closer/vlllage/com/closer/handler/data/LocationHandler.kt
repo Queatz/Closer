@@ -10,7 +10,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.queatz.on.On
-import com.queatz.on.OnLifecycle
 
 class LocationHandler constructor(private val on: On) {
 

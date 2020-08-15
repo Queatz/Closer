@@ -14,7 +14,6 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.ReactionCount
 import com.queatz.on.On
-import java.util.*
 
 class ReactionAdapter(on: On) : PoolRecyclerAdapter<ReactionAdapter.ViewHolder>(on) {
 

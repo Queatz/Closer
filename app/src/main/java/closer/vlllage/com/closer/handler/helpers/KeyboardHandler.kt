@@ -27,7 +27,7 @@ class KeyboardHandler constructor(private val on: On) {
     }
 
     fun showViewAboveKeyboard(view: View) {
-        on<TimerHandler>().postDisposable(Runnable {
+        on<TimerHandler>().postDisposable({
             val rect = Rect()
             view.getLocalVisibleRect(rect)
             rect.bottom += on<KeyboardVisibilityHandler>().lastKeyboardHeight

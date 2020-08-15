@@ -6,11 +6,8 @@ import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.group.DirectGroupHandler
 import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
-import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.Group_
 import com.queatz.on.On
-import io.objectbox.android.AndroidScheduler
 import io.reactivex.Single
 
 class GroupNameHelper(private val on: On) {

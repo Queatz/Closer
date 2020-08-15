@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.map
 
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.Search
 import closer.vlllage.com.closer.handler.helpers.ToastHandler

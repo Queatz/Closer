@@ -8,7 +8,6 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.menu_modal.view.*
-import java.util.*
 
 class MenuHandler constructor(private val on: On) {
     fun show(vararg menuOptions: MenuOption, title: String? = null, button: String? = null, buttonCallback: (() -> Unit)? = null) {

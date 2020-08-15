@@ -52,7 +52,7 @@ class SuggestionHandler constructor(private val on: On) {
         val bubbles = suggestions.map(this::suggestionBubbleFrom)
 
         bubbles.forEachIndexed { index, bubble ->
-            on<TimerHandler>().postDisposable(Runnable {
+            on<TimerHandler>().postDisposable({
                 on<BubbleHandler>().add(bubble)
                 suggestionBubbles.add(bubble)
             }, (225 * 2 + index * 95).toLong())

@@ -3,7 +3,6 @@ package closer.vlllage.com.closer.handler.map
 import android.Manifest
 import android.content.Intent
 import android.location.Address
-import android.location.Location
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -46,8 +45,8 @@ class MapSlideFragment : PoolFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         on<NetworkConnectionViewHandler>().attach(view.connectionError)
-        on<TimerHandler>().postDisposable(Runnable { on<SyncHandler>().syncAll() }, 1325)
-        on<TimerHandler>().postDisposable(Runnable { on<RefreshHandler>().refreshAll() }, 1625)
+        on<TimerHandler>().postDisposable({ on<SyncHandler>().syncAll() }, 1325)
+        on<TimerHandler>().postDisposable({ on<RefreshHandler>().refreshAll() }, 1625)
 
         on<BubbleHandler>().attach(view.findViewById(R.id.bubbleMapLayer), { mapBubble ->
             on<NavigationHandler>().showProfile(mapBubble.phone!!, mapBubble.view)

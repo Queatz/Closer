@@ -4,8 +4,6 @@ import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.KeyboardVisibilityHandler
 import com.queatz.on.On
 import kotlin.math.max
 

@@ -4,9 +4,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.doOnAttach
-import androidx.core.view.doOnLayout
-import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.ApiHandler
@@ -171,7 +168,7 @@ class GroupActionHandler constructor(private val on: On) {
     }
 
     private class AddToGroupModalModel {
-        internal var name: String? = null
-        internal var intent: String? = null
+        var name: String? = null
+        var intent: String? = null
     }
 }
