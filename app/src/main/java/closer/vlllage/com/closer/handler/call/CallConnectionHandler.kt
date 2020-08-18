@@ -29,6 +29,7 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     val active = PublishSubject.create<Boolean>()
+    private val ready = PublishSubject.create<CallEvent>()
 
     private var callTimeoutDisposable: Disposable? = null
     private lateinit var otherPhoneId: String
@@ -72,7 +73,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
     private val peerConnection = peerConnectionFactory.createPeerConnection(iceServers, object : PeerConnection.Observer {
         override fun onIceCandidate(iceCandidate: IceCandidate) {
-            send("connect", iceCandidate)
+            on<CallMqttHandler>().send("connect", iceCandidate)
             addIceCandidate(iceCandidate)
         }
 
@@ -114,6 +115,8 @@ class CallConnectionHandler constructor(private val on: On) {
         mandatory.add(MediaConstraints.KeyValuePair("googNoiseSuppression", "false"))
     })
 
+    private val disposeReady = PublishSubject.create<Unit>()
+
     fun attach(otherPhoneId: String, localView: SurfaceViewRenderer, remoteView: SurfaceViewRenderer) {
         this.otherPhoneId = otherPhoneId
         this.remoteView = remoteView
@@ -138,6 +141,9 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     fun call() {
+        val token = on<CallMqttHandler>().newCall()
+        sendPushNotification("start", StartCallEvent(token))
+
         peerConnection.createOffer(object : SdpObserver by sdpObserver {
             override fun onCreateSuccess(sessionDescription: SessionDescription) {
                 peerConnection.setLocalDescription(object : SdpObserver {
@@ -150,7 +156,6 @@ class CallConnectionHandler constructor(private val on: On) {
                         displayError(message)
                     }
                 }, sessionDescription)
-                send("start", sessionDescription)
                 callTimeoutDisposable = on<TimerHandler>().postDisposable({
                     endCall()
                 }, 45000)
@@ -162,24 +167,30 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     fun answerIncomingCall() {
-        peerConnection.createAnswer(object : SdpObserver by sdpObserver {
-            override fun onCreateSuccess(sessionDescription: SessionDescription) {
-                peerConnection.setLocalDescription(object : SdpObserver {
-                    override fun onSetFailure(message: String?) {
-                        displayError(message)
-                    }
-                    override fun onSetSuccess() {}
-                    override fun onCreateSuccess(p0: SessionDescription?) {}
-                    override fun onCreateFailure(message: String?) {
-                        displayError(message)
-                    }
-                }, sessionDescription)
-                send("accept", sessionDescription)
-            }
-        }, MediaConstraints().apply {
-            mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
-            mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
-        })
+        ready.takeUntil(disposeReady)
+                .take(1)
+                .subscribe {
+            peerConnection.createAnswer(object : SdpObserver by sdpObserver {
+                override fun onCreateSuccess(sessionDescription: SessionDescription) {
+                    peerConnection.setLocalDescription(object : SdpObserver {
+                        override fun onSetFailure(message: String?) {
+                            displayError(message)
+                        }
+                        override fun onSetSuccess() {}
+                        override fun onCreateSuccess(p0: SessionDescription?) {}
+                        override fun onCreateFailure(message: String?) {
+                            displayError(message)
+                        }
+                    }, sessionDescription)
+                    on<CallMqttHandler>().send("accept", sessionDescription)
+                }
+            }, MediaConstraints().apply {
+                mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
+                mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
+            })
+        }.also {
+            on<DisposableHandler>().add(it)
+        }
     }
 
     private fun isInCall() = peerConnection.signalingState() == PeerConnection.SignalingState.CLOSED
@@ -238,25 +249,23 @@ class CallConnectionHandler constructor(private val on: On) {
         peerConnection.setAudioPlayout(true)
     }
 
-    fun send(event: String, data: Any, phoneId: String? = null) {
-        on<ApiHandler>().call(phoneId ?: otherPhoneId, event, on<JsonHandler>().to(data)).subscribe({}, {
-            displayError(null)
-        })
-    }
-
     fun onStart(callEvent: CallEvent) {
         if (isInCall()) {
-            send("end", EndCallEvent("In call"), callEvent.phone)
+            sendPushNotification("end", EndCallEvent("In call"), callEvent.phone)
             return
         }
+
+        on<CallMqttHandler>().switchCall(on<JsonHandler>().from(callEvent.data, StartCallEvent::class.java).token)
 
         // todo listen for started calls and launch activity from service
         // note: activity can be closed and opened anytime during the call
         on<TimerHandler>().post { on<CallHandler>().onReceiveCall(callEvent.phone, callEvent.phoneName) }
         // end todo //
+    }
 
-        val sessionDescription = on<JsonHandler>().from(callEvent.data, SessionDescription::class.java)
-        onRemoteSessionReceived(sessionDescription)
+    fun onReady(callEvent: CallEvent) {
+        ready.onNext(callEvent)
+        on<CallMqttHandler>().send("accept", peerConnection.localDescription)
     }
 
     fun onConnect(callEvent: CallEvent) {
@@ -269,7 +278,7 @@ class CallConnectionHandler constructor(private val on: On) {
         onRemoteSessionReceived(sessionDescription)
     }
 
-    fun onEnd(callEvent: CallEvent) {
+    fun onEnd(callEvent: CallEvent? = null) {
 //        peerConnection.close()
 //        peerConnectionFactory.dispose()
         videoCapturer?.stopCapture()
@@ -280,21 +289,37 @@ class CallConnectionHandler constructor(private val on: On) {
 
         active.onNext(false)
 
-        on<TimerHandler>().post {
-            val endCallEvent = on<JsonHandler>().from(callEvent.data, EndCallEvent::class.java)
-            on<ToastHandler>().show(endCallEvent.reason)
+        callEvent?.let {
+            on<TimerHandler>().post {
+                val endCallEvent = on<JsonHandler>().from(it.data, EndCallEvent::class.java)
+                on<ToastHandler>().show(endCallEvent.reason)
 
-            on<NotificationHandler>().hideFullScreen()
+                on<NotificationHandler>().hideFullScreen()
+            }
+
         }
+
+        on<CallMqttHandler>().endActiveCall()
+
+        disposeReady.onNext(Unit)
     }
 
     fun endCall() {
-        send("end", EndCallEvent("Call ended"))
+        sendPushNotification("end", EndCallEvent("Call ended"))
+        onEnd()
+    }
 
-        active.onNext(false)
+    private fun sendPushNotification(event: String, data: Any, phoneId: String? = null) {
+        on<ApiHandler>().call(phoneId ?: otherPhoneId, event, on<JsonHandler>().to(data)).subscribe({}, {
+            displayError(null)
+        }).also { on<DisposableHandler>().add(it) }
     }
 }
 
-data class EndCallEvent constructor(
+data class StartCallEvent(
+    val token: String
+)
+
+data class EndCallEvent(
     val reason: String
 )

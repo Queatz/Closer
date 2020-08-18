@@ -3,8 +3,8 @@ package closer.vlllage.com.closer.handler.group
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.mqtt.events.TypingMqttEvent
 import closer.vlllage.com.closer.handler.mqtt.MqttHandler
+import closer.vlllage.com.closer.handler.mqtt.events.TypingMqttEvent
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
 import io.reactivex.subjects.BehaviorSubject
@@ -36,15 +36,15 @@ class TypingHandler constructor(private val on: On) : OnLifecycle {
             send()
         }
 
-        this.groupId?.let { mqtt.unsubscribe(it) }
+        this.groupId?.let { mqtt.unsubscribe("group/$it/typing") }
 
         this.groupId = groupId
 
         whoIsTyping.onNext(setOf())
 
-        mqtt.subscribe(groupId)
+        mqtt.subscribe("group/$groupId/typing")
 
-        mqtt.events(TypingMqttEvent::class).subscribe({
+        mqtt.events("group/$groupId/typing", TypingMqttEvent::class).subscribe({
             val modified = whoIsTyping.value!!.toMutableSet()
 
             it.stopTyping?.let { modified.remove(it) }
@@ -56,7 +56,7 @@ class TypingHandler constructor(private val on: On) : OnLifecycle {
 
     override fun off() {
         disposableGroup.clear()
-        groupId?.let { mqtt.unsubscribe(it) }
+        groupId?.let { mqtt.unsubscribe("group/$it/typing") }
     }
 
     private fun send() {
@@ -65,9 +65,9 @@ class TypingHandler constructor(private val on: On) : OnLifecycle {
         val me = on<PersistenceHandler>().phoneId!!
 
         if (isTyping) {
-            mqtt.publish(groupId!!, TypingMqttEvent(typing = me))
+            mqtt.publish("group/$groupId/typing", TypingMqttEvent(typing = me))
         } else {
-            mqtt.publish(groupId!!, TypingMqttEvent(stopTyping = me))
+            mqtt.publish("group/$groupId/typing", TypingMqttEvent(stopTyping = me))
         }
     }
 }

@@ -9,7 +9,7 @@ import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import com.queatz.on.On
 
-class CallActivityTransitionHandler constructor(private val on: On) {
+class CallActivityTransitionHandler(private val on: On) {
     fun show(view: View?, phoneId: String, phoneName: String? = null, incoming: Boolean = false) {
         val intent = Intent(on<ApplicationHandler>().app, CallActivity::class.java)
         intent.action = Intent.ACTION_CALL

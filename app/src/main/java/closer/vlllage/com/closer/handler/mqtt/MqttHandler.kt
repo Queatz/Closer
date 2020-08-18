@@ -5,6 +5,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.JsonHandler
+import closer.vlllage.com.closer.handler.mqtt.events.CallMqttEvent
 import closer.vlllage.com.closer.handler.mqtt.events.TypingMqttEvent
 import com.google.gson.JsonObject
 import com.queatz.on.On
@@ -17,8 +18,7 @@ import kotlin.reflect.KClass
 
 class MqttHandler constructor(private val on: On) : OnLifecycle {
 
-    private val events = PublishSubject.create<Any>()
-
+    private val events = PublishSubject.create<MqttChannelEvent>()
     private val queue = mutableListOf<() -> Unit>()
 
     companion object {
@@ -32,7 +32,7 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
 
         mqttClient.setCallback(object : MqttCallback {
             override fun messageArrived(channel: String, message: MqttMessage) {
-                handleMessage(on<JsonHandler>().from(String(message.payload, Charset.defaultCharset()), MqttEvent::class.java))
+                handleMessage(channel, on<JsonHandler>().from(String(message.payload, Charset.defaultCharset()), MqttEvent::class.java))
             }
 
             override fun connectionLost(cause: Throwable?) {
@@ -64,27 +64,21 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
         }
     }
 
-    fun <T : Any> events(kClass: KClass<T>) = events.filter { it::class == kClass }.map { it as T }
+    fun <T : Any> events(channel: String, kClass: KClass<T>) = events
+            .filter { it.channel == channel && it.event::class == kClass }
+            .map { it.event as T }!!
 
-    private fun handleMessage(mqttEvent: MqttEvent) {
-        events.onNext(on<JsonHandler>().from(mqttEvent.data!!, when (mqttEvent.type) {
-            TypingMqttEvent::class.simpleName -> TypingMqttEvent::class.java
-            else -> {
-                on<DefaultAlerts>().syncError()
-                return
-            }
-        }))
-    }
-
-    fun subscribe(channel: String, qos: Int = 1) {
+    fun subscribe(channel: String, qos: Int = 1, callback: (() -> Unit)? = null) {
         if (!mqttClient.isConnected) {
             queue.add { subscribe(channel, qos) }
             return
         }
+
         try {
             mqttClient.subscribe(channel, qos, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "Subscribed to $channel")
+                    callback?.invoke()
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -144,6 +138,20 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
         }
     }
 
+    private fun handleMessage(channel: String, mqttEvent: MqttEvent) {
+        events.onNext(MqttChannelEvent(
+                channel,
+                on<JsonHandler>().from(mqttEvent.data!!, when (mqttEvent.type) {
+                    TypingMqttEvent::class.simpleName -> TypingMqttEvent::class.java
+                    CallMqttEvent::class.simpleName -> CallMqttEvent::class.java
+                    else -> {
+                        on<DefaultAlerts>().syncError()
+                        return
+                    }
+                })
+        ))
+    }
+
     override fun off() {
         try {
             if (!mqttClient.isConnected) return
@@ -166,4 +174,9 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
 private data class MqttEvent constructor(
         val type: String,
         val data: JsonObject? = null
+)
+
+private data class MqttChannelEvent constructor(
+        val channel: String,
+        val event: Any
 )
