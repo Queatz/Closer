@@ -7,7 +7,9 @@ import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import com.queatz.on.On
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.webrtc.*
 
@@ -29,7 +31,7 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     val active = PublishSubject.create<Boolean>()
-    private val ready = PublishSubject.create<CallEvent>()
+    private val remoteReady = BehaviorSubject.createDefault(false)
 
     private var callTimeoutDisposable: Disposable? = null
     private lateinit var otherPhoneId: String
@@ -73,7 +75,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
     private val peerConnection = peerConnectionFactory.createPeerConnection(iceServers, object : PeerConnection.Observer {
         override fun onIceCandidate(iceCandidate: IceCandidate) {
-            on<CallMqttHandler>().send("connect", iceCandidate)
+            send("connect", iceCandidate)
             addIceCandidate(iceCandidate)
         }
 
@@ -115,7 +117,7 @@ class CallConnectionHandler constructor(private val on: On) {
         mandatory.add(MediaConstraints.KeyValuePair("googNoiseSuppression", "false"))
     })
 
-    private val disposeReady = PublishSubject.create<Unit>()
+    private val disposeCall = PublishSubject.create<Unit>()
 
     fun attach(otherPhoneId: String, localView: SurfaceViewRenderer, remoteView: SurfaceViewRenderer) {
         this.otherPhoneId = otherPhoneId
@@ -167,8 +169,14 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     fun answerIncomingCall() {
-        ready.takeUntil(disposeReady)
+        // TODO CAN OPTIMIZE BY STARTING answer before mqtt is ready
+        on<CallMqttHandler>()
+                .ready
+                .filter { it }
+                .map { Unit }
+                .takeUntil(disposeCall)
                 .take(1)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
             peerConnection.createAnswer(object : SdpObserver by sdpObserver {
                 override fun onCreateSuccess(sessionDescription: SessionDescription) {
@@ -182,7 +190,7 @@ class CallConnectionHandler constructor(private val on: On) {
                             displayError(message)
                         }
                     }, sessionDescription)
-                    on<CallMqttHandler>().send("accept", sessionDescription)
+                    send("accept", sessionDescription)
                 }
             }, MediaConstraints().apply {
                 mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
@@ -191,6 +199,20 @@ class CallConnectionHandler constructor(private val on: On) {
         }.also {
             on<DisposableHandler>().add(it)
         }
+    }
+
+    private fun send(event: String, payload: Any) {
+        remoteReady
+                .filter { it }
+                .map { Unit }
+                .takeUntil(disposeCall)
+                .take(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    on<CallMqttHandler>().send(event, payload)
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
     }
 
     private fun isInCall() = peerConnection.signalingState() == PeerConnection.SignalingState.CLOSED
@@ -255,17 +277,31 @@ class CallConnectionHandler constructor(private val on: On) {
             return
         }
 
-        on<CallMqttHandler>().switchCall(on<JsonHandler>().from(callEvent.data, StartCallEvent::class.java).token)
+        on<CallMqttHandler>()
+                .ready
+                .filter { it }
+                .map { Unit }
+                .takeUntil(disposeCall)
+                .take(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    on<CallMqttHandler>().send("ready", "")
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
+
+        on<JsonHandler>().from(callEvent.data, StartCallEvent::class.java).apply {
+            on<CallMqttHandler>().switchCall(token)
+        }
 
         // todo listen for started calls and launch activity from service
-        // note: activity can be closed and opened anytime during the call
+        // todo note: activity can be closed and opened anytime during the call
         on<TimerHandler>().post { on<CallHandler>().onReceiveCall(callEvent.phone, callEvent.phoneName) }
-        // end todo //
     }
 
     fun onReady(callEvent: CallEvent) {
-        ready.onNext(callEvent)
-        on<CallMqttHandler>().send("accept", peerConnection.localDescription)
+        remoteReady.onNext(true)
+        send("accept", peerConnection.localDescription)
     }
 
     fun onConnect(callEvent: CallEvent) {
@@ -288,6 +324,7 @@ class CallConnectionHandler constructor(private val on: On) {
         audioManager?.mode = AudioManager.MODE_NORMAL
 
         active.onNext(false)
+        remoteReady.onNext(false)
 
         callEvent?.let {
             on<TimerHandler>().post {
@@ -296,12 +333,11 @@ class CallConnectionHandler constructor(private val on: On) {
 
                 on<NotificationHandler>().hideFullScreen()
             }
-
         }
 
         on<CallMqttHandler>().endActiveCall()
 
-        disposeReady.onNext(Unit)
+        disposeCall.onNext(Unit)
     }
 
     fun endCall() {

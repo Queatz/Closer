@@ -6,15 +6,19 @@ import closer.vlllage.com.closer.handler.mqtt.MqttHandler
 import closer.vlllage.com.closer.handler.mqtt.events.CallMqttEvent
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
+import java.util.logging.Logger.getAnonymousLogger
 
 class CallMqttHandler(private val on: On) {
 
     var token: String? = null
     var callDisposableGroup = on<DisposableHandler>().group()
+    val ready = BehaviorSubject.createDefault(false)
 
     private val mqtt = on<ApplicationHandler>().app.on<MqttHandler>()
 
     fun send(event: String, payload: Any) = token?.let {
+        getAnonymousLogger().warning("XXXXXXXX SEND $event | $payload")
         mqtt.publish("call/$it", CallMqttEvent(CallEvent(
                 on<PersistenceHandler>().phoneId!!,
                 on<PersistenceHandler>().myName,
@@ -22,17 +26,22 @@ class CallMqttHandler(private val on: On) {
                 on<JsonHandler>().to(payload)
         )))
         true
-    } ?: false
+    } ?: let {
+        on<DefaultAlerts>().thatDidntWork()
+        false
+    }
 
-    fun newCall() = on<Val>().rndId().also { switchCall(it, false) }
+    fun newCall() = on<Val>().rndId().also { switchCall(it) }
 
-    fun switchCall(token: String, sendReady: Boolean = true) {
+    fun switchCall(token: String) {
+        ready.onNext(false)
+
         endActiveCall()
 
         this.token = token
 
         mqtt.subscribe("call/$token") {
-            if (sendReady) send("ready", "")
+            ready.onNext(true)
         }
 
         mqtt.events("call/$token", CallMqttEvent::class)

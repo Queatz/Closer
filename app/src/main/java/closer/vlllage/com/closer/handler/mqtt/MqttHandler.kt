@@ -45,6 +45,7 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
         })
 
         val options = MqttConnectOptions()
+        options.maxInflight = 1000
         options.isAutomaticReconnect = true
 
         try {
@@ -130,7 +131,7 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    Log.d(TAG, "Failed to publish $msg to $channel")
+                    Log.d(TAG, "Failed to publish $msg to $channel\n$exception")
                 }
             })
         } catch (e: MqttException) {

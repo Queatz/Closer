@@ -73,12 +73,12 @@ class CallActivity : PoolActivity() {
         on<ApplicationHandler>().app.on<CallConnectionHandler>().active
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-            if (!it) {
-                finish()
-            }
-        }.also {
-            on<DisposableHandler>().add(it)
-        }
+                    if (!it) {
+                        finish()
+                    }
+                }.also {
+                    on<DisposableHandler>().add(it)
+                }
 
         on<NotificationHandler>().hideFullScreen()
     }

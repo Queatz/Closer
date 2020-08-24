@@ -2,9 +2,11 @@ package closer.vlllage.com.closer.handler.call
 
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import com.queatz.on.On
+import java.util.logging.Logger.getAnonymousLogger
 
 class CallEventHandler(private val on: On) {
     fun handle(callEvent: CallEvent) {
+        getAnonymousLogger().warning("XXXXXXXX ${callEvent.event} | ${callEvent.data}")
         when (callEvent.event) {
             "start" -> on<ApplicationHandler>().app.on<CallConnectionHandler>().onStart(callEvent)
             "ready" -> on<ApplicationHandler>().app.on<CallConnectionHandler>().onReady(callEvent)
