@@ -6,7 +6,7 @@ import java.util.logging.Logger.getAnonymousLogger
 
 class CallEventHandler(private val on: On) {
     fun handle(callEvent: CallEvent) {
-        getAnonymousLogger().warning("XXXXXXXX ${callEvent.event} | ${callEvent.data}")
+        getAnonymousLogger().warning("CALL-XXX GETT ${callEvent.event} | ${callEvent.data}")
         when (callEvent.event) {
             "start" -> on<ApplicationHandler>().app.on<CallConnectionHandler>().onStart(callEvent)
             "ready" -> on<ApplicationHandler>().app.on<CallConnectionHandler>().onReady(callEvent)

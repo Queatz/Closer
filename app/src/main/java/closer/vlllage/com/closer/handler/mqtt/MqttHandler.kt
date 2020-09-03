@@ -71,7 +71,7 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
 
     fun subscribe(channel: String, qos: Int = 1, callback: (() -> Unit)? = null) {
         if (!mqttClient.isConnected) {
-            queue.add { subscribe(channel, qos) }
+            queue.add { subscribe(channel, qos, callback) }
             return
         }
 

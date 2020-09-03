@@ -7,11 +7,11 @@ import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.webrtc.*
+import java.util.logging.Logger.getAnonymousLogger
 
 
 class CallConnectionHandler constructor(private val on: On) {
@@ -31,7 +31,7 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     val active = PublishSubject.create<Boolean>()
-    private val remoteReady = BehaviorSubject.createDefault(false)
+    val remoteReady = BehaviorSubject.createDefault(false)
 
     private var callTimeoutDisposable: Disposable? = null
     private lateinit var otherPhoneId: String
@@ -75,7 +75,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
     private val peerConnection = peerConnectionFactory.createPeerConnection(iceServers, object : PeerConnection.Observer {
         override fun onIceCandidate(iceCandidate: IceCandidate) {
-            send("connect", iceCandidate)
+            on<CallStateHandler>().onIceCandidate(iceCandidate)
             addIceCandidate(iceCandidate)
         }
 
@@ -117,8 +117,6 @@ class CallConnectionHandler constructor(private val on: On) {
         mandatory.add(MediaConstraints.KeyValuePair("googNoiseSuppression", "false"))
     })
 
-    private val disposeCall = PublishSubject.create<Unit>()
-
     fun attach(otherPhoneId: String, localView: SurfaceViewRenderer, remoteView: SurfaceViewRenderer) {
         this.otherPhoneId = otherPhoneId
         this.remoteView = remoteView
@@ -144,75 +142,55 @@ class CallConnectionHandler constructor(private val on: On) {
 
     fun call() {
         val token = on<CallMqttHandler>().newCall()
-        sendPushNotification("start", StartCallEvent(token))
 
         peerConnection.createOffer(object : SdpObserver by sdpObserver {
             override fun onCreateSuccess(sessionDescription: SessionDescription) {
                 peerConnection.setLocalDescription(object : SdpObserver {
                     override fun onSetFailure(message: String?) {
                         displayError(message)
+                        endCall()
                     }
-                    override fun onSetSuccess() {}
-                    override fun onCreateSuccess(sessionDescription: SessionDescription?) {}
+                    override fun onSetSuccess() {
+                        callTimeoutDisposable = on<TimerHandler>().postDisposable({
+                            endCall()
+                        }, 45000)
+                    }
+                    override fun onCreateSuccess(sessionDescription: SessionDescription?) {
+
+                    }
                     override fun onCreateFailure(message: String?) {
                         displayError(message)
+                        endCall()
                     }
                 }, sessionDescription)
-                callTimeoutDisposable = on<TimerHandler>().postDisposable({
-                    endCall()
-                }, 45000)
             }
         }, MediaConstraints().apply {
             mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
             mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
         })
+
+        on<CallStateHandler>().onOutgoingCall(token)
     }
 
     fun answerIncomingCall() {
-        // TODO CAN OPTIMIZE BY STARTING answer before mqtt is ready
-        on<CallMqttHandler>()
-                .ready
-                .filter { it }
-                .map { Unit }
-                .takeUntil(disposeCall)
-                .take(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-            peerConnection.createAnswer(object : SdpObserver by sdpObserver {
-                override fun onCreateSuccess(sessionDescription: SessionDescription) {
-                    peerConnection.setLocalDescription(object : SdpObserver {
-                        override fun onSetFailure(message: String?) {
-                            displayError(message)
-                        }
-                        override fun onSetSuccess() {}
-                        override fun onCreateSuccess(p0: SessionDescription?) {}
-                        override fun onCreateFailure(message: String?) {
-                            displayError(message)
-                        }
-                    }, sessionDescription)
-                    send("accept", sessionDescription)
-                }
-            }, MediaConstraints().apply {
-                mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
-                mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
-            })
-        }.also {
-            on<DisposableHandler>().add(it)
-        }
-    }
-
-    private fun send(event: String, payload: Any) {
-        remoteReady
-                .filter { it }
-                .map { Unit }
-                .takeUntil(disposeCall)
-                .take(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    on<CallMqttHandler>().send(event, payload)
-                }.also {
-                    on<DisposableHandler>().add(it)
-                }
+        peerConnection.createAnswer(object : SdpObserver by sdpObserver {
+            override fun onCreateSuccess(sessionDescription: SessionDescription) {
+                peerConnection.setLocalDescription(object : SdpObserver {
+                    override fun onSetFailure(message: String?) {
+                        displayError(message)
+                    }
+                    override fun onSetSuccess() {}
+                    override fun onCreateSuccess(p0: SessionDescription?) {}
+                    override fun onCreateFailure(message: String?) {
+                        displayError(message)
+                    }
+                }, sessionDescription)
+                on<CallStateHandler>().onCreateAnswer(sessionDescription)
+            }
+        }, MediaConstraints().apply {
+            mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
+            mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
+        })
     }
 
     private fun isInCall() = peerConnection.signalingState() == PeerConnection.SignalingState.CLOSED
@@ -277,22 +255,11 @@ class CallConnectionHandler constructor(private val on: On) {
             return
         }
 
-        on<CallMqttHandler>()
-                .ready
-                .filter { it }
-                .map { Unit }
-                .takeUntil(disposeCall)
-                .take(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    on<CallMqttHandler>().send("ready", "")
-                }.also {
-                    on<DisposableHandler>().add(it)
-                }
-
         on<JsonHandler>().from(callEvent.data, StartCallEvent::class.java).apply {
             on<CallMqttHandler>().switchCall(token)
         }
+
+        on<CallStateHandler>().onIncomingCall()
 
         // todo listen for started calls and launch activity from service
         // todo note: activity can be closed and opened anytime during the call
@@ -300,8 +267,11 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     fun onReady(callEvent: CallEvent) {
+// XXX todo        if (callEvent.phone == 'current phone')
+        onAccept(callEvent)
+
         remoteReady.onNext(true)
-        send("accept", peerConnection.localDescription)
+        on<CallStateHandler>().onReady(peerConnection.localDescription)
     }
 
     fun onConnect(callEvent: CallEvent) {
@@ -337,7 +307,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
         on<CallMqttHandler>().endActiveCall()
 
-        disposeCall.onNext(Unit)
+        on<CallStateHandler>().end()
     }
 
     fun endCall() {
@@ -345,7 +315,8 @@ class CallConnectionHandler constructor(private val on: On) {
         onEnd()
     }
 
-    private fun sendPushNotification(event: String, data: Any, phoneId: String? = null) {
+    fun sendPushNotification(event: String, data: Any, phoneId: String? = null) {
+        getAnonymousLogger().warning("CALL-XXX PUSH $event | $data")
         on<ApiHandler>().call(phoneId ?: otherPhoneId, event, on<JsonHandler>().to(data)).subscribe({}, {
             displayError(null)
         }).also { on<DisposableHandler>().add(it) }
