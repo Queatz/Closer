@@ -288,12 +288,10 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     fun onEnd(callEvent: CallEvent? = null) {
-// todo        peerConnection.close()
-// todo        peerConnectionFactory.dispose()
         dispose.clear()
         videoCapturer?.stopCapture()
         videoCapturer = null
-        remoteMediaStream?.videoTracks?.firstOrNull()?.removeSink(remoteView)
+        remoteMediaStream?.dispose()
         remoteMediaStream = null
         audioManager?.mode = AudioManager.MODE_NORMAL
 
