@@ -18,7 +18,7 @@ class CallMqttHandler(private val on: On) {
     private val mqtt = on<ApplicationHandler>().app.on<MqttHandler>()
 
     fun send(event: String, payload: Any) = token?.let {
-        getAnonymousLogger().warning("CALL-XXX SEND $event | $payload")
+        getAnonymousLogger().warning("CALL-XXX SEND $event | ${on<JsonHandler>().to(payload)}")
         mqtt.publish("call/$it", CallMqttEvent(CallEvent(
                 on<PersistenceHandler>().phoneId!!,
                 on<PersistenceHandler>().myName,
@@ -31,14 +31,15 @@ class CallMqttHandler(private val on: On) {
         false
     }
 
-    fun newCall() = on<Val>().rndId().also { switchCall(it) }
+    fun newCall(callback: (token: String) -> Unit) = on<Val>().rndId().also { switchCall(it, callback) }
 
-    fun switchCall(token: String) {
+    fun switchCall(token: String, callback: (token: String) -> Unit) {
         endActiveCall()
 
         this.token = token
 
         mqtt.subscribe("call/$token") {
+            callback(token)
             ready.onNext(true)
         }
 
