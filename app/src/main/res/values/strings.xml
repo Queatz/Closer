@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Closer</string>
     <string name="notification_channel" translatable="false">notifications</string>
-    <string name="call_notification_channel" translatable="false">call_notifications</string>
+    <string name="call_notification_channel" translatable="false">notifications_call</string>
 
     <string name="reply">Reply</string>
     <string name="update">Update</string>

@@ -99,6 +99,7 @@ class CallConnectionHandler constructor(private val on: On) {
         override fun onSignalingChange(signalingState: PeerConnection.SignalingState?) {
             if (signalingState == PeerConnection.SignalingState.STABLE) {
                 callTimeoutDisposable?.dispose()
+                active.onNext(true)
             }
         }
         override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {}

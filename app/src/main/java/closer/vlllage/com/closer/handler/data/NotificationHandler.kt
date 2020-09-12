@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.os.Build.VERSION
@@ -297,17 +298,25 @@ class NotificationHandler constructor(private val on: On) {
         }
 
         if (VERSION.SDK_INT >= VERSION_CODES.O) {
-            val channel = NotificationChannel(notificationChannel(),
+            NotificationChannel(notificationChannel(),
                     context.getString(R.string.closer_notifications),
-                    NotificationManager.IMPORTANCE_DEFAULT)
-            (context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-                    .createNotificationChannel(channel)
+                    NotificationManager.IMPORTANCE_DEFAULT).also {
+                (context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+                        .createNotificationChannel(it)
+            }
 
-            val channel2 = NotificationChannel(callNotificationChannel(),
+            NotificationChannel(callNotificationChannel(),
                     context.getString(R.string.closer_calls),
-                    NotificationManager.IMPORTANCE_HIGH)
-            (context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-                    .createNotificationChannel(channel2)
+                    NotificationManager.IMPORTANCE_HIGH).apply {
+                setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE), AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                        .build())
+                vibrationPattern = longArrayOf(500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500)
+            }.also {
+                (context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+                        .createNotificationChannel(it)
+            }
         }
 
         val builder = NotificationCompat.Builder(context, when (fullScreenIntent) {
@@ -393,8 +402,6 @@ class NotificationHandler constructor(private val on: On) {
             builder.setFullScreenIntent(pendingIntent, true)
         }
 
-        val newMessageNotification = builder.build()
-
         val notificationManager = NotificationManagerCompat.from(context)
 
         if (fullScreenIntent != null) {
@@ -407,7 +414,7 @@ class NotificationHandler constructor(private val on: On) {
         }, when (fullScreenIntent) {
             null -> NOTIFICATION_ID
             else -> FULLSCREEN_NOTIFICATION_ID
-        }, newMessageNotification)
+        }, builder.build())
     }
 
     private fun coloredText(@StringRes stringRes: Int, @ColorRes colorRes: Int): Spannable? {
