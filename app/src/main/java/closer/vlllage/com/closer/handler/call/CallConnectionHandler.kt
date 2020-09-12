@@ -3,9 +3,12 @@ package closer.vlllage.com.closer.handler.call
 import android.content.Context
 import android.media.AudioManager
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.NotificationHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import com.queatz.on.On
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -36,6 +39,7 @@ class CallConnectionHandler constructor(private val on: On) {
     private var localView: SurfaceViewRenderer? = null
     private var remoteView: SurfaceViewRenderer? = null
     private var audioManager: AudioManager? = null
+    private var localStream: MediaStream? = null
     private val dispose = on<DisposableHandler>().group()
 
     private val iceServers = listOf(
@@ -181,6 +185,10 @@ class CallConnectionHandler constructor(private val on: On) {
         onEnd()
     }
 
+    fun endCall(phoneId: String) {
+        sendPushNotification("end", EndCallEvent("${on<NameHandler>().getFallbackName(on<PersistenceHandler>().phone, on<AccountHandler>().name)} isn't available"), phoneId)
+    }
+
     private fun isInCall() = peerConnection.signalingState() == PeerConnection.SignalingState.CLOSED
 
     private fun displayError(message: String?) {
@@ -215,7 +223,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
         localView?.setZOrderMediaOverlay(true)
 
-        val localStream = peerConnectionFactory.createLocalMediaStream(LOCAL_STREAM_ID)
+        localStream = peerConnectionFactory.createLocalMediaStream(LOCAL_STREAM_ID)
 
         videoCapturer = Camera2Enumerator(on<ApplicationHandler>().app).let {
             it.deviceNames.find { device ->
@@ -228,12 +236,12 @@ class CallConnectionHandler constructor(private val on: On) {
             videoCapturer.startCapture(720, 1280, 60)
             val localVideoTrack = peerConnectionFactory.createVideoTrack(LOCAL_VIDEO_TRACK_ID, localVideoSource)
             localVideoTrack.addSink(localVideoOutput)
-            localStream.addTrack(localVideoTrack)
+            localStream?.addTrack(localVideoTrack)
         }
 
         val localAudioTrack = peerConnectionFactory.createAudioTrack(LOCAL_AUDIO_TRACK_ID, localAudioSource)
         localAudioTrack.setEnabled(true)
-        localStream.addTrack(localAudioTrack)
+        localStream?.addTrack(localAudioTrack)
         peerConnection.addStream(localStream)
         peerConnection.setAudioRecording(true)
         peerConnection.setAudioPlayout(true)
@@ -241,7 +249,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
     fun onStart(callEvent: CallEvent) {
         if (isInCall()) {
-            sendPushNotification("end", EndCallEvent("In call"), callEvent.phone)
+            endCall(callEvent.phone)
             return
         }
 
@@ -290,10 +298,13 @@ class CallConnectionHandler constructor(private val on: On) {
     fun onEnd(callEvent: CallEvent? = null) {
         dispose.clear()
         videoCapturer?.stopCapture()
+        videoCapturer?.dispose()
         videoCapturer = null
         remoteMediaStream?.dispose()
         remoteMediaStream = null
         audioManager?.mode = AudioManager.MODE_NORMAL
+        localStream?.dispose()
+        localStream = null
 
         active.onNext(false)
 

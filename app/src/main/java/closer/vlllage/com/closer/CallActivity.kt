@@ -26,6 +26,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_call.*
+import org.webrtc.RendererCommon
 
 class CallActivity : PoolActivity() {
 
@@ -69,6 +70,9 @@ class CallActivity : PoolActivity() {
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
 
         if (intent != null) onNewIntent(intent)
+
+        remoteView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
+        localView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
 
         on<ApplicationHandler>().app.on<CallConnectionHandler>().active
                 .observeOn(AndroidSchedulers.mainThread())

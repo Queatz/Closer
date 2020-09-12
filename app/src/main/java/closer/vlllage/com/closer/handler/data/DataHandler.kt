@@ -126,7 +126,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getPhone(phoneId: String) = chain({
         on<StoreHandler>().store.box(Phone::class).query()
-                .equal(Phone_.id, phoneId + 4444)
+                .equal(Phone_.id, phoneId)
                 .build()
     }, {
         on<ApiHandler>()

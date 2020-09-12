@@ -235,7 +235,7 @@ class NotificationHandler constructor(private val on: On) {
                 event.id!! + "/group", false)
     }
 
-    fun showIncomingCallNotification(phoneId: String, intent: Intent) {
+    fun showIncomingCallNotification(phoneId: String, intent: Intent, answerIntent: Intent, ignoreIntent: Intent) {
         val context = on<ApplicationHandler>().app
 
         val contentIntent = PendingIntent.getActivity(
@@ -253,7 +253,7 @@ class NotificationHandler constructor(private val on: On) {
         show(contentIntent, null, null,
                 "Call from $phoneName",
                 "",
-                "$phoneId/call", false, intent)
+                "$phoneId/call", false, intent, answerIntent, ignoreIntent)
     }
 
     fun hide(notificationTag: String) {
@@ -287,7 +287,9 @@ class NotificationHandler constructor(private val on: On) {
                      message: String,
                      notificationTag: String,
                      sound: Boolean,
-                     fullScreenIntent: Intent? = null) {
+                     fullScreenIntent: Intent? = null,
+                     fullScreenAnswerIntent: Intent? = null,
+                     fullScreenIgnoreIntent: Intent? = null) {
         val context = on<ApplicationHandler>().app
 
         if (on<PersistenceHandler>().isNotificationsPaused) {
@@ -361,11 +363,25 @@ class NotificationHandler constructor(private val on: On) {
                     PendingIntent.FLAG_ONE_SHOT
             )
 
+            val pendingIgnoreIntent = PendingIntent.getBroadcast(
+                    context,
+                    REQUEST_CODE_NOTIFICATION_IGNORE,
+                    fullScreenIgnoreIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            val pendingAnswerIntent = PendingIntent.getActivity(
+                    context,
+                    REQUEST_CODE_NOTIFICATION_ANSWER,
+                    fullScreenAnswerIntent,
+                    PendingIntent.FLAG_ONE_SHOT
+            )
+
             builder.addAction(R.drawable.ic_baseline_call_end_24,
-                    coloredText(R.string.ignore_call, R.color.red), null)
+                    coloredText(R.string.ignore_call, R.color.red), pendingIgnoreIntent)
 
             builder.addAction(R.drawable.common_full_open_on_phone,
-                    coloredText(R.string.answer_call, R.color.green), pendingIntent)
+                    coloredText(R.string.answer_call, R.color.green), pendingAnswerIntent)
 
             builder.setAutoCancel(true)
             builder.setCategory(NotificationCompat.CATEGORY_CALL)
@@ -417,6 +433,8 @@ class NotificationHandler constructor(private val on: On) {
         const val FULLSCREEN_NOTIFICATION_ID = 1
         private const val REQUEST_CODE_NOTIFICATION = 101
         private const val REQUEST_CODE_NOTIFICATION_MUTE = 102
+        private const val REQUEST_CODE_NOTIFICATION_ANSWER = 103
+        private const val REQUEST_CODE_NOTIFICATION_IGNORE = 104
         const val EXTRA_NOTIFICATION = "notification"
         const val EXTRA_MUTE = "mute"
     }
