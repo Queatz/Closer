@@ -490,6 +490,7 @@
     <string name="answer_call">Answer</string>
     <string name="ignore_call">Ignore</string>
     <string name="closer_calls">Closer calls</string>
+    <string name="auto_answer_calls">Auto-answer calls</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

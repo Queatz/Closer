@@ -88,6 +88,20 @@
                 android:text="@string/public_notifications_switch_description" />
 
             <Switch
+                android:id="@+id/autoAnswerSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/auto_answer_calls" />
+
+            <Switch
                 android:id="@+id/lightThemeSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

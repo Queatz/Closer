@@ -3,6 +3,8 @@ package closer.vlllage.com.closer
 import android.Manifest
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.media.RingtoneManager
@@ -10,6 +12,10 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_PERCENT
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_SPREAD
+import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallConnectionHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
@@ -17,6 +23,8 @@ import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.data.PermissionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
+import closer.vlllage.com.closer.handler.settings.SettingsHandler
+import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.pool.PoolActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -85,13 +93,48 @@ class CallActivity : PoolActivity() {
                 }
 
         on<NotificationHandler>().hideFullScreen()
+
+        updateLayout(resources.configuration.orientation)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        updateLayout(newConfig.orientation)
+    }
+
+    private fun updateLayout(orientation: Int) {
+        if (orientation == ORIENTATION_LANDSCAPE) {
+            localView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                constrainedWidth = false
+                constrainedHeight = true
+                matchConstraintDefaultWidth = MATCH_CONSTRAINT_SPREAD
+                matchConstraintDefaultHeight = MATCH_CONSTRAINT_PERCENT
+                matchConstraintPercentWidth = 0f
+                matchConstraintPercentHeight = .33f
+                dimensionRatio = "1.5:1"
+            }
+        } else {
+            localView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                constrainedWidth = true
+                constrainedHeight = false
+                matchConstraintDefaultWidth = MATCH_CONSTRAINT_PERCENT
+                matchConstraintDefaultHeight = MATCH_CONSTRAINT_SPREAD
+                matchConstraintPercentWidth = .33f
+                matchConstraintPercentHeight = 0f
+                dimensionRatio = "1:1.5"
+            }
+        }
+
+        localView.requestLayout()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
         var incoming = intent.getBooleanExtra(EXTRA_INCOMING, false)
-        val autoAnswer = intent.getBooleanExtra(EXTRA_ANSWER, false)
+        val autoAnswer = on<SettingsHandler>().get(UserLocalSetting.CLOSER_SETTINGS_AUTO_ANSWER_CALLS) ||
+                intent.getBooleanExtra(EXTRA_ANSWER, false)
 
         showAnswer(incoming && !autoAnswer)
 
@@ -171,6 +214,14 @@ class CallActivity : PoolActivity() {
         } else {
             finish()
         }
+    }
+
+    override fun onBackPressed() {
+        if (on<ApplicationHandler>().app.on<CallConnectionHandler>().isInCall()) {
+            on<ApplicationHandler>().app.on<CallConnectionHandler>().endCall()
+        }
+
+        super.onBackPressed()
     }
 
     override fun onDestroy() {
