@@ -5,11 +5,9 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
-import android.media.Ringtone
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings.System.DEFAULT_RINGTONE_URI
 import android.view.View
 import android.view.WindowManager
 import closer.vlllage.com.closer.extensions.visible
@@ -53,8 +51,7 @@ class CallActivity : PoolActivity() {
         const val EXTRA_ANSWER = "answer"
     }
 
-    private val ringtone: Ringtone? = RingtoneManager.getRingtone(this, DEFAULT_RINGTONE_URI)
-    private var outgoingRing: MediaPlayer? = null
+    private var ring: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -98,10 +95,19 @@ class CallActivity : PoolActivity() {
 
         showAnswer(incoming && !autoAnswer)
 
+        ring?.release()
+
         if (incoming) {
-            ringtone?.play()
+            if (!autoAnswer) {
+                ring = MediaPlayer.create(this, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)).apply {
+                    setOnPreparedListener {
+                        isLooping = true
+                        start()
+                    }
+                }
+            }
         } else {
-            outgoingRing = MediaPlayer.create(this, R.raw.ring).apply {
+            ring = MediaPlayer.create(this, R.raw.ring).apply {
                 setOnPreparedListener {
                     isLooping = true
                     start()
@@ -111,17 +117,18 @@ class CallActivity : PoolActivity() {
             on<ApplicationHandler>().app.on<CallConnectionHandler>().active.take(1)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                outgoingRing?.release()
-            }.also {
-                on<DisposableHandler>().add(it)
-            }
+                        ring?.release()
+                        ring = null
+                    }.also {
+                        on<DisposableHandler>().add(it)
+                    }
         }
 
         answerButton.setOnClickListener {
             showAnswer(false)
 
             if (incoming && !autoAnswer) {
-                ringtone?.stop()
+                ring?.stop()
                 incoming = false
                 on<ApplicationHandler>().app.on<CallConnectionHandler>().answerIncomingCall()
             } else {
@@ -167,7 +174,10 @@ class CallActivity : PoolActivity() {
     }
 
     override fun onDestroy() {
-        outgoingRing?.release()
+        localView.release()
+        remoteView.release()
+        ring?.release()
+        on<ApplicationHandler>().app.on<CallConnectionHandler>().detach()
         super.onDestroy()
     }
 
