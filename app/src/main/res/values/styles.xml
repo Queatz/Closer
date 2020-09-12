@@ -21,16 +21,17 @@
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
     </style>
 
-    <style name="AppTheme.AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="AppTheme.AlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:windowSoftInputMode">adjustPan</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorAccentDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="dialogCornerRadius">@dimen/miniWindowCornerRadius</item>
         <item name="buttonBarButtonStyle">@style/AlertDialogButton</item>
     </style>
 
     <style name="AppTheme.AlertDialog.Red">
+        <item name="colorPrimary">@color/red</item>
         <item name="colorAccent">@color/red</item>
     </style>
 
@@ -40,6 +41,7 @@
     </style>
 
     <style name="AppTheme.Red">
+        <item name="colorPrimary">@color/red</item>
         <item name="colorAccent">@color/red</item>
     </style>
 
@@ -49,10 +51,11 @@
     </style>
 
     <style name="AppTheme.Translucent.Red">
+        <item name="colorPrimary">@color/red</item>
         <item name="colorAccent">@color/red</item>
     </style>
 
-    <style name="AlertDialogButton" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+    <style name="AlertDialogButton" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:gravity">end|center_vertical</item>
         <item name="android:lineSpacingMultiplier">1.125</item>
         <item name="android:minWidth">0dp</item>

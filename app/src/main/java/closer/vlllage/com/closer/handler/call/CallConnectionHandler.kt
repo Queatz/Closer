@@ -185,7 +185,7 @@ class CallConnectionHandler constructor(private val on: On) {
         sendPushNotification("end", EndCallEvent("${on<NameHandler>().getFallbackName(on<PersistenceHandler>().phone, on<AccountHandler>().name)} isn't available"), phoneId)
     }
 
-    fun isInCall() = peerConnection?.signalingState() == PeerConnection.SignalingState.CLOSED
+    fun isInCall() = peerConnection?.signalingState() == PeerConnection.SignalingState.STABLE
 
     private fun displayError(message: String?) {
         on<TimerHandler>().post {
