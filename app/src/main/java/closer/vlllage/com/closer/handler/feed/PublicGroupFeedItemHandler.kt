@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.feed
 
 import android.content.res.ColorStateList
+import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -303,7 +304,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         toolbarAdapter = ToolbarAdapter(on, onToolbarItemSelected)
 
-        appsToolbar.layoutManager = LinearLayoutManager(appsToolbar.context, RecyclerView.HORIZONTAL, false)
+        appsToolbar.layoutManager = object : LinearLayoutManager(appsToolbar.context, RecyclerView.HORIZONTAL, false) {
+        }
+
         appsToolbar.adapter = toolbarAdapter
 
         toolbarAdapter.selectedContentView.onNext(when (on<FeedHandler>().feedContent()) {

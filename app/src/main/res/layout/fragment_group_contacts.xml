@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/qrCodeLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -119,6 +119,8 @@
         android:id="@+id/contactsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_max="@dimen/maxFullWidth"
         android:layout_marginBottom="@dimen/padDouble"
         android:clipToPadding="false"
         android:clipChildren="false"

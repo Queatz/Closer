@@ -40,7 +40,6 @@ open class FixedUpRecyclerView : RecyclerView {
         return super.dispatchTouchEvent(ev)
     }
 
-
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
 
