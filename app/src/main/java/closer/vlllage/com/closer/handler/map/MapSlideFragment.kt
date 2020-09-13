@@ -49,6 +49,7 @@ class MapSlideFragment : PoolFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val breakpoint = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.maxFullWidth)
         val feedPeekHeightMinus12dp = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeightMinus12dp)
+        val pad = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
 
         mapLayout.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             val w = right - left
@@ -57,11 +58,25 @@ class MapSlideFragment : PoolFragment() {
                     bottomMargin = feedPeekHeightMinus12dp
                 }
 
+                view.feed.setPaddingRelative(
+                        0,
+                        view.feed.paddingTop,
+                        0,
+                        view.feed.paddingBottom,
+                )
+
                 mapLayout.requestLayout()
             } else if (mapLayout.marginBottom != 0 && w > breakpoint) {
                 mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = 0
                 }
+
+                view.feed.setPaddingRelative(
+                        pad,
+                        view.feed.paddingTop,
+                        pad,
+                        view.feed.paddingBottom,
+                )
 
                 mapLayout.requestLayout()
             }

@@ -131,11 +131,11 @@ class FeedHandler constructor(private val on: On) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { visible ->
                     if (visible) {
-                        recyclerView.setPadding(0, 0, 0, on<KeyboardVisibilityHandler>().lastKeyboardHeight)
+                        recyclerView.setPaddingRelative(recyclerView.paddingStart, 0, recyclerView.paddingEnd, on<KeyboardVisibilityHandler>().lastKeyboardHeight)
                         recyclerView.requestLayout()
                         recyclerView.postInvalidate()
                     } else {
-                        recyclerView.setPadding(0, 0, 0, 0)
+                        recyclerView.setPaddingRelative(recyclerView.paddingStart, 0, recyclerView.paddingEnd, 0)
                         recyclerView.requestLayout()
                         recyclerView.postInvalidate()
                     }

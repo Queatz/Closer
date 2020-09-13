@@ -63,13 +63,15 @@ class RecyclerViewHeader(private val on: On) {
 
     fun onRecycled(holder: RecyclerView.ViewHolder) {
         if (holder === headerViewHolder) {
-            headerViewHolder?.itemView?.removeOnLayoutChangeListener(headerLayoutChangeListener)
-            holder.itemView.setPaddingRelative(
-                    holder.itemView.paddingStart,
-                    originalHeaderPadding,
-                    holder.itemView.paddingEnd,
-                    holder.itemView.paddingBottom
-            )
+            headerViewHolder?.apply {
+                itemView.removeOnLayoutChangeListener(headerLayoutChangeListener)
+                itemView.setPaddingRelative(
+                        itemView.paddingStart,
+                        originalHeaderPadding,
+                        itemView.paddingEnd,
+                        itemView.paddingBottom
+                )
+            }
 
             val params = holder.itemView.layoutParams as ViewGroup.MarginLayoutParams
             params.topMargin = 0
