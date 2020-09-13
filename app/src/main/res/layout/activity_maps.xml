@@ -92,12 +92,49 @@
             android:textColorHighlight="@color/colorAccent_50"
             android:textSize="@dimen/textSize" />
 
+        <closer.vlllage.com.closer.ui.ScrollStopper
+            android:id="@+id/topContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchMap"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintWidth_default="spread"
+            app:layout_constraintWidth_max="@dimen/maxFullWidth"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <FrameLayout
+                android:id="@+id/myGroupsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+                    android:id="@+id/myGroupsRecyclerView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="@dimen/padDouble"
+                    android:paddingBottom="@dimen/padDouble"
+                    android:paddingStart="@dimen/padDouble"
+                    android:paddingEnd="@dimen/padDouble"
+                    android:overScrollMode="never"
+                    android:clipChildren="false"
+                    android:clipToPadding="false" />
+
+            </FrameLayout>
+
+        </closer.vlllage.com.closer.ui.ScrollStopper>
+
         <TextView
             android:id="@+id/connectionError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padDouble"
-            app:layout_constraintTop_toBottomOf="@+id/searchMap"
+            app:layout_constraintTop_toBottomOf="@+id/topContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="gone"
@@ -120,19 +157,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/pad"
             android:clipChildren="false"
             android:clipToPadding="false">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:clipChildren="false"
-                android:clipToPadding="false">
-
-                <include layout="@layout/my_groups_layout" />
-
-            </LinearLayout>
 
         </closer.vlllage.com.closer.ui.ScrollStopper>
 
@@ -142,9 +169,21 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/padDouble"
-            android:layout_marginBottom="@dimen/pad"
+            android:layout_marginBottom="@dimen/padDouble"
             app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
             android:src="@drawable/ic_my_location_black_24dp"
+            android:backgroundTint="@color/white"
+            app:borderWidth="0dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/scanInviteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/padDouble"
+            android:layout_marginBottom="@dimen/padDouble"
+            app:layout_constraintBottom_toTopOf="@+id/locateMeButton"
+            android:src="@drawable/ic_qr_code_black_24dp"
             android:backgroundTint="@color/white"
             app:borderWidth="0dp" />
 
@@ -162,6 +201,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:clipToPadding="false"
         android:clipChildren="false"/>
 
     <closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout

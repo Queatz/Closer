@@ -2,12 +2,11 @@ package closer.vlllage.com.closer.handler.map
 
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
 import closer.vlllage.com.closer.handler.group.GroupActionBarButton
 import closer.vlllage.com.closer.handler.group.MyGroupsAdapter
-import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
-import closer.vlllage.com.closer.handler.settings.HelpHandler
 import com.queatz.on.On
 
 class MyGroupsLayoutActionsHandler constructor(private val on: On) {
@@ -17,12 +16,8 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
     private val actions = mutableListOf<GroupActionBarButton>()
 
     private var meetPeopleButton: GroupActionBarButton? = null
-    private var featureRequestsButton: GroupActionBarButton? = null
-    private var scanInviteButton: GroupActionBarButton? = null
     private var verifyYourNumberButton: GroupActionBarButton? = null
-    private var allowPermissionsButton: GroupActionBarButton? = null
     private var unmuteNotificationsButton: GroupActionBarButton? = null
-    private var showHelpButton: GroupActionBarButton? = null
     private var setMyName: GroupActionBarButton? = null
 
     private val meetPeopleHandle = object : GroupActionBarButtonHandle {
@@ -41,36 +36,6 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
         }
     }
 
-    private val featureRequestsHandle = object : GroupActionBarButtonHandle {
-        override fun set() {
-            featureRequestsButton = GroupActionBarButton(on<ResourcesHandler>().resources.getString(R.string.feature_requests), { on<FeatureRequestsHandler>().show() },
-                    backgroundDrawableRes = R.drawable.clickable_red,
-                    textColorRes = R.color.text).also {
-                it.icon = R.drawable.ic_star_black_24dp
-            }
-        }
-
-        override fun get() = featureRequestsButton
-        override fun unset() {
-            featureRequestsButton = null
-        }
-    }
-
-    private val scanInviteHandle = object : GroupActionBarButtonHandle {
-        override fun set() {
-            scanInviteButton = GroupActionBarButton(on<ResourcesHandler>().resources.getString(R.string.scan_invite), { on<ScanQrCodeHandler>().scan() },
-                    backgroundDrawableRes = R.drawable.clickable_accent,
-                    textColorRes = R.color.text).also {
-                it.icon = R.drawable.ic_qr_code_black_24dp
-            }
-        }
-
-        override fun get() = scanInviteButton
-        override fun unset() {
-            scanInviteButton = null
-        }
-    }
-
     private val verifyYourNumberButtonHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.verify_your_number)
@@ -82,25 +47,6 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
         override fun get() = verifyYourNumberButton
         override fun unset() {
             verifyYourNumberButton = null
-        }
-    }
-
-    private val allowPermissionsButtonHandle = object : GroupActionBarButtonHandle {
-        override fun set() {
-            val action = on<ResourcesHandler>().resources.getString(R.string.use_your_location)
-            allowPermissionsButton = GroupActionBarButton(action, { view ->
-                on<AlertHandler>().make().apply {
-                    title = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission)
-                    message = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission_rationale)
-                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.open_settings)
-                    positiveButtonCallback = { alertResult -> on<SystemSettingsHandler>().showSystemSettings() }
-                }
-            })
-        }
-
-        override fun get() = allowPermissionsButton
-        override fun unset() {
-            allowPermissionsButton = null
         }
     }
 
@@ -118,26 +64,6 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
         override fun get() = unmuteNotificationsButton
         override fun unset() {
             unmuteNotificationsButton = null
-        }
-    }
-
-    private val showHelpButtonHandle = object : GroupActionBarButtonHandle {
-        override fun set() {
-            val action = on<ResourcesHandler>().resources.getString(R.string.show_help)
-            showHelpButton = GroupActionBarButton(action, { on<HelpHandler>().showHelp() }, {
-                on<PersistenceHandler>().isHelpHidden = true
-                on<AlertHandler>().make().apply {
-                    message = on<ResourcesHandler>().resources.getString(R.string.you_hid_the_help_bubble)
-                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.ok)
-                    show()
-                }
-                showHelpButton(false)
-            }, R.drawable.clickable_green_light)
-        }
-
-        override fun get() = showHelpButton
-        override fun unset() {
-            showHelpButton = null
         }
     }
 
@@ -172,16 +98,8 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
         show(verifyYourNumberButtonHandle, show, -1)
     }
 
-    internal fun showAllowLocationPermissionsInSettings(show: Boolean) {
-        show(allowPermissionsButtonHandle, show, 0)
-    }
-
     internal fun showUnmuteNotifications(show: Boolean) {
         show(unmuteNotificationsButtonHandle, show, 0)
-    }
-
-    internal fun showHelpButton(show: Boolean) {
-        show(showHelpButtonHandle, show, 0)
     }
 
     internal fun showSetMyName(show: Boolean) {
@@ -190,14 +108,6 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     internal fun showMeetPeople(show: Boolean) {
         show(meetPeopleHandle, show, actions.size)
-    }
-
-    fun showFeatureRequests(show: Boolean) {
-        show(featureRequestsHandle, show, 0)
-    }
-
-    fun showInviteCard(show: Boolean) {
-        show(scanInviteHandle, show, 0)
     }
 
     private fun show(handle: GroupActionBarButtonHandle, show: Boolean, position: Int) {

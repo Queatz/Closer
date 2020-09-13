@@ -12,6 +12,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
@@ -58,6 +59,10 @@ class SettingsSlideFragment : PoolFragment() {
 
         publicNotificationsSettingsSwitch.isChecked = !on<AccountHandler>().privateMode
         publicNotificationsSettingsSwitchDescription.visible = !publicNotificationsSettingsSwitch.isChecked
+
+        featureRequestsButton.setOnClickListener {
+            on<FeatureRequestsHandler>().show()
+        }
 
         appVersion.text = "${getString(R.string.version)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 

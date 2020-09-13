@@ -56,10 +56,14 @@ class MapSlideFragment : PoolFragment() {
                 mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = feedPeekHeightMinus12dp
                 }
+
+                mapLayout.requestLayout()
             } else if (mapLayout.marginBottom != 0 && w > breakpoint) {
                 mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = 0
                 }
+
+                mapLayout.requestLayout()
             }
         }
 
@@ -159,8 +163,6 @@ class MapSlideFragment : PoolFragment() {
             on<AccountHandler>().updateStatus(on<AccountHandler>().status)
         }
 
-        on<MyGroupsLayoutActionsHandler>().showHelpButton(!on<PersistenceHandler>().isHelpHidden)
-
         on<EventBubbleHandler>().attach()
         on<FeedHandler>().attach(view.feed, view.toTheTopLayout)
 
@@ -199,9 +201,25 @@ class MapSlideFragment : PoolFragment() {
         }
 
         view.locateMeButton.setOnClickListener {
+            if (on<PermissionHandler>().denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                on<AlertHandler>().make().apply {
+                    title = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission)
+                    message = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission_rationale)
+                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.open_settings)
+                    positiveButtonCallback = { on<SystemSettingsHandler>().showSystemSettings() }
+                    show()
+                }
+
+                return@setOnClickListener
+            }
+
             on<LocationHandler>().getCurrentLocation {
                 on<MapHandler>().centerMap(it.toLatLng())
             }
+        }
+
+        view.scanInviteButton.setOnClickListener {
+            on<ScanQrCodeHandler>().scan()
         }
 
         view.searchMap.setOnEditorActionListener { _, actionId, event ->
@@ -285,12 +303,8 @@ class MapSlideFragment : PoolFragment() {
         }
 
         val locationPermissionDenied = on<PermissionHandler>().denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        on<MyGroupsLayoutActionsHandler>().showAllowLocationPermissionsInSettings(locationPermissionDenied)
-
         val isNotificationsPaused = on<PersistenceHandler>().isNotificationsPaused
         on<MyGroupsLayoutActionsHandler>().showUnmuteNotifications(isNotificationsPaused)
-        on<MyGroupsLayoutActionsHandler>().showFeatureRequests(on<AccountHandler>().privateOnly.not())
-        on<MyGroupsLayoutActionsHandler>().showInviteCard(true)
         on<MyGroupsLayoutActionsHandler>().showSetMyName(on<AccountHandler>().name.isBlank())
 
         if (locationPermissionGranted && locationPermissionWasDenied) {

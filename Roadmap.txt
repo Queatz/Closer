@@ -2,6 +2,15 @@
 Top
 ===
 
+ [ ] showVerifyMyNumber -> Personal slide
+ [X] showAllowLocationPermissionsInSettings -> Locate me button
+ [ ] showUnmuteNotifications -> Top of feed above apps toolbar
+ [X] showHelpButton -> gone
+ [ ] showSetMyName -> better visual of no name personal slide
+ [ ] showMeetPeople -> in my groups?
+ [X] showFeatureRequests -> Settings slide
+ [X] showInviteCard -> Above locate me
+
 ❤ Next ❤
 ========
 

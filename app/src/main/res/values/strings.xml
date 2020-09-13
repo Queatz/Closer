@@ -273,7 +273,7 @@
     <string name="settings_use_light_theme">Use dark theme</string>
     <string name="no_events_yet_be_the_first_to_host_one">No events yet. Be the first to host one!</string>
     <string name="members">Members</string>
-    <string name="feature_requests">Top Feature Requests</string>
+    <string name="feature_requests">Feature Requests</string>
     <string name="vote">Vote</string>
     <string name="you_voted">☑ Voted</string>
     <string name="beta_message">Welcome to Closer Beta! Tap on the \"+\" to tell us what you would like to see next!</string>

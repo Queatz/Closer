@@ -2,23 +2,22 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/pad"
-    android:layout_marginEnd="@dimen/pad"
+    android:layout_marginEnd="@dimen/padDouble"
     android:clipToPadding="false"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/groupName"
         android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:paddingStart="@dimen/padDialog"
-        android:paddingEnd="@dimen/padDialog"
+        android:layout_height="36dp"
+        android:paddingStart="@dimen/padDouble"
+        android:paddingEnd="@dimen/padDouble"
         android:gravity="center_vertical"
         android:elevation="8dp"
         android:background="@drawable/clickable_blue"
         android:textColor="@color/text"
         android:textStyle="bold"
-        android:textSize="@dimen/textSize"
-        tools:text="888 Friends" />
+        android:textSize="@dimen/textSizeSmall"
+        tools:text="Little Hill Friends" />
 
 </FrameLayout>

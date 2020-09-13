@@ -85,13 +85,6 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
             sharedPreferences.edit().putString(PREFERENCE_PHONE_ID, phoneId).commit()
         }
 
-    var isHelpHidden: Boolean
-        get() = sharedPreferences.getBoolean(PREFERENCE_HELP_IS_HIDDEN, false)
-        @SuppressLint("ApplySharedPref")
-        set(helpIsHidden) {
-            sharedPreferences.edit().putBoolean(PREFERENCE_HELP_IS_HIDDEN, helpIsHidden).commit()
-        }
-
     var isNotificationsPaused: Boolean
         get() = sharedPreferences.getBoolean(PREFERENCE_NOTIFICATIONS_PAUSED, false)
         @SuppressLint("ApplySharedPref")
@@ -156,7 +149,6 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
         private const val PREFERENCE_PHONE = "closer.phone"
         private const val PREFERENCE_VERIFIED = "closer.verified"
         private const val PREFERENCE_PHONE_ID = "closer.phone.id"
-        private const val PREFERENCE_HELP_IS_HIDDEN = "closer.state.help-is-hidden"
         private const val PREFERENCE_NOTIFICATIONS_PAUSED = "closer.notifications.paused"
         private const val PREFERENCE_LAST_MAP_CENTER = "closer.map.center"
         private const val PREFERENCE_LAST_FEED_CONTENT = "closer.feed.content"
