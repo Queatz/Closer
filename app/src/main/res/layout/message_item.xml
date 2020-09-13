@@ -194,7 +194,9 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constrainedHeight="true"
             android:scrollbars="none"
-            android:overScrollMode="never">
+            android:overScrollMode="never"
+            android:paddingStart="38dp"
+            android:clipToPadding="false">
 
             <LinearLayout
                 android:layout_width="wrap_content"

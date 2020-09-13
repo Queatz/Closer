@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.feed
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.feed.content.*

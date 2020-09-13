@@ -233,13 +233,18 @@ class CallConnectionHandler constructor(private val on: On) {
                 it.isFrontFacing(device)
             }?.let { device ->
                 it.createCapturer(device, null)
-            } ?: throw IllegalStateException()
-        }.also { videoCapturer ->
+            }
+        }?.also { videoCapturer ->
             videoCapturer.initialize(surfaceTextureHelper, localVideoOutput.context, localVideoSource.capturerObserver)
             videoCapturer.startCapture(720, 1280, 60)
             val localVideoTrack = peerConnectionFactory.createVideoTrack(LOCAL_VIDEO_TRACK_ID, localVideoSource)
             localVideoTrack.addSink(localVideoOutput)
             localStream?.addTrack(localVideoTrack)
+        }
+
+        if (videoCapturer == null) {
+            on<DefaultAlerts>().thatDidntWork()
+            return
         }
 
         val localAudioTrack = peerConnectionFactory.createAudioTrack(LOCAL_AUDIO_TRACK_ID, localAudioSource)

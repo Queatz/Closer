@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.doOnLayout
+import androidx.core.view.marginBottom
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.toLatLng
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.iid.FirebaseInstanceId
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.android.synthetic.main.activity_maps.view.*
 
 
@@ -44,6 +47,22 @@ class MapSlideFragment : PoolFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val breakpoint = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.maxFullWidth)
+        val feedPeekHeightMinus12dp = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeightMinus12dp)
+
+        mapLayout.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            val w = right - left
+            if (mapLayout.marginBottom == 0 && w <= breakpoint) {
+                mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin = feedPeekHeightMinus12dp
+                }
+            } else if (mapLayout.marginBottom != 0 && w > breakpoint) {
+                mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin = 0
+                }
+            }
+        }
+
         on<NetworkConnectionViewHandler>().attach(view.connectionError)
         on<TimerHandler>().postDisposable({ on<SyncHandler>().syncAll() }, 1325)
         on<TimerHandler>().postDisposable({ on<RefreshHandler>().refreshAll() }, 1625)

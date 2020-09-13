@@ -8,6 +8,7 @@
     android:background="@color/dark">
 
     <closer.vlllage.com.closer.ui.ScrollStopper
+        android:id="@+id/mapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/feedPeekHeightMinus12dp"
@@ -70,6 +71,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_max="@dimen/maxFullWidth"
             android:elevation="@dimen/elevationHigh"
             android:background="@drawable/rounded_white_bkg"
             android:drawableStart="@drawable/ic_search_black_24dp"
@@ -153,6 +155,8 @@
         android:elevation="@dimen/elevationHigh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_max="@dimen/maxFullWidth"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -167,8 +171,8 @@
         tools:visibility="visible"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/feed"
+        app:layout_constraintStart_toStartOf="@id/feed"
         android:elevation="@dimen/elevationSky">
 
         <ImageButton

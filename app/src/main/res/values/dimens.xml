@@ -34,4 +34,5 @@
     <dimen name="textSizeHeader">18sp</dimen>
     <dimen name="textSizeTitle">22sp</dimen>
     <dimen name="textSizeEmoji">24sp</dimen>
+    <dimen name="maxFullWidth">512dp</dimen>
 </resources>

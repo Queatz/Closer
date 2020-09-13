@@ -9,8 +9,10 @@ import closer.vlllage.com.closer.handler.call.CallHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.group.PhotoActivityTransitionHandler
-import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.PhotoHelper
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.TimeStr
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
@@ -80,16 +82,16 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
             on<CallHandler>().startCall(phone.id!!)
         }
 
+        holder.photo.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupForPhone(holder.photo, phone.id!!) }
+
         if (groupContact.photo != null) {
             holder.photo.imageTintList = null
             holder.photo.alpha = 1f
             holder.on<PhotoHelper>().loadCircle(holder.photo, groupContact.photo!!, R.dimen.profilePhotoSmall)
-            holder.photo.setOnClickListener { on<PhotoActivityTransitionHandler>().show(holder.photo, groupContact.photo!!) }
         } else if (phone.photo != null) {
             holder.photo.imageTintList = null
             holder.photo.alpha = 1f
             holder.on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!, R.dimen.profilePhotoSmall)
-            holder.photo.setOnClickListener { on<PhotoActivityTransitionHandler>().show(holder.photo, phone.photo!!) }
         }
 
         holder.name.text = on<NameHandler>().getName(groupContact)

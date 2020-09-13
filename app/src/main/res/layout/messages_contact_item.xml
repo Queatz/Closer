@@ -15,6 +15,7 @@
         android:id="@+id/click"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:background="@drawable/clickable_dark"
         android:clickable="true"
         android:padding="@dimen/pad">
