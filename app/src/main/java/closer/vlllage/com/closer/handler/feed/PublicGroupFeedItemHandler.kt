@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.feed
 
 import android.content.res.ColorStateList
-import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -319,6 +318,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             FeedContent.PLACES -> ContentViewType.HOME_PLACES
             FeedContent.QUESTS -> ContentViewType.HOME_QUESTS
             FeedContent.CONTACTS -> ContentViewType.HOME_CONTACTS
+            FeedContent.LIFESTYLES -> ContentViewType.HOME_LIFESTYLES
+            FeedContent.GOALS -> ContentViewType.HOME_GOALS
         })
 
         updateViews()
@@ -555,6 +556,54 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 itemView.feedText.setText(R.string.conversations)
                                 searchGroupsAdapter.setCreateIsPublic(false)
                                 searchGroupsAdapter.showCreateOption(true)
+                            }
+                            ContentViewType.HOME_LIFESTYLES -> {
+                                saySomethingHeader.visible = false
+                                saySomething.visible = false
+                                sendSomethingButton.visible = false
+                                peopleContainer.visible = false
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = false
+                                actionRecyclerView.visible = false
+                                suggestionsRecyclerView.visible = false
+                                groupsRecyclerView.visible = false
+                                if (searchGroups.visible.not()) {
+                                    searchGroups.visible = true
+                                }
+                                on<ResourcesHandler>().resources.getString(R.string.search_lifestyles).let { hint ->
+                                    if (searchGroups.hint != hint) searchGroups.hint = hint
+                                }
+                                itemView.historyButton.visible = false
+                                actionHeader.visible = false
+                                itemView.suggestionsHeader.visible = false
+                                itemView.placesHeader.visible = false
+                                itemView.feedText.visible = false
+                            }
+                            ContentViewType.HOME_GOALS -> {
+                                saySomethingHeader.visible = false
+                                saySomething.visible = false
+                                sendSomethingButton.visible = false
+                                peopleContainer.visible = false
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = false
+                                actionRecyclerView.visible = false
+                                suggestionsRecyclerView.visible = false
+                                groupsRecyclerView.visible = false
+                                if (searchGroups.visible.not()) {
+                                    searchGroups.visible = true
+                                }
+                                on<ResourcesHandler>().resources.getString(R.string.search_goals).let { hint ->
+                                    if (searchGroups.hint != hint) searchGroups.hint = hint
+                                }
+                                itemView.historyButton.visible = false
+                                actionHeader.visible = false
+                                itemView.suggestionsHeader.visible = false
+                                itemView.placesHeader.visible = false
+                                itemView.feedText.visible = false
                             }
                         }
                     })

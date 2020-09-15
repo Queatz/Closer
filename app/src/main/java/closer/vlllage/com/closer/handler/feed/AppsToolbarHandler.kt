@@ -88,6 +88,24 @@ class AppsToolbarHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_ACTIVITIES,
                         color = R.color.colorAccent),
                 GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.lifestyles),
+                        R.drawable.ic_star_black_24dp,
+                        {
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_LIFESTYLES)
+                            on<AccountHandler>().updatePrivateOnly(false)
+                        },
+                        value = ContentViewType.HOME_LIFESTYLES,
+                        color = R.color.pink500),
+                GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.goals),
+                        R.drawable.ic_baseline_flag_24,
+                        {
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_GOALS)
+                            on<AccountHandler>().updatePrivateOnly(false)
+                        },
+                        value = ContentViewType.HOME_GOALS,
+                        color = R.color.pink500),
+                GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.groups),
                         R.drawable.ic_group_black_24dp,
                         {
@@ -97,7 +115,9 @@ class AppsToolbarHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_FRIENDS,
                         color = R.color.colorPrimary)
         ).sortedBy {
-            appsToolbarOrder.indexOf(it.value)
+            appsToolbarOrder.indexOf(it.value).let {
+                if (it == -1) Int.MAX_VALUE else it
+            }
         }.toMutableList()
     }
 }

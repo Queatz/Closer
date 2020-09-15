@@ -209,8 +209,8 @@
     <string name="introduction">Введение</string>
     <string name="offtime">В моё нерабочее время</string>
     <string name="history">История</string>
-    <string name="goals">%1$s\'s Текущие цели</string>
-    <string name="lifestyles">%1$s\'s cтиль жизни</string>
+    <string name="current_goals">%1$s\'s Текущие цели</string>
+    <string name="current_lifestyles">%1$s\'s cтиль жизни</string>
     <string name="lifestyle">Стиль жизни</string>
     <string name="nothing_here">Здесь ничего нет</string>
     <string name="edit_your_introduction">Отредактируйте свое введение</string>

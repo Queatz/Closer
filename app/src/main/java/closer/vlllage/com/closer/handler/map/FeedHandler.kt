@@ -156,6 +156,7 @@ class FeedHandler constructor(private val on: On) {
         on<DisposableHandler>().add(content.switchMap { on<MapHandler>().onMapIdleObservable() }.subscribe({
             on<MapHandler>().center?.let { center ->
                 loadGroups(center)
+                loadPeople(center)
                 loadQuests(center, lastKnownQueryString)
             }
         }, {}))
@@ -183,6 +184,53 @@ class FeedHandler constructor(private val on: On) {
         on<Search>().quests(target, queryString) { quests ->
             mixedAdapter.quests = quests.toMutableList()
         }.also { questsObservable = it }
+    }
+
+    private fun loadPeople(latLng: LatLng) {
+        val distance = on<HowFar>().about7Miles
+
+        val queryBuilder = on<StoreHandler>().store.box(Phone::class).query()
+                .between(Phone_.latitude, latLng.latitude - distance, latLng.latitude + distance)
+                .and()
+                .between(Phone_.longitude, latLng.longitude - distance, latLng.longitude + distance)
+                .and()
+                .greater(Phone_.updated, on<TimeAgo>().fifteenDaysAgo())
+                .notEqual(Phone_.id, on<PersistenceHandler>().phoneId ?: "")
+
+        on<DisposableHandler>().add(queryBuilder
+                .sort(on<SortHandler>().sortPhones())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { phones ->
+                    loadlLifestylesAndGoals(phones)
+                })
+    }
+
+    private fun loadlLifestylesAndGoals(phones: List<Phone>) {
+        val lifestyles = phones.map { it.lifestyles ?: listOf() }.flatMap { it }.toTypedArray()
+        val goals = phones.map { it.goals ?: listOf() }.flatMap { it }.toTypedArray()
+
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Lifestyle::class).query(Lifestyle_.name.oneOf(lifestyles))
+                .sort(on<SortHandler>().sortLifestyles())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { lifestyles ->
+                    mixedAdapter.lifestyles = lifestyles
+                })
+
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Goal::class).query(Goal_.name.oneOf(goals))
+                .sort(on<SortHandler>().sortGoals())
+                .build()
+                .subscribe()
+                .on(AndroidScheduler.mainThread())
+                .single()
+                .observer { goals ->
+                    mixedAdapter.goals = goals
+                })
     }
 
     private fun loadGroups(target: LatLng) {
@@ -289,6 +337,8 @@ class FeedHandler constructor(private val on: On) {
             ContentViewType.HOME_PLACES -> FeedContent.PLACES
             ContentViewType.HOME_QUESTS -> FeedContent.QUESTS
             ContentViewType.HOME_CONTACTS -> FeedContent.CONTACTS
+            ContentViewType.HOME_LIFESTYLES -> FeedContent.LIFESTYLES
+            ContentViewType.HOME_GOALS -> FeedContent.GOALS
             else -> null
         }?.let {
             content.onNext(it)

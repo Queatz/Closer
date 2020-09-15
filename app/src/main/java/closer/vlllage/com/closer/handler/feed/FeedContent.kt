@@ -10,4 +10,6 @@ enum class FeedContent {
     FRIENDS,
     NOTIFICATIONS,
     CONTACTS,
+    LIFESTYLES,
+    GOALS,
 }

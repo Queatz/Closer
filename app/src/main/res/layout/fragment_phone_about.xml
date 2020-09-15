@@ -190,55 +190,6 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/goalsHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padQuadruple"
-                android:layout_marginBottom="@dimen/pad"
-                android:textColor="@color/textInverse"
-                android:textSize="@dimen/textSizeLarge"
-                android:textStyle="bold"
-                tools:text="@string/goals" />
-
-            <TextView
-                android:id="@+id/goalsEmptyTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/nothing_here"
-                android:textColor="@color/textHintInverse" />
-
-            <closer.vlllage.com.closer.ui.FixedUpRecyclerView
-                android:id="@+id/goalsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false" />
-
-            <TextView
-                android:id="@+id/actionAddGoal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad"
-                android:background="@drawable/clickable_accent"
-                android:drawableStart="@drawable/ic_add_black_18dp"
-                android:drawablePadding="@dimen/padHalf"
-                android:elevation="2dp"
-                android:gravity="center_vertical"
-                android:minHeight="0dp"
-                android:paddingStart="@dimen/padDouble"
-                android:paddingTop="@dimen/pad"
-                android:paddingEnd="@dimen/padDouble"
-                android:paddingBottom="@dimen/pad"
-                android:text="@string/add_a_goal"
-                android:textAllCaps="true"
-                android:textColor="@color/textInverse"
-                android:textSize="@dimen/textSizeSmall"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <TextView
                 android:id="@+id/lifestyleHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -280,6 +231,55 @@
                 android:paddingEnd="@dimen/padDouble"
                 android:paddingBottom="@dimen/pad"
                 android:text="@string/add_a_lifestyle"
+                android:textAllCaps="true"
+                android:textColor="@color/textInverse"
+                android:textSize="@dimen/textSizeSmall"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/goalsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padQuadruple"
+                android:layout_marginBottom="@dimen/pad"
+                android:textColor="@color/textInverse"
+                android:textSize="@dimen/textSizeLarge"
+                android:textStyle="bold"
+                tools:text="@string/current_goals" />
+
+            <TextView
+                android:id="@+id/goalsEmptyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nothing_here"
+                android:textColor="@color/textHintInverse" />
+
+            <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+                android:id="@+id/goalsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
+
+            <TextView
+                android:id="@+id/actionAddGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad"
+                android:background="@drawable/clickable_accent"
+                android:drawableStart="@drawable/ic_add_black_18dp"
+                android:drawablePadding="@dimen/padHalf"
+                android:elevation="2dp"
+                android:gravity="center_vertical"
+                android:minHeight="0dp"
+                android:paddingStart="@dimen/padDouble"
+                android:paddingTop="@dimen/pad"
+                android:paddingEnd="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:text="@string/add_a_goal"
                 android:textAllCaps="true"
                 android:textColor="@color/textInverse"
                 android:textSize="@dimen/textSizeSmall"

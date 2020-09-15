@@ -2,7 +2,6 @@ package closer.vlllage.com.closer.handler.feed
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.feed.content.*
@@ -13,6 +12,18 @@ import com.queatz.on.On
 import java.util.*
 
 class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
+
+    var goals = mutableListOf<Goal>()
+        set(value) {
+            field = value
+            generate()
+        }
+
+    var lifestyles = mutableListOf<Lifestyle>()
+        set(value) {
+            field = value
+            generate()
+        }
 
     var groups = mutableListOf<Group>()
         set(value) {
@@ -95,7 +106,9 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
             on<NotificationMixedItemAdapter>(),
             on<GroupPreviewMixedItemAdapter>(),
             on<CalendarDayMixedItemAdapter>(),
-            on<MessagesContactItemAdapter>()
+            on<MessagesContactItemAdapter>(),
+            on<LifestyleMixedItemAdapter>(),
+            on<GoalMixedItemAdapter>()
     ).map { Pair(it.getMixedItemType(), it as MixedItemAdapter<MixedItem, MixedItemViewHolder>) }.toMap()
 
     private fun generate() {
@@ -135,14 +148,34 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
                 }
                 FeedContent.CALENDAR -> IntArray(14)
                         .mapIndexed { i, _ -> i }
-                        .forEach { add(CalendarDayMixedItem(it, Calendar.getInstance(TimeZone.getDefault()).let { cal ->
-                            cal.set(Calendar.HOUR_OF_DAY, 0)
-                            cal.set(Calendar.MINUTE, 0)
-                            cal.set(Calendar.SECOND, 0)
-                            cal.set(Calendar.MILLISECOND, 0)
-                            cal.add(Calendar.DATE, it)
-                            cal.time
-                        })) }
+                        .forEach {
+                            add(CalendarDayMixedItem(it, Calendar.getInstance(TimeZone.getDefault()).let { cal ->
+                                cal.set(Calendar.HOUR_OF_DAY, 0)
+                                cal.set(Calendar.MINUTE, 0)
+                                cal.set(Calendar.SECOND, 0)
+                                cal.set(Calendar.MILLISECOND, 0)
+                                cal.add(Calendar.DATE, it)
+                                cal.time
+                            }))
+                        }
+                FeedContent.LIFESTYLES -> groups.apply {
+                        if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                        else {
+                            lifestyles.forEach {
+                                add(LifestyleMixedItem(it))
+                            }
+                            add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_lifestyles)))
+                        }
+                    }
+                FeedContent.GOALS -> groups.apply {
+                        if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                        else {
+                            goals.forEach {
+                                add(GoalMixedItem(it))
+                            }
+                            add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_goals)))
+                        }
+                    }
             }
         }
     }

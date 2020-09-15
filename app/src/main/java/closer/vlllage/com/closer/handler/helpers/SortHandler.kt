@@ -168,4 +168,16 @@ class SortHandler constructor(private val on: On) {
             return@Comparator 0
         }
     }
+
+    fun sortLifestyles(): Comparator<Lifestyle> {
+        return Comparator { o1, o2 ->
+            (o2.phonesCount ?: 0).compareTo(o1.phonesCount ?: 0)
+        }
+    }
+
+    fun sortGoals(): Comparator<Goal> {
+        return Comparator { o1, o2 ->
+            (o2.phonesCount ?: 0).compareTo(o1.phonesCount ?: 0)
+        }
+    }
 }
