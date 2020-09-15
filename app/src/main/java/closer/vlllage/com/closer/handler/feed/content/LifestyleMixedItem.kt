@@ -29,7 +29,7 @@ class LifestyleMixedItemAdapter(private val on: On) : MixedItemAdapter<Lifestyle
         holder.itemView.count.visible = false
 
         val count = item.lifestyle.phonesCount ?: 0
-        holder.itemView.count.visible = count > 1
+        holder.itemView.count.visible = true
         holder.itemView.count.text = "$count"
     }
 

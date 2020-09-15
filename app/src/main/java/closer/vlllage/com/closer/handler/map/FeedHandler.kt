@@ -27,6 +27,7 @@ import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -42,6 +43,7 @@ class FeedHandler constructor(private val on: On) {
     private var groupMessagesObservable: DataSubscription? = null
     private var lastKnownQueryString = ""
     private var groupActionsGroups = listOf<Group>()
+    private var lifestyleAndGoalPhones = listOf<Phone>()
     private var isToTheTopVisible = false
     private var content = BehaviorSubject.create<FeedContent>()
     private var loadGroupsDisposableGroup: DisposableGroup = on<DisposableHandler>().group()
@@ -176,6 +178,7 @@ class FeedHandler constructor(private val on: On) {
     fun searchQuests(queryString: String) {
         lastKnownQueryString = queryString
         loadQuests(on<MapHandler>().center!!, lastKnownQueryString)
+        loadLifestylesAndGoals()
     }
 
     private fun loadQuests(target: LatLng, queryString: String) {
@@ -204,15 +207,21 @@ class FeedHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { phones ->
-                    loadlLifestylesAndGoals(phones)
+                    loadLifestylesAndGoals(phones)
                 })
     }
 
-    private fun loadlLifestylesAndGoals(phones: List<Phone>) {
-        val lifestyles = phones.map { it.lifestyles ?: listOf() }.flatMap { it }.toTypedArray()
-        val goals = phones.map { it.goals ?: listOf() }.flatMap { it }.toTypedArray()
+    private fun loadLifestylesAndGoals(phones: List<Phone>? = null) {
+        phones?.let { lifestyleAndGoalPhones = it }
 
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(Lifestyle::class).query(Lifestyle_.name.oneOf(lifestyles))
+        val lifestyles = lifestyleAndGoalPhones.map { it.lifestyles ?: listOf() }.flatMap { it }.toTypedArray()
+        val goals = lifestyleAndGoalPhones.map { it.goals ?: listOf() }.flatMap { it }.toTypedArray()
+
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Lifestyle::class).query(Lifestyle_.name.oneOf(lifestyles).let { query ->
+            lastKnownQueryString.takeIf { it.isNotBlank() }?.let {
+                query.and(Lifestyle_.name.contains(lastKnownQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE))
+            } ?: query
+        })
                 .sort(on<SortHandler>().sortLifestyles())
                 .build()
                 .subscribe()
@@ -222,7 +231,11 @@ class FeedHandler constructor(private val on: On) {
                     mixedAdapter.lifestyles = lifestyles
                 })
 
-        on<DisposableHandler>().add(on<StoreHandler>().store.box(Goal::class).query(Goal_.name.oneOf(goals))
+        on<DisposableHandler>().add(on<StoreHandler>().store.box(Goal::class).query(Goal_.name.oneOf(goals).let { query ->
+            lastKnownQueryString.takeIf { it.isNotBlank() }?.let {
+                query.and(Goal_.name.contains(lastKnownQueryString, QueryBuilder.StringOrder.CASE_INSENSITIVE))
+            } ?: query
+        })
                 .sort(on<SortHandler>().sortGoals())
                 .build()
                 .subscribe()

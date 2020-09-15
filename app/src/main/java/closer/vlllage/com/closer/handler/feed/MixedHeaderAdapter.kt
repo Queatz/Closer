@@ -158,19 +158,19 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
                                 cal.time
                             }))
                         }
-                FeedContent.LIFESTYLES -> groups.apply {
+                FeedContent.LIFESTYLES -> lifestyles.apply {
                         if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                         else {
-                            lifestyles.forEach {
+                            forEach {
                                 add(LifestyleMixedItem(it))
                             }
                             add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_lifestyles)))
                         }
                     }
-                FeedContent.GOALS -> groups.apply {
+                FeedContent.GOALS -> goals.apply {
                         if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                         else {
-                            goals.forEach {
+                            forEach {
                                 add(GoalMixedItem(it))
                             }
                             add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_goals)))

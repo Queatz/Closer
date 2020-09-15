@@ -7,6 +7,7 @@
     android:paddingEnd="@dimen/padDouble"
     android:background="@color/white"
     android:clipToPadding="false"
+    android:clickable="true"
     android:elevation="@dimen/elevation">
 
     <include layout="@layout/item_goal" />

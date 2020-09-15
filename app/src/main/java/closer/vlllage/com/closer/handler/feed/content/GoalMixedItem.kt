@@ -29,7 +29,7 @@ class GoalMixedItemAdapter(private val on: On) : MixedItemAdapter<GoalMixedItem,
         holder.itemView.count.visible = false
 
         val count = item.goal.phonesCount ?: 0
-        holder.itemView.count.visible = count > 1
+        holder.itemView.count.visible = true
         holder.itemView.count.text = "$count"
     }
 
