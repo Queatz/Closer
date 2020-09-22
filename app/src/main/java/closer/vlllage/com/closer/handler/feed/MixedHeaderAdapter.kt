@@ -141,7 +141,10 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else forEach { add(QuestMixedItem(it)) }
                 }
-                FeedContent.NOTIFICATIONS -> notifications.forEach { add(NotificationMixedItem(it)) }
+                FeedContent.NOTIFICATIONS -> notifications.apply {
+                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.no_notifications)))
+                    else forEach { add(NotificationMixedItem(it)) }
+                }
                 FeedContent.CONTACTS -> contacts.apply {
                     if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.no_contacts)))
                     else forEach { add(MessagesContactMixedItem(it)) }

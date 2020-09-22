@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.store.models.Group
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class CreatePostActivity : ListActivity() {
 
@@ -116,10 +117,12 @@ class CreatePostActivity : ListActivity() {
     }
 
     private fun setGroup(group: Group) {
-        val groupName = if (group.name.isNullOrBlank()) on<ResourcesHandler>().resources.getString(R.string.unknown) else group.name!!
-
-        adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.post_in, groupName))
-        adapter.groupName = groupName
+        on<GroupNameHelper>().getName(group).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.post_in, it))
+            adapter.groupName = it
+        }, { on<DefaultAlerts>().thatDidntWork() }).also {
+            on<DisposableHandler>().add(it)
+        }
 
         adapter.items = (on<GroupDraftHandler>().getDraft(group.id!!)
                 ?.post

@@ -343,5 +343,5 @@ data class StartCallEvent(
 )
 
 data class EndCallEvent(
-    val reason: String
+    val reason: String,
 )

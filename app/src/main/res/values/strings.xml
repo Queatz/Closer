@@ -272,7 +272,7 @@
     <string name="events">Events</string>
     <string name="post_review">Post your review</string>
     <string name="review_summary">Review summary</string>
-    <string name="settings_use_light_theme">Use dark theme</string>
+    <string name="settings_use_light_theme">Use light theme</string>
     <string name="no_events_yet_be_the_first_to_host_one">No events yet. Be the first to host one!</string>
     <string name="members">Members</string>
     <string name="feature_requests">Feature Requests</string>
@@ -327,7 +327,7 @@
     <string name="failed_to_load_photo">Failed to load photo</string>
     <string name="host_again">Host again</string>
     <string name="message_deleted">Message deleted</string>
-    <string name="delete_message_confirm">Do you want to delete this message?</string>
+    <string name="delete_message_confirm">Do you want to delete this message forever?</string>
     <string name="yes_delete">Yes, delete</string>
     <string name="unavailable_message">This message is unavailable</string>
     <string name="reactions">Reactions</string>
@@ -497,6 +497,7 @@
     <string name="auto_answer_calls">Auto-answer calls</string>
     <string name="search_goals">Search goals</string>
     <string name="search_lifestyles">Search lifestyles</string>
+    <string name="no_notifications">You don\'t have any notifications yet.</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
