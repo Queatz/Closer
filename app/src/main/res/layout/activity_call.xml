@@ -35,6 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="@dimen/pad"
+        android:elevation="@dimen/elevation"
         app:layout_constrainedWidth="true"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintWidth_percent=".333"
