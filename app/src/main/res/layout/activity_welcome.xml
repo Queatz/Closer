@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/closerLogo"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layout"
+        android:layout_marginTop="@dimen/padDialog"
+        android:padding="@dimen/pad"
+        android:src="@drawable/ic_app" />
+
+    <ScrollView
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/closerLogo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:overScrollMode="never"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padDouble"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padDouble"
+                android:textColor="@color/textInverse"
+                android:gravity="center_horizontal"
+                android:lineSpacingMultiplier="1.25"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="Welcome to Closer!" />
+
+            <Button style="@style/Widget.AppCompat.Button"
+                android:id="@+id/scanInviteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/maxFullWidth"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/colorAccent"
+                android:drawableStart="@drawable/ic_qr_code_black_24dp"
+                android:drawableTint="@color/textInverse"
+                android:drawablePadding="@dimen/padDouble"
+                android:padding="@dimen/padDouble"
+                android:text="Scan an invite QR code" />
+
+            <EditText
+                android:id="@+id/inviteLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/maxFullWidth"
+                android:paddingEnd="@dimen/padDialog"
+                android:paddingStart="@dimen/padDialog"
+                android:padding="@dimen/padDouble"
+                android:imeOptions="actionGo"
+                android:focusedByDefault="false"
+                android:gravity="center_horizontal"
+                android:inputType="phone"
+                android:hint="Paste an invite link"
+                android:textColor="@color/textInverse"
+                android:textColorHint="@color/textHintInverse"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:maxLength="24"
+                android:maxLines="1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/pad"
+                android:textColor="@color/textHintInverse"
+                android:gravity="center_horizontal"
+                android:lineSpacingMultiplier="1.25"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:text="Or, tap an invite link in any app to instantly sign in." />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/pad"
+                android:layout_marginTop="@dimen/pad"
+                android:textColor="@color/textInverse"
+                android:gravity="center_horizontal"
+                android:lineSpacingMultiplier="1.25"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="Already on Closer?" />
+
+            <Button style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:id="@+id/phoneNumberButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/maxFullWidth"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorAccent"
+                android:text="Sign in with your phone number" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</closer.vlllage.com.closer.ui.FitsSystemWindowsConstraintLayout>
