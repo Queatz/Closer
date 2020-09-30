@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.ScanQrCodeHandler
 import closer.vlllage.com.closer.handler.map.SetNameHandler
@@ -35,9 +36,13 @@ class WelcomeSlideFragment : PoolFragment() {
         }
 
         view.requestInviteButton.setOnClickListener {
-            on<SetNameHandler>().modifyName({
+            if (on<AccountHandler>().name.isBlank()) {
+                on<SetNameHandler>().modifyName({
+                    on<GroupActivityTransitionHandler>().showGroupMessages(view.requestInviteButton, on<ConfigHandler>().feedbackGroupId())
+                })
+            } else {
                 on<GroupActivityTransitionHandler>().showGroupMessages(view.requestInviteButton, on<ConfigHandler>().feedbackGroupId())
-            })
+            }
         }
     }
 
