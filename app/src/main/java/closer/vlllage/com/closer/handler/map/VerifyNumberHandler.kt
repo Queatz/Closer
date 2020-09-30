@@ -67,6 +67,7 @@ class VerifyNumberHandler constructor(private val on: On) {
     }
 
     private fun codeConfirmed() {
+        on<PersistenceHandler>().access = true
         on<PersistenceHandler>().isVerified = true
         on<MyGroupsLayoutActionsHandler>().showVerifyMyNumber(false)
 

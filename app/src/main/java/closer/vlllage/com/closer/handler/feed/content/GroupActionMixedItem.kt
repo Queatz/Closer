@@ -7,6 +7,9 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.helpers.DisposableGroup
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
+import closer.vlllage.com.closer.handler.helpers.MenuHandler
+import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.GroupAction
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.group_action_photo_large_item.view.*
@@ -42,6 +45,19 @@ class GroupActionMixedItemAdapter(private val on: On) : MixedItemAdapter<GroupAc
             use<DisposableHandler>()
             use<GroupActionDisplay>()
         }
+
+        holder.on<GroupActionDisplay>().onGroupActionClickListener = { groupAction, proceed ->
+            on<MenuHandler>().show(
+                    MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.share_this)) {
+                        on<ShareActivityTransitionHandler>().shareGroupActionToGroup(groupAction.id!!)
+                    },
+                    MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.post_now)) {
+                        proceed()
+                    },
+                    button = ""
+            )
+        }
+
         holder.on<GroupActionDisplay>().display(holder.itemView.groupAction, groupAction, GroupActionDisplay.Layout.PHOTO, holder.itemView.groupActionDescription, 1.5f)
     }
 }

@@ -220,7 +220,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
                         true -> add(WelcomeMixedItem("<b>Goals</b>\n\nIt looks like there are ${goals.size} goals in your area, why not go check them out?", "See goals in my area") {
                             on<FeedHandler>().show(ContentViewType.HOME_GOALS)
                         })
-                        false -> add(WelcomeMixedItem("<b>Goals</b>\n\nIt looks like there are no goals in your area, why not join one yourself?", "Join a lifestyle") {
+                        false -> add(WelcomeMixedItem("<b>Goals</b>\n\nIt looks like there are no goals in your area, why not join one yourself?", "Add a goal") {
                             on<ProfileHelper>().addGoal(on<PersistenceHandler>().phoneId!!)
                         })
                     }

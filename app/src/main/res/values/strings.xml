@@ -200,7 +200,7 @@
     <string name="join_event_message">Join this event to let others know you\'re here.</string>
     <string name="group">Group</string>
     <string name="share_group">Share this group…</string>
-    <string name="share_group_activity">Share this activity…</string>
+    <string name="share_group_activity">Share this activity</string>
     <string name="pinned_message">Pinned message</string>
     <string name="unpin">Unpin</string>
     <string name="pin">Pin</string>
@@ -499,6 +499,8 @@
     <string name="search_lifestyles">Search lifestyles</string>
     <string name="no_notifications">You don\'t have any notifications yet.</string>
     <string name="welcome">Welcome</string>
+    <string name="post_now">Post now</string>
+    <string name="share_this">Share this</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

@@ -5,6 +5,7 @@ import android.net.Uri
 import closer.vlllage.com.closer.api.models.UseInviteCodeResult
 import closer.vlllage.com.closer.handler.data.ApiError
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import com.google.zxing.integration.android.IntentIntegrator
 import com.queatz.on.On
@@ -33,6 +34,8 @@ class ScanQrCodeHandler constructor(private val on: On) {
 
         on<DisposableHandler>().add(on<ApiHandler>().useInviteCode(url.path!!.split('/').last()).subscribe({ result: UseInviteCodeResult ->
             if (result.success) {
+                on<PersistenceHandler>().access = true
+
                 on<ApiHandler>().getGroup(result.group!!).subscribe({ group ->
                     on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id, isNewMember = true)
                 }, { on<DefaultAlerts>().thatDidntWork() })

@@ -11,20 +11,20 @@ import com.queatz.on.On
 
 class SetNameHandler constructor(private val on: On) {
     @JvmOverloads
-    fun modifyName(onNameModifiedCallback: OnNameModifiedCallback? = null, allowSkip: Boolean = false) {
+    fun modifyName(onNameModifiedCallback: ((String?) -> Unit)? = null, allowSkip: Boolean = false) {
         on<AlertHandler>().make().apply {
             layoutResId = R.layout.set_name_modal
             title = on<ResourcesHandler>().resources.getString(R.string.update_your_name)
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_your_name)
             negativeButton = (if (allowSkip) on<ResourcesHandler>().resources.getString(R.string.skip) else null)
             negativeButtonCallback = if (allowSkip)
-                    { result -> onNameModifiedCallback?.onNameModified(null) }
+                    { result -> onNameModifiedCallback?.invoke(null) }
                 else
                     null
             textViewId = R.id.input
             onTextViewSubmitCallback = { name ->
                     on<AccountHandler>().updateName(name)
-                    onNameModifiedCallback?.onNameModified(name)
+                    onNameModifiedCallback?.invoke(name)
                 }
             onAfterViewCreated = { alertConfig, view ->
                     (view.findViewById(R.id.input) as TextView).text = on<AccountHandler>().name
@@ -36,9 +36,5 @@ class SetNameHandler constructor(private val on: On) {
                 }
             show()
         }
-    }
-
-    interface OnNameModifiedCallback {
-        fun onNameModified(name: String?)
     }
 }

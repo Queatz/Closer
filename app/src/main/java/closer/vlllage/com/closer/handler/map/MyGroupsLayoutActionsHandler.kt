@@ -71,12 +71,10 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.set_my_name)
             setMyName = GroupActionBarButton(action, {
-                on<SetNameHandler>().modifyName(object : SetNameHandler.OnNameModifiedCallback {
-                    override fun onNameModified(name: String?) {
-                        if (!name.isNullOrBlank()) {
-                            showSetMyName(false)
-                            on<NavigationHandler>().showProfile(on<PersistenceHandler>().phoneId!!)
-                        }
+                on<SetNameHandler>().modifyName({
+                    if (!it.isNullOrBlank()) {
+                        showSetMyName(false)
+                        on<NavigationHandler>().showProfile(on<PersistenceHandler>().phoneId!!)
                     }
                 }, false)
             }).also {

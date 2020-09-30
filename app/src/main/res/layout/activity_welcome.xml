@@ -69,12 +69,11 @@
                 android:imeOptions="actionGo"
                 android:focusedByDefault="false"
                 android:gravity="center_horizontal"
-                android:inputType="phone"
+                android:inputType="textUri"
                 android:hint="Paste an invite link"
                 android:textColor="@color/textInverse"
                 android:textColorHint="@color/textHintInverse"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:maxLength="24"
                 android:maxLines="1" />
 
             <TextView
@@ -106,6 +105,26 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/colorAccent"
                 android:text="Sign in with your phone number" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/pad"
+                android:layout_marginTop="@dimen/pad"
+                android:textColor="@color/textInverse"
+                android:gravity="center_horizontal"
+                android:lineSpacingMultiplier="1.25"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="Don't have an invite?" />
+
+            <Button style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:id="@+id/requestInviteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/maxFullWidth"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorAccent"
+                android:text="Request an invite" />
 
         </LinearLayout>
 

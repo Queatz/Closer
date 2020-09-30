@@ -2,50 +2,48 @@ package closer.vlllage.com.closer
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import closer.vlllage.com.closer.handler.PersonalSlideFragment
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ScanQrCodeHandler
 import closer.vlllage.com.closer.handler.map.MapViewHandler
 import closer.vlllage.com.closer.handler.settings.SettingsSlideFragment
+import closer.vlllage.com.closer.handler.welcome.WelcomeSlideFragment
 import closer.vlllage.com.closer.pool.PoolActivity
 import com.github.queatz.slidescreen.SlideScreen
 import com.github.queatz.slidescreen.SlideScreenAdapter
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class MapsActivity : PoolActivity() {
 
     private lateinit var slideScreen: SlideScreen
 
+    private val accessDisposableGroup = on<DisposableHandler>().group()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.slidescreen)
         slideScreen = findViewById(R.id.slideScreen)
-        slideScreen.adapter = object : SlideScreenAdapter {
-            override fun getCount(): Int {
-                return NUM_SCREENS
-            }
-
-            override fun getSlide(position: Int): Fragment {
-                return when (position) {
-                    POSITION_SCREEN_PERSONAL -> PersonalSlideFragment()
-                    POSITION_SCREEN_MAP -> on<MapViewHandler>().mapFragment
-                    POSITION_SCREEN_SETTINGS -> SettingsSlideFragment()
-                    else -> throw IndexOutOfBoundsException()
-                }
-            }
-
-            override fun getFragmentManager() = this@MapsActivity.supportFragmentManager
-        }
+        refreshScreens()
 
         if (intent != null) {
             onNewIntent(intent)
         }
 
-        on<MapViewHandler>().onRequestMapOnScreenListener = {
-            slideScreen.slide = POSITION_SCREEN_MAP
+        if (on<PersistenceHandler>().access.not()) {
+            on<PersistenceHandler>().changes
+                    .filter { it == PersistenceHandler.PREFERENCE_ACCESS }
+                    .map { on<PersistenceHandler>().access }
+                    .filter { it }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        refreshScreens()
+                        accessDisposableGroup.dispose()
+                    }.also {
+                        accessDisposableGroup.add(it)
+                    }
         }
-
-        slideScreen.slide = POSITION_SCREEN_MAP
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -79,17 +77,50 @@ class MapsActivity : PoolActivity() {
     }
 
     override fun onBackPressed() {
-        on<MapViewHandler>().onBackPressed {
-            if (it) {
-                return@onBackPressed
-            }
+        if (on<PersistenceHandler>().access) {
+            on<MapViewHandler>().onBackPressed {
+                if (it) {
+                    return@onBackPressed
+                }
 
-            if (!slideScreen.isExpose) {
-                slideScreen.expose(true)
-                return@onBackPressed
-            }
+                if (!slideScreen.isExpose) {
+                    slideScreen.expose(true)
+                    return@onBackPressed
+                }
 
+                super.onBackPressed()
+            }
+        } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun refreshScreens() {
+        if (on<PersistenceHandler>().access.not()) {
+            slideScreen.adapter = object : SlideScreenAdapter {
+                override fun getCount() = 1
+                override fun getSlide(position: Int) = WelcomeSlideFragment()
+                override fun getFragmentManager() = this@MapsActivity.supportFragmentManager
+            }
+        } else {
+            slideScreen.adapter = object : SlideScreenAdapter {
+                override fun getCount() = NUM_SCREENS
+
+                override fun getSlide(position: Int) = when (position) {
+                    POSITION_SCREEN_PERSONAL -> PersonalSlideFragment()
+                    POSITION_SCREEN_MAP -> on<MapViewHandler>().mapFragment
+                    POSITION_SCREEN_SETTINGS -> SettingsSlideFragment()
+                    else -> throw IndexOutOfBoundsException()
+                }
+
+                override fun getFragmentManager() = this@MapsActivity.supportFragmentManager
+            }
+
+            on<MapViewHandler>().onRequestMapOnScreenListener = {
+                slideScreen.slide = POSITION_SCREEN_MAP
+            }
+
+            slideScreen.slide = POSITION_SCREEN_MAP
         }
     }
 

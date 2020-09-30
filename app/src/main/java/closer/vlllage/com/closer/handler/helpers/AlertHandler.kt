@@ -5,8 +5,10 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import com.queatz.on.On
+
 
 class AlertHandler constructor(private val on: On) {
 

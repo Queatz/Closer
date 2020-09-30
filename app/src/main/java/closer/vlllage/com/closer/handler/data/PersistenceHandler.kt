@@ -10,10 +10,17 @@ import closer.vlllage.com.closer.handler.helpers.Val
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
+import io.reactivex.subjects.PublishSubject
 
 class PersistenceHandler constructor(private val on: On) : OnLifecycle {
 
+    private val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+        Companion.changes.onNext(key)
+    }
+
     private lateinit var sharedPreferences: SharedPreferences
+
+    val changes = Companion.changes
 
     var appsToolbarOrder: List<ContentViewType>
         get() = sharedPreferences.getString(PREFERENCE_APPS_TOOLBAR_ORDER, null)?.split(",")?.mapNotNull {
@@ -54,6 +61,13 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
         @SuppressLint("ApplySharedPref")
         set(active) {
             sharedPreferences.edit().putBoolean(PREFERENCE_MY_ACTIVE, active).commit()
+        }
+
+    var access: Boolean
+        get() = sharedPreferences.getBoolean(PREFERENCE_ACCESS, false)
+        @SuppressLint("ApplySharedPref")
+        set(active) {
+            sharedPreferences.edit().putBoolean(PREFERENCE_ACCESS, active).commit()
         }
 
     var deviceToken: String?
@@ -133,23 +147,28 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
         sharedPreferences = on<ApplicationHandler>().app.getSharedPreferences(
                 SHARED_PREFERENCES, Context.MODE_PRIVATE
         )
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
     }
 
     companion object {
-        private const val SHARED_PREFERENCES = "closer.prefs"
-        private const val PREFERENCE_APPS_TOOLBAR_ORDER = "closer.apps.toolbar.order"
-        private const val PREFERENCE_MY_STATUS = "closer.me.status"
-        private const val PREFERENCE_MY_NAME = "closer.me.name"
-        private const val PREFERENCE_MY_ACTIVE = "closer.me.active"
-        private const val PREFERENCE_MY_PHOTO = "closer.me.photo"
-        private const val PREFERENCE_MY_PRIVATE_MODE = "closer.me.private-mode"
-        private const val PREFERENCE_MY_PRIVATE_ONLY = "closer.me.private-only"
-        private const val PREFERENCE_DEVICE_TOKEN = "closer.device-token"
-        private const val PREFERENCE_PHONE = "closer.phone"
-        private const val PREFERENCE_VERIFIED = "closer.verified"
-        private const val PREFERENCE_PHONE_ID = "closer.phone.id"
-        private const val PREFERENCE_NOTIFICATIONS_PAUSED = "closer.notifications.paused"
-        private const val PREFERENCE_LAST_MAP_CENTER = "closer.map.center"
-        private const val PREFERENCE_LAST_FEED_CONTENT = "closer.feed.content"
+        val changes = PublishSubject.create<String>()
+
+        const val SHARED_PREFERENCES = "closer.prefs"
+        const val PREFERENCE_APPS_TOOLBAR_ORDER = "closer.apps.toolbar.order"
+        const val PREFERENCE_MY_STATUS = "closer.me.status"
+        const val PREFERENCE_MY_NAME = "closer.me.name"
+        const val PREFERENCE_MY_ACTIVE = "closer.me.active"
+        const val PREFERENCE_MY_PHOTO = "closer.me.photo"
+        const val PREFERENCE_MY_PRIVATE_MODE = "closer.me.private-mode"
+        const val PREFERENCE_MY_PRIVATE_ONLY = "closer.me.private-only"
+        const val PREFERENCE_DEVICE_TOKEN = "closer.device-token"
+        const val PREFERENCE_PHONE = "closer.phone"
+        const val PREFERENCE_VERIFIED = "closer.verified"
+        const val PREFERENCE_PHONE_ID = "closer.phone.id"
+        const val PREFERENCE_NOTIFICATIONS_PAUSED = "closer.notifications.paused"
+        const val PREFERENCE_LAST_MAP_CENTER = "closer.map.center"
+        const val PREFERENCE_LAST_FEED_CONTENT = "closer.feed.content"
+        const val PREFERENCE_ACCESS = "closer.access"
     }
 }

@@ -172,10 +172,8 @@ class GroupContactsHandler constructor(private val on: On) {
     private fun inviteToGroup(group: Group, phoneContact: PhoneContact) {
         val myName = on<AccountHandler>().name
         if (myName.isBlank()) {
-            on<SetNameHandler>().modifyName(object : SetNameHandler.OnNameModifiedCallback {
-                override fun onNameModified(name: String?) {
-                    sendInviteToGroup(group, phoneContact)
-                }
+            on<SetNameHandler>().modifyName({
+                sendInviteToGroup(group, phoneContact)
             }, true)
         } else {
             sendInviteToGroup(group, phoneContact)
