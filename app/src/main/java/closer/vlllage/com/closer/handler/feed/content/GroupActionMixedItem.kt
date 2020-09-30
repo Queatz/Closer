@@ -52,7 +52,7 @@ class GroupActionMixedItemAdapter(private val on: On) : MixedItemAdapter<GroupAc
                         on<ShareActivityTransitionHandler>().shareGroupActionToGroup(groupAction.id!!)
                     },
                     MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.post_now)) {
-                        proceed()
+                        holder.on<GroupActionDisplay>().fallbackGroupActionClickListener.invoke(groupAction, proceed)
                     },
                     button = ""
             )

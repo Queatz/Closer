@@ -204,6 +204,12 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 ContentViewType.HOME_QUESTS -> {
                     on<QuestHandler>().createQuest()
                 }
+                ContentViewType.HOME_LIFESTYLES -> {
+                    on<ProfileHelper>().joinLifestyle(on<PersistenceHandler>().phoneId!!)
+                }
+                ContentViewType.HOME_GOALS -> {
+                    on<ProfileHelper>().addGoal(on<PersistenceHandler>().phoneId!!)
+                }
                 else -> {
                     on<MapHandler>().center?.let { center ->
                         on<AlertHandler>().make().apply {
@@ -607,7 +613,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 on<ResourcesHandler>().resources.getString(R.string.search_lifestyles).let { hint ->
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }
-                                itemView.historyButton.visible = false
+                                itemView.historyButton.visible = true
+                                itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
+                                itemView.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.pink500))
                                 actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
@@ -631,7 +639,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 on<ResourcesHandler>().resources.getString(R.string.search_goals).let { hint ->
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }
-                                itemView.historyButton.visible = false
+                                itemView.historyButton.visible = true
+                                itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
+                                itemView.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.pink500))
                                 actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
