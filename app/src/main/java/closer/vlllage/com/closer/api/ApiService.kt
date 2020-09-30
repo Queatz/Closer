@@ -67,6 +67,7 @@ class ApiService {
 
         contentBackend = Retrofit.Builder()
                 .baseUrl(ContentBackend.BASE_URL)
+                .client(httpClient.build())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(ContentBackend::class.java)

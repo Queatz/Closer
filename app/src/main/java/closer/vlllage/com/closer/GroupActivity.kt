@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
@@ -19,6 +20,7 @@ import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -128,6 +130,8 @@ class GroupActivity : CircularRevealActivity() {
             onContactInfoChanged { redrawContacts(it) }
 
             onGroupChanged { group ->
+                view.settingsButton.setOnLongClickListener(null)
+
                 on<GroupToolbarHandler>().contentView.onNext(initialContent ?: ContentViewType.MESSAGES)
 
                 on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
@@ -173,6 +177,23 @@ class GroupActivity : CircularRevealActivity() {
                 view.groupAbout.visible = !phone.status.isNullOrBlank()
                 view.groupAbout.text = phone.status ?: ""
 
+                view.settingsButton.setOnLongClickListener {
+                    on<AlertHandler>().make().apply {
+                        title = "Terms of Use"
+                        negativeButton = "Bad"
+                        positiveButton = "Good"
+                        negativeButtonCallback = {
+                            updateTerms(phone, false)
+                        }
+                        positiveButtonCallback = {
+                            updateTerms(phone, true)
+                        }
+                        show()
+                    }
+
+                    true
+                }
+
                 if (on<MatchHandler>().active) {
                     view.meetLayout.visible = true
                     view.meetLayout.meetPrompt.text = on<ResourcesHandler>().resources.getString(R.string.want_to_meet_phone, on<NameHandler>().getName(phone))
@@ -187,6 +208,22 @@ class GroupActivity : CircularRevealActivity() {
                 }
             }
         }
+    }
+
+    private fun updateTerms(phone: Phone, good: Boolean) {
+        on<ApiHandler>().terms(phone.id!!, good)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it.success) {
+                        on<DefaultAlerts>().message("Terms updated for ${on<NameHandler>().getName(phone)}")
+                    } else {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                }).also {
+                    on<DisposableHandler>().add(it)
+                }
     }
 
     private fun redrawContacts(contactInfo: ContactInfo) {

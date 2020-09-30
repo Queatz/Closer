@@ -6,6 +6,11 @@ import retrofit2.http.*
 
 interface Backend {
 
+    // Terms
+
+    @POST("terms")
+    fun terms(@Query("phone") phoneId: String, @Query("good") good: Boolean): Single<SuccessResult>
+
     // Verify Number
 
     @GET("verify")

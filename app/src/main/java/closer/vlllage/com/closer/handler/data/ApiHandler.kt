@@ -2,7 +2,9 @@ package closer.vlllage.com.closer.handler.data
 
 import closer.vlllage.com.closer.api.ApiService
 import closer.vlllage.com.closer.api.Backend
-import closer.vlllage.com.closer.api.models.*
+import closer.vlllage.com.closer.api.models.QuestProgressResult
+import closer.vlllage.com.closer.api.models.QuestResult
+import closer.vlllage.com.closer.api.models.SuccessResult
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.QuestFlow
 import closer.vlllage.com.closer.store.models.QuestProgressFlow
@@ -19,7 +21,6 @@ import okio.Okio
 import retrofit2.HttpException
 import java.io.IOException
 import java.io.InputStream
-import java.lang.RuntimeException
 import java.util.*
 
 class ApiHandler constructor(private val on: On) {
@@ -33,6 +34,8 @@ class ApiHandler constructor(private val on: On) {
     fun setAuthorization(auth: String) {
         api.authorization = auth
     }
+
+    fun terms(phoneId: String, good: Boolean) = api { terms(phoneId, good) }
 
     fun call(phoneId: String, event: String, data: String) = api { call(phoneId, event, data) }
 
