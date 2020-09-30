@@ -17,6 +17,7 @@ enum class MixedItemType {
     MessageContact,
     Lifestyle,
     Goal,
+    Welcome,
 }
 
 abstract class MixedItem(val type: MixedItemType)

@@ -12,4 +12,5 @@ enum class FeedContent {
     CONTACTS,
     LIFESTYLES,
     GOALS,
+    WELCOME,
 }

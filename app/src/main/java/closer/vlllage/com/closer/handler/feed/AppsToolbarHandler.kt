@@ -16,6 +16,15 @@ class AppsToolbarHandler constructor(private val on: On) {
 
         toolbarAdapter.items = listOf(
                 GroupToolbarHandler.ToolbarItem(
+                        on<ResourcesHandler>().resources.getString(R.string.welcome),
+                        R.drawable.ic_baseline_school_24,
+                        {
+                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_WELCOME)
+                            on<AccountHandler>().updatePrivateOnly(false)
+                        },
+                        value = ContentViewType.HOME_WELCOME,
+                        color = R.color.green),
+                GroupToolbarHandler.ToolbarItem(
                         on<ResourcesHandler>().resources.getString(R.string.contacts),
                         R.drawable.ic_person_black_24dp,
                         {

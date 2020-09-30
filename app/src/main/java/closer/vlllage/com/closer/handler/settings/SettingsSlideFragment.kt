@@ -46,7 +46,6 @@ class SettingsSlideFragment : PoolFragment() {
         sendFeedbackButton.setOnClickListener { v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, on<ConfigHandler>().feedbackGroupId()) }
         viewPrivacyPolicyButton.setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().privacy().subscribe({ privacyPolicy -> on<DefaultAlerts>().message(privacyPolicy) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
         viewTermsOfUseButton.setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().terms().subscribe({ terms -> on<DefaultAlerts>().message(terms) }, { e -> on<DefaultAlerts>().thatDidntWork() })) }
-        showHelpButton.setOnClickListener { on<HelpHandler>().showHelp() }
         returnToMapButton.setOnClickListener { on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_MAP) }
 
         val publicNotificationsSettingsSwitch = view.findViewById<Switch>(R.id.publicNotificationsSettingsSwitch)

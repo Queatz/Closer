@@ -21,5 +21,6 @@ enum class ContentViewType {
     HOME_LIFESTYLES,
     HOME_GOALS,
     GROUP_PHOTOS,
-    GROUP_ABOUT
+    GROUP_ABOUT,
+    HOME_WELCOME
 }

@@ -35,6 +35,6 @@ class HeaderMixedItemAdapter(private val on: On) : MixedItemAdapter<HeaderMixedI
 
     private fun bindHeader(holder: HeaderViewHolder) {
         holder.on = On(on).apply { use<DisposableHandler>() }
-        holder.on<PublicGroupFeedItemHandler>().attach(holder.view) { on<FeedHandler>().show(it) }
+        holder.on<PublicGroupFeedItemHandler>().attach(holder.view) { on<FeedHandler>().show(it.value!!) }
     }
 }

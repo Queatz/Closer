@@ -17,7 +17,6 @@ import closer.vlllage.com.closer.handler.feed.FilterGroups
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageHelper
-import closer.vlllage.com.closer.handler.group.GroupToolbarHandler
 import closer.vlllage.com.closer.handler.group.SearchGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
@@ -45,8 +44,9 @@ class FeedHandler constructor(private val on: On) {
     private var groupActionsGroups = listOf<Group>()
     private var lifestyleAndGoalPhones = listOf<Phone>()
     private var isToTheTopVisible = false
-    private var content = BehaviorSubject.create<FeedContent>()
     private var loadGroupsDisposableGroup: DisposableGroup = on<DisposableHandler>().group()
+
+    var content = BehaviorSubject.create<FeedContent>()
 
     fun attach(recyclerView: RecyclerView, toTheTop: View) {
         this.recyclerView = recyclerView
@@ -337,10 +337,10 @@ class FeedHandler constructor(private val on: On) {
         }
     }
 
-    fun show(item: GroupToolbarHandler.ToolbarItem) {
+    fun show(show: ContentViewType) {
         reveal(true)
 
-        when (item.value) {
+        when (show) {
             ContentViewType.HOME_NOTIFICATIONS -> FeedContent.NOTIFICATIONS
             ContentViewType.HOME_CALENDAR -> FeedContent.CALENDAR
             ContentViewType.HOME_ACTIVITIES -> FeedContent.ACTIVITIES
@@ -352,6 +352,7 @@ class FeedHandler constructor(private val on: On) {
             ContentViewType.HOME_CONTACTS -> FeedContent.CONTACTS
             ContentViewType.HOME_LIFESTYLES -> FeedContent.LIFESTYLES
             ContentViewType.HOME_GOALS -> FeedContent.GOALS
+            ContentViewType.HOME_WELCOME -> FeedContent.WELCOME
             else -> null
         }?.let {
             content.onNext(it)

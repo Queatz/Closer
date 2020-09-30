@@ -10,7 +10,6 @@ import closer.vlllage.com.closer.handler.helpers.Val
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
-import java.lang.Exception
 
 class PersistenceHandler constructor(private val on: On) : OnLifecycle {
 
@@ -124,7 +123,7 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
         }
 
     var lastFeedTab: FeedContent?
-        get() = sharedPreferences.getString(PREFERENCE_LAST_FEED_CONTENT, null)?.let { on<Val>().valueOr(it, FeedContent.POSTS) }
+        get() = sharedPreferences.getString(PREFERENCE_LAST_FEED_CONTENT, null)?.let { on<Val>().valueOr(it, FeedContent.WELCOME) }
         @SuppressLint("ApplySharedPref")
         set(feedContent) {
             sharedPreferences.edit().putString(PREFERENCE_LAST_FEED_CONTENT, feedContent?.name).commit()

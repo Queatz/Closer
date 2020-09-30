@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallHandler
-import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
@@ -193,50 +192,12 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 actionEditHistory.visible = editable
 
                 if (editable) {
-                    actionEditIntroduction.setOnClickListener {
-                        on<DefaultInput>().show(R.string.introduction_hint, hintRes = R.string.write_here, prefill = phone.introduction, multiline = true) {
-                            on<AccountHandler>().updateAbout(introduction = it) {
-                                on<RefreshHandler>().refreshPhone(phone.id!!)
-                            }
-                        }
-                    }
-
-                    actionAddGoal.setOnClickListener {
-                        on<DefaultInput>().show(R.string.add_a_goal, hintRes = R.string.goal_hint) {
-                            on<GoalHandler>().addGoal(it, phone.id!!)
-                        }
-                    }
-
-                    actionAddLifestyle.setOnClickListener {
-                        on<DefaultInput>().show(R.string.add_a_lifestyle, hintRes = R.string.lifestyle_hint) {
-                            on<LifestyleHandler>().addLifestyle(it, phone.id!!)
-                        }
-                    }
-
-                    actionEditOfftime.setOnClickListener {
-                        on<DefaultInput>().show(R.string.offtime_hint, hintRes = R.string.write_here, prefill = phone.offtime, multiline = true) {
-                            on<AccountHandler>().updateAbout(offtime = it) {
-                                on<RefreshHandler>().refreshPhone(phone.id!!)
-                            }
-                        }
-                    }
-
-                    actionEditOccupation.setOnClickListener {
-                        on<DefaultInput>().show(R.string.occupation_hint, hintRes = R.string.write_here, prefill = phone.occupation, multiline = true) {
-                            on<AccountHandler>().updateAbout(occupation = it) {
-                                on<RefreshHandler>().refreshPhone(phone.id!!)
-                            }
-                        }
-                    }
-
-                    actionEditHistory.setOnClickListener {
-                        on<DefaultInput>().show(R.string.history_hint, hintRes = R.string.write_here, prefill = phone.history, multiline = true) {
-                            on<AccountHandler>().updateAbout(history = it) {
-                                on<RefreshHandler>().refreshPhone(phone.id!!)
-                            }
-                        }
-                    }
-
+                    actionEditIntroduction.setOnClickListener { on<ProfileHelper>().editIntroduction(phone) }
+                    actionAddGoal.setOnClickListener { on<ProfileHelper>().addGoal(phone.id!!) }
+                    actionAddLifestyle.setOnClickListener { on<ProfileHelper>().joinLifestyle(phone.id!!) }
+                    actionEditOfftime.setOnClickListener { on<ProfileHelper>().editOfftime(phone) }
+                    actionEditOccupation.setOnClickListener { on<ProfileHelper>().editOccupation(phone) }
+                    actionEditHistory.setOnClickListener { on<ProfileHelper>().editHistory(phone) }
                 }
             }
         }

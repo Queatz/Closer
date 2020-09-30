@@ -34,7 +34,6 @@ import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.create_group_modal.view.*
 import kotlinx.android.synthetic.main.feed_item_public_groups.view.*
 import java.util.*
 
@@ -97,7 +96,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         on<GroupActionRecyclerViewHandler>().attach(actionRecyclerView, GroupActionDisplay.Layout.PHOTO)
 
-        searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean -> createGroup(groupName, isPublic) })
+        searchGroupsAdapter = SearchGroupsAdapter(on, true, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean ->
+            searchGroups.setText("")
+            on<CreateGroupHelper>().createGroup(groupName, isPublic)
+        })
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         groupsRecyclerView.adapter = searchGroupsAdapter
@@ -107,7 +109,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 false
         )
 
-        searchEventsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean -> createGroup(groupName, isPublic) })
+        searchEventsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean ->
+            searchGroups.setText("")
+            on<CreateGroupHelper>().createGroup(groupName, isPublic)
+        })
         searchEventsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         eventsRecyclerView.adapter = searchEventsAdapter
@@ -117,7 +122,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 false
         )
 
-        searchHubsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean -> createGroup(groupName, isPublic) })
+        searchHubsAdapter = SearchGroupsAdapter(on, false, { group, view -> openGroup(group.id, view) }, { groupName: String, isPublic: Boolean ->
+            searchGroups.setText("")
+            on<CreateGroupHelper>().createGroup(groupName, isPublic)
+        })
         searchHubsAdapter.setLayoutResId(R.layout.search_groups_card_item)
 
         hubsRecyclerView.adapter = searchHubsAdapter
@@ -303,24 +311,29 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         toolbarAdapter = ToolbarAdapter(on, onToolbarItemSelected)
 
-        appsToolbar.layoutManager = object : LinearLayoutManager(appsToolbar.context, RecyclerView.HORIZONTAL, false) {
-        }
+        appsToolbar.layoutManager = object : LinearLayoutManager(appsToolbar.context, RecyclerView.HORIZONTAL, false) {}
 
         appsToolbar.adapter = toolbarAdapter
 
-        toolbarAdapter.selectedContentView.onNext(when (on<FeedHandler>().feedContent()) {
-            FeedContent.CALENDAR -> ContentViewType.HOME_CALENDAR
-            FeedContent.NOTIFICATIONS -> ContentViewType.HOME_NOTIFICATIONS
-            FeedContent.GROUPS -> ContentViewType.HOME_GROUPS
-            FeedContent.FRIENDS -> ContentViewType.HOME_FRIENDS
-            FeedContent.POSTS -> ContentViewType.HOME_POSTS
-            FeedContent.ACTIVITIES -> ContentViewType.HOME_ACTIVITIES
-            FeedContent.PLACES -> ContentViewType.HOME_PLACES
-            FeedContent.QUESTS -> ContentViewType.HOME_QUESTS
-            FeedContent.CONTACTS -> ContentViewType.HOME_CONTACTS
-            FeedContent.LIFESTYLES -> ContentViewType.HOME_LIFESTYLES
-            FeedContent.GOALS -> ContentViewType.HOME_GOALS
-        })
+
+        on<FeedHandler>().content.observeOn(AndroidSchedulers.mainThread()).subscribe {
+            toolbarAdapter.selectedContentView.onNext(when (it!!) {
+                FeedContent.CALENDAR -> ContentViewType.HOME_CALENDAR
+                FeedContent.NOTIFICATIONS -> ContentViewType.HOME_NOTIFICATIONS
+                FeedContent.GROUPS -> ContentViewType.HOME_GROUPS
+                FeedContent.FRIENDS -> ContentViewType.HOME_FRIENDS
+                FeedContent.POSTS -> ContentViewType.HOME_POSTS
+                FeedContent.ACTIVITIES -> ContentViewType.HOME_ACTIVITIES
+                FeedContent.PLACES -> ContentViewType.HOME_PLACES
+                FeedContent.QUESTS -> ContentViewType.HOME_QUESTS
+                FeedContent.CONTACTS -> ContentViewType.HOME_CONTACTS
+                FeedContent.LIFESTYLES -> ContentViewType.HOME_LIFESTYLES
+                FeedContent.GOALS -> ContentViewType.HOME_GOALS
+                FeedContent.WELCOME -> ContentViewType.HOME_WELCOME
+            })
+        }.also {
+            on<DisposableHandler>().add(it)
+        }
 
         updateViews()
 
@@ -347,6 +360,25 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                         updateLaunchGroupButton()
 
                         when (content) {
+                            ContentViewType.HOME_WELCOME -> {
+                                saySomethingHeader.visible = false
+                                saySomething.visible = false
+                                sendSomethingButton.visible = false
+                                peopleContainer.visible = false
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = false
+                                actionRecyclerView.visible = false
+                                suggestionsRecyclerView.visible = false
+                                groupsRecyclerView.visible = false
+                                searchGroups.visible = false
+                                itemView.historyButton.visible = false
+                                actionHeader.visible = false
+                                itemView.suggestionsHeader.visible = false
+                                itemView.placesHeader.visible = false
+                                itemView.feedText.visible = false
+                            }
                             ContentViewType.HOME_CONTACTS -> {
                                 saySomethingHeader.visible = false
                                 saySomething.visible = false
@@ -720,62 +752,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 }.also { on<DisposableHandler>().add(it) }
     }
 
-    private fun createGroup(groupName: String?, isPublic: Boolean) {
-        if (groupName.isNullOrBlank()) {
-            on<AlertHandler>().make().apply {
-                title = on<ResourcesHandler>().resources.getString(if (isPublic) R.string.create_public_group else R.string.add_new_private_group)
-                layoutResId = R.layout.create_group_modal
-                textViewId = R.id.input
-                onTextViewSubmitCallback = {
-                    addGroupDescription(it.trim(), isPublic)
-                }
-                onAfterViewCreated = { alertConfig, view ->
-                    alertConfig.alertResult = view.input
-                }
-                buttonClickCallback = {
-                    (it as EditText).text.isNotBlank()
-                }
-                positiveButton = on<ResourcesHandler>().resources.getString(R.string.continue_text)
-                show()
-            }
-        } else {
-            addGroupDescription(groupName, isPublic)
-        }
-    }
-
-    private fun addGroupDescription(groupName: String, isPublic: Boolean) {
-        searchGroups.setText("")
-
-        on<MapHandler>().center?.let { latLng ->
-            on<LocalityHelper>().getLocality(on<MapHandler>().center!!) { locality ->
-                on<AlertHandler>().make().apply {
-                    title = groupName
-                    message = if (isPublic) locality?.let { on<ResourcesHandler>().resources.getString(R.string.public_group_in_x, it) } ?: on<ResourcesHandler>().resources.getString(R.string.public_group) else on<ResourcesHandler>().resources.getString(R.string.private_group)
-                    layoutResId = R.layout.create_public_group_modal
-                    textViewId = R.id.input
-                    onTextViewSubmitCallback = { about ->
-                        val group = on<StoreHandler>().create(Group::class.java)
-                        group!!.name = groupName
-                        group.about = about
-                        group.isPublic = isPublic
-                        group.latitude = latLng.latitude
-                        group.longitude = latLng.longitude
-                        on<StoreHandler>().store.box(Group::class).put(group)
-                        on<SyncHandler>().sync(group, { groupId ->
-                            openGroup(groupId, null)
-                        })
-                    }
-                    positiveButton = on<ResourcesHandler>().resources.getString(if (isPublic) R.string.create_public_group else R.string.create_private_group)
-                    show()
-                }
-            }
-        } ?: run { on<DefaultAlerts>().thatDidntWork() }
-    }
-
     private fun openGroup(groupId: String?, view: View?) {
         on<GroupActivityTransitionHandler>().showGroupMessages(view, groupId)
     }
-
 }
 
 class ViewState {
