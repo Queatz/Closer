@@ -193,34 +193,34 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
                             "You can scroll through the tabs above to explore your area.\n\nBut first, let's get you familiar with a few things!"))
 
                     when (groups.size < 5) {
-                        true -> add(WelcomeMixedItem("<b>Communities</b>\n\nIt looks like there aren't many communities in your area, why not create one yourself?", "Create a community") {
+                        true -> add(WelcomeMixedItem("<b>Communities</b> are the best way to connect with people around topics. Join one or create your own community for others to join!\n\nIt looks like there aren't many communities in your area, why not create one yourself?", "Create a community") {
                             on<CreateGroupHelper>().createGroup(null, true)
                         })
-                        false -> add(WelcomeMixedItem("<b>Communities</b>\n\nIt looks like there are ${groups.size} communities in your area, that's a lot!", "See communities in my area") {
+                        false -> add(WelcomeMixedItem("<b>Communities</b> are the best way to connect with people around topics. Join one or create your own community for others to join!\n\nIt looks like there are ${groups.size} communities in your area, that's a lot!", "See communities in my area") {
                             on<FeedHandler>().show(ContentViewType.HOME_GROUPS)
                         })
                     }
 
                     when (groupActions.size < 5) {
-                        false -> add(WelcomeMixedItem("<b>Activities</b>\n\nIt looks like there are ${groupActions.size} activities in your area, that's a lot!", "See activities in my area") {
+                        false -> add(WelcomeMixedItem("Browse <b>Activities</b> to find things to do in your area.\n\nIt looks like there are ${groupActions.size} activities in your area, that's a lot!", "See activities in my area") {
                             on<FeedHandler>().show(ContentViewType.HOME_ACTIVITIES)
                         })
                     }
 
                     when (lifestyles.size > 0) {
-                        true -> add(WelcomeMixedItem("<b>Lifestyles</b>\n\nIt looks like there are ${lifestyles.size} lifestyles in your area, why not go check them out?", "See lifestyles in my area") {
+                        true -> add(WelcomeMixedItem("<b>Lifestyles</b> are a great way to get to know people! Join one or create your own.\n\nIt looks like there are ${lifestyles.size} lifestyles in your area, why not go check them out?", "See lifestyles in my area") {
                             on<FeedHandler>().show(ContentViewType.HOME_LIFESTYLES)
                         })
-                        false -> add(WelcomeMixedItem("<b>Lifestyles</b>\n\nIt looks like there are no lifestyles in your area, why not join one yourself?", "Join a lifestyle") {
+                        false -> add(WelcomeMixedItem("<b>Lifestyles</b> are a great way to get to know people! Join one or create your own.\n\nIt looks like there are no lifestyles in your area, why not join one yourself?", "Join a lifestyle") {
                             on<ProfileHelper>().joinLifestyle(on<PersistenceHandler>().phoneId!!)
                         })
                     }
 
                     when (goals.size > 0) {
-                        true -> add(WelcomeMixedItem("<b>Goals</b>\n\nIt looks like there are ${goals.size} goals in your area, why not go check them out?", "See goals in my area") {
+                        true -> add(WelcomeMixedItem("<b>Goals</b> help you know what people are going for around you.  Share someone's goal, or make your own.\n\nIt looks like there are ${goals.size} goals in your area, why not go check them out?", "See goals in my area") {
                             on<FeedHandler>().show(ContentViewType.HOME_GOALS)
                         })
-                        false -> add(WelcomeMixedItem("<b>Goals</b>\n\nIt looks like there are no goals in your area, why not join one yourself?", "Add a goal") {
+                        false -> add(WelcomeMixedItem("<b>Goals</b> help you know what people are going for around you.  Share someone's goal, or make your own.\n\nIt looks like there are no goals in your area, why not join one yourself?", "Add a goal") {
                             on<ProfileHelper>().addGoal(on<PersistenceHandler>().phoneId!!)
                         })
                     }
