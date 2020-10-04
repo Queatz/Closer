@@ -10,10 +10,8 @@ import closer.vlllage.com.closer.handler.call.CallConnectionHandler
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.NotificationHandler
-import closer.vlllage.com.closer.handler.data.NotificationHandler.Companion.EXTRA_MUTE
 import closer.vlllage.com.closer.handler.data.NotificationHandler.Companion.EXTRA_NOTIFICATION
 import closer.vlllage.com.closer.handler.data.NotificationHandler.Companion.KEY_TEXT_REPLY
-import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ToastHandler
 
@@ -26,9 +24,6 @@ class Background : BroadcastReceiver() {
         if (intent.getBooleanExtra(EXTRA_IGNORE_CALL, false)) {
             intent.getStringExtra(EXTRA_PHONE)?.let { app.on<CallConnectionHandler>().endCall(it) }
             app.on<NotificationHandler>().hideFullScreen()
-        } else if (intent.getBooleanExtra(EXTRA_MUTE, false)) {
-            app.on<PersistenceHandler>().isNotificationsPaused = true
-            app.on<ToastHandler>().show(R.string.all_notifications_muted)
         } else {
             val remoteInput = RemoteInput.getResultsFromIntent(intent)
             if (remoteInput != null) {

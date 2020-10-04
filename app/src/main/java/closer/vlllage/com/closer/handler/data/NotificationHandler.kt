@@ -293,10 +293,6 @@ class NotificationHandler constructor(private val on: On) {
                      fullScreenIgnoreIntent: Intent? = null) {
         val context = on<ApplicationHandler>().app
 
-        if (on<PersistenceHandler>().isNotificationsPaused) {
-            return
-        }
-
         if (VERSION.SDK_INT >= VERSION_CODES.O) {
             NotificationChannel(notificationChannel(),
                     context.getString(R.string.closer_notifications),
@@ -345,23 +341,6 @@ class NotificationHandler constructor(private val on: On) {
                     .build()
 
             builder.addAction(action)
-        }
-
-        if (fullScreenIntent == null) {
-            val muteBackgroundIntent = Intent(context, Background::class.java)
-            muteBackgroundIntent.putExtra(EXTRA_MUTE, true)
-            muteBackgroundIntent.putExtra(EXTRA_NOTIFICATION, notificationTag)
-
-            val mutePendingIntent = PendingIntent.getBroadcast(context,
-                    REQUEST_CODE_NOTIFICATION_MUTE,
-                    muteBackgroundIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT)
-
-            val muteAction = NotificationCompat.Action.Builder(R.drawable.ic_notifications_paused_white_24dp,
-                    on<ResourcesHandler>().resources.getString(R.string.mute), mutePendingIntent)
-                    .build()
-
-            builder.addAction(muteAction)
         }
 
         fullScreenIntent?.let { it ->
@@ -439,10 +418,8 @@ class NotificationHandler constructor(private val on: On) {
         const val NOTIFICATION_ID = 0
         const val FULLSCREEN_NOTIFICATION_ID = 1
         private const val REQUEST_CODE_NOTIFICATION = 101
-        private const val REQUEST_CODE_NOTIFICATION_MUTE = 102
         private const val REQUEST_CODE_NOTIFICATION_ANSWER = 103
         private const val REQUEST_CODE_NOTIFICATION_IGNORE = 104
         const val EXTRA_NOTIFICATION = "notification"
-        const val EXTRA_MUTE = "mute"
     }
 }

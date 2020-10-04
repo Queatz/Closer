@@ -98,13 +98,6 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
             sharedPreferences.edit().putString(PREFERENCE_PHONE_ID, phoneId).commit()
         }
 
-    var isNotificationsPaused: Boolean
-        get() = sharedPreferences.getBoolean(PREFERENCE_NOTIFICATIONS_PAUSED, false)
-        @SuppressLint("ApplySharedPref")
-        set(isNotificationsPaused) {
-            sharedPreferences.edit().putBoolean(PREFERENCE_NOTIFICATIONS_PAUSED, isNotificationsPaused).commit()
-        }
-
     var privateMode: Boolean
         get() = sharedPreferences.getBoolean(PREFERENCE_MY_PRIVATE_MODE, false)
         @SuppressLint("ApplySharedPref")

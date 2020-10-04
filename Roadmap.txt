@@ -1,4 +1,36 @@
 
+Incoming
+========
+
+
+
+[ ] thought: react to people's goals
+[ ] thought: find a new interest
+[ ] thought: Ideas tab
+[ ] thought: name it Let's get closer
+
+[ ] feature: view directory at bottom of contacts screen
+[ ] feature: show activities inline on contacts rab
+[ ] feature: edit event price
+[ ] feature: goal and lifestyle backgrounds
+
+[x] delete: remove "mute closer" entirely
+
+[ ] guide: assistant, angel, guide, life guide
+[ ] guide: idea button
+[ ] guide: remove welcome tab, add your guide
+[ ] guide: add Xable messages to top of feed tabs
+[ ] guide: guides by people, Outdoor Adventure by Jacob
+
+[ ] bug: recent change is breaking feed
+[ ] bug: overlapping events
+[ ] bug: change group photo isn't updating from feed
+[ ] bug: Active X ago on group card needs shadow
+[ ] bug: Talk with Unknown... not using fallback name
+[ ] bug: white on white when no background on profile
+[ ] bug: call button not turning white in colored mode
+[ ] bug: groups should not start scrolled to the end of the list
+
 
 Rename "Public -> Anyone"
 Invite to join, Private Community & Social Activities

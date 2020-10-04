@@ -5,7 +5,6 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActionBarButton
 import closer.vlllage.com.closer.handler.group.MyGroupsAdapter
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import com.queatz.on.On
 
@@ -50,23 +49,6 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
         }
     }
 
-    private val unmuteNotificationsButtonHandle = object : GroupActionBarButtonHandle {
-        override fun set() {
-            val action = on<ResourcesHandler>().resources.getString(R.string.unmute_notifications)
-            unmuteNotificationsButton = GroupActionBarButton(action, {
-                on<PersistenceHandler>().isNotificationsPaused = false
-                on<ToastHandler>().show(R.string.notifications_on)
-                actions.remove(unmuteNotificationsButton)
-                myGroupsAdapter!!.setActions(actions)
-            })
-        }
-
-        override fun get() = unmuteNotificationsButton
-        override fun unset() {
-            unmuteNotificationsButton = null
-        }
-    }
-
     private val setMyNameHandle = object : GroupActionBarButtonHandle {
         override fun set() {
             val action = on<ResourcesHandler>().resources.getString(R.string.set_my_name)
@@ -94,10 +76,6 @@ class MyGroupsLayoutActionsHandler constructor(private val on: On) {
 
     internal fun showVerifyMyNumber(show: Boolean) {
         show(verifyYourNumberButtonHandle, show, -1)
-    }
-
-    internal fun showUnmuteNotifications(show: Boolean) {
-        show(unmuteNotificationsButtonHandle, show, 0)
     }
 
     internal fun showSetMyName(show: Boolean) {

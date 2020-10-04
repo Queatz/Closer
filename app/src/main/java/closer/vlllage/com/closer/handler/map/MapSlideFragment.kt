@@ -318,8 +318,6 @@ class MapSlideFragment : PoolFragment() {
         }
 
         val locationPermissionDenied = on<PermissionHandler>().denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        val isNotificationsPaused = on<PersistenceHandler>().isNotificationsPaused
-        on<MyGroupsLayoutActionsHandler>().showUnmuteNotifications(isNotificationsPaused)
         on<MyGroupsLayoutActionsHandler>().showSetMyName(on<AccountHandler>().name.isBlank())
 
         if (locationPermissionGranted && locationPermissionWasDenied) {
