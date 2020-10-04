@@ -70,7 +70,7 @@ open class SearchGroupsAdapter constructor(
                 holder.on = On()
 
                 if (position >= itemCount - createGroupCount) {
-                    holder.action.text = on<ResourcesHandler>().resources.getString(R.string.create_group)
+                    holder.action.text = on<ResourcesHandler>().resources.getString(R.string.continue_text)
                     holder.about.text = on<ResourcesHandler>().resources.getString(if (createIsPublic) R.string.add_new_public_group else R.string.add_new_private_group)
                     holder.backgroundPhoto.visible = false
                     setShadows(holder, false)

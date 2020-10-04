@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.handler.quest
 
 import android.view.View
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import androidx.core.view.children
@@ -29,7 +30,6 @@ import kotlinx.android.synthetic.main.add_progress_modal.view.*
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.actionRecyclerView
 import kotlinx.android.synthetic.main.create_post_select_group_action.view.searchActivities
 import kotlinx.android.synthetic.main.create_quest_modal.view.*
-import kotlinx.android.synthetic.main.create_quest_modal.view.name
 import kotlinx.android.synthetic.main.edit_quest_action_modal.view.*
 import kotlinx.android.synthetic.main.edit_quest_duration_modal.view.*
 import kotlinx.android.synthetic.main.edit_quest_finish_date_modal.view.*
@@ -512,7 +512,7 @@ class QuestHandler(private val on: On) {
     private fun updateToggleButtonWeights(group: MaterialButtonToggleGroup) {
         group.children.forEach {
             it.updateLayoutParams<LinearLayout.LayoutParams> {
-                weight = if (it.id == group.checkedButtonId) 0f else 1f
+                width = if (it.id == group.checkedButtonId) WRAP_CONTENT else 0
             }
         }
     }

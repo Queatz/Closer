@@ -573,19 +573,19 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                             }
                             ContentViewType.HOME_FRIENDS -> {
                                 val explore = content === ContentViewType.HOME_GROUPS
-                                eventsRecyclerView.visible = state.hasEvents
-                                hubsRecyclerView.visible = state.hasPlaces
-                                actionRecyclerView.visible = state.hasGroupActions
+                                eventsRecyclerView.visible = false
+                                hubsRecyclerView.visible = false
+                                actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
                                 groupsRecyclerView.visible = true
-                                eventsHeader.visible = state.hasEvents
-                                groupsHeader.visible = true
+                                eventsHeader.visible = false
+                                groupsHeader.visible = false
+                                actionHeader.visible = false
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
                                 itemView.historyButton.visible = explore
                                 itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
                                 itemView.historyButton.imageTintList = null
-                                actionHeader.visible = state.hasGroupActions
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = state.hasPlaces
                                 itemView.feedText.visible = true
@@ -595,9 +595,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 sendSomethingButton.visible = false
                                 peopleContainer.visible = false
                                 itemView.placesHeader.setText(R.string.your_places)
-                                actionHeader.setText(R.string.your_things_to_do)
-                                eventsHeader.setText(R.string.your_events)
-                                groupsHeader.setText(R.string.your_groups)
+                                groupsHeader.setText(R.string.groups)
                                 itemView.feedText.setText(R.string.conversations)
                                 searchGroupsAdapter.setCreateIsPublic(false)
                                 searchGroupsAdapter.showCreateOption(true)

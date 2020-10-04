@@ -94,7 +94,6 @@
     <string name="enable_location_permission_rationale">Откройте настройки системы, найдите Closer, нажмите «Разрешения», а затем включите «Местоположение».</string>
     <string name="enable_contacts_permission_rationale">Откройте настройки системы, найдите Closer, нажмите «Разрешения», а затем включите «Контакты».</string>
     <string name="show_help">Показать справку</string>
-    <string name="help_message_html">Спасибо за использование Closer! &lt;br /&gt;&lt;br /&gt;Closer - это то, что вам нужно, чтобы стать ближе с друзьями. &lt;br /&gt;&lt;br /&gt;&lt;b&gt;Убедитесь, что ваш номер&lt;/b&gt; автоматически добавлен в любые группы, в которые вы были приглашены. &lt;br /&gt;&lt;br /&gt;&lt;b&gt;Добавьте свои собственные группы,&lt;/b&gt; пригласите своих друзей и начните действовать. &lt;br /&gt;&lt;br /&gt;&lt;span style="color:#2196F3"&gt;&lt;b&gt;Синие&lt;/b&gt;&lt;/span&gt; группы являются частными и предназначены только для ваших друзей. &lt;br /&gt;&lt;br /&gt;&lt;span style="color:#8BC34A"&gt;&lt;b&gt;Зеленые&lt;/b&gt;&lt;/span&gt; группы являются общедоступными. &lt;br /&gt;&lt;br /&gt;&lt;span style="color:#9c27b0"&gt;&lt;b&gt;Фиолетовые&lt;/b&gt;&lt;/span&gt; группы - это места на карте. &lt;br /&gt;&lt;br /&gt;&lt;span style="color:#f44336"&gt;&lt;b&gt;Красные&lt;/b&gt;&lt;/span&gt; группы - это события. &lt;br /&gt;&lt;br /&gt;Наслаждайтесь!</string>
     <string name="you_hid_the_help_bubble">Поздравляем, вы скрыли всплывающую справку!</string>
     <string name="search_public_groups_hint">Поиск групп</string>
     <string name="search_events_hint">Поиск событий</string>
@@ -155,7 +154,6 @@
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="group_settings">Настройки группы</string>
     <string name="return_to_map">Вернуться к карте</string>
-    <string name="public_group">Общедоступная группа</string>
     <string name="private_group_message">Только участники могут отправлять и видеть сообщения в этой группе, и любой член группы может добавлять в группу дополнительных друзей.</string>
     <string name="public_group_message">Любой может отправлять и видеть сообщения в этой группе.</string>
     <string name="public_group_title">Это открытая группа</string>
@@ -383,7 +381,7 @@
     <string name="resize_photo">Изменить размер фото</string>
     <string name="cannot_delete_last_message">Ваше сообщение должно содержать хотя бы один раздел.</string>
     <string name="blank_sections_error">Заполните или удалите пустые разделы перед публикацией.</string>
-    <string name="public_group_in_x">Общедоступная группа в %1$s</string>
+    <string name="group_in_x">Общедоступная группа в %1$s</string>
     <string name="goal_hint">Опишите цель</string>
     <string name="lifestyle_hint">Опишите образ жизни</string>
     <string name="create_place">Добавить место</string>

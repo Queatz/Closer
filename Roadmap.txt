@@ -2,8 +2,6 @@
 Incoming
 ========
 
-
-
 [ ] thought: react to people's goals
 [ ] thought: find a new interest
 [ ] thought: Ideas tab

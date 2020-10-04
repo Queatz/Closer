@@ -39,7 +39,7 @@ class CreateGroupHelper(private val on: On) {
             on<LocalityHelper>().getLocality(on<MapHandler>().center!!) { locality ->
                 on<AlertHandler>().make().apply {
                     title = groupName
-                    message = if (isPublic) locality?.let { on<ResourcesHandler>().resources.getString(R.string.public_group_in_x, it) } ?: on<ResourcesHandler>().resources.getString(R.string.public_group) else on<ResourcesHandler>().resources.getString(R.string.private_group)
+                    message = if (isPublic) locality?.let { on<ResourcesHandler>().resources.getString(R.string.group_in_x, it) } ?: on<ResourcesHandler>().resources.getString(R.string.group) else on<ResourcesHandler>().resources.getString(R.string.private_group)
                     layoutResId = R.layout.create_public_group_modal
                     textViewId = R.id.input
                     onTextViewSubmitCallback = { about ->

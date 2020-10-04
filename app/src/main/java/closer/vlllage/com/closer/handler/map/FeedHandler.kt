@@ -252,9 +252,12 @@ class FeedHandler constructor(private val on: On) {
         val distance = on<HowFar>().about7Miles
 
         val queryBuilder = when (feedContent()) {
-            FeedContent.FRIENDS -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false).and(Group_.direct.equal(false)))
+            FeedContent.FRIENDS -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false).and(Group_.direct.equal(false).and(Group_.eventId.isNull)
+                    .and(Group_.phoneId.isNull)
+                    .and(Group_.ofId.isNull)))
             else -> on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(true)
                     .and(Group_.eventId.isNull)
+                    .and(Group_.direct.equal(false))
                     .and(Group_.phoneId.isNull)
                     .and(Group_.ofId.isNull)
                     .and(Group_.updated.greater(on<TimeAgo>().oneMonthAgo(3)))
