@@ -25,7 +25,7 @@ Incoming
 [ ] bug: recent change is breaking feed
 [ ] bug: change group photo isn't updating from feed
 [ ] bug: Active X ago on group card needs shadow
-[ ] bug: white on white when no background on profile
+[x] bug: white on white when no background on profile
 [x] bug: groups should not start scrolled to the end of the list
 [x] bug: overlapping events
 [x] bug: Talk with Unknown... not using fallback name
@@ -40,11 +40,11 @@ Top
 ===
 
  [ ] showVerifyMyNumber -> Personal slide
- [X] showAllowLocationPermissionsInSettings -> Locate me button
  [ ] showUnmuteNotifications -> Top of feed above apps toolbar
- [X] showHelpButton -> gone
  [ ] showSetMyName -> better visual of no name personal slide
  [ ] showMeetPeople -> in my groups?
+ [X] showAllowLocationPermissionsInSettings -> Locate me button
+ [X] showHelpButton -> gone
  [X] showFeatureRequests -> Settings slide
  [X] showInviteCard -> Above locate me
 

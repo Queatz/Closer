@@ -73,7 +73,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 aboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.about_x, name)
                 moreAboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.more_about_x, name)
 
-                if (phone.photo.isNullOrEmpty()) {
+                if (group?.photo.isNullOrEmpty()) {
                     on<LightDarkHandler>().setLight(true)
                 } else {
                     on<LightDarkHandler>().setLight(on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME])
