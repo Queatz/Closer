@@ -5,27 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.group.GroupActionDisplay
+import closer.vlllage.com.closer.handler.group.GroupActionRecyclerViewHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.PhotoHelper
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.TimeStr
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.GroupContact
-import closer.vlllage.com.closer.store.models.GroupContact_
-import closer.vlllage.com.closer.store.models.Phone
+import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.messages_contact_item.view.*
 
 class MessagesContactMixedItem(val group: Group) : MixedItem(MixedItemType.MessageContact)
-
 class MessagesContactViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.MessageContact) {
     lateinit var on: On
     val click = itemView.click!!
@@ -33,12 +29,14 @@ class MessagesContactViewHolder(itemView: View) : MixedItemViewHolder(itemView, 
     val name = itemView.name!!
     val lastMessage = itemView.lastMessage!!
     val callButton = itemView.callButton!!
+    val actionRecyclerView = itemView.actionRecyclerView!!
 }
 
 class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<MessagesContactMixedItem, MessagesContactViewHolder> {
     override fun bind(holder: MessagesContactViewHolder, item: MessagesContactMixedItem, position: Int) {
         holder.on = On(on).apply {
             use<DisposableHandler>()
+            use<LightDarkHandler>().setLight(true)
         }
         holder.name.setTextColor(ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)))
         holder.name.text = on<ResourcesHandler>().resources.getString(R.string.loading)
@@ -52,6 +50,16 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
         holder.click.setOnClickListener {
             on<GroupActivityTransitionHandler>().showGroupMessages(holder.click, item.group.id!!)
         }
+
+        holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionDisplay.Layout.TEXT)
+        holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
+                .equal(GroupAction_.group, item.group.id!!)
+                .build().subscribe().single()
+                .on(AndroidScheduler.mainThread())
+                .observer { groupActions ->
+                    holder.on<GroupActionRecyclerViewHandler>().recyclerView!!.visible = groupActions.isNotEmpty()
+                    holder.on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
+                })
 
         on<StoreHandler>().store.box(GroupContact::class).query(
                 GroupContact_.groupId.equal(item.group.id!!).and(
@@ -102,6 +110,8 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
         } else {
             holder.lastMessage.text = on<TimeStr>().prettyDate(group.updated)
         }
+
+        holder.actionRecyclerView
     }
 
     override fun getMixedItemClass() = MessagesContactMixedItem::class

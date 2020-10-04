@@ -27,6 +27,8 @@ class GroupNameHelper(private val on: On) {
         }, {}).also { on<DisposableHandler>().add(it) }
     }
 
+    fun getName(groupId: String) = on<DataHandler>().getGroup(groupId).flatMap { getName(it) }
+
     fun getName(group: Group): Single<String> {
         return when {
             group.direct -> on<DirectGroupHandler>().getContactName(group.id!!)

@@ -23,6 +23,10 @@ import kotlinx.android.synthetic.main.create_post_select_group_action.view.*
 open class CreatePostAdapter(protected val on: On, private val action: (CreatePostAction) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var groupName: String = on<ResourcesHandler>().resources.getString(R.string.app_name)
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
 
     var items: List<PostSection> = listOf()
         set(value) {

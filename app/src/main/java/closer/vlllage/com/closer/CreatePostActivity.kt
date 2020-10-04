@@ -88,7 +88,7 @@ class CreatePostActivity : ListActivity() {
             }
         }
 
-        adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.loading_people))
+        adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.create_a_post))
 
         on<DataHandler>().getGroup(groupId!!).subscribe({
             setGroup(it)
@@ -118,7 +118,6 @@ class CreatePostActivity : ListActivity() {
 
     private fun setGroup(group: Group) {
         on<GroupNameHelper>().getName(group).observeOn(AndroidSchedulers.mainThread()).subscribe({
-            adapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.post_in, it))
             adapter.groupName = it
         }, { on<DefaultAlerts>().thatDidntWork() }).also {
             on<DisposableHandler>().add(it)

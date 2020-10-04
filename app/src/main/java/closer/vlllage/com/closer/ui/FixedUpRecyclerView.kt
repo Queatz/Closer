@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.children
+import androidx.core.view.doOnNextLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -24,13 +25,13 @@ open class FixedUpRecyclerView : RecyclerView {
         setOnHierarchyChangeListener(object : OnHierarchyChangeListener {
             override fun onChildViewRemoved(parent: View, child: View) {
                 if ((layoutManager as? LinearLayoutManager)?.orientation != HORIZONTAL) return
-                if (child.height == 0 || parent.height >= child.height) post { requestLayout() }
+                if (child.height == 0 || parent.height >= child.height) requestLayout()
             }
 
             override fun onChildViewAdded(parent: View, child: View) {
                 if ((layoutManager as? LinearLayoutManager)?.orientation != HORIZONTAL) return
-                if (child.height == 0 || parent.height <= child.height) post { requestLayout() }
-                if (child.height == 0) child.post { child.requestLayout() }
+                if (child.height == 0 || parent.height <= child.height) requestLayout()
+                if (child.height == 0) child.post { requestLayout() }
             }
         })
     }
@@ -54,7 +55,7 @@ open class FixedUpRecyclerView : RecyclerView {
         // Check https://stackoverflow.com/questions/49371866/recyclerview-wont-update-child-until-i-scroll
         if (!mRequestedLayout) {
             mRequestedLayout = true
-            post {
+            doOnNextLayout {
                 mRequestedLayout = false
                 layout(left, top, right, bottom)
                 onLayout(false, left, top, right, bottom)

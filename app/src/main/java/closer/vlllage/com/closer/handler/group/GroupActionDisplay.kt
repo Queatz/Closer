@@ -15,7 +15,6 @@ import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
-import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.quest.QuestHandler
@@ -198,7 +197,7 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     private fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
-        on<DataHandler>().getGroup(groupAction.group!!).observeOn(AndroidSchedulers.mainThread()).subscribe({ group ->
+        on<GroupNameHelper>().getName(groupAction.group!!).observeOn(AndroidSchedulers.mainThread()).subscribe({ groupName ->
             on<AlertHandler>().make().apply {
                 val noComment = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.firstOrNull()?.asJsonObject?.let {
                     if (it.has("noComment")) it["noComment"].asBoolean else false
@@ -233,7 +232,7 @@ class GroupActionDisplay constructor(private val on: On) {
 
                 title = "${on<AccountHandler>().name} ${groupAction.intent}"
                 message = "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it"} ?: ""}".let { if (it.isBlank()) null else it }
-                positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_in, group.name ?: on<ResourcesHandler>().resources.getString(R.string.app_name))
+                positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_in, groupName)
                 show()
             }
         }, {

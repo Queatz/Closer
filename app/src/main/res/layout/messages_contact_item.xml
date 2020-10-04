@@ -36,7 +36,7 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padDouble"
             app:layout_constraintTop_toTopOf="@+id/photo"
@@ -53,19 +53,37 @@
 
         <TextView
             android:id="@+id/lastMessage"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padDouble"
             app:layout_constraintStart_toEndOf="@+id/photo"
             app:layout_constraintEnd_toStartOf="@+id/callButton"
             app:layout_constraintTop_toBottomOf="@+id/name"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/actionRecyclerView"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constrainedWidth="true"
             android:lineSpacingMultiplier="1.5"
             android:textSize="@dimen/textSizeSmall"
             android:textColor="@color/textHintInverse"
             tools:text="Sent a photo" />
+
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+            android:id="@+id/actionRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad"
+            app:layout_constraintStart_toEndOf="@+id/photo"
+            app:layout_constraintEnd_toStartOf="@+id/callButton"
+            app:layout_constraintTop_toBottomOf="@+id/lastMessage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constrainedWidth="true"
+            android:paddingEnd="@dimen/pad"
+            android:paddingBottom="@dimen/pad"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
 
         <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/callButton"

@@ -145,7 +145,7 @@ open class SearchGroupsAdapter constructor(
                             .build().subscribe().single()
                             .on(AndroidScheduler.mainThread())
                             .observer { groupActions ->
-                                holder.on<GroupActionRecyclerViewHandler>().recyclerView!!.visibility = if (groupActions.isEmpty()) View.GONE else View.VISIBLE
+                                holder.on<GroupActionRecyclerViewHandler>().recyclerView!!.visible = groupActions.isNotEmpty()
                                 holder.on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
                             })
 
