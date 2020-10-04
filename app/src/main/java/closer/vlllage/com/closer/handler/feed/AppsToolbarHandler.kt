@@ -7,6 +7,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupToolbarHandler
 import closer.vlllage.com.closer.handler.group.ToolbarAdapter
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.map.FeedHandler
 import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
 
@@ -19,7 +20,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.welcome),
                         R.drawable.ic_baseline_school_24,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_WELCOME)
+                            on<FeedHandler>().show(ContentViewType.HOME_WELCOME)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_WELCOME,
@@ -28,7 +29,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.contacts),
                         R.drawable.ic_person_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CONTACTS)
+                            on<FeedHandler>().show(ContentViewType.HOME_CONTACTS)
                             on<AccountHandler>().updatePrivateOnly(true)
                         },
                         value = ContentViewType.HOME_CONTACTS,
@@ -37,7 +38,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.posts),
                         R.drawable.ic_whatshot_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_POSTS)
+                            on<FeedHandler>().show(ContentViewType.HOME_POSTS)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_POSTS,
@@ -46,7 +47,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.notifications),
                         R.drawable.ic_notifications_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_NOTIFICATIONS)
+                            on<FeedHandler>().show(ContentViewType.HOME_NOTIFICATIONS)
                         },
                         value = ContentViewType.HOME_NOTIFICATIONS,
                         color = R.color.colorAccent),
@@ -54,7 +55,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.places),
                         R.drawable.ic_location_on_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_PLACES)
+                            on<FeedHandler>().show(ContentViewType.HOME_PLACES)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_PLACES,
@@ -63,7 +64,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.events),
                         R.drawable.ic_event_note_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_CALENDAR)
+                            on<FeedHandler>().show(ContentViewType.HOME_CALENDAR)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_CALENDAR,
@@ -73,7 +74,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.communities),
                         R.drawable.ic_location_city_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_GROUPS)
+                            on<FeedHandler>().show(ContentViewType.HOME_GROUPS)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_GROUPS,
@@ -82,7 +83,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.quests),
                         R.drawable.ic_baseline_terrain_24,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_QUESTS)
+                            on<FeedHandler>().show(ContentViewType.HOME_QUESTS)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_QUESTS,
@@ -91,7 +92,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.things_to_do),
                         R.drawable.ic_beach_access_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_ACTIVITIES)
+                            on<FeedHandler>().show(ContentViewType.HOME_ACTIVITIES)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_ACTIVITIES,
@@ -100,7 +101,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.lifestyles),
                         R.drawable.ic_star_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_LIFESTYLES)
+                            on<FeedHandler>().show(ContentViewType.HOME_LIFESTYLES)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_LIFESTYLES,
@@ -109,7 +110,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.goals),
                         R.drawable.ic_baseline_flag_24,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_GOALS)
+                            on<FeedHandler>().show(ContentViewType.HOME_GOALS)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_GOALS,
@@ -118,7 +119,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         on<ResourcesHandler>().resources.getString(R.string.groups),
                         R.drawable.ic_group_black_24dp,
                         {
-                            toolbarAdapter.selectedContentView.onNext(ContentViewType.HOME_FRIENDS)
+                            on<FeedHandler>().show(ContentViewType.HOME_FRIENDS)
                             on<AccountHandler>().updatePrivateOnly(false)
                         },
                         value = ContentViewType.HOME_FRIENDS,

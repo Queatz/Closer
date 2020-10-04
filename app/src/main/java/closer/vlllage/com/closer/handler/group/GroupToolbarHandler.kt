@@ -40,7 +40,6 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         on<DisposableHandler>().add(contentView.subscribe {
             show(on<GroupHandler>().group)
-            adapter.selectedContentView.onNext(it)
         })
 
         adapter.selectedContentView.distinctUntilChanged()

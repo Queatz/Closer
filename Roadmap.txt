@@ -23,13 +23,13 @@ Incoming
 [ ] guide: guides by people, Outdoor Adventure by Jacob
 
 [ ] bug: recent change is breaking feed
-[ ] bug: overlapping events
 [ ] bug: change group photo isn't updating from feed
 [ ] bug: Active X ago on group card needs shadow
-[ ] bug: Talk with Unknown... not using fallback name
 [ ] bug: white on white when no background on profile
-[ ] bug: call button not turning white in colored mode
-[ ] bug: groups should not start scrolled to the end of the list
+[x] bug: groups should not start scrolled to the end of the list
+[x] bug: overlapping events
+[x] bug: Talk with Unknown... not using fallback name
+[x] bug: call button not turning white in colored mode
 
 
 Rename "Public -> Anyone"

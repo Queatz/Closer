@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.group.DirectGroupHandler
 import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
 import io.reactivex.Single
@@ -31,6 +32,7 @@ class GroupNameHelper(private val on: On) {
             group.direct -> on<DirectGroupHandler>().getContactName(group.id!!)
             !group.name.isNullOrBlank() -> Single.just(group.name!!)
             group.physical -> on<PhysicalGroupHandler>().physicalGroupName(group)
+            group.hasPhone() -> on<NameHandler>().getNameAsync(group.phoneId!!)
             else -> Single.just(on<ResourcesHandler>().resources.getString(R.string.unknown))
         }
     }

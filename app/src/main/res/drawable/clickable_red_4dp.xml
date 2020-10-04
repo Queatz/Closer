@@ -9,6 +9,7 @@
                         android:endColor="@color/redLight"
                         android:angle="90" />
                     <corners android:radius="4dp" />
+                    <stroke android:color="@color/white_50" android:width="2dp" />
                 </shape>
             </item>
         </ripple>

@@ -365,6 +365,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
                         updateLaunchGroupButton()
 
+                        groupsRecyclerView.scrollToPosition(0)
+                        eventsRecyclerView.scrollToPosition(0)
+                        hubsRecyclerView.scrollToPosition(0)
+                        actionRecyclerView.scrollToPosition(0)
+                        suggestionsRecyclerView.scrollToPosition(0)
+                        peopleRecyclerView.scrollToPosition(0)
+
                         when (content) {
                             ContentViewType.HOME_WELCOME -> {
                                 saySomethingHeader.visible = false

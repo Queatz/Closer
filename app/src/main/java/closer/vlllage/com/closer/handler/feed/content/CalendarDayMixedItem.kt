@@ -114,7 +114,9 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
             it.get(Calendar.DAY_OF_YEAR)
         }
 
-        holder.events?.forEach { event ->
+        val overlapping = Overlapping()
+
+        holder.events?.sortedBy { it.startsAt }?.forEach { event ->
             val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.day, false)
 
             view.name.text = event.name
@@ -124,13 +126,17 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 
                 topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                 startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
                 width = ViewGroup.LayoutParams.MATCH_PARENT
                 height = h.toInt()
                 constrainedHeight = true
                 constrainedWidth = true
-                marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
+                marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3 +
+                        on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 4 * overlapping.count(event)
                 marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
             }
+
+            overlapping.add(event)
 
             view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
                 it.time = event.startsAt!!
@@ -152,5 +158,17 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
             holder.day.addView(view)
             holder.views.add(view)
         }
+    }
+}
+
+class Overlapping {
+    val events = mutableListOf<Event>()
+
+    fun add(event: Event) {
+        events.add(event)
+    }
+
+    fun count(event: Event) = events.count {
+        it.startsAt!!.before(event.endsAt) && it.endsAt!!.after(event.startsAt)
     }
 }

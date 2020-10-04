@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.content.res.ColorStateList
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +11,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
-import closer.vlllage.com.closer.handler.helpers.DisposableGroup
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.pool.PoolActivityFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -49,6 +47,9 @@ class GroupMessagesFragment : PoolActivityFragment() {
         disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
             sendButton.imageTintList = it.tint
             sendButton.setBackgroundResource(it.clickableRoundedBackground)
+            callButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(
+                    if (it.light) R.color.green else R.color.text
+            ))
             callButton.setBackgroundResource(it.clickableRoundedBackground)
             replyMessage.setTextColor(it.text)
             replyMessage.setHintTextColor(it.hint)
