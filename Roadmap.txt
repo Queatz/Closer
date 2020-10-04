@@ -22,9 +22,9 @@ Incoming
 [ ] guide: add Xable messages to top of feed tabs
 [ ] guide: guides by people, Outdoor Adventure by Jacob
 
-[ ] bug: recent change is breaking feed
-[ ] bug: change group photo isn't updating from feed
-[ ] bug: Active X ago on group card needs shadow
+[x] bug: recent change is breaking feed
+[x] bug: change group photo isn't updating from feed
+[x] bug: Active X ago on group card needs shadow
 [x] bug: white on white when no background on profile
 [x] bug: groups should not start scrolled to the end of the list
 [x] bug: overlapping events

@@ -268,7 +268,6 @@ class FeedHandler constructor(private val on: On) {
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
-                .single()
                 .observer { groups ->
                     if (feedContent() == FeedContent.FRIENDS) {
                         on<SearchGroupHandler>().setGroups(groups, includeTopics = true)

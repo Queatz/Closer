@@ -227,15 +227,12 @@ open class SearchGroupsAdapter constructor(
             override fun getNewListSize() = groups.size
 
             override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                return this@SearchGroupsAdapter.groups[oldPosition].id != null &&
-                        groups[newPosition].id != null &&
-                        this@SearchGroupsAdapter.groups[oldPosition].id == groups[newPosition].id
+                return this@SearchGroupsAdapter.groups[oldPosition].id == groups[newPosition].id
             }
 
             override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-                return this@SearchGroupsAdapter.groups[oldPosition].name != null &&
-                        groups[newPosition].name != null &&
-                        this@SearchGroupsAdapter.groups[oldPosition].name == groups[newPosition].name
+                return this@SearchGroupsAdapter.groups[oldPosition].name == groups[newPosition].name &&
+                        this@SearchGroupsAdapter.groups[oldPosition].photo == groups[newPosition].photo
             }
         })
         this.groups.clear()
