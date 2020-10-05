@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_EVENT_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_GROUP_MESSAGE_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_INVITE_TO_GROUP_PHONE_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_LAT_LNG
+import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SEARCH
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SHARE_GROUP_TO_GROUP_ID
 import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SUGGESTION_ID
@@ -65,10 +66,11 @@ class ShareActivityTransitionHandler constructor(private val on: On) {
 
     }
 
-    fun performArcheology(latLng: LatLng) {
+    fun performArcheology(latLng: LatLng, searchString: String? = null) {
         val intent = Intent(on<ApplicationHandler>().app, ShareActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_LAT_LNG, on<LatLngStr>().from(latLng))
+        searchString?.let { intent.putExtra(EXTRA_SEARCH, it) }
 
         on<ActivityHandler>().activity!!.startActivity(intent)
     }

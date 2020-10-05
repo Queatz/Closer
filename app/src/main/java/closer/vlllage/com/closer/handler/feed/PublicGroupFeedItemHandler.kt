@@ -218,7 +218,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                             negativeButton = on<ResourcesHandler>().resources.getString(R.string.nevermind)
                             positiveButton = on<ResourcesHandler>().resources.getString(R.string.lets_go)
                             positiveButtonCallback = {
-                                on<ShareActivityTransitionHandler>().performArcheology(center)
+                                on<ShareActivityTransitionHandler>().performArcheology(center, searchGroups.text.toString())
                             }
                             show()
                         }

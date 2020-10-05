@@ -20,6 +20,7 @@ import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.store.models.Group_
 import io.objectbox.android.AndroidScheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class ShareActivity : ListActivity() {
 
@@ -53,7 +54,7 @@ class ShareActivity : ListActivity() {
 
         archeologyLatLngStr = intent?.getStringExtra(EXTRA_LAT_LNG)
 
-        on<DisposableHandler>().add(on<SearchGroupHandler>().groups.subscribe {
+        on<DisposableHandler>().add(on<SearchGroupHandler>().groups.observeOn(AndroidSchedulers.mainThread()).subscribe{
             searchGroupsAdapter.setGroups(it)
         })
 
@@ -71,6 +72,10 @@ class ShareActivity : ListActivity() {
             on<DisposableHandler>().add(on<ApiHandler>().getInactiveGroups(latLng).subscribe({
                 on<SearchGroupHandler>().setGroups(it.map { GroupResult.from(it) })
             }, { on<DefaultAlerts>().thatDidntWork() }))
+
+            intent?.getStringExtra(EXTRA_SEARCH)?.let {
+                searchGroupsAdapter.setQuery(it)
+            }
         }
 
         if (intent != null) {
@@ -134,7 +139,7 @@ class ShareActivity : ListActivity() {
         }
 
         if (archeologyLatLngStr != null) {
-            open(group)
+            open(group, true)
         } else if (phoneId != null) {
             on<DisposableHandler>().add(on<ApiHandler>().inviteToGroup(group.id!!, phoneId!!).subscribe(
                     { successResult ->
@@ -181,8 +186,8 @@ class ShareActivity : ListActivity() {
         }
     }
 
-    private fun open(group: Group) {
-        finish { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!) }
+    private fun open(group: Group, isExpired: Boolean = false) {
+        finish { on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id!!, isExpired = isExpired) }
     }
 
     companion object {
@@ -195,5 +200,6 @@ class ShareActivity : ListActivity() {
         const val EXTRA_EVENT_ID = "eventId"
         const val EXTRA_SUGGESTION_ID = "suggestionId"
         const val EXTRA_LAT_LNG = "latLng"
+        const val EXTRA_SEARCH = "search"
     }
 }

@@ -3,14 +3,13 @@ package closer.vlllage.com.closer
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
-import closer.vlllage.com.closer.handler.data.ApiHandler
-import closer.vlllage.com.closer.handler.data.DataHandler
-import closer.vlllage.com.closer.handler.data.RefreshHandler
+import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
@@ -20,11 +19,13 @@ import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
+import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_group.view.*
+import java.util.*
 
 class GroupActivity : CircularRevealActivity() {
 
@@ -32,6 +33,8 @@ class GroupActivity : CircularRevealActivity() {
     lateinit var groupId: String
 
     private var initialContent: ContentViewType? = null
+
+    private var restoreOption = false
 
     private var contentView: ContentViewType = ContentViewType.MESSAGES
         set(value) {
@@ -163,6 +166,39 @@ class GroupActivity : CircularRevealActivity() {
                 setGroupBackground(group)
 
                 on<ApplicationHandler>().app.on<TopHandler>().setGroupActive(group.id!!)
+
+                if (restoreOption) {
+                    view.meetLayout.visible = true
+                    view.meetLayout.meetFalse.visible = false
+                    view.meetLayout.meetPrompt.gravity = Gravity.START
+                    view.meetLayout.meetPrompt.setPaddingRelative(
+                            on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDialog),
+                            view.meetLayout.meetPrompt.paddingTop,
+                            view.meetLayout.meetPrompt.paddingEnd,
+                            view.meetLayout.meetPrompt.paddingBottom,
+                    )
+                    view.meetLayout.meetTrue.setText(R.string.restore)
+                    view.meetLayout.meetTrue.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_history_black_24dp, 0)
+
+                    view.meetLayout.meetPrompt.text = on<ResourcesHandler>().resources.getString(R.string.group_expired_on, on<TimeStr>().approx(group.updated?.let {
+                        Calendar.getInstance(TimeZone.getDefault()).let { calendar ->
+                            calendar.time = it
+
+                            calendar.add(Calendar.MONTH, 3)
+
+                            calendar.time
+                        }
+                    }, true))
+                    view.meetLayout.meetTrue.setOnClickListener {
+                        val groupMessage = GroupMessage()
+                        groupMessage.text = "Hence I breathe new life into thee!"
+                        groupMessage.from = on<PersistenceHandler>().phoneId
+                        groupMessage.to = group.id!!
+                        groupMessage.created = Date()
+                        on<SyncHandler>().sync(groupMessage)
+                        view.meetLayout.visible = false
+                    }
+                }
             }
 
             onEventChanged { event ->
@@ -196,6 +232,9 @@ class GroupActivity : CircularRevealActivity() {
 
                 if (on<MatchHandler>().active) {
                     view.meetLayout.visible = true
+                    view.meetLayout.meetFalse.visible = true
+                    view.meetLayout.meetTrue.visible = true
+                    view.meetLayout.meetPrompt.gravity = Gravity.CENTER
                     view.meetLayout.meetPrompt.text = on<ResourcesHandler>().resources.getString(R.string.want_to_meet_phone, on<NameHandler>().getName(phone))
                     view.meetLayout.meetTrue.setOnClickListener {
                         on<MeetHandler>().meet(phone.id!!, true)
@@ -387,6 +426,10 @@ class GroupActivity : CircularRevealActivity() {
         if (intent.hasExtra(EXTRA_MEET)) {
             on<MatchHandler>().activate()
         }
+
+        if (intent.hasExtra(EXTRA_RESTORE)) {
+            restoreOption = true
+        }
     }
 
     private fun reply(phoneId: String) {
@@ -427,5 +470,6 @@ class GroupActivity : CircularRevealActivity() {
         const val EXTRA_MEET = "meet"
         const val EXTRA_NEW_MEMBER = "newMember"
         const val EXTRA_CONTENT = "content"
+        const val EXTRA_RESTORE = "restore"
     }
 }

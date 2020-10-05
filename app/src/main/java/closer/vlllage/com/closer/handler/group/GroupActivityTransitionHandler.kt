@@ -11,21 +11,25 @@ import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_GROUP_ID
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_MEET
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_NEW_MEMBER
 import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_RESPOND
+import closer.vlllage.com.closer.GroupActivity.Companion.EXTRA_RESTORE
 import closer.vlllage.com.closer.handler.data.DataHandler
-import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.helpers.ActivityHandler
+import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Quest
 import com.queatz.on.On
 
 class GroupActivityTransitionHandler constructor(private val on: On) {
 
-    fun showGroupMessages(view: View?, groupId: String?, isRespond: Boolean = false, isMeet: Boolean = false, isNewMember: Boolean = false, isPhone: Boolean = false) {
+    fun showGroupMessages(view: View?, groupId: String?, isRespond: Boolean = false, isMeet: Boolean = false, isNewMember: Boolean = false, isPhone: Boolean = false, isExpired: Boolean = false) {
         if (groupId == null) {
             on<DefaultAlerts>().thatDidntWork()
             return
         }
 
-        val intent = getIntent(groupId, isRespond, isMeet, isNewMember, isPhone)
+        val intent = getIntent(groupId, isRespond, isMeet, isNewMember, isPhone, isExpired)
 
         if (view != null) {
             val bounds = Rect()
@@ -37,7 +41,7 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
         on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
-    fun getIntent(groupId: String, isRespond: Boolean, isMeet: Boolean = false, isNewMember: Boolean = false, isPhone: Boolean = false): Intent {
+    fun getIntent(groupId: String, isRespond: Boolean, isMeet: Boolean = false, isNewMember: Boolean = false, isPhone: Boolean = false, isExpired: Boolean = false): Intent {
         val intent = Intent(on<ApplicationHandler>().app, GroupActivity::class.java)
         intent.action = Intent.ACTION_VIEW
         intent.putExtra(EXTRA_GROUP_ID, groupId)
@@ -56,6 +60,10 @@ class GroupActivityTransitionHandler constructor(private val on: On) {
 
         if (isPhone) {
             intent.putExtra(EXTRA_CONTENT, ContentViewType.PHONE_ABOUT.name)
+        }
+
+        if (isExpired) {
+            intent.putExtra(EXTRA_RESTORE, true)
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)

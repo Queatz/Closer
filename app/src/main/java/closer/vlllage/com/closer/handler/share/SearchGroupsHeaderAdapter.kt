@@ -21,8 +21,11 @@ class SearchGroupsHeaderAdapter constructor(on: On,
                                 private val onQueryChangedListener: OnQueryChangedListener)
     : SearchGroupsAdapter(on, false, onGroupClickListener, onCreateGroupClickListener) {
 
+    private var searchTextWatcher: TextWatcher? = null
+    private var queryStringPrefill: String? = null
     private val header = RecyclerViewHeader(on)
     private var headerText: String? = null
+    private var headerViewHolder: SearchGroupsHeaderViewHolder? = null
 
     init {
         setNoAnimation(true)
@@ -41,8 +44,10 @@ class SearchGroupsHeaderAdapter constructor(on: On,
         if (position == 0) {
             when (holder) {
                 is SearchGroupsHeaderViewHolder -> {
+                    headerViewHolder = holder
                     holder.name.text = headerText
-                    holder.searchGroups.addTextChangedListener(object : TextWatcher {
+
+                    searchTextWatcher = object : TextWatcher {
                         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
                         }
@@ -54,7 +59,14 @@ class SearchGroupsHeaderAdapter constructor(on: On,
                         override fun afterTextChanged(s: Editable) {
 
                         }
-                    })
+                    }
+
+                    holder.searchGroups.addTextChangedListener(searchTextWatcher)
+
+                    if (queryStringPrefill != null) {
+                        holder.searchGroups.setText(queryStringPrefill)
+                        queryStringPrefill = null
+                    }
                 }
             }
         } else {
@@ -67,6 +79,11 @@ class SearchGroupsHeaderAdapter constructor(on: On,
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
         header.onRecycled(holder)
+
+        if (holder == headerViewHolder) {
+            headerViewHolder?.searchGroups?.removeTextChangedListener(searchTextWatcher)
+            headerViewHolder = null
+        }
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -85,6 +102,11 @@ class SearchGroupsHeaderAdapter constructor(on: On,
     fun setHeaderText(headerText: String): SearchGroupsHeaderAdapter {
         this.headerText = headerText
         return this
+    }
+
+    fun setQuery(query: String) {
+        this.queryStringPrefill = query
+        this.headerViewHolder?.searchGroups?.setText(query)
     }
 
     interface OnQueryChangedListener {

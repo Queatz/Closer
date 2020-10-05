@@ -495,6 +495,8 @@
     <string name="post_now">Post now</string>
     <string name="share_this">Share this</string>
     <string name="create_a_post">Create a post</string>
+    <string name="group_expired_on">This group expired %1$s</string>
+    <string name="restore">Restore</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
