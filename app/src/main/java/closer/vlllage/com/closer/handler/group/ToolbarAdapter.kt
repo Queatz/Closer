@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
@@ -75,14 +76,23 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
     }
 
     private fun recolor(item: GroupToolbarHandler.ToolbarItem, button: Button, colors: LightDarkColors, selected: ContentViewType?) {
+        val isSelected = item.value == selected
+
         if (item.color != null) {
             button.compoundDrawableTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(item.color!!))
-            button.setTextColor(on<ResourcesHandler>().resources.getColor(if (item.value == selected) R.color.textInverse else R.color.textHintInverse))
+            button.setTextColor(on<ResourcesHandler>().resources.getColor(if (isSelected) R.color.textInverse else R.color.textHintInverse))
             button.setTypeface(null, if (item.value == selected) Typeface.BOLD else Typeface.NORMAL)
         } else {
             button.compoundDrawableTintList = if (item.value == selected) colors.tintSelected else colors.tint
             button.setTextColor(if (item.value == selected) colors.selected else colors.text)
         }
+
+        button.animate()
+                .scaleX(if (isSelected) 1.125f else 1f)
+                .scaleY(if (isSelected) 1.125f else 1f)
+                .setDuration(300)
+                .setInterpolator(OvershootInterpolator(4f))
+                .start()
 
         button.setBackgroundResource(colors.clickableRoundedBackground8dp)
     }

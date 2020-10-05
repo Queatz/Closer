@@ -15,14 +15,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:padding="@dimen/pad"
-        android:textSize="@dimen/textSizeSmall"
+        android:textSize="@dimen/textSize"
         android:drawableTint="@color/text"
+        tools:drawableTint="@color/textInverse"
+        tools:textColor="@color/textInverse"
         android:drawablePadding="@dimen/padHalf"
         android:background="@drawable/clickable_light"
         android:singleLine="true"
-        android:ellipsize="marquee"
-        android:scrollHorizontally="true"
         android:textColor="@color/text"
+        android:textAllCaps="false"
         tools:drawableTop="@drawable/ic_close_black_24dp"
         tools:text="@string/cancel" />
 
