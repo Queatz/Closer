@@ -63,7 +63,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_PLACES,
                         color = R.color.purple),
                 GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.events),
+                        on<ResourcesHandler>().resources.getString(R.string.calendar),
                         R.drawable.ic_event_note_black_24dp,
                         {
                             on<FeedHandler>().show(ContentViewType.HOME_CALENDAR)

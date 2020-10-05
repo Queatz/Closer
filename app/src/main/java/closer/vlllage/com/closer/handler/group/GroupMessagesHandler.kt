@@ -191,7 +191,11 @@ class GroupMessagesHandler constructor(private val on: On) {
             }
 
             on<GroupNameHelper>().loadName(group, replyMessage, true) {
-                on<ResourcesHandler>().resources.getString(R.string.talk_with_x, it)
+                on<ResourcesHandler>().resources.getString(when {
+                    group.direct -> R.string.talk_with_x
+                    group.hasPhone() -> R.string.talk_on_x_profile
+                    else -> R.string.say_something_in
+                }, it)
             }
 
             groupMessagesSubscription = on<StoreHandler>().store.box(GroupMessage::class).query(
