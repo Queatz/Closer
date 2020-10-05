@@ -1,7 +1,10 @@
 package closer.vlllage.com.closer.handler.group
 
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.data.RefreshHandler
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupContact_
@@ -14,7 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 class DirectGroupHandler constructor(private val on: On) {
     fun getContactName(groupId: String): Single<String> {
         return getContactPhone(groupId).map {
-            it.name
+            on<NameHandler>().getName(it)
         }
     }
 
@@ -27,7 +30,13 @@ class DirectGroupHandler constructor(private val on: On) {
                 .build()).observeOn(AndroidSchedulers.mainThread()).flatMap {
             it.firstOrNull()?.let { groupContact ->
                 on<DataHandler>().getPhone(groupContact.contactId!!)
-            } ?: Single.error(Exception("Not found"))
+            } ?: on<ApiHandler>().getContacts(groupId).flatMap {
+                on<RefreshHandler>().handleGroupContacts(it, noGroups = true, removeAllExcept = false)
+
+                it.firstOrNull { it.phone != null && it.phone?.id != on<PersistenceHandler>().phoneId!! }?.let {
+                    on<DataHandler>().getPhone(it.phone!!.id!!)
+                } ?: Single.error(Exception("Not found"))
+            }
         }
     }
 }

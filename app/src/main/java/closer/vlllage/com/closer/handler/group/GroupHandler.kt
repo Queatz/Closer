@@ -96,7 +96,7 @@ class GroupHandler constructor(private val on: On) {
             return
         }
 
-        disposableGroup.add(on<DataHandler>().getGroup(groupId).subscribe({
+        disposableGroup.add(on<DataHandler>().getGroup(groupId).observeOn(AndroidSchedulers.mainThread()).subscribe({
             group = it
 
             on<RefreshHandler>().refreshGroup(groupId)

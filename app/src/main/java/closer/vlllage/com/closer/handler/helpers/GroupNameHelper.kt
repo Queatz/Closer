@@ -10,6 +10,7 @@ import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class GroupNameHelper(private val on: On) {
     fun loadName(group: Group, textView: TextView, hint: Boolean = false, callback: (String) -> String) {
@@ -22,7 +23,7 @@ class GroupNameHelper(private val on: On) {
             else textView.text = callback(it)
         }
 
-        getName(group).subscribe({
+        getName(group).observeOn(AndroidSchedulers.mainThread()).subscribe({
             set(it)
         }, {}).also { on<DisposableHandler>().add(it) }
     }
@@ -52,7 +53,7 @@ class GroupNameHelper(private val on: On) {
         if (groupId == null) {
             set(on<ResourcesHandler>().resources.getString(R.string.unknown))
         } else {
-            on<DataHandler>().getGroup(groupId).subscribe({
+            on<DataHandler>().getGroup(groupId).observeOn(AndroidSchedulers.mainThread()).subscribe({
                 loadName(it, textView, hint, callback)
             }, {
                 set(on<ResourcesHandler>().resources.getString(R.string.unknown))

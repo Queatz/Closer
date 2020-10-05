@@ -332,7 +332,7 @@ class RefreshHandler constructor(private val on: On) {
         handleFullListResult(groups, Group::class.java, Group_.id, deleteLocal, { GroupResult.from(it) }, { group, groupResult -> GroupResult.updateFrom(group, groupResult) })
     }
 
-    private fun handleGroupContacts(groupContacts: List<GroupContactResult>, noGroups: Boolean = false, noPhones: Boolean = false, removeAllExcept: Boolean = true) {
+    fun handleGroupContacts(groupContacts: List<GroupContactResult>, noGroups: Boolean = false, noPhones: Boolean = false, removeAllExcept: Boolean = true) {
         val allMyGroupContactIds = HashSet<String>()
 
         if (!noPhones) {
