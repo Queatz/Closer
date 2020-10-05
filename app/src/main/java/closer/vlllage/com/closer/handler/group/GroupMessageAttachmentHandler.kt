@@ -76,6 +76,7 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
         val action = JsonObject()
         action.add("intent", JsonPrimitive(groupAction.intent!!))
         action.add("comment", JsonPrimitive(comment))
+        action.add("groupActionId", JsonPrimitive(groupAction.id!!))
         jsonObject.add("action", action)
         saveMessageWithAttachment(groupId, null, jsonObject)
         return true
@@ -135,6 +136,12 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
             sections.forEach { section -> it.add(section) }
         })
         jsonObject.add("post", post)
+        saveMessageWithAttachment(groupId, null, jsonObject)
+    }
+
+    fun postGroupEvent(groupId: String, message: String) {
+        val jsonObject = JsonObject()
+        jsonObject.add("message", JsonPrimitive(message))
         saveMessageWithAttachment(groupId, null, jsonObject)
     }
 }

@@ -321,7 +321,6 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         appsToolbar.adapter = toolbarAdapter
 
-
         on<FeedHandler>().content.observeOn(AndroidSchedulers.mainThread()).subscribe {
             toolbarAdapter.selectedContentView.onNext(when (it!!) {
                 FeedContent.CALENDAR -> ContentViewType.HOME_CALENDAR
@@ -343,7 +342,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         updateViews()
 
-        on<AppsToolbarHandler>().attach(toolbarAdapter, showCalendarIndicator)
+        on<AppsToolbarHandler>().attach(toolbarAdapter, showCalendarIndicator, isLight = true)
     }
 
     private fun scrollToolbarTo(content: ContentViewType) {

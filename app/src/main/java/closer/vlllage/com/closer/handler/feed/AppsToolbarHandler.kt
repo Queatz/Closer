@@ -12,8 +12,10 @@ import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
 
 class AppsToolbarHandler constructor(private val on: On) {
-    fun attach(toolbarAdapter: ToolbarAdapter, showCalendarIndicator: BehaviorSubject<Boolean>) {
+    fun attach(toolbarAdapter: ToolbarAdapter, showCalendarIndicator: BehaviorSubject<Boolean>, isLight: Boolean = false) {
         val appsToolbarOrder = on<PersistenceHandler>().appsToolbarOrder
+
+        toolbarAdapter.isLight = isLight
 
         toolbarAdapter.items = listOf(
                 GroupToolbarHandler.ToolbarItem(

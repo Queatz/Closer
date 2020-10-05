@@ -9,7 +9,10 @@ import androidx.fragment.app.Fragment
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
-import closer.vlllage.com.closer.handler.data.*
+import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
+import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
@@ -19,7 +22,6 @@ import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -190,12 +192,7 @@ class GroupActivity : CircularRevealActivity() {
                         }
                     }, true))
                     view.meetLayout.meetTrue.setOnClickListener {
-                        val groupMessage = GroupMessage()
-                        groupMessage.text = "Hence I breathe new life into thee!"
-                        groupMessage.from = on<PersistenceHandler>().phoneId
-                        groupMessage.to = group.id!!
-                        groupMessage.created = Date()
-                        on<SyncHandler>().sync(groupMessage)
+                        on<GroupMessageAttachmentHandler>().postGroupEvent(groupId, "@${on<PersistenceHandler>().phoneId} breathed new life into the group!")
                         view.meetLayout.visible = false
                     }
                 }

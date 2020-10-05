@@ -22,6 +22,7 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
 
     private var recyclerView: RecyclerView? = null
     val selectedContentView = BehaviorSubject.create<ContentViewType>()
+    var isLight: Boolean = false
 
     var items = mutableListOf<GroupToolbarHandler.ToolbarItem>()
         set(value) {
@@ -66,7 +67,7 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
         })
 
         selectedContentView.subscribe {
-            recolor(item, viewHolder.button, on<LightDarkHandler>().onLightChanged.value!!, it)
+            recolor(item, viewHolder.button, if (isLight) on<LightDarkHandler>().LIGHT else on<LightDarkHandler>().onLightChanged.value!!, it)
         }.also { viewHolder.disposableGroup.add(it) }
 
         item.indicator?.observeOn(AndroidSchedulers.mainThread())
@@ -80,7 +81,7 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
 
         if (item.color != null) {
             button.compoundDrawableTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(item.color!!))
-            button.setTextColor(on<ResourcesHandler>().resources.getColor(if (isSelected) R.color.textInverse else R.color.textHintInverse))
+            button.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textInverse))
             button.setTypeface(null, if (item.value == selected) Typeface.BOLD else Typeface.NORMAL)
         } else {
             button.compoundDrawableTintList = if (item.value == selected) colors.tintSelected else colors.tint
@@ -94,7 +95,7 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
                 .setInterpolator(OvershootInterpolator(4f))
                 .start()
 
-        button.setBackgroundResource(colors.clickableRoundedBackground8dp)
+        button.setBackgroundResource(colors.clickableRoundedBackgroundBorderless)
     }
 
     override fun onViewRecycled(holder: ToolbarViewHolder) {
