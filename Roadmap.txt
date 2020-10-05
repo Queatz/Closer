@@ -16,19 +16,6 @@ Incoming
 Rename "Public -> Anyone"
 Invite to join, Private Community & Social Activities
 
-
-Top
-===
-
- [ ] showVerifyMyNumber -> Personal slide
- [ ] showUnmuteNotifications -> Top of feed above apps toolbar
- [ ] showSetMyName -> better visual of no name personal slide
- [ ] showMeetPeople -> in my groups?
- [X] showAllowLocationPermissionsInSettings -> Locate me button
- [X] showHelpButton -> gone
- [X] showFeatureRequests -> Settings slide
- [X] showInviteCard -> Above locate me
-
 ❤ Next ❤
 ========
 

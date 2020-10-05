@@ -292,6 +292,7 @@
     <string name="date_tiny_years">%1$sy</string>
     <string name="active">Active %1$s ago</string>
     <string name="last_active">Last active %1$s ago</string>
+    <string name="joined">Joined %1$s</string>
     <string name="your_groups">Your groups</string>
     <string name="your_places">Your places</string>
     <string name="conversations">Conversations</string>

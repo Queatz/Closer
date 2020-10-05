@@ -19,6 +19,7 @@ class ApiModelHandler constructor(private val on: On) {
     fun updateFrom(phone: Phone, phoneResult: PhoneResult): Phone {
         phone.id = phoneResult.id
         phone.updated = phoneResult.updated
+        phone.created = phoneResult.created
 
         if (phoneResult.geo != null && phoneResult.geo!!.size == 2) {
             phone.latitude = phoneResult.geo!![0]

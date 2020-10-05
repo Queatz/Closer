@@ -38,6 +38,7 @@ class PhoneAboutFragment : PoolActivityFragment() {
             onPhoneUpdated(disposableGroup) { phone ->
 
                 activeTextView.text = on<TimeStr>().lastActive(phone.updated)
+                joined.text = on<TimeStr>().joined(phone.created)
                 phoneVerifiedTextView.visible = phone.verified ?: false
 
                 (phone.latitude != null && phone.longitude != null).let { hasLocation ->

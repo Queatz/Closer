@@ -442,7 +442,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                groupsRecyclerView.visible = true
+                                groupsRecyclerView.visible = false
                                 searchGroups.visible = false
                                 itemView.historyButton.visible = false
                                 actionHeader.visible = false

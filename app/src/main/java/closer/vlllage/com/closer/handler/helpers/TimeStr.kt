@@ -92,4 +92,5 @@ class TimeStr constructor(private val on: On) {
 
     fun active(date: Date?) = on<ResourcesHandler>().resources.getString(R.string.active, approx(date))
     fun lastActive(date: Date?) = on<ResourcesHandler>().resources.getString(R.string.last_active, approx(date))
+    fun joined(date: Date?) = on<ResourcesHandler>().resources.getString(R.string.joined, prettyDate(date))
 }
