@@ -42,7 +42,7 @@ class GroupAboutFragment : PoolActivityFragment() {
 
         mixedAdapter = MixedHeaderAdapter(On(on).apply {
             use<GroupMessageHelper>()
-        })
+        }, true)
 
         mixedAdapter.showFeedHeader = false
         mixedAdapter.useHeader = false

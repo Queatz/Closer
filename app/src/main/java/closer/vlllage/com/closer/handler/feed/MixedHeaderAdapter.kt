@@ -17,7 +17,7 @@ import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import java.util.*
 
-class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
+class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : HeaderAdapter<MixedItemViewHolder>(on) {
 
     var goals = mutableListOf<Goal>()
         set(value) {
@@ -120,40 +120,43 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
 
     private fun generate() {
         items = mutableListOf<MixedItem>().apply {
+
+            val empty = { item: TextMixedItem -> if (!hideText) add(item) }
+
             if (showFeedHeader) add(HeaderMixedItem())
             when (content) {
                 FeedContent.GROUPS, FeedContent.PLACES -> groups.apply {
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else {
                         forEach { add(GroupPreviewMixedItem(it)) }
                     }
                 }
                 FeedContent.FRIENDS -> groups.apply {
                     forEach { add(GroupPreviewMixedItem(it)) }
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_here)))
+                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_here)))
                 }
                 FeedContent.POSTS -> groupMessages.apply {
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else {
                         forEach { add(GroupMessageMixedItem(it)) }
                         add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_conversations)))
                     }
                 }
                 FeedContent.ACTIVITIES -> groupActions.apply {
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else forEach { add(GroupActionMixedItem(it)) }
 
                 }
                 FeedContent.QUESTS -> quests.apply {
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else forEach { add(QuestMixedItem(it)) }
                 }
                 FeedContent.NOTIFICATIONS -> notifications.apply {
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.no_notifications)))
+                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.no_notifications)))
                     else forEach { add(NotificationMixedItem(it)) }
                 }
                 FeedContent.CONTACTS -> contacts.apply {
-                    if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.no_contacts)))
+                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.no_contacts)))
                     else forEach { add(MessagesContactMixedItem(it)) }
                 }
                 FeedContent.CALENDAR -> IntArray(14)
@@ -169,7 +172,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
                             }))
                         }
                 FeedContent.LIFESTYLES -> lifestyles.apply {
-                        if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                        if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                         else {
                             forEach {
                                 add(LifestyleMixedItem(it))
@@ -178,7 +181,7 @@ class MixedHeaderAdapter(on: On) : HeaderAdapter<MixedItemViewHolder>(on) {
                         }
                     }
                 FeedContent.GOALS -> goals.apply {
-                        if (isEmpty()) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                        if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                         else {
                             forEach {
                                 add(GoalMixedItem(it))
