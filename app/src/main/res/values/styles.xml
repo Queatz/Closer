@@ -40,6 +40,11 @@
         <item name="colorAccent">@color/forestgreen</item>
     </style>
 
+    <style name="AppTheme.AlertDialog.Pink">
+        <item name="colorPrimary">@color/pink500</item>
+        <item name="colorAccent">@color/pink500</item>
+    </style>
+
     <style name="AppTheme.Red">
         <item name="colorPrimary">@color/red</item>
         <item name="colorAccent">@color/red</item>

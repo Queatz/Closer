@@ -17,6 +17,7 @@ class DefaultInput constructor(private val on: On) {
              prefill: String? = null,
              inputType: Int? = null,
              multiline: Boolean = false,
+             @StyleRes themeRes: Int? = null,
              callback: (String) -> Unit) {
         show(
                 on<ResourcesHandler>().resources.getString(titleRes),
@@ -25,6 +26,7 @@ class DefaultInput constructor(private val on: On) {
                 prefill,
                 inputType,
                 multiline,
+                themeRes,
                 callback
         )
     }
@@ -35,9 +37,11 @@ class DefaultInput constructor(private val on: On) {
              prefill: String? = null,
              inputType: Int? = null,
              multiline: Boolean = false,
+             themeRes: Int? = null,
              callback: (String) -> Unit) {
         on<AlertHandler>().make().apply {
             layoutResId = R.layout.simple_input_modal
+            themeRes?.let { theme = it }
             textViewId = R.id.input
             onAfterViewCreated = { _, view ->
                 val input: TextView = view.input
