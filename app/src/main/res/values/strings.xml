@@ -23,7 +23,7 @@
     <string name="enter_code">Enter the code…</string>
     <string name="verify_number">Verify number</string>
     <string name="create_group">Add group</string>
-    <string name="create_private_group">Add secret group</string>
+    <string name="create_private_group">Add members group</string>
     <string name="create_public_group">Add group</string>
     <string name="enter_group_name">Name this group</string>
     <string name="enter_place_name">Name this place</string>
@@ -40,9 +40,9 @@
     <string name="make_suggestion">Describe the suggestion</string>
     <string name="add_a_suggestion">Add a suggestion</string>
     <string name="add_suggestion">Add suggestion</string>
-    <string name="add_new_private_group">Add a secret group</string>
+    <string name="add_new_private_group">Add a members group</string>
     <string name="add_new_public_place">Add a place</string>
-    <string name="add_new_private_place">Add a secret place</string>
+    <string name="add_new_private_place">Add a members place</string>
     <string name="add_new_public_group">Add a community</string>
     <string name="verify_your_number">Verify your number</string>
     <string name="not_found">Not found</string>
@@ -160,7 +160,7 @@
     <string name="private_group_message">Only members can see this group. Anyone in the group can add additional members to the group.</string>
     <string name="public_group_message">Anyone can see and join this group.</string>
     <string name="public_group_title">This group is for everyone</string>
-    <string name="private_group_title">This a secret group</string>
+    <string name="private_group_title">This a members group</string>
     <string name="add_a_shortcut">Add a shortcut</string>
     <string name="member">Member</string>
     <string name="member_you">Member (You)</string>
@@ -174,7 +174,7 @@
     <string name="today">Today</string>
     <string name="update_description">Update description</string>
     <string name="update_background">Update background</string>
-    <string name="private_group">Secret group</string>
+    <string name="private_group">Members group</string>
     <string name="shared_by">%1$s — shared by %2$s</string>
     <string name="is_in">— in %1$s</string>
     <string name="add">Add</string>
@@ -183,7 +183,7 @@
     <string name="added_phone">%1$s has been added</string>
     <string name="sending_photo">Sending photo…</string>
     <string name="settings_public_notifications">Area notifications</string>
-    <string name="public_notifications_switch_description">Area notifications are off. You\'ll only get notifications from secret groups.</string>
+    <string name="public_notifications_switch_description">Area notifications are off. You\'ll only get notifications from member groups.</string>
     <string name="join_this_group">Join this group…</string>
     <string name="join_this_event">Join this event…</string>
     <string name="you_joined_group">You joined %1$s</string>
@@ -395,7 +395,7 @@
     <string name="subscribed_message">You will always get notifications from \"%1$s\"</string>
     <string name="unsubscribed_message">You will only get notifications from \"%1$s\" when you are close by</string>
     <string name="from">from %1$s</string>
-    <string name="friends">Secret</string>
+    <string name="friends">Members</string>
     <string name="request_feature">Request this feature</string>
     <string name="unknown_place">Mysterious place</string>
     <string name="view_photo">View photo</string>
