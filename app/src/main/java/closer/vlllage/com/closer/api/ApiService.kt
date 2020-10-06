@@ -43,9 +43,11 @@ class ApiService {
             response
         }
 
+        val http = httpClient.build()
+
         backend = Retrofit.Builder()
                 .baseUrl(Backend.BASE_URL)
-                .client(httpClient.build())
+                .client(http)
                 .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat(DateFormat.FULL).create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
@@ -67,7 +69,7 @@ class ApiService {
 
         contentBackend = Retrofit.Builder()
                 .baseUrl(ContentBackend.BASE_URL)
-                .client(httpClient.build())
+                .client(http)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(ContentBackend::class.java)

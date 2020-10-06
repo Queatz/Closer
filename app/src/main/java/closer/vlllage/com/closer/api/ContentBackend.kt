@@ -13,6 +13,6 @@ interface ContentBackend {
     fun terms(): Single<ResponseBody>
 
     companion object {
-        const val BASE_URL = "http://closer.vlllage.com/"
+        const val BASE_URL = "https://closer.vlllage.com/"
     }
 }
