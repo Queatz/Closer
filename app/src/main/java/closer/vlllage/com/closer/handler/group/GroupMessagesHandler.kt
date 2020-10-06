@@ -39,6 +39,7 @@ class GroupMessagesHandler constructor(private val on: On) {
     private lateinit var sendMoreLayout: View
     private lateinit var recyclerView: RecyclerView
     private var groupMessagesSubscription: DataSubscription? = null
+    private var isRespond: Boolean = false
 
     fun attach(recyclerView: RecyclerView, replyMessage: EditText, sendButton: ImageButton, sendMoreButton: ImageButton, sendMoreLayout: View) {
         this.replyMessage = replyMessage
@@ -46,6 +47,13 @@ class GroupMessagesHandler constructor(private val on: On) {
         this.sendMoreButton = sendMoreButton
         this.sendMoreLayout = sendMoreLayout
         this.recyclerView = recyclerView
+
+        if (isRespond) {
+            replyMessage.postDelayed({
+                replyMessage.requestFocus()
+                on<KeyboardHandler>().showKeyboard(replyMessage, true)
+            }, 500)
+        }
 
         layoutManager = LinearLayoutManager(
                 on<ActivityHandler>().activity,
@@ -293,11 +301,6 @@ class GroupMessagesHandler constructor(private val on: On) {
     }
 
     fun setIsRespond() {
-        null ?: return
-        // TODO...
-        replyMessage.postDelayed({
-                    replyMessage.requestFocus()
-                    on<KeyboardHandler>().showKeyboard(replyMessage, true)
-                }, 500)
+        isRespond = true
     }
 }

@@ -8,12 +8,17 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
+import closer.vlllage.com.closer.handler.group.GroupDraftHandler
+import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ScanQrCodeHandler
 import closer.vlllage.com.closer.handler.map.SetNameHandler
 import closer.vlllage.com.closer.handler.map.VerifyNumberHandler
 import closer.vlllage.com.closer.handler.settings.ConfigHandler
 import closer.vlllage.com.closer.pool.PoolFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_welcome.view.*
 
 class WelcomeSlideFragment : PoolFragment() {
@@ -38,12 +43,25 @@ class WelcomeSlideFragment : PoolFragment() {
         view.requestInviteButton.setOnClickListener {
             if (on<AccountHandler>().name.isBlank()) {
                 on<SetNameHandler>().modifyName({
-                    on<GroupActivityTransitionHandler>().showGroupMessages(view.requestInviteButton, on<ConfigHandler>().feedbackGroupId())
+                    requestInvite(view.requestInviteButton)
                 })
             } else {
-                on<GroupActivityTransitionHandler>().showGroupMessages(view.requestInviteButton, on<ConfigHandler>().feedbackGroupId())
+                requestInvite(view.requestInviteButton)
             }
         }
+    }
+
+    private fun requestInvite(view: View) {
+        on<DataHandler>().getDirectGroup(on<ConfigHandler>().requestInvitePhoneId())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe({
+                    on<GroupDraftHandler>().saveDraft(it.id!!, "Hey Jacob! May I have an invite?")
+                    on<GroupActivityTransitionHandler>().showGroupMessages(view.requestInviteButton, it.id!!, isRespond = true)
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                }
+                ).also {
+                    on<DisposableHandler>().add(it)
+                }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

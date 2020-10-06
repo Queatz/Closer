@@ -411,10 +411,6 @@ class GroupActivity : CircularRevealActivity() {
             on<DisposableHandler>().add(on<DataHandler>().getGroupForPhone(phoneId).subscribe({
                 groupId = it.id!!
                 on<GroupHandler>().setGroupById(groupId)
-
-                if (intent.hasExtra(EXTRA_RESPOND) && it.phoneId != null) {
-                    reply(it.phoneId!!)
-                }
             }, {
                 on<DefaultAlerts>().thatDidntWork()
             }))
@@ -427,12 +423,6 @@ class GroupActivity : CircularRevealActivity() {
         if (intent.hasExtra(EXTRA_RESTORE)) {
             restoreOption = true
         }
-    }
-
-    private fun reply(phoneId: String) {
-        on<DisposableHandler>().add(on<DataHandler>().getPhone(phoneId).subscribe(
-                { on<ReplyHandler>().reply(it) }, { on<DefaultAlerts>().thatDidntWork() }
-        ))
     }
 
     override fun onResume() {
