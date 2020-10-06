@@ -499,6 +499,7 @@
     <string name="group_expired_on">This group expired %1$s</string>
     <string name="restore">Restore</string>
     <string name="talk_on_x_profile">Talk on %1$s\'s profile…</string>
+    <string name="approx_location">Location is approximate</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

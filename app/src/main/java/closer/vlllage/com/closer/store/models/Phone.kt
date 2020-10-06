@@ -15,6 +15,7 @@ class Phone : BaseObject() {
     var photo: String? = null
     var latitude: Double? = null
     var longitude: Double? = null
+    var geoIsApprox: Boolean? = null
     var verified: Boolean? = null
 
     @Convert(converter = StringListJsonConverter::class, dbType = String::class)

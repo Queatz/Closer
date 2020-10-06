@@ -126,6 +126,7 @@ class MapsActivity : PoolActivity() {
 
     companion object {
         const val EXTRA_LAT_LNG = "latLng"
+        const val EXTRA_ZOOM = "latLngZoom"
         const val EXTRA_SUGGESTION = "suggestion"
         const val EXTRA_EVENT_ID = "eventId"
         const val EXTRA_PHONE = "phone"

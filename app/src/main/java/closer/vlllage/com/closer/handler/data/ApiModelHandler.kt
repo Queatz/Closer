@@ -21,6 +21,7 @@ class ApiModelHandler constructor(private val on: On) {
         phone.updated = phoneResult.updated
         phone.created = phoneResult.created
 
+        phone.geoIsApprox = phoneResult.geoIsApprox
         if (phoneResult.geo != null && phoneResult.geo!!.size == 2) {
             phone.latitude = phoneResult.geo!![0]
             phone.longitude = phoneResult.geo!![1]

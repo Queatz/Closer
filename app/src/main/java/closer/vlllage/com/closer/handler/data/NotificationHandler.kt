@@ -60,7 +60,7 @@ class NotificationHandler constructor(private val on: On) {
         intent.action = Intent.ACTION_VIEW
 
         if (latLng != null) {
-            intent.putExtra(EXTRA_LAT_LNG, floatArrayOf(latLng.latitude.toFloat(), latLng.longitude.toFloat()))
+            intent.putExtra(EXTRA_LAT_LNG, doubleArrayOf(latLng.latitude, latLng.longitude))
         }
 
         name = if (name.isEmpty())

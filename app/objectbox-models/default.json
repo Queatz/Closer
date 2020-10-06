@@ -423,7 +423,7 @@
     },
     {
       "id": "7:1991292620081453937",
-      "lastPropertyId": "17:5908739437548338146",
+      "lastPropertyId": "18:604976005741568843",
       "name": "Phone",
       "properties": [
         {
@@ -515,6 +515,12 @@
           "id": "17:5908739437548338146",
           "name": "created",
           "type": 10
+        },
+        {
+          "id": "18:604976005741568843",
+          "name": "geoIsApprox",
+          "type": 1,
+          "flags": 2
         }
       ],
       "relations": []

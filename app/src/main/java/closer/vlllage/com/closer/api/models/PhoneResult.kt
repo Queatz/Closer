@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.api.models
 
 class PhoneResult : ModelResult() {
     var geo: List<Double>? = null
+    var geoIsApprox: Boolean? = null
     var name: String? = null
     var photo: String? = null
     var status: String? = null
