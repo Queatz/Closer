@@ -12,6 +12,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.store.models.Group
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.create_post_select_group_action.view.*
 
 open class CreatePostAdapter(protected val on: On, private val action: (CreatePostAction) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    var group: Group? = null
     var groupName: String = on<ResourcesHandler>().resources.getString(R.string.app_name)
     set(value) {
         field = value
@@ -71,7 +73,7 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
                 }) }
 
                 postButton.visible = position == items.size - 1
-                postButton.text = on<ResourcesHandler>().resources.getString(R.string.post_in, groupName)
+                postButton.text = on<GroupActionDisplay>().postText(group, groupName)
                 postButton.setOnClickListener { action(CreatePostAction(CreatePostActionType.Post, position)) }
             }
 

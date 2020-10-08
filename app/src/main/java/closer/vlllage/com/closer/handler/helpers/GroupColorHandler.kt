@@ -14,6 +14,7 @@ class GroupColorHandler constructor(private val on: On) {
             group.hasEvent() -> on<ResourcesHandler>().resources.getColor(R.color.white)
             group.hasPhone() -> on<ResourcesHandler>().resources.getColor(R.color.white)
             group.physical -> on<ResourcesHandler>().resources.getColor(R.color.purple)
+            group.ofKind == "quest" -> on<ResourcesHandler>().resources.getColor(R.color.forestgreen)
             group.isPublic -> on<ResourcesHandler>().resources.getColor(R.color.green)
             else -> on<ResourcesHandler>().resources.getColor(R.color.colorPrimary)
         }
@@ -25,6 +26,7 @@ class GroupColorHandler constructor(private val on: On) {
             group.hasEvent() -> on<ResourcesHandler>().resources.getColor(R.color.redLight)
             group.hasPhone() -> on<ResourcesHandler>().resources.getColor(R.color.white)
             group.physical -> on<ResourcesHandler>().resources.getColor(R.color.purpleLight)
+            group.ofKind == "quest" -> on<ResourcesHandler>().resources.getColor(R.color.forestgreenLight)
             group.isPublic -> on<ResourcesHandler>().resources.getColor(R.color.greenLight)
             else -> on<ResourcesHandler>().resources.getColor(R.color.colorPrimaryLight)
         }
@@ -36,6 +38,7 @@ class GroupColorHandler constructor(private val on: On) {
             group.hasEvent() -> R.drawable.color_red_rounded
             group.hasPhone() -> R.drawable.color_white_rounded
             group.physical -> R.drawable.color_purple_rounded
+            group.ofKind == "quest" -> R.drawable.color_forestgreen_rounded
             group.isPublic -> R.drawable.color_green_rounded
             else -> R.drawable.color_primary_rounded
         }
@@ -47,6 +50,7 @@ class GroupColorHandler constructor(private val on: On) {
             group.hasEvent() -> R.drawable.clickable_red
             group.hasPhone() -> R.drawable.clickable_white
             group.physical -> R.drawable.clickable_purple
+            group.ofKind == "quest" -> R.drawable.clickable_forestgreen
             group.isPublic -> R.drawable.clickable_green
             else -> R.drawable.clickable_blue
         }
@@ -58,6 +62,7 @@ class GroupColorHandler constructor(private val on: On) {
             group.hasEvent() -> R.drawable.clickable_red_8dp
             group.hasPhone() -> R.drawable.clickable_white_8dp
             group.physical -> R.drawable.clickable_purple_8dp
+            group.ofKind == "quest" -> R.drawable.clickable_forestgreen_8dp
             group.isPublic -> R.drawable.clickable_green_8dp
             else -> R.drawable.clickable_blue_8dp
         }

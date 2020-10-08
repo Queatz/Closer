@@ -118,6 +118,7 @@ class CreatePostActivity : ListActivity() {
 
     private fun setGroup(group: Group) {
         on<GroupNameHelper>().getName(group).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            adapter.group = group
             adapter.groupName = it
         }, { on<DefaultAlerts>().thatDidntWork() }).also {
             on<DisposableHandler>().add(it)

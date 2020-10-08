@@ -411,6 +411,7 @@
     <string name="communities">Communities</string>
     <string name="more_about_x">More about %1$s</string>
     <string name="sent_to_x">Sent to %1$s</string>
+    <string name="send_to_x">Send to %1$s</string>
     <string name="about_x">About %1$s</string>
     <string name="all_notifications_muted">All notifications have been muted until you turn them back on</string>
     <string name="notifications_muted">Notifications muted</string>
@@ -499,6 +500,7 @@
     <string name="group_expired_on">This group expired %1$s</string>
     <string name="restore">Restore</string>
     <string name="talk_on_x_profile">Talk on %1$s\'s profile…</string>
+    <string name="post_on_x_profile">Post on %1$s\'s profile</string>
     <string name="approx_location">Location is approximate</string>
 
     <plurals name="review_count_parenthesized">

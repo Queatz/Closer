@@ -15,15 +15,13 @@ import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.GroupAction
-import closer.vlllage.com.closer.store.models.GroupAction_
-import closer.vlllage.com.closer.store.models.QuestAction
-import closer.vlllage.com.closer.store.models.QuestActionType
+import closer.vlllage.com.closer.store.models.*
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -71,6 +69,12 @@ class GroupActionDisplay constructor(private val on: On) {
                     render(GroupActionViewHolder(view, about), groupAction, layout, scale)
                 })
     }
+
+    fun postText(group: Group?, groupName: String) = on<ResourcesHandler>().resources.getString(when {
+        group?.direct == true -> R.string.send_to_x
+        group?.hasPhone() == true -> R.string.post_on_x_profile
+        else -> R.string.post_in
+    }, groupName)
 
     private fun render(holder: GroupActionViewHolder, groupAction: GroupAction, layout: Layout, scale: Float = 1f) {
         holder.itemView.clipToOutline = true
@@ -197,7 +201,11 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     private fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
-        on<GroupNameHelper>().getName(groupAction.group!!).observeOn(AndroidSchedulers.mainThread()).subscribe({ groupName ->
+        on<DataHandler>().getGroup(groupAction.group!!).flatMap {
+            on<GroupNameHelper>().getName(it).map { groupName -> object { val group = it; val groupName = groupName } }
+        }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ groupInfo ->
             on<AlertHandler>().make().apply {
                 val noComment = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.firstOrNull()?.asJsonObject?.let {
                     if (it.has("noComment")) it["noComment"].asBoolean else false
@@ -232,7 +240,7 @@ class GroupActionDisplay constructor(private val on: On) {
 
                 title = "${on<AccountHandler>().name} ${groupAction.intent}"
                 message = "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it"} ?: ""}".let { if (it.isBlank()) null else it }
-                positiveButton = on<ResourcesHandler>().resources.getString(R.string.post_in, groupName)
+                positiveButton = postText(groupInfo.group, groupInfo.groupName)
                 show()
             }
         }, {
