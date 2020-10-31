@@ -14,5 +14,6 @@ class Event : BaseObject() {
     var longitude: Double? = null
     var startsAt: Date? = null
     var endsAt: Date? = null
+    var allDay: Boolean = false
     var cancelled: Boolean = false
 }

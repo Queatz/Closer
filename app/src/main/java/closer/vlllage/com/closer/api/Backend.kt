@@ -272,7 +272,7 @@ interface Backend {
     fun getEvent(@Path("id") eventId: String): Single<EventResult>
 
     @POST("event")
-    fun createEvent(@Query("name") name: String, @Query("about") about: String, @Query("public") isPublic: Boolean, @Query("geo") geo: String, @Query(value = "starts-at", encoded = true) startsAt: String, @Query(value = "ends-at", encoded = true) endsAt: String): Single<CreateResult>
+    fun createEvent(@Query("name") name: String, @Query("about") about: String, @Query("public") isPublic: Boolean, @Query("geo") geo: String, @Query(value = "starts-at", encoded = true) startsAt: String, @Query(value = "ends-at", encoded = true) endsAt: String, @Query("all-day") allDay: Boolean): Single<CreateResult>
 
     @POST("event/{id}")
     fun cancelEvent(@Path("id") eventId: String, @Query("cancel") cancel: Boolean): Single<SuccessResult>

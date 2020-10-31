@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootView"
-    android:background="@drawable/clickable_red_4dp"
+    android:background="@drawable/outlined_clickable_red_8dp"
     android:paddingStart="@dimen/padHalf"
     android:paddingEnd="@dimen/padHalf"
     android:clickable="true"

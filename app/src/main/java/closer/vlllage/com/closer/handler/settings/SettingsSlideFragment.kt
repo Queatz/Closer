@@ -63,6 +63,10 @@ class SettingsSlideFragment : PoolFragment() {
             on<FeatureRequestsHandler>().show()
         }
 
+        kioskModeButton.setOnClickListener {
+
+        }
+
         appVersion.text = "${getString(R.string.version)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
 //        val privateModeSettingsSwitch = view.findViewById<Switch>(R.id.privateModeSettingsSwitch)

@@ -207,7 +207,7 @@ class ApiHandler constructor(private val on: On) {
 
     fun getQuestProgress(questProgressId: String) = api { getQuestProgress(questProgressId) }
 
-    fun createEvent(name: String, about: String, isPublic: Boolean, latLng: LatLng, startsAt: Date, endsAt: Date) = api { createEvent(name, about, isPublic, on<LatLngStr>().from(latLng), on<HttpEncode>().encode(on<DateFormatter>().format(startsAt))!!, on<HttpEncode>().encode(on<DateFormatter>().format(endsAt))!!) }
+    fun createEvent(name: String, about: String, isPublic: Boolean, latLng: LatLng, startsAt: Date, endsAt: Date, allDay: Boolean) = api { createEvent(name, about, isPublic, on<LatLngStr>().from(latLng), on<HttpEncode>().encode(on<DateFormatter>().format(startsAt))!!, on<HttpEncode>().encode(on<DateFormatter>().format(endsAt))!!, allDay) }
 
     fun getEvents(latLng: LatLng) = api { getEvents(on<LatLngStr>().from(latLng)) }
 

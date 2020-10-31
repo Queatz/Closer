@@ -50,10 +50,14 @@ class GroupActionAdapter(on: On,
             }, parent, false))
 
     override fun onBindViewHolder(holder: GroupActionViewHolder, position: Int) {
+        val groupActionDisplay = on<GroupActionDisplay>()
+
         holder.on = On(on).apply {
             use<DisposableHandler>()
             use<QuestHandler>()
             use<GroupActionDisplay>().also {
+                it.launchGroup = groupActionDisplay.launchGroup
+                it.showGroupName = groupActionDisplay.showGroupName
                 it.onGroupActionClickListener = { groupAction, proceed ->
                     (on<GroupActionDisplay>().onGroupActionClickListener ?: this<GroupActionDisplay>().fallbackGroupActionClickListener).invoke(groupAction, proceed)
                 }

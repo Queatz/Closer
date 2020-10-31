@@ -1,6 +1,25 @@
 
+Hom Nay - Halloween
+=======
+
+[X] BUG Group should not be showing up on activity in the group
+
+[X] Create event from feed
+[X] All day events
+[ ] Repeating events
+
+[ ] Tags
+
+[ ] Kiosk mode
+    [ ] Return to tab after 1 minute
+    [ ] Expand feed | Show map
+
 Incoming
 ========
+
+[ ] Search for stuff should hide the feed
+[ ] Hide contacts via long press
+[ ] Goals and lifestyles should show members on their cards
 
 [ ] thought: react to people's goals
 [ ] thought: find a new interest

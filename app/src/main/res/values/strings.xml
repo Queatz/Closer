@@ -111,10 +111,12 @@
     <string name="enter_event_details">Describe the event</string>
     <string name="enter_event_price">Price (optional)</string>
     <string name="view">View</string>
+    <string name="event_start_end_day">%1$s — %2$s</string>
     <string name="event_start_end_time">%1$s — %2$s %3$s</string>
     <string name="event_start_end_time_multiday">%1$s %2$s — %3$s %4$s</string>
     <string name="event_price_and_time">%1$s, %2$s</string>
     <string name="event_happening_now">%1$s (Happening Now)</string>
+    <string name="event_happening_today">%1$s (Happening Today)</string>
     <string name="cancelled">Cancelled</string>
     <string name="event">Event</string>
     <string name="open_event">Open event</string>
@@ -259,8 +261,8 @@
     <string name="x_removed">%1$s removed</string>
     <string name="remove_x">Remove %1$s?</string>
     <string name="say_something_in">Talk in %1$s…</string>
-    <string name="ends">End time</string>
-    <string name="starts">Start time</string>
+    <string name="ends">Ends</string>
+    <string name="starts">Starts</string>
     <string name="events">Events</string>
     <string name="calendar">Calendar</string>
     <string name="post_review">Post your review</string>
@@ -502,6 +504,8 @@
     <string name="talk_on_x_profile">Talk on %1$s\'s profile…</string>
     <string name="post_on_x_profile">Post on %1$s\'s profile</string>
     <string name="approx_location">Location is approximate</string>
+    <string name="kiosk_mode">Kiosk mode</string>
+    <string name="all_day">All day</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

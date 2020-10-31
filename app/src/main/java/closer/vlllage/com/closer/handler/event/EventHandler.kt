@@ -23,6 +23,7 @@ import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.ui.InterceptableScrollView
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.post_event_modal.view.*
 import java.util.*
@@ -73,7 +74,18 @@ class EventHandler constructor(private val on: On) {
                 viewHolder.endsAtTimePicker.currentMinute = endCal.get(Calendar.MINUTE)
 
                 viewHolder.datePicker.minDate = now.timeInMillis
-                viewHolder.isPublicSwitch.isChecked = isPublic
+                viewHolder.isPublicToggle.check(if (isPublic) R.id.publicToggleButton else R.id.friendsToggleButton)
+
+                view.isPublicToggle.addOnButtonCheckedListener { group, _, _ ->
+                    on<ToggleHelper>().updateToggleButtonWeights(group)
+                }
+
+                on<ToggleHelper>().updateToggleButtonWeights(view.isPublicToggle)
+
+                view.isAllDaySwitch.setOnCheckedChangeListener { _, isChecked ->
+                    viewHolder.startsAtTimePicker.visible = !isChecked
+                    viewHolder.endsAtTimePicker.visible = !isChecked
+                }
 
                 name?.let { viewHolder.eventName.setText(it) }
                 price?.let { viewHolder.eventPrice.setText(it) }
@@ -103,8 +115,8 @@ class EventHandler constructor(private val on: On) {
 
                 on<TaskHandler>().activeTask?.let {
                     if (it.taskType == TaskType.CREATE_EVENT_IN_GROUP) {
-                        viewHolder.isPublicSwitch.isChecked = it.group.isPublic
-                        viewHolder.isPublicSwitch.visible = false
+                        viewHolder.isPublicToggle.check(if (it.group.isPublic) R.id.publicToggleButton else R.id.friendsToggleButton)
+                        viewHolder.isPublicToggle.visible = false
                         viewHolder.postEventInContainer.visible = true
                         viewHolder.postEventIn.text = on<ResourcesHandler>().resources.getString(R.string.in_x,
                                 it.group.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown))
@@ -114,7 +126,7 @@ class EventHandler constructor(private val on: On) {
                         viewHolder.removeGroupFromEvent.setOnClickListener {
                             on<TaskHandler>().activeTask = null
                             viewHolder.postEventInContainer.visible = false
-                            viewHolder.isPublicSwitch.visible = true
+                            viewHolder.isPublicToggle.visible = true
                         }
                     }
                 }
@@ -171,13 +183,14 @@ class EventHandler constructor(private val on: On) {
 
                     val event = getViewState(viewHolder)
 
-                    createNewEvent(viewHolder.isPublicSwitch.isChecked,
+                    createNewEvent(viewHolder.isPublicToggle.checkedButtonId == R.id.publicToggleButton,
                             latLng,
                             viewHolder.eventName.text.toString(),
                             viewHolder.pinnedMessage.text.toString(),
                             viewHolder.eventPrice.text.toString(),
                             event.startsAt.time,
                             event.endsAt.time,
+                            viewHolder.isAllDaySwitch.isChecked,
                             onEventCreatedListener)
                 }
             title = on<ResourcesHandler>().resources.getString(R.string.host_event)
@@ -214,6 +227,7 @@ class EventHandler constructor(private val on: On) {
                                price: String,
                                startsAt: Date,
                                endsAt: Date,
+                               allDay: Boolean,
                                onEventCreatedListener: OnEventCreatedListener) {
         val event = on<StoreHandler>().create(Event::class.java)
         event!!.name = name.trim()
@@ -223,6 +237,7 @@ class EventHandler constructor(private val on: On) {
         event.longitude = latLng.longitude
         event.startsAt = startsAt
         event.endsAt = endsAt
+        event.allDay = allDay
 
         val group = on<TaskHandler>().activeTask?.group
         on<TaskHandler>().activeTask = null
@@ -268,7 +283,8 @@ class EventHandler constructor(private val on: On) {
     }
 
     private class CreateEventViewHolder(view: View) {
-        var isPublicSwitch: Switch = view.isPublicSwitch
+        var isPublicToggle: MaterialButtonToggleGroup = view.isPublicToggle
+        var isAllDaySwitch: Switch = view.isAllDaySwitch
         var changeEndDateButton: View = view.changeEndDate
         var endDateTextView: TextView = view.endDateTextView
         var endDatePicker: DatePicker = view.endsDatePicker

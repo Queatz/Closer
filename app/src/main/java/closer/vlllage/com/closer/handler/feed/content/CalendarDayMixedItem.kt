@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.event.EventAdapter
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
@@ -32,6 +34,8 @@ class CalendarDayViewHolder(itemView: View) : MixedItemViewHolder(itemView, Mixe
     var eventsObservable: DataSubscription? = null
     val views = mutableSetOf<View>()
     var date = itemView.date!!
+    lateinit var allDayAdapter: EventAdapter
+    var allDayEvents = itemView.allDayEvents!!
     var day = itemView.day!!
     var events: List<Event>? = null
 }
@@ -62,6 +66,10 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 
         holder.date.text = on<TimeStr>().day(date)
 
+        holder.allDayAdapter = EventAdapter(on)
+        holder.allDayEvents.adapter = holder.allDayAdapter
+        holder.allDayEvents.layoutManager = LinearLayoutManager(holder.allDayEvents.context, LinearLayoutManager.HORIZONTAL, false)
+
         holder.itemView.headerPadding.visible = false && position == 0
         holder.itemView.headerPadding.clipToOutline = true
 
@@ -83,15 +91,24 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                                     ).or(
                                             Event_.isPublic.equal(false)
                                     )
+
                             )
                     )
                             .build()
                             .subscribe()
                             .on(AndroidScheduler.mainThread())
-                            .observer { setCalendarDayEvents(holder, date, it) }.also {
+                            .observer {
+                                setAllDayEvents(holder, it.filter { it.allDay })
+                                setCalendarDayEvents(holder, date, it.filter { it.allDay.not() })
+                            }.also {
                                 holder.on<DisposableHandler>().add(it)
                             }
                 })
+    }
+
+    private fun setAllDayEvents(holder: CalendarDayViewHolder, events: List<Event>) {
+        holder.allDayEvents.visible = events.isEmpty().not()
+        holder.allDayAdapter.items = events.toMutableList()
     }
 
     private fun setCalendarDayEvents(holder: CalendarDayViewHolder, date: Date, events: List<Event>? = null) {

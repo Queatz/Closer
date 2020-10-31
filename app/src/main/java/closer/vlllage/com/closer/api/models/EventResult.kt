@@ -13,6 +13,7 @@ class EventResult : ModelResult() {
     var startsAt: Date? = null
     var endsAt: Date? = null
     var cancelled: Boolean = false
+    var allDay: Boolean = false
     var groupId: String? = null
     var creator: String? = null
 
@@ -33,6 +34,7 @@ class EventResult : ModelResult() {
             event.longitude = eventResult.geo!![1]
             event.endsAt = eventResult.endsAt
             event.startsAt = eventResult.startsAt
+            event.allDay = eventResult.allDay
             event.cancelled = eventResult.cancelled
             event.groupId = eventResult.groupId
             event.creator = eventResult.creator

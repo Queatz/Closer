@@ -4,6 +4,8 @@ import android.text.format.DateUtils
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.extensions.setToEndOfDay
+import closer.vlllage.com.closer.extensions.setToStartOfDay
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.store.models.Event
 import com.queatz.on.On
@@ -33,16 +35,34 @@ class EventDetailsHandler constructor(private val on: On) {
                 DAY_IN_MILLIS
         ).toString()
 
-        val now = Calendar.getInstance().time
-        val isHappeningNow = now.after(event.startsAt) && now.before(event.endsAt)
+        val now = Calendar.getInstance(TimeZone.getDefault()).time
 
-        var eventTimeText = if (day == endDay)
-            on<ResourcesHandler>().resources.getString(R.string.event_start_end_time, startTime, endTime, day)
-        else
-            on<ResourcesHandler>().resources.getString(R.string.event_start_end_time_multiday, startTime, day, endTime, endDay)
+        val endsAtCalendar = Calendar.getInstance(TimeZone.getDefault()).apply {
+            time = event.startsAt!!
+
+            if (event.allDay) setToEndOfDay()
+        }.time
+
+        val startsAtCalendar = Calendar.getInstance(TimeZone.getDefault()).apply {
+            time = event.startsAt!!
+
+            if (event.allDay) setToStartOfDay()
+        }.time
+
+        val isHappeningNow = now.after(startsAtCalendar) && now.before(endsAtCalendar)
+
+        var eventTimeText = when {
+            event.allDay -> if (day == endDay) day else on<ResourcesHandler>().resources.getString(R.string.event_start_end_day, day, endDay)
+            day == endDay -> on<ResourcesHandler>().resources.getString(R.string.event_start_end_time, startTime, endTime, day)
+            else -> on<ResourcesHandler>().resources.getString(R.string.event_start_end_time_multiday, startTime, day, endTime, endDay)
+        }
 
         if (isHappeningNow) {
-            eventTimeText = on<ResourcesHandler>().resources.getString(R.string.event_happening_now, eventTimeText)
+            eventTimeText = on<ResourcesHandler>().resources.getString(
+                    if (event.allDay)
+                        R.string.event_happening_today
+                    else
+                        R.string.event_happening_now, eventTimeText)
         }
 
         return if (event.about?.isBlank() == false) {

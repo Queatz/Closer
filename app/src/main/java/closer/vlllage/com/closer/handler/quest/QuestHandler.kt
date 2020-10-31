@@ -154,14 +154,14 @@ class QuestHandler(private val on: On) {
                 viewHolder.searchGroupsAdapter = adapter
 
                 view.isPublicToggle.addOnButtonCheckedListener { group, checkedId, isChecked ->
-                    updateToggleButtonWeights(group)
+                    on<ToggleHelper>().updateToggleButtonWeights(group)
                     if (isChecked) {
                         viewHolder.isPublic = checkedId == R.id.publicToggleButton
                     }
                 }
 
                 view.finishDateToggle.addOnButtonCheckedListener { group, checkedId, isChecked ->
-                    updateToggleButtonWeights(group)
+                    on<ToggleHelper>().updateToggleButtonWeights(group)
 
                     if (isChecked) {
                         when (checkedId) {
@@ -178,8 +178,8 @@ class QuestHandler(private val on: On) {
                         }
                     }
                 }
-                updateToggleButtonWeights(view.finishDateToggle)
-                updateToggleButtonWeights(view.isPublicToggle)
+                on<ToggleHelper>().updateToggleButtonWeights(view.finishDateToggle)
+                on<ToggleHelper>().updateToggleButtonWeights(view.isPublicToggle)
 
                 view.actionRecyclerView.adapter = adapter
                 view.actionRecyclerView.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
@@ -509,14 +509,6 @@ class QuestHandler(private val on: On) {
         else -> R.plurals.date_approx_days
     }, finish.duration ?: 1, finish.duration ?: 1)
 
-    private fun updateToggleButtonWeights(group: MaterialButtonToggleGroup) {
-        group.children.forEach {
-            it.updateLayoutParams<LinearLayout.LayoutParams> {
-                width = if (it.id == group.checkedButtonId) WRAP_CONTENT else 0
-            }
-        }
-    }
-
     private fun refresh(viewHolder: CreateQuestViewHolder) {
         searchGroupActivities(viewHolder, viewHolder.searchGroupsAdapter, viewHolder.view.searchActivities.text.toString())
         viewHolder.on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(viewHolder.activities, true)
@@ -549,7 +541,7 @@ class QuestHandler(private val on: On) {
                 }
 
                 view.intervalToggle.addOnButtonCheckedListener { group, checkedId, isChecked ->
-                    updateToggleButtonWeights(group)
+                    on<ToggleHelper>().updateToggleButtonWeights(group)
 
                     if (isChecked) {
                         view.count.setHint(when (checkedId) {
@@ -592,7 +584,7 @@ class QuestHandler(private val on: On) {
                     else -> R.id.daysToggleButton
                 })
 
-                updateToggleButtonWeights(view.intervalToggle)
+                on<ToggleHelper>().updateToggleButtonWeights(view.intervalToggle)
             }
             show()
         }
@@ -662,9 +654,9 @@ class QuestHandler(private val on: On) {
                         onChange()
                     }
 
-                    updateToggleButtonWeights(group)
+                    on<ToggleHelper>().updateToggleButtonWeights(group)
                 }
-                updateToggleButtonWeights(view.interactionToggle)
+                on<ToggleHelper>().updateToggleButtonWeights(view.interactionToggle)
 
                 view.numberOfTimes.doOnTextChanged { text, start, before, count ->
                     questAction.value = (text.toString().toIntOrNull() ?: 1).coerceAtLeast(1)

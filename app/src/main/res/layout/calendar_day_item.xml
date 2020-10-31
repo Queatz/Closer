@@ -28,18 +28,38 @@
         app:layout_constraintTop_toBottomOf="@+id/headerPadding"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/day"
+        app:layout_constraintBottom_toTopOf="@+id/allDayEventsContainer"
         android:textColor="@color/textInverse"
         android:gravity="center_horizontal"
         android:textAppearance="?android:textAppearanceMedium"
         tools:text="Thursday, May 3rd"
         android:padding="@dimen/padDialog" />
 
+    <closer.vlllage.com.closer.ui.SoftScrollStopper
+        android:id="@+id/allDayEventsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/date"
+        app:layout_constraintBottom_toTopOf="@+id/day">
+
+        <closer.vlllage.com.closer.ui.FixedUpRecyclerView
+            android:id="@+id/allDayEvents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/pad"
+            android:paddingBottom="@dimen/pad"
+            android:clipToPadding="false"
+            tools:orientation="horizontal"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/search_groups_card_item" />
+
+    </closer.vlllage.com.closer.ui.SoftScrollStopper>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/day"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/date"
+        app:layout_constraintTop_toBottomOf="@+id/allDayEventsContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -13,6 +13,19 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_event_details"
+            android:imeOptions="actionGo"
+            android:padding="@dimen/padDialog"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:background="@null"
+            android:maxLength="128"
+            android:maxLines="1"
+            android:inputType="textCapSentences|textShortMessage" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/postEventInContainer"
             android:layout_width="match_parent"
@@ -54,29 +67,51 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:theme="@style/AppTheme.Red"
+            android:id="@+id/isPublicToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:checkedButton="@id/friendsToggleButton"
+            app:selectionRequired="true"
+            android:paddingEnd="@dimen/padDialog"
+            android:paddingStart="@dimen/padDialog"
+            android:paddingTop="@dimen/padDouble"
+            android:paddingBottom="@dimen/padDouble"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/friendsToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                app:icon="@drawable/ic_group_black_24dp"
+                app:iconPadding="@dimen/pad"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/friends" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/publicToggleButton"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_public_black_24dp"
+                app:iconPadding="@dimen/pad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/is_public" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
         <Switch
-            android:id="@+id/isPublicSwitch"
+            android:id="@+id/isAllDaySwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/padDialog"
             android:paddingStart="@dimen/padDialog"
             android:paddingTop="@dimen/padDouble"
             android:paddingBottom="@dimen/padDouble"
-            android:text="@string/is_public"
+            android:text="@string/all_day"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/enter_event_details"
-            android:imeOptions="actionGo"
-            android:padding="@dimen/padDialog"
-            android:textAppearance="@android:style/TextAppearance.Material.Large"
-            android:background="@null"
-            android:maxLength="128"
-            android:maxLines="1"
-            android:inputType="textCapSentences|textShortMessage" />
 
         <RelativeLayout
             android:id="@+id/changeDate"

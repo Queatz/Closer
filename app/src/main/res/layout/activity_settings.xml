@@ -158,6 +158,20 @@
                 android:drawableTint="@color/text" />
 
             <Button style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/kioskModeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/kiosk_mode"
+                android:drawableStart="@drawable/ic_baseline_fullscreen_24"
+                android:drawablePadding="@dimen/pad"
+                android:drawableTint="@color/text" />
+
+            <Button style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/sendFeedbackButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

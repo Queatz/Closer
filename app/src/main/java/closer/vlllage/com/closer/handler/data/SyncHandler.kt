@@ -146,7 +146,8 @@ class SyncHandler constructor(private val on: On) {
                 event.isPublic,
                 LatLng(event.latitude!!, event.longitude!!),
                 event.startsAt!!,
-                event.endsAt!!
+                event.endsAt!!,
+                event.allDay
         ).subscribe({ createResult ->
             if (createResult.success) {
                 event.id = createResult.id

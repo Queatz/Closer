@@ -14,11 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
-import closer.vlllage.com.closer.handler.data.AccountHandler
+import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.data.AccountHandler.Companion.ACCOUNT_FIELD_PRIVATE
-import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.data.RefreshHandler
-import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.FeedHandler
@@ -209,6 +207,16 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 }
                 ContentViewType.HOME_GOALS -> {
                     on<ProfileHelper>().addGoal(on<PersistenceHandler>().phoneId!!)
+                }
+                ContentViewType.HOME_CALENDAR -> {
+                    on<LocationHandler>().getCurrentLocation {
+                        on<EventHandler>().createNewEvent(LatLng(
+                                it.latitude,
+                                it.longitude
+                        ), false) {
+                            on<GroupActivityTransitionHandler>().showGroupForEvent(null, it)
+                        }
+                    }
                 }
                 else -> {
                     on<MapHandler>().center?.let { center ->
@@ -488,7 +496,9 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_events_hint)
-                                itemView.historyButton.visible = false
+                                itemView.historyButton.visible = true
+                                itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
+                                itemView.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.red))
                                 actionHeader.visible = false
                                 itemView.suggestionsHeader.visible = false
                                 itemView.placesHeader.visible = false
