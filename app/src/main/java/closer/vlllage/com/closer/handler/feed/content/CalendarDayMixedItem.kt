@@ -1,19 +1,18 @@
 package closer.vlllage.com.closer.handler.feed.content
 
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.event.EventAdapter
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.HowFar
-import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.helpers.TimeStr
+import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
@@ -78,6 +77,13 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
         val distance = on<HowFar>().about7Miles
         val dateStart = Date(date.time + 1)
         val dateEnd = Date(date.time + TimeUnit.DAYS.toMillis(1) - 1)
+        val isToday = DateUtils.isToday(dateStart.time)
+
+        holder.itemView.pastTime.visible = isToday
+
+        if (isToday) {
+            trackTimeOfDay(holder)
+        }
 
         holder.on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -104,6 +110,19 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                                 holder.on<DisposableHandler>().add(it)
                             }
                 })
+    }
+
+    private fun trackTimeOfDay(holder: CalendarDayViewHolder) {
+        holder.on<TimerHandler>().postDisposable({
+            val now = Calendar.getInstance(TimeZone.getDefault())
+            val percentDayPast = (now.get(Calendar.HOUR_OF_DAY) * TimeUnit.HOURS.toSeconds(1)).toFloat() / TimeUnit.DAYS.toSeconds(1)
+
+            holder.itemView.pastTime.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                matchConstraintPercentHeight = percentDayPast
+            }
+
+            trackTimeOfDay(holder)
+        }, 1000)
     }
 
     private fun setAllDayEvents(holder: CalendarDayViewHolder, events: List<Event>) {

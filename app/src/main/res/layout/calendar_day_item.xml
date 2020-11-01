@@ -68,6 +68,21 @@
         android:isScrollContainer="true">
 
         <View
+            android:id="@+id/pastTime"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent=".5"
+            app:layout_constraintVertical_bias="0"
+            android:background="@color/black_5"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <View
             android:id="@+id/time5am"
             android:layout_width="match_parent"
             app:layout_constraintTop_toTopOf="parent"

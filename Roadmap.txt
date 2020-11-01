@@ -7,14 +7,14 @@ Hom Nay - Halloween
 [X] Create event from feed
 [X] All day events
 [X] Update quest +1 button
+[X] 1hr before event reminder server push notification
+[X] Show time of day line in calendar tab on day
 
 [ ] Repeating events
 
 [ ] Tags
 
 [ ] Reminders on everything
-[ ] 1hr before event reminder server push notification
-
 
 Incoming
 ========

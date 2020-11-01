@@ -33,5 +33,4 @@ class HostEventHelper constructor(private val on: On) {
         (on<ActivityHandler>().activity as CircularRevealActivity)
                 .finish { on<MapActivityHandler>().showEventOnMap(event!!) }
     }
-
 }
