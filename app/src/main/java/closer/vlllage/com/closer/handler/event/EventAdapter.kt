@@ -36,6 +36,10 @@ class EventAdapter(private val on: On) : RecyclerView.Adapter<EventViewHolder>()
         holder.name.text = event.name
         holder.about.text = on<EventDetailsHandler>().formatEventDetails(event)
 
+        holder.name.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_group_black_18dp, 0, 0, 0
+        )
+
         holder.itemView.setOnClickListener {
             on<GroupActivityTransitionHandler>().showGroupForEvent(holder.itemView, event)
         }

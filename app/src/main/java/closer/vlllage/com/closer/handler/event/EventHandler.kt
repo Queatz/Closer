@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.*
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.EventResult
+import closer.vlllage.com.closer.extensions.setToEndOfDay
+import closer.vlllage.com.closer.extensions.setToStartOfDay
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.TaskHandler
 import closer.vlllage.com.closer.handler.TaskType
@@ -182,6 +184,12 @@ class EventHandler constructor(private val on: On) {
                     val viewHolder = alertResult as CreateEventViewHolder
 
                     val event = getViewState(viewHolder)
+                    val isAllDay = viewHolder.isAllDaySwitch.isChecked
+
+                    if (isAllDay) {
+                        event.startsAt.setToStartOfDay()
+                        event.endsAt.setToEndOfDay()
+                    }
 
                     createNewEvent(viewHolder.isPublicToggle.checkedButtonId == R.id.publicToggleButton,
                             latLng,
@@ -190,7 +198,7 @@ class EventHandler constructor(private val on: On) {
                             viewHolder.eventPrice.text.toString(),
                             event.startsAt.time,
                             event.endsAt.time,
-                            viewHolder.isAllDaySwitch.isChecked,
+                            isAllDay,
                             onEventCreatedListener)
                 }
             title = on<ResourcesHandler>().resources.getString(R.string.host_event)
