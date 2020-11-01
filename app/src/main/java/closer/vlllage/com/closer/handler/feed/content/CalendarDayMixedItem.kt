@@ -108,7 +108,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 
     private fun setAllDayEvents(holder: CalendarDayViewHolder, events: List<Event>) {
         holder.allDayEvents.visible = events.isEmpty().not()
-        holder.allDayAdapter.items = events.toMutableList()
+        holder.allDayAdapter.items = events.sortedBy { it.startsAt }.toMutableList()
     }
 
     private fun setCalendarDayEvents(holder: CalendarDayViewHolder, date: Date, events: List<Event>? = null) {

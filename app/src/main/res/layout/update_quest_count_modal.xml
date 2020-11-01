@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/padDouble">
+
+    <EditText
+        android:id="@+id/count"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/message"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0"
+        android:imeOptions="actionDone"
+        android:paddingTop="@dimen/padDouble"
+        android:paddingBottom="@dimen/pad"
+        android:paddingStart="6dp"
+        android:paddingEnd="@dimen/pad"
+        android:maxLength="96"
+        android:hint="#"
+        android:gravity="center_horizontal"
+        android:textColor="@color/textInverse"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:inputType="numberSigned"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/count"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0"
+        android:paddingTop="@dimen/padDouble"
+        android:paddingBottom="@dimen/pad"
+        android:paddingStart="@dimen/pad"
+        android:textColor="@color/textInverse"
+        tools:text="of 10"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -457,6 +457,7 @@
     <string name="x_remaining">%1$s remaining</string>
     <string name="x_percent_remaining">%1$s%% remaining</string>
     <string name="x_of_y_done">%1$s of %2$s done</string>
+    <string name="of_y_done">of %1$s done</string>
     <string name="stop_quest">Stop quest</string>
     <string name="resume_quest">Resume previous quest</string>
     <string name="finish_quest">Finish quest</string>

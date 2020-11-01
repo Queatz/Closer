@@ -1,11 +1,7 @@
 package closer.vlllage.com.closer.handler.quest
 
 import android.view.View
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.LinearLayout
 import android.widget.SeekBar
-import androidx.core.view.children
-import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +18,6 @@ import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -32,8 +27,10 @@ import kotlinx.android.synthetic.main.create_post_select_group_action.view.searc
 import kotlinx.android.synthetic.main.create_quest_modal.view.*
 import kotlinx.android.synthetic.main.edit_quest_action_modal.view.*
 import kotlinx.android.synthetic.main.edit_quest_duration_modal.view.*
+import kotlinx.android.synthetic.main.edit_quest_duration_modal.view.count
 import kotlinx.android.synthetic.main.edit_quest_finish_date_modal.view.*
 import kotlinx.android.synthetic.main.link_quest_modal.view.*
+import kotlinx.android.synthetic.main.update_quest_count_modal.view.*
 import java.util.*
 
 class QuestHandler(private val on: On) {
@@ -309,12 +306,20 @@ class QuestHandler(private val on: On) {
                 else -> {
                     on<AlertHandler>().make().apply {
                         title = quest.name
-                        message = "${on<AccountHandler>().name} ${groupAction.intent}\n\n${on<ResourcesHandler>().resources.getString(R.string.x_of_y_done, (current + 1).toString(), it.value.toString())}"
+                        layoutResId = R.layout.update_quest_count_modal
+                        onAfterViewCreated = { config, view ->
+                            view.count.setText((current + 1).toString())
+                            view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done, it.value.toString())
+
+                            view.count.doOnTextChanged { text, start, before, count ->
+                                config.alertResult = text.toString().toIntOrNull()
+                            }
+                        }
                         negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
                         negativeButtonCallback = { callback?.invoke() }
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_quest)
                         positiveButtonCallback = {
-                            addProgressInternal(questProgress, groupAction.id!!, 1)
+                            addProgressInternal(questProgress, groupAction.id!!, it as? Int ?: 1)
                             callback?.invoke()
                         }
                         show()

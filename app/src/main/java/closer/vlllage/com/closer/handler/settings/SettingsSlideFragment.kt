@@ -64,7 +64,7 @@ class SettingsSlideFragment : PoolFragment() {
         }
 
         kioskModeButton.setOnClickListener {
-
+            on<DefaultAlerts>().message("Coming soon!")
         }
 
         appVersion.text = "${getString(R.string.version)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"

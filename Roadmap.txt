@@ -6,16 +6,22 @@ Hom Nay - Halloween
 
 [X] Create event from feed
 [X] All day events
+[X] Update quest +1 button
+
 [ ] Repeating events
 
 [ ] Tags
 
-[ ] Kiosk mode
-    [ ] Return to tab after 1 minute
-    [ ] Expand feed | Show map
+[ ] Reminders on everything
+[ ] 1hr before event reminder server push notification
+
 
 Incoming
 ========
+
+[ ] Kiosk mode
+    [ ] Return to tab after 1 minute
+    [ ] Expand feed | Show map
 
 [ ] Search for stuff should hide the feed
 [ ] Hide contacts via long press
