@@ -115,8 +115,8 @@
     <string name="event_start_end_time">%1$s — %2$s %3$s</string>
     <string name="event_start_end_time_multiday">%1$s %2$s — %3$s %4$s</string>
     <string name="event_price_and_time">%1$s, %2$s</string>
-    <string name="event_happening_now">%1$s (Happening Now)</string>
-    <string name="event_happening_today">%1$s (Happening Today)</string>
+    <string name="event_happening_now">%1$s (Happening now)</string>
+    <string name="event_happening_all_day">%1$s (Happening all day)</string>
     <string name="cancelled">Cancelled</string>
     <string name="event">Event</string>
     <string name="open_event">Open event</string>

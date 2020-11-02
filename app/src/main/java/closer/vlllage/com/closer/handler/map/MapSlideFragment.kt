@@ -250,6 +250,7 @@ class MapSlideFragment : PoolFragment() {
     private fun search(query: String) {
         on<AccountHandler>().updatePrivateOnly(false)
         on<SearchMapHandler>().next(query)
+        on<FeedHandler>().hide()
     }
 
     private fun showMapMenu(latLng: LatLng, title: String?) {

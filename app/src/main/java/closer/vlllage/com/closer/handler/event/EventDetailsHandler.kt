@@ -60,7 +60,7 @@ class EventDetailsHandler constructor(private val on: On) {
         if (isHappeningNow) {
             eventTimeText = on<ResourcesHandler>().resources.getString(
                     if (event.allDay)
-                        R.string.event_happening_today
+                        R.string.event_happening_all_day
                     else
                         R.string.event_happening_now, eventTimeText)
         }

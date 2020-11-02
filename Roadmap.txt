@@ -1,30 +1,15 @@
 
-Hom Nay - Halloween
-=======
-
-[X] BUG Group should not be showing up on activity in the group
-
-[X] Create event from feed
-[X] All day events
-[X] Update quest +1 button
-[X] 1hr before event reminder server push notification
-[X] Show time of day line in calendar tab on day
-
-[ ] Repeating events
-
-[ ] Tags
-
-[ ] Reminders on everything
-
 Incoming
 ========
+
+[ ] NPCs
 
 [ ] Kiosk mode
     [ ] Return to tab after 1 minute
     [ ] Expand feed | Show map
 
-[ ] Search for stuff should hide the feed
-[ ] Hide contacts via long press
+[X] Search for stuff should hide the feed
+[ ] Hide contacts via long press / delete endpoint?
 [ ] Goals and lifestyles should show members on their cards
 
 [ ] thought: react to people's goals
@@ -38,54 +23,25 @@ Incoming
 [ ] guide: add Xable messages to top of feed tabs
 [ ] guide: guides by people, Outdoor Adventure by Jacob
 
-Rename "Public -> Anyone"
 Invite to join, Private Community & Social Activities
+
+❤ NPCs ❤
+========
+
+Uses webhooks and regular API calls
+NPC gets regular notifications that a user would
+NPC flag on visible profile
+Edit + setup happens inside NPC
+Need Message w/ Option Buttons message attachment
+
+Invite to group
+Leave group
+
+First NPC: Reminder Rochelle
+post a message or ask a question every week / day / year / etc.
+    she can handle multiple reminders
+
+
 
 ❤ Next ❤
 ========
-
-Quests
-======
-
-[ QuestMap ]
-    Array<QuestProgress>
-        complete: boolean
-        active: boolean
-        created: Date               // started
-        advent: '<date>'
-        group: Group
-        quest: Quest
-            isPublic: boolean
-            subquests: List<Quest>
-            items: List<QuestItem>
-                id: string
-                groupAction: GroupAction
-                config: { advent: '<date>', times: 100, percent: true, done: true }
-        progress: List<QuestItemProgress>
-            id: string
-            questItemId: 1
-            phones: [1, 2, 3]
-            data: { times 50, percent: 44, done: false }
-
-
-Implementation Notes
-====================
-
-Quest maps automagically connect and layout QuestProgresses
-  If a sub- or super- quest is not started, it shows as just name,
-    otherwise, it shows as the full QuestProgress
-      - Tap on just name = Start Quest / Open Quest
-
-What to show on Quest Cards:
-
-Looking at Quest group ->
-    22 times
-    Everyone you can see via friendships, including you
-    Quest map shows all relations collapsed
-        No checkmark
-Looking at QuestProgress group ->
-    22 remaining
-    Just friends are visible
-    Quest map only shows active quests as expanded
-        Completed get checkmark
-        Unstarted get collapsed version
