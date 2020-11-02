@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import closer.vlllage.com.closer.handler.PersonalSlideFragment
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ScanQrCodeHandler
+import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.handler.map.MapViewHandler
 import closer.vlllage.com.closer.handler.settings.SettingsSlideFragment
 import closer.vlllage.com.closer.handler.welcome.WelcomeSlideFragment
@@ -56,7 +56,7 @@ class MapsActivity : PoolActivity() {
         }
 
         if (intent.hasExtra(EXTRA_PROMPT)) {
-            on<DefaultAlerts>().message(intent.getStringExtra(EXTRA_PROMPT))
+            on<ToastHandler>().show(intent.getStringExtra(EXTRA_PROMPT)!!)
         }
 
         if (intent.hasExtra(EXTRA_SCREEN)) {

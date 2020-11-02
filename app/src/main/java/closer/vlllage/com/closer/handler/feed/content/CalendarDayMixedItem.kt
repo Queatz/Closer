@@ -115,7 +115,10 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
     private fun trackTimeOfDay(holder: CalendarDayViewHolder) {
         holder.on<TimerHandler>().postDisposable({
             val now = Calendar.getInstance(TimeZone.getDefault())
-            val percentDayPast = (now.get(Calendar.HOUR_OF_DAY) * TimeUnit.HOURS.toSeconds(1)).toFloat() / TimeUnit.DAYS.toSeconds(1)
+            val percentDayPast = (
+                    now.get(Calendar.HOUR_OF_DAY) * TimeUnit.HOURS.toSeconds(1) +
+                    now.get(Calendar.MINUTE) * TimeUnit.MINUTES.toSeconds(1)
+                    ).toFloat() / TimeUnit.DAYS.toSeconds(1)
 
             holder.itemView.pastTime.updateLayoutParams<ConstraintLayout.LayoutParams> {
                 matchConstraintPercentHeight = percentDayPast

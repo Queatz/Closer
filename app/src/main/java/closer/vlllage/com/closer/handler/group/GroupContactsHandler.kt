@@ -192,11 +192,7 @@ class GroupContactsHandler constructor(private val on: On) {
                     on<ResourcesHandler>().resources.getString(R.string.phone_invited, phoneContact.phoneNumber, group.name)
                 else
                     on<ResourcesHandler>().resources.getString(R.string.phone_invited, phoneContact.name, group.name)
-                on<AlertHandler>().make().apply {
-                    this.message = message
-                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.yaay)
-                    show()
-                }
+                on<ToastHandler>().show(message)
                 on<RefreshHandler>().refreshMyGroups()
             } else {
                 on<DefaultAlerts>().thatDidntWork(successResult.error)
