@@ -36,4 +36,5 @@
     <dimen name="textSizeEmoji">24sp</dimen>
     <dimen name="maxFullWidth">512dp</dimen>
     <dimen name="maxFullWidthWithPadding">528dp</dimen>
+    <dimen name="minEventHeight">36dp</dimen>
 </resources>

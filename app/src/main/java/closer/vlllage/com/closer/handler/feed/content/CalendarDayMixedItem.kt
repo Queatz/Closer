@@ -139,6 +139,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
         }
 
         val vH = holder.day.measuredHeight
+        val minH = ((TimeUnit.HOURS.toMillis(1) ).toFloat() / TimeUnit.DAYS.toMillis(1) * vH).toInt()
 
         if (vH == 0) {
             holder.itemView.post { setCalendarDayEvents(holder, date, events) }
@@ -164,7 +165,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                 startToStart = ConstraintLayout.LayoutParams.PARENT_ID
                 endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
                 width = ViewGroup.LayoutParams.MATCH_PARENT
-                height = h.toInt()
+                height = h.toInt().coerceAtLeast(minH)
                 constrainedHeight = true
                 constrainedWidth = true
                 marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3 +
