@@ -7,6 +7,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.event.EventHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
@@ -79,7 +80,15 @@ class GroupMemberHandler constructor(private val on: On) {
                                 positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_description)
                                 show()
                             }
-                        })
+                        },
+                        MenuHandler.MenuOption(R.drawable.ic_refresh_black_24dp, R.string.host_again) {
+                            on<DataHandler>().getEvent(group.eventId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
+                                on<EventHandler>().hostAgain(it)
+                            }, {
+                                on<DefaultAlerts>().thatDidntWork()
+                            })
+                        }.visible(group.hasEvent())
+                )
             }
         }
     }
@@ -150,6 +159,13 @@ class GroupMemberHandler constructor(private val on: On) {
                         }
                     }
                 }.visible(group?.hasPhone() != true),
+                MenuHandler.MenuOption(R.drawable.ic_refresh_black_24dp, R.string.host_again) {
+                    on<DataHandler>().getEvent(group!!.eventId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
+                        on<EventHandler>().hostAgain(it)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    })
+                }.visible(group?.hasEvent() == true),
                 MenuHandler.MenuOption(R.drawable.ic_add_black_24dp, R.string.add_an_action) {
                     if (group != null) {
                         on<GroupActionHandler>().addActionToGroup(group)

@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.bubble.MapBubble
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
+import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
@@ -29,6 +30,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.post_event_modal.view.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class EventHandler constructor(private val on: On) {
 
@@ -38,6 +40,7 @@ class EventHandler constructor(private val on: On) {
                        price: String? = null,
                        startsAt: Date? = null,
                        endsAt: Date? = null,
+                       allDay: Boolean? = null,
                        onEventCreatedListener: OnEventCreatedListener) {
         on<AlertHandler>().make().apply {
             theme = R.style.AppTheme_AlertDialog_Red
@@ -87,6 +90,10 @@ class EventHandler constructor(private val on: On) {
                 view.isAllDaySwitch.setOnCheckedChangeListener { _, isChecked ->
                     viewHolder.startsAtTimePicker.visible = !isChecked
                     viewHolder.endsAtTimePicker.visible = !isChecked
+                }
+
+                if (allDay == true) {
+                    view.isAllDaySwitch.isChecked = true
                 }
 
                 name?.let { viewHolder.eventName.setText(it) }
@@ -295,6 +302,36 @@ class EventHandler constructor(private val on: On) {
         mapBubble.isPinned = true
         mapBubble.tag = event
         return mapBubble
+    }
+
+    fun hostAgain(event: Event) {
+        val daysAgo = TimeUnit.MILLISECONDS.toDays(Date().time - event.startsAt!!.time).toInt()
+        val now = Calendar.getInstance(TimeZone.getDefault())
+        val startsAt = event.startsAt!!.let { Calendar.getInstance(TimeZone.getDefault()).apply {
+            time = it
+            add(Calendar.DATE, daysAgo)
+        } }
+        val endsAt = event.endsAt!!.let { Calendar.getInstance(TimeZone.getDefault()).apply {
+            time = it
+            add(Calendar.DATE, daysAgo)
+        } }
+
+        if (startsAt.before(now)) {
+            startsAt.add(Calendar.DATE, 1)
+            endsAt.add(Calendar.DATE, 1)
+        }
+
+        on<EventHandler>().createNewEvent(
+                LatLng(event.latitude!!, event.longitude!!),
+                event.isPublic,
+                event.name,
+                event.about,
+                startsAt.time,
+                endsAt.time,
+                event.allDay
+        ) {
+            on<GroupActivityTransitionHandler>().showGroupForEvent(null, it)
+        }
     }
 
     private class CreateEventViewHolder(view: View) {
