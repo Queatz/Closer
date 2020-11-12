@@ -37,7 +37,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                         value = ContentViewType.HOME_CONTACTS,
                         color = R.color.colorPrimary),
                 GroupToolbarHandler.ToolbarItem(
-                        on<ResourcesHandler>().resources.getString(R.string.posts),
+                        on<ResourcesHandler>().resources.getString(R.string.map),
                         R.drawable.ic_whatshot_black_24dp,
                         {
                             on<FeedHandler>().show(ContentViewType.HOME_POSTS)

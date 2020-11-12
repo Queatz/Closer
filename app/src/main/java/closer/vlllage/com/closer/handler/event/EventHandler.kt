@@ -160,6 +160,8 @@ class EventHandler constructor(private val on: On) {
             buttonClickCallback = { alertResult ->
                     val viewHolder = alertResult as CreateEventViewHolder
 
+                    allDayPreProcess(viewHolder)
+
                     if (viewHolder.eventName.text.toString().isBlank()) {
                         on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.enter_event_details))
                         viewHolder.eventName.requestFocus()
@@ -186,10 +188,7 @@ class EventHandler constructor(private val on: On) {
                     val event = getViewState(viewHolder)
                     val isAllDay = viewHolder.isAllDaySwitch.isChecked
 
-                    if (isAllDay) {
-                        event.startsAt.setToStartOfDay()
-                        event.endsAt.setToEndOfDay()
-                    }
+                    allDayPreProcess(viewHolder)
 
                     createNewEvent(viewHolder.isPublicToggle.checkedButtonId == R.id.publicToggleButton,
                             latLng,
@@ -201,8 +200,16 @@ class EventHandler constructor(private val on: On) {
                             isAllDay,
                             onEventCreatedListener)
                 }
-            title = on<ResourcesHandler>().resources.getString(R.string.host_event)
             show()
+        }
+    }
+
+    private fun allDayPreProcess(viewHolder: CreateEventViewHolder) {
+        if (viewHolder.isAllDaySwitch.isChecked) {
+            getViewState(viewHolder).apply {
+                startsAt.setToStartOfDay()
+                endsAt.setToEndOfDay()
+            }
         }
     }
 

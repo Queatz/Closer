@@ -65,12 +65,12 @@ play {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation ('androidx.constraintlayout:constraintlayout:2.0.1') {
+    implementation ('androidx.constraintlayout:constraintlayout:2.0.4') {
         exclude group: 'com.android.support'
     }
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.1'
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'com.google.android.material:material:1.3.0-alpha03'
     implementation ('com.google.android.gms:play-services-maps:17.0.0') {
         exclude group: 'com.android.support'
     }
@@ -99,6 +99,7 @@ dependencies {
     implementation 'com.github.Queatz:Android-UX-Extras-Slide-Screen:0.2'
     implementation 'com.github.Queatz:On:0.1.6.4'
     implementation group: 'com.github.haifengl', name: 'smile-core', version: '1.5.2'
+    implementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
     implementation "io.objectbox:objectbox-rxjava:$objectboxVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

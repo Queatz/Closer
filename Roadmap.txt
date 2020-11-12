@@ -3,14 +3,16 @@ Incoming
 ========
 
 [ ] NPCs
+[ ] Reminders
+[ ] Categories
 
 [ ] Kiosk mode
     [ ] Return to tab after 1 minute
     [ ] Expand feed | Show map
+    [ ] Auto refresh tabs every 1 min
 
 [X] Search for stuff should hide the feed
 [ ] Hide contacts via long press / delete endpoint?
-[ ] Goals and lifestyles should show members on their cards
 
 [ ] thought: react to people's goals
 [ ] thought: find a new interest

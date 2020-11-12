@@ -90,7 +90,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                 .subscribe { cameraPosition ->
                     holder.eventsObservable?.let { holder.on<DisposableHandler>().dispose(it) }
                     holder.eventsObservable = on<StoreHandler>().store.box(Event::class).query(
-                            Event_.startsAt.between(dateStart, dateEnd).or(Event_.endsAt.between(dateStart, dateEnd)
+                            Event_.startsAt.less(dateEnd).and(Event_.endsAt.greater(dateStart)
                             ).and(
                                     Event_.latitude.between(cameraPosition.target.latitude - distance, cameraPosition.target.latitude + distance).and(
                                             Event_.longitude.between(cameraPosition.target.longitude - distance, cameraPosition.target.longitude + distance)

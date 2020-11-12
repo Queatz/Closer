@@ -507,6 +507,7 @@
     <string name="approx_location">Location is approximate</string>
     <string name="kiosk_mode">Kiosk mode</string>
     <string name="all_day">All day</string>
+    <string name="map">Map</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
