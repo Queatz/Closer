@@ -135,6 +135,26 @@ class SortHandler constructor(private val on: On) {
 
     fun sortQuests(latLng: LatLng): Comparator<Quest> {
         return Comparator { o1, o2 ->
+            val questProgresses = on<StoreHandler>().store.box(QuestProgress::class).query()
+                    .equal(QuestProgress_.questId, o1.id!!)
+                    .equal(QuestProgress_.active, true)
+                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!)
+                    .build()
+                    .count()
+
+            val questProgressesOther = on<StoreHandler>().store.box(QuestProgress::class).query()
+                    .equal(QuestProgress_.questId, o2.id!!)
+                    .equal(QuestProgress_.active, true)
+                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!)
+                    .build()
+                    .count()
+
+            if (questProgresses > questProgressesOther) {
+                return@Comparator -1
+            } else if (questProgresses < questProgressesOther) {
+                return@Comparator 1
+            }
+
             val d1 = FloatArray(1)
             val d2 = FloatArray(1)
 
