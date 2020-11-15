@@ -112,7 +112,6 @@ class QuestHandler(private val on: On) {
     fun createQuest() {
         on<AlertHandler>().make().apply {
             theme = R.style.AppTheme_AlertDialog_ForestGreen
-            title = on<ResourcesHandler>().resources.getString(R.string.create_a_quest)
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_quest)
             layoutResId = R.layout.create_quest_modal
             onAfterViewCreated = { alertConfig, view ->
@@ -309,7 +308,9 @@ class QuestHandler(private val on: On) {
                         layoutResId = R.layout.update_quest_count_modal
                         onAfterViewCreated = { config, view ->
                             view.count.setText((current + 1).toString())
-                            view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done, it.value.toString())
+                            view.count.selectAll()
+                            view.count.requestFocus()
+                            view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done, on<NumberHelper>().format(it.value))
 
                             view.count.doOnTextChanged { text, start, before, count ->
                                 config.alertResult = text.toString().toIntOrNull()
@@ -327,6 +328,25 @@ class QuestHandler(private val on: On) {
                 }
             }
         } ?: on<DefaultAlerts>().thatDidntWork()
+    }
+
+    fun questFinishPercent(quest: Quest, started: Date): Int {
+        val nowMs = Date().time
+        val progressMs = nowMs - started.time
+        val questDurationMs = when {
+            quest.flow?.finish?.date != null -> quest.flow!!.finish!!.date!!.time
+            else -> Calendar.getInstance(TimeZone.getDefault()).apply {
+                time = started
+
+                add(when (quest.flow?.finish?.unit) {
+                    QuestDurationUnit.Month -> Calendar.MONTH
+                    QuestDurationUnit.Week -> Calendar.WEEK_OF_YEAR
+                    else -> Calendar.DAY_OF_MONTH
+                }, quest.flow!!.finish!!.duration!!)
+            }.time.time
+        } - started.time
+
+        return ((progressMs.toFloat() / questDurationMs.toFloat()) * 100).toInt()
     }
 
     fun questFinishText(quest: Quest, relativeToDate: Date? = null): String {
@@ -355,7 +375,8 @@ class QuestHandler(private val on: On) {
                         }
 
                         on<ResourcesHandler>().resources.getString(R.string.finish_x,
-                                "${on<TimeStr>().approx(calendar.time, preposition = true)} (${on<TimeStr>().prettyDate(calendar.time)})")
+                                "${on<TimeStr>().approx(calendar.time
+                                        , preposition = true)} (${on<TimeStr>().prettyDate(calendar.time)})")
                     }
                 }
 

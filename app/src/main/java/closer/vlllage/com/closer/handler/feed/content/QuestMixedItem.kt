@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.feed.content
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,10 @@ import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.handler.quest.QuestLinkAdapter
 import closer.vlllage.com.closer.handler.quest.QuestProgressAdapter
 import closer.vlllage.com.closer.store.StoreHandler
-import closer.vlllage.com.closer.store.models.*
+import closer.vlllage.com.closer.store.models.GroupAction
+import closer.vlllage.com.closer.store.models.GroupAction_
+import closer.vlllage.com.closer.store.models.Quest
+import closer.vlllage.com.closer.store.models.QuestProgress
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,6 +43,7 @@ class QuestViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemT
     val description = itemView.description!!
     val name = itemView.name!!
     val card = itemView.card!!
+    val overallProgress = itemView.overallProgress!!
 }
 
 class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedItem, QuestViewHolder> {
@@ -85,7 +90,15 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.questProgressAdapter = QuestProgressAdapter(holder.on) { it, view ->
             if (holder.activeProgress == it) {
-                holder.on<QuestHandler>().openGroupForQuestProgress(view, it)
+                on<MenuHandler>().show(
+                        MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.open_group) {
+                            holder.on<QuestHandler>().openGroupForQuestProgress(view, it)
+                        },
+                        MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.deselect) {
+                            holder.activeProgress = null
+                            refreshProgress(holder, quest)
+                        }
+                )
             } else {
                 holder.activeProgress = it
                 refreshProgress(holder, quest)
@@ -196,6 +209,10 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                 true -> R.drawable.clickable_white_rounded_12dp
                 false -> R.drawable.clickable_forestgreen_rounded_12dp
             })
+            holder.overallProgress?.progressTintList = when (it.light) {
+                true -> ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.forestgreen))
+                false -> ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.colorAccent))
+            }
         }.also {
             holder.on<DisposableHandler>().add(it)
         }
@@ -277,6 +294,13 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                 }.also {
                     holder.on<DisposableHandler>().add(it)
                 }
+
+        if (holder.activeProgress?.active == true && holder.activeProgress!!.created != null) {
+            holder.overallProgress.visible = true
+            holder.overallProgress.progress = on<QuestHandler>().questFinishPercent(quest, holder.activeProgress!!.created!!).toInt()
+        } else {
+            holder.overallProgress.visible = false
+        }
 
         holder.about.text = when {
             holder.activeProgress?.finished != null -> on<ResourcesHandler>().resources.getString(R.string.finished_x,

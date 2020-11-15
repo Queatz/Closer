@@ -92,7 +92,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name"
-            app:layout_constraintBottom_toTopOf="@+id/description" />
+            app:layout_constraintBottom_toTopOf="@+id/overallProgress" />
+
+        <ProgressBar
+            android:id="@+id/overallProgress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padQuadruple"
+            android:paddingEnd="@dimen/padQuadruple"
+            tools:progress="25"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/about"
+            app:layout_constraintBottom_toTopOf="@+id/description"/>
+
 
         <TextView
             android:id="@+id/description"
@@ -115,7 +132,7 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/about"
+            app:layout_constraintTop_toBottomOf="@+id/overallProgress"
             app:layout_constraintBottom_toTopOf="@+id/groupActionsRecyclerViewContainer" />
 
         <closer.vlllage.com.closer.ui.SoftScrollStopper

@@ -24,7 +24,7 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
     var active: QuestProgress? = null
         set (value) {
             field = value
-            field?.let { activeObservable.onNext(it) }
+            activeObservable.onNext(field ?: QuestProgress())
         }
 
     var questProgresses = mutableListOf<QuestProgress>()

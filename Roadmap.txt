@@ -1,10 +1,64 @@
 
+Reminders
+=========
+
+-- App --
+
+[ ] Add reminder in group toolbar
+[ ] Add / Remove reminders in group overflow menu
+
+[ ] Reminders have their own groups
+
+[ ] View reminders screen
+    [ ] Delete, edit, add
+
+[ ] Edit Reminder modal
+    [ ] Date and time
+        [ ] Set starting date and time
+    [ ] Repeat? "Repeats every hour" "Repeats every day at 5:37pm" "Repeats every day in March at 5:37pm"
+        [ ] Only at these Hours
+            [ ] At midnight, 1, 2, 3, 4, 5 (preselected from start time), 6, 7, 8, 9, 10, 11, noon, ...
+        [ ] Only on these Days
+            [ ] on M, T, W, T (preselected from start day), F, S, S
+            [ ] on the 15th
+            [ ] on the 2nd Tuesday
+        [ ] Only in these Months (not selected)
+            [ ] in March, April, June, ...
+
+-- Server --
+
+[ ] Reminder post in group
+    [ ] Alarm icon with message below it + who set the alarm
+
+[ ] Status messages on add, edit, remove
+    [ ] Jacob added a reminder "Do this and that"
+    [ ] Jacob edited a reminder
+    [ ] Jacob removed a reminder "Do this and that"
+
+[ ] Reminder checker (server)
+    [ ] Check for reminders
+
+        check start
+        check active
+        check hour
+        check minute
+        check matches filters...
+            hour
+            day <any>
+            week <any>
+            month <any>
+            year <any>
+
+    [ ] Posts reminder to group
+        [ ] Notifies people in the group
+
 Incoming
 ========
 
-[ ] NPCs
 [ ] Reminders
 [ ] Categories
+
+[ ] NPCs
 
 [ ] Kiosk mode
     [ ] Return to tab after 1 minute
