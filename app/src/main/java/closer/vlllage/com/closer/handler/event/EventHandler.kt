@@ -5,6 +5,7 @@ import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.EventResult
 import closer.vlllage.com.closer.extensions.setToEndOfDay
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.post_event_modal.view.*
+import kotlinx.android.synthetic.main.reminders.view.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -331,6 +333,46 @@ class EventHandler constructor(private val on: On) {
                 event.allDay
         ) {
             on<GroupActivityTransitionHandler>().showGroupForEvent(null, it)
+        }
+    }
+
+    fun editReminders(event: Event) {
+        on<AlertHandler>().make().apply {
+            layoutResId = R.layout.reminders
+            positiveButton = on<ResourcesHandler>().resources.getString(R.string.apply)
+            positiveButtonCallback = {
+
+            }
+            onAfterViewCreated = { alertConfig, view ->
+                alertConfig.alertResult = 0
+
+                lateinit var adapter: EditRemindersAdapter
+
+                adapter = EditRemindersAdapter(on) {
+                    adapter.items = mutableListOf<EventReminder>().apply {
+                        addAll(adapter.items)
+                        remove(it)
+                    }
+                }
+
+                adapter.items = mutableListOf()
+
+                view.remindersRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+                view.remindersRecyclerView.adapter = adapter
+
+                view.addReminder.setOnClickListener {
+                    adapter.items = mutableListOf<EventReminder>().apply {
+                        addAll(adapter.items)
+                        add(EventReminder())
+                    }
+                    view.remindersRecyclerView.apply {
+                        post {
+                            smoothScrollToPosition(adapter.items.size - 1)
+                        }
+                    }
+                }
+            }
+            show()
         }
     }
 

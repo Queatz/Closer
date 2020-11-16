@@ -25,6 +25,7 @@
     <color name="green200">#C5E1A5</color>
     <color name="orange">#FF5722</color>
     <color name="red">#f44336</color>
+    <color name="red_5">#11f44336</color>
     <color name="forestgreen">#009688</color>
     <color name="forestgreenLight">#80CBC4</color>
     <color name="redLight">#E57373</color>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_white_12dp"
+    android:layout_marginStart="@dimen/padDouble"
+    android:layout_marginEnd="@dimen/padDouble"
+    android:layout_marginTop="@dimen/padDouble"
+    android:elevation="@dimen/elevation"
+    android:padding="@dimen/pad">
+
+    <EditText
+        android:id="@+id/offsetAmount"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/offsetUnit"
+        android:padding="@dimen/padDouble"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/textHintInverse"
+        android:text="1"
+        android:hint="#"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/offsetUnit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/pad"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/offsetAmount"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Day"
+        android:padding="@dimen/padDouble"
+        android:maxLength="96"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/selectPosition"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/offsetAmount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Before the event starts"
+        android:padding="@dimen/padDouble"
+        android:maxLength="96"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/atText"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/selectPosition"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/selectTime"
+        android:layout_marginTop="@dimen/pad"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:padding="@dimen/padDouble"
+        android:textColor="@color/textHintInverse"
+        android:text="@string/at"
+        android:textAlignment="center"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/selectTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_default="spread"
+        app:layout_constraintTop_toBottomOf="@+id/selectPosition"
+        app:layout_constraintStart_toEndOf="@+id/atText"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/pad"
+        android:layout_marginStart="@dimen/pad"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Time of event (5:30pm)"
+        android:padding="@dimen/padDouble"
+        android:maxLength="96"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+    <View
+        android:id="@+id/repeatDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black_15"
+        app:layout_constraintTop_toBottomOf="@+id/selectTime"
+        android:layout_marginTop="@dimen/padDouble"
+        android:layout_marginBottom="@dimen/padDouble"/>
+
+    <TextView
+        android:id="@+id/repeatText"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padDouble"
+        app:layout_constraintTop_toBottomOf="@+id/repeatDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/selectTime"
+        android:padding="@dimen/padDouble"
+        android:textColor="@color/textHintInverse"
+        android:text="@string/repeat"
+        android:textAlignment="center"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/selectRepeat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padDouble"
+        android:layout_marginStart="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/repeatDivider"
+        app:layout_constraintStart_toEndOf="@+id/repeatText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_default="spread"
+        tools:text="None"
+        android:padding="@dimen/padDouble"
+        android:maxLength="96"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/textHintInverse"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/selectRepeatHours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/repeatText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Every hour"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:padding="@dimen/padDouble"
+        android:ellipsize="end"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/selectRepeatDays"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/selectRepeatHours"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Every day"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:padding="@dimen/padDouble"
+        android:ellipsize="end"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/selectRepeatWeeks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/selectRepeatDays"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Every week"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:padding="@dimen/padDouble"
+        android:ellipsize="end"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/selectRepeatMonths"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/selectRepeatWeeks"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Every month"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:padding="@dimen/padDouble"
+        android:ellipsize="end"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+    <View
+        android:id="@+id/commentDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black_15"
+        app:layout_constraintTop_toBottomOf="@+id/selectRepeatMonths"
+        android:layout_marginTop="@dimen/padDouble"
+        android:layout_marginBottom="@dimen/padDouble"/>
+
+    <EditText
+        android:id="@+id/comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padDouble"
+        app:layout_constraintTop_toBottomOf="@+id/commentDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/padDouble"
+        android:background="@drawable/clickable_dark_flat"
+        android:textColor="@color/textHintInverse"
+        android:hint="@string/add_a_comment"
+        android:inputType="textShortMessage|textCapSentences"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/actionDelete"
+        android:clickable="true"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad"
+        app:layout_constraintTop_toBottomOf="@+id/comment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Delete this reminder"
+        android:padding="@dimen/padDouble"
+        android:maxLength="96"
+        android:background="@drawable/clickable_red_50_rounded_512dp"
+        android:textColor="@color/red"
+        android:textAlignment="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:maxLines="1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

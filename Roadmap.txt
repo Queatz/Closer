@@ -7,7 +7,13 @@ Reminders
 [ ] Add reminder in group toolbar
 [ ] Add / Remove reminders in group overflow menu
 
-[ ] Reminders have their own groups
+[ ] Add a reminder
+    1 [ Hour / Day / Week / Month ] [ Before / After ] event [ Starts / Ends ]
+    At 5:30am (not available for Hour)
+    Repeats every
+    until event [ Starts / Ends ]
+
+[?] Reminders have their own groups
 
 [ ] View reminders screen
     [ ] Delete, edit, add
@@ -25,9 +31,91 @@ Reminders
         [ ] Only in these Months (not selected)
             [ ] in March, April, June, ...
 
+-- Spec --
+
+{
+    reminders: [
+        {
+            position: 'start'|'end',
+            offset: {
+                amount: -1,
+                unit: 'day'
+            },
+            time: {
+                hour: 23,
+                minute: 30
+            },
+            repeat: null || {
+                until: 'start'|'end',
+                hours: null || [1, ..., 5, ..., 23],
+                days: null || [ 'monday', '1st', ..., '15th', ..., 'last_of_month' ],
+                weeks: null || [ 'first', 'second', ..., 'last' ],
+                months: null || [ 'january', ..., 'december' ]
+            },
+            actual: {
+                startsAt: <timestamp>,
+                endsAt: <timestamp>
+            }
+        },
+        // ...
+    ]
+}
+
+-- App --
+
+Add default reminder 1hr before event
+
+POST /event
+{
+    // ...
+    reminders: [
+        {
+            position: 'start',
+            offset: {
+                amount: -1,
+                unit: 'hour'
+            },
+            time: {
+                hour: 4,
+                minute: 0
+            },
+            repeat: null
+        }
+    ]
+}
+
+-- AQL --
+
+regular startsAt as is, but change to 1 per reminder (not event.startsAt, will become event.reminders[].actual.startsAt)
+
+add call to handle repeating events, one check per minute on the :00 second...
+
+getEventRemindersFor(
+    currentMinute: Int,
+    currentHour: Int,
+    currentDayOfWeek: String,
+    currentDayOfMonth: Int,
+    isLastDayOfMonth: Boolean,
+    currentWeekOfMonth: String,
+    currentMonth: String,
+): List<Event> {
+
+}
+
+FOR event IN @@entities FILTER event.kind == 'event'
+        AND event.cancelled == false
+        AND event.reminders != NULL
+    FOR reminder IN event.reminders FILTER _________
+            AND reminder.time.minute == @currentMinute
+            AND reminder.actual.startsAt >= DATE_NOW() AND reminder.actual.endsAt < DATE_NOW()
+            AND (repeat.hours == NULL OR @currentHour IN repeat.hours)
+            AND (repeat.days == NULL OR @currentDayOfWeek IN repeat.days OR @currentDayOfMonth IN repeat.days OR (@isLastDayOfMonth AND 'last_of_month' IN repeat.days))
+            AND (repeat.weeks == NULL OR @currentWeekOfMonth IN repeat.weeks OR @isLastWeekOfMonth AND 'last' IN repeat.weeks)
+            AND (repeat.months == NULL OR @currentMonth IN repeat.months)
+
 -- Server --
 
-[ ] Reminder post in group
+[?] Reminder post in group
     [ ] Alarm icon with message below it + who set the alarm
 
 [ ] Status messages on add, edit, remove
@@ -35,27 +123,10 @@ Reminders
     [ ] Jacob edited a reminder
     [ ] Jacob removed a reminder "Do this and that"
 
-[ ] Reminder checker (server)
-    [ ] Check for reminders
-
-        check start
-        check active
-        check hour
-        check minute
-        check matches filters...
-            hour
-            day <any>
-            week <any>
-            month <any>
-            year <any>
-
-    [ ] Posts reminder to group
-        [ ] Notifies people in the group
-
 Incoming
 ========
 
-[ ] Reminders
+[.] Reminders
 [ ] Categories
 
 [ ] NPCs

@@ -81,6 +81,13 @@ class GroupMemberHandler constructor(private val on: On) {
                                 show()
                             }
                         },
+                        MenuHandler.MenuOption(R.drawable.ic_baseline_alarm_24, R.string.edit_reminders) {
+                            on<DataHandler>().getEvent(group.eventId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
+                                on<EventHandler>().editReminders(it)
+                            }, {
+                                on<DefaultAlerts>().thatDidntWork()
+                            })
+                        }.visible(group.hasEvent() /* todo only show for event owner */),
                         MenuHandler.MenuOption(R.drawable.ic_refresh_black_24dp, R.string.host_again) {
                             on<DataHandler>().getEvent(group.eventId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
                                 on<EventHandler>().hostAgain(it)
@@ -159,6 +166,13 @@ class GroupMemberHandler constructor(private val on: On) {
                         }
                     }
                 }.visible(group?.hasPhone() != true),
+                MenuHandler.MenuOption(R.drawable.ic_baseline_alarm_24, R.string.edit_reminders) {
+                    on<DataHandler>().getEvent(group!!.eventId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
+                        on<EventHandler>().editReminders(it)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    })
+                }.visible(group?.hasEvent() == true /* todo only show for event owner */),
                 MenuHandler.MenuOption(R.drawable.ic_refresh_black_24dp, R.string.host_again) {
                     on<DataHandler>().getEvent(group!!.eventId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
                         on<EventHandler>().hostAgain(it)

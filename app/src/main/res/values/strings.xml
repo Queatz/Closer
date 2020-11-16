@@ -509,6 +509,14 @@
     <string name="all_day">All day</string>
     <string name="map">Map</string>
     <string name="deselect">Deselect</string>
+    <string name="edit_reminders">Edit reminders</string>
+    <string name="apply">Apply</string>
+    <string name="repeats">Repeats</string>
+    <string name="minute">Minute</string>
+    <string name="day">Day</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
+    <string name="hour">Hour</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
