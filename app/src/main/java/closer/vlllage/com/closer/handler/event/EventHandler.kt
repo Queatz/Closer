@@ -341,10 +341,15 @@ class EventHandler constructor(private val on: On) {
             layoutResId = R.layout.reminders
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.apply)
             positiveButtonCallback = {
-
+                val items = (it as EditRemindersAdapter).items
+                on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().updateEventReminders(event.id!!, items).subscribe({
+                    event.reminders = items
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                }))
             }
+
             onAfterViewCreated = { alertConfig, view ->
-                alertConfig.alertResult = 0
 
                 lateinit var adapter: EditRemindersAdapter
 
@@ -355,6 +360,8 @@ class EventHandler constructor(private val on: On) {
                     }
                 }
 
+                alertConfig.alertResult = adapter
+
                 adapter.items = mutableListOf()
 
                 view.remindersRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
@@ -363,7 +370,7 @@ class EventHandler constructor(private val on: On) {
                 view.addReminder.setOnClickListener {
                     adapter.items = mutableListOf<EventReminder>().apply {
                         addAll(adapter.items)
-                        add(EventReminder())
+                        add(EventReminder().apply { offset.amount = -1; offset.unit = EventReminderOffsetUnit.Hour })
                     }
                     view.remindersRecyclerView.apply {
                         post {

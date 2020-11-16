@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.handler.event
 
+import com.google.gson.annotations.SerializedName
+
 data class EventReminder constructor(
     var position: EventReminderPosition = EventReminderPosition.Start,
     val offset: EventReminderOffset = EventReminderOffset(),
@@ -8,8 +10,8 @@ data class EventReminder constructor(
 )
 
 data class EventReminderOffset constructor(
-        var amount: Int = -1,
-        var unit: String = "day"
+        var amount: Int = 0,
+        var unit: EventReminderOffsetUnit = EventReminderOffsetUnit.Minute
 )
 
 data class EventReminderTime constructor(
@@ -25,7 +27,15 @@ data class EventReminderRepeat constructor(
         var months: List<String>? = null,
 )
 
+enum class EventReminderOffsetUnit {
+    @SerializedName("minute") Minute,
+    @SerializedName("hour") Hour,
+    @SerializedName("day") Day,
+    @SerializedName("week") Week,
+    @SerializedName("month") Month,
+}
+
 enum class EventReminderPosition {
-    Start,
-    End
+    @SerializedName("start") Start,
+    @SerializedName("end") End
 }

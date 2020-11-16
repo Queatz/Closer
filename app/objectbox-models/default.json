@@ -527,7 +527,7 @@
     },
     {
       "id": "8:3055293152274442269",
-      "lastPropertyId": "16:1201967890604915431",
+      "lastPropertyId": "17:9124549268334969132",
       "name": "Event",
       "properties": [
         {
@@ -616,6 +616,11 @@
           "name": "allDay",
           "type": 1,
           "flags": 4
+        },
+        {
+          "id": "17:9124549268334969132",
+          "name": "reminders",
+          "type": 9
         }
       ],
       "relations": []

@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.api.models
 
+import closer.vlllage.com.closer.handler.event.EventReminder
 import closer.vlllage.com.closer.store.models.Event
 import com.google.gson.annotations.SerializedName
 import java.util.*
@@ -16,6 +17,7 @@ class EventResult : ModelResult() {
     var allDay: Boolean = false
     var groupId: String? = null
     var creator: String? = null
+    var reminders: List<EventReminder>? = null
 
     companion object {
 
@@ -38,6 +40,7 @@ class EventResult : ModelResult() {
             event.cancelled = eventResult.cancelled
             event.groupId = eventResult.groupId
             event.creator = eventResult.creator
+            event.reminders = eventResult.reminders
             return event
         }
     }

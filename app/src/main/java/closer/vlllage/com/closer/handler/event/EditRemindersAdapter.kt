@@ -1,9 +1,11 @@
 package closer.vlllage.com.closer.handler.event
 
+import android.app.TimePickerDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
@@ -12,6 +14,9 @@ import closer.vlllage.com.closer.handler.helpers.MenuHandler
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.item_edit_reminder.view.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.absoluteValue
 
 class EditRemindersAdapter(private val on: On, private val removeCallback: (EventReminder) -> Unit) : RecyclerView.Adapter<EditRemindersViewHolder>() {
 
@@ -19,10 +24,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         set(value) {
             val diffUtil = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = field[oldItemPosition] == value[newItemPosition]
-
                 override fun getOldListSize() = field.size
                 override fun getNewListSize() = value.size
-
                 override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = true
             })
 
@@ -31,6 +34,188 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
 
             diffUtil.dispatchUpdatesTo(this)
         }
+
+    private val weekOptions = arrayOf(
+            "First week",
+            "Second week",
+            "Third week",
+            "Fourth week",
+    )
+
+    private val weekOptionsValues = arrayOf(
+            "1",
+            "2",
+            "3",
+            "4",
+    )
+
+    private val hourOptions = arrayOf(
+            "12am",
+            "1am",
+            "2am",
+            "3am",
+            "4am",
+            "5am",
+            "6am",
+            "7am",
+            "8am",
+            "9am",
+            "10am",
+            "11am",
+            "12pm",
+            "1pm",
+            "2pm",
+            "3pm",
+            "4pm",
+            "5pm",
+            "6pm",
+            "7pm",
+            "8pm",
+            "9pm",
+            "10pm",
+            "11pm",
+    )
+
+    private val hourOptionsValues = arrayOf(
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+    )
+
+    private val dayOptions = arrayOf(
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "1st",
+            "2nd",
+            "3rd",
+            "4th",
+            "5th",
+            "6th",
+            "7th",
+            "8th",
+            "9th",
+            "10th",
+            "11th",
+            "12th",
+            "13th",
+            "14th",
+            "15th",
+            "16th",
+            "17th",
+            "18th",
+            "19th",
+            "20th",
+            "21st",
+            "22nd",
+            "23rd",
+            "24th",
+            "25th",
+            "26th",
+            "27th",
+            "28th",
+            "29th",
+            "30th",
+            "31st",
+            "Last day of the month",
+    )
+
+     private val dayOptionsValues = arrayOf(
+            "sunday",
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "last",
+    )
+
+    private val monthOptions = arrayOf(
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+    )
+
+    private val monthOptionsValues = arrayOf(
+            "january",
+            "february",
+            "march",
+            "april",
+            "may",
+            "june",
+            "july",
+            "august",
+            "september",
+            "october",
+            "november",
+            "december",
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditRemindersViewHolder {
         return EditRemindersViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_edit_reminder, parent, false))
@@ -43,115 +228,92 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             removeCallback(reminder)
         }
 
-        // populate values()
+        holder.itemView.offsetAmount.setText(reminder.offset.amount.absoluteValue.toString())
 
-        holder.itemView.offsetUnit.text = "Hour"
+        holder.itemView.offsetAmount.doAfterTextChanged {
+            it.toString().toIntOrNull()?.let {
+                reminder.offset.amount = it * (if (reminder.offset.amount < 0) -1 else 1)
+                update(holder, reminder)
+            }
+        }
+
+        update(holder, reminder)
 
         holder.itemView.offsetUnit.setOnClickListener {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(0, R.string.minute) {
-                        reminder.offset.unit = "minute"
-                        holder.itemView.offsetUnit.text = "Minute"
-
-                        holder.itemView.atText.visible = false
-                        holder.itemView.selectTime.visible = false
+                        reminder.offset.unit = EventReminderOffsetUnit.Minute
+                        update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, R.string.hour) {
-                        reminder.offset.unit = "hour"
-                        holder.itemView.offsetUnit.text = "Hour"
-
-                        holder.itemView.atText.visible = false
-                        holder.itemView.selectTime.visible = false
+                        reminder.offset.unit = EventReminderOffsetUnit.Hour
+                        update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, R.string.day) {
-                        reminder.offset.unit = "day"
-                        holder.itemView.offsetUnit.text = "Day"
-
-                        holder.itemView.atText.visible = true
-                        holder.itemView.selectTime.visible = true
+                        reminder.offset.unit = EventReminderOffsetUnit.Day
+                        update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, R.string.week) {
-                        reminder.offset.unit = "week"
-                        holder.itemView.offsetUnit.text = "Week"
-
-                        holder.itemView.atText.visible = true
-                        holder.itemView.selectTime.visible = true
+                        reminder.offset.unit = EventReminderOffsetUnit.Week
+                        update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, R.string.month) {
-                        reminder.offset.unit = "month"
-                        holder.itemView.offsetUnit.text = "Month"
-
-                        holder.itemView.atText.visible = true
-                        holder.itemView.selectTime.visible = true
+                        reminder.offset.unit = EventReminderOffsetUnit.Month
+                        update(holder, reminder)
                     },
                     button = ""
             )
         }
-
-        holder.itemView.selectPosition.text = "Before the event starts"
 
         holder.itemView.selectPosition.setOnClickListener {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(0, title = "Before the event starts") {
-                        reminder.offset.unit = "beforeStart"
-                        holder.itemView.selectPosition.text = "Before the event starts"
+                        reminder.offset.amount = -reminder.offset.amount.absoluteValue
+                        reminder.position = EventReminderPosition.Start
+                        update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, title = "Before the event ends") {
-                        reminder.offset.unit = "beforeEnd"
-                        holder.itemView.selectPosition.text = "Before the event ends"
+                        reminder.offset.amount = -reminder.offset.amount.absoluteValue
+                        reminder.position = EventReminderPosition.End
+                        update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, title = "After the event starts") {
-                        reminder.offset.unit = "afterStart"
-                        holder.itemView.selectPosition.text = "After the event starts"
+                        reminder.offset.amount = reminder.offset.amount.absoluteValue
+                        reminder.position = EventReminderPosition.Start
+                        update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, title = "After the event ends") {
-                        reminder.offset.unit = "afterEnd"
-                        holder.itemView.selectPosition.text = "After the event ends"
+                        reminder.offset.amount = reminder.offset.amount.absoluteValue
+                        reminder.position = EventReminderPosition.End
+                        update(holder, reminder)
                     },
                     button = ""
             )
         }
 
-        holder.itemView.selectTime.text = "5:45pm (Time of event)"
-
         holder.itemView.selectTime.setOnClickListener {
-            // timepicker
-            holder.itemView.selectTime.text = "5:30pm"
+            TimePickerDialog(it.context, { timePicker, hour, minute ->
+                reminder.time.hour = hour
+                reminder.time.minute = minute
+                update(holder, reminder)
+            }, reminder.time.hour, reminder.time.minute, false).show()
         }
-
-        holder.itemView.selectRepeat.text = "None"
 
         holder.itemView.selectRepeat.setOnClickListener {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(0, title = "None") {
                         reminder.repeat = null
-                        holder.itemView.selectRepeat.text = "None"
-                        holder.itemView.selectRepeat.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-
-                        holder.itemView.selectRepeatHours.visible = false
-                        holder.itemView.selectRepeatDays.visible = false
-                        holder.itemView.selectRepeatWeeks.visible = false
-                        holder.itemView.selectRepeatMonths.visible = false
+                        update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, title = "Until the event starts") {
                         reminder.repeat = EventReminderRepeat()
-                        holder.itemView.selectRepeat.text = "Until the event starts"
-                        holder.itemView.selectRepeat.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
-
-                        holder.itemView.selectRepeatHours.visible = true
-                        holder.itemView.selectRepeatDays.visible = true
-                        holder.itemView.selectRepeatWeeks.visible = true
-                        holder.itemView.selectRepeatMonths.visible = true
+                        reminder.repeat!!.until = EventReminderPosition.Start
+                        update(holder, reminder)
                     }.visible(true),
                     MenuHandler.MenuOption(0, title = "Until the event ends") {
                         reminder.repeat = EventReminderRepeat()
-                        holder.itemView.selectRepeat.text = "Until the event ends"
-                        holder.itemView.selectRepeat.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
-
-                        holder.itemView.selectRepeatHours.visible = true
-                        holder.itemView.selectRepeatDays.visible = true
-                        holder.itemView.selectRepeatWeeks.visible = true
-                        holder.itemView.selectRepeatMonths.visible = true
+                        reminder.repeat!!.until = EventReminderPosition.End
+                        update(holder, reminder)
                     }.visible(true),
                     button = ""
             )
@@ -168,47 +330,20 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         holder.itemView.selectRepeatMonths.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
 
         holder.itemView.selectRepeatHours.setOnClickListener {
-            val options = arrayOf(
-                    "12am",
-                    "1am",
-                    "2am",
-                    "3am",
-                    "4am",
-                    "5am",
-                    "6am",
-                    "7am",
-                    "8am",
-                    "9am",
-                    "10am",
-                    "11am",
-                    "12pm",
-                    "1pm",
-                    "2pm",
-                    "3pm",
-                    "4pm",
-                    "5pm",
-                    "6pm",
-                    "7pm",
-                    "8pm",
-                    "9pm",
-                    "10pm",
-                    "11pm",
-            )
-
             AlertDialog.Builder(holder.itemView.context)
                     .setMultiChoiceItems(
-                            options,
-                            options.map {
+                            hourOptions,
+                            hourOptions.map {
                                 reminder.repeat?.hours?.contains(it) == true
                             }.toBooleanArray()
                     ) { dialog, item, checked ->
                         if (checked) {
                             if (reminder.repeat?.hours == null) {
-                                reminder.repeat?.hours = listOf(options[item])
+                                reminder.repeat?.hours = listOf(hourOptions[item])
                             } else {
                                 reminder.repeat?.hours = reminder.repeat?.hours?.toMutableList()?.let {
-                                    it.add(options[item])
-                                    it.sortedBy { options.indexOf(it) }.toList()
+                                    it.add(hourOptions[item])
+                                    it.sortedBy { hourOptions.indexOf(it) }.toList()
                                 }
                             }
                         } else {
@@ -216,8 +351,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                                 reminder.repeat?.hours = null
                             } else {
                                 reminder.repeat?.hours = reminder.repeat?.hours?.toMutableList()?.let {
-                                    it.remove(options[item])
-                                    it.sortedBy { options.indexOf(it) }.toList()
+                                    it.remove(hourOptions[item])
+                                    it.sortedBy { hourOptions.indexOf(it) }.toList()
                                 }
                             }
                         }
@@ -241,61 +376,19 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         }
 
         holder.itemView.selectRepeatDays.setOnClickListener {
-            val options = arrayOf(
-                    "Sunday",
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                    "1st",
-                    "2nd",
-                    "3rd",
-                    "4th",
-                    "5th",
-                    "6th",
-                    "7th",
-                    "8th",
-                    "9th",
-                    "10th",
-                    "11th",
-                    "12th",
-                    "13th",
-                    "14th",
-                    "15th",
-                    "16th",
-                    "17th",
-                    "18th",
-                    "19th",
-                    "20th",
-                    "21st",
-                    "22nd",
-                    "23rd",
-                    "24th",
-                    "25th",
-                    "26th",
-                    "27th",
-                    "28th",
-                    "29th",
-                    "30th",
-                    "31st",
-                    "Last day of the month",
-            )
-
             AlertDialog.Builder(holder.itemView.context)
                     .setMultiChoiceItems(
-                            options,
-                            options.map {
+                            dayOptions,
+                            dayOptions.map {
                                 reminder.repeat?.days?.contains(it) == true
                             }.toBooleanArray()) { dialog, item, checked ->
                         if (checked) {
                             if (reminder.repeat?.days == null) {
-                                reminder.repeat?.days = listOf(options[item])
+                                reminder.repeat?.days = listOf(dayOptions[item])
                             } else {
                                 reminder.repeat?.days = reminder.repeat?.days?.toMutableList()?.let {
-                                    it.add(options[item])
-                                    it.sortedBy { options.indexOf(it) }.toList()
+                                    it.add(dayOptions[item])
+                                    it.sortedBy { dayOptions.indexOf(it) }.toList()
                                 }
                             }
                         } else {
@@ -303,8 +396,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                                 reminder.repeat?.days = null
                             } else {
                                 reminder.repeat?.days = reminder.repeat?.days?.toMutableList()?.let {
-                                    it.remove(options[item])
-                                    it.sortedBy { options.indexOf(it) }.toList()
+                                    it.remove(dayOptions[item])
+                                    it.sortedBy { dayOptions.indexOf(it) }.toList()
                                 }
                             }
                         }
@@ -328,29 +421,19 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         }
 
         holder.itemView.selectRepeatWeeks.setOnClickListener {
-            val options = arrayOf(
-                    "First week",
-                    "Second week",
-                    "Third week",
-                    "Fourth week",
-            )
-
             AlertDialog.Builder(holder.itemView.context)
                     .setMultiChoiceItems(
-                            options,
-                            booleanArrayOf(
-                                    reminder.repeat?.weeks?.contains("First week") == true,
-                                    reminder.repeat?.weeks?.contains("Second week") == true,
-                                    reminder.repeat?.weeks?.contains("Third week") == true,
-                                    reminder.repeat?.weeks?.contains("Fourth week") == true,
-                            )) { dialog, item, checked ->
+                            weekOptions,
+                            weekOptions.map {
+                                reminder.repeat?.days?.contains(it) == true
+                            }.toBooleanArray()) { dialog, item, checked ->
                         if (checked) {
                             if (reminder.repeat?.weeks == null) {
-                                reminder.repeat?.weeks = listOf(options[item])
+                                reminder.repeat?.weeks = listOf(weekOptions[item])
                             } else {
                                 reminder.repeat?.weeks = reminder.repeat?.weeks?.toMutableList()?.let {
-                                    it.add(options[item])
-                                    it.sortedBy { options.indexOf(it) }.toList()
+                                    it.add(weekOptions[item])
+                                    it.sortedBy { weekOptions.indexOf(it) }.toList()
                                 }
                             }
                         } else {
@@ -358,8 +441,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                                 reminder.repeat?.weeks = null
                             } else {
                                 reminder.repeat?.weeks = reminder.repeat?.weeks?.toMutableList()?.let {
-                                    it.remove(options[item])
-                                    it.sortedBy { options.indexOf(it) }.toList()
+                                    it.remove(weekOptions[item])
+                                    it.sortedBy { weekOptions.indexOf(it) }.toList()
                                 }
                             }
                         }
@@ -383,45 +466,19 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         }
 
         holder.itemView.selectRepeatMonths.setOnClickListener {
-            val options = arrayOf(
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
-            )
-
             AlertDialog.Builder(holder.itemView.context)
                     .setMultiChoiceItems(
-                            options,
-                            booleanArrayOf(
-                                    reminder.repeat?.months?.contains("January") == true,
-                                    reminder.repeat?.months?.contains("February") == true,
-                                    reminder.repeat?.months?.contains("March") == true,
-                                    reminder.repeat?.months?.contains("April") == true,
-                                    reminder.repeat?.months?.contains("May") == true,
-                                    reminder.repeat?.months?.contains("June") == true,
-                                    reminder.repeat?.months?.contains("July") == true,
-                                    reminder.repeat?.months?.contains("August") == true,
-                                    reminder.repeat?.months?.contains("September") == true,
-                                    reminder.repeat?.months?.contains("October") == true,
-                                    reminder.repeat?.months?.contains("November") == true,
-                                    reminder.repeat?.months?.contains("December") == true,
-                            )) { dialog, item, checked ->
+                            monthOptions,
+                            monthOptions.map {
+                                reminder.repeat?.days?.contains(it) == true
+                            }.toBooleanArray()) { dialog, item, checked ->
                         if (checked) {
                             if (reminder.repeat?.months == null) {
-                                reminder.repeat?.months = listOf(options[item])
+                                reminder.repeat?.months = listOf(monthOptions[item])
                             } else {
                                 reminder.repeat?.months = reminder.repeat?.months?.toMutableList()?.let {
-                                    it.add(options[item])
-                                    it.sortedBy { options.indexOf(it) }.toList()
+                                    it.add(monthOptions[item])
+                                    it.sortedBy { monthOptions.indexOf(it) }.toList()
                                 }
                             }
                         } else {
@@ -429,8 +486,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                                 reminder.repeat?.months = null
                             } else {
                                 reminder.repeat?.months = reminder.repeat?.months?.toMutableList()?.let {
-                                    it.remove(options[item])
-                                    it.sortedBy { options.indexOf(it) }.toList()
+                                    it.remove(monthOptions[item])
+                                    it.sortedBy { monthOptions.indexOf(it) }.toList()
                                 }
                             }
                         }
@@ -453,6 +510,71 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                     .show()
         }
 
+    }
+
+    private fun update(holder: EditRemindersViewHolder, reminder: EventReminder) {
+
+        // Offset
+
+        when (reminder.offset.unit) {
+            EventReminderOffsetUnit.Minute, EventReminderOffsetUnit.Hour -> false
+            else -> true
+        }.let { visible ->
+            holder.itemView.atText.visible = visible
+            holder.itemView.selectTime.visible = visible
+        }
+
+        holder.itemView.offsetUnit.text = when (reminder.offset.unit) {
+            EventReminderOffsetUnit.Minute -> "Minute"
+            EventReminderOffsetUnit.Hour -> "Hour"
+            EventReminderOffsetUnit.Day -> "Day"
+            EventReminderOffsetUnit.Week -> "Week"
+            EventReminderOffsetUnit.Month -> "Month"
+        }
+
+        // Position
+
+        holder.itemView.selectPosition.text = when (reminder.position) {
+            EventReminderPosition.Start -> "${if (reminder.offset.amount < 0) "Before" else "After"} the event starts"
+            EventReminderPosition.End -> "${if (reminder.offset.amount < 0) "Before" else "After"} the event ends"
+        }
+
+        // Time
+
+        val timeFormatter = SimpleDateFormat("h:mma", Locale.US)
+        val cal = Calendar.getInstance(TimeZone.getDefault()).apply {
+            set(Calendar.HOUR_OF_DAY, reminder.time.hour)
+            set(Calendar.MINUTE, reminder.time.minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        holder.itemView.selectTime.setText(timeFormatter.format(cal.time))
+
+        // Repeat
+
+
+        holder.itemView.selectRepeat.text = "None"
+        holder.itemView.selectRepeat.setTextColor(on<ResourcesHandler>().resources.getColor(when (reminder.repeat) {
+            null -> R.color.textHintInverse
+            else -> R.color.colorPrimary
+        }))
+
+        when (reminder.repeat) {
+            null -> false
+            else -> true
+        }.let { visible ->
+            holder.itemView.selectRepeatHours.visible = visible
+            holder.itemView.selectRepeatDays.visible = visible
+            holder.itemView.selectRepeatWeeks.visible = visible
+            holder.itemView.selectRepeatMonths.visible = visible
+        }
+
+        holder.itemView.selectRepeat.text = when(reminder.repeat?.until) {
+            EventReminderPosition.Start -> "Until the event starts"
+            EventReminderPosition.End -> "Until the event ends"
+            else -> "None"
+        }
     }
 
     override fun getItemCount() = items.size

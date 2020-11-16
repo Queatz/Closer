@@ -1,6 +1,7 @@
 package closer.vlllage.com.closer.api
 
 import closer.vlllage.com.closer.api.models.*
+import closer.vlllage.com.closer.handler.event.EventReminder
 import io.reactivex.Single
 import retrofit2.http.*
 
@@ -276,6 +277,9 @@ interface Backend {
 
     @POST("event/{id}")
     fun cancelEvent(@Path("id") eventId: String, @Query("cancel") cancel: Boolean): Single<SuccessResult>
+
+    @POST("event/{id}/reminders")
+    fun updateEventReminders(@Path("id") eventId: String, @Body reminders: List<EventReminder>): Single<SuccessResult>
 
     @GET("member/of/{group}")
     fun getGroupMember(@Path("group") groupId: String): Single<GroupMemberResult>

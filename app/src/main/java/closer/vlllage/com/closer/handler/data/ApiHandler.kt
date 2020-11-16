@@ -5,6 +5,7 @@ import closer.vlllage.com.closer.api.Backend
 import closer.vlllage.com.closer.api.models.QuestProgressResult
 import closer.vlllage.com.closer.api.models.QuestResult
 import closer.vlllage.com.closer.api.models.SuccessResult
+import closer.vlllage.com.closer.handler.event.EventReminder
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.QuestFlow
 import closer.vlllage.com.closer.store.models.QuestProgressFlow
@@ -214,6 +215,8 @@ class ApiHandler constructor(private val on: On) {
     fun getEvent(eventId: String) = api { getEvent(eventId) }
 
     fun cancelEvent(eventId: String) = api { cancelEvent(eventId, true) }
+
+    fun updateEventReminders(eventId: String, reminders: List<EventReminder>) = api { updateEventReminders(eventId, reminders) }
 
     fun getPhysicalGroups(latLng: LatLng) = api { getGroups("physical", on<LatLngStr>().from(latLng)) }
 

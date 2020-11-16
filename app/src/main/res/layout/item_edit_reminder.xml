@@ -22,7 +22,6 @@
         android:padding="@dimen/padDouble"
         android:background="@drawable/clickable_dark_flat"
         android:textColor="@color/textHintInverse"
-        android:text="1"
         android:hint="#"
         android:inputType="number"
         android:textAlignment="center"
