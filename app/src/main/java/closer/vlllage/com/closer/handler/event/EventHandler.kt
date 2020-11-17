@@ -344,6 +344,7 @@ class EventHandler constructor(private val on: On) {
                 val items = (it as EditRemindersAdapter).items
                 on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().updateEventReminders(event.id!!, items).subscribe({
                     event.reminders = items
+                    on<ToastHandler>().show(context.getString(R.string.event_reminders_updated))
                 }, {
                     on<DefaultAlerts>().thatDidntWork()
                 }))
@@ -362,7 +363,7 @@ class EventHandler constructor(private val on: On) {
 
                 alertConfig.alertResult = adapter
 
-                adapter.items = mutableListOf()
+                adapter.items = event.reminders?.toMutableList() ?: mutableListOf()
 
                 view.remindersRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
                 view.remindersRecyclerView.adapter = adapter

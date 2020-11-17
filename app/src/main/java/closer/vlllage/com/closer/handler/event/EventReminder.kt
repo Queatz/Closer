@@ -6,7 +6,8 @@ data class EventReminder constructor(
     var position: EventReminderPosition = EventReminderPosition.Start,
     val offset: EventReminderOffset = EventReminderOffset(),
     val time: EventReminderTime = EventReminderTime(),
-    var repeat: EventReminderRepeat? = null
+    var repeat: EventReminderRepeat? = null,
+    var text: String? = null
 )
 
 data class EventReminderOffset constructor(
