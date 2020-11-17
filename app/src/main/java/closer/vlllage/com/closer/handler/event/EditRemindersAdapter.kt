@@ -237,6 +237,12 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             }
         }
 
+        holder.itemView.comment.setText(reminder.text ?: "")
+
+        holder.itemView.comment.doAfterTextChanged {
+            reminder.text = it?.toString()?.takeIf { it.isNotBlank() }
+        }
+
         update(holder, reminder)
 
         holder.itemView.offsetUnit.setOnClickListener {
@@ -306,12 +312,16 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                         update(holder, reminder)
                     },
                     MenuHandler.MenuOption(0, title = "Until the event starts") {
-                        reminder.repeat = EventReminderRepeat()
+                        if (reminder.repeat == null) {
+                            reminder.repeat = EventReminderRepeat()
+                        }
                         reminder.repeat!!.until = EventReminderPosition.Start
                         update(holder, reminder)
                     }.visible(true),
                     MenuHandler.MenuOption(0, title = "Until the event ends") {
-                        reminder.repeat = EventReminderRepeat()
+                        if (reminder.repeat == null) {
+                            reminder.repeat = EventReminderRepeat()
+                        }
                         reminder.repeat!!.until = EventReminderPosition.End
                         update(holder, reminder)
                     }.visible(true),
@@ -319,31 +329,22 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             )
         }
 
-        holder.itemView.selectRepeatHours.text = "Choose hours"
-        holder.itemView.selectRepeatDays.text = "Choose days"
-        holder.itemView.selectRepeatWeeks.text = "Choose weeks"
-        holder.itemView.selectRepeatMonths.text = "Choose months"
-
-        holder.itemView.selectRepeatHours.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-        holder.itemView.selectRepeatDays.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-        holder.itemView.selectRepeatWeeks.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-        holder.itemView.selectRepeatMonths.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-
         holder.itemView.selectRepeatHours.setOnClickListener {
             AlertDialog.Builder(holder.itemView.context)
                     .setMultiChoiceItems(
                             hourOptions,
-                            hourOptions.map {
+                            hourOptionsValues.map {
                                 reminder.repeat?.hours?.contains(it) == true
                             }.toBooleanArray()
                     ) { dialog, item, checked ->
                         if (checked) {
                             if (reminder.repeat?.hours == null) {
-                                reminder.repeat?.hours = listOf(hourOptions[item])
+                                reminder.repeat?.hours = listOf(hourOptionsValues[item])
                             } else {
                                 reminder.repeat?.hours = reminder.repeat?.hours?.toMutableList()?.let {
-                                    it.add(hourOptions[item])
-                                    it.sortedBy { hourOptions.indexOf(it) }.toList()
+                                    it.removeIf { hourOptionsValues.indexOf(it) == -1 } // Sanitize
+                                    it.add(hourOptionsValues[item])
+                                    it.sortedBy { hourOptionsValues.indexOf(it) }.toList()
                                 }
                             }
                         } else {
@@ -351,25 +352,14 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                                 reminder.repeat?.hours = null
                             } else {
                                 reminder.repeat?.hours = reminder.repeat?.hours?.toMutableList()?.let {
-                                    it.remove(hourOptions[item])
-                                    it.sortedBy { hourOptions.indexOf(it) }.toList()
+                                    it.removeIf { hourOptionsValues.indexOf(it) == -1 } // Sanitize
+                                    it.remove(hourOptionsValues[item])
+                                    it.sortedBy { hourOptionsValues.indexOf(it) }.toList()
                                 }
                             }
                         }
 
-                        reminder.repeat?.hours?.let { hours ->
-                            if (hours.size > 0) {
-                                holder.itemView.selectRepeatHours.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
-                                holder.itemView.selectRepeatHours.text = hours.toList().joinToString(if (hours.size == 2) " and " else ", ")
-                            } else {
-                                holder.itemView.selectRepeatHours.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-                                holder.itemView.selectRepeatHours.text = "Choose hours"
-                            }
-                        } ?: run {
-                            holder.itemView.selectRepeatHours.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-                            holder.itemView.selectRepeatHours.text = "Choose hours"
-
-                        }
+                        update(holder, reminder)
                     }
                     .setPositiveButton(R.string.apply, { dialog, which -> })
                     .show()
@@ -379,16 +369,17 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             AlertDialog.Builder(holder.itemView.context)
                     .setMultiChoiceItems(
                             dayOptions,
-                            dayOptions.map {
+                            dayOptionsValues.map {
                                 reminder.repeat?.days?.contains(it) == true
                             }.toBooleanArray()) { dialog, item, checked ->
                         if (checked) {
                             if (reminder.repeat?.days == null) {
-                                reminder.repeat?.days = listOf(dayOptions[item])
+                                reminder.repeat?.days = listOf(dayOptionsValues[item])
                             } else {
                                 reminder.repeat?.days = reminder.repeat?.days?.toMutableList()?.let {
-                                    it.add(dayOptions[item])
-                                    it.sortedBy { dayOptions.indexOf(it) }.toList()
+                                    it.removeIf { dayOptionsValues.indexOf(it) == -1 } // Sanitize
+                                    it.add(dayOptionsValues[item])
+                                    it.sortedBy { dayOptionsValues.indexOf(it) }.toList()
                                 }
                             }
                         } else {
@@ -396,25 +387,14 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                                 reminder.repeat?.days = null
                             } else {
                                 reminder.repeat?.days = reminder.repeat?.days?.toMutableList()?.let {
-                                    it.remove(dayOptions[item])
-                                    it.sortedBy { dayOptions.indexOf(it) }.toList()
+                                    it.removeIf { dayOptionsValues.indexOf(it) == -1 } // Sanitize
+                                    it.remove(dayOptionsValues[item])
+                                    it.sortedBy { dayOptionsValues.indexOf(it) }.toList()
                                 }
                             }
                         }
 
-                        reminder.repeat?.days?.let { days ->
-                            if (days.size > 0) {
-                                holder.itemView.selectRepeatDays.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
-                                holder.itemView.selectRepeatDays.text = days.toList().joinToString(if (days.size == 2) " and " else ", ")
-                            } else {
-                                holder.itemView.selectRepeatDays.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-                                holder.itemView.selectRepeatDays.text = "Choose days"
-                            }
-                        } ?: run {
-                            holder.itemView.selectRepeatDays.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-                            holder.itemView.selectRepeatDays.text = "Choose days"
-
-                        }
+                        update(holder, reminder)
                     }
                     .setPositiveButton(R.string.apply, { dialog, which -> })
                     .show()
@@ -424,16 +404,17 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             AlertDialog.Builder(holder.itemView.context)
                     .setMultiChoiceItems(
                             weekOptions,
-                            weekOptions.map {
-                                reminder.repeat?.days?.contains(it) == true
+                            weekOptionsValues.map {
+                                reminder.repeat?.weeks?.contains(it) == true
                             }.toBooleanArray()) { dialog, item, checked ->
                         if (checked) {
                             if (reminder.repeat?.weeks == null) {
-                                reminder.repeat?.weeks = listOf(weekOptions[item])
+                                reminder.repeat?.weeks = listOf(weekOptionsValues[item])
                             } else {
                                 reminder.repeat?.weeks = reminder.repeat?.weeks?.toMutableList()?.let {
-                                    it.add(weekOptions[item])
-                                    it.sortedBy { weekOptions.indexOf(it) }.toList()
+                                    it.removeIf { weekOptionsValues.indexOf(it) == -1 } // Sanitize
+                                    it.add(weekOptionsValues[item])
+                                    it.sortedBy { weekOptionsValues.indexOf(it) }.toList()
                                 }
                             }
                         } else {
@@ -441,25 +422,14 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                                 reminder.repeat?.weeks = null
                             } else {
                                 reminder.repeat?.weeks = reminder.repeat?.weeks?.toMutableList()?.let {
-                                    it.remove(weekOptions[item])
-                                    it.sortedBy { weekOptions.indexOf(it) }.toList()
+                                    it.removeIf { weekOptionsValues.indexOf(it) == -1 } // Sanitize
+                                    it.remove(weekOptionsValues[item])
+                                    it.sortedBy { weekOptionsValues.indexOf(it) }.toList()
                                 }
                             }
                         }
 
-                        reminder.repeat?.weeks?.let { weeks ->
-                            if (weeks.size > 0) {
-                                holder.itemView.selectRepeatWeeks.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
-                                holder.itemView.selectRepeatWeeks.text = weeks.toList().joinToString(if (weeks.size == 2) " and " else ", ")
-                            } else {
-                                holder.itemView.selectRepeatWeeks.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-                                holder.itemView.selectRepeatWeeks.text = "Choose weeks"
-                            }
-                        } ?: run {
-                            holder.itemView.selectRepeatWeeks.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-                            holder.itemView.selectRepeatWeeks.text = "Choose weeks"
-
-                        }
+                        update(holder, reminder)
                     }
                     .setPositiveButton(R.string.apply, { dialog, which -> })
                     .show()
@@ -469,16 +439,17 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             AlertDialog.Builder(holder.itemView.context)
                     .setMultiChoiceItems(
                             monthOptions,
-                            monthOptions.map {
-                                reminder.repeat?.days?.contains(it) == true
+                            monthOptionsValues.map {
+                                reminder.repeat?.months?.contains(it) == true
                             }.toBooleanArray()) { dialog, item, checked ->
                         if (checked) {
                             if (reminder.repeat?.months == null) {
-                                reminder.repeat?.months = listOf(monthOptions[item])
+                                reminder.repeat?.months = listOf(monthOptionsValues[item])
                             } else {
                                 reminder.repeat?.months = reminder.repeat?.months?.toMutableList()?.let {
-                                    it.add(monthOptions[item])
-                                    it.sortedBy { monthOptions.indexOf(it) }.toList()
+                                    it.removeIf { monthOptionsValues.indexOf(it) == -1 } // Sanitize
+                                    it.add(monthOptionsValues[item])
+                                    it.sortedBy { monthOptionsValues.indexOf(it) }.toList()
                                 }
                             }
                         } else {
@@ -486,25 +457,14 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                                 reminder.repeat?.months = null
                             } else {
                                 reminder.repeat?.months = reminder.repeat?.months?.toMutableList()?.let {
-                                    it.remove(monthOptions[item])
-                                    it.sortedBy { monthOptions.indexOf(it) }.toList()
+                                    it.removeIf { monthOptionsValues.indexOf(it) == -1 } // Sanitize
+                                    it.remove(monthOptionsValues[item])
+                                    it.sortedBy { monthOptionsValues.indexOf(it) }.toList()
                                 }
                             }
                         }
 
-                        reminder.repeat?.months?.let { months ->
-                            if (months.size > 0) {
-                                holder.itemView.selectRepeatMonths.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
-                                holder.itemView.selectRepeatMonths.text = months.toList().joinToString(if (months.size == 2) " and " else ", ")
-                            } else {
-                                holder.itemView.selectRepeatMonths.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-                                holder.itemView.selectRepeatMonths.text = "Choose months"
-                            }
-                        } ?: run {
-                            holder.itemView.selectRepeatMonths.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-                            holder.itemView.selectRepeatMonths.text = "Choose months"
-
-                        }
+                        update(holder, reminder)
                     }
                     .setPositiveButton(R.string.apply, { dialog, which -> })
                     .show()
@@ -534,9 +494,13 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
 
         // Position
 
-        holder.itemView.selectPosition.text = when (reminder.position) {
-            EventReminderPosition.Start -> "${if (reminder.offset.amount < 0) "Before" else "After"} the event starts"
-            EventReminderPosition.End -> "${if (reminder.offset.amount < 0) "Before" else "After"} the event ends"
+        holder.itemView.selectPosition.text = if (reminder.offset.amount == 0) {
+            "At time of event"
+        } else {
+            when (reminder.position) {
+                EventReminderPosition.Start -> "${if (reminder.offset.amount < 0) "Before" else "After"} the event starts"
+                EventReminderPosition.End -> "${if (reminder.offset.amount < 0) "Before" else "After"} the event ends"
+            }
         }
 
         // Time
@@ -574,6 +538,70 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             EventReminderPosition.Start -> "Until the event starts"
             EventReminderPosition.End -> "Until the event ends"
             else -> "None"
+        }
+
+        // Hours
+
+        reminder.repeat?.hours?.let { hours ->
+            if (hours.isNotEmpty()) {
+                holder.itemView.selectRepeatHours.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
+                holder.itemView.selectRepeatHours.text = hours.asSequence()
+                        .map { hourOptionsValues.indexOf(it) }
+                        .filter { it != -1 }
+                        .map { hourOptions[it] }
+                        .joinToString(if (hours.size == 2) " and " else ", ")
+            } else null
+        } ?: run {
+            holder.itemView.selectRepeatHours.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
+            holder.itemView.selectRepeatHours.text = "Choose hours"
+        }
+
+        // Days
+
+        reminder.repeat?.days?.let { days ->
+            if (days.isNotEmpty()) {
+                holder.itemView.selectRepeatDays.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
+                holder.itemView.selectRepeatDays.text = days.asSequence()
+                        .map { dayOptionsValues.indexOf(it) }
+                        .filter { it != -1 }
+                        .map { dayOptions[it] }
+                        .joinToString(if (days.size == 2) " and " else ", ")
+            } else null
+        } ?: run {
+            holder.itemView.selectRepeatDays.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
+            holder.itemView.selectRepeatDays.text = "Choose days"
+        }
+
+        // Weeks
+
+        reminder.repeat?.weeks?.let { weeks ->
+            if (weeks.isNotEmpty()) {
+                holder.itemView.selectRepeatWeeks.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
+                holder.itemView.selectRepeatWeeks.text = weeks.asSequence()
+                        .map { weekOptionsValues.indexOf(it) }
+                        .filter { it != -1 }
+                        .map { weekOptions[it] }
+                        .joinToString(if (weeks.size == 2) " and " else ", ")
+            } else null
+        } ?: run {
+            holder.itemView.selectRepeatWeeks.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
+            holder.itemView.selectRepeatWeeks.text = "Choose weeks"
+        }
+
+        // Months
+
+        reminder.repeat?.months?.let { months ->
+            if (months.isNotEmpty()) {
+                holder.itemView.selectRepeatMonths.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.colorPrimary))
+                holder.itemView.selectRepeatMonths.text = months.asSequence()
+                        .map { monthOptionsValues.indexOf(it) }
+                        .filter { it != -1 }
+                        .map { monthOptions[it] }
+                        .joinToString(if (months.size == 2) " and " else ", ")
+            } else null
+        } ?: run {
+            holder.itemView.selectRepeatMonths.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
+            holder.itemView.selectRepeatMonths.text = "Choose months"
         }
     }
 

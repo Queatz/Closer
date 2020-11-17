@@ -344,14 +344,14 @@ class EventHandler constructor(private val on: On) {
                 val items = (it as EditRemindersAdapter).items
                 on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().updateEventReminders(event.id!!, items).subscribe({
                     event.reminders = items
-                    on<ToastHandler>().show(context.getString(R.string.event_reminders_updated))
+                    on<StoreHandler>().store.box(Event::class).put(event)
+                    on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.event_reminders_updated))
                 }, {
                     on<DefaultAlerts>().thatDidntWork()
                 }))
             }
 
             onAfterViewCreated = { alertConfig, view ->
-
                 lateinit var adapter: EditRemindersAdapter
 
                 adapter = EditRemindersAdapter(on) {
