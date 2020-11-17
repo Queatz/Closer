@@ -1,8 +1,5 @@
-//plugins {
-//    id 'com.github.triplet.play' version '3.0.0'
-//}
-
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.triplet.play'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -57,10 +54,10 @@ android {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-//play {
-//    serviceAccountCredentials = file('../../../service-account-key.json')
-//    track = 'internal'
-//}
+play {
+    serviceAccountCredentials = file('../../../service-account-key.json')
+    track = 'internal'
+}
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'

@@ -2,10 +2,10 @@ package closer.vlllage.com.closer.handler.helpers
 
 import android.content.DialogInterface
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.updateLayoutParams
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import com.queatz.on.On
 
@@ -38,7 +38,6 @@ class AlertHandler constructor(private val on: On) {
     }
 
     private fun show(alertConfig: AlertConfig, parsedMessage: String?) {
-
         val dialogBuilder = AlertDialog.Builder(on<ActivityHandler>().activity!!, alertConfig.theme)
         var textView: TextView? = null
         if (alertConfig.layoutResId != null) {
@@ -128,5 +127,7 @@ class AlertHandler constructor(private val on: On) {
         alertConfig.dialog = alertDialog
 
         alertDialog.show()
+
+        alertDialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
     }
 }

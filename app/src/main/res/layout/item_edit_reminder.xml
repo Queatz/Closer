@@ -23,6 +23,7 @@
         android:background="@drawable/clickable_dark_flat"
         android:textColor="@color/textHintInverse"
         android:hint="#"
+        android:imeOptions="actionNext"
         android:inputType="number"
         android:textAlignment="center"
         android:textAppearance="?android:textAppearanceMedium" />
@@ -36,6 +37,7 @@
         app:layout_constraintStart_toEndOf="@+id/offsetAmount"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Day"
+        android:ellipsize="middle"
         android:padding="@dimen/padDouble"
         android:maxLength="96"
         android:background="@drawable/clickable_dark_flat"
@@ -52,6 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Before the event starts"
+        android:ellipsize="middle"
         android:padding="@dimen/padDouble"
         android:maxLength="96"
         android:background="@drawable/clickable_dark_flat"
@@ -88,6 +91,7 @@
         android:layout_marginStart="@dimen/pad"
         android:visibility="gone"
         tools:visibility="visible"
+        android:ellipsize="middle"
         tools:text="Time of event (5:30pm)"
         android:padding="@dimen/padDouble"
         android:maxLength="96"
@@ -133,6 +137,7 @@
         tools:text="None"
         android:padding="@dimen/padDouble"
         android:maxLength="96"
+        android:ellipsize="middle"
         android:background="@drawable/clickable_dark_flat"
         android:textColor="@color/textHintInverse"
         android:textAppearance="?android:textAppearanceMedium"
@@ -221,7 +226,7 @@
 
     <EditText
         android:id="@+id/comment"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padDouble"
         app:layout_constraintTop_toBottomOf="@+id/commentDivider"
@@ -230,6 +235,7 @@
         android:padding="@dimen/padDouble"
         android:background="@drawable/clickable_dark_flat"
         android:textColor="@color/textHintInverse"
+        android:imeOptions="actionNext"
         android:hint="@string/add_a_comment"
         android:inputType="textShortMessage|textCapSentences"
         android:textAppearance="?android:textAppearanceMedium" />

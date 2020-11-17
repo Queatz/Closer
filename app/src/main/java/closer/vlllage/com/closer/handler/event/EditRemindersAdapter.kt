@@ -23,7 +23,7 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
     var items = mutableListOf<EventReminder>()
         set(value) {
             val diffUtil = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = field[oldItemPosition] == value[newItemPosition]
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = field[oldItemPosition] === value[newItemPosition]
                 override fun getOldListSize() = field.size
                 override fun getNewListSize() = value.size
                 override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = true
@@ -104,13 +104,13 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
     )
 
     private val dayOptions = arrayOf(
-            "Sunday",
             "Monday",
             "Tuesday",
             "Wednesday",
             "Thursday",
             "Friday",
             "Saturday",
+            "Sunday",
             "1st",
             "2nd",
             "3rd",
@@ -146,13 +146,13 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
     )
 
      private val dayOptionsValues = arrayOf(
-            "sunday",
             "monday",
             "tuesday",
             "wednesday",
             "thursday",
             "friday",
             "saturday",
+            "sunday",
             "1",
             "2",
             "3",
@@ -203,18 +203,18 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
     )
 
     private val monthOptionsValues = arrayOf(
-            "january",
-            "february",
-            "march",
-            "april",
-            "may",
-            "june",
-            "july",
-            "august",
-            "september",
-            "october",
-            "november",
-            "december",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditRemindersViewHolder {
