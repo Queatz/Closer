@@ -44,6 +44,7 @@ import closer.vlllage.com.closer.store.models.Event
 import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import java.util.*
+import kotlin.math.abs
 
 
 class NotificationHandler constructor(private val on: On) {
@@ -222,7 +223,16 @@ class NotificationHandler constructor(private val on: On) {
         val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
             created = Date()
             updated = Date()
-            name = on<ResourcesHandler>().resources.getString(R.string.event_notification, event.name, on<EventDetailsHandler>().formatRelative(event.startsAt!!))
+            name = when (abs(Date().time - event.startsAt!!.time) < abs(Date().time - event.endsAt!!.time)) {
+                true -> when (event.startsAt!!.before(Date())) {
+                    true -> on<ResourcesHandler>().resources.getString(R.string.event_notification_started, event.name, on<EventDetailsHandler>().formatRelative(event.startsAt!!).toLowerCase(Locale.getDefault()))
+                    else -> on<ResourcesHandler>().resources.getString(R.string.event_notification_starts, event.name, on<EventDetailsHandler>().formatRelative(event.startsAt!!).toLowerCase(Locale.getDefault()))
+                }
+                else -> when (event.endsAt!!.before(Date())) {
+                    true -> on<ResourcesHandler>().resources.getString(R.string.event_notification_ended, event.name, on<EventDetailsHandler>().formatRelative(event.endsAt!!).toLowerCase(Locale.getDefault()))
+                    else -> on<ResourcesHandler>().resources.getString(R.string.event_notification_ends, event.name, on<EventDetailsHandler>().formatRelative(event.endsAt!!).toLowerCase(Locale.getDefault()))
+                }
+            }
             message = on<EventDetailsHandler>().formatEventDetails(event)
             intentTarget = intent.component!!.className
             intentAction = intent.action

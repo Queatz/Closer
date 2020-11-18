@@ -123,7 +123,10 @@
     <string name="event_cancelled">%1$s has been cancelled</string>
     <string name="cancel_event">Cancel event</string>
     <string name="event_will_be_cancelled">%1$s will be cancelled</string>
-    <string name="event_notification">%1$s starts %2$s</string>
+    <string name="event_notification_starts">%1$s starts %2$s</string>
+    <string name="event_notification_started">%1$s started %2$s</string>
+    <string name="event_notification_ends">%1$s ends %2$s</string>
+    <string name="event_notification_ended">%1$s ended %2$s</string>
     <string name="event_must_not_end_in_the_past">Event must not end in the past</string>
     <string name="enable_contacts_permission">Enable contacts permission</string>
     <string name="photo">Photo</string>

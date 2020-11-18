@@ -118,7 +118,7 @@
     <string name="event_cancelled">%1$s было отменено</string>
     <string name="cancel_event">Отменить событие</string>
     <string name="event_will_be_cancelled">%1$s будет отменено</string>
-    <string name="event_notification">%1$s начинается %2$s</string>
+    <string name="event_notification_starts">%1$s начинается %2$s</string>
     <string name="event_must_not_end_in_the_past">Событие не должно заканчиваться в прошлом</string>
     <string name="enable_contacts_permission">Включить разрешение на доступ к контактам</string>
     <string name="photo">Фото</string>

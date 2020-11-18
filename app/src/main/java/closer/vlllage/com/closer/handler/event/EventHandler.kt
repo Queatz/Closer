@@ -342,6 +342,11 @@ class EventHandler constructor(private val on: On) {
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.apply)
             positiveButtonCallback = {
                 val items = (it as EditRemindersAdapter).items
+
+                items.forEach { eventReminder ->
+                    eventReminder.utcOffset = TimeZone.getDefault().getOffset(Date().time)
+                }
+
                 on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().updateEventReminders(event.id!!, items).subscribe({
                     event.reminders = items
                     on<StoreHandler>().store.box(Event::class).put(event)
