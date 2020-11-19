@@ -320,7 +320,7 @@ class QuestHandler(private val on: On) {
                         negativeButtonCallback = { callback?.invoke() }
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_quest)
                         positiveButtonCallback = {
-                            addProgressInternal(questProgress, groupAction.id!!, it as? Int ?: 1)
+                            addProgressInternal(questProgress, groupAction.id!!, it as? Int ?: 1, set = true)
                             callback?.invoke()
                         }
                         show()
