@@ -72,6 +72,8 @@ class ApiHandler constructor(private val on: On) {
 
     fun myGroups(latLng: LatLng) = api { myGroups(on<LatLngStr>().from(latLng)) }
 
+    fun myEvents() = api { myEvents() }
+
     fun getGroup(groupId: String) = api { getGroup(groupId) }
 
     fun getDirectGroup(phoneId: String) = api { getDirectGroup(phoneId) }

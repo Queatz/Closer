@@ -91,7 +91,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.questProgressAdapter = QuestProgressAdapter(holder.on) { it, view ->
             if (holder.activeProgress == it) {
                 on<MenuHandler>().show(
-                        MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.open_group) {
+                        MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.show_progress) {
                             holder.on<QuestHandler>().openGroupForQuestProgress(view, it)
                         },
                         MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.deselect) {

@@ -23,6 +23,7 @@ class RefreshHandler constructor(private val on: On) {
         refreshMe()
         refreshMyGroups()
         refreshMyMessages()
+        refreshMyEvents()
         refreshActiveQuestProgresses()
     }
 
@@ -58,6 +59,12 @@ class RefreshHandler constructor(private val on: On) {
                 handleGroupContacts(stateResult.groupContacts!!, noGroups = true)
             }, connectionError))
         }
+    }
+
+    fun refreshMyEvents() {
+        on<DisposableHandler>().add(on<ApiHandler>().myEvents().subscribe({ events ->
+            handleFullListResult(events, Event::class.java, Event_.id, true, { EventResult.from(it) }, null)
+        }, connectionError))
     }
 
     fun refreshDirectGroups() {

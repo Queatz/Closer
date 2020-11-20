@@ -269,6 +269,9 @@ interface Backend {
     @GET("event")
     fun getEvents(@Query("geo") latLng: String): Single<List<EventResult>>
 
+    @GET("event")
+    fun myEvents(): Single<List<EventResult>>
+
     @GET("event/{id}")
     fun getEvent(@Path("id") eventId: String): Single<EventResult>
 

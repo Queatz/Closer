@@ -13,7 +13,7 @@ interface PlacesBackend {
     fun reverse(@Query("lat") latitude: Double, @Query("lon") longitude: Double, @Query("limit") limit: Int): Single<GeoJsonResponse>
 
     companion object {
-        const val BASE_URL = "https://photon.komoot.de/"
+        const val BASE_URL = "https://photon.komoot.io/"
     }
 }
 
