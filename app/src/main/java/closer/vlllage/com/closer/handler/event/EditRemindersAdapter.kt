@@ -273,22 +273,22 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
 
         holder.itemView.selectPosition.setOnClickListener {
             on<MenuHandler>().show(
-                    MenuHandler.MenuOption(0, title = "Before the event starts") {
+                    MenuHandler.MenuOption(0, title = on<ResourcesHandler>().resources.getString(R.string.before_event_starts)) {
                         reminder.offset.amount = -reminder.offset.amount.absoluteValue
                         reminder.position = EventReminderPosition.Start
                         update(holder, reminder)
                     },
-                    MenuHandler.MenuOption(0, title = "Before the event ends") {
+                    MenuHandler.MenuOption(0, title = on<ResourcesHandler>().resources.getString(R.string.before_event_ends)) {
                         reminder.offset.amount = -reminder.offset.amount.absoluteValue
                         reminder.position = EventReminderPosition.End
                         update(holder, reminder)
                     },
-                    MenuHandler.MenuOption(0, title = "After the event starts") {
+                    MenuHandler.MenuOption(0, title = on<ResourcesHandler>().resources.getString(R.string.after_event_starts)) {
                         reminder.offset.amount = reminder.offset.amount.absoluteValue
                         reminder.position = EventReminderPosition.Start
                         update(holder, reminder)
                     },
-                    MenuHandler.MenuOption(0, title = "After the event ends") {
+                    MenuHandler.MenuOption(0, title = on<ResourcesHandler>().resources.getString(R.string.after_event_ends)) {
                         reminder.offset.amount = reminder.offset.amount.absoluteValue
                         reminder.position = EventReminderPosition.End
                         update(holder, reminder)
@@ -311,14 +311,14 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                         reminder.repeat = null
                         update(holder, reminder)
                     },
-                    MenuHandler.MenuOption(0, title = "Until the event starts") {
+                    MenuHandler.MenuOption(0, title = on<ResourcesHandler>().resources.getString(R.string.until_event_starts)) {
                         if (reminder.repeat == null) {
                             reminder.repeat = EventReminderRepeat()
                         }
                         reminder.repeat!!.until = EventReminderPosition.Start
                         update(holder, reminder)
                     }.visible(true),
-                    MenuHandler.MenuOption(0, title = "Until the event ends") {
+                    MenuHandler.MenuOption(0, title = on<ResourcesHandler>().resources.getString(R.string.until_event_ends)) {
                         if (reminder.repeat == null) {
                             reminder.repeat = EventReminderRepeat()
                         }
@@ -485,21 +485,21 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         }
 
         holder.itemView.offsetUnit.text = when (reminder.offset.unit) {
-            EventReminderOffsetUnit.Minute -> "Minute"
-            EventReminderOffsetUnit.Hour -> "Hour"
-            EventReminderOffsetUnit.Day -> "Day"
-            EventReminderOffsetUnit.Week -> "Week"
-            EventReminderOffsetUnit.Month -> "Month"
+            EventReminderOffsetUnit.Minute -> on<ResourcesHandler>().resources.getString(R.string.minute)
+            EventReminderOffsetUnit.Hour -> on<ResourcesHandler>().resources.getString(R.string.hour)
+            EventReminderOffsetUnit.Day -> on<ResourcesHandler>().resources.getString(R.string.day)
+            EventReminderOffsetUnit.Week -> on<ResourcesHandler>().resources.getString(R.string.week)
+            EventReminderOffsetUnit.Month -> on<ResourcesHandler>().resources.getString(R.string.month)
         }
 
         // Position
 
         holder.itemView.selectPosition.text = if (reminder.offset.amount == 0) {
-            "At time of event"
+            on<ResourcesHandler>().resources.getString(R.string.at_time_of_event)
         } else {
             when (reminder.position) {
-                EventReminderPosition.Start -> "${if (reminder.offset.amount < 0) "Before" else "After"} the event starts"
-                EventReminderPosition.End -> "${if (reminder.offset.amount < 0) "Before" else "After"} the event ends"
+                EventReminderPosition.Start -> on<ResourcesHandler>().resources.getString(if (reminder.offset.amount < 0) R.string.before_event_starts else R.string.after_event_starts)
+                EventReminderPosition.End -> on<ResourcesHandler>().resources.getString(if (reminder.offset.amount < 0) R.string.before_event_ends else R.string.after_event_ends)
             }
         }
 
@@ -518,7 +518,7 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         // Repeat
 
 
-        holder.itemView.selectRepeat.text = "None"
+        holder.itemView.selectRepeat.text = on<ResourcesHandler>().resources.getString(R.string.none)
         holder.itemView.selectRepeat.setTextColor(on<ResourcesHandler>().resources.getColor(when (reminder.repeat) {
             null -> R.color.textHintInverse
             else -> R.color.colorPrimary
@@ -535,9 +535,9 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         }
 
         holder.itemView.selectRepeat.text = when(reminder.repeat?.until) {
-            EventReminderPosition.Start -> "Until the event starts"
-            EventReminderPosition.End -> "Until the event ends"
-            else -> "None"
+            EventReminderPosition.Start -> on<ResourcesHandler>().resources.getString(R.string.until_event_starts)
+            EventReminderPosition.End -> on<ResourcesHandler>().resources.getString(R.string.until_event_ends)
+            else -> on<ResourcesHandler>().resources.getString(R.string.none)
         }
 
         // Hours
@@ -549,11 +549,11 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                         .map { hourOptionsValues.indexOf(it) }
                         .filter { it != -1 }
                         .map { hourOptions[it] }
-                        .joinToString(if (hours.size == 2) " and " else ", ")
+                        .joinToString(if (hours.size == 2) " ${on<ResourcesHandler>().resources.getString(R.string.and)} " else ", ")
             } else null
         } ?: run {
             holder.itemView.selectRepeatHours.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-            holder.itemView.selectRepeatHours.text = "Choose hours"
+            holder.itemView.selectRepeatHours.text = on<ResourcesHandler>().resources.getString(R.string.every_hour)
         }
 
         // Days
@@ -565,11 +565,11 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                         .map { dayOptionsValues.indexOf(it) }
                         .filter { it != -1 }
                         .map { dayOptions[it] }
-                        .joinToString(if (days.size == 2) " and " else ", ")
+                        .joinToString(if (days.size == 2) " ${on<ResourcesHandler>().resources.getString(R.string.and)} " else ", ")
             } else null
         } ?: run {
             holder.itemView.selectRepeatDays.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-            holder.itemView.selectRepeatDays.text = "Choose days"
+            holder.itemView.selectRepeatDays.text = on<ResourcesHandler>().resources.getString(R.string.choose_days)
         }
 
         // Weeks
@@ -581,11 +581,11 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                         .map { weekOptionsValues.indexOf(it) }
                         .filter { it != -1 }
                         .map { weekOptions[it] }
-                        .joinToString(if (weeks.size == 2) " and " else ", ")
+                        .joinToString(if (weeks.size == 2) " ${on<ResourcesHandler>().resources.getString(R.string.and)} " else ", ")
             } else null
         } ?: run {
             holder.itemView.selectRepeatWeeks.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-            holder.itemView.selectRepeatWeeks.text = "Choose weeks"
+            holder.itemView.selectRepeatWeeks.text = on<ResourcesHandler>().resources.getString(R.string.choose_weeks)
         }
 
         // Months
@@ -597,11 +597,11 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
                         .map { monthOptionsValues.indexOf(it) }
                         .filter { it != -1 }
                         .map { monthOptions[it] }
-                        .joinToString(if (months.size == 2) " and " else ", ")
+                        .joinToString(if (months.size == 2) " ${on<ResourcesHandler>().resources.getString(R.string.and)} " else ", ")
             } else null
         } ?: run {
             holder.itemView.selectRepeatMonths.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-            holder.itemView.selectRepeatMonths.text = "Choose months"
+            holder.itemView.selectRepeatMonths.text = on<ResourcesHandler>().resources.getString(R.string.choose_months)
         }
     }
 

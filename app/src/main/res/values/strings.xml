@@ -154,6 +154,7 @@
     <string name="remove_action_message">Remove \"%1$s\" from this group?</string>
     <string name="add_a_comment">Add a comment…</string>
     <string name="nope">Nope</string>
+    <string name="and">and</string>
     <string name="take_photo">Take photo</string>
     <string name="upload_photo">Upload photo</string>
     <string name="remove_action_menu_item">Remove from group…</string>
@@ -522,6 +523,17 @@
     <string name="hour">Hour</string>
     <string name="event_reminders_updated">Event reminders updated</string>
     <string name="show_progress">Show progress</string>
+    <string name="every_hour">Every hour</string>
+    <string name="choose_days">Choose days</string>
+    <string name="choose_weeks">Choose weeks</string>
+    <string name="choose_months">Choose months</string>
+    <string name="until_event_ends">Until the event ends</string>
+    <string name="until_event_starts">Until the event starts</string>
+    <string name="before_event_starts">Before the event starts</string>
+    <string name="before_event_ends">Before the event ends</string>
+    <string name="after_event_starts">After the event starts</string>
+    <string name="after_event_ends">After the event ends</string>
+    <string name="at_time_of_event">At time of event</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
