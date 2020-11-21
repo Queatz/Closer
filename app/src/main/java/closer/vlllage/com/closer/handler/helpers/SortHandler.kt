@@ -107,6 +107,11 @@ class SortHandler constructor(private val on: On) {
 
     fun sortEvents(latLng: LatLng): Comparator<Event> {
         return Comparator { o1, o2 ->
+
+            if (o1.startsAt != o2.startsAt) {
+                return@Comparator if (o1.startsAt!!.before(o2.startsAt)) -1 else 1
+            }
+
             val d1 = FloatArray(1)
             val d2 = FloatArray(1)
 

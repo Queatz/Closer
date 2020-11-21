@@ -78,10 +78,12 @@ class Search constructor(private val on: On) {
         val distance = on<HowFar>().about7Miles
 
         return on<StoreHandler>().store.box(Event::class).query(
-                Event_.startsAt.less(on<TimeAgo>().startOfToday(1))
+                Event_.startsAt.less(on<TimeAgo>().daysAgo(-14))
                         .and(Event_.endsAt.greater(Date()))
-                        .and(Event_.latitude.between(latLng.latitude - distance, latLng.latitude + distance)
-                        .and(Event_.longitude.between(latLng.longitude - distance, latLng.longitude + distance))).let { query ->
+                        .and(Event_.isPublic.notEqual(true).or(
+                                Event_.latitude.between(latLng.latitude - distance, latLng.latitude + distance)
+                                        .and(Event_.longitude.between(latLng.longitude - distance, latLng.longitude + distance))
+                        )).let { query ->
                             queryString?.takeIf { it.isNotBlank() }?.let {
                                 query.and(Event_.about.contains(queryString, QueryBuilder.StringOrder.CASE_INSENSITIVE) or
                                         Event_.name.contains(queryString, QueryBuilder.StringOrder.CASE_INSENSITIVE))

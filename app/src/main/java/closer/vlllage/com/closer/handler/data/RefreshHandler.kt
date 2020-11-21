@@ -63,7 +63,7 @@ class RefreshHandler constructor(private val on: On) {
 
     fun refreshMyEvents() {
         on<DisposableHandler>().add(on<ApiHandler>().myEvents().subscribe({ events ->
-            handleFullListResult(events, Event::class.java, Event_.id, true, { EventResult.from(it) }, null)
+            handleFullListResult(events, Event::class.java, Event_.id, false, { EventResult.from(it) }, { event, eventResult ->  EventResult.updateFrom(event, eventResult) })
         }, connectionError))
     }
 

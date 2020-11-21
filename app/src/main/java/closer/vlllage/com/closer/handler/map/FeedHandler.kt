@@ -283,7 +283,9 @@ class FeedHandler constructor(private val on: On) {
                                     .single()
                                     .on(AndroidScheduler.mainThread())
                                     .observer { eventGroups ->
-                                        on<SearchGroupHandler>().setGroups(groups + eventGroups.filter { eventGroup -> groups.all { it.id != eventGroup.id } }, includeTopics = feedContent() == FeedContent.POSTS)
+                                        on<SearchGroupHandler>().setGroups(groups + eventGroups
+                                                .filter { eventGroup -> groups.all { it.id != eventGroup.id } }
+                                                .sortedBy { group -> events.indexOfFirst { event -> event.groupId == group.id } }, includeTopics = feedContent() == FeedContent.POSTS)
                                     }.also { loadGroupsDisposableGroup.add(it) }
                         }.also { loadGroupsDisposableGroup.add(it) }
                     }
