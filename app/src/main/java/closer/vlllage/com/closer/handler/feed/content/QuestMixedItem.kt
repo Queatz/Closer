@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionGridRecyclerViewHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.quest.QuestDisplaySettings
 import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.handler.quest.QuestLinkAdapter
@@ -90,15 +91,21 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         holder.questProgressAdapter = QuestProgressAdapter(holder.on) { it, view ->
             if (holder.activeProgress == it) {
-                on<MenuHandler>().show(
-                        MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, R.string.show_progress) {
-                            holder.on<QuestHandler>().openGroupForQuestProgress(view, it)
-                        },
-                        MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.deselect) {
-                            holder.activeProgress = null
-                            refreshProgress(holder, quest)
-                        }
-                )
+                on<NameHandler>().getNameAsync(it.ofId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({ name ->
+                    on<MenuHandler>().show(
+                            MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.show_progress, name)) {
+                                holder.on<QuestHandler>().openGroupForQuestProgress(view, it)
+                            },
+                            MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.deselect) {
+                                holder.activeProgress = null
+                                refreshProgress(holder, quest)
+                            }
+                    )
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                }).also {
+                    holder.on<DisposableHandler>().add(it)
+                }
             } else {
                 holder.activeProgress = it
                 refreshProgress(holder, quest)
@@ -242,7 +249,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             val questProgress = if (holder.activeProgress?.ofId == me) holder.activeProgress else holder.progressByMe
 
             on<MenuHandler>().show(
-                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_group)) {
+                    MenuHandler.MenuOption(R.drawable.ic_launch_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.open_quest)) {
                         holder.on<GroupActivityTransitionHandler>().showGroupMessages(null, quest.groupId)
                     },
                     MenuHandler.MenuOption(R.drawable.ic_baseline_play_arrow_24, title = on<ResourcesHandler>().resources.getString(R.string.start_quest)) {
@@ -297,20 +304,11 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         if (holder.activeProgress?.active == true && holder.activeProgress!!.created != null) {
             holder.overallProgress.visible = true
-            holder.overallProgress.progress = on<QuestHandler>().questFinishPercent(quest, holder.activeProgress!!.created!!).toInt()
+            holder.overallProgress.progress = on<QuestHandler>().questFinishPercent(quest, holder.activeProgress!!.created!!)
         } else {
             holder.overallProgress.visible = false
         }
 
-        holder.about.text = when {
-            holder.activeProgress?.finished != null -> on<ResourcesHandler>().resources.getString(R.string.finished_x,
-                    on<TimeStr>().prettyDate(holder.activeProgress!!.finished!!))
-            holder.activeProgress?.active == true -> on<ResourcesHandler>().resources.getString(R.string.in_progress_x,
-                    on<QuestHandler>().questFinishText(quest, holder.activeProgress!!.created))
-            holder.activeProgress?.stopped != null -> on<ResourcesHandler>().resources.getString(R.string.stopped_x,
-                    on<TimeStr>().prettyDate(holder.activeProgress!!.stopped!!))
-            else -> on<ResourcesHandler>().resources.getString(R.string.not_started_x,
-                    on<QuestHandler>().questFinishText(quest))
-        }
+        holder.about.text = on<QuestHandler>().questProgressText(holder.activeProgress, quest)
     }
 }

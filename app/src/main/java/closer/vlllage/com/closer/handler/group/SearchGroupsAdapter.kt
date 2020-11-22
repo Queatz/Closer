@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.helpers.*
+import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
@@ -76,7 +78,8 @@ open class SearchGroupsAdapter constructor(
                     setShadows(holder, false)
                     holder.actionRecyclerView.visible = false
                     holder.cardView.setOnClickListener {
-                        onCreateGroupClickListener?.invoke(createGroupName.value ?: "", createIsPublic)
+                        onCreateGroupClickListener?.invoke(createGroupName.value
+                                ?: "", createIsPublic)
                     }
                     holder.cardView.setOnLongClickListener(null)
                     holder.cardView.setBackgroundResource(if (isSmall) backgroundResId else if (createIsPublic) R.drawable.clickable_green_8dp else R.drawable.clickable_blue_8dp)
@@ -114,6 +117,18 @@ open class SearchGroupsAdapter constructor(
                         on<EventDetailsHandler>().formatEventDetails(event)
                     else
                         on<ResourcesHandler>().resources.getString(R.string.event)
+                } else if (group.ofKind == "quest") {
+                    holder.action.text = on<ResourcesHandler>().resources.getString(R.string.open_quest)
+                    holder.about.text = on<StoreHandler>().store.box(Quest::class).query()
+                            .equal(Quest_.id, group.ofId!!)
+                            .build()
+                            .findFirst()?.let { quest -> on<QuestHandler>().questProgressText(on<StoreHandler>().store.box(QuestProgress::class).query()
+                                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!)
+                                    .equal(QuestProgress_.questId, group.ofId!!)
+                                    .equal(QuestProgress_.active, true)
+                                    .build()
+                                    .findFirst(), quest) }
+                            ?: on<ResourcesHandler>().resources.getString(R.string.quest)
                 } else {
                     holder.about.text = group.about
                     holder.action.text = if (actionText != null) actionText else if (recentActivity) on<TimeStr>().active(group.updated) else on<ResourcesHandler>().resources.getString(R.string.open_group)
@@ -139,9 +154,49 @@ open class SearchGroupsAdapter constructor(
                     holder.on.use(on<ActivityHandler>())
                     holder.on.use(on<ApiHandler>())
                     holder.on.use(on<StoreHandler>())
-                    holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionDisplay.Layout.TEXT)
-                    holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
-                            .equal(GroupAction_.group, group.id!!)
+
+                    var questProgress: QuestProgress? = null
+                    var quest: Quest? = null
+
+                    if (group.ofKind == "quest") {
+                        questProgress = on<StoreHandler>().store.box(QuestProgress::class).query()
+                                .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!)
+                                .equal(QuestProgress_.questId, group.ofId!!)
+                                .equal(QuestProgress_.active, true)
+                                .build()
+                                .findFirst()
+
+                        quest = on<StoreHandler>().store.box(Quest::class).query()
+                                .equal(Quest_.id, group.ofId!!)
+                                .build()
+                                .findFirst()
+                    }
+
+                    holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionDisplay.Layout.TEXT, when {
+                        quest != null -> ({ it, proceed ->
+                            if (questProgress == null) {
+                                holder.on<QuestHandler>().startQuest(quest) { questProgress ->
+                                    if (questProgress != null) {
+                                        holder.on<QuestHandler>().addProgress(quest, questProgress, it) { proceed() }
+                                    } else {
+                                        proceed()
+                                    }
+                                }
+                            } else {
+                                holder.on<QuestHandler>().addProgress(quest, questProgress, it) { proceed() }
+                            }
+                        })
+                        else -> null
+                    })
+                    holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query().let {
+                        if (group.ofKind == "quest") {
+                            it.`in`(GroupAction_.id, quest?.flow?.items?.map { it.groupActionId!! }?.filter { groupActionId ->
+                                        !on<QuestHandler>().isGroupActionProgressDone(quest, questProgress, groupActionId)
+                                    }?.toTypedArray() ?: arrayOf())
+                        } else {
+                            it.equal(GroupAction_.group, group.id!!)
+                        }
+                    }
                             .build().subscribe().single()
                             .on(AndroidScheduler.mainThread())
                             .observer { groupActions ->

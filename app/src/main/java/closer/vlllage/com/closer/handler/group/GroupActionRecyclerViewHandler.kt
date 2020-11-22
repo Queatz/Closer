@@ -12,7 +12,7 @@ class GroupActionRecyclerViewHandler constructor(private val on: On) {
     var recyclerView: RecyclerView? = null
         private set
 
-    fun attach(actionRecyclerView: RecyclerView, layout: GroupActionDisplay.Layout) {
+    fun attach(actionRecyclerView: RecyclerView, layout: GroupActionDisplay.Layout, onGroupActionClickListener: GroupActionClickListener? = null) {
         recyclerView = actionRecyclerView
         actionRecyclerView.layoutManager = LinearLayoutManager(
                 on<ActivityHandler>().activity,
@@ -20,7 +20,7 @@ class GroupActionRecyclerViewHandler constructor(private val on: On) {
                 false
         )
 
-        adapter = GroupActionAdapter(on, layout)
+        adapter = GroupActionAdapter(on, layout, onGroupActionClickListener)
 
         actionRecyclerView.adapter = adapter
     }

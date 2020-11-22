@@ -462,6 +462,7 @@
     <string name="x_percent_remaining">%1$s%% remaining</string>
     <string name="x_of_y_done">%1$s of %2$s done</string>
     <string name="of_y_done">of %1$s done</string>
+    <string name="of_y_done_z_change">of %1$s done (%2$s)</string>
     <string name="stop_quest">Stop quest</string>
     <string name="resume_quest">Resume previous quest</string>
     <string name="finish_quest">Finish quest</string>
@@ -522,7 +523,7 @@
     <string name="month">Month</string>
     <string name="hour">Hour</string>
     <string name="event_reminders_updated">Event reminders updated</string>
-    <string name="show_progress">Show progress</string>
+    <string name="show_progress">Show %1$s\'s progress</string>
     <string name="every_hour">Every hour</string>
     <string name="choose_days">Choose days</string>
     <string name="choose_weeks">Choose weeks</string>
@@ -534,6 +535,8 @@
     <string name="after_event_starts">After the event starts</string>
     <string name="after_event_ends">After the event ends</string>
     <string name="at_time_of_event">At time of event</string>
+    <string name="open_quest">Open quest</string>
+    <string name="quest">Quest</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

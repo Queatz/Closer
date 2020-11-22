@@ -18,7 +18,6 @@ import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MeetHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
-import closer.vlllage.com.closer.handler.phone.ReplyHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.store.models.Group
@@ -308,16 +307,8 @@ class GroupActivity : CircularRevealActivity() {
     }
 
     private fun setGroupAbout(group: Group) {
-        if (group.hasEvent()) {
-            return
-        }
-
-        if (group.about.isNullOrBlank()) {
-            view.groupAbout.visible = false
-        } else {
-            view.groupAbout.visible = true
-            view.groupAbout.text = group.about
-        }
+        view.groupAbout.visible = !group.about.isNullOrBlank()
+        view.groupAbout.text = group.about
     }
 
     private fun setGroupBackground(group: Group) {

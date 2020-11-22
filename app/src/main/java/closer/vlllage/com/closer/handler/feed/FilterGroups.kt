@@ -8,4 +8,5 @@ class FilterGroups(private val on: On) {
     fun events(groups: List<Group>) = groups.filter { it.hasEvent() }
     fun hub(groups: List<Group>) = groups.filter { it.hub }
     fun physical(groups: List<Group>) = groups.filter { it.physical || it.hasEvent() }
+    fun quests(groups: List<Group>) = groups.filter { it.ofKind == "quest" }
 }

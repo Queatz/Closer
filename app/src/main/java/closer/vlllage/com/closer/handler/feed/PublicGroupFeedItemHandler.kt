@@ -166,11 +166,21 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 stateObservable.onNext(state)
             })
 
-            if (on<FeedHandler>().feedContent() == FeedContent.POSTS) {
-                searchGroupsAdapter.setGroups(on<FilterGroups>().physical(groups))
-            } else {
-                searchGroupsAdapter.setGroups(on<FilterGroups>().public(groups))
+            when (on<FeedHandler>().feedContent()) {
+                FeedContent.POSTS -> {
+                    searchGroupsAdapter.setGroups(on<FilterGroups>().physical(groups))
+                }
+                FeedContent.QUESTS -> {
+                    val quests = on<FilterGroups>().quests(groups)
+                    searchGroupsAdapter.setGroups(quests)
+                    state.hasQuests = quests.isNotEmpty()
+                    stateObservable.onNext(state)
+                }
+                else -> {
+                    searchGroupsAdapter.setGroups(on<FilterGroups>().public(groups))
+                }
             }
+
             searchHubsAdapter.setGroups(on<FilterGroups>().hub(groups).also {
                 state.hasPlaces = it.isNotEmpty()
                 stateObservable.onNext(state)
@@ -531,10 +541,10 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                             }
                             ContentViewType.HOME_QUESTS -> {
                                 eventsRecyclerView.visible = false
-                                hubsRecyclerView.visible = state.hasQuests
+                                hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
                                 suggestionsRecyclerView.visible = false
-                                groupsRecyclerView.visible = false
+                                groupsRecyclerView.visible = state.hasQuests
                                 eventsHeader.visible = false
                                 groupsHeader.visible = false
                                 searchGroups.visible = true
@@ -552,6 +562,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 itemView.placesHeader.visible = false
                                 actionHeader.visible = false
                                 searchGroups.visible = true
+                                searchGroupsAdapter.showCreateOption(false)
                             }
                             ContentViewType.HOME_GROUPS -> {
                                 val explore = content === ContentViewType.HOME_GROUPS

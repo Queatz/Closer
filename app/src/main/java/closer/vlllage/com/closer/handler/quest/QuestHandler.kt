@@ -310,11 +310,17 @@ class QuestHandler(private val on: On) {
                             view.count.setText((current + 1).toString())
                             view.count.selectAll()
                             view.count.requestFocus()
-                            view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done, on<NumberHelper>().format(it.value))
+                            view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done_z_change, on<NumberHelper>().format(it.value), "+${on<NumberHelper>().format(1)}")
 
                             view.count.doOnTextChanged { text, start, before, count ->
-                                config.alertResult = text.toString().toIntOrNull()
+                                text.toString().toIntOrNull().let { value ->
+                                    config.alertResult = value
+                                    view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done_z_change, on<NumberHelper>().format(it.value), "${if (value == null || value < current) "" else "+"}${if (value == null) "?" else on<NumberHelper>().format(value - count)}")
+                                }
                             }
+                        }
+                        buttonClickCallback = {
+                            it != null
                         }
                         negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
                         negativeButtonCallback = { callback?.invoke() }
@@ -723,6 +729,28 @@ class QuestHandler(private val on: On) {
         on<Search>().quests(LatLng(quest.latitude!!, quest.longitude!!), queryString = queryString) { quests ->
             adapter.setQuests(quests.filter { it.id != quest.id })
         }.also { holder.disposableGroup.add(it) }
+    }
+
+    fun isGroupActionProgressDone(quest: Quest, questProgress: QuestProgress?, groupActionId: String): Boolean {
+        val questAction = quest.flow?.items?.firstOrNull { it.groupActionId == groupActionId }?.also {
+            it.current = questProgress?.progress?.items?.get(groupActionId)?.current ?: 0
+        } ?: return false
+
+        return when (questAction.type) {
+            QuestActionType.Percent -> questAction.current >= 100
+            QuestActionType.Repeat -> questAction.current >= questAction.value
+        }
+    }
+
+    fun questProgressText(questProgress: QuestProgress?, quest: Quest) = when {
+        questProgress?.finished != null -> on<ResourcesHandler>().resources.getString(R.string.finished_x,
+                on<TimeStr>().prettyDate(questProgress!!.finished!!))
+        questProgress?.active == true -> on<ResourcesHandler>().resources.getString(R.string.in_progress_x,
+                questFinishText(quest, questProgress!!.created))
+        questProgress?.stopped != null -> on<ResourcesHandler>().resources.getString(R.string.stopped_x,
+                on<TimeStr>().prettyDate(questProgress!!.stopped!!))
+        else -> on<ResourcesHandler>().resources.getString(R.string.not_started_x,
+                questFinishText(quest))
     }
 
     private class CreateQuestViewHolder(val view: View) {

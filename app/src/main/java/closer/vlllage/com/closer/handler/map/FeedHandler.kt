@@ -149,6 +149,7 @@ class FeedHandler constructor(private val on: On) {
                     setGroups(when (result.first) {
                         FeedContent.GROUPS -> on<FilterGroups>().public(result.second)
                         FeedContent.PLACES -> on<FilterGroups>().hub(result.second)
+                        FeedContent.QUESTS -> on<FilterGroups>().quests(result.second)
                         else -> result.second
                     })
                 }, {}).also {
@@ -272,22 +273,40 @@ class FeedHandler constructor(private val on: On) {
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer { groups ->
-                    if (feedContent() == FeedContent.FRIENDS) {
-                        on<SearchGroupHandler>().setGroups(groups, includeTopics = true)
-                    } else {
-                        on<Search>().events(target, single = true) { events ->
-                            on<StoreHandler>().store.box(Group::class).query(
-                                    Group_.id.oneOf(events.map { it.groupId }.toTypedArray())
-                            ).build()
-                                    .subscribe()
-                                    .single()
-                                    .on(AndroidScheduler.mainThread())
-                                    .observer { eventGroups ->
-                                        on<SearchGroupHandler>().setGroups(groups + eventGroups
-                                                .filter { eventGroup -> groups.all { it.id != eventGroup.id } }
-                                                .sortedBy { group -> events.indexOfFirst { event -> event.groupId == group.id } }, includeTopics = feedContent() == FeedContent.POSTS)
-                                    }.also { loadGroupsDisposableGroup.add(it) }
-                        }.also { loadGroupsDisposableGroup.add(it) }
+                    when (feedContent()) {
+                        FeedContent.FRIENDS -> {
+                            on<SearchGroupHandler>().setGroups(groups, includeTopics = true)
+                        }
+                        FeedContent.QUESTS -> {
+                            on<Search>().quests(target) { quests ->
+                                on<StoreHandler>().store.box(Group::class).query(
+                                        Group_.id.oneOf(quests.map { it.groupId }.toTypedArray())
+                                ).build()
+                                        .subscribe()
+                                        .single()
+                                        .on(AndroidScheduler.mainThread())
+                                        .observer { questGroups ->
+                                            on<SearchGroupHandler>().setGroups(groups + questGroups
+                                                    .filter { questGroup -> groups.all { it.id != questGroup.id } }
+                                                    .sortedBy { group -> quests.indexOfFirst { event -> event.groupId == group.id } }, includeTopics = feedContent() == FeedContent.POSTS)
+                                        }.also { loadGroupsDisposableGroup.add(it) }
+                            }.also { loadGroupsDisposableGroup.add(it) }
+                        }
+                        else -> {
+                            on<Search>().events(target, single = true) { events ->
+                                on<StoreHandler>().store.box(Group::class).query(
+                                        Group_.id.oneOf(events.map { it.groupId }.toTypedArray())
+                                ).build()
+                                        .subscribe()
+                                        .single()
+                                        .on(AndroidScheduler.mainThread())
+                                        .observer { eventGroups ->
+                                            on<SearchGroupHandler>().setGroups(groups + eventGroups
+                                                    .filter { eventGroup -> groups.all { it.id != eventGroup.id } }
+                                                    .sortedBy { group -> events.indexOfFirst { event -> event.groupId == group.id } }, includeTopics = feedContent() == FeedContent.POSTS)
+                                        }.also { loadGroupsDisposableGroup.add(it) }
+                            }.also { loadGroupsDisposableGroup.add(it) }
+                        }
                     }
                 }.also { loadGroupsDisposableGroup.add(it) }
     }
