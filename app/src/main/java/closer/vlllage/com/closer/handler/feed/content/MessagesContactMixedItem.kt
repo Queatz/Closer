@@ -12,6 +12,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActionDisplay
 import closer.vlllage.com.closer.handler.group.GroupActionRecyclerViewHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
+import closer.vlllage.com.closer.handler.group.HideHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
@@ -51,10 +52,22 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
             on<GroupActivityTransitionHandler>().showGroupMessages(holder.click, item.group.id!!)
         }
 
+        holder.click.setOnLongClickListener {
+            on<MenuHandler>().show(
+                    MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.hide_from_contacts) {
+                        on<HideHandler>().hide(item.group)
+                    }
+            )
+
+            true
+        }
+
         holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionDisplay.Layout.TEXT)
         holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
                 .equal(GroupAction_.group, item.group.id!!)
-                .build().subscribe().single()
+                .build()
+                .subscribe()
+                .single()
                 .on(AndroidScheduler.mainThread())
                 .observer { groupActions ->
                     holder.on<GroupActionRecyclerViewHandler>().recyclerView!!.visible = groupActions.isNotEmpty()

@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.feed.FilterGroups
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupMessageHelper
+import closer.vlllage.com.closer.handler.group.HideHandler
 import closer.vlllage.com.closer.handler.group.SearchGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
@@ -44,6 +45,7 @@ class FeedHandler constructor(private val on: On) {
     private var groupActionsGroups = listOf<Group>()
     private var lifestyleAndGoalPhones = listOf<Phone>()
     private var isToTheTopVisible = false
+    private var isFirstLoad = true
     private var loadGroupsDisposableGroup: DisposableGroup = on<DisposableHandler>().group()
 
     var content = BehaviorSubject.create<FeedContent>()
@@ -126,7 +128,7 @@ class FeedHandler constructor(private val on: On) {
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer {
-                    mixedAdapter.contacts = it.toMutableList()
+                    mixedAdapter.contacts = it.filter { it.id == null || !on<HideHandler>().isHidden(it.id!!) }.toMutableList()
                 })
 
         on<DisposableHandler>().add(on<KeyboardVisibilityHandler>().isKeyboardVisible
@@ -307,6 +309,13 @@ class FeedHandler constructor(private val on: On) {
                                         }.also { loadGroupsDisposableGroup.add(it) }
                             }.also { loadGroupsDisposableGroup.add(it) }
                         }
+                    }
+
+                    if (isFirstLoad && on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_FEED_EXPANDED]) {
+                        isFirstLoad = false
+                        on<TimerHandler>().postDisposable({
+                            reveal(true)
+                        }, 250)
                     }
                 }.also { loadGroupsDisposableGroup.add(it) }
     }

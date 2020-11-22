@@ -315,7 +315,7 @@ class QuestHandler(private val on: On) {
                             view.count.doOnTextChanged { text, start, before, count ->
                                 text.toString().toIntOrNull().let { value ->
                                     config.alertResult = value
-                                    view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done_z_change, on<NumberHelper>().format(it.value), "${if (value == null || value < current) "" else "+"}${if (value == null) "?" else on<NumberHelper>().format(value - count)}")
+                                    view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done_z_change, on<NumberHelper>().format(it.value), "${if (value == null || value < current) "" else "+"}${if (value == null) "?" else on<NumberHelper>().format(value - current)}")
                                 }
                             }
                         }
