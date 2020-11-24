@@ -537,10 +537,9 @@
     <string name="at_time_of_event">At time of event</string>
     <string name="open_quest">Open quest</string>
     <string name="quest">Quest</string>
-    <string name="settings_open_feed_expanded">expand feed at launch</string>
-    <string name="hide">Hide</string>
+    <string name="settings_open_feed_expanded">Expand feed at launch</string>
     <string name="hide_from_contacts">Hide from contacts</string>
-    <string name="unhide">Unhide</string>
+    <string name="unhide_from_contacts">Unhide from contacts</string>
     <string name="contact_unhidden">Contact unhidden</string>
     <string name="contact_hidden">Contact hidden</string>
 

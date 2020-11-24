@@ -95,7 +95,7 @@ class GroupMemberHandler constructor(private val on: On) {
                                 on<DefaultAlerts>().thatDidntWork()
                             })
                         }.visible(group.hasEvent()),
-                        MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.unhide) {
+                        MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.unhide_from_contacts) {
                             on<HideHandler>().unhide(group)
                         }.visible(group.direct && on<HideHandler>().isHidden(group.id!!))
                 )
