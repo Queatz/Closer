@@ -37,6 +37,9 @@ class SettingsSlideFragment : PoolFragment() {
         openFeedExpandedSettingsSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_FEED_EXPANDED]
         openFeedExpandedSettingsSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_FEED_EXPANDED] = checked }
 
+        rememberLastTabSettingsSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_REMEMBER_LAST_TAB]
+        rememberLastTabSettingsSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_REMEMBER_LAST_TAB] = checked }
+
         lightThemeSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME]
         lightThemeSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME] = checked }
 

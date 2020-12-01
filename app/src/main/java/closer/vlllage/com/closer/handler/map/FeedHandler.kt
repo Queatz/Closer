@@ -74,7 +74,11 @@ class FeedHandler constructor(private val on: On) {
             }
         })
 
-        mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.POSTS
+        if (on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_REMEMBER_LAST_TAB]) {
+            mixedAdapter.content = on<PersistenceHandler>().lastFeedTab ?: FeedContent.POSTS
+        } else {
+            mixedAdapter.content = FeedContent.POSTS
+        }
 
         content.onNext(mixedAdapter.content)
 
@@ -290,7 +294,7 @@ class FeedHandler constructor(private val on: On) {
                                         .observer { questGroups ->
                                             on<SearchGroupHandler>().setGroups(groups + questGroups
                                                     .filter { questGroup -> groups.all { it.id != questGroup.id } }
-                                                    .sortedBy { group -> quests.indexOfFirst { event -> event.groupId == group.id } }, includeTopics = feedContent() == FeedContent.POSTS)
+                                                    .sortedBy { group -> quests.indexOfFirst { quest -> quest.groupId == group.id } })
                                         }.also { loadGroupsDisposableGroup.add(it) }
                             }.also { loadGroupsDisposableGroup.add(it) }
                         }

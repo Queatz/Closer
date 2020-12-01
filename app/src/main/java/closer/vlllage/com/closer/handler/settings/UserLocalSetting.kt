@@ -6,4 +6,5 @@ enum class UserLocalSetting(val defaultValue: Boolean) {
     CLOSER_SETTINGS_HIDE_CLOSE_BUTTON(false),
     CLOSER_SETTINGS_USE_LIGHT_THEME(true),
     CLOSER_SETTINGS_AUTO_ANSWER_CALLS(false),
+    CLOSER_SETTINGS_REMEMBER_LAST_TAB(false),
 }

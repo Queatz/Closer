@@ -144,6 +144,20 @@
                 android:text="@string/settings_open_feed_expanded" />
 
             <Switch
+                android:id="@+id/rememberLastTabSettingsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/settings_remember_last_tab" />
+
+            <Switch
                 android:id="@+id/showCloseButtonSettingsSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

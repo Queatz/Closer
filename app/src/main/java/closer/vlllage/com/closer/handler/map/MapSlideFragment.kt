@@ -297,7 +297,7 @@ class MapSlideFragment : PoolFragment() {
                             (MapBubbleMenuItem(getString(R.string.share_location), R.drawable.ic_share_black_18dp, R.color.colorAccent)),
                             (MapBubbleMenuItem(getString(R.string.add_a_suggestion), R.drawable.ic_edit_location_black_18dp, R.color.colorPrimaryLight)),
                             (MapBubbleMenuItem(getString(R.string.add_new_public_place), R.drawable.ic_add_black_18dp, R.color.purple)),
-                            (MapBubbleMenuItem(getString(R.string.add_new_private_place), R.drawable.ic_group_add_black_18dp, R.color.colorPrimary)))
+                            (MapBubbleMenuItem(getString(R.string.add_new_private_place), R.drawable.ic_group_add_black_18dp, R.color.purple)))
 
             on<MapBubbleMenuView>().setMenuTitle(menuBubble, title ?: on<ResourcesHandler>().resources.getString(R.string.loading_location))
 

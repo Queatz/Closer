@@ -214,7 +214,7 @@
     <string name="profile">Profile</string>
     <string name="about">About</string>
     <string name="introduction">Introduction</string>
-    <string name="offtime">In my offtime</string>
+    <string name="offtime">Favorite pastimes</string>
     <string name="history">History</string>
     <string name="current_goals">%1$s\'s current goals</string>
     <string name="current_lifestyles">%1$s\'s lifestyle</string>
@@ -224,12 +224,12 @@
     <string name="nothing_here">There\'s nothing here</string>
     <string name="edit_your_introduction">Edit your introduction</string>
     <string name="edit_your_history">Edit your history</string>
-    <string name="edit_your_offtime">Edit your offtime</string>
+    <string name="edit_your_offtime">Edit your pastime</string>
     <string name="add_a_lifestyle">Join a lifestyle</string>
     <string name="add_a_goal">Add a goal</string>
     <string name="introduction_hint">What\'s the first thing people might want to know about you?</string>
     <string name="history_hint">Where are you from, what have you done?</string>
-    <string name="offtime_hint">What do you do in your offtime?</string>
+    <string name="offtime_hint">What\'s your favorite pastimes?</string>
     <string name="them">Them</string>
     <string name="cheer_them">Cheer %1$s</string>
     <string name="remove_lifestyle">Leave lifestyle…</string>
@@ -243,9 +243,9 @@
     <string name="x_ago">%1$s ago</string>
     <string name="create_event_in_group_instructions">Tap anywhere on the map and choose \"Host event\"</string>
     <string name="enter_welcome_message">Pinned message (optional)</string>
-    <string name="occupation_hint">What are your primary occupation(s)?</string>
-    <string name="occupations">Occupation(s)</string>
-    <string name="edit_your_occupation">Edit your occupations</string>
+    <string name="occupation_hint">What are your preoccupations?</string>
+    <string name="occupations">Preoccupations</string>
+    <string name="edit_your_occupation">Edit your preoccupations</string>
     <string name="at">at</string>
     <string name="near">near</string>
     <string name="write_review">Write a review</string>
@@ -542,6 +542,7 @@
     <string name="unhide_from_contacts">Unhide from contacts</string>
     <string name="contact_unhidden">Contact unhidden</string>
     <string name="contact_hidden">Contact hidden</string>
+    <string name="settings_remember_last_tab">Rember last tab</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>
