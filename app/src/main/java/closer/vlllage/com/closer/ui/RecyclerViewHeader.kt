@@ -9,6 +9,8 @@ import kotlin.math.max
 
 class RecyclerViewHeader(private val on: On) {
 
+    var headerMargin: Int = 0
+        private set
     private var headerViewHolder: RecyclerView.ViewHolder? = null
     private var footerViewHolder: RecyclerView.ViewHolder? = null
     private var recyclerView: RecyclerView? = null
@@ -119,7 +121,8 @@ class RecyclerViewHeader(private val on: On) {
 
         val params = headerViewHolder!!.itemView.layoutParams as ViewGroup.MarginLayoutParams
         val m = r.height() - pad
-        params.topMargin = m + (if (headerViewHolder === footerViewHolder && recyclerView!!.adapter!!.itemCount > 1) 0 else (footerViewHolder?.itemView?.bottom?.let { max(0, r.height() - (m + (it - headerViewHolder!!.itemView.top))) } ?: 0))
+        headerMargin = m + (if (headerViewHolder === footerViewHolder && recyclerView!!.adapter!!.itemCount > 1) 0 else (footerViewHolder?.itemView?.bottom?.let { max(0, r.height() - (m + (it - headerViewHolder!!.itemView.top))) } ?: 0))
+        params.topMargin = headerMargin
         headerViewHolder?.itemView?.layoutParams = params
 
         recyclerView?.postInvalidate()

@@ -6,6 +6,7 @@
     <dimen name="padDouble">16dp</dimen>
     <dimen name="padQuadruple">32dp</dimen>
     <dimen name="padDialog">24dp</dimen>
+    <dimen name="padDialogHalf">12dp</dimen>
     <dimen name="profilePhotoCollapsedHeight">84dp</dimen>
     <dimen name="profilePhotoSmall">48dp</dimen>
     <dimen name="miniWindowHeight">350dp</dimen>

@@ -23,6 +23,21 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_person_black_24dp"/>
 
+    <ImageView
+        android:id="@+id/addIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/photo"
+        app:layout_constraintEnd_toEndOf="@+id/photo"
+        android:padding="@dimen/padQuarter"
+        android:tint="@color/colorPrimary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:elevation="@dimen/elevationSmall"
+        android:background="@drawable/clickable_white_rounded_flat"
+        android:contentDescription="@string/edit"
+        android:src="@drawable/ic_add_black_18dp" />
+
     <View
         android:id="@+id/activeNowIndicator"
         android:layout_width="12dp"

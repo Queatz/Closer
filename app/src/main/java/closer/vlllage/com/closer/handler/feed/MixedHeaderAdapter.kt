@@ -115,7 +115,8 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
             on<MessagesContactItemAdapter>(),
             on<LifestyleMixedItemAdapter>(),
             on<GoalMixedItemAdapter>(),
-            on<WelcomeMixedItemAdapter>()
+            on<WelcomeMixedItemAdapter>(),
+            on<StoryMixedItemAdapter>(),
     ).map { Pair(it.getMixedItemType(), it as MixedItemAdapter<MixedItem, MixedItemViewHolder>) }.toMap()
 
     private fun generate() {
@@ -136,11 +137,15 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
                     if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_here)))
                 }
                 FeedContent.POSTS -> groupMessages.apply {
-                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
-                    else {
-                        forEach { add(GroupMessageMixedItem(it)) }
-                        add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_conversations)))
+                    repeat(10) {
+                        add(StoryMixedItem())
                     }
+
+//                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+//                    else {
+//                        forEach { add(GroupMessageMixedItem(it)) }
+//                        add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_conversations)))
+//                    }
                 }
                 FeedContent.ACTIVITIES -> groupActions.apply {
                     if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))

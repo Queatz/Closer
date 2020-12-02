@@ -65,7 +65,7 @@
         android:tint="@color/colorPrimary"
         android:background="@drawable/clickable_white_rounded_flat"
         android:contentDescription="@string/edit"
-        android:src="@drawable/ic_add_black_18dp" />
+        android:src="@drawable/ic_camera_black_18dp" />
 
     <TextView
         android:id="@+id/yourName"

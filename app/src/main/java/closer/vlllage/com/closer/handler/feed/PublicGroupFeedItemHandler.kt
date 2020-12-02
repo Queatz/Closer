@@ -453,8 +453,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 sendSomethingButton.visible = true
                                 peopleContainer.visible = state.hasPeople
                                 eventsHeader.visible = false
-                                groupsHeader.visible = true
-                                groupsHeader.setText(R.string.conversations)
+                                groupsHeader.visible = false
                                 eventsRecyclerView.visible = false
                                 hubsRecyclerView.visible = false
                                 actionRecyclerView.visible = false
@@ -686,7 +685,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .between(Phone_.longitude, latLng.longitude - distance, latLng.longitude + distance)
                 .and()
                 .greater(Phone_.updated, on<TimeAgo>().fifteenDaysAgo())
-                .notEqual(Phone_.id, on<PersistenceHandler>().phoneId ?: "")
+                .or()
+                .equal(Phone_.id, on<PersistenceHandler>().phoneId ?: "")
 
         on<DisposableHandler>().add(queryBuilder
                 .sort(on<SortHandler>().sortPhones())

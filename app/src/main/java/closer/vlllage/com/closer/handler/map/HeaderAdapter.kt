@@ -11,6 +11,8 @@ abstract class HeaderAdapter<T : RecyclerView.ViewHolder>(on: On) : PoolRecycler
 
     private val header = RecyclerViewHeader(on)
 
+    val headerMargin get() = header.headerMargin
+
     var useHeader: Boolean = true
         set(value) {
             field = value

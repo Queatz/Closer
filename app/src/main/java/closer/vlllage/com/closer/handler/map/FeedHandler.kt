@@ -7,6 +7,7 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
@@ -32,6 +33,8 @@ import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
+
 
 class FeedHandler constructor(private val on: On) {
     private lateinit var recyclerView: RecyclerView
@@ -47,6 +50,40 @@ class FeedHandler constructor(private val on: On) {
     private var isToTheTopVisible = false
     private var isFirstLoad = true
     private var loadGroupsDisposableGroup: DisposableGroup = on<DisposableHandler>().group()
+    private val snapHelper = object : PagerSnapHelper() {
+
+        private var targetPostion: Int = RecyclerView.NO_POSITION
+        val noSnap get() = layoutManager.findFirstVisibleItemPosition() < 1 && abs(recyclerView.computeVerticalScrollOffset()) < mixedAdapter.headerMargin
+
+        override fun onFling(velocityX: Int, velocityY: Int): Boolean {
+            return if (noSnap && velocityY < 0) {
+                false
+            } else {
+                super.onFling(velocityX, velocityY)
+            }
+        }
+
+        override fun findTargetSnapPosition(layoutManager: RecyclerView.LayoutManager?, velocityX: Int, velocityY: Int): Int {
+            val result = super.findTargetSnapPosition(layoutManager, velocityX, velocityY)
+
+            targetPostion = if (result == 0)
+                RecyclerView.NO_POSITION
+            else
+                result
+
+            return targetPostion
+        }
+
+        override fun calculateDistanceToFinalSnap(layoutManager_: RecyclerView.LayoutManager, targetView: View): IntArray {
+            val result = super.calculateDistanceToFinalSnap(layoutManager, targetView)!!
+
+            return if (targetPostion == RecyclerView.NO_POSITION && noSnap) {
+                IntArray(2)
+            } else {
+                result
+            }
+        }
+    }
 
     var content = BehaviorSubject.create<FeedContent>()
 
@@ -81,6 +118,13 @@ class FeedHandler constructor(private val on: On) {
         }
 
         content.onNext(mixedAdapter.content)
+
+        on<DisposableHandler>().add(content.observeOn(AndroidSchedulers.mainThread()).subscribe {
+            snapHelper.attachToRecyclerView(when (it) {
+                FeedContent.POSTS -> recyclerView
+                else -> null
+            })
+        })
 
         recyclerView.adapter = mixedAdapter
 
@@ -404,8 +448,8 @@ class FeedHandler constructor(private val on: On) {
                 .filter { it }
                 .take(1)
                 .subscribe({
-            performScrollTo(itemView, child)
-        }, {}).also { on<DisposableHandler>().add(it) }
+                    performScrollTo(itemView, child)
+                }, {}).also { on<DisposableHandler>().add(it) }
     }
 
     private fun performScrollTo(itemView: ViewGroup, child: View) {

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.PhotoHelper
 import closer.vlllage.com.closer.handler.helpers.TimeAgo
@@ -54,10 +55,12 @@ class PeopleAdapter(private val on: On, private val small: Boolean = false) : Re
 
     override fun onBindViewHolder(holder: PeopleViewHolder, position: Int) {
         val person = people[position]
+        val isMe = person.id == on<PersistenceHandler>().phoneId
 
         holder.itemView.name?.text = on<NameHandler>().getName(person)
-        holder.itemView.active?.text = on<TimeStr>().tiny(person.updated)
-        holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(person.updated)
+        holder.itemView.active?.text = if (isMe) "Add to\nStory" else on<TimeStr>().tiny(person.updated)
+        holder.itemView.name?.visible = !isMe
+        holder.itemView.activeNowIndicator.visible = !isMe && on<TimeAgo>().fifteenMinutesAgo().before(person.updated)
 
         if (person.photo == null) {
             holder.itemView.photo.setImageResource(R.drawable.ic_person_black_24dp)
@@ -66,14 +69,21 @@ class PeopleAdapter(private val on: On, private val small: Boolean = false) : Re
             on<PhotoHelper>().loadCircle(holder.itemView.photo, "${person.photo}?s=256")
             holder.itemView.photo.scaleType = ImageView.ScaleType.CENTER_CROP
         }
+        
 
-        holder.itemView.setOnClickListener {
-            on<GroupActivityTransitionHandler>().showGroupForPhone(holder.itemView, person.id!!)
+        if (isMe) {
+
+        } else {
+            holder.itemView.setOnClickListener {
+                on<GroupActivityTransitionHandler>().showGroupForPhone(holder.itemView, person.id!!)
+            }
+
+            holder.itemView.photo.setOnClickListener {
+                on<GroupActivityTransitionHandler>().showGroupForPhone(holder.itemView, person.id!!)
+            }
         }
 
-        holder.itemView.photo.setOnClickListener {
-            on<GroupActivityTransitionHandler>().showGroupForPhone(holder.itemView, person.id!!)
-        }
+        holder.itemView.addIndicator?.visible = isMe
     }
 }
 
