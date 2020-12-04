@@ -107,7 +107,7 @@
         android:focusedByDefault="false"
         tools:hint="@string/reply_to_x"
         android:imeOptions="actionSend"
-        android:inputType="text|textCapWords"
+        android:inputType="text|textCapSentences"
         android:maxLines="1"
         android:paddingStart="@dimen/padDialog"
         android:paddingTop="@dimen/padDouble"
