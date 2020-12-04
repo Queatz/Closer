@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.api.models.StoryResult
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.feed.FeedContent
+import closer.vlllage.com.closer.handler.feed.FeedVisibilityHandler
 import closer.vlllage.com.closer.handler.feed.FilterGroups
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
@@ -31,6 +34,7 @@ import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -43,6 +47,7 @@ class FeedHandler constructor(private val on: On) {
 
     private var groupActionsObservable: DataSubscription? = null
     private var questsObservable: DataSubscription? = null
+    private var storiesObservable: Disposable? = null
     private var groupMessagesObservable: DataSubscription? = null
     private var lastKnownQueryString = ""
     private var groupActionsGroups = listOf<Group>()
@@ -52,7 +57,7 @@ class FeedHandler constructor(private val on: On) {
     private var loadGroupsDisposableGroup: DisposableGroup = on<DisposableHandler>().group()
     private val snapHelper = object : PagerSnapHelper() {
 
-        private var targetPostion: Int = RecyclerView.NO_POSITION
+        private var targetPosition: Int = RecyclerView.NO_POSITION
         val noSnap get() = layoutManager.findFirstVisibleItemPosition() < 1 && abs(recyclerView.computeVerticalScrollOffset()) < mixedAdapter.headerMargin
 
         override fun onFling(velocityX: Int, velocityY: Int): Boolean {
@@ -66,18 +71,18 @@ class FeedHandler constructor(private val on: On) {
         override fun findTargetSnapPosition(layoutManager: RecyclerView.LayoutManager?, velocityX: Int, velocityY: Int): Int {
             val result = super.findTargetSnapPosition(layoutManager, velocityX, velocityY)
 
-            targetPostion = if (result == 0)
+            targetPosition = if (result == 0)
                 RecyclerView.NO_POSITION
             else
                 result
 
-            return targetPostion
+            return targetPosition
         }
 
         override fun calculateDistanceToFinalSnap(layoutManager_: RecyclerView.LayoutManager, targetView: View): IntArray {
             val result = super.calculateDistanceToFinalSnap(layoutManager, targetView)!!
 
-            return if (targetPostion == RecyclerView.NO_POSITION && noSnap) {
+            return if (targetPosition == RecyclerView.NO_POSITION && noSnap) {
                 IntArray(2)
             } else {
                 result
@@ -128,8 +133,16 @@ class FeedHandler constructor(private val on: On) {
 
         recyclerView.adapter = mixedAdapter
 
+        recyclerView.clearOnScrollListeners()
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    (layoutManager.findFirstVisibleItemPosition()..layoutManager.findLastVisibleItemPosition()).forEach {
+                        on<FeedVisibilityHandler>().onScreen(it)
+                    }
+                }
+
                 val visible = layoutManager.findFirstVisibleItemPosition() >= 3
 
                 if (isToTheTopVisible != visible) {
@@ -210,6 +223,7 @@ class FeedHandler constructor(private val on: On) {
             on<MapHandler>().center?.let { center ->
                 loadGroups(center)
                 loadPeople(center)
+                loadStories(center)
                 loadQuests(center, lastKnownQueryString)
             }
         }, {}))
@@ -235,10 +249,22 @@ class FeedHandler constructor(private val on: On) {
     private fun loadQuests(target: LatLng, queryString: String) {
         questsObservable?.cancel()
 
-        on<Search>().quests(target, queryString) { quests ->
+        questsObservable = on<Search>().quests(target, queryString) { quests ->
             mixedAdapter.quests = quests.toMutableList()
-        }.also { questsObservable = it }
+        }
     }
+
+    private fun loadStories(target: LatLng) {
+        storiesObservable?.dispose()
+        storiesObservable = on<ApiHandler>().getStoriesNear(target).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    mixedAdapter.stories = it
+                            .map { StoryResult.from(on, it) }
+                            .toMutableList()
+                }, {
+                    on<ConnectionErrorHandler>().notifyConnectionError()
+                })
+        }
 
     private fun loadPeople(latLng: LatLng) {
         val distance = on<HowFar>().about7Miles

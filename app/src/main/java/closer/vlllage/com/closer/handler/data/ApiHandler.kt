@@ -46,6 +46,12 @@ class ApiHandler constructor(private val on: On) {
 
     fun addSuggestion(name: String, latLng: LatLng) = api { addSuggestion(name, on<LatLngStr>().from(latLng)) }
 
+    fun getStoriesNear(latLng: LatLng) = api { getStoriesNear(on<LatLngStr>().from(latLng)) }
+
+    fun addStory(text: String?, photo: String?, latLng: LatLng) = api { addStory(text, photo, on<LatLngStr>().from(latLng)) }
+
+    fun storyViewed(storyId: String) = api { storyViewed(storyId) }
+
     fun updatePhone(latLng: String? = null,
                     name: String? = null,
                     status: String? = null,

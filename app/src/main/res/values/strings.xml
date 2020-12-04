@@ -105,6 +105,7 @@
     <string name="tell_more_about_group">This group is about…</string>
     <string name="tell_more_about_group_action">More about this activity…</string>
     <string name="message_sent">Message sent</string>
+    <string name="message_sent_to_x">Message sent to %1$s</string>
     <string name="no_suggestions_here">I couldn\'t find any suggestions here</string>
     <string name="no_more_results">I couldn\'t find anything else. Tap again to restart the search.</string>
     <string name="no_results">I couldn\'t find anything</string>
@@ -383,7 +384,7 @@
     <string name="send_post">Post</string>
     <string name="text">Text</string>
     <string name="heading">Heading</string>
-    <string name="write_here">Write here</string>
+    <string name="write_here">Write something</string>
     <string name="edit">Edit</string>
     <string name="resize_photo">Resize photo</string>
     <string name="cannot_delete_last_message">Your post must contain at least one section.</string>
@@ -543,7 +544,11 @@
     <string name="contact_unhidden">Contact unhidden</string>
     <string name="contact_hidden">Contact hidden</string>
     <string name="settings_remember_last_tab">Rember last tab</string>
-    <string name="reply_to_x">Reply to Jacob...</string>
+    <string name="reply_to_x">Reply to %1$s…</string>
+    <string name="view_more_stories">Move the map to view more stories.</string>
+    <string name="add_to_your_story">Add to your story</string>
+    <string name="post_story">Post story</string>
+    <string name="your_story_updated">Your story has been posted</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

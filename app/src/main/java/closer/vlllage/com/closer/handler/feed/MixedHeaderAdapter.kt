@@ -67,6 +67,12 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
             generate()
         }
 
+    var stories = mutableListOf<Story>()
+        set(value) {
+            field = value
+            generate()
+        }
+
     var content: FeedContent = FeedContent.POSTS
         set(value) {
             field = value
@@ -136,16 +142,12 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
                     forEach { add(GroupPreviewMixedItem(it)) }
                     if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_here)))
                 }
-                FeedContent.POSTS -> groupMessages.apply {
-                    repeat(10) {
-                        add(StoryMixedItem())
+                FeedContent.POSTS -> stories.apply {
+                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
+                    else {
+                        forEach { add(StoryMixedItem(it)) }
+                        add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_stories)))
                     }
-
-//                    if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
-//                    else {
-//                        forEach { add(GroupMessageMixedItem(it)) }
-//                        add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_conversations)))
-//                    }
                 }
                 FeedContent.ACTIVITIES -> groupActions.apply {
                     if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))

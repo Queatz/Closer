@@ -119,7 +119,10 @@ interface Backend {
     fun getStoriesNear(@Query("geo") latLng: String): Single<List<StoryResult>>
 
     @POST("story")
-    fun addStory(@Query("text") text: String, @Query("photo") photo: String, @Query("geo") geo: String): Single<CreateResult>
+    fun addStory(@Query("text") text: String?, @Query("photo") photo: String?, @Query("geo") geo: String): Single<CreateResult>
+
+    @POST("story/{id}/viewed")
+    fun storyViewed(@Path("id") storyId: String): Single<SuccessResult>
 
     // Group Message
 

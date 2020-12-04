@@ -53,7 +53,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getDirectGroup(phoneId: String) = chain({
         on<StoreHandler>().store.box(Group::class).query()
-                .equal(Group_.id, "") // todo always fail for now
+                .equal(Group_.id, "i am not an id") // todo always fail for now
                 .build()
     }, {
         on<ApiHandler>()

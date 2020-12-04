@@ -20,6 +20,7 @@ class SyncHandler constructor(private val on: On) {
         syncAll(GroupMember::class.java, GroupMember_.localOnly)
         syncAll(Quest::class.java, Quest_.localOnly)
         syncAll(QuestProgress::class.java, QuestProgress_.localOnly)
+        syncAll(Story::class.java, Story_.localOnly)
     }
 
     fun <T : BaseObject> sync(obj: T, onSyncResult: OnSyncResult? = null) {
@@ -43,6 +44,7 @@ class SyncHandler constructor(private val on: On) {
         when (obj) {
             is Group -> sendCreateGroup(obj, onSyncResult)
             is Suggestion -> sendCreateSuggestion(obj, onSyncResult)
+            is Story -> sendCreateStory(obj, onSyncResult)
             is GroupMessage -> sendCreateGroupMessage(obj, onSyncResult)
             is Event -> sendCreateEvent(obj, onSyncResult)
             is GroupAction -> sendCreateGroupAction(obj, onSyncResult)
@@ -170,6 +172,24 @@ class SyncHandler constructor(private val on: On) {
                 suggestion.id = createResult.id
                 suggestion.localOnly = false
                 on<StoreHandler>().store.box(Suggestion::class).put(suggestion)
+                onSyncResult?.invoke(createResult.id!!)
+            }
+        }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+    }
+
+    private fun sendCreateStory(story: Story, onSyncResult: OnSyncResult?) {
+        story.localOnly = true
+        on<StoreHandler>().store.box(Story::class).put(story)
+
+        on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().addStory(
+                story.text,
+                story.photo,
+                LatLng(story.latitude!!, story.longitude!!)
+        ).subscribe({ createResult ->
+            if (createResult.success) {
+                story.id = createResult.id
+                story.localOnly = false
+                on<StoreHandler>().store.box(Story::class).put(story)
                 onSyncResult?.invoke(createResult.id!!)
             }
         }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))

@@ -160,7 +160,6 @@ class GroupPreviewMixedItemAdapter(private val on: On) : MixedItemAdapter<GroupP
             groupMessage.from = on<PersistenceHandler>().phoneId
             groupMessage.to = group.id
             groupMessage.created = Date()
-            on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
             on<SyncHandler>().sync(groupMessage)
 
             holder.replyMessage.setText("")
