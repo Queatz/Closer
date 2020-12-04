@@ -16,6 +16,7 @@ class DefaultMenus constructor(private val on: On) {
                 MenuHandler.MenuOption(R.drawable.ic_photo_black_24dp, R.string.upload_photo) {
                     (on<ActivityHandler>().activity as PoolActivity).on<MediaHandler>()
                             .getPhoto { photoUri -> on<PhotoUploadGroupMessageHandler>().upload(photoUri, onPhotoUploadedListener) }
-                })
+                },
+                button = "")
     }
 }

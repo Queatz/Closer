@@ -113,6 +113,14 @@ interface Backend {
     @POST("suggestion")
     fun addSuggestion(@Query("name") name: String, @Query("geo") geo: String): Single<CreateResult>
 
+    // Story
+
+    @GET("story")
+    fun getStoriesNear(@Query("geo") latLng: String): Single<List<StoryResult>>
+
+    @POST("story")
+    fun addStory(@Query("text") text: String, @Query("photo") photo: String, @Query("geo") geo: String): Single<CreateResult>
+
     // Group Message
 
     @GET("message")

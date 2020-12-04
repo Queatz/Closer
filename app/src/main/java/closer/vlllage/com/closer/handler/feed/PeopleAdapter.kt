@@ -14,6 +14,7 @@ import closer.vlllage.com.closer.handler.helpers.PhotoHelper
 import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.handler.helpers.TimeStr
 import closer.vlllage.com.closer.handler.phone.NameHandler
+import closer.vlllage.com.closer.handler.story.StoryHandler
 import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.person_item.view.*
@@ -72,7 +73,13 @@ class PeopleAdapter(private val on: On, private val small: Boolean = false) : Re
         
 
         if (isMe) {
+            holder.itemView.setOnClickListener {
+                on<StoryHandler>().addToStory()
+            }
 
+            holder.itemView.photo.setOnClickListener {
+                on<StoryHandler>().addToStory()
+            }
         } else {
             holder.itemView.setOnClickListener {
                 on<GroupActivityTransitionHandler>().showGroupForPhone(holder.itemView, person.id!!)

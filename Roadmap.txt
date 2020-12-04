@@ -1,4 +1,30 @@
 
+STORIES
+=======
+
+Story {
+    phoneId
+    text
+    photo
+    geo
+    created
+
+    phone: { phone }
+    viewers: [ { phone }, ... ]
+    viewersCount: 136
+}
+
+GET /story?geo=0,0
+GET /story/1
+GET /story/1/viewers
+POS /story/1?viewed=true
+POS /story { story }
+
+FOR story IN @@entities FILTER <geo>
+    SORT COUNT(FOR viewer IN @@entities GRAPH @graph INBOUND story OUTBOUND @phone) == 0 DESC, story.created DESC
+    LIMIT 10
+    RETURN story
+
 Today
 ========
 

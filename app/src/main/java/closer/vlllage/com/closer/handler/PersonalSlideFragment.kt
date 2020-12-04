@@ -90,7 +90,7 @@ class PersonalSlideFragment : PoolFragment() {
 
         yourName.text = on<Val>().of(on<AccountHandler>().name, on<ResourcesHandler>().resources.getString(R.string.update_your_name))
 
-        yourPhoto.setOnClickListener { v ->
+        yourPhoto.setOnClickListener {
             on<DefaultMenus>().uploadPhoto { photoId ->
                 val photo = on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)
                 on<AccountHandler>().updatePhoto(photo)
