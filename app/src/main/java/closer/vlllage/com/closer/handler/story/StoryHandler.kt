@@ -10,8 +10,12 @@ import closer.vlllage.com.closer.handler.helpers.DefaultMenus
 import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.store.models.Story
 import com.queatz.on.On
+import io.reactivex.subjects.BehaviorSubject
 
 class StoryHandler(private val on: On) {
+
+    val changes = BehaviorSubject.createDefault("")
+
     fun addToStory() {
         on<LocationHandler>().getCurrentLocation { location ->
             on<DefaultMenus>().uploadPhoto { photoId ->
@@ -26,6 +30,7 @@ class StoryHandler(private val on: On) {
                     story.creator = on<PersistenceHandler>().phoneId
 
                     on<SyncHandler>().sync(story) {
+                        changes.onNext(it)
                         on<ToastHandler>().show(R.string.your_story_updated)
                     }
                 }

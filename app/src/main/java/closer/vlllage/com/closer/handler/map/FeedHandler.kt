@@ -26,6 +26,7 @@ import closer.vlllage.com.closer.handler.group.SearchGroupHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
+import closer.vlllage.com.closer.handler.story.StoryHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.model.LatLng
@@ -256,7 +257,8 @@ class FeedHandler constructor(private val on: On) {
 
     private fun loadStories(target: LatLng) {
         storiesObservable?.dispose()
-        storiesObservable = on<ApiHandler>().getStoriesNear(target).observeOn(AndroidSchedulers.mainThread())
+        storiesObservable = on<StoryHandler>().changes.switchMapSingle { on<ApiHandler>().getStoriesNear(target) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     mixedAdapter.stories = it
                             .map { StoryResult.from(on, it) }
