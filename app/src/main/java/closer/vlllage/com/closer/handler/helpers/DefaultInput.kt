@@ -91,7 +91,7 @@ class DefaultInput constructor(private val on: On) {
                     )
                 }
             }
-            buttonClickCallback = {
+            buttonClickCallback = { it, _ ->
                 (it as ViewGroup).let { alertResult ->
                     buttonCallback?.invoke(
                             alertResult.inputOne.text.toString(),

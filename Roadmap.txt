@@ -1,4 +1,12 @@
 
+
+
+[X] Skip on quest not working
+[ ] Cap sente on story reploy
+[ ] long story text what happens
+[ ] viewed is per phone?
+
+
 Today
 ========
 

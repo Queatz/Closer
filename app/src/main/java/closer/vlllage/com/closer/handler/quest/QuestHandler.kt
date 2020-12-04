@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.quest
 
+import android.content.DialogInterface
 import android.view.View
 import android.widget.SeekBar
 import androidx.core.widget.doOnTextChanged
@@ -196,7 +197,7 @@ class QuestHandler(private val on: On) {
                 val viewHolder = alertResult as CreateQuestViewHolder
                 saveQuest(viewHolder)
             }
-            buttonClickCallback = {
+            buttonClickCallback = { it, _ ->
                 val viewHolder = alertResult as CreateQuestViewHolder
 
                 when {
@@ -312,6 +313,8 @@ class QuestHandler(private val on: On) {
                             view.count.requestFocus()
                             view.message.text = on<ResourcesHandler>().resources.getString(R.string.of_y_done_z_change, on<NumberHelper>().format(it.value), "+${on<NumberHelper>().format(1)}")
 
+                            config.alertResult = 1
+
                             view.count.doOnTextChanged { text, start, before, count ->
                                 text.toString().toIntOrNull().let { value ->
                                     config.alertResult = value
@@ -319,8 +322,8 @@ class QuestHandler(private val on: On) {
                                 }
                             }
                         }
-                        buttonClickCallback = {
-                            it != null
+                        buttonClickCallback = { it, button ->
+                            it != null || button != DialogInterface.BUTTON_POSITIVE
                         }
                         negativeButton = on<ResourcesHandler>().resources.getString(R.string.skip)
                         negativeButtonCallback = { callback?.invoke() }

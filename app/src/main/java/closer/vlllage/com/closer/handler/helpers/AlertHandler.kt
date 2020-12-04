@@ -106,7 +106,7 @@ class AlertHandler constructor(private val on: On) {
             val finalTextView = textView
             alertDialog.setOnShowListener { dialog ->
                 alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener { view ->
-                    if (it.invoke(alertConfig.alertResult)) {
+                    if (it.invoke(alertConfig.alertResult, DialogInterface.BUTTON_POSITIVE)) {
                         if (finalTextView != null) {
                             alertConfig.onTextViewSubmitCallback?.invoke(finalTextView.text.toString())
                         }
@@ -116,7 +116,7 @@ class AlertHandler constructor(private val on: On) {
                     }
                 }
                 alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener { view ->
-                    if (it.invoke(alertConfig.alertResult)) {
+                    if (it.invoke(alertConfig.alertResult, DialogInterface.BUTTON_NEGATIVE)) {
                         alertConfig.negativeButtonCallback?.invoke(alertConfig.alertResult)
                         dialog.dismiss()
                     }

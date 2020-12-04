@@ -166,7 +166,7 @@ class EventHandler constructor(private val on: On) {
 
                 alertConfig.alertResult = viewHolder
             }
-            buttonClickCallback = { alertResult ->
+            buttonClickCallback = { alertResult, _ ->
                     val viewHolder = alertResult as CreateEventViewHolder
 
                     allDayPreProcess(viewHolder)

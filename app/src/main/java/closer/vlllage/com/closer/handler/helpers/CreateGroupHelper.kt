@@ -23,7 +23,7 @@ class CreateGroupHelper(private val on: On) {
                 onAfterViewCreated = { alertConfig, view ->
                     alertConfig.alertResult = view.input
                 }
-                buttonClickCallback = {
+                buttonClickCallback = { it, _ ->
                     (it as EditText).text.isNotBlank()
                 }
                 positiveButton = on<ResourcesHandler>().resources.getString(R.string.continue_text)

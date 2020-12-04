@@ -1,12 +1,11 @@
 package closer.vlllage.com.closer.handler.helpers
 
-import androidx.annotation.LayoutRes
-import androidx.annotation.StyleRes
-import androidx.appcompat.app.AlertDialog
 import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-
+import androidx.annotation.LayoutRes
+import androidx.annotation.StyleRes
+import androidx.appcompat.app.AlertDialog
 import closer.vlllage.com.closer.R
 
 class AlertConfig(private val showCallback: (AlertConfig) -> Unit) {
@@ -22,7 +21,7 @@ class AlertConfig(private val showCallback: (AlertConfig) -> Unit) {
     var textViewId: Int? = null
     var onTextViewSubmitCallback: ((value: String) -> Unit)? = null
     var onAfterViewCreated: ((alertConfig: AlertConfig, view: View) -> Unit)? = null
-    var buttonClickCallback: ((alertResult: Any?) -> Boolean)? = null
+    var buttonClickCallback: ((alertResult: Any?, buttonId: Int) -> Boolean)? = null
     var cancelIsNegative: Boolean = false
     var alertResult: Any? = null
     @StyleRes var theme = R.style.AppTheme_AlertDialog
