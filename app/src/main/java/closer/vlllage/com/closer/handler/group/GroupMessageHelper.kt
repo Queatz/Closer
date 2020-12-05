@@ -142,6 +142,7 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.inFeed = inFeed
 
         holder.message.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.textSize))
+        holder.messageLayout.setBackgroundResource(R.drawable.rounded_dim_12dp)
 
         on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 

@@ -19,6 +19,7 @@ import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
 import closer.vlllage.com.closer.handler.feed.FeedVisibilityHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
+import closer.vlllage.com.closer.handler.group.GroupMessageAttachmentHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
@@ -170,7 +171,7 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
 
         holder.itemView.replyMessage.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-                sendDirectMessage(holder, story.creator!!, name)
+                sendDirectMessage(holder, story, name)
                 true
             } else {
                 false
@@ -179,7 +180,7 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
 
         holder.itemView.sendButton.setOnClickListener {
             if (holder.itemView.replyMessage.text.toString().isNotBlank()) {
-                sendDirectMessage(holder, story.creator!!, name)
+                sendDirectMessage(holder, story, name)
             } else {
                 on<ShareActivityTransitionHandler>().shareStoryToGroup(story.id!!)
             }
@@ -194,11 +195,13 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
         }
     }
 
-    private fun sendDirectMessage(holder: StoryViewHolder, phoneId: String, phoneName: String) {
+    private fun sendDirectMessage(holder: StoryViewHolder, story: Story, phoneName: String) {
         holder.itemView.replyMessage.text.toString().takeIf { it.isNotBlank() }?.let { text ->
             holder.itemView.replyMessage.setText("")
-            on<DataHandler>().getDirectGroup(phoneId).observeOn(AndroidSchedulers.mainThread())
+            on<DataHandler>().getDirectGroup(story.creator!!).observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
+                        on<GroupMessageAttachmentHandler>().shareStory(story, it)
+
                         val groupMessage = GroupMessage()
                         groupMessage.text = text
                         groupMessage.from = on<PersistenceHandler>().phoneId

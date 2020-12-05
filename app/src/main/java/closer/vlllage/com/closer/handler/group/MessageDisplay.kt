@@ -217,9 +217,10 @@ class MessageDisplay constructor(private val on: On) {
 
         loadName(groupMessage.from!!, holder.name) { it }
 
-        holder.message.text = on<GroupMessageParseHandler>().parseText(holder.message, groupMessage.text!!)
+        holder.message.text = on<GroupMessageParseHandler>().parseText(holder.message, groupMessage.text ?: "")
 
         if (EmojiManager.isOnlyEmojis(groupMessage.text)) {
+            holder.messageLayout.background = null
             holder.message.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.textSizeEmoji))
         }
     }
@@ -341,7 +342,7 @@ class MessageDisplay constructor(private val on: On) {
                 }
 
                 override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                    on<NavigationHandler>().showStory(storyDef.get("id").asString!!)
+                    on<NavigationHandler>().showStory(storyDef.get("id").asString!!, holder.photo)
                     return true
                 }
 
@@ -357,7 +358,7 @@ class MessageDisplay constructor(private val on: On) {
 
         holder.action.visible = true
         holder.action.text = on<ResourcesHandler>().resources.getString(R.string.view_story)
-        holder.action.setOnClickListener { on<NavigationHandler>().showStory(storyDef.get("id").asString!!) }
+        holder.action.setOnClickListener { on<NavigationHandler>().showStory(storyDef.get("id").asString!!, holder.action) }
 
         if (text.isNullOrBlank()) {
             holder.message.visible = false
