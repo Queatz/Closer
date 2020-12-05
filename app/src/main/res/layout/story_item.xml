@@ -34,6 +34,7 @@
         app:layout_constraintWidth_percent=".75"
         app:layout_constraintHorizontal_bias="0"
         android:padding="@dimen/padDialog"
+        android:scrollbars="vertical"
         android:gravity="bottom"
         android:textSize="@dimen/textSizeEmoji"
         android:textStyle="bold"
@@ -134,8 +135,8 @@
         android:minWidth="0dp"
         android:background="@drawable/clickable_white_rounded_flat"
         android:padding="@dimen/padDouble"
-        android:tint="@color/textInverse"
-        android:src="@drawable/ic_chevron_right_black_24dp"
+        android:tint="@color/colorPrimary"
+        android:src="@drawable/ic_share_black_24dp"
         android:contentDescription="@string/perform_archeology" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

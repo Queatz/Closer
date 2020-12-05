@@ -118,6 +118,9 @@ interface Backend {
     @GET("story")
     fun getStoriesNear(@Query("geo") latLng: String): Single<List<StoryResult>>
 
+    @GET("story/{id}")
+    fun getStory(@Path("id") storyId: String): Single<StoryResult>
+
     @POST("story")
     fun addStory(@Query("text") text: String?, @Query("photo") photo: String?, @Query("geo") geo: String): Single<CreateResult>
 

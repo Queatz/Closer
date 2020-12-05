@@ -50,6 +50,21 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
         return true
     }
 
+    fun shareStory(story: Story, group: Group): Boolean {
+        val jsonObject = JsonObject()
+        val share = Story()
+        share.id = story.id
+        share.photo = story.photo
+        share.text = story.text
+        share.creator = story.creator
+        share.created = story.created
+        jsonObject.add("story", on<JsonHandler>().toJsonTree(share))
+
+        saveMessageWithAttachment(group.id, null, jsonObject)
+
+        return true
+    }
+
     fun shareGroupAction(groupActionToShare: GroupAction, group: Group): Boolean {
         val jsonObject = JsonObject()
         jsonObject.add("activity", on<JsonHandler>().toJsonTree(groupActionToShare))
@@ -106,7 +121,6 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
 
         groupMessage.from = on<PersistenceHandler>().phoneId
         groupMessage.created = Date()
-        on<StoreHandler>().store.box(GroupMessage::class).put(groupMessage)
         on<SyncHandler>().sync(groupMessage)
     }
 

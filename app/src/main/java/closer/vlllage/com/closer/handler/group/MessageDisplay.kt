@@ -314,6 +314,70 @@ class MessageDisplay constructor(private val on: On) {
         }
     }
 
+    private fun displayStory(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
+        holder.eventMessage.visible = false
+        holder.messageLayout.visible = true
+
+        loadName(groupMessage.from!!, holder.name) {
+            on<ResourcesHandler>().resources.getString(R.string.phone_shared_a_story, it)
+        }
+
+        val storyDef = jsonObject.get("story").asJsonObject
+
+        val photo = if (!storyDef.has("photo") || storyDef.get("photo").isJsonNull) null else storyDef.get("photo").asString + "?s=256"
+        val text = if (!storyDef.has("text") || storyDef.get("text").isJsonNull) null else storyDef.get("text").asString
+
+        holder.time.visible = true
+        holder.time.text = on<TimeStr>().pretty(groupMessage.created)
+        holder.photo.visible = photo.isNullOrBlank().not()
+
+        if (holder.photo.visible) {
+            val gl = object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDown(e: MotionEvent?) = true
+
+                override fun onDoubleTap(e: MotionEvent?): Boolean {
+                    react(groupMessage, on<ResourcesHandler>().resources.getString(R.string.heart))
+                    return true
+                }
+
+                override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                    on<NavigationHandler>().showStory(storyDef.get("id").asString!!)
+                    return true
+                }
+
+                override fun onLongPress(e: MotionEvent?) {
+                    on<MessageDisplay>().toggleMessageActionLayout(groupMessage, holder)
+                }
+            }
+
+            val gd = GestureDetector(holder.photo.context, gl)
+
+            holder.photo.setOnTouchListener { _, event -> gd.onTouchEvent(event) }
+        }
+
+        holder.action.visible = true
+        holder.action.text = on<ResourcesHandler>().resources.getString(R.string.view_story)
+        holder.action.setOnClickListener { on<NavigationHandler>().showStory(storyDef.get("id").asString!!) }
+
+        if (text.isNullOrBlank()) {
+            holder.message.visible = false
+        } else {
+            holder.message.visible = true
+            holder.message.gravity = Gravity.START
+            holder.message.text = text
+        }
+
+        on<ImageHandler>().get().clear(holder.photo)
+
+        if (photo != null) {
+            on<ImageHandler>().get()
+                    .load(photo)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .apply(RequestOptions().transform(RoundedCorners(on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.imageCorners))))
+                    .into(holder.photo)
+        }
+    }
+
     private fun displayPhoto(holder: GroupMessageViewHolder, jsonObject: JsonObject, groupMessage: GroupMessage) {
         holder.eventMessage.visible = false
         holder.messageLayout.visible = true
@@ -389,6 +453,7 @@ class MessageDisplay constructor(private val on: On) {
                     jsonObject.has("event") -> displayEvent(holder, jsonObject, groupMessage, onEventClickListener)
                     jsonObject.has("group") -> displayGroup(holder, jsonObject, groupMessage, onGroupClickListener)
                     jsonObject.has("suggestion") -> displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener)
+                    jsonObject.has("story") -> displayStory(holder, jsonObject, groupMessage)
                     jsonObject.has("photo") -> displayPhoto(holder, jsonObject, groupMessage)
                     jsonObject.has("share") -> displayShare(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
                     jsonObject.has("post") -> displayPost(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)

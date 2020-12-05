@@ -144,6 +144,17 @@ class DataHandler constructor(private val on: On) {
                 .map { GroupResult.from(it) }
     })
 
+
+
+    fun getStory(storyId: String) = chain({
+        on<StoreHandler>().store.box(Story::class).query()
+                .equal(Story_.id, storyId)
+                .build()
+    }, {
+        on<ApiHandler>().getStory(storyId)
+                .map { StoryResult.from(on, it) }
+    })
+
     fun getSuggestion(suggestionId: String) =
             RxQuery.single(on<StoreHandler>().store.box(Suggestion::class).query()
                     .equal(Suggestion_.id, suggestionId)

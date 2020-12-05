@@ -1,11 +1,16 @@
 package closer.vlllage.com.closer.handler.feed.content
 
+import android.annotation.SuppressLint
+import android.graphics.Point
 import android.graphics.Rect
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
+import androidx.core.widget.doAfterTextChanged
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
@@ -16,13 +21,17 @@ import closer.vlllage.com.closer.handler.feed.FeedVisibilityHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
+import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.GroupMessage
+import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Story
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.story_item.view.*
 import java.util.*
+import kotlin.math.abs
+
 
 class StoryMixedItem(val story: Story) : MixedItem(MixedItemType.Story)
 
@@ -31,45 +40,76 @@ class StoryViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemT
 }
 
 class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedItem, StoryViewHolder> {
+    @SuppressLint("ClickableViewAccessibility")
     override fun bind(holder: StoryViewHolder, item: StoryMixedItem, position: Int) {
         holder.on = On(on).apply {
             use<DisposableHandler>()
         }
 
-        val name = on<NameHandler>().getName(item.story.phone)
+        holder.itemView.text.movementMethod = ScrollingMovementMethod.getInstance()
 
-        holder.itemView.replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.reply_to_x, name)
-        holder.itemView.text.text = item.story.text
-
-        holder.itemView.replyMessage.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_SEND) {
-                sendDirectMessage(holder, item.story.creator!!, name)
-                true
-            } else {
-                false
-            }
+        holder.itemView.text.apply {
+            post { scrollTo(0, 0) }
         }
 
-        holder.itemView.sendButton.setOnClickListener {
-            sendDirectMessage(holder, item.story.creator!!, name)
+        var isChildScrolling = false
+        val originPosition = Point()
+
+        holder.itemView.text.setOnTouchListener { v, event ->
+            if (!v.canScrollVertically(-1) && !v.canScrollVertically(1)) {
+                return@setOnTouchListener false
+            }
+
+            when (event.action) {
+                MotionEvent.ACTION_UP -> isChildScrolling = false
+                MotionEvent.ACTION_DOWN -> {
+                    originPosition.x = event.rawX.toInt()
+                    originPosition.y = event.rawY.toInt()
+                    isChildScrolling = true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val deltaX = (event.rawX - originPosition.x).toInt()
+                    val deltaY = (event.rawY - originPosition.y).toInt()
+
+                    if (abs(deltaY) > 8 || abs(deltaX) > 8) {
+                        isChildScrolling = if (abs(deltaY) > abs(deltaX)) {
+                            if (deltaY > 0 && v.canScrollVertically(-1)) {
+                                true
+                            } else
+                                deltaY < 0 && v.canScrollVertically(1)
+                        } else {
+                            false
+                        }
+                    }
+                }
+            }
+
+            if (isChildScrolling) {
+                v.parent?.requestDisallowInterceptTouchEvent(true)
+            }
+
+            false
+        }
+
+        holder.itemView.replyMessage.setOnEditorActionListener(null)
+        holder.itemView.sendButton.setOnClickListener(null)
+
+        updateSendIcon(holder)
+
+        holder.itemView.replyMessage.doAfterTextChanged {
+            updateSendIcon(holder)
         }
 
         item.story.phone?.let {
-            holder.itemView.name.text = "$name • ${on<TimeStr>().tiny(item.story.created)}"
-
-            holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(it.updated ?: Date(0))
-
-            if (it.photo.isNullOrBlank()) {
-                holder.itemView.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
-                holder.itemView.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
-            } else {
-                holder.itemView.profilePhoto.scaleType = ImageView.ScaleType.CENTER_CROP
-                on<PhotoHelper>().loadCircle(holder.itemView.profilePhoto, "${it.photo}?s=64")
-            }
-
-            holder.itemView.profilePhoto.setOnClickListener { view ->
-                on<GroupActivityTransitionHandler>().showGroupForPhone(view, it.id!!)
-            }
+            showPhone(holder, item.story, it)
+        } ?: run {
+            on<DataHandler>().getPhone(item.story.creator!!)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        showPhone(holder, item.story, it)
+                    }, {
+                        on<DefaultAlerts>().thatDidntWork()
+                    })
         }
 
         item.story.photo?.let {
@@ -86,9 +126,7 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
         val isMe = on<PersistenceHandler>().phoneId == item.story.creator
 
         holder.itemView.replyMessage.isEnabled = !isMe
-        holder.itemView.sendButton.isEnabled = !isMe
         holder.itemView.replyMessage.alpha = if (isMe) .5f else 1f
-        holder.itemView.sendButton.alpha = if (isMe) .5f else 1f
 
         on<FeedVisibilityHandler>().positionOnScreen
                 .filter { it == position }
@@ -105,6 +143,55 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
                 }, {}).also {
                     holder.on<DisposableHandler>().add(it)
                 }
+    }
+
+    private fun showPhone(holder: StoryViewHolder, story: Story, phone: Phone) {
+        val name = on<NameHandler>().getName(phone)
+
+        holder.itemView.replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.reply_to_x, name)
+        holder.itemView.text.text = story.text
+
+        holder.itemView.name.text = "$name • ${on<TimeStr>().tiny(story.created)}"
+
+        holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(phone.updated
+                ?: Date(0))
+
+        if (phone.photo.isNullOrBlank()) {
+            holder.itemView.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
+            holder.itemView.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        } else {
+            holder.itemView.profilePhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+            on<PhotoHelper>().loadCircle(holder.itemView.profilePhoto, "${phone.photo}?s=64")
+        }
+
+        holder.itemView.profilePhoto.setOnClickListener { view ->
+            on<GroupActivityTransitionHandler>().showGroupForPhone(view, phone.id!!)
+        }
+
+        holder.itemView.replyMessage.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                sendDirectMessage(holder, story.creator!!, name)
+                true
+            } else {
+                false
+            }
+        }
+
+        holder.itemView.sendButton.setOnClickListener {
+            if (holder.itemView.replyMessage.text.toString().isNotBlank()) {
+                sendDirectMessage(holder, story.creator!!, name)
+            } else {
+                on<ShareActivityTransitionHandler>().shareStoryToGroup(story.id!!)
+            }
+        }
+    }
+
+    private fun updateSendIcon(holder: StoryViewHolder) {
+        if (holder.itemView.replyMessage.text.toString().isNotBlank()) {
+            holder.itemView.sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
+        } else {
+            holder.itemView.sendButton.setImageResource(R.drawable.ic_share_black_24dp)
+        }
     }
 
     private fun sendDirectMessage(holder: StoryViewHolder, phoneId: String, phoneName: String) {

@@ -89,6 +89,7 @@
     <string name="phone_shared_a_group">%1$s shared a group</string>
     <string name="phone_shared_a_location">%1$s shared a location</string>
     <string name="phone_shared_a_photo">%1$s shared a photo</string>
+    <string name="phone_shared_a_story">%1$s shared a story</string>
     <string name="phone_shared_a_post">%1$s shared a post</string>
     <string name="just_now">Just now</string>
     <string name="use_your_location">Use your location</string>
@@ -549,6 +550,8 @@
     <string name="add_to_your_story">Add to your story</string>
     <string name="post_story">Post story</string>
     <string name="your_story_updated">Your story has been posted</string>
+    <string name="share_story">Share story</string>
+    <string name="view_story">View story</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

@@ -52,6 +52,8 @@ class ApiHandler constructor(private val on: On) {
 
     fun storyViewed(storyId: String) = api { storyViewed(storyId) }
 
+    fun getStory(storyId: String) = api { getStory(storyId) }
+
     fun updatePhone(latLng: String? = null,
                     name: String? = null,
                     status: String? = null,

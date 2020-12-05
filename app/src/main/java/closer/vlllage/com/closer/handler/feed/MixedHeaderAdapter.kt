@@ -146,7 +146,7 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
                     if (isEmpty()) empty(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.nothing_around_here)))
                     else {
                         forEach { add(StoryMixedItem(it)) }
-                        add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_stories)))
+                        if (!hideText) add(TextMixedItem(on<ResourcesHandler>().resources.getString(R.string.view_more_stories)))
                     }
                 }
                 FeedContent.ACTIVITIES -> groupActions.apply {

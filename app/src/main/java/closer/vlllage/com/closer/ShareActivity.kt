@@ -32,6 +32,7 @@ class ShareActivity : ListActivity() {
     private var groupActionId: String? = null
     private var eventId: String? = null
     private var suggestionId: String? = null
+    private var storyId: String? = null
     private var archeologyLatLngStr: String? = null
     private var groupToShare: Group? = null
     private var groupActionToShare: GroupAction? = null
@@ -85,8 +86,12 @@ class ShareActivity : ListActivity() {
             groupActionId = intent.getStringExtra(EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID)
             eventId = intent.getStringExtra(EXTRA_EVENT_ID)
             suggestionId = intent.getStringExtra(EXTRA_SUGGESTION_ID)
+            storyId = intent.getStringExtra(EXTRA_STORY_ID)
 
-            searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_with))
+            searchGroupsAdapter.setHeaderText(when {
+                storyId != null -> on<ResourcesHandler>().resources.getString(R.string.share_story)
+                else -> on<ResourcesHandler>().resources.getString(R.string.share_with)
+            })
 
             if (Intent.ACTION_SEND == intent.action) {
                 data = intent.data
@@ -95,32 +100,37 @@ class ShareActivity : ListActivity() {
                     data = intent.extras!!.get(Intent.EXTRA_STREAM) as Uri
                 }
             } else if (Intent.ACTION_VIEW == intent.action) {
-                if (archeologyLatLngStr != null) {
-                    searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.expired_groups))
-                    searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.open_group))
-                } else if (phoneId != null) {
-                    searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.add_person_to, on<NameHandler>().getName(phoneId!!)))
-                    searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.add))
-                } else if (groupId != null) {
-                    groupToShare = on<StoreHandler>().store.box(Group::class).query()
-                            .equal(Group_.id, groupId!!)
-                            .build().findFirst()
+                when {
+                    archeologyLatLngStr != null -> {
+                        searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.expired_groups))
+                        searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.open_group))
+                    }
+                    phoneId != null -> {
+                        searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.add_person_to, on<NameHandler>().getName(phoneId!!)))
+                        searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.add))
+                    }
+                    groupId != null -> {
+                        groupToShare = on<StoreHandler>().store.box(Group::class).query()
+                                .equal(Group_.id, groupId!!)
+                                .build().findFirst()
 
-                    searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
-                            groupToShare?.name, on<ResourcesHandler>().resources.getString(R.string.group)
-                    )))
+                        searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
+                                groupToShare?.name, on<ResourcesHandler>().resources.getString(R.string.group)
+                        )))
 
-                    searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
-                } else if (groupActionId != null) {
-                    groupActionToShare = on<StoreHandler>().store.box(GroupAction::class).query()
-                            .equal(GroupAction_.id, groupActionId!!)
-                            .build().findFirst()
+                        searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
+                    }
+                    groupActionId != null -> {
+                        groupActionToShare = on<StoreHandler>().store.box(GroupAction::class).query()
+                                .equal(GroupAction_.id, groupActionId!!)
+                                .build().findFirst()
 
-                    searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
-                            groupActionToShare?.name, on<ResourcesHandler>().resources.getString(R.string.activity)
-                    )))
+                        searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
+                                groupActionToShare?.name, on<ResourcesHandler>().resources.getString(R.string.activity)
+                        )))
 
-                    searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
+                        searchGroupsAdapter.setActionText(on<ResourcesHandler>().resources.getString(R.string.share))
+                    }
                 }
             }
         }
@@ -138,50 +148,67 @@ class ShareActivity : ListActivity() {
             return
         }
 
-        if (archeologyLatLngStr != null) {
-            open(group, true)
-        } else if (phoneId != null) {
-            on<DisposableHandler>().add(on<ApiHandler>().inviteToGroup(group.id!!, phoneId!!).subscribe(
-                    { successResult ->
-                        if (successResult.success) {
-                            on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.added_phone, on<NameHandler>().getName(phoneId!!)))
-                            finish()
-                        } else {
-                            on<DefaultAlerts>().thatDidntWork()
-                        }
-                    }, { on<DefaultAlerts>().thatDidntWork() }))
-        } else if (groupToShare != null) {
-            on<GroupMessageAttachmentHandler>().shareGroup(groupToShare!!, group)
-            open(group)
-        } else if (groupActionToShare != null) {
-            on<GroupMessageAttachmentHandler>().shareGroupAction(groupActionToShare!!, group)
-            open(group)
-        } else if (groupMessageId != null) {
-            on<GroupMessageAttachmentHandler>().shareGroupMessage(group.id!!, groupMessageId)
-            open(group)
-        } else if (suggestionId != null) {
-            on<DataHandler>().getSuggestion(suggestionId!!).subscribe({ suggestion ->
-                on<GroupMessageAttachmentHandler>().shareSuggestion(suggestion, group)
+        when {
+            archeologyLatLngStr != null -> {
+                open(group, true)
+            }
+            phoneId != null -> {
+                on<DisposableHandler>().add(on<ApiHandler>().inviteToGroup(group.id!!, phoneId!!).subscribe(
+                        { successResult ->
+                            if (successResult.success) {
+                                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.added_phone, on<NameHandler>().getName(phoneId!!)))
+                                finish()
+                            } else {
+                                on<DefaultAlerts>().thatDidntWork()
+                            }
+                        }, { on<DefaultAlerts>().thatDidntWork() }))
+            }
+            groupToShare != null -> {
+                on<GroupMessageAttachmentHandler>().shareGroup(groupToShare!!, group)
                 open(group)
-            }, {
-                on<DefaultAlerts>().thatDidntWork()
-            })
-        } else if (eventId != null) {
-            on<DataHandler>().getEvent(eventId!!).subscribe({ event ->
-                on<GroupMessageAttachmentHandler>().shareEvent(event, group)
+            }
+            groupActionToShare != null -> {
+                on<GroupMessageAttachmentHandler>().shareGroupAction(groupActionToShare!!, group)
                 open(group)
-            }, {
-                on<DefaultAlerts>().thatDidntWork()
-            })
-        } else if (data != null) {
-            on<ToastHandler>().show(R.string.sending_photo)
-            on<PhotoUploadGroupMessageHandler>().upload(data!!) { photoId ->
-                val success = on<GroupMessageAttachmentHandler>().sharePhoto(on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId), group.id!!)
-                if (!success) {
+            }
+            groupMessageId != null -> {
+                on<GroupMessageAttachmentHandler>().shareGroupMessage(group.id!!, groupMessageId)
+                open(group)
+            }
+            suggestionId != null -> {
+                on<DataHandler>().getSuggestion(suggestionId!!).subscribe({ suggestion ->
+                    on<GroupMessageAttachmentHandler>().shareSuggestion(suggestion, group)
+                    open(group)
+                }, {
                     on<DefaultAlerts>().thatDidntWork()
-                }
+                })
+            }
+            eventId != null -> {
+                on<DataHandler>().getEvent(eventId!!).subscribe({ event ->
+                    on<GroupMessageAttachmentHandler>().shareEvent(event, group)
+                    open(group)
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                })
+            }
+            storyId != null -> {
+                on<DataHandler>().getStory(storyId!!).subscribe({ story ->
+                    on<GroupMessageAttachmentHandler>().shareStory(story, group)
+                    open(group)
+                }, {
+                    on<DefaultAlerts>().thatDidntWork()
+                })
+            }
+            data != null -> {
+                on<ToastHandler>().show(R.string.sending_photo)
+                on<PhotoUploadGroupMessageHandler>().upload(data!!) { photoId ->
+                    val success = on<GroupMessageAttachmentHandler>().sharePhoto(on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId), group.id!!)
+                    if (!success) {
+                        on<DefaultAlerts>().thatDidntWork()
+                    }
 
-                open(group)
+                    open(group)
+                }
             }
         }
     }
@@ -199,6 +226,7 @@ class ShareActivity : ListActivity() {
         const val EXTRA_SHARE_GROUP_ACTION_TO_GROUP_ID = "shareGroupActionToGroupId"
         const val EXTRA_EVENT_ID = "eventId"
         const val EXTRA_SUGGESTION_ID = "suggestionId"
+        const val EXTRA_STORY_ID = "storyId"
         const val EXTRA_LAT_LNG = "latLng"
         const val EXTRA_SEARCH = "search"
     }
