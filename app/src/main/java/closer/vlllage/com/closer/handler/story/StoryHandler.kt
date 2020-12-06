@@ -18,7 +18,7 @@ class StoryHandler(private val on: On) {
 
     fun addToStory() {
         on<LocationHandler>().getCurrentLocation { location ->
-            on<DefaultMenus>().uploadPhoto { photoId ->
+            on<DefaultMenus>().uploadPhoto(true) { photoId ->
                 val photo = on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)
 
                 on<DefaultInput>().show(R.string.add_to_your_story, hintRes = R.string.write_here, buttonRes = R.string.post_story) { text ->

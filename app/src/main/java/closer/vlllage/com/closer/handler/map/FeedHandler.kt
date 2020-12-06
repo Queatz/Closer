@@ -256,14 +256,17 @@ class FeedHandler constructor(private val on: On) {
     }
 
     private fun loadStories(target: LatLng) {
+        mixedAdapter.loadingStories = true
         storiesObservable?.dispose()
         storiesObservable = on<StoryHandler>().changes.switchMapSingle { on<ApiHandler>().getStoriesNear(target) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    mixedAdapter.loadingStories = false
                     mixedAdapter.stories = it
                             .map { StoryResult.from(on, it) }
                             .toMutableList()
                 }, {
+                    mixedAdapter.loadingStories = false
                     on<ConnectionErrorHandler>().notifyConnectionError()
                 })
         }
