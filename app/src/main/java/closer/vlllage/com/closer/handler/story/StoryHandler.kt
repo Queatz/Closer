@@ -11,6 +11,7 @@ import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.store.models.Story
 import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
+import java.util.*
 
 class StoryHandler(private val on: On) {
 
@@ -27,6 +28,7 @@ class StoryHandler(private val on: On) {
                     story.longitude = location.longitude
                     story.text = text
                     story.photo = photo
+                    story.created = Date()
                     story.creator = on<PersistenceHandler>().phoneId
 
                     on<SyncHandler>().sync(story) {
