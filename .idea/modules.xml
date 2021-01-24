@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Closer.iml" filepath="$PROJECT_DIR$/Closer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Closer.iml" filepath="$PROJECT_DIR$/.idea/Closer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Closer.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Closer.app.iml" />
     </modules>
   </component>
