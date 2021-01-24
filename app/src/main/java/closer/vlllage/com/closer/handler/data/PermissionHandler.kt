@@ -26,16 +26,14 @@ class PermissionHandler constructor(private val on: On) {
     }
 
     fun check(vararg permissions: String): LocationCheck {
-        val check: LocationCheck
-
-        if (has(*permissions)) {
-            check = LocationCheck(true)
+        return if (has(*permissions)) {
+            LocationCheck(true)
         } else {
-            check = LocationCheck(arrayOf(*permissions))
-            on<ActivityHandler>().activity!!.requestPermissions(permissions, REQUEST_CODE_PERMISSION)
+            on<ActivityHandler>().activity?.let {
+                it.requestPermissions(permissions, REQUEST_CODE_PERMISSION)
+                LocationCheck(arrayOf(*permissions))
+            } ?: LocationCheck(false)
         }
-
-        return check
     }
 
     fun has(vararg permissions: String): Boolean {

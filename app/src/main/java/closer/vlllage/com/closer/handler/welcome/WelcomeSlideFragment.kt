@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.data.AccountHandler
-import closer.vlllage.com.closer.handler.data.DataHandler
+import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupDraftHandler
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
@@ -18,8 +17,10 @@ import closer.vlllage.com.closer.handler.map.SetNameHandler
 import closer.vlllage.com.closer.handler.map.VerifyNumberHandler
 import closer.vlllage.com.closer.handler.settings.ConfigHandler
 import closer.vlllage.com.closer.pool.PoolFragment
+import com.google.android.gms.common.api.Api
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_welcome.view.*
+import java.util.logging.Logger
 
 class WelcomeSlideFragment : PoolFragment() {
 
@@ -48,6 +49,19 @@ class WelcomeSlideFragment : PoolFragment() {
             } else {
                 requestInvite(view.requestInviteButton)
             }
+        }
+
+        // Handle invite from another user
+        // Current logic is: If user exists in any group that is not a direct group, the get acces
+        on<RefreshHandler>().refreshMe { me ->
+            on<ApiHandler>().getGroupContactsForPhone(me.id!!)
+                .subscribe({
+                    if (it.any { it.group?.direct != true }) {
+                        on<PersistenceHandler>().access = true
+                    }
+                }, {}).also {
+                    on<DisposableHandler>().add(it)
+                }
         }
     }
 

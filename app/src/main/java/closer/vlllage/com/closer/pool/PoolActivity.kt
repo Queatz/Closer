@@ -32,6 +32,7 @@ abstract class PoolActivity : FragmentActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         on<PermissionHandler>().onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 

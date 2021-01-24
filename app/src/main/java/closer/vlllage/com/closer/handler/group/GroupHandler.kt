@@ -120,7 +120,7 @@ class GroupHandler constructor(private val on: On) {
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer { groupContacts ->
-                    groupContact = groupContacts.firstOrNull { it.contactId == on<PersistenceHandler>().phoneId!! }
+                    groupContact = groupContacts.firstOrNull { it.contactId == on<PersistenceHandler>().phoneId }
 
                     on<GroupContactsHandler>().setCurrentGroupContacts(groupContacts)
 

@@ -22,12 +22,12 @@ class IntentHandler constructor(private val on: On) {
         if (Intent.ACTION_VIEW == intent.action) {
             if (intent.hasExtra(EXTRA_EVENT_ID) || intent.hasExtra(EXTRA_GROUP_ID)) {
                 val latLngFloats = intent.getDoubleArrayExtra(EXTRA_LAT_LNG)
-                val latLng = LatLng(latLngFloats[0], latLngFloats[1])
+                val latLng = LatLng(latLngFloats!![0], latLngFloats[1])
                 on<MapHandler>().centerMap(latLng)
                 onRequestMapOnScreenListener?.invoke()
             } else if (intent.hasExtra(EXTRA_SUGGESTION)) {
                 val latLngFloats = intent.getDoubleArrayExtra(EXTRA_LAT_LNG)
-                val latLng = LatLng(latLngFloats[0], latLngFloats[1])
+                val latLng = LatLng(latLngFloats!![0], latLngFloats[1])
 
                 val suggestion = Suggestion()
                 suggestion.latitude = latLng.latitude
@@ -42,7 +42,7 @@ class IntentHandler constructor(private val on: On) {
                 onRequestMapOnScreenListener?.invoke()
             } else if (intent.hasExtra(EXTRA_LAT_LNG)) {
                 val latLngFloats = intent.getDoubleArrayExtra(EXTRA_LAT_LNG)
-                val latLng = LatLng(latLngFloats[0], latLngFloats[1])
+                val latLng = LatLng(latLngFloats!![0], latLngFloats[1])
 
                 if (intent.hasExtra(EXTRA_ZOOM)) {
                     on<MapHandler>().centerMap(latLng, intent.getFloatExtra(EXTRA_ZOOM, DEFAULT_ZOOM))

@@ -17,6 +17,11 @@ interface Backend {
     @GET("verify")
     fun isVerified(): Single<VerifiedResult>
 
+    // Invite Status
+
+    @GET("verify/invited")
+    fun isInvited(): Single<SuccessResult>
+
     // Member
 
     @GET("member")

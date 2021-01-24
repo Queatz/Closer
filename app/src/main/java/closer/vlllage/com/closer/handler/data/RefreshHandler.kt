@@ -27,9 +27,11 @@ class RefreshHandler constructor(private val on: On) {
         refreshActiveQuestProgresses()
     }
 
-    fun refreshMe() {
+    fun refreshMe(callback: ((Phone) -> Unit)? = null) {
         on<DisposableHandler>().add(on<ApiHandler>().phone().subscribe({
-            refresh(on<ApiModelHandler>().from(it))
+            val phone = on<ApiModelHandler>().from(it)
+            refresh(phone)
+            callback?.invoke(phone)
         }, connectionError))
     }
 
