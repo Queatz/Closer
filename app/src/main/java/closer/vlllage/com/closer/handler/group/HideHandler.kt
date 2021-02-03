@@ -37,7 +37,7 @@ class HideHandler(private val on: On) {
         on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.contact_unhidden))
     }
 
-    fun isHidden(groupId: String) = on<StoreHandler>().store.box(Hide::class).query(
-            Hide_.groupId.equal(groupId).and(Hide_.phoneId.equal(on<PersistenceHandler>().phoneId!!))
-    ).build().count() > 0L
+    fun isHidden(groupId: String) = on<PersistenceHandler>().phoneId?.let { phoneId -> on<StoreHandler>().store.box(Hide::class).query(
+            Hide_.groupId.equal(groupId).and(Hide_.phoneId.equal(phoneId))
+    ).build().count() > 0L } ?: false
 }

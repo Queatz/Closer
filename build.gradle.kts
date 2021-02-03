@@ -13,7 +13,7 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:4.2.0-beta03")
-//        classpath("com.github.triplet.gradle:play-publisher:3.2.0")
+        classpath("com.github.triplet.gradle:play-publisher:3.2.0-agp4.2")
         classpath("com.google.gms:google-services:4.3.4")
         classpath("io.objectbox:objectbox-gradle-plugin:${rootProject.extra["objectboxVersion"]}")
         classpath(kotlin("gradle-plugin", version = rootProject.extra["kotlinVersion"] as String))

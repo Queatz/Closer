@@ -74,6 +74,10 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
                     holder.on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
                 })
 
+        if (on<PersistenceHandler>().phoneId == null) {
+            return
+        }
+
         on<StoreHandler>().store.box(GroupContact::class).query(
                 GroupContact_.groupId.equal(item.group.id!!).and(
                         GroupContact_.contactId.notEqual(on<PersistenceHandler>().phoneId!!)

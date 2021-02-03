@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id("com.android.application")
-//  id("com.github.triplet.play")
+  id("com.github.triplet.play")
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
@@ -61,10 +61,10 @@ android {
     }
 }
 
-//play {
-//    serviceAccountCredentials = file("../../../service-account-key.json")
-//    track = "internal"
-//}
+play {
+    serviceAccountCredentials.set(file("../../../Secrets/service-account-key.json"))
+    track.set("internal")
+}
 
 dependencies {
     "implementation"("androidx.multidex:multidex:2.0.1")
