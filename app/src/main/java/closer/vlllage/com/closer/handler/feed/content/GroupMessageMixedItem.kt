@@ -45,6 +45,6 @@ class GroupMessageMixedItemAdapter(private val on: On) : MixedItemAdapter<GroupM
                 onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group1.id) }
             }
         }
-        holder.on<GroupMessageHelper>().onBind(groupMessage, holder)
+        holder.on<GroupMessageHelper>().onBind(groupMessage, null, holder)
     }
 }

@@ -15,7 +15,7 @@ class GroupMessagesAdapter(on: On) : PoolRecyclerAdapter<GroupMessageViewHolder>
     }
 
     override fun onBindViewHolder(holder: GroupMessageViewHolder, position: Int) {
-        on<GroupMessageHelper>().onBind(groupMessages[position], holder)
+        on<GroupMessageHelper>().onBind(groupMessages[position], if (position < groupMessages.size - 2) groupMessages[position + 1] else null, holder)
     }
 
     override fun onViewRecycled(holder: GroupMessageViewHolder) {

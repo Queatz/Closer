@@ -54,7 +54,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
     override fun getMixedItemClass() = CalendarDayMixedItem::class
     override fun getMixedItemType() = MixedItemType.CalendarDay
 
-    override fun areItemsTheSame(old: CalendarDayMixedItem, new: CalendarDayMixedItem) = false
+    override fun areItemsTheSame(old: CalendarDayMixedItem, new: CalendarDayMixedItem) = old.date == new.date
 
     override fun areContentsTheSame(old: CalendarDayMixedItem, new: CalendarDayMixedItem) = false
 

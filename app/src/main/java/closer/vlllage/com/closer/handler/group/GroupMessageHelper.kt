@@ -57,7 +57,7 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.disposableGroup.clear()
     }
 
-    fun onBind(groupMessage: GroupMessage, holder: GroupMessageViewHolder) {
+    fun onBind(groupMessage: GroupMessage, previousGroupMessage: GroupMessage?, holder: GroupMessageViewHolder) {
         if (inFeed) {
             holder.itemView.setBackgroundResource(R.color.white)
             holder.itemView.elevation = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.elevation).toFloat()
@@ -144,7 +144,7 @@ class GroupMessageHelper constructor(private val on: On) {
         holder.message.setTextSize(TypedValue.COMPLEX_UNIT_PX, on<ResourcesHandler>().resources.getDimension(R.dimen.textSize))
         holder.messageLayout.setBackgroundResource(R.drawable.rounded_dim_12dp)
 
-        on<MessageDisplay>().display(holder, groupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
+        on<MessageDisplay>().display(holder, groupMessage, previousGroupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 
         if (groupMessage.reactions.isNullOrEmpty()) {
             holder.reactionsRecyclerView.visible = false

@@ -6,8 +6,6 @@ Today
 
 [ ] Move to Dallas data center!!!!
 
-[ ] FUN hide profile if message above is same person and < 5 minute time difference
-[ ] BUG fix scrolling when returning to tab
 [ ] BUG opening stack history bug / wrong group
 
 HMS

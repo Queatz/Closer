@@ -4,6 +4,7 @@ import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -49,7 +50,7 @@ class MessageDisplay constructor(private val on: On) {
         holder.showGroupInsteadOfProfile = null
 
         holder.disposableGroup.add(on<DataHandler>().getGroupMessage(jsonObject.get("share").asString).subscribe({ sharedGroupMessage ->
-            display(holder, sharedGroupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
+            display(holder, sharedGroupMessage, null, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
             holder.time.text = on<GroupMessageParseHandler>().parseText(holder.time, on<ResourcesHandler>().resources.getString(R.string.shared_by, on<TimeStr>().pretty(groupMessage.created), "@" + groupMessage.from!!))
 
             val group = sharedGroupMessage.to?.let { getGroup(it) }
@@ -436,6 +437,7 @@ class MessageDisplay constructor(private val on: On) {
 
     fun display(holder: GroupMessageViewHolder,
                 groupMessage: GroupMessage,
+                previousGroupMessage: GroupMessage?,
                 onEventClickListener: (Event) -> Unit,
                 onGroupClickListener: (Group) -> Unit,
                 onSuggestionClickListener: (Suggestion) -> Unit) {
@@ -494,6 +496,13 @@ class MessageDisplay constructor(private val on: On) {
         holder.activeNowIndicator.visible = false
 
         if (showProfile && !holder.pinned) {
+            val invisi = previousGroupMessage?.attachment?.startsWith("{\"message\":") != true && previousGroupMessage?.from == groupMessage.from
+
+            if (invisi) {
+                holder.profilePhoto.visibility = View.INVISIBLE
+                return
+            }
+
             holder.profilePhoto.setOnClickListener {
                 on<GroupActivityTransitionHandler>().showGroupForPhone(holder.profilePhoto, groupMessage.from!!)
             }
