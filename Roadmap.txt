@@ -2,21 +2,13 @@
 Today
 ========
 
-[X] Scope reminders to only ones I have joined
-[X] Show event start reminder on calendar
-[X] Every hour logic
-[X] Pluralize minutes
-[ ] Reminders as blue line
-
-[ ] tap on calendar to add event
-
 [ ] Fix quest card showing up broken layout
 
 [ ] Move to Dallas data center!!!!
 
-[ ] Closer: hide profile if message above is same person and < 5 minute time difference
-[ ] Closer: fix scrolling when returning to tab
-[ ] Closer: opening stack history bug / wrong group
+[ ] FUN hide profile if message above is same person and < 5 minute time difference
+[ ] BUG fix scrolling when returning to tab
+[ ] BUG opening stack history bug / wrong group
 
 HMS
 ===

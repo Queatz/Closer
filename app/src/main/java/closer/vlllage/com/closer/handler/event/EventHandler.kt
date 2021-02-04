@@ -68,6 +68,10 @@ class EventHandler constructor(private val on: On) {
                     if (endsAt != null) {
                         time = endsAt
                     } else {
+                        if (startsAt != null) {
+                            time = startsAt
+                        }
+
                         add(Calendar.HOUR_OF_DAY, 4)
                         set(Calendar.MINUTE, 0)
                         set(Calendar.SECOND, 0)
