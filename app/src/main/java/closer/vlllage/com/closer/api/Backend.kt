@@ -309,6 +309,11 @@ interface Backend {
     @POST("member/of/{group}")
     fun updateGroupMember(@Path("group") groupId: String, @Query("muted") muted: Boolean, @Query("subscribed") subscribed: Boolean): Single<CreateResult>
 
+    // Calendar
+
+    @GET("/calendar/reminders")
+    fun getEventRemindersOnDay(@Query(value = "date", encoded = true) date: String): Single<List<EventReminder>>
+
     // World
 
     @GET("world/phones")

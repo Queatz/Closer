@@ -554,6 +554,7 @@
     <string name="share_story">Share story</string>
     <string name="view_story">View story</string>
     <string name="loading_stories">Loading stories, please wait…</string>
+    <string name="choose_hours">Choose hours</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

@@ -10,7 +10,7 @@ class EventResult : ModelResult() {
     var name: String? = null
     var about: String? = null
     @SerializedName("public")
-    private val isPublic: Boolean = false
+    val isPublic: Boolean = false
     var startsAt: Date? = null
     var endsAt: Date? = null
     var cancelled: Boolean = false

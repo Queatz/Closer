@@ -345,6 +345,28 @@ class EventHandler constructor(private val on: On) {
 
                 items.forEach { eventReminder ->
                     eventReminder.utcOffset = TimeZone.getDefault().getOffset(Date().time)
+
+                    when (eventReminder.offset.unit) {
+                        EventReminderOffsetUnit.Minute -> {
+                            val cal = Calendar.getInstance(TimeZone.getDefault())
+                            cal.time = event.startsAt!!
+                            cal.add(Calendar.MINUTE, eventReminder.offset.amount)
+
+                            eventReminder.time.minute = cal.get(Calendar.MINUTE)
+                            eventReminder.time.hour = cal.get(Calendar.HOUR_OF_DAY)
+                        }
+                        EventReminderOffsetUnit.Hour -> {
+                            val cal = Calendar.getInstance(TimeZone.getDefault())
+                            cal.time = event.startsAt!!
+                            cal.add(Calendar.HOUR_OF_DAY, eventReminder.offset.amount)
+
+                            eventReminder.time.minute = cal.get(Calendar.MINUTE)
+                            eventReminder.time.hour = cal.get(Calendar.HOUR_OF_DAY)
+                        }
+                        else -> {
+                            // Configured in UI by the user
+                        }
+                    }
                 }
 
                 on<ApplicationHandler>().app.on<DisposableHandler>().add(on<ApiHandler>().updateEventReminders(event.id!!, items).subscribe({

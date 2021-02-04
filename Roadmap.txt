@@ -2,10 +2,19 @@
 Today
 ========
 
-[ ] Hide contacts
-[ ]
-[ ]
-[ ]
+[ ] Scope reminders to only ones I have joined
+[X] Show event start reminder on calendar
+[X] Every hour logic
+[ ] Pluralize minutes
+[ ] Fix quest card showing up broken layout
+
+[ ] Move to Dallas data center!!!!
+
+[ ] Closer: hide profile if message above is same person and < 5 minute time difference
+[ ] Closer: reminders as blue line
+[ ] Closer: fix scrolling when returning to tab
+[ ] Closer: tap on calendar to add event
+[ ] Closer: opening stack history bug / wrong group
 
 HMS
 ===
@@ -16,7 +25,6 @@ HMS
 Incoming
 ========
 
-[.] Reminders
 [ ] Categories
 
 [ ] NPCs

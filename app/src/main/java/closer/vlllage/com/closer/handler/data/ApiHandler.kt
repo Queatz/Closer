@@ -224,6 +224,8 @@ class ApiHandler constructor(private val on: On) {
 
     fun getEvent(eventId: String) = api { getEvent(eventId) }
 
+    fun getEventRemindersOnDay(date: Date) = api { getEventRemindersOnDay(on<HttpEncode>().encode(on<DateFormatter>().format(date))!!) }
+
     fun cancelEvent(eventId: String) = api { cancelEvent(eventId, true) }
 
     fun updateEventReminders(eventId: String, reminders: List<EventReminder>) = api { updateEventReminders(eventId, reminders) }

@@ -396,8 +396,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
 
                         update(holder, reminder)
                     }
-                    .setPositiveButton(R.string.apply, { dialog, which -> })
-                    .show()
+                    .setPositiveButton(R.string.apply) { _, _ -> }
+                .show()
         }
 
         holder.itemView.selectRepeatWeeks.setOnClickListener {
@@ -431,8 +431,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
 
                         update(holder, reminder)
                     }
-                    .setPositiveButton(R.string.apply, { dialog, which -> })
-                    .show()
+                    .setPositiveButton(R.string.apply) { _, _ -> }
+                .show()
         }
 
         holder.itemView.selectRepeatMonths.setOnClickListener {
@@ -466,8 +466,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
 
                         update(holder, reminder)
                     }
-                    .setPositiveButton(R.string.apply, { dialog, which -> })
-                    .show()
+                    .setPositiveButton(R.string.apply) { _, _ -> }
+                .show()
         }
 
     }
@@ -513,7 +513,7 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             set(Calendar.MILLISECOND, 0)
         }
 
-        holder.itemView.selectTime.setText(timeFormatter.format(cal.time))
+        holder.itemView.selectTime.text = timeFormatter.format(cal.time)
 
         // Repeat
 
@@ -553,7 +553,7 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
             } else null
         } ?: run {
             holder.itemView.selectRepeatHours.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse))
-            holder.itemView.selectRepeatHours.text = on<ResourcesHandler>().resources.getString(R.string.every_hour)
+            holder.itemView.selectRepeatHours.text = on<ResourcesHandler>().resources.getString(R.string.choose_hours)
         }
 
         // Days

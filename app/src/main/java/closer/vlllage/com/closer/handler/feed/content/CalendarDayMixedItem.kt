@@ -8,7 +8,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.api.models.EventResult
 import closer.vlllage.com.closer.extensions.visible
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.event.EventAdapter
 import closer.vlllage.com.closer.handler.event.EventDetailsHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
@@ -81,6 +83,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 
         holder.itemView.pastTime.visible = isToday
 
+        // TODO also track future days
         if (isToday) {
             trackTimeOfDay(holder)
         }
@@ -154,49 +157,96 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
             it.get(Calendar.DAY_OF_YEAR)
         }
 
+        holder.on<ApiHandler>().getEventRemindersOnDay(date).subscribe({
+            it.forEach { eventReminder ->
+                eventReminder.instances?.forEach { instance ->
+                    val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_reminder_item, holder.day, false)
+
+                    view.name.text = eventReminder.text?.let { "$it${eventReminder.event?.name?.let { " ($it)" } ?: ""}" } ?: eventReminder.event?.name
+                    (view.layoutParams as ConstraintLayout.LayoutParams).apply {
+                        topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                        startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                        endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                        width = ViewGroup.LayoutParams.MATCH_PARENT
+                        height = minH
+                        constrainedHeight = true
+                        constrainedWidth = true
+                        marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
+                        marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
+                    }
+
+                    view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
+                        it.time = instance
+                        (it.get(Calendar.DAY_OF_YEAR) - dayOfYear).toFloat() +
+                                it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
+                                it.get(Calendar.MINUTE).toFloat() / TimeUnit.DAYS.toMinutes(1).toFloat()
+                    })
+
+                    view.name.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_baseline_flag_18dp, 0, 0, 0
+                    )
+
+                    view.setBackgroundResource(R.drawable.clickable_blue_8dp)
+
+                    view.setOnClickListener {
+                        eventReminder.event?.let { on<GroupActivityTransitionHandler>().showGroupForEvent(view, EventResult.from(it)) }
+                    }
+
+                    holder.day.addView(view)
+                    holder.views.add(view)
+                }
+            }
+        }, {
+            on<DefaultAlerts>().syncError()
+        }).also {
+            holder.on<DisposableHandler>().add(it)
+        }
+
         val overlapping = Overlapping()
 
-        holder.events?.sortedBy { it.startsAt }?.forEach { event ->
-            val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.day, false)
+        holder.events?.sortedBy { it.startsAt }?.apply {
+            forEach { event ->
+                val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.day, false)
 
-            view.name.text = event.name
-            view.about.text = on<EventDetailsHandler>().formatEventDetails(event)
-            (view.layoutParams as ConstraintLayout.LayoutParams).apply {
-                val h = (event.endsAt!!.time - event.startsAt!!.time).toFloat() / TimeUnit.DAYS.toMillis(1) * vH
+                view.name.text = event.name
+                view.about.text = on<EventDetailsHandler>().formatEventDetails(event)
+                (view.layoutParams as ConstraintLayout.LayoutParams).apply {
+                    val h = (event.endsAt!!.time - event.startsAt!!.time).toFloat() / TimeUnit.DAYS.toMillis(1) * vH
 
-                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                width = ViewGroup.LayoutParams.MATCH_PARENT
-                height = h.toInt().coerceAtLeast(minH)
-                constrainedHeight = true
-                constrainedWidth = true
-                marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3 +
-                        on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 4 * overlapping.count(event)
-                marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
-            }
+                    topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                    startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                    endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                    width = ViewGroup.LayoutParams.MATCH_PARENT
+                    height = h.toInt().coerceAtLeast(minH)
+                    constrainedHeight = true
+                    constrainedWidth = true
+                    marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3 +
+                            on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 4 * overlapping.count(event)
+                    marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
+                }
 
-            overlapping.add(event)
+                overlapping.add(event)
 
-            view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
-                it.time = event.startsAt!!
-                (it.get(Calendar.DAY_OF_YEAR) - dayOfYear).toFloat() +
-                        it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
-                        it.get(Calendar.MINUTE).toFloat() / TimeUnit.DAYS.toMinutes(1).toFloat()
-            })
+                view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
+                    it.time = event.startsAt!!
+                    (it.get(Calendar.DAY_OF_YEAR) - dayOfYear).toFloat() +
+                            it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
+                            it.get(Calendar.MINUTE).toFloat() / TimeUnit.DAYS.toMinutes(1).toFloat()
+                })
 
-            view.name.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                view.name.setCompoundDrawablesRelativeWithIntrinsicBounds(
                     if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_group_black_18dp, 0, 0, 0
-            )
+                )
 
 //            view.setBackgroundResource(if (event.isPublic) R.drawable.clickable_red_8dp else R.drawable.clickable_blue_8dp)
 
-            view.setOnClickListener {
-                on<GroupActivityTransitionHandler>().showGroupForEvent(view, event)
-            }
+                view.setOnClickListener {
+                    on<GroupActivityTransitionHandler>().showGroupForEvent(view, event)
+                }
 
-            holder.day.addView(view)
-            holder.views.add(view)
+                holder.day.addView(view)
+                holder.views.add(view)
+            }
         }
     }
 }

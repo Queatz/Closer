@@ -1,14 +1,18 @@
 package closer.vlllage.com.closer.handler.event
 
+import closer.vlllage.com.closer.api.models.EventResult
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class EventReminder constructor(
-        var position: EventReminderPosition = EventReminderPosition.Start,
-        val offset: EventReminderOffset = EventReminderOffset(),
-        var utcOffset: Int = 0,
-        val time: EventReminderTime = EventReminderTime(),
-        var repeat: EventReminderRepeat? = null,
-        var text: String? = null
+    var position: EventReminderPosition = EventReminderPosition.Start,
+    val offset: EventReminderOffset = EventReminderOffset(),
+    var utcOffset: Int = 0,
+    val time: EventReminderTime = EventReminderTime(),
+    var repeat: EventReminderRepeat? = null,
+    var text: String? = null,
+    var instances: List<Date>? = null,
+    var event: EventResult? = null,
 )
 
 data class EventReminderOffset constructor(
