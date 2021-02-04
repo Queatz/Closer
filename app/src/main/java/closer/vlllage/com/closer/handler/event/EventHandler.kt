@@ -193,11 +193,11 @@ class EventHandler constructor(private val on: On) {
                 }
                 positiveButtonCallback = { alertResult ->
                     val viewHolder = alertResult as CreateEventViewHolder
-
-                    val event = getViewState(viewHolder)
                     val isAllDay = viewHolder.isAllDaySwitch.isChecked
 
                     allDayPreProcess(viewHolder)
+
+                    val event = getViewState(viewHolder)
 
                     createNewEvent(viewHolder.isPublicToggle.checkedButtonId == R.id.publicToggleButton,
                             latLng,

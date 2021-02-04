@@ -100,7 +100,6 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                                     ).or(
                                             Event_.isPublic.equal(false)
                                     )
-
                             )
                     )
                             .build()
@@ -157,6 +156,8 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
             it.get(Calendar.DAY_OF_YEAR)
         }
 
+        val overlapping = Overlapping()
+
         holder.on<ApiHandler>().getEventRemindersOnDay(date).subscribe({
             it.forEach { eventReminder ->
                 eventReminder.instances?.forEach { instance ->
@@ -171,9 +172,13 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                         height = minH
                         constrainedHeight = true
                         constrainedWidth = true
-                        marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
+                        marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3 +
+                                on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 4 * overlapping.count(
+                            Overlapping.Companion.Entry(instance, Date(instance.time + TimeUnit.HOURS.toMillis(1))))
                         marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
                     }
+
+                    overlapping.add(Overlapping.Companion.Entry(instance, Date(instance.time + TimeUnit.HOURS.toMillis(1))))
 
                     view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
                         it.time = instance
@@ -202,8 +207,6 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
             holder.on<DisposableHandler>().add(it)
         }
 
-        val overlapping = Overlapping()
-
         holder.events?.sortedBy { it.startsAt }?.apply {
             forEach { event ->
                 val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.day, false)
@@ -221,11 +224,11 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                     constrainedHeight = true
                     constrainedWidth = true
                     marginStart = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3 +
-                            on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 4 * overlapping.count(event)
+                            on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 4 * overlapping.count(Overlapping.Companion.Entry(event.startsAt!!, event.endsAt!!))
                     marginEnd = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble) * 3
                 }
 
-                overlapping.add(event)
+                overlapping.add(Overlapping.Companion.Entry(event.startsAt!!, event.endsAt!!))
 
                 view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
                     it.time = event.startsAt!!
@@ -252,13 +255,22 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 }
 
 class Overlapping {
-    val events = mutableListOf<Event>()
 
-    fun add(event: Event) {
-        events.add(event)
+    companion object {
+        data class Entry constructor(
+            val startsAt: Date,
+            val endsAt: Date
+        )
     }
 
-    fun count(event: Event) = events.count {
-        it.startsAt!!.before(event.endsAt) && it.endsAt!!.after(event.startsAt)
+    val entries = mutableListOf<Entry>()
+
+    fun add(entry: Entry) {
+        entries.add(entry)
+    }
+
+    fun count(entry: Entry) = entries.count {
+        it.startsAt.before(entry.endsAt) && it.endsAt.after(entry.startsAt)
     }
 }
+

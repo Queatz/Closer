@@ -601,4 +601,24 @@
         <item quantity="one">%1$s reply</item>
         <item quantity="other">%1$s replies</item>
     </plurals>
+    <plurals name="plural_minute">
+        <item quantity="one">Minute</item>
+        <item quantity="other">Minutes</item>
+    </plurals>
+    <plurals name="plural_hour">
+        <item quantity="one">Hour</item>
+        <item quantity="other">Hours</item>
+    </plurals>
+    <plurals name="plural_day">
+        <item quantity="one">Day</item>
+        <item quantity="other">Days</item>
+    </plurals>
+    <plurals name="plural_week">
+        <item quantity="one">Week</item>
+        <item quantity="other">Weeks</item>
+    </plurals>
+    <plurals name="plural_month">
+        <item quantity="one">Month</item>
+        <item quantity="other">Months</item>
+    </plurals>
 </resources>

@@ -16,6 +16,7 @@ import com.queatz.on.On
 import kotlinx.android.synthetic.main.item_edit_reminder.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 
 class EditRemindersAdapter(private val on: On, private val removeCallback: (EventReminder) -> Unit) : RecyclerView.Adapter<EditRemindersViewHolder>() {
@@ -361,8 +362,8 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
 
                         update(holder, reminder)
                     }
-                    .setPositiveButton(R.string.apply, { dialog, which -> })
-                    .show()
+                    .setPositiveButton(R.string.apply) { _, _ -> }
+                .show()
         }
 
         holder.itemView.selectRepeatDays.setOnClickListener {
@@ -485,11 +486,11 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         }
 
         holder.itemView.offsetUnit.text = when (reminder.offset.unit) {
-            EventReminderOffsetUnit.Minute -> on<ResourcesHandler>().resources.getString(R.string.minute)
-            EventReminderOffsetUnit.Hour -> on<ResourcesHandler>().resources.getString(R.string.hour)
-            EventReminderOffsetUnit.Day -> on<ResourcesHandler>().resources.getString(R.string.day)
-            EventReminderOffsetUnit.Week -> on<ResourcesHandler>().resources.getString(R.string.week)
-            EventReminderOffsetUnit.Month -> on<ResourcesHandler>().resources.getString(R.string.month)
+            EventReminderOffsetUnit.Minute -> on<ResourcesHandler>().resources.getQuantityString(R.plurals.plural_minute, abs(reminder.offset.amount))
+            EventReminderOffsetUnit.Hour -> on<ResourcesHandler>().resources.getQuantityString(R.plurals.plural_hour, abs(reminder.offset.amount))
+            EventReminderOffsetUnit.Day -> on<ResourcesHandler>().resources.getQuantityString(R.plurals.plural_day, abs(reminder.offset.amount))
+            EventReminderOffsetUnit.Week -> on<ResourcesHandler>().resources.getQuantityString(R.plurals.plural_week, abs(reminder.offset.amount))
+            EventReminderOffsetUnit.Month -> on<ResourcesHandler>().resources.getQuantityString(R.plurals.plural_month, abs(reminder.offset.amount))
         }
 
         // Position
@@ -516,7 +517,6 @@ class EditRemindersAdapter(private val on: On, private val removeCallback: (Even
         holder.itemView.selectTime.text = timeFormatter.format(cal.time)
 
         // Repeat
-
 
         holder.itemView.selectRepeat.text = on<ResourcesHandler>().resources.getString(R.string.none)
         holder.itemView.selectRepeat.setTextColor(on<ResourcesHandler>().resources.getColor(when (reminder.repeat) {
