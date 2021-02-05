@@ -206,6 +206,9 @@ interface Backend {
     fun setGroupAbout(@Path("id") groupId: String, @Query("about") about: String): Single<SuccessResult>
 
     @POST("group/{id}")
+    fun renameGroup(@Path("id") groupId: String, @Query("name") about: String): Single<SuccessResult>
+
+    @POST("group/{id}")
     fun pin(@Path("id") groupId: String, @Query("pin") messageId: String, @Query("remove") remove: Boolean): Single<SuccessResult>
 
     // Group Action

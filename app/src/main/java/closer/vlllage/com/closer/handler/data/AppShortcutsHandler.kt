@@ -30,7 +30,7 @@ class AppShortcutsHandler constructor(private val on: On) {
         val bitmaps = HashSet<Bitmap>()
 
         for (group in groups) {
-            if (group.name?.isEmpty() == false) {
+            if (group.name?.isNotEmpty() != true) {
                 continue
             }
 

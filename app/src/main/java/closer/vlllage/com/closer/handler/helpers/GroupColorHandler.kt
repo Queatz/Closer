@@ -11,7 +11,7 @@ class GroupColorHandler constructor(private val on: On) {
     @ColorInt
     fun getColor(group: Group): Int {
         return when {
-            group.hasEvent() -> on<ResourcesHandler>().resources.getColor(R.color.white)
+            group.hasEvent() -> on<ResourcesHandler>().resources.getColor(R.color.red)
             group.hasPhone() -> on<ResourcesHandler>().resources.getColor(R.color.white)
             group.physical -> on<ResourcesHandler>().resources.getColor(R.color.purple)
             group.ofKind == "quest" -> on<ResourcesHandler>().resources.getColor(R.color.forestgreen)

@@ -2,6 +2,9 @@
 Today
 ========
 
+[ ] Mapbox
+[ ] FEAT: choose tab to select when opening shortcut
+
 HMS
 ===
 

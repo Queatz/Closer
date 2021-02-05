@@ -25,13 +25,14 @@ import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.pool.PoolFragment
-import closer.vlllage.com.closer.store.models.Event
-import closer.vlllage.com.closer.store.models.Group
-import closer.vlllage.com.closer.store.models.Phone
-import closer.vlllage.com.closer.store.models.Suggestion
+import closer.vlllage.com.closer.store.StoreHandler
+import closer.vlllage.com.closer.store.models.*
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.iid.FirebaseInstanceId
+import io.objectbox.android.AndroidScheduler
+import io.objectbox.kotlin.single
+import io.objectbox.query.QueryBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.android.synthetic.main.activity_maps.view.*
@@ -85,6 +86,13 @@ class MapSlideFragment : PoolFragment() {
         on<NetworkConnectionViewHandler>().attach(view.connectionError)
         on<TimerHandler>().postDisposable({ on<SyncHandler>().syncAll() }, 1325)
         on<TimerHandler>().postDisposable({ on<RefreshHandler>().refreshAll() }, 1625)
+        on<TimerHandler>().postDisposable({
+            on<StoreHandler>().store.box(Group::class).query(Group_.isPublic.equal(false)).order(Group_.updated, QueryBuilder.DESCENDING).build().subscribe().single().on(AndroidScheduler.mainThread()).observer {
+                if (it.isNotEmpty()) {
+                    on<AppShortcutsHandler>().setGroupShortcuts(it.take(3))
+                }
+            }
+        }, 1625 * 2)
 
         on<BubbleHandler>().attach(view.findViewById(R.id.bubbleMapLayer), { mapBubble ->
             on<NavigationHandler>().showProfile(mapBubble.phone!!, mapBubble.view)

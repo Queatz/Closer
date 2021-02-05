@@ -132,6 +132,8 @@ class ApiHandler constructor(private val on: On) {
 
     fun setGroupAbout(groupId: String, about: String) = api { setGroupAbout(groupId, about) }
 
+    fun renameGroup(groupId: String, name: String) = api { renameGroup(groupId, name) }
+
     fun removeGroupAction(groupActionId: String) = api { removeGroupAction(groupActionId) }
 
     fun createGroupAction(groupId: String, name: String, intent: String) = api { createGroupAction(groupId, name, intent) }

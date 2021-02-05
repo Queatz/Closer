@@ -4,6 +4,7 @@ import android.widget.EditText
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
@@ -95,6 +96,22 @@ class GroupMemberHandler constructor(private val on: On) {
                                 on<DefaultAlerts>().thatDidntWork()
                             })
                         }.visible(group.hasEvent()),
+                        MenuHandler.MenuOption(R.drawable.ic_more_horiz_black_24dp, R.string.more_options) {
+                            on<MenuHandler>().show(MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, R.string.rename_group) {
+                                on<DefaultInput>().show(R.string.rename_group, prefill = group.name) { name ->
+                                    on<ApiHandler>().renameGroup(group.id!!, name).observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe({
+                                            if (it.success) {
+                                                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.group_renamed, name))
+                                            } else {
+                                                on<DefaultAlerts>().thatDidntWork()
+                                            }
+                                        }, {
+                                            on<DefaultAlerts>().thatDidntWork()
+                                        })
+                                }
+                            })
+                        },
                         MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.unhide_from_contacts) {
                             on<HideHandler>().unhide(group)
                         }.visible(group.direct && on<HideHandler>().isHidden(group.id!!))
@@ -234,6 +251,5 @@ class GroupMemberHandler constructor(private val on: On) {
                 .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)
                 .build()
                 .count() > 0
-
     }
 }
