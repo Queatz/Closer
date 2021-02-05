@@ -23,6 +23,7 @@ import com.queatz.on.On
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
+import kotlin.math.min
 
 
 class MapHandler constructor(private val on: On) : OnMapReadyCallback {
@@ -124,9 +125,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     fun updateMyLocationEnabled() {
-        if (map == null) {
-            return
-        }
+        map ?: return
 
         on<PermissionHandler>()
                 .check(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -136,9 +135,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
     private fun mapChanged() {
         onMapChangedListener!!.invoke()
 
-        if (map == null) {
-            return
-        }
+        map ?: return
 
         if (map!!.cameraPosition.zoom >= 18) {
             if (map!!.mapType != GoogleMap.MAP_TYPE_HYBRID) {
@@ -187,7 +184,7 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
         }
 
         try {
-            val cu = CameraUpdateFactory.newLatLngBounds(builder.build(), Math.min(
+            val cu = CameraUpdateFactory.newLatLngBounds(builder.build(), min(
                     on<ActivityHandler>().activity!!.window.decorView.width,
                     on<ActivityHandler>().activity!!.window.decorView.height
             ) / 4)

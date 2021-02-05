@@ -3,6 +3,7 @@ package closer.vlllage.com.closer
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.Gravity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_group.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class GroupActivity : CircularRevealActivity() {
@@ -195,11 +197,17 @@ class GroupActivity : CircularRevealActivity() {
                         view.meetLayout.visible = false
                     }
                 }
+
+                view.groupDetails.setOnClickListener(null)
             }
 
             onEventChanged { event ->
                 view.groupDetails.visible = true
                 view.groupDetails.text = on<EventDetailsHandler>().formatEventDetails(event)
+                view.groupDetails.setOnClickListener {
+                    val timeFormatter = SimpleDateFormat("MMMM d, yyyy${if (event.allDay) "" else " h:mma"}", Locale.US)
+                    on<DefaultAlerts>().message("${timeFormatter.format(event.startsAt!!)} to ${timeFormatter.format(event.endsAt!!)}")
+                }
             }
 
             onPhoneUpdated { phone ->

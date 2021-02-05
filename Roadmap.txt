@@ -2,12 +2,6 @@
 Today
 ========
 
-[ ] Fix quest card showing up broken layout
-
-[ ] Move to Dallas data center!!!!
-
-[ ] BUG opening stack history bug / wrong group
-
 HMS
 ===
 

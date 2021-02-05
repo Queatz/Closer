@@ -27,6 +27,7 @@ import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.calendar_day_item.view.*
 import kotlinx.android.synthetic.main.calendar_event_item.view.*
 import java.util.*
@@ -36,6 +37,7 @@ import kotlin.math.floor
 class CalendarDayMixedItem(val position: Int, val date: Date) : MixedItem(MixedItemType.CalendarDay)
 
 class CalendarDayViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.CalendarDay) {
+    var disposable: Disposable? = null
     lateinit var on: On
     var eventsObservable: DataSubscription? = null
     val views = mutableSetOf<View>()
@@ -188,7 +190,8 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 
         val overlapping = Overlapping()
 
-        holder.on<ApiHandler>().getEventRemindersOnDay(date).subscribe({
+        holder.disposable?.dispose()
+        holder.disposable = holder.on<ApiHandler>().getEventRemindersOnDay(date).subscribe({
             it.forEach { eventReminder ->
                 eventReminder.instances?.forEach { instance ->
                     val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_reminder_item, holder.day, false)

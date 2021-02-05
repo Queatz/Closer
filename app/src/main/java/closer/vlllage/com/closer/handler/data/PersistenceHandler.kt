@@ -14,7 +14,7 @@ import io.reactivex.subjects.PublishSubject
 
 class PersistenceHandler constructor(private val on: On) : OnLifecycle {
 
-    private val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+    private val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         Companion.changes.onNext(key)
     }
 

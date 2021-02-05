@@ -156,9 +156,12 @@ class GroupHandler constructor(private val on: On) {
             return
         }
 
-        disposableGroup.add(on<DataHandler>().getEvent(eventId)
-                .subscribe({ event -> eventChanged.onNext(event) },
-                        { on<DefaultAlerts>().thatDidntWork() }))
+        disposableGroup.add(
+            on<DataHandler>().getEvent(eventId).subscribe(
+                { event -> eventChanged.onNext(event) },
+                { on<DefaultAlerts>().thatDidntWork() }
+            )
+        )
     }
 
     private fun setPhoneById(phoneId: String?) {
