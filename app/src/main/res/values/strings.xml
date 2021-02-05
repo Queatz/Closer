@@ -558,6 +558,7 @@
     <string name="rename_group">Rename group</string>
     <string name="icon_text">Icon text</string>
     <string name="group_renamed">Group renamed to %1$s</string>
+    <string name="event_renamed">Event renamed to %1$s</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

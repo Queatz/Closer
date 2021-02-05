@@ -102,7 +102,7 @@ class GroupMemberHandler constructor(private val on: On) {
                                     on<ApiHandler>().renameGroup(group.id!!, name).observeOn(AndroidSchedulers.mainThread())
                                         .subscribe({
                                             if (it.success) {
-                                                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.group_renamed, name))
+                                                on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(if (group.hasEvent()) R.string.event_renamed else R.string.group_renamed, name))
                                             } else {
                                                 on<DefaultAlerts>().thatDidntWork()
                                             }
