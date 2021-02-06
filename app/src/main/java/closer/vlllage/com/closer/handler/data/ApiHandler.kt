@@ -301,7 +301,7 @@ class ApiHandler constructor(private val on: On) {
     private fun <T> uiThread(observable: Single<T>): Single<T> {
         return observable.observeOn(AndroidSchedulers.mainThread()).onErrorResumeNext {
             Single.error(ApiError(it, when (it) {
-                is HttpException -> it.response().errorBody()?.string()?.let { on<JsonHandler>().from(it, SuccessResult::class.java) }
+                is HttpException -> it.response()?.errorBody()?.string()?.let { on<JsonHandler>().from(it, SuccessResult::class.java) }
                 else -> SuccessResult().apply {
                     success = false
                     error = it.message
