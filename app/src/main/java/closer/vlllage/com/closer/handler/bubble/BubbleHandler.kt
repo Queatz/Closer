@@ -15,7 +15,7 @@ class BubbleHandler constructor(private val on: On) {
     private lateinit var onMapBubbleEventClickListener: MapBubbleEventClickListener
     private lateinit var onMapBubblePhysicalGroupClickListener: MapBubblePhysicalGroupClickListener
 
-    private val bubbleMapLayer = BubbleMapLayer()
+    private val bubbleMapLayer = BubbleMapLayer(on)
     private val bubbleProxyLayer = BubbleProxyLayer(bubbleMapLayer) { on<MapHandler>().visibleRegion }
 
     private val bubbleView: BubbleMapLayer.BubbleView

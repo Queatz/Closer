@@ -58,10 +58,10 @@ class GroupMessagesFragment : PoolActivityFragment() {
 
         on<GroupHandler> {
             onGroupChanged {
-                callButton.visible = it.direct
+                callButton?.visible = it.direct
 
                 if (it.direct) {
-                    callButton.setOnClickListener { _ ->
+                    callButton?.setOnClickListener { _ ->
                         on<DirectGroupHandler>().getContactPhone(it.id!!).subscribe({
                             on<CallHandler>().startCall(it.id!!)
                         }, {

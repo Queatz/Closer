@@ -159,7 +159,6 @@ class PersistenceHandler constructor(private val on: On) : OnLifecycle {
         const val PREFERENCE_PHONE = "closer.phone"
         const val PREFERENCE_VERIFIED = "closer.verified"
         const val PREFERENCE_PHONE_ID = "closer.phone.id"
-        const val PREFERENCE_NOTIFICATIONS_PAUSED = "closer.notifications.paused"
         const val PREFERENCE_LAST_MAP_CENTER = "closer.map.center"
         const val PREFERENCE_LAST_FEED_CONTENT = "closer.feed.content"
         const val PREFERENCE_ACCESS = "closer.access"

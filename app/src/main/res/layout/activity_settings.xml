@@ -41,6 +41,7 @@
         android:paddingTop="@dimen/padDouble"
         android:paddingBottom="@dimen/padDouble"
         android:textColor="@color/text"
+        android:alpha=".5"
         android:textStyle="bold"
         android:gravity="start"
         android:textAppearance="?android:textAppearanceMedium"
@@ -101,6 +102,19 @@
                 android:textAppearance="?android:textAppearanceMedium"
                 android:text="@string/auto_answer_calls" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:gravity="start"
+                android:textAllCaps="true"
+                android:alpha=".5"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/display" />
+
             <Switch
                 android:id="@+id/lightThemeSwitch"
                 android:layout_width="match_parent"
@@ -114,6 +128,47 @@
                 android:gravity="start"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:text="@string/settings_use_light_theme" />
+
+            <Switch
+                android:id="@+id/largeMapBubblesSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/settings_use_large_map_bubbles" />
+
+            <Switch
+                android:id="@+id/showCloseButtonSettingsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:paddingBottom="@dimen/padDouble"
+                android:textColor="@color/text"
+                android:background="@drawable/clickable_light"
+                android:gravity="start"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/settings_show_close_button" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padQuadruple"
+                android:paddingEnd="@dimen/padQuadruple"
+                android:paddingTop="@dimen/padQuadruple"
+                android:textColor="@color/text"
+                android:gravity="start"
+                android:textAllCaps="true"
+                android:alpha=".5"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/behavior" />
 
             <Switch
                 android:id="@+id/openGroupsExpandedSettingsSwitch"
@@ -157,19 +212,18 @@
                 android:textAppearance="?android:textAppearanceMedium"
                 android:text="@string/settings_remember_last_tab" />
 
-            <Switch
-                android:id="@+id/showCloseButtonSettingsSwitch"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/padQuadruple"
                 android:paddingEnd="@dimen/padQuadruple"
                 android:paddingTop="@dimen/padQuadruple"
-                android:paddingBottom="@dimen/padDouble"
                 android:textColor="@color/text"
-                android:background="@drawable/clickable_light"
                 android:gravity="start"
+                android:textAllCaps="true"
+                android:alpha=".5"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:text="@string/settings_show_close_button" />
+                android:text="@string/information_and_feedback" />
 
             <Button style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/featureRequestsButton"

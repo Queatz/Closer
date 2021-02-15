@@ -191,8 +191,8 @@
     <string name="share_group_to">Share \"%1$s\" with</string>
     <string name="added_phone">%1$s has been added</string>
     <string name="sending_photo">Sending photo…</string>
-    <string name="settings_public_notifications">Area notifications</string>
-    <string name="public_notifications_switch_description">Area notifications are off. You\'ll only get notifications from member groups.</string>
+    <string name="settings_public_notifications">Nearby notifications</string>
+    <string name="public_notifications_switch_description">Nearby notifications are off. You\'ll only get notifications from member groups.</string>
     <string name="join_this_group">Join this group…</string>
     <string name="join_this_event">Join this event…</string>
     <string name="you_joined_group">You joined %1$s</string>
@@ -545,7 +545,7 @@
     <string name="unhide_from_contacts">Unhide from contacts</string>
     <string name="contact_unhidden">Contact unhidden</string>
     <string name="contact_hidden">Contact hidden</string>
-    <string name="settings_remember_last_tab">Rember last tab</string>
+    <string name="settings_remember_last_tab">Remember last feed tab</string>
     <string name="reply_to_x">Reply to %1$s…</string>
     <string name="view_more_stories">Move the map to view more stories.</string>
     <string name="add_to_your_story">Add to your story</string>
@@ -559,6 +559,11 @@
     <string name="icon_text">Icon text</string>
     <string name="group_renamed">Group renamed to %1$s</string>
     <string name="event_renamed">Event renamed to %1$s</string>
+    <string name="settings_use_large_map_bubbles">Large map bubbles</string>
+    <string name="information_and_feedback">Information &amp; Feedback</string>
+    <string name="behavior">Behavior</string>
+    <string name="display">Display</string>
+    <string name="your_auto_answering">Incoming calls will be automatically answered, and anyone on Closer may call you.</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

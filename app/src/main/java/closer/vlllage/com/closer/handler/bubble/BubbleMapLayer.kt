@@ -9,15 +9,18 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import closer.vlllage.com.closer.handler.map.MapHandler.Companion.DEFAULT_ZOOM
+import closer.vlllage.com.closer.handler.settings.SettingsHandler
+import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.queatz.on.On
 import kotlin.math.pow
 
 /**
  * Created by jacob on 2/18/18.
  */
 
-class BubbleMapLayer {
+class BubbleMapLayer(private val on: On) {
 
     val mapBubbles = HashSet<MapBubble>()
     private val mapBubbleAnimations = HashMap<MapBubble, Animator>()
@@ -233,9 +236,9 @@ class BubbleMapLayer {
     }
 
     private fun zoomScale(mapBubble: MapBubble): Float = when (mapBubble.type) {
-        BubbleType.PHYSICAL_GROUP, BubbleType.STATUS -> (map!!.cameraPosition.zoom / (DEFAULT_ZOOM)).toDouble().pow(10.0).coerceAtLeast(.75).coerceAtMost(2.0).toFloat()
+        BubbleType.PHYSICAL_GROUP, BubbleType.STATUS -> if (on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LARGE_MAP_BUBBLES]) 1f else (map!!.cameraPosition.zoom / (DEFAULT_ZOOM)).toDouble().pow(10.0).coerceAtLeast(.75).coerceAtMost(2.0).toFloat()
         BubbleType.MENU -> 1f
-        else -> 1.0.coerceAtMost((map!!.cameraPosition.zoom / (DEFAULT_ZOOM)).toDouble().pow(10.0)).coerceAtLeast(.5).coerceAtMost(1.0).toFloat()
+        else -> if (on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LARGE_MAP_BUBBLES]) 1f else 1.0.coerceAtMost((map!!.cameraPosition.zoom / (DEFAULT_ZOOM)).toDouble().pow(10.0)).coerceAtLeast(.5).coerceAtMost(1.0).toFloat()
     }
 
     interface BubbleView {

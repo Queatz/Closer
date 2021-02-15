@@ -9,6 +9,7 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -100,50 +101,26 @@ class NotificationHandler constructor(private val on: On) {
     }
 
     fun showInvitedToGroupNotification(invitedBy: String, groupName: String, groupId: String) {
-        val context = on<ApplicationHandler>().app
-
-        val intent = Intent(context, GroupActivity::class.java)
-        intent.action = Intent.ACTION_VIEW
-
-        intent.putExtra(EXTRA_GROUP_ID, groupId)
-
-        val contentIntent = PendingIntent.getActivity(
-                context,
-                REQUEST_CODE_NOTIFICATION,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val intents = getGroupIntent(groupId)
 
         val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
             created = Date()
             updated = Date()
             name = on<ResourcesHandler>().resources.getString(R.string.app_name)
             message = on<ResourcesHandler>().resources.getString(R.string.invited_to_group_notification, invitedBy, groupName)
-            intentTarget = intent.component!!.className
-            intentAction = intent.action
-            intentBundle = intent.extras?.toJson(on())
+            intentTarget = intents.first.component!!.className
+            intentAction = intents.first.action
+            intentBundle = intents.first.extras?.toJson(on())
             on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
         }!!
 
-        show(contentIntent, null, null, notification.name!!,
+        show(intents.second, null, null, notification.name!!,
                 notification.message!!,
                 "$groupId/invited", true)
     }
 
     fun showGroupMessageNotification(text: String, messageFrom: String, groupName: String?, direct: String?, groupId: String, isPassive: String?) {
-        val context = on<ApplicationHandler>().app
-
-        val intent = Intent(context, GroupActivity::class.java)
-        intent.action = Intent.ACTION_VIEW
-
-        intent.putExtra(EXTRA_GROUP_ID, groupId)
-
-        val contentIntent = PendingIntent.getActivity(
-                context,
-                REQUEST_CODE_NOTIFICATION,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val intents = getGroupIntent(groupId)
 
         on<DisposableHandler>().add(on<GroupMessageParseHandler>().parseString(text).subscribe({ parsedText ->
             val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
@@ -151,34 +128,21 @@ class NotificationHandler constructor(private val on: On) {
                 updated = Date()
                 name = groupName?.let { on<ResourcesHandler>().resources.getString(R.string.group_message_notification, messageFrom, it) } ?: messageFrom
                 message = parsedText
-                intentTarget = intent.component!!.className
-                intentAction = intent.action
-                intentBundle = intent.extras?.toJson(on())
+                intentTarget = intents.first.component!!.className
+                intentAction = intents.first.action
+                intentBundle = intents.first.extras?.toJson(on())
                 on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
             }!!
 
-            show(contentIntent, null, null,
+            show(intents.second, null, null,
                     notification.name!!,
                     notification.message!!,
                     "$groupId/message", !java.lang.Boolean.valueOf(isPassive))
         }, {}))
-
     }
 
     fun showGroupMessageReactionNotification(from: String, groupName: String?, reaction: String, groupId: String, isPassive: String?) {
-        val context = on<ApplicationHandler>().app
-
-        val intent = Intent(context, GroupActivity::class.java)
-        intent.action = Intent.ACTION_VIEW
-
-        intent.putExtra(EXTRA_GROUP_ID, groupId)
-
-        val contentIntent = PendingIntent.getActivity(
-                context,
-                REQUEST_CODE_NOTIFICATION,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val intent = getGroupIntent(groupId)
 
         val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
             created = Date()
@@ -193,32 +157,20 @@ class NotificationHandler constructor(private val on: On) {
                     R.string.group_message_reaction_notification,
                     from)
             message = reaction
-            intentTarget = intent.component!!.className
-            intentAction = intent.action
-            intentBundle = intent.extras?.toJson(on())
+            intentTarget = intent.first.component!!.className
+            intentAction = intent.first.action
+            intentBundle = intent.first.extras?.toJson(on())
             on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
         }!!
 
-        show(contentIntent, null, null,
+        show(intent.second, null, null,
                 notification.name!!,
                 notification.message!!,
                 "$groupId/message/reaction", !java.lang.Boolean.valueOf(isPassive))
     }
 
     fun showEventNotification(event: Event) {
-        val context = on<ApplicationHandler>().app
-
-        val intent = Intent(context, GroupActivity::class.java)
-        intent.action = Intent.ACTION_VIEW
-
-        intent.putExtra(EXTRA_GROUP_ID, event.groupId)
-
-        val contentIntent = PendingIntent.getActivity(
-                context,
-                REQUEST_CODE_NOTIFICATION,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val intents = getGroupIntent(event.groupId!!)
 
         val notification = on<StoreHandler>().create(closer.vlllage.com.closer.store.models.Notification::class.java)?.apply {
             created = Date()
@@ -234,13 +186,13 @@ class NotificationHandler constructor(private val on: On) {
                 }
             }
             message = on<EventDetailsHandler>().formatEventDetails(event)
-            intentTarget = intent.component!!.className
-            intentAction = intent.action
-            intentBundle = intent.extras?.toJson(on())
+            intentTarget = intents.first.component!!.className
+            intentAction = intents.first.action
+            intentBundle = intents.first.extras?.toJson(on())
             on<StoreHandler>().store.box(closer.vlllage.com.closer.store.models.Notification::class).put(this)
         }!!
 
-        show(contentIntent, null, null,
+        show(intents.second, null, null,
                 notification.name!!,
                 notification.message!!,
                 event.id!! + "/group", false)
@@ -289,6 +241,23 @@ class NotificationHandler constructor(private val on: On) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
 
         context.startActivity(intent)
+    }
+
+    private fun getGroupIntent(groupId: String): Pair<Intent, PendingIntent> {
+        val context = on<ApplicationHandler>().app
+
+        val intent = Intent(context, GroupActivity::class.java)
+        intent.action = Intent.ACTION_VIEW
+
+        intent.putExtra(EXTRA_GROUP_ID, groupId)
+        intent.data = Uri.parse("closer://group/$groupId")
+
+        return Pair(intent, PendingIntent.getActivity(
+            context,
+            REQUEST_CODE_NOTIFICATION,
+            intent,
+            0
+        ))
     }
 
     private fun show(contentIntent: PendingIntent,

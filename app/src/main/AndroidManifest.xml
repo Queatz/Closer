@@ -112,6 +112,7 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="standard"
+            android:documentLaunchMode="always"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

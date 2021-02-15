@@ -44,10 +44,19 @@ class SettingsSlideFragment : PoolFragment() {
         lightThemeSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LIGHT_THEME] = checked }
 
         autoAnswerSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_AUTO_ANSWER_CALLS]
-        autoAnswerSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_AUTO_ANSWER_CALLS] = checked }
+        autoAnswerSwitch.setOnCheckedChangeListener { _, checked ->
+            on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_AUTO_ANSWER_CALLS] = checked
+
+            if (checked) {
+                on<DefaultAlerts>().message(R.string.your_auto_answering)
+            }
+        }
 
         showCloseButtonSettingsSwitch.isChecked = !on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON]
         showCloseButtonSettingsSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON] = !checked }
+
+        largeMapBubblesSwitch.isChecked = on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LARGE_MAP_BUBBLES]
+        largeMapBubblesSwitch.setOnCheckedChangeListener { _, checked -> on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_USE_LARGE_MAP_BUBBLES] = checked }
 
         sendFeedbackButton.setOnClickListener { v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, on<ConfigHandler>().feedbackGroupId()) }
         viewPrivacyPolicyButton.setOnClickListener { on<DisposableHandler>().add(on<ApiHandler>().privacy().subscribe({ privacyPolicy -> on<DefaultAlerts>().message(privacyPolicy) }, { on<DefaultAlerts>().thatDidntWork() })) }

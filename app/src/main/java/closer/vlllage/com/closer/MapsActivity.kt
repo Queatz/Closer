@@ -3,6 +3,7 @@ package closer.vlllage.com.closer
 import android.content.Intent
 import android.os.Bundle
 import closer.vlllage.com.closer.handler.PersonalSlideFragment
+import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ScanQrCodeHandler
