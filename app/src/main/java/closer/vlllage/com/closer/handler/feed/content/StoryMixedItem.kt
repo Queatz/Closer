@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.feed.content
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.graphics.Point
 import android.graphics.Rect
@@ -10,6 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
+import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doAfterTextChanged
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.visible
@@ -112,6 +116,36 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
                         on<DefaultAlerts>().thatDidntWork()
                     })
         }
+
+        holder.itemView.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            dimensionRatio = null
+        }
+
+        var zoomed = false
+
+        val onclick = { _: View ->
+            val aspect = holder.itemView.measuredHeight.toFloat() / holder.itemView.measuredWidth.toFloat()
+            val photoAspect = holder.itemView.photo.drawable.intrinsicHeight.toFloat() / holder.itemView.photo.drawable.intrinsicWidth.toFloat()
+            (if (!zoomed) ObjectAnimator.ofFloat(aspect, photoAspect) else ObjectAnimator.ofFloat(photoAspect, aspect))
+                .apply {
+                    if (zoomed) doOnEnd {
+                        holder.itemView.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                            dimensionRatio = null
+                        }
+                    }
+                    addUpdateListener {
+                        holder.itemView.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                            dimensionRatio = "1:${it.animatedValue}"
+                        }
+                    }
+                }
+                .start()
+
+            zoomed = !zoomed
+        }
+
+        holder.itemView.photo.setOnClickListener(onclick)
+        holder.itemView.text.setOnClickListener(onclick)
 
         item.story.photo?.let {
             holder.itemView.photo.visible = true
