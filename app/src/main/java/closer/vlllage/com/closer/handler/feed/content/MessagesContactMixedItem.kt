@@ -54,7 +54,7 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
 
         holder.click.setOnLongClickListener {
             on<MenuHandler>().show(
-                    MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.hide_from_contacts) {
+                    MenuHandler.MenuOption(R.drawable.ic_baseline_visibility_off_24, R.string.hide_from_contacts) {
                         on<HideHandler>().hide(item.group)
                     }
             )
