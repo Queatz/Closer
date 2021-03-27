@@ -98,7 +98,7 @@
             android:background="@drawable/clickable_dark_50_rounded_512dp"
             android:padding="@dimen/pad"
             android:tint="@color/green"
-            android:src="@drawable/ic_baseline_phone_24"
+            android:src="@drawable/ic_baseline_videocam_24"
             android:contentDescription="@string/call" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

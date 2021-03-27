@@ -250,7 +250,7 @@ class CallActivity : PoolActivity() {
     }
 
     private fun showAnswer(show: Boolean) {
-        answerButton.setImageResource(if (show) R.drawable.ic_baseline_phone_24 else R.drawable.ic_baseline_call_end_24)
+        answerButton.setImageResource(if (show) R.drawable.ic_baseline_videocam_24 else R.drawable.ic_baseline_call_end_24)
         answerButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(
                 if (show) R.color.green else R.color.red
         ))

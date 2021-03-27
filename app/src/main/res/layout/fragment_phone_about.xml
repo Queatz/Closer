@@ -107,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/pad"
                         android:background="@drawable/clickable_green_8dp"
-                        android:drawableStart="@drawable/ic_baseline_phone_24"
+                        android:drawableStart="@drawable/ic_baseline_videocam_24"
                         android:drawablePadding="@dimen/pad"
                         android:drawableTint="@color/text"
                         android:elevation="@dimen/elevationSmall"

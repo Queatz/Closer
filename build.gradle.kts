@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     extra["kotlinVersion"] = "1.4.30"
@@ -30,4 +30,10 @@ allprojects {
 
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        useIR = true
+    }
 }
