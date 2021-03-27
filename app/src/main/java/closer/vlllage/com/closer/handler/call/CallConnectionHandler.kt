@@ -35,7 +35,7 @@ class CallConnectionHandler constructor(private val on: On) {
     val active = PublishSubject.create<Boolean>()
 
     private var callTimeoutDisposable: Disposable? = null
-    private lateinit var otherPhoneId: String
+    private var otherPhoneId: String? = null
     private var audioManager: AudioManager? = null
     private val dispose = on<DisposableHandler>().group()
 
@@ -321,7 +321,7 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     private fun sendPushNotification(event: String, data: Any, phoneId: String? = null) {
-        on<ApiHandler>().call(phoneId ?: otherPhoneId, event, on<JsonHandler>().to(data)).subscribe({}, {
+        on<ApiHandler>().call(phoneId ?: otherPhoneId ?: return, event, on<JsonHandler>().to(data)).subscribe({}, {
             displayError(null)
         }).also { on<DisposableHandler>().add(it) }
     }
