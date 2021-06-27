@@ -6,13 +6,15 @@ buildscript {
     extra["webrtcVersion"] = "1.0.30039"
 
     repositories {
+        maven(url = "https://developer.huawei.com/repo/")
         google()
         jcenter()
-        maven(url ="https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:4.2.0-beta04")
+        classpath("com.huawei.agconnect:agcp:1.5.2.300")
+        classpath("com.android.tools.build:gradle:4.2.1")
         classpath("com.github.triplet.gradle:play-publisher:3.2.0-agp4.2")
         classpath("com.google.gms:google-services:4.3.5")
         classpath("io.objectbox:objectbox-gradle-plugin:${rootProject.extra["objectboxVersion"]}")
@@ -22,6 +24,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven(url = "https://developer.huawei.com/repo/")
         google()
         jcenter()
         maven(url ="https://jitpack.io")
@@ -37,3 +40,5 @@ tasks.withType<KotlinCompile>().configureEach {
         useIR = true
     }
 }
+
+apply plugin: 'com.huawei.agconnect'

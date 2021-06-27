@@ -198,6 +198,9 @@
 
         </provider>
 
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="appid=102900665" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"

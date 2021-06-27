@@ -24,6 +24,7 @@ class App : PoolApplication() {
 
         on<ApplicationHandler>().app = this
         on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
+        ChoiceSdk.init(this)
         FirebaseApp.initializeApp(this)
     }
 }

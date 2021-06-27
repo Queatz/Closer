@@ -67,6 +67,12 @@ play {
 }
 
 dependencies {
+    "implementation"("at.bluesource.choicesdk:choicesdk-location:0.1.6")
+    "implementation"("at.bluesource.choicesdk:choicesdk-maps:0.1.6")
+    "implementation"("at.bluesource.choicesdk:choicesdk-messaging:0.1.6")
+
+    "implementation"("com.huawei.agconnect:agconnect-core:1.4.0.300")
+    "implementation"("com.huawei.hms:maps:5.3.0.300")
     "implementation"("androidx.multidex:multidex:2.0.1")
     "implementation"("androidx.constraintlayout:constraintlayout:2.0.4") {
         exclude(group = "com.android.support")
