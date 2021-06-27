@@ -1,10 +1,8 @@
 package closer.vlllage.com.closer.handler.map
 
 import android.graphics.Color
-import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.google.android.gms.maps.model.TileOverlay
-import com.google.android.gms.maps.model.TileOverlayOptions
 import com.google.maps.android.heatmaps.Gradient
 import com.google.maps.android.heatmaps.HeatmapTileProvider
 import com.queatz.on.On

@@ -146,6 +146,15 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
 
         map ?: return
 
+        // Huawei does not support satellite maps
+        if (map!!.getHuaweiMap() != null) {
+            if (map!!.mapType != Map.MAP_TYPE_NORMAL) {
+                map!!.mapType = Map.MAP_TYPE_NORMAL
+            }
+
+            return
+        }
+
         if (map!!.cameraPosition.zoom >= 18) {
             if (map!!.mapType != Map.MAP_TYPE_HYBRID) {
                 map!!.mapType = Map.MAP_TYPE_HYBRID

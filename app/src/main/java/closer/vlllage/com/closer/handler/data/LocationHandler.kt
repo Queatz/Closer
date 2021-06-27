@@ -3,22 +3,20 @@ package closer.vlllage.com.closer.handler.data
 import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
+import at.bluesource.choicesdk.location.common.*
+import at.bluesource.choicesdk.location.factory.FusedLocationProviderFactory
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 import com.queatz.on.On
 
 class LocationHandler constructor(private val on: On) {
 
     private var fusedLocationProvider: FusedLocationProviderClient = if (on<ActivityHandler>().isPresent) {
-        LocationServices.getFusedLocationProviderClient(
+        FusedLocationProviderFactory.getFusedLocationProviderClient(
                 on<ActivityHandler>().activity!!
         )
     } else {
-        LocationServices.getFusedLocationProviderClient(
+        FusedLocationProviderFactory.getFusedLocationProviderClient(
                 on<ApplicationHandler>().app
         )
     }
@@ -36,15 +34,15 @@ class LocationHandler constructor(private val on: On) {
                 .check(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 .`when` { granted ->
                     if (granted) {
-                        fusedLocationProvider.lastLocation.addOnCompleteListener { task ->
-                            if (!task.isSuccessful || task.result == null) {
+                        fusedLocationProvider.getLastLocation().addOnCompleteListener { task ->
+                            if (!task.isSuccessful() || task.getResult() == null) {
                                 waitForLocation(callback, locationUnavailableCallback)
                                 return@addOnCompleteListener
                             }
 
-                            lastKnownLocation = task.result
+                            lastKnownLocation = task.getResult()
 
-                            callback.invoke(task.result!!)
+                            callback.invoke(task.getResult()!!)
                         }
                     } else locationUnavailableCallback?.invoke()
                 }
@@ -52,15 +50,20 @@ class LocationHandler constructor(private val on: On) {
 
     @SuppressLint("MissingPermission")
     private fun waitForLocation(callback: (Location) -> Unit, locationUnavailableCallback: (() -> Unit)?) {
-        val locationRequest = LocationRequest.create()
+        val locationRequest = LocationRequest.Builder()
                 .setExpirationDuration(10000)
                 .setNumUpdates(1)
+                .build()
 
-        fusedLocationProvider.locationAvailability.addOnCompleteListener { task ->
-            if (task.isSuccessful && !task.result!!.isLocationAvailable) {
+        fusedLocationProvider.getLocationAvailability().addOnCompleteListener { task ->
+            if (task.isSuccessful() && !task.getResult()!!.isLocationAvailable) {
                 locationUnavailableCallback?.invoke()
             } else {
-                fusedLocationProvider.requestLocationUpdates(locationRequest, object : com.google.android.gms.location.LocationCallback() {
+                fusedLocationProvider.requestLocationUpdates(locationRequest, object : LocationCallback {
+                    override fun onLocationAvailability(locationAvailability: LocationAvailability?) {
+                        // Ignored
+                    }
+
                     override fun onLocationResult(locationResult: LocationResult?) {
                         if (locationResult!!.lastLocation == null) {
                             locationUnavailableCallback?.invoke()
@@ -69,7 +72,7 @@ class LocationHandler constructor(private val on: On) {
                         }
 
                         lastKnownLocation = locationResult.lastLocation
-                        callback.invoke(locationResult.lastLocation)
+                        callback.invoke(locationResult.lastLocation!!)
                     }
                 }, on<ActivityHandler>().activity!!.mainLooper)
             }
