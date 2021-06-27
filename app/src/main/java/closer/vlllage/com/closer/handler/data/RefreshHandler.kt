@@ -1,11 +1,11 @@
 package closer.vlllage.com.closer.handler.data
 
+import at.bluesource.choicesdk.maps.common.LatLng
 import closer.vlllage.com.closer.api.models.*
 import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.objectbox.Property
 import io.objectbox.android.AndroidScheduler
@@ -43,10 +43,12 @@ class RefreshHandler constructor(private val on: On) {
         }
 
         on<LocationHandler>().getCurrentLocation { location ->
-            on<DisposableHandler>().add(on<ApiHandler>().myMessages(LatLng(
+            on<DisposableHandler>().add(on<ApiHandler>().myMessages(
+                LatLng(
                     location.latitude,
                     location.longitude
-            )).subscribe({ this.handleMessages(it) }, connectionError))
+            )
+            ).subscribe({ this.handleMessages(it) }, connectionError))
         }
     }
 

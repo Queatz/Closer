@@ -10,7 +10,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.reactivex.Single
 

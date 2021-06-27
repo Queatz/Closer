@@ -3,7 +3,7 @@ package closer.vlllage.com.closer.handler.helpers
 import android.content.Intent
 import android.net.Uri
 import com.queatz.on.On
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 
 class OutboundHandler constructor(private val on: On) {
     fun openDirections(latLng: LatLng?) {

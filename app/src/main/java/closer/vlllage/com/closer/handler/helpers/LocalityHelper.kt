@@ -3,7 +3,7 @@ package closer.vlllage.com.closer.handler.helpers
 import android.location.Address
 import android.location.Geocoder
 import closer.vlllage.com.closer.handler.map.PlacesHandler
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

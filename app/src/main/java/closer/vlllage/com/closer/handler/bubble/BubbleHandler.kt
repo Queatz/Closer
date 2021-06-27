@@ -3,8 +3,8 @@ package closer.vlllage.com.closer.handler.bubble
 import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.handler.map.MapHandler
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
+import at.bluesource.choicesdk.maps.common.Map
 import com.queatz.on.On
 
 class BubbleHandler constructor(private val on: On) {
@@ -59,7 +59,7 @@ class BubbleHandler constructor(private val on: On) {
         bubbleMapLayer.attach(bubbleMapLayerLayout, bubbleView)
     }
 
-    fun attach(map: GoogleMap) {
+    fun attach(map: Map) {
         bubbleMapLayer.attach(map)
     }
 

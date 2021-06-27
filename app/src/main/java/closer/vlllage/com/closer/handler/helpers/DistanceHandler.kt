@@ -4,7 +4,7 @@ import android.location.Location.distanceBetween
 import closer.vlllage.com.closer.handler.data.LocationHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 
 class DistanceHandler constructor(private val on: On) {

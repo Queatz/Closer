@@ -3,11 +3,11 @@ package closer.vlllage.com.closer.handler.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import at.bluesource.choicesdk.maps.common.LatLng
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.Val
-import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
 import io.reactivex.subjects.PublishSubject

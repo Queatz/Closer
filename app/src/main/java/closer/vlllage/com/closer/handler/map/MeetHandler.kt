@@ -9,7 +9,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.models.Phone
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.reactivex.subjects.BehaviorSubject
 

@@ -6,7 +6,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.JsonHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive

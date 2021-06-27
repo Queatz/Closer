@@ -2,7 +2,7 @@ package closer.vlllage.com.closer.handler.map
 
 import android.graphics.Color
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.google.android.gms.maps.model.TileOverlay
 import com.google.android.gms.maps.model.TileOverlayOptions
 import com.google.maps.android.heatmaps.Gradient
@@ -32,21 +32,22 @@ class DataVisualsHandler constructor(private val on: On) {
             return
         }
 
-        heatmaps[layer]?.tileProvider?.setData(list) ?: run {
-            val heatmap = Heatmap()
-            heatmaps[layer] = heatmap
-            heatmap.tileProvider = HeatmapTileProvider.Builder()
-                    .gradient(gradient(layer))
-                    .radius(30)
-                    .data(list)
-                    .build()
-
-            on<DisposableHandler>().add(on<MapHandler>().onMapReadyObservable()
-                    .subscribe { map ->
-                        heatmap.overlay?.remove()
-                        heatmap.overlay = map.addTileOverlay(TileOverlayOptions().tileProvider(heatmap.tileProvider))
-                    })
-        }
+        // TODO ChoiceSDK
+//        heatmaps[layer]?.tileProvider?.setData(list) ?: run {
+//            val heatmap = Heatmap()
+//            heatmaps[layer] = heatmap
+//            heatmap.tileProvider = HeatmapTileProvider.Builder()
+//                    .gradient(gradient(layer))
+//                    .radius(30)
+//                    .data(list)
+//                    .build()
+//
+//            on<DisposableHandler>().add(on<MapHandler>().onMapReadyObservable()
+//                    .subscribe { map ->
+//                        heatmap.overlay?.remove()
+//                        heatmap.overlay = map.addTileOverlay(TileOverlayOptions().tileProvider(heatmap.tileProvider))
+//                    })
+//        }
     }
 
     private fun gradient(layer: Layer) = when (layer) {

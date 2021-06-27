@@ -26,7 +26,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.ui.InterceptableScrollView
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
 import kotlinx.android.synthetic.main.post_event_modal.view.*

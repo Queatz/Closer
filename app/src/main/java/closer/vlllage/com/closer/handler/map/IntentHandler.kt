@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.handler.map.MapHandler.Companion.DEFAULT_ZOOM
 import closer.vlllage.com.closer.store.models.Suggestion
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 
 class IntentHandler constructor(private val on: On) {

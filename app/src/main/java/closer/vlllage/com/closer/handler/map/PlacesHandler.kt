@@ -4,7 +4,7 @@ import android.location.Address
 import android.location.Geocoder
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

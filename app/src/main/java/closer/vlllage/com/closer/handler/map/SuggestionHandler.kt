@@ -11,8 +11,8 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Suggestion
 import closer.vlllage.com.closer.store.models.Suggestion_
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
+import at.bluesource.choicesdk.maps.common.LatLng
+import at.bluesource.choicesdk.maps.common.LatLngBounds
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.SubscriptionBuilder

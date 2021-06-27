@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.handler.helpers.TimeStr
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 
 class MyBubbleHandler constructor(private val on: On) {

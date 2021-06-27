@@ -3,7 +3,7 @@ package closer.vlllage.com.closer.handler.data
 import closer.vlllage.com.closer.api.models.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.objectbox.query.Query
 import io.objectbox.rx.RxQuery

@@ -2,7 +2,7 @@ package closer.vlllage.com.closer.handler.helpers
 
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.store.models.Phone
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 
 class PhoneDetailsHandler constructor(private val on: On) {

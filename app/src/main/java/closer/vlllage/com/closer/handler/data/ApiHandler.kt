@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.data
 
+import at.bluesource.choicesdk.maps.common.LatLng
 import closer.vlllage.com.closer.api.ApiService
 import closer.vlllage.com.closer.api.Backend
 import closer.vlllage.com.closer.api.models.QuestProgressResult
@@ -9,7 +10,6 @@ import closer.vlllage.com.closer.handler.event.EventReminder
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.QuestFlow
 import closer.vlllage.com.closer.store.models.QuestProgressFlow
-import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

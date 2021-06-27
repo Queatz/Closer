@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.handler.helpers
 
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
-import com.google.android.gms.maps.model.LatLng
 
 class LatLngStr constructor(private val on: On) {
 

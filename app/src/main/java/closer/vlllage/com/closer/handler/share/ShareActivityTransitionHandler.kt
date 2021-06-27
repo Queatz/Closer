@@ -14,7 +14,7 @@ import closer.vlllage.com.closer.ShareActivity.Companion.EXTRA_SUGGESTION_ID
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.LatLngStr
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 
 class ShareActivityTransitionHandler constructor(private val on: On) {

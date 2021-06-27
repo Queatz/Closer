@@ -1,7 +1,7 @@
 package closer.vlllage.com.closer.handler.bubble
 
 import android.view.View
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 
 /**
  * Created by jacob on 2/18/18.

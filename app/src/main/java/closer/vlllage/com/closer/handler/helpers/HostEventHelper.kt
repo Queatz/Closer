@@ -10,7 +10,7 @@ import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 
 class HostEventHelper constructor(private val on: On) {

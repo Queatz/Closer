@@ -13,6 +13,7 @@ import androidx.core.view.doOnLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentContainerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.toLatLng
 import closer.vlllage.com.closer.handler.bubble.*
@@ -27,8 +28,8 @@ import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
+import at.bluesource.choicesdk.maps.common.MapFragment
 import com.google.firebase.iid.FirebaseInstanceId
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
@@ -157,7 +158,8 @@ class MapSlideFragment : PoolFragment() {
 
             on<MeetHandler>().setLocation(latLng)
         }
-        on<MapHandler>().attach(childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment)
+
+        on<MapHandler>().attach(childFragmentManager, R.id.map)
         on<MyBubbleHandler>().start()
         on<MyGroupsLayoutHandler>().attach(view.findViewById(R.id.myGroupsLayout))
         on<MyGroupsLayoutHandler>().setContainerView(view.findViewById(R.id.bottomContainer))

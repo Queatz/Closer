@@ -25,8 +25,8 @@ import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.handler.share.ShareActivityTransitionHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.CameraPosition
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription

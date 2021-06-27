@@ -5,7 +5,7 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.Search
 import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.store.models.*
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 
 class SearchMapHandler constructor(private val on: On) {

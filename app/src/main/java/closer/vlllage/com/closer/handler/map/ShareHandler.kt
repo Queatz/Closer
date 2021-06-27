@@ -8,7 +8,7 @@ import closer.vlllage.com.closer.handler.helpers.TimerHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 

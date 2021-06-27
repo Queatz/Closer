@@ -4,7 +4,7 @@ import closer.vlllage.com.closer.handler.helpers.ConnectionErrorHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.Val
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.reactivex.subjects.PublishSubject
 

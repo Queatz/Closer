@@ -8,11 +8,11 @@ import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import at.bluesource.choicesdk.maps.common.LatLng
+import at.bluesource.choicesdk.maps.common.Map
 import closer.vlllage.com.closer.handler.map.MapHandler.Companion.DEFAULT_ZOOM
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
 import com.queatz.on.On
 import kotlin.math.pow
 
@@ -25,7 +25,7 @@ class BubbleMapLayer(private val on: On) {
     val mapBubbles = HashSet<MapBubble>()
     private val mapBubbleAnimations = HashMap<MapBubble, Animator>()
     private val mapBubbleAppearDisappearAnimations = HashMap<MapBubble, ViewPropertyAnimator>()
-    private var map: GoogleMap? = null
+    private var map: Map? = null
     private var view: ViewGroup? = null
     private var bubbleView: BubbleView? = null
 
@@ -34,7 +34,7 @@ class BubbleMapLayer(private val on: On) {
         this.bubbleView = bubbleView
     }
 
-    fun attach(map: GoogleMap) {
+    fun attach(map: Map) {
         this.map = map
         update()
     }
@@ -103,7 +103,7 @@ class BubbleMapLayer(private val on: On) {
             return
         }
 
-        val point = map!!.projection.toScreenLocation(mapBubble.latLng)
+        val point = map!!.getProjection().toScreenLocation(mapBubble.latLng!!)
         view.x = (point.x - view.width / 2).toFloat()
         view.y = (point.y - view.height).toFloat()
 

@@ -17,7 +17,7 @@ import closer.vlllage.com.closer.handler.phone.*
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.pool.PoolActivityFragment
-import com.google.android.gms.maps.model.LatLng
+import at.bluesource.choicesdk.maps.common.LatLng
 import kotlinx.android.synthetic.main.fragment_phone_about.*
 
 

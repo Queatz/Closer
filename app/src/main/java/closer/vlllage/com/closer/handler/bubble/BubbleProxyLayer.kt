@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.handler.bubble
 
 import closer.vlllage.com.closer.handler.map.ClusterMap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.VisibleRegion
+import at.bluesource.choicesdk.maps.common.LatLng
+import at.bluesource.choicesdk.maps.common.VisibleRegion
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
