@@ -31,7 +31,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.iid.FirebaseInstanceId
 import io.objectbox.android.AndroidScheduler
-import io.objectbox.kotlin.single
 import io.objectbox.query.QueryBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_maps.*

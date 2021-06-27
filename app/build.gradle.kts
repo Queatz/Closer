@@ -8,11 +8,7 @@ plugins {
     kotlin("kapt")
     id("io.objectbox")
     id("com.google.gms.google-services")
-}
-
-repositories {
-    google()
-    jcenter()
+    id("com.huawei.agconnect")
 }
 
 android {
@@ -71,15 +67,15 @@ dependencies {
     "implementation"("at.bluesource.choicesdk:choicesdk-maps:0.1.6")
     "implementation"("at.bluesource.choicesdk:choicesdk-messaging:0.1.6")
 
-    "implementation"("com.huawei.agconnect:agconnect-core:1.4.0.300")
+    "implementation"("com.huawei.agconnect:agconnect-core:1.4.2.300")
     "implementation"("com.huawei.hms:maps:5.3.0.300")
     "implementation"("androidx.multidex:multidex:2.0.1")
     "implementation"("androidx.constraintlayout:constraintlayout:2.0.4") {
         exclude(group = "com.android.support")
     }
-    "implementation"("androidx.appcompat:appcompat:1.3.0-beta01")
-    "implementation"("androidx.core:core-ktx:1.3.2")
-    "implementation"("com.google.android.material:material:1.3.0-rc01")
+    "implementation"("androidx.appcompat:appcompat:1.4.0-alpha02")
+    "implementation"("androidx.core:core-ktx:1.5.0")
+    "implementation"("com.google.android.material:material:1.4.0-rc01")
     "implementation"("com.google.android.gms:play-services-maps:17.0.0") {
         exclude(group = "com.android.support")
     }
@@ -90,13 +86,13 @@ dependencies {
     "implementation"("com.squareup.retrofit2:retrofit:2.9.0")
     "implementation"("com.squareup.retrofit2:converter-gson:2.9.0")
     "implementation"("com.squareup.retrofit2:adapter-rxjava2:2.3.0")
-    "implementation"("com.google.code.gson:gson:2.8.6")
+    "implementation"("com.google.code.gson:gson:2.8.7")
     "implementation"("io.reactivex.rxjava2:rxandroid:2.1.0")
-    "implementation"("io.reactivex.rxjava2:rxjava:2.2.18")
+    "implementation"("io.reactivex.rxjava2:rxjava:2.2.21")
     "implementation"("com.google.firebase:firebase-core:18.0.2")
     "implementation"("com.google.firebase:firebase-messaging:21.0.1")
     "implementation"("com.github.bumptech.glide:glide:4.11.0")
-    "implementation"("jp.wasabeef:glide-transformations:4.1.0")
+    "implementation"("jp.wasabeef:glide-transformations:4.3.0")
     "implementation"(group = "com.journeyapps", name = "zxing-android-embedded", version = "4.1.0")
     "implementation"("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.4")
     "implementation"("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")

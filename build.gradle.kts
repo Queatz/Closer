@@ -1,14 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-    extra["kotlinVersion"] = "1.4.30"
-    extra["objectboxVersion"] = "3.0.0-alpha2"
-    extra["webrtcVersion"] = "1.0.30039"
+    extra["kotlinVersion"] = "1.5.20"
+    extra["objectboxVersion"] = "2.9.2-RC2"
+    extra["webrtcVersion"] = "1.0.32006"
 
     repositories {
         maven(url = "https://developer.huawei.com/repo/")
+        mavenCentral()
         google()
-        jcenter()
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
 
@@ -25,9 +25,10 @@ buildscript {
 allprojects {
     repositories {
         maven(url = "https://developer.huawei.com/repo/")
+        mavenCentral()
         google()
-        jcenter()
-        maven(url ="https://jitpack.io")
+        maven(url = "https://jitpack.io")
+        maven(url = "https://dl.bintray.com/google/webrtc/")
     }
 }
 
@@ -40,5 +41,3 @@ tasks.withType<KotlinCompile>().configureEach {
         useIR = true
     }
 }
-
-apply plugin: 'com.huawei.agconnect'
