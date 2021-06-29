@@ -93,6 +93,7 @@ class AccountHandler constructor(private val on: On) {
     }
 
     fun updateDeviceToken(deviceToken: String) {
+        // TODO ChoiceSDK also send device type, HMS or GMS
         on<PersistenceHandler>().deviceToken = deviceToken
         on<DisposableHandler>().add(on<ApiHandler>().updatePhone(deviceToken = deviceToken)
                 .subscribe({ createResult -> on<PersistenceHandler>().phoneId = createResult.id }, { this.onError(it) }))

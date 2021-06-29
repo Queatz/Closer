@@ -4,6 +4,7 @@ import android.content.Context
 import at.bluesource.choicesdk.core.ChoiceSdk
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
+import closer.vlllage.com.closer.handler.data.PushHandler
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.pool.PoolApplication
 import com.google.firebase.FirebaseApp
@@ -27,5 +28,6 @@ class App : PoolApplication() {
         on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
         ChoiceSdk.init(this)
         FirebaseApp.initializeApp(this)
+        on<PushHandler>().init()
     }
 }
