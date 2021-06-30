@@ -110,14 +110,20 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
 
         holder.photo.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupForPhone(holder.photo, phone.id!!) }
 
-        if (groupContact.photo != null) {
-            holder.photo.imageTintList = null
-            holder.photo.alpha = 1f
-            holder.on<PhotoHelper>().loadCircle(holder.photo, groupContact.photo!!, R.dimen.profilePhotoSmall)
-        } else if (phone.photo != null) {
-            holder.photo.imageTintList = null
-            holder.photo.alpha = 1f
-            holder.on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!, R.dimen.profilePhotoSmall)
+        when {
+            groupContact.photo != null -> {
+                holder.photo.imageTintList = null
+                holder.photo.alpha = 1f
+                holder.on<PhotoHelper>().loadCircle(holder.photo, groupContact.photo!!, R.dimen.profilePhotoSmall)
+            }
+            phone.photo != null -> {
+                holder.photo.imageTintList = null
+                holder.photo.alpha = 1f
+                holder.on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!, R.dimen.profilePhotoSmall)
+            }
+            else -> {
+                holder.on<ImageHandler>().get().clear(holder.photo)
+            }
         }
 
         holder.name.text = on<NameHandler>().getName(groupContact)
