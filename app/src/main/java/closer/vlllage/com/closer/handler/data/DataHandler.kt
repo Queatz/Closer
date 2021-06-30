@@ -13,8 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 class DataHandler constructor(private val on: On) {
     fun getPhonesNear(latLng: LatLng) = on<ApiHandler>().getPhonesNear(latLng)
             .doOnSuccess { phoneResults -> on<RefreshHandler>().handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
-                    { on<ApiModelHandler>().from(it) },
-                    { phone, phoneResult -> on<ApiModelHandler>().updateFrom(phone, phoneResult) }) }
+                    { on<ApiModelHandler>().from(it) }) }
             .map { phoneResults ->
                 val result = mutableListOf<Phone>()
                 for (phoneResult in phoneResults) {
