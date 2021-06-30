@@ -9,13 +9,17 @@ import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.feed.content.*
 import closer.vlllage.com.closer.handler.helpers.CreateGroupHelper
+import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ProfileHelper
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.map.FeedHandler
 import closer.vlllage.com.closer.handler.map.HeaderAdapter
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : HeaderAdapter<MixedItemViewHolder>(on) {
 
@@ -82,7 +86,7 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
     var content: FeedContent = FeedContent.POSTS
         set(value) {
             field = value
-            generate()
+            generateInternal()
         }
 
     var showFeedHeader: Boolean = true
@@ -131,7 +135,21 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
             on<StoryMixedItemAdapter>(),
     ).map { Pair(it.getMixedItemType(), it as MixedItemAdapter<MixedItem, MixedItemViewHolder>) }.toMap()
 
+    private val regenerate = BehaviorSubject.create<Unit>()
+
     private fun generate() {
+        regenerate.onNext(Unit)
+    }
+
+    init {
+        regenerate.debounce(250, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            generateInternal()
+        }.also {
+            on<DisposableHandler>().add(it)
+        }
+    }
+
+    private fun generateInternal() {
         items = mutableListOf<MixedItem>().apply {
 
             val empty = { item: TextMixedItem -> if (!hideText) add(item) }

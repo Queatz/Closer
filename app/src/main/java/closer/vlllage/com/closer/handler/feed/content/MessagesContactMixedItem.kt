@@ -39,6 +39,7 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
             use<DisposableHandler>()
             use<LightDarkHandler>().setLight(true)
         }
+
         holder.name.setTextColor(ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)))
         holder.name.text = on<ResourcesHandler>().resources.getString(R.string.loading)
         holder.lastMessage.text = ""
