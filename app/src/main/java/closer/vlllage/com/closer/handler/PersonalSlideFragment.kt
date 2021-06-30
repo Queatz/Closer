@@ -112,6 +112,9 @@ class PersonalSlideFragment : PoolFragment() {
                     if (accountChange.prop == AccountHandler.ACCOUNT_FIELD_PHOTO) {
                         on<PhotoHelper>().loadCircle(yourPhoto, on<PersistenceHandler>().myPhoto + "?s=128")
                     }
+                    if (accountChange.prop == AccountHandler.ACCOUNT_FIELD_ACTIVE) {
+                        shareYourLocationSwitch.isChecked = accountChange.value == true
+                    }
                 },
                 { on<DefaultAlerts>().thatDidntWork() }
         ))

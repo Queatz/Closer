@@ -69,7 +69,9 @@
             android:layout_marginEnd="@dimen/padDouble"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/toggleShowMeOnMapButton"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintWidth_max="@dimen/maxFullWidth"
             android:elevation="@dimen/elevationHigh"
             android:background="@drawable/rounded_white_bkg"
@@ -90,6 +92,25 @@
             android:textColorHint="@color/textHintInverse"
             android:textColorHighlight="@color/colorAccent_50"
             android:textSize="@dimen/textSize" />
+
+        <ImageButton style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/toggleShowMeOnMapButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/padDouble"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="@+id/searchMap"
+            app:layout_constraintBottom_toBottomOf="@+id/searchMap"
+            app:layout_constraintStart_toEndOf="@+id/searchMap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:elevation="@dimen/elevationHigh"
+            android:minWidth="0dp"
+            android:background="@drawable/clickable_white_rounded_flat"
+            android:padding="@dimen/pad"
+            android:tint="@color/disabled"
+            android:src="@drawable/outline_share_location_24"
+            android:contentDescription="@string/show_on_map" />
 
         <closer.vlllage.com.closer.ui.ScrollStopper
             android:id="@+id/topContainer"

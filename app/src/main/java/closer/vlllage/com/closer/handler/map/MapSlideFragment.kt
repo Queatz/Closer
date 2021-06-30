@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.map
 
 import android.Manifest
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.location.Address
 import android.os.Bundle
 import android.text.InputType
@@ -30,12 +31,14 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
 import at.bluesource.choicesdk.maps.common.MapFragment
+import closer.vlllage.com.closer.extensions.visible
 import com.google.firebase.iid.FirebaseInstanceId
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.android.synthetic.main.activity_maps.view.*
+import kotlinx.android.synthetic.main.fragment_group_messages.*
 
 
 class MapSlideFragment : PoolFragment() {
@@ -93,6 +96,17 @@ class MapSlideFragment : PoolFragment() {
                 }
             }
         }, 1625 * 2)
+
+        on<AccountHandler>().changes(AccountHandler.ACCOUNT_FIELD_ACTIVE).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            view.toggleShowMeOnMapButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(if (it.value == true) R.color.colorPrimary else R.color.disabled))
+        }.also {
+            on<DisposableHandler>().add(it)
+        }
+
+        view.toggleShowMeOnMapButton.setOnClickListener {
+            val active = !on<AccountHandler>().active
+            on<AccountHandler>().updateActive(active)
+        }
 
         on<BubbleHandler>().attach(view.findViewById(R.id.bubbleMapLayer), { mapBubble ->
             on<NavigationHandler>().showProfile(mapBubble.phone!!, mapBubble.view)
@@ -177,10 +191,6 @@ class MapSlideFragment : PoolFragment() {
                 on<PersistenceHandler>().isVerified = verified
                 on<MyGroupsLayoutActionsHandler>().showVerifyMyNumber(!verified)
             }, { networkError(it) }))
-        }
-
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(activity as FragmentActivity) { instanceIdResult ->
-            on<AccountHandler>().updateDeviceToken(instanceIdResult.token)
         }
 
         if (on<AccountHandler>().active) {
