@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     extra["kotlinVersion"] = "1.5.20"
-    extra["objectboxVersion"] = "2.9.2-RC2"
+    extra["objectboxVersion"] = "2.9.2-RC3"
     extra["webrtcVersion"] = "1.0.32006"
 
     repositories {

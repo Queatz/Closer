@@ -30,9 +30,6 @@ import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
-import at.bluesource.choicesdk.maps.common.MapFragment
-import closer.vlllage.com.closer.extensions.visible
-import com.google.firebase.iid.FirebaseInstanceId
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers

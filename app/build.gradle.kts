@@ -63,19 +63,19 @@ play {
 }
 
 dependencies {
-    "implementation"("at.bluesource.choicesdk:choicesdk-location:0.1.6")
-    "implementation"("at.bluesource.choicesdk:choicesdk-maps:0.1.6")
-    "implementation"("at.bluesource.choicesdk:choicesdk-messaging:0.1.6")
+    "implementation"("at.bluesource.choicesdk:choicesdk-location:0.2.0")
+    "implementation"("at.bluesource.choicesdk:choicesdk-maps:0.2.0")
+    "implementation"("at.bluesource.choicesdk:choicesdk-messaging:0.2.0")
 
-    "implementation"("com.huawei.agconnect:agconnect-core:1.4.2.300")
+    "implementation"("com.huawei.agconnect:agconnect-core:1.5.0.300")
     "implementation"("com.huawei.hms:maps:5.3.0.300")
     "implementation"("androidx.multidex:multidex:2.0.1")
     "implementation"("androidx.constraintlayout:constraintlayout:2.0.4") {
         exclude(group = "com.android.support")
     }
-    "implementation"("androidx.appcompat:appcompat:1.4.0-alpha02")
-    "implementation"("androidx.core:core-ktx:1.5.0")
-    "implementation"("com.google.android.material:material:1.4.0-rc01")
+    "implementation"("androidx.appcompat:appcompat:1.4.0-alpha03")
+    "implementation"("androidx.core:core-ktx:1.6.0")
+    "implementation"("com.google.android.material:material:1.4.0")
     "implementation"("com.google.android.gms:play-services-maps:17.0.0") {
         exclude(group = "com.android.support")
     }
