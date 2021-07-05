@@ -12,15 +12,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 
 class DataHandler constructor(private val on: On) {
     fun getPhonesNear(latLng: LatLng) = on<ApiHandler>().getPhonesNear(latLng)
-            .doOnSuccess { phoneResults -> on<RefreshHandler>().handleFullListResult(phoneResults, Phone::class.java, Phone_.id, false,
-                    { on<ApiModelHandler>().from(it) }) }
-            .map { phoneResults ->
-                val result = mutableListOf<Phone>()
-                for (phoneResult in phoneResults) {
-                    result.add(on<ApiModelHandler>().from(phoneResult))
-                }
-                result
+        .doOnSuccess { phoneResults ->
+            on<RefreshHandler>().handleFullListResult(
+                phoneResults, Phone::class.java, Phone_.id, false
+            ) { on<ApiModelHandler>().from(it) }
+        }
+        .map { phoneResults ->
+            val result = mutableListOf<Phone>()
+            for (phoneResult in phoneResults) {
+                result.add(on<ApiModelHandler>().from(phoneResult))
             }
+            result
+        }
 
     fun getRecentlyActivePhones(limit: Int = 100) = on<ApiHandler>().getRecentlyActivePhones(limit)
 //            TODO these cause problems

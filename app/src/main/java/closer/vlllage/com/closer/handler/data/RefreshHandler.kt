@@ -8,8 +8,6 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.Property
-import io.objectbox.android.AndroidScheduler
-import io.objectbox.reactive.SubscriptionBuilder
 import java.util.*
 import kotlin.collections.HashSet
 
@@ -206,16 +204,6 @@ class RefreshHandler constructor(private val on: On) {
     }
 
     private fun <T : BaseObject> refreshObject(obj: T, clazz: Class<T>) {
-        if (obj is Phone) {
-            if (obj.goals == null) {
-                obj.goals = (obj as Phone).goals
-            }
-
-            if (obj.lifestyles == null) {
-                obj.lifestyles = (obj as Phone).lifestyles
-            }
-        }
-
         on<StoreHandler>().store.box(clazz).put(obj)
     }
 
@@ -283,13 +271,11 @@ class RefreshHandler constructor(private val on: On) {
             createTransformer: (R) -> T) {
         results ?: return
 
-        on<StoreHandler>().store.tx({
-            if (deleteLocalNotReturnedFromServer) {
-                on<StoreHandler>().removeAllExcept(clazz, idProperty, results.map { it.id!! }.toSet(), false)
-            }
+        if (deleteLocalNotReturnedFromServer) {
+            on<StoreHandler>().removeAllExcept(clazz, idProperty, results.map { it.id!! }.toSet(), false)
+        }
 
-            on<StoreHandler>().store.box(clazz).put(results.map { createTransformer.invoke(it) })
-        })
+        on<StoreHandler>().store.box(clazz).put(results.map { createTransformer.invoke(it) })
     }
 
     fun handleLifestylesAndGoals(phoneResult: PhoneResult) {
