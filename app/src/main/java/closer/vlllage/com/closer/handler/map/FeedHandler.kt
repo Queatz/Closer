@@ -296,8 +296,8 @@ class FeedHandler constructor(private val on: On) {
     private fun loadLifestylesAndGoals(phones: List<Phone>? = null) {
         phones?.let { lifestyleAndGoalPhones = it }
 
-        val lifestyles = lifestyleAndGoalPhones.map { it.lifestyles ?: listOf() }.flatMap { it }.toTypedArray()
-        val goals = lifestyleAndGoalPhones.map { it.goals ?: listOf() }.flatMap { it }.toTypedArray()
+        val lifestyles = lifestyleAndGoalPhones.map { it.lifestyles ?: listOf() }.flatten().toTypedArray()
+        val goals = lifestyleAndGoalPhones.map { it.goals ?: listOf() }.flatten().toTypedArray()
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(Lifestyle::class).query(Lifestyle_.name.oneOf(lifestyles).let { query ->
             lastKnownQueryString.takeIf { it.isNotBlank() }?.let {
