@@ -5,21 +5,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.QuestLinkItemBinding
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.LightDarkHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.Quest
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.quest_link_item.view.*
 
 
 class QuestLinkAdapter(on: On, private val onQuestLongClickListener: ((Quest) -> Unit)? = null, private val onQuestClickListener: ((Quest, View) -> Unit)? = null) : PoolRecyclerAdapter<QuestLinkAdapter.QuestLinkViewHolder>(on) {
 
     private val quests = mutableListOf<Quest>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuestLinkViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.quest_link_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuestLinkViewHolder(QuestLinkItemBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: QuestLinkViewHolder, position: Int) {
         val quest = quests[position]
@@ -29,19 +28,19 @@ class QuestLinkAdapter(on: On, private val onQuestLongClickListener: ((Quest) ->
         }
 
         holder.on<LightDarkHandler>().onLightChanged.subscribe {
-            holder.itemView.name.compoundDrawableTintList = it.tint
-            holder.itemView.name.setTextColor(it.text)
-            holder.itemView.name.setBackgroundResource(it.clickableRoundedBackground)
+            holder.binding.name.compoundDrawableTintList = it.tint
+            holder.binding.name.setTextColor(it.text)
+            holder.binding.name.setBackgroundResource(it.clickableRoundedBackground)
         }.also {
             holder.on<DisposableHandler>().add(it)
         }
 
-        holder.itemView.name.text = quest.name ?: ""
+        holder.binding.name.text = quest.name ?: ""
 
-        holder.itemView.name.setOnClickListener {
-            onQuestClickListener?.invoke(quest, holder.itemView.name)
+        holder.binding.name.setOnClickListener {
+            onQuestClickListener?.invoke(quest, holder.binding.name)
         }
-        holder.itemView.name.setOnLongClickListener {
+        holder.binding.name.setOnLongClickListener {
             onQuestLongClickListener?.invoke(quest)
             true
         }
@@ -69,7 +68,7 @@ class QuestLinkAdapter(on: On, private val onQuestLongClickListener: ((Quest) ->
         else diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class QuestLinkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class QuestLinkViewHolder(val binding: QuestLinkItemBinding) : RecyclerView.ViewHolder(binding.root) {
         lateinit var on: On
     }
 }

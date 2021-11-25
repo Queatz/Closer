@@ -1,17 +1,15 @@
 package closer.vlllage.com.closer.handler.phone
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.ReactionResult
+import closer.vlllage.com.closer.databinding.ListTextHeaderItemBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.ui.RecyclerViewHeader
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.list_text_header_item.view.*
 
 class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult) -> Unit) : PhoneAdapter(on, onReactionClickListener) {
 
@@ -21,8 +19,8 @@ class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            HEADER_VIEW_TYPE -> return PhoneHeaderViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_text_header_item, parent, false))
+            HEADER_VIEW_TYPE -> return PhoneHeaderViewHolder(ListTextHeaderItemBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false))
         }
 
         return super.onCreateViewHolder(parent, viewType)
@@ -33,10 +31,10 @@ class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult
             when (holder) {
                 is PhoneHeaderViewHolder -> {
                     headerViewHolder = holder
-                    holder.name.text = headerText
-                    holder.loadingText.visible = isLoading || items.isEmpty()
-                    holder.loadingText.setText(if (isLoading) R.string.loading_people else R.string.nobody)
-                    holder.itemView.searchGroups.visible = false
+                    holder.binding.name.text = headerText
+                    holder.binding.loadingText.visible = isLoading || items.isEmpty()
+                    holder.binding.loadingText.setText(if (isLoading) R.string.loading_people else R.string.nobody)
+                    holder.binding.searchGroups.visible = false
                 }
             }
         } else {
@@ -68,15 +66,12 @@ class PhoneAdapterHeaderAdapter(on: On, onReactionClickListener: (ReactionResult
 
     fun setHeaderText(text: String) {
         headerText = text
-        headerViewHolder?.name?.text = text
+        headerViewHolder?.binding?.name?.text = text
     }
 
     companion object {
         private const val HEADER_VIEW_TYPE = -1
     }
-
-    class PhoneHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.name)
-        val loadingText: TextView = view.findViewById(R.id.loadingText)
-    }
 }
+
+class PhoneHeaderViewHolder(val binding: ListTextHeaderItemBinding) : RecyclerView.ViewHolder(binding.root)

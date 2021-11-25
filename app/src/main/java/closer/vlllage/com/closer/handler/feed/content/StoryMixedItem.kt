@@ -16,6 +16,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doAfterTextChanged
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.StoryItemBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
@@ -33,14 +34,13 @@ import closer.vlllage.com.closer.store.models.Story
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.queatz.on.On
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.story_item.view.*
 import java.util.*
 import kotlin.math.abs
 
 
 class StoryMixedItem(val story: Story) : MixedItem(MixedItemType.Story)
 
-class StoryViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.Story) {
+class StoryViewHolder(val binding: StoryItemBinding) : MixedItemViewHolder(binding.root, MixedItemType.Story) {
     lateinit var on: On
 }
 
@@ -51,16 +51,16 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
             use<DisposableHandler>()
         }
 
-        holder.itemView.text.movementMethod = ScrollingMovementMethod.getInstance()
+        holder.binding.text.movementMethod = ScrollingMovementMethod.getInstance()
 
-        holder.itemView.text.apply {
+        holder.binding.text.apply {
             post { scrollTo(0, 0) }
         }
 
         var isChildScrolling = false
         val originPosition = Point()
 
-        holder.itemView.text.setOnTouchListener { v, event ->
+        holder.binding.text.setOnTouchListener { v, event ->
             if (!v.canScrollVertically(-1) && !v.canScrollVertically(1)) {
                 return@setOnTouchListener false
             }
@@ -96,12 +96,12 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
             false
         }
 
-        holder.itemView.replyMessage.setOnEditorActionListener(null)
-        holder.itemView.sendButton.setOnClickListener(null)
+        holder.binding.replyMessage.setOnEditorActionListener(null)
+        holder.binding.sendButton.setOnClickListener(null)
 
         updateSendIcon(holder)
 
-        holder.itemView.replyMessage.doAfterTextChanged {
+        holder.binding.replyMessage.doAfterTextChanged {
             updateSendIcon(holder)
         }
 
@@ -117,7 +117,7 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
                     })
         }
 
-        holder.itemView.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
+        holder.binding.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
             dimensionRatio = null
         }
 
@@ -125,16 +125,16 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
 
         val onclick = { _: View ->
             val aspect = holder.itemView.measuredHeight.toFloat() / holder.itemView.measuredWidth.toFloat()
-            val photoAspect = holder.itemView.photo.drawable.intrinsicHeight.toFloat() / holder.itemView.photo.drawable.intrinsicWidth.toFloat()
+            val photoAspect = holder.binding.photo.drawable.intrinsicHeight.toFloat() / holder.binding.photo.drawable.intrinsicWidth.toFloat()
             (if (!zoomed) ObjectAnimator.ofFloat(aspect, photoAspect) else ObjectAnimator.ofFloat(photoAspect, aspect))
                 .apply {
                     if (zoomed) doOnEnd {
-                        holder.itemView.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                        holder.binding.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
                             dimensionRatio = null
                         }
                     }
                     addUpdateListener {
-                        holder.itemView.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                        holder.binding.photo.updateLayoutParams<ConstraintLayout.LayoutParams> {
                             dimensionRatio = "1:${it.animatedValue}"
                         }
                     }
@@ -144,24 +144,24 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
             zoomed = !zoomed
         }
 
-        holder.itemView.photo.setOnClickListener(onclick)
-        holder.itemView.text.setOnClickListener(onclick)
+        holder.binding.photo.setOnClickListener(onclick)
+        holder.binding.text.setOnClickListener(onclick)
 
         item.story.photo?.let {
-            holder.itemView.photo.visible = true
+            holder.binding.photo.visible = true
 
             on<ImageHandler>().get().load("${it}?s=512")
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(holder.itemView.photo)
+                    .into(holder.binding.photo)
         } ?: run {
-            holder.itemView.photo.visible = false
-            on<ImageHandler>().get().clear(holder.itemView.photo)
+            holder.binding.photo.visible = false
+            on<ImageHandler>().get().clear(holder.binding.photo)
         }
 
         val isMe = on<PersistenceHandler>().phoneId == item.story.creator
 
-        holder.itemView.replyMessage.isEnabled = !isMe
-        holder.itemView.replyMessage.alpha = if (isMe) .5f else 1f
+        holder.binding.replyMessage.isEnabled = !isMe
+        holder.binding.replyMessage.alpha = if (isMe) .5f else 1f
 
         on<FeedVisibilityHandler>().positionOnScreen
                 .filter { it == position }
@@ -183,27 +183,27 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
     private fun showPhone(holder: StoryViewHolder, story: Story, phone: Phone) {
         val name = on<NameHandler>().getName(phone)
 
-        holder.itemView.replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.reply_to_x, name)
-        holder.itemView.text.text = story.text
+        holder.binding.replyMessage.hint = on<ResourcesHandler>().resources.getString(R.string.reply_to_x, name)
+        holder.binding.text.text = story.text
 
-        holder.itemView.name.text = "$name • ${on<TimeStr>().tiny(story.created)}"
+        holder.binding.name.text = "$name • ${on<TimeStr>().tiny(story.created)}"
 
-        holder.itemView.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(phone.updated
+        holder.binding.activeNowIndicator.visible = on<TimeAgo>().fifteenMinutesAgo().before(phone.updated
                 ?: Date(0))
 
         if (phone.photo.isNullOrBlank()) {
-            holder.itemView.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
-            holder.itemView.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            holder.binding.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
+            holder.binding.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
         } else {
-            holder.itemView.profilePhoto.scaleType = ImageView.ScaleType.CENTER_CROP
-            on<PhotoHelper>().loadCircle(holder.itemView.profilePhoto, "${phone.photo}?s=64")
+            holder.binding.profilePhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+            on<PhotoHelper>().loadCircle(holder.binding.profilePhoto, "${phone.photo}?s=64")
         }
 
-        holder.itemView.profilePhoto.setOnClickListener { view ->
+        holder.binding.profilePhoto.setOnClickListener { view ->
             on<GroupActivityTransitionHandler>().showGroupForPhone(view, phone.id!!)
         }
 
-        holder.itemView.replyMessage.setOnEditorActionListener { v, actionId, event ->
+        holder.binding.replyMessage.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 sendDirectMessage(holder, story, name)
                 true
@@ -212,8 +212,8 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
             }
         }
 
-        holder.itemView.sendButton.setOnClickListener {
-            if (holder.itemView.replyMessage.text.toString().isNotBlank()) {
+        holder.binding.sendButton.setOnClickListener {
+            if (holder.binding.replyMessage.text.toString().isNotBlank()) {
                 sendDirectMessage(holder, story, name)
             } else {
                 on<ShareActivityTransitionHandler>().shareStoryToGroup(story.id!!)
@@ -222,16 +222,16 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
     }
 
     private fun updateSendIcon(holder: StoryViewHolder) {
-        if (holder.itemView.replyMessage.text.toString().isNotBlank()) {
-            holder.itemView.sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
+        if (holder.binding.replyMessage.text.toString().isNotBlank()) {
+            holder.binding.sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
         } else {
-            holder.itemView.sendButton.setImageResource(R.drawable.ic_share_black_24dp)
+            holder.binding.sendButton.setImageResource(R.drawable.ic_share_black_24dp)
         }
     }
 
     private fun sendDirectMessage(holder: StoryViewHolder, story: Story, phoneName: String) {
-        holder.itemView.replyMessage.text.toString().takeIf { it.isNotBlank() }?.let { text ->
-            holder.itemView.replyMessage.setText("")
+        holder.binding.replyMessage.text.toString().takeIf { it.isNotBlank() }?.let { text ->
+            holder.binding.replyMessage.setText("")
             on<DataHandler>().getDirectGroup(story.creator!!).observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         on<GroupMessageAttachmentHandler>().shareStory(story, it)
@@ -244,7 +244,7 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
                         on<SyncHandler>().sync(groupMessage)
                         on<ToastHandler>().show(on<ResourcesHandler>().resources.getString(R.string.message_sent_to_x, phoneName))
                     }, {
-                        holder.itemView.replyMessage.setText(text)
+                        holder.binding.replyMessage.setText(text)
                         on<DefaultAlerts>().thatDidntWork()
                     })
         }
@@ -257,11 +257,11 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
 
     override fun areContentsTheSame(old: StoryMixedItem, new: StoryMixedItem) = false
 
-    override fun onCreateViewHolder(parent: ViewGroup) = StoryViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.story_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup) = StoryViewHolder(StoryItemBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onViewRecycled(holder: StoryViewHolder) {
         holder.on.off()
-        holder.itemView.replyMessage.setText("")
+        holder.binding.replyMessage.setText("")
     }
 }

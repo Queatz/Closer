@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_PERCENT
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_SPREAD
 import androidx.core.view.updateLayoutParams
+import closer.vlllage.com.closer.databinding.ActivityCallBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallConnectionHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
@@ -32,7 +33,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_call.*
 
 
 class CallActivity : PoolActivity() {
@@ -58,6 +58,7 @@ class CallActivity : PoolActivity() {
         const val EXTRA_ANSWER = "answer"
     }
 
+    private lateinit var binding: ActivityCallBinding
     private var ring: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +71,9 @@ class CallActivity : PoolActivity() {
         }
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_call)
+        binding = ActivityCallBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
@@ -104,7 +107,7 @@ class CallActivity : PoolActivity() {
 
     private fun updateLayout(orientation: Int) {
         if (orientation == ORIENTATION_LANDSCAPE) {
-            localView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            binding.localView.updateLayoutParams<ConstraintLayout.LayoutParams> {
                 constrainedWidth = false
                 constrainedHeight = true
                 matchConstraintDefaultWidth = MATCH_CONSTRAINT_SPREAD
@@ -114,7 +117,7 @@ class CallActivity : PoolActivity() {
                 dimensionRatio = "1.5:1"
             }
         } else {
-            localView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            binding.localView.updateLayoutParams<ConstraintLayout.LayoutParams> {
                 constrainedWidth = true
                 constrainedHeight = false
                 matchConstraintDefaultWidth = MATCH_CONSTRAINT_PERCENT
@@ -125,7 +128,7 @@ class CallActivity : PoolActivity() {
             }
         }
 
-        localView.requestLayout()
+        binding.localView.requestLayout()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -166,7 +169,7 @@ class CallActivity : PoolActivity() {
                     }
         }
 
-        answerButton.setOnClickListener {
+        binding.answerButton.setOnClickListener {
             showAnswer(false)
 
             if (incoming && !autoAnswer) {
@@ -188,7 +191,7 @@ class CallActivity : PoolActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         it.photo?.let {
-                            background.visible = true
+                            binding.background.visible = true
                             on<ImageHandler>().get().load("$it?s=12")
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .listener(object : RequestListener<Drawable> {
@@ -202,9 +205,9 @@ class CallActivity : PoolActivity() {
                                             return false
                                         }
                                     })
-                                    .into(background)
+                                    .into(binding.background)
                         }
-                        name.text = on<NameHandler>().getName(it)
+                        binding.name.text = on<NameHandler>().getName(it)
                     }, {
                         on<ConnectionErrorHandler>().notifyConnectionError()
                     }).also {
@@ -233,7 +236,7 @@ class CallActivity : PoolActivity() {
         on<PermissionHandler>().check(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO).`when` {
             when (it) {
                 true -> {
-                    on<ApplicationHandler>().app.on<CallConnectionHandler>().attach(otherPhoneId, localView, remoteView)
+                    on<ApplicationHandler>().app.on<CallConnectionHandler>().attach(otherPhoneId, binding.localView, binding.remoteView)
 
                     if (!incoming) {
                         on<ApplicationHandler>().app.on<CallConnectionHandler>().call()
@@ -247,16 +250,16 @@ class CallActivity : PoolActivity() {
     }
 
     private fun showAnswer(show: Boolean) {
-        answerButton.setImageResource(if (show) R.drawable.ic_baseline_videocam_24 else R.drawable.ic_baseline_call_end_24)
-        answerButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(
+        binding.answerButton.setImageResource(if (show) R.drawable.ic_baseline_videocam_24 else R.drawable.ic_baseline_call_end_24)
+        binding.answerButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(
                 if (show) R.color.green else R.color.red
         ))
     }
 
     private fun loadHighRes(photoUrl: String) {
         on<ImageHandler>().get().load("$photoUrl?s=512")
-                .placeholder(background.drawable)
+                .placeholder(binding.background.drawable)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .into(background)
+                .into(binding.background)
     }
 }

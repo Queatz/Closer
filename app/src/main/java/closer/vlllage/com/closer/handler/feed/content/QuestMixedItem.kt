@@ -2,11 +2,11 @@ package closer.vlllage.com.closer.handler.feed.content
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.QuestResult
+import closer.vlllage.com.closer.databinding.ItemQuestBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
@@ -29,22 +29,16 @@ import closer.vlllage.com.closer.store.models.QuestProgress
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.item_quest.view.*
 
 class QuestMixedItem(val quest: Quest) : MixedItem(MixedItemType.Quest)
 
-class QuestViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.Quest) {
+class QuestViewHolder(val binding: ItemQuestBinding) : MixedItemViewHolder(binding.root, MixedItemType.Quest) {
     lateinit var on: On
     var progress: List<QuestProgress> = listOf()
     var progressByMe: QuestProgress? = null
     var activeProgress: QuestProgress? = null
     lateinit var questProgressAdapter: QuestProgressAdapter
     lateinit var nextQuestsAdapter: QuestLinkAdapter
-    val about = itemView.about!!
-    val description = itemView.description!!
-    val name = itemView.name!!
-    val card = itemView.card!!
-    val overallProgress = itemView.overallProgress!!
 }
 
 class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedItem, QuestViewHolder> {
@@ -57,8 +51,8 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
     override fun areItemsTheSame(old: QuestMixedItem, new: QuestMixedItem) = old.quest.id == new.quest.id
     override fun areContentsTheSame(old: QuestMixedItem, new: QuestMixedItem) = old.quest.name == new.quest.name
 
-    override fun onCreateViewHolder(parent: ViewGroup) = QuestViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_quest, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup) = QuestViewHolder(ItemQuestBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onViewRecycled(holder: QuestViewHolder) {
         holder.on.off()
@@ -66,7 +60,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
         holder.progressByMe = null
         holder.activeProgress = null
         holder.questProgressAdapter.questProgresses = mutableListOf()
-        holder.itemView.peopleRecyclerView.adapter = null
+        holder.binding.peopleRecyclerView.adapter = null
     }
 
     private fun bindQuest(holder: QuestViewHolder, quest: Quest) {
@@ -79,12 +73,12 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
 
         if (on<QuestDisplaySettings>().isAbout) {
             holder.itemView.background = null
-            holder.itemView.name.visible = false
-            holder.itemView.scopeIndicatorButton.visible = false
-            holder.itemView.goToGroup.visible = false
-            holder.itemView.card.elevation = 0f
+            holder.binding.name.visible = false
+            holder.binding.scopeIndicatorButton.visible = false
+            holder.binding.goToGroup.visible = false
+            holder.binding.card.elevation = 0f
         } else {
-            on<GroupScopeHandler>().setup(quest, holder.itemView.scopeIndicatorButton)
+            on<GroupScopeHandler>().setup(quest, holder.binding.scopeIndicatorButton)
         }
 
         on<RefreshHandler>().refreshQuestProgresses(quest.id!!)
@@ -112,9 +106,9 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             }
         }
 
-        holder.itemView.peopleRecyclerView.adapter = holder.questProgressAdapter
-        holder.itemView.peopleRecyclerView.layoutManager = LinearLayoutManager(
-                holder.itemView.peopleRecyclerView.context,
+        holder.binding.peopleRecyclerView.adapter = holder.questProgressAdapter
+        holder.binding.peopleRecyclerView.layoutManager = LinearLayoutManager(
+                holder.binding.peopleRecyclerView.context,
                 LinearLayoutManager.HORIZONTAL,
                 false
         )
@@ -140,26 +134,26 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             on<GroupActivityTransitionHandler>().showGroupForQuest(view, it)
         }
 
-        holder.itemView.nextQuestsRecyclerView.adapter = holder.nextQuestsAdapter
-        holder.itemView.nextQuestsRecyclerView.layoutManager = LinearLayoutManager(
-                holder.itemView.nextQuestsRecyclerView.context,
+        holder.binding.nextQuestsRecyclerView.adapter = holder.nextQuestsAdapter
+        holder.binding.nextQuestsRecyclerView.layoutManager = LinearLayoutManager(
+                holder.binding.nextQuestsRecyclerView.context,
                 LinearLayoutManager.HORIZONTAL,
                 false
         )
 
-        holder.itemView.nextQuestsHeader.visible = false
-        holder.itemView.nextQuestsRecyclerViewContainer.visible = false
+        holder.binding.nextQuestsHeader.visible = false
+        holder.binding.nextQuestsRecyclerViewContainer.visible = false
 
         loadLinks(holder, quest)
         loadQuestActions(quest)
 
-        holder.description.visible = false
+        holder.binding.description.visible = false
 
         if (quest.groupId != null) {
             holder.on<DataHandler>().getGroup(quest.groupId!!).observeOn(AndroidSchedulers.mainThread()).subscribe({
                 if (!on<QuestDisplaySettings>().isAbout) {
-                    holder.description.visible = it.about.isNullOrEmpty().not()
-                    holder.description.text = it.about ?: ""
+                    holder.binding.description.visible = it.about.isNullOrEmpty().not()
+                    holder.binding.description.text = it.about ?: ""
                 }
             }, {
                 on<ConnectionErrorHandler>().notifyConnectionError()
@@ -185,38 +179,38 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             refreshProgress(holder, quest)
         }
 
-        holder.on<GroupActionGridRecyclerViewHandler>().attach(holder.itemView.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
+        holder.on<GroupActionGridRecyclerViewHandler>().attach(holder.binding.groupActionsRecyclerView, GroupActionDisplay.Layout.QUEST)
 
         refreshProgress(holder, quest)
 
-        holder.about.setOnClickListener {
-            on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.quest_status), holder.about.text.toString())
+        holder.binding.about.setOnClickListener {
+            on<DefaultAlerts>().message(on<ResourcesHandler>().resources.getString(R.string.quest_status), holder.binding.about.text.toString())
         }
 
-        holder.name.text = quest.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown)
+        holder.binding.name.text = quest.name ?: on<ResourcesHandler>().resources.getString(R.string.unknown)
 
-        holder.name.setOnClickListener {
+        holder.binding.name.setOnClickListener {
             on<QuestHandler>().openQuest(quest)
         }
 
         holder.on<LightDarkHandler>().onLightChanged.subscribe {
-            holder.name.setTextColor(it.text)
-            holder.about.setTextColor(it.text)
-            holder.description.setTextColor(it.text)
-            holder.itemView.nextQuestsHeader.setTextColor(it.hint)
-            holder.name.setBackgroundResource(it.clickableRoundedBackground8dp)
-            holder.about.setBackgroundResource(it.clickableRoundedBackground8dp)
-            holder.itemView.optionsButton.setTextColor(on<ResourcesHandler>().resources.getColor(when (it.light) {
+            holder.binding.name.setTextColor(it.text)
+            holder.binding.about.setTextColor(it.text)
+            holder.binding.description.setTextColor(it.text)
+            holder.binding.nextQuestsHeader.setTextColor(it.hint)
+            holder.binding.name.setBackgroundResource(it.clickableRoundedBackground8dp)
+            holder.binding.about.setBackgroundResource(it.clickableRoundedBackground8dp)
+            holder.binding.optionsButton.setTextColor(on<ResourcesHandler>().resources.getColor(when (it.light) {
                 true -> R.color.forestgreen
                 false -> R.color.text
             }))
-            holder.itemView.scopeIndicatorButton.imageTintList = it.tint
-            holder.itemView.goToGroup.imageTintList = it.tint
-            holder.card.setBackgroundResource(when (it.light) {
+            holder.binding.scopeIndicatorButton.imageTintList = it.tint
+            holder.binding.goToGroup.imageTintList = it.tint
+            holder.binding.card.setBackgroundResource(when (it.light) {
                 true -> R.drawable.clickable_white_rounded_12dp
                 false -> R.drawable.clickable_forestgreen_rounded_12dp
             })
-            holder.overallProgress?.progressTintList = when (it.light) {
+            holder.binding.overallProgress?.progressTintList = when (it.light) {
                 true -> ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.forestgreen))
                 false -> ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.colorAccent))
             }
@@ -244,7 +238,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
             }
         }
 
-        holder.card.setOnClickListener {
+        holder.binding.card.setOnClickListener {
             val me = on<PersistenceHandler>().phoneId
             val questProgress = if (holder.activeProgress?.ofId == me) holder.activeProgress else holder.progressByMe
 
@@ -279,8 +273,8 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
     private fun loadLinks(holder: QuestViewHolder, quest: Quest) {
         on<ApiHandler>().getQuestLinks(quest.id!!).subscribe({
             holder.nextQuestsAdapter.setQuests(it.map { QuestResult.from(it) }, true)
-            holder.itemView.nextQuestsHeader.visible = it.isNotEmpty()
-            holder.itemView.nextQuestsRecyclerViewContainer.visible = it.isNotEmpty()
+            holder.binding.nextQuestsHeader.visible = it.isNotEmpty()
+            holder.binding.nextQuestsRecyclerViewContainer.visible = it.isNotEmpty()
         }, {
             // ignored
         }).also {
@@ -303,12 +297,12 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                 }
 
         if (holder.activeProgress?.active == true && holder.activeProgress!!.created != null) {
-            holder.overallProgress.visible = true
-            holder.overallProgress.progress = on<QuestHandler>().questFinishPercent(quest, holder.activeProgress!!.created!!)
+            holder.binding.overallProgress.visible = true
+            holder.binding.overallProgress.progress = on<QuestHandler>().questFinishPercent(quest, holder.activeProgress!!.created!!)
         } else {
-            holder.overallProgress.visible = false
+            holder.binding.overallProgress.visible = false
         }
 
-        holder.about.text = on<QuestHandler>().questProgressText(holder.activeProgress, quest)
+        holder.binding.about.text = on<QuestHandler>().questProgressText(holder.activeProgress, quest)
     }
 }

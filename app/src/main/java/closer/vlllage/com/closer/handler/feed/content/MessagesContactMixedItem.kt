@@ -2,9 +2,9 @@ package closer.vlllage.com.closer.handler.feed.content
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.MessagesContactItemBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
@@ -21,17 +21,10 @@ import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.messages_contact_item.view.*
 
 class MessagesContactMixedItem(val group: Group) : MixedItem(MixedItemType.MessageContact)
-class MessagesContactViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.MessageContact) {
+class MessagesContactViewHolder(val binding: MessagesContactItemBinding) : MixedItemViewHolder(binding.root, MixedItemType.MessageContact) {
     lateinit var on: On
-    val click = itemView.click!!
-    val photo = itemView.photo!!
-    val name = itemView.name!!
-    val lastMessage = itemView.lastMessage!!
-    val callButton = itemView.callButton!!
-    val actionRecyclerView = itemView.actionRecyclerView!!
 }
 
 class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<MessagesContactMixedItem, MessagesContactViewHolder> {
@@ -41,20 +34,20 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
             use<LightDarkHandler>().setLight(true)
         }
 
-        holder.name.setTextColor(ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)))
-        holder.name.text = on<ResourcesHandler>().resources.getString(R.string.loading)
-        holder.lastMessage.text = ""
+        holder.binding.name.setTextColor(ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textHintInverse)))
+        holder.binding.name.text = on<ResourcesHandler>().resources.getString(R.string.loading)
+        holder.binding.lastMessage.text = ""
 
-        holder.photo.setImageResource(R.drawable.ic_person_black_24dp)
+        holder.binding.photo.setImageResource(R.drawable.ic_person_black_24dp)
 
-        holder.photo.setOnClickListener(null)
-        holder.callButton.setOnClickListener(null)
+        holder.binding.photo.setOnClickListener(null)
+        holder.binding.callButton.setOnClickListener(null)
 
-        holder.click.setOnClickListener {
-            on<GroupActivityTransitionHandler>().showGroupMessages(holder.click, item.group.id!!)
+        holder.binding.click.setOnClickListener {
+            on<GroupActivityTransitionHandler>().showGroupMessages(holder.binding.click, item.group.id!!)
         }
 
-        holder.click.setOnLongClickListener {
+        holder.binding.click.setOnLongClickListener {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_baseline_visibility_off_24, R.string.hide_from_contacts) {
                         on<HideHandler>().hide(item.group)
@@ -64,7 +57,7 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
             true
         }
 
-        holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionDisplay.Layout.TEXT)
+        holder.on<GroupActionRecyclerViewHandler>().attach(holder.binding.actionRecyclerView, GroupActionDisplay.Layout.TEXT)
         holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
                 .equal(GroupAction_.group, item.group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
@@ -105,38 +98,38 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
     }
 
     private fun setContact(holder: MessagesContactViewHolder, group: Group, groupContact: GroupContact, phone: Phone) {
-        holder.callButton.setOnClickListener {
+        holder.binding.callButton.setOnClickListener {
             on<CallHandler>().startCall(phone.id!!)
         }
 
-        holder.photo.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupForPhone(holder.photo, phone.id!!) }
+        holder.binding.photo.setOnClickListener { on<GroupActivityTransitionHandler>().showGroupForPhone(holder.binding.photo, phone.id!!) }
 
         when {
             groupContact.photo != null -> {
-                holder.photo.imageTintList = null
-                holder.photo.alpha = 1f
-                holder.on<PhotoHelper>().loadCircle(holder.photo, groupContact.photo!!, R.dimen.profilePhotoSmall)
+                holder.binding.photo.imageTintList = null
+                holder.binding.photo.alpha = 1f
+                holder.on<PhotoHelper>().loadCircle(holder.binding.photo, groupContact.photo!!, R.dimen.profilePhotoSmall)
             }
             phone.photo != null -> {
-                holder.photo.imageTintList = null
-                holder.photo.alpha = 1f
-                holder.on<PhotoHelper>().loadCircle(holder.photo, phone.photo!!, R.dimen.profilePhotoSmall)
+                holder.binding.photo.imageTintList = null
+                holder.binding.photo.alpha = 1f
+                holder.on<PhotoHelper>().loadCircle(holder.binding.photo, phone.photo!!, R.dimen.profilePhotoSmall)
             }
             else -> {
-                holder.on<ImageHandler>().get().clear(holder.photo)
+                holder.on<ImageHandler>().get().clear(holder.binding.photo)
             }
         }
 
-        holder.name.text = on<NameHandler>().getName(groupContact)
-        holder.name.setTextColor(ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textInverse)))
+        holder.binding.name.text = on<NameHandler>().getName(groupContact)
+        holder.binding.name.setTextColor(ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.textInverse)))
 
         if (groupContact.status != null) {
-            holder.lastMessage.text = "${groupContact.status} • ${on<TimeStr>().prettyDate(group.updated)}"
+            holder.binding.lastMessage.text = "${groupContact.status} • ${on<TimeStr>().prettyDate(group.updated)}"
         } else {
-            holder.lastMessage.text = on<TimeStr>().prettyDate(group.updated)
+            holder.binding.lastMessage.text = on<TimeStr>().prettyDate(group.updated)
         }
 
-        holder.actionRecyclerView
+        holder.binding.actionRecyclerView
     }
 
     override fun getMixedItemClass() = MessagesContactMixedItem::class
@@ -146,8 +139,8 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
 
     override fun areContentsTheSame(old: MessagesContactMixedItem, new: MessagesContactMixedItem) = false
 
-    override fun onCreateViewHolder(parent: ViewGroup) = MessagesContactViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.messages_contact_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup) = MessagesContactViewHolder(MessagesContactItemBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onViewRecycled(holder: MessagesContactViewHolder) {
         holder.on.off()

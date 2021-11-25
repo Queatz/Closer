@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
-import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.ActivityWelcomeBinding
 import closer.vlllage.com.closer.handler.data.*
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.group.GroupDraftHandler
@@ -18,16 +18,17 @@ import closer.vlllage.com.closer.handler.map.VerifyNumberHandler
 import closer.vlllage.com.closer.handler.settings.ConfigHandler
 import closer.vlllage.com.closer.pool.PoolFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_welcome.view.*
 
 class WelcomeSlideFragment : PoolFragment() {
 
+    private lateinit var binding: ActivityWelcomeBinding
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.scanInviteButton.setOnClickListener {
+        binding.scanInviteButton.setOnClickListener {
             on<ScanQrCodeHandler>().scan()
         }
 
-        view.inviteLink.doOnTextChanged { text, _, before, count ->
+        binding.inviteLink.doOnTextChanged { text, _, before, count ->
             if (count > before) {
                 val uri = Uri.parse(text.toString())
 
@@ -35,17 +36,17 @@ class WelcomeSlideFragment : PoolFragment() {
             }
         }
 
-        view.phoneNumberButton.setOnClickListener {
+        binding.phoneNumberButton.setOnClickListener {
             on<VerifyNumberHandler>().verify()
         }
 
-        view.requestInviteButton.setOnClickListener {
+        binding.requestInviteButton.setOnClickListener {
             if (on<AccountHandler>().name.isBlank()) {
                 on<SetNameHandler>().modifyName({
-                    requestInvite(view.requestInviteButton)
+                    requestInvite(binding.requestInviteButton)
                 })
             } else {
-                requestInvite(view.requestInviteButton)
+                requestInvite(binding.requestInviteButton)
             }
         }
 
@@ -67,7 +68,7 @@ class WelcomeSlideFragment : PoolFragment() {
         on<DataHandler>().getDirectGroup(on<ConfigHandler>().requestInvitePhoneId())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe({
                     on<GroupDraftHandler>().saveDraft(it.id!!, "Hey Jacob! May I have an invite?")
-                    on<GroupActivityTransitionHandler>().showGroupMessages(view.requestInviteButton, it.id!!, isRespond = true)
+                    on<GroupActivityTransitionHandler>().showGroupMessages(binding.requestInviteButton, it.id!!, isRespond = true)
                 }, {
                     on<DefaultAlerts>().thatDidntWork()
                 }
@@ -76,7 +77,9 @@ class WelcomeSlideFragment : PoolFragment() {
                 }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.activity_welcome, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        ActivityWelcomeBinding.inflate(inflater, container, false).let {
+            binding = it
+            it.root
+        }
 }

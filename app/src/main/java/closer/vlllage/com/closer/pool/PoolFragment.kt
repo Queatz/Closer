@@ -23,7 +23,7 @@ open class PoolFragment : Fragment() {
         on.use(activityOn<MediaHandler>())
         on.use(activityOn<CameraHandler>())
 
-        on<ApplicationHandler>().app = activity!!.application as App
+        on<ApplicationHandler>().app = requireActivity().application as App
         on<ApiHandler>().setAuthorization(on<AccountHandler>().phone)
     }
 

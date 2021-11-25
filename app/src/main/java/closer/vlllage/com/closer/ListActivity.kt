@@ -11,13 +11,14 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.TranslateAnimation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.databinding.ActivityShareBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.pool.PoolActivity
-import kotlinx.android.synthetic.main.activity_share.*
 
 abstract class ListActivity : PoolActivity() {
 
+    private lateinit var binding: ActivityShareBinding
     protected lateinit var recyclerView: RecyclerView
 
     private var finishAnimator: TranslateAnimation? = null
@@ -31,32 +32,34 @@ abstract class ListActivity : PoolActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(0, 0)
-        setContentView(R.layout.activity_share)
+        binding = ActivityShareBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
-        background.clipToOutline = true
-        recyclerView = shareRecyclerView
+        binding.background.clipToOutline = true
+        recyclerView = binding.shareRecyclerView
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        background.setOnTouchListener { view, motionEvent ->
+        binding.background.setOnTouchListener { view, motionEvent ->
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
                 if (closeCallback?.invoke() != false) {
-                    background.setOnTouchListener(null)
+                    binding.background.setOnTouchListener(null)
                     finish()
                 }
                 true
             } else false
         }
 
-        val viewTreeObserver = background.viewTreeObserver
+        val viewTreeObserver = binding.background.viewTreeObserver
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                background.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                binding.background.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 reveal()
             }
 
             private fun reveal() {
-                val colorAnim = ObjectAnimator.ofInt(background, "backgroundColor", getColor(R.color.black_transparent), getColor(R.color.black_10))
+                val colorAnim = ObjectAnimator.ofInt(binding.background, "backgroundColor", getColor(R.color.black_transparent), getColor(R.color.black_10))
                 colorAnim.duration = 225
                 colorAnim.setEvaluator(ArgbEvaluator())
                 colorAnim.start()
@@ -77,7 +80,7 @@ abstract class ListActivity : PoolActivity() {
             return
         }
 
-        val colorAnim = ObjectAnimator.ofInt(background, "backgroundColor", getColor(R.color.black_10), getColor(R.color.black_transparent))
+        val colorAnim = ObjectAnimator.ofInt(binding.background, "backgroundColor", getColor(R.color.black_10), getColor(R.color.black_transparent))
         colorAnim.duration = 195
         colorAnim.setEvaluator(ArgbEvaluator())
         colorAnim.start()

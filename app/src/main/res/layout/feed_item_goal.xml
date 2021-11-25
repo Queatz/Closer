@@ -10,6 +10,6 @@
     android:clickable="true"
     android:elevation="@dimen/elevation">
 
-    <include layout="@layout/item_goal" />
+    <include android:id="@+id/itemGoal" layout="@layout/item_goal" />
 
 </FrameLayout>

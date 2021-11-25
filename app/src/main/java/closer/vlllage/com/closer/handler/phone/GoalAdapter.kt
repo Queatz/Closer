@@ -1,11 +1,11 @@
 package closer.vlllage.com.closer.handler.phone
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.ItemGoalBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.helpers.DisposableGroup
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
@@ -17,7 +17,6 @@ import closer.vlllage.com.closer.store.models.Lifestyle
 import closer.vlllage.com.closer.store.models.Lifestyle_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import kotlinx.android.synthetic.main.item_goal.view.*
 
 class GoalAdapter constructor(private val on: On, private val isLifestyleAdapter: Boolean, private val callback: (String) -> Unit) : RecyclerView.Adapter<GoalViewHolder>() {
 
@@ -49,8 +48,8 @@ class GoalAdapter constructor(private val on: On, private val isLifestyleAdapter
     override fun getItemCount() = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoalViewHolder {
-        return GoalViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_goal, parent, false)).also {
+        return GoalViewHolder(ItemGoalBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)).also {
             it.disposableGroup = on<DisposableHandler>().group()
         }
     }
@@ -64,10 +63,10 @@ class GoalAdapter constructor(private val on: On, private val isLifestyleAdapter
             callback.invoke(item)
         }
 
-        holder.itemView.type.text = type
-        holder.itemView.goalName.text = item
-        holder.itemView.cheerButton.text = on<ResourcesHandler>().resources.getString(R.string.tap_for_options)
-        holder.itemView.count.visible = false
+        holder.binding.type.text = type
+        holder.binding.goalName.text = item
+        holder.binding.cheerButton.text = on<ResourcesHandler>().resources.getString(R.string.tap_for_options)
+        holder.binding.count.visible = false
 
         if (isLifestyleAdapter.not()) {
             on<StoreHandler>().store.box(Goal::class).query(Goal_.name.equal(item)).build().subscribe().on(AndroidScheduler.mainThread()).observer {
@@ -75,8 +74,8 @@ class GoalAdapter constructor(private val on: On, private val isLifestyleAdapter
 
                 val count = it.firstOrNull()?.phonesCount ?: 0
 
-                holder.itemView.count.visible = count > 1
-                holder.itemView.count.text = "$count"
+                holder.binding.count.visible = count > 1
+                holder.binding.count.text = "$count"
             }.also { holder.disposableGroup.add(it) }
         } else {
             on<StoreHandler>().store.box(Lifestyle::class).query(Lifestyle_.name.equal(item)).build().subscribe().on(AndroidScheduler.mainThread()).observer {
@@ -84,13 +83,13 @@ class GoalAdapter constructor(private val on: On, private val isLifestyleAdapter
 
                 val count = it.firstOrNull()?.phonesCount ?: 0
 
-                holder.itemView.count.visible = count > 1
-                holder.itemView.count.text = "$count"
+                holder.binding.count.visible = count > 1
+                holder.binding.count.text = "$count"
             }.also { holder.disposableGroup.add(it) }
         }
     }
 }
 
-class GoalViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class GoalViewHolder(val binding: ItemGoalBinding) : RecyclerView.ViewHolder(binding.root) {
     lateinit var disposableGroup: DisposableGroup
 }

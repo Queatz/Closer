@@ -13,8 +13,6 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentContainerView
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.extensions.toLatLng
 import closer.vlllage.com.closer.handler.bubble.*
@@ -30,12 +28,10 @@ import closer.vlllage.com.closer.pool.PoolFragment
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
+import closer.vlllage.com.closer.databinding.ActivityMapsBinding
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_maps.*
-import kotlinx.android.synthetic.main.activity_maps.view.*
-import kotlinx.android.synthetic.main.fragment_group_messages.*
 
 
 class MapSlideFragment : PoolFragment() {
@@ -43,47 +39,51 @@ class MapSlideFragment : PoolFragment() {
     private var locationPermissionWasDenied: Boolean = false
     private var pendingRunnable: Runnable? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_maps, container, false)
-    }
+    private lateinit var binding: ActivityMapsBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        ActivityMapsBinding.inflate(inflater, container, false).let {
+            binding = it
+            it.root
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val breakpoint = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.maxFullWidth)
         val feedPeekHeightMinus12dp = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.feedPeekHeightMinus12dp)
         val pad = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.pad)
 
-        mapLayout.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        binding.mapLayout.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             val w = right - left
-            if (mapLayout.marginBottom == 0 && w <= breakpoint) {
-                mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            if (binding.mapLayout.marginBottom == 0 && w <= breakpoint) {
+                binding.mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = feedPeekHeightMinus12dp
                 }
 
-                view.feed.setPaddingRelative(
-                        0,
-                        view.feed.paddingTop,
-                        0,
-                        view.feed.paddingBottom,
+                binding.feed.setPaddingRelative(
+                    0,
+                    binding.feed.paddingTop,
+                    0,
+                    binding.feed.paddingBottom,
                 )
 
-                mapLayout.requestLayout()
-            } else if (mapLayout.marginBottom != 0 && w > breakpoint) {
-                mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                binding.mapLayout.requestLayout()
+            } else if (binding.mapLayout.marginBottom != 0 && w > breakpoint) {
+                binding.mapLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = 0
                 }
 
-                view.feed.setPaddingRelative(
+                binding.feed.setPaddingRelative(
                         pad,
-                        view.feed.paddingTop,
+                        binding.feed.paddingTop,
                         pad,
-                        view.feed.paddingBottom,
+                        binding.feed.paddingBottom,
                 )
 
-                mapLayout.requestLayout()
+                binding.mapLayout.requestLayout()
             }
         }
 
-        on<NetworkConnectionViewHandler>().attach(view.connectionError)
+        on<NetworkConnectionViewHandler>().attach(binding.connectionError)
         on<TimerHandler>().postDisposable({ on<SyncHandler>().syncAll() }, 1325)
         on<TimerHandler>().postDisposable({ on<RefreshHandler>().refreshAll() }, 1625)
         on<TimerHandler>().postDisposable({
@@ -95,12 +95,12 @@ class MapSlideFragment : PoolFragment() {
         }, 1625 * 2)
 
         on<AccountHandler>().changes(AccountHandler.ACCOUNT_FIELD_ACTIVE).observeOn(AndroidSchedulers.mainThread()).subscribe {
-            view.toggleShowMeOnMapButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(if (it.value == true) R.color.colorPrimary else R.color.disabled))
+            binding.toggleShowMeOnMapButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(if (it.value == true) R.color.colorPrimary else R.color.disabled))
         }.also {
             on<DisposableHandler>().add(it)
         }
 
-        view.toggleShowMeOnMapButton.setOnClickListener {
+        binding.toggleShowMeOnMapButton.setOnClickListener {
             val active = !on<AccountHandler>().active
             on<AccountHandler>().updateActive(active)
         }
@@ -147,9 +147,9 @@ class MapSlideFragment : PoolFragment() {
         on<MapHandler>().onMapIdleListener = { latLng ->
             on<LocalityHelper>().getLocality(latLng) {
                 if (it.isNullOrBlank()) {
-                    view.searchMap.hint = on<ResourcesHandler>().resources.getString(R.string.search_map_hint)
+                    binding.searchMap.hint = on<ResourcesHandler>().resources.getString(R.string.search_map_hint)
                 } else {
-                    view.searchMap.hint = on<ResourcesHandler>().resources.getString(R.string.search_x_hint, it)
+                    binding.searchMap.hint = on<ResourcesHandler>().resources.getString(R.string.search_x_hint, it)
                 }
             }
 
@@ -195,9 +195,9 @@ class MapSlideFragment : PoolFragment() {
         }
 
         on<EventBubbleHandler>().attach()
-        on<FeedHandler>().attach(view.feed, view.toTheTopLayout)
+        on<FeedHandler>().attach(binding.feed, binding.toTheTopLayout)
 
-        view.toTheTop.setOnClickListener {
+        binding.toTheTop.setOnClickListener {
             on<FeedHandler>().hide()
         }
 
@@ -227,11 +227,11 @@ class MapSlideFragment : PoolFragment() {
             }, { }))
         }
 
-        view.searchMap.doOnLayout {
-            on<MapHandler>().setTopPadding(view.searchMap.bottom)
+        binding.searchMap.doOnLayout {
+            on<MapHandler>().setTopPadding(binding.searchMap.bottom)
         }
 
-        view.locateMeButton.setOnClickListener {
+        binding.locateMeButton.setOnClickListener {
             if (on<PermissionHandler>().denied(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 on<AlertHandler>().make().apply {
                     title = on<ResourcesHandler>().resources.getString(R.string.enable_location_permission)
@@ -249,13 +249,13 @@ class MapSlideFragment : PoolFragment() {
             }
         }
 
-        view.scanInviteButton.setOnClickListener {
+        binding.scanInviteButton.setOnClickListener {
             on<ScanQrCodeHandler>().scan()
         }
 
-        view.searchMap.setOnEditorActionListener { _, actionId, event ->
+        binding.searchMap.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                search(view.searchMap.text.toString())
+                search(binding.searchMap.text.toString())
                 false
             }
 

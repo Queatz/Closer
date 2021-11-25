@@ -3,10 +3,10 @@ package closer.vlllage.com.closer
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.Gravity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import closer.vlllage.com.closer.databinding.ActivityGroupBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
@@ -26,14 +26,14 @@ import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_group.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class GroupActivity : CircularRevealActivity() {
 
-    lateinit var view: GroupViewHolder
     lateinit var groupId: String
+
+    private lateinit var binding: ActivityGroupBinding
 
     private var initialContent: ContentViewType? = null
 
@@ -59,34 +59,35 @@ class GroupActivity : CircularRevealActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_group)
-        view = GroupViewHolder(findViewById(android.R.id.content))
+        binding = ActivityGroupBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         bindViewEvents()
         bindToGroup()
 
         if (on<FeatureHandler>().has(FeatureType.FEATURE_MANAGE_PUBLIC_GROUP_SETTINGS)) {
-            view.settingsButton.visible = true
+            binding.settingsButton.visible = true
         }
 
         handleIntent(intent)
 
-        on<GroupToolbarHandler>().attach(view.eventToolbar) {
-            if ((view.profilePhoto.layoutParams as ConstraintLayout.LayoutParams).matchConstraintPercentHeight == 1f) {
+        on<GroupToolbarHandler>().attach(binding.eventToolbar) {
+            if ((binding.profilePhoto.layoutParams as ConstraintLayout.LayoutParams).matchConstraintPercentHeight == 1f) {
                 return@attach
             }
 
-            val initialHeight = view.profilePhoto.measuredHeight
+            val initialHeight = binding.profilePhoto.measuredHeight
             val finalHeight = 0 //on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.profilePhotoCollapsedHeight)
 
             ObjectAnimator.ofFloat(0f, 1f).apply {
                 duration = 150
                 addUpdateListener {
-                    val params = view.profilePhoto.layoutParams as ConstraintLayout.LayoutParams
+                    val params = binding.profilePhoto.layoutParams as ConstraintLayout.LayoutParams
                     params.apply {
                         height = (initialHeight + it.animatedFraction * (finalHeight - initialHeight)).toInt()
                         matchConstraintPercentHeight = if (height == 0) 0f else 1f
-                        view.profilePhoto.layoutParams = this
+                        binding.profilePhoto.layoutParams = this
                     }
                 }
                 start()
@@ -97,19 +98,19 @@ class GroupActivity : CircularRevealActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { contentView = it })
 
-        on<MiniWindowHandler>().attach(view.groupName, view.backgroundColor) { finish() }
+        on<MiniWindowHandler>().attach(binding.groupName, binding.backgroundColor) { finish() }
 
         on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
-            view.closeButton.imageTintList = it.tint
-            view.scopeIndicatorButton.imageTintList = it.tint
-            view.settingsButton.imageTintList = it.tint
-            view.notificationSettingsButton.imageTintList = it.tint
-            view.groupName.setTextColor(it.text)
-            view.groupAbout.setTextColor(it.text)
-            view.groupDetails.setTextColor(it.text)
-            view.groupRatingCount.setTextColor(it.text)
-            view.peopleInGroup.setTextColor(it.text)
-            view.backgroundPhoto.alpha = if (it.light) .15f else 1f
+            binding.closeButton.imageTintList = it.tint
+            binding.scopeIndicatorButton.imageTintList = it.tint
+            binding.settingsButton.imageTintList = it.tint
+            binding.notificationSettingsButton.imageTintList = it.tint
+            binding.groupName.setTextColor(it.text)
+            binding.groupAbout.setTextColor(it.text)
+            binding.groupDetails.setTextColor(it.text)
+            binding.groupRatingCount.setTextColor(it.text)
+            binding.peopleInGroup.setTextColor(it.text)
+            binding.backgroundPhoto.alpha = if (it.light) .15f else 1f
         })
     }
 
@@ -124,7 +125,7 @@ class GroupActivity : CircularRevealActivity() {
             }
 
             onGroupMemberChanged { groupMember ->
-                view.notificationSettingsButton.visible = groupMember.muted
+                binding.notificationSettingsButton.visible = groupMember.muted
             }
 
             onGroupUpdated { group ->
@@ -136,13 +137,13 @@ class GroupActivity : CircularRevealActivity() {
             onContactInfoChanged { redrawContacts(it) }
 
             onGroupChanged { group ->
-                view.settingsButton.setOnLongClickListener(null)
+                binding.settingsButton.setOnLongClickListener(null)
 
                 on<GroupToolbarHandler>().contentView.onNext(initialContent ?: ContentViewType.MESSAGES)
 
-                on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
+                on<GroupScopeHandler>().setup(group, binding.scopeIndicatorButton)
 
-                view.peopleInGroup.isSelected = true
+                binding.peopleInGroup.isSelected = true
 
                 if (!group.hasPhone()) {
                     setGroupProfilePhoto(null)
@@ -154,36 +155,36 @@ class GroupActivity : CircularRevealActivity() {
                 showGroupName(group)
 
                 if (!group.hasEvent()) {
-                    view.groupDetails.visible = false
-                    view.groupDetails.text = ""
+                    binding.groupDetails.visible = false
+                    binding.groupDetails.text = ""
                 }
 
-                view.peopleInGroup.text = ""
+                binding.peopleInGroup.text = ""
 
                 setGroupAbout(group)
 
-                on<GroupScopeHandler>().setup(group, view.scopeIndicatorButton)
+                on<GroupScopeHandler>().setup(group, binding.scopeIndicatorButton)
 
-                view.peopleInGroup.isSelected = true
+                binding.peopleInGroup.isSelected = true
 
                 setGroupBackground(group)
 
                 on<ApplicationHandler>().app.on<TopHandler>().setGroupActive(group.id!!)
 
                 if (restoreOption) {
-                    view.meetLayout.visible = true
-                    view.meetLayout.meetFalse.visible = false
-                    view.meetLayout.meetPrompt.gravity = Gravity.START
-                    view.meetLayout.meetPrompt.setPaddingRelative(
+                    binding.meetLayout.visible = true
+                    binding.meetFalse.visible = false
+                    binding.meetPrompt.gravity = Gravity.START
+                    binding.meetPrompt.setPaddingRelative(
                             on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDialog),
-                            view.meetLayout.meetPrompt.paddingTop,
-                            view.meetLayout.meetPrompt.paddingEnd,
-                            view.meetLayout.meetPrompt.paddingBottom,
+                            binding.meetPrompt.paddingTop,
+                            binding.meetPrompt.paddingEnd,
+                            binding.meetPrompt.paddingBottom,
                     )
-                    view.meetLayout.meetTrue.setText(R.string.restore)
-                    view.meetLayout.meetTrue.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_history_black_24dp, 0)
+                    binding.meetTrue.setText(R.string.restore)
+                    binding.meetTrue.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_history_black_24dp, 0)
 
-                    view.meetLayout.meetPrompt.text = on<ResourcesHandler>().resources.getString(R.string.group_expired_on, on<TimeStr>().approx(group.updated?.let {
+                    binding.meetPrompt.text = on<ResourcesHandler>().resources.getString(R.string.group_expired_on, on<TimeStr>().approx(group.updated?.let {
                         Calendar.getInstance(TimeZone.getDefault()).let { calendar ->
                             calendar.time = it
 
@@ -192,19 +193,19 @@ class GroupActivity : CircularRevealActivity() {
                             calendar.time
                         }
                     }, true))
-                    view.meetLayout.meetTrue.setOnClickListener {
+                    binding.meetTrue.setOnClickListener {
                         on<GroupMessageAttachmentHandler>().postGroupEvent(groupId, "@${on<PersistenceHandler>().phoneId} breathed new life into the group!")
-                        view.meetLayout.visible = false
+                        binding.meetLayout.visible = false
                     }
                 }
 
-                view.groupDetails.setOnClickListener(null)
+                binding.groupDetails.setOnClickListener(null)
             }
 
             onEventChanged { event ->
-                view.groupDetails.visible = true
-                view.groupDetails.text = on<EventDetailsHandler>().formatEventDetails(event)
-                view.groupDetails.setOnClickListener {
+                binding.groupDetails.visible = true
+                binding.groupDetails.text = on<EventDetailsHandler>().formatEventDetails(event)
+                binding.groupDetails.setOnClickListener {
                     val timeFormatter = SimpleDateFormat("MMMM d, yyyy${if (event.allDay) "" else " h:mma"}", Locale.US)
                     on<DefaultAlerts>().message("${timeFormatter.format(event.startsAt!!)} to ${timeFormatter.format(event.endsAt!!)}")
                 }
@@ -212,12 +213,12 @@ class GroupActivity : CircularRevealActivity() {
 
             onPhoneUpdated { phone ->
                 setGroupProfilePhoto(phone.photo)
-                view.groupDetails.visible = false
-                view.groupDetails.text = ""
-                view.groupAbout.visible = !phone.status.isNullOrBlank()
-                view.groupAbout.text = phone.status ?: ""
+                binding.groupDetails.visible = false
+                binding.groupDetails.text = ""
+                binding.groupAbout.visible = !phone.status.isNullOrBlank()
+                binding.groupAbout.text = phone.status ?: ""
 
-                view.settingsButton.setOnLongClickListener {
+                binding.settingsButton.setOnLongClickListener {
                     on<AlertHandler>().make().apply {
                         title = "Terms of Use"
                         negativeButton = "Bad"
@@ -235,16 +236,16 @@ class GroupActivity : CircularRevealActivity() {
                 }
 
                 if (on<MatchHandler>().active) {
-                    view.meetLayout.visible = true
-                    view.meetLayout.meetFalse.visible = true
-                    view.meetLayout.meetTrue.visible = true
-                    view.meetLayout.meetPrompt.gravity = Gravity.CENTER
-                    view.meetLayout.meetPrompt.text = on<ResourcesHandler>().resources.getString(R.string.want_to_meet_phone, on<NameHandler>().getName(phone))
-                    view.meetLayout.meetTrue.setOnClickListener {
+                    binding.meetLayout.visible = true
+                    binding.meetFalse.visible = true
+                    binding.meetTrue.visible = true
+                    binding.meetPrompt.gravity = Gravity.CENTER
+                    binding.meetPrompt.text = on<ResourcesHandler>().resources.getString(R.string.want_to_meet_phone, on<NameHandler>().getName(phone))
+                    binding.meetTrue.setOnClickListener {
                         on<MeetHandler>().meet(phone.id!!, true)
                         if (!on<MeetHandler>().next()) finish()
                     }
-                    view.meetLayout.meetFalse.setOnClickListener {
+                    binding.meetFalse.setOnClickListener {
                         on<MeetHandler>().meet(phone.id!!, false)
                         if (!on<MeetHandler>().next()) finish()
                     }
@@ -276,102 +277,102 @@ class GroupActivity : CircularRevealActivity() {
         names.addAll(contactInfo.contactInvites)
 
         if (names.isEmpty()) {
-            view.peopleInGroup.visible = false
-            view.peopleInGroup.setText(R.string.add_contact)
+            binding.peopleInGroup.visible = false
+            binding.peopleInGroup.setText(R.string.add_contact)
             return
         }
 
-        view.peopleInGroup.visible = true
-        view.peopleInGroup.text = names.joinToString()
+        binding.peopleInGroup.visible = true
+        binding.peopleInGroup.text = names.joinToString()
     }
 
     private fun showGroupName(group: Group?) {
         if (group == null) {
-            view.groupName.setText(R.string.not_found)
+            binding.groupName.setText(R.string.not_found)
             return
         }
 
         if (group.hasPhone()) {
             on<DisposableHandler>().add(on<DataHandler>().getPhone(group.phoneId!!).subscribe(
-                    { view.groupName.text = on<NameHandler>().getName(it) }, { on<DefaultAlerts>().thatDidntWork() }
+                    { binding.groupName.text = on<NameHandler>().getName(it) }, { on<DefaultAlerts>().thatDidntWork() }
             ))
         } else {
-            on<GroupNameHelper>().loadName(group, view.groupName) { it }
+            on<GroupNameHelper>().loadName(group, binding.groupName) { it }
         }
     }
 
     private fun setGroupRating(group: Group) {
         val visible = group.ratingAverage != null && group.ratingCount != null
 
-        view.groupRatingAverage.visible = visible
-        view.groupRatingCount.visible = visible
+        binding.groupRatingAverage.visible = visible
+        binding.groupRatingCount.visible = visible
 
         if (!visible) {
             return
         }
 
-        view.groupRatingAverage.rating = group.ratingAverage!!.toFloat()
-        view.groupRatingCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count_parenthesized, group.ratingCount!!, group.ratingCount)
+        binding.groupRatingAverage.rating = group.ratingAverage!!.toFloat()
+        binding.groupRatingCount.text = on<ResourcesHandler>().resources.getQuantityString(R.plurals.review_count_parenthesized, group.ratingCount!!, group.ratingCount)
     }
 
     private fun setGroupAbout(group: Group) {
-        view.groupAbout.visible = !group.about.isNullOrBlank()
-        view.groupAbout.text = group.about
+        binding.groupAbout.visible = !group.about.isNullOrBlank()
+        binding.groupAbout.text = group.about
     }
 
     private fun setGroupBackground(group: Group) {
         if (group.photo != null) {
-            view.backgroundPhoto.visible = true
+            binding.backgroundPhoto.visible = true
             on<ImageHandler>().get().load(group.photo + "?s=512")
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(view.backgroundPhoto)
-            view.backgroundPhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.backgroundPhoto, group.photo!!) }
+                    .into(binding.backgroundPhoto)
+            binding.backgroundPhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(binding.backgroundPhoto, group.photo!!) }
 
         } else {
-            view.backgroundPhoto.visible = false
+            binding.backgroundPhoto.visible = false
         }
 
         if (on<LightDarkHandler>().isLight()) {
-            view.backgroundColor.setBackgroundResource(R.drawable.color_white_rounded)
+            binding.backgroundColor.setBackgroundResource(R.drawable.color_white_rounded)
         } else {
-            view.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
+            binding.backgroundColor.setBackgroundResource(on<GroupColorHandler>().getColorBackground(group))
         }
     }
 
     private fun setGroupProfilePhoto(photo: String?) {
         if (photo != null) {
-            view.profilePhoto.visible = true
+            binding.profilePhoto.visible = true
             on<ImageHandler>().get().load("$photo?s=512")
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(view.profilePhoto)
-            view.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(view.profilePhoto, photo) }
+                    .into(binding.profilePhoto)
+            binding.profilePhoto.setOnClickListener { on<PhotoActivityTransitionHandler>().show(binding.profilePhoto, photo) }
 
         } else {
-            view.profilePhoto.visible = false
+            binding.profilePhoto.visible = false
         }
     }
 
     private fun bindViewEvents() {
-        view.closeButton.setOnClickListener { finish() }
+        binding.closeButton.setOnClickListener { finish() }
 
-        view.groupAbout.setOnClickListener {
+        binding.groupAbout.setOnClickListener {
             on<DefaultAlerts>().message(
                     on<ResourcesHandler>().resources.getString(on<GroupHandler>().phone?.let { R.string.public_status } ?: R.string.about_this_group),
                     on<GroupHandler>().phone?.status ?: on<GroupHandler>().group?.about ?: ""
             )
         }
 
-        view.peopleInGroup.setOnClickListener { toggleContactsView() }
+        binding.peopleInGroup.setOnClickListener { toggleContactsView() }
 
-        view.settingsButton.setOnClickListener {
+        binding.settingsButton.setOnClickListener {
             on<GroupMemberHandler>().changeGroupSettings(on<GroupHandler>().group)
         }
 
-        view.notificationSettingsButton.setOnClickListener {
+        binding.notificationSettingsButton.setOnClickListener {
             on<GroupMemberHandler>().mute(on<GroupHandler>().group, false)
         }
 
-        view.closeButton.visible = !on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON]
+        binding.closeButton.visible = !on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_HIDE_CLOSE_BUTTON]
     }
 
     override fun onNewIntent(intent: Intent) {

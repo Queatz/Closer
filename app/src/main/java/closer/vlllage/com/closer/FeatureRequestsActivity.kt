@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import closer.vlllage.com.closer.databinding.ActivityFeatureRequestsBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestAdapter
 import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
@@ -15,37 +16,39 @@ import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.activity_feature_requests.*
 
 class FeatureRequestsActivity : CircularRevealActivity() {
 
+    private lateinit var binding: ActivityFeatureRequestsBinding
     private lateinit var adapter: FeatureRequestAdapter
     private val searchString = BehaviorSubject.createDefault("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_feature_requests)
+        binding = ActivityFeatureRequestsBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
-        addButton.setOnClickListener {
+        binding.addButton.setOnClickListener {
             on<FeatureRequestsHandler>().add()
         }
 
-        betaMessage.setOnClickListener {
+        binding.betaMessage.setOnClickListener {
             it.visible = false
         }
 
         adapter = FeatureRequestAdapter(on)
 
-        featureRequestsRecyclerView.let {
+        binding.featureRequestsRecyclerView.let {
             it.layoutManager = LinearLayoutManager(this@FeatureRequestsActivity)
             it.adapter = adapter
         }
 
-        featureRequestsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.featureRequestsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    if (betaMessage.visible) {
-                        betaMessage.visible = false
+                    if (binding.betaMessage.visible) {
+                        binding.betaMessage.visible = false
                     }
                 }
             }
@@ -63,9 +66,9 @@ class FeatureRequestsActivity : CircularRevealActivity() {
                     .toMutableList()
         })
 
-        on<MiniWindowHandler>().attach(windowTitle, backgroundColor) { finish() }
+        on<MiniWindowHandler>().attach(binding.windowTitle, binding.backgroundColor) { finish() }
 
-        search.addTextChangedListener(object : TextWatcher {
+        binding.search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}

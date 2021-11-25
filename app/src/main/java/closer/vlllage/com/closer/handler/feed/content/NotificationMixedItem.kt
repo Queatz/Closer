@@ -1,24 +1,19 @@
 package closer.vlllage.com.closer.handler.feed.content
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.NotificationItemBinding
 import closer.vlllage.com.closer.handler.data.NotificationHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.Notification
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.notification_item.view.*
 
 class NotificationMixedItem(val notification: Notification) : MixedItem(MixedItemType.Notification)
 
-class NotificationViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.Notification) {
+class NotificationViewHolder(val binding: NotificationItemBinding) : MixedItemViewHolder(binding.root, MixedItemType.Notification) {
     lateinit var on: On
     lateinit var disposableGroup: DisposableGroup
-    var icon = itemView.icon!!
-    var name = itemView.notificationName!!
-    var message = itemView.notificationMessage!!
-    var time = itemView.notificationTime!!
 }
 
 class NotificationMixedItemAdapter(private val on: On) : MixedItemAdapter<NotificationMixedItem, NotificationViewHolder> {
@@ -33,8 +28,8 @@ class NotificationMixedItemAdapter(private val on: On) : MixedItemAdapter<Notifi
 
     override fun areContentsTheSame(old: NotificationMixedItem, new: NotificationMixedItem) = true
 
-    override fun onCreateViewHolder(parent: ViewGroup) = NotificationViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.notification_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup) = NotificationViewHolder(NotificationItemBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onViewRecycled(holder: NotificationViewHolder) {
         holder.on.off()
@@ -44,9 +39,9 @@ class NotificationMixedItemAdapter(private val on: On) : MixedItemAdapter<Notifi
         holder.on = On(on).apply {
             use<DisposableHandler>()
         }
-        holder.name.text = notification.name ?: ""
-        holder.message.text = notification.message ?: ""
-        holder.time.text = on<TimeStr>().prettyDate(notification.created)
+        holder.binding.notificationName.text = notification.name ?: ""
+        holder.binding.notificationMessage.text = notification.message ?: ""
+        holder.binding.notificationTime.text = on<TimeStr>().prettyDate(notification.created)
         holder.itemView.setOnClickListener {
             on<NotificationHandler>().launch(notification)
         }
