@@ -27,10 +27,10 @@ import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.ui.InterceptableScrollView
 import at.bluesource.choicesdk.maps.common.LatLng
+import closer.vlllage.com.closer.databinding.PostEventModalBinding
+import closer.vlllage.com.closer.databinding.RemindersBinding
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.post_event_modal.view.*
-import kotlinx.android.synthetic.main.reminders.view.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -44,10 +44,9 @@ class EventHandler constructor(private val on: On) {
                        endsAt: Date? = null,
                        allDay: Boolean? = null,
                        onEventCreatedListener: OnEventCreatedListener) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { PostEventModalBinding.inflate(it) }.apply {
             theme = R.style.AppTheme_AlertDialog_Red
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.host_event)
-            layoutResId = R.layout.post_event_modal
             onAfterViewCreated = { alertConfig, view ->
                 val viewHolder = CreateEventViewHolder(view)
 
@@ -341,8 +340,7 @@ class EventHandler constructor(private val on: On) {
     }
 
     fun editReminders(event: Event) {
-        on<AlertHandler>().make().apply {
-            layoutResId = R.layout.reminders
+        on<AlertHandler>().view { RemindersBinding.inflate(it) }.apply {
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.apply)
             positiveButtonCallback = {
                 val items = (it as EditRemindersAdapter).items
@@ -396,7 +394,7 @@ class EventHandler constructor(private val on: On) {
 
                 adapter.items = event.reminders?.toMutableList() ?: mutableListOf()
 
-                view.remindersRecyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+                view.remindersRecyclerView.layoutManager = LinearLayoutManager(view.root.context, LinearLayoutManager.VERTICAL, false)
                 view.remindersRecyclerView.adapter = adapter
 
                 view.addReminder.setOnClickListener {
@@ -415,7 +413,7 @@ class EventHandler constructor(private val on: On) {
         }
     }
 
-    private class CreateEventViewHolder(view: View) {
+    private class CreateEventViewHolder(view: PostEventModalBinding) {
         var isPublicToggle: MaterialButtonToggleGroup = view.isPublicToggle
         var isAllDaySwitch: Switch = view.isAllDaySwitch
         var changeEndDateButton: View = view.changeEndDate
@@ -432,7 +430,7 @@ class EventHandler constructor(private val on: On) {
         var postEventInContainer: ViewGroup = view.postEventInContainer
         var postEventIn: TextView = view.postEventIn
         var removeGroupFromEvent: ImageButton = view.removeGroupFromEvent
-        var scrollView: InterceptableScrollView = view as InterceptableScrollView
+        var scrollView: InterceptableScrollView = view.root
     }
 
     private class CreateEventViewState(var startsAt: Calendar, var endsAt: Calendar)

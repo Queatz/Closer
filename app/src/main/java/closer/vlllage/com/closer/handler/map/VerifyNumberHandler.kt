@@ -1,6 +1,8 @@
 package closer.vlllage.com.closer.handler.map
 
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.SendCodeLayoutBinding
+import closer.vlllage.com.closer.databinding.VerifyNumberLayoutBinding
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -13,8 +15,7 @@ import com.queatz.on.On
 class VerifyNumberHandler constructor(private val on: On) {
 
     fun verify() {
-        on<AlertHandler>().make().apply {
-            layoutResId = R.layout.send_code_layout
+        on<AlertHandler>().view { SendCodeLayoutBinding.inflate(it) }.apply {
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.send_code)
             textViewId = R.id.input
             onTextViewSubmitCallback = { sendPhoneNumber(it) }
@@ -35,8 +36,7 @@ class VerifyNumberHandler constructor(private val on: On) {
     }
 
     private fun getCodeFromUser(phoneNumber: String) {
-        on<AlertHandler>().make().apply {
-            layoutResId = R.layout.verify_number_layout
+        on<AlertHandler>().view { VerifyNumberLayoutBinding.inflate(it) }.apply {
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.verify_number)
             textViewId = R.id.input
             onTextViewSubmitCallback = { verificationCode -> sendVerificationCode(phoneNumber, verificationCode) }

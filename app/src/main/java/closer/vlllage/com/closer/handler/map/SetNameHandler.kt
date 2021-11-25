@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.map
 import android.view.View
 import android.widget.TextView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.SetNameModalBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.helpers.AlertHandler
@@ -12,8 +13,7 @@ import com.queatz.on.On
 class SetNameHandler constructor(private val on: On) {
     @JvmOverloads
     fun modifyName(onNameModifiedCallback: ((String?) -> Unit)? = null, allowSkip: Boolean = false) {
-        on<AlertHandler>().make().apply {
-            layoutResId = R.layout.set_name_modal
+        on<AlertHandler>().view { SetNameModalBinding.inflate(it) }.apply {
             title = on<ResourcesHandler>().resources.getString(R.string.update_your_name)
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_your_name)
             negativeButton = (if (allowSkip) on<ResourcesHandler>().resources.getString(R.string.skip) else null)
@@ -27,10 +27,10 @@ class SetNameHandler constructor(private val on: On) {
                     onNameModifiedCallback?.invoke(name)
                 }
             onAfterViewCreated = { alertConfig, view ->
-                    (view.findViewById(R.id.input) as TextView).text = on<AccountHandler>().name
+                    view.input.setText(on<AccountHandler>().name)
 
                     if (allowSkip) {
-                        view.findViewById<View>(R.id.optionalText).visible = true
+                        view.optionalText.visible = true
                     }
 
                 }

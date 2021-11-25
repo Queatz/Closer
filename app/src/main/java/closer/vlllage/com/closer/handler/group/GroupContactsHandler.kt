@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
+import closer.vlllage.com.closer.databinding.InviteByNumberModalBinding
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
@@ -39,9 +40,8 @@ class GroupContactsHandler constructor(private val on: On) {
         this.searchContacts = searchContacts
         phoneContactAdapter = PhoneContactAdapter(on, { phoneContact ->
             if (phoneContact.name == null) {
-                on<AlertHandler>().make().apply {
+                on<AlertHandler>().view { InviteByNumberModalBinding.inflate(it) }.apply {
                     positiveButton = on<ResourcesHandler>().resources.getString(R.string.invite)
-                    layoutResId = R.layout.invite_by_number_modal
                     textViewId = R.id.input
                     onTextViewSubmitCallback = { name ->
                         phoneContact.name = name

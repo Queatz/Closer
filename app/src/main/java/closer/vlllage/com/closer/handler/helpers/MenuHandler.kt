@@ -5,14 +5,13 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.MenuModalBinding
 import closer.vlllage.com.closer.extensions.visible
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.menu_modal.view.*
 
 class MenuHandler constructor(private val on: On) {
     fun show(vararg menuOptions: MenuOption, title: String? = null, button: String? = null, buttonCallback: (() -> Unit)? = null) {
-        on<AlertHandler>().make().apply {
-            layoutResId = R.layout.menu_modal
+        on<AlertHandler>().view { MenuModalBinding.inflate(it) }.apply {
             onAfterViewCreated = { alertConfig, view ->
                 val menuRecyclerView = view.menuRecyclerView
                 menuRecyclerView.layoutManager = LinearLayoutManager(on<ActivityHandler>().activity, RecyclerView.VERTICAL, false)

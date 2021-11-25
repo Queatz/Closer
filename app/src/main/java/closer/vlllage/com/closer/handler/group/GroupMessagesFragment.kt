@@ -33,7 +33,7 @@ class GroupMessagesFragment : PoolActivityFragment() {
         on<GroupActionDisplay>().launchGroup = false
         on<GroupActionDisplay>().showGroupName = false
         on<GroupActionHandler>().attach(binding.actionFrameLayout, binding.actionRecyclerView)
-        on<GroupMessagesHandler>().attach(binding.messagesRecyclerView, binding.replyMessage, binding.sendButton, binding.sendMoreButton, binding.sendMoreLayout)
+        on<GroupMessagesHandler>().attach(binding)
         on<PinnedMessagesHandler>().attach(binding.pinnedMessagesRecyclerView)
         on<GroupMessageMentionHandler>().attach(binding.mentionSuggestionsLayout, binding.mentionSuggestionRecyclerView) {
             mention -> on<GroupMessagesHandler>().insertMention(mention)

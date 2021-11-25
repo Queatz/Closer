@@ -6,6 +6,7 @@ import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.AddActionModalBinding
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.RefreshHandler
@@ -21,7 +22,6 @@ import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.add_action_modal.view.*
 
 class GroupActionHandler constructor(private val on: On) {
 
@@ -92,20 +92,17 @@ class GroupActionHandler constructor(private val on: On) {
     }
 
     fun addActionToGroup(group: Group) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { AddActionModalBinding.inflate(it) }.apply {
             title = on<ResourcesHandler>().resources.getString(R.string.add_an_action)
             negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.add_action)
-            layoutResId = R.layout.add_action_modal
             onAfterViewCreated = { alertConfig, view ->
-                val name = view.findViewById<EditText>(R.id.name)
-                val intent = view.findViewById<EditText>(R.id.intent)
                 val model = AddToGroupModalModel()
                 alertConfig.alertResult = model
 
-                view.intentPrefix.setOnClickListener { intent.requestFocus() }
+                view.intentPrefix.setOnClickListener { view.intent.requestFocus() }
 
-                name.addTextChangedListener(object : TextWatcher {
+                view.name.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
                     }
@@ -115,10 +112,10 @@ class GroupActionHandler constructor(private val on: On) {
                     }
 
                     override fun afterTextChanged(s: Editable) {
-                        model.name = name.text.toString()
+                        model.name = view.name.text.toString()
                     }
                 })
-                intent.addTextChangedListener(object : TextWatcher {
+                view.intent.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
                     }
@@ -128,7 +125,7 @@ class GroupActionHandler constructor(private val on: On) {
                     }
 
                     override fun afterTextChanged(s: Editable) {
-                        model.intent = intent.text.toString()
+                        model.intent = view.intent.text.toString()
                     }
                 })
             }

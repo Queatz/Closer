@@ -3,12 +3,15 @@ package closer.vlllage.com.closer.handler.post
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.CreatePostItemBinding
+import closer.vlllage.com.closer.databinding.CreatePostSectionHeaderBinding
+import closer.vlllage.com.closer.databinding.CreatePostSectionTextBinding
+import closer.vlllage.com.closer.databinding.CreatePostSelectGroupActionBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
@@ -16,10 +19,6 @@ import closer.vlllage.com.closer.store.models.Group
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.create_post_item.view.*
-import kotlinx.android.synthetic.main.create_post_section_header.view.input
-import kotlinx.android.synthetic.main.create_post_section_text.view.*
-import kotlinx.android.synthetic.main.create_post_select_group_action.view.*
 
 open class CreatePostAdapter(protected val on: On, private val action: (CreatePostAction) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -47,8 +46,7 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
         }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
-            CreatePostViewHolder(LayoutInflater.from(viewGroup.context)
-                    .inflate(R.layout.create_post_item, viewGroup, false)) as RecyclerView.ViewHolder
+            CreatePostViewHolder(CreatePostItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)) as RecyclerView.ViewHolder
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         (viewHolder as? CreatePostViewHolder)?.let { holder ->
@@ -60,155 +58,149 @@ open class CreatePostAdapter(protected val on: On, private val action: (CreatePo
 
             val item = items[position]
 
-            with(holder.itemView) {
-                actionAddHeading.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddHeading, position)) }
-                actionAddText.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddText, position)) }
-                actionAddPhoto.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddPhoto, position)) }
-                actionAddActivity.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddGroupAction, position)) }
-                actionDelete.setOnClickListener { action(CreatePostAction(CreatePostActionType.Delete, position)) }
+            holder.binding.actionAddHeading.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddHeading, position)) }
+            holder.binding.actionAddText.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddText, position)) }
+            holder.binding.actionAddPhoto.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddPhoto, position)) }
+            holder.binding.actionAddActivity.setOnClickListener { action(CreatePostAction(CreatePostActionType.AddGroupAction, position)) }
+            holder.binding.actionDelete.setOnClickListener { action(CreatePostAction(CreatePostActionType.Delete, position)) }
 
-                actionPhotoOptions.visible = item.attachment.has("photo")
-                actionPhotoOptions.setOnClickListener { action(CreatePostAction(CreatePostActionType.EditPhoto, position) {
-                    render(holder, item)
-                }) }
+            holder.binding.actionPhotoOptions.visible = item.attachment.has("photo")
+            holder.binding.actionPhotoOptions.setOnClickListener { action(CreatePostAction(CreatePostActionType.EditPhoto, position) {
+                render(holder, item)
+            }) }
 
-                postButton.visible = position == items.size - 1
-                postButton.text = on<GroupActionDisplay>().postText(group, groupName)
-                postButton.setOnClickListener { action(CreatePostAction(CreatePostActionType.Post, position)) }
-            }
+            holder.binding.postButton.visible = position == items.size - 1
+            holder.binding.postButton.text = on<GroupActionDisplay>().postText(group, groupName)
+            holder.binding.postButton.setOnClickListener { action(CreatePostAction(CreatePostActionType.Post, position)) }
 
             render(holder, item)
 
             on<LightDarkHandler>().onLightChanged.subscribe {
-                with(holder.itemView) {
-                    actionAddHeading.setTextColor(it.text)
-                    actionAddText.setTextColor(it.text)
-                    actionAddPhoto.setTextColor(it.text)
-                    actionAddActivity.setTextColor(it.text)
-                    actionPhotoOptions.setTextColor(it.text)
-                    actionDelete.setTextColor(it.text)
-                    actionAddHeading.compoundDrawableTintList = it.tint
-                    actionAddText.compoundDrawableTintList = it.tint
-                    actionAddPhoto.compoundDrawableTintList = it.tint
-                    actionAddActivity.compoundDrawableTintList = it.tint
-                    actionPhotoOptions.compoundDrawableTintList = it.tint
-                    actionDelete.compoundDrawableTintList = it.tint
-                    actionAddHeading.setBackgroundResource(it.clickableRoundedBackground)
-                    actionAddText.setBackgroundResource(it.clickableRoundedBackground)
-                    actionAddPhoto.setBackgroundResource(it.clickableRoundedBackground)
-                    actionAddActivity.setBackgroundResource(it.clickableRoundedBackground)
-                    actionPhotoOptions.setBackgroundResource(it.clickableRoundedBackground)
-                    actionDelete.setBackgroundResource(it.clickableRoundedBackground)
-                }
+                holder.binding.actionAddHeading.setTextColor(it.text)
+                holder.binding.actionAddText.setTextColor(it.text)
+                holder.binding.actionAddPhoto.setTextColor(it.text)
+                holder.binding.actionAddActivity.setTextColor(it.text)
+                holder.binding.actionPhotoOptions.setTextColor(it.text)
+                holder.binding.actionDelete.setTextColor(it.text)
+                holder.binding.actionAddHeading.compoundDrawableTintList = it.tint
+                holder.binding.actionAddText.compoundDrawableTintList = it.tint
+                holder.binding.actionAddPhoto.compoundDrawableTintList = it.tint
+                holder.binding.actionAddActivity.compoundDrawableTintList = it.tint
+                holder.binding.actionPhotoOptions.compoundDrawableTintList = it.tint
+                holder.binding.actionDelete.compoundDrawableTintList = it.tint
+                holder.binding.actionAddHeading.setBackgroundResource(it.clickableRoundedBackground)
+                holder.binding.actionAddText.setBackgroundResource(it.clickableRoundedBackground)
+                holder.binding.actionAddPhoto.setBackgroundResource(it.clickableRoundedBackground)
+                holder.binding.actionAddActivity.setBackgroundResource(it.clickableRoundedBackground)
+                holder.binding.actionPhotoOptions.setBackgroundResource(it.clickableRoundedBackground)
+                holder.binding.actionDelete.setBackgroundResource(it.clickableRoundedBackground)
             }.also { holder.disposableGroup.add(it) }
         }
     }
 
     private fun render(holder: CreatePostViewHolder, item: PostSection) {
-        with(holder.itemView) {
-            content.removeAllViews()
+        holder.binding.content.removeAllViews()
 
-            when {
-                item.attachment.has("header") -> {
-                    val view = LayoutInflater.from(context).inflate(R.layout.create_post_section_header, content, false)
-                    view.input.setText(holder.on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("header").asJsonObject.get("text").asString))
+        when {
+            item.attachment.has("header") -> {
+                val view = CreatePostSectionHeaderBinding.inflate(LayoutInflater.from(holder.binding.content.context), holder.binding.content, false)
+                view.input.setText(holder.on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("header").asJsonObject.get("text").asString))
 
-                    view.input.addTextChangedListener(object : TextWatcher {
+                view.input.addTextChangedListener(object : TextWatcher {
 
-                        private var isDeleteMention: Boolean = false
-                        private var shouldDeleteMention: Boolean = false
+                    private var isDeleteMention: Boolean = false
+                    private var shouldDeleteMention: Boolean = false
 
-                        override fun afterTextChanged(text: Editable) {
-                            holder.on<GroupMessageMentionHandler>().showSuggestionsForName(holder.on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
+                    override fun afterTextChanged(text: Editable) {
+                        holder.on<GroupMessageMentionHandler>().showSuggestionsForName(holder.on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
 
-                            if (shouldDeleteMention) {
-                                isDeleteMention = true
-                                holder.on<GroupMessageParseHandler>().deleteMention(view.input)
-                            }
+                        if (shouldDeleteMention) {
+                            isDeleteMention = true
+                            holder.on<GroupMessageParseHandler>().deleteMention(view.input)
                         }
-
-                        override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
-                            shouldDeleteMention = !isDeleteMention && after == 0 && holder.on<GroupMessageParseHandler>().isMentionSelected(view.input)
-                            isDeleteMention = false
-                        }
-
-                        override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
-                            item.attachment.get("header").asJsonObject.add("text", JsonPrimitive(text.toString()))
-                        }
-                    })
-
-                    holder.on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
-                        mention -> holder.on<GroupMessageParseHandler>().insertMention(view.input, mention)
                     }
 
-                    content.addView(view)
-                }
-                item.attachment.has("text") -> {
-                    val view = LayoutInflater.from(context).inflate(R.layout.create_post_section_text, content, false)
-                    view.input.setText(holder.on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("text").asJsonObject.get("text").asString))
-                    view.input.addTextChangedListener(object : TextWatcher {
-
-                        private var isDeleteMention: Boolean = false
-                        private var shouldDeleteMention: Boolean = false
-
-                        override fun afterTextChanged(text: Editable) {
-                            holder.on<GroupMessageMentionHandler>().showSuggestionsForName(holder.on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
-
-                            if (shouldDeleteMention) {
-                                isDeleteMention = true
-                                holder.on<GroupMessageParseHandler>().deleteMention(view.input)
-                            }
-                        }
-
-                        override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
-                            shouldDeleteMention = !isDeleteMention && after == 0 && holder.on<GroupMessageParseHandler>().isMentionSelected(view.input)
-                            isDeleteMention = false
-                        }
-
-                        override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
-                            item.attachment.get("text").asJsonObject.add("text", JsonPrimitive(text.toString()))
-                        }
-                    })
-
-                    holder.on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
-                        mention -> holder.on<GroupMessageParseHandler>().insertMention(view.input, mention)
+                    override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
+                        shouldDeleteMention = !isDeleteMention && after == 0 && holder.on<GroupMessageParseHandler>().isMentionSelected(view.input)
+                        isDeleteMention = false
                     }
 
-                    content.addView(view)
-                }
-                item.attachment.has("photo") -> {
-                    on<MessageSections>().renderPhotoSection(item.attachment.get("photo").asJsonObject, content).subscribe { view ->
-                        content.addView(view)
-                    }.also { holder.disposableGroup.add(it) }
-                }
-                item.attachment.has("activity") -> {
-                    val activity = item.attachment.get("activity")
-
-                    if (activity.isJsonObject) {
-                        on<MessageSections>().renderGroupActionSection(item.attachment.get("activity").asJsonObject, content).subscribe { view ->
-                            content.addView(view)
-                        }.also { holder.disposableGroup.add(it) }
-                    } else {
-                        val view = LayoutInflater.from(context).inflate(R.layout.create_post_select_group_action, content, false)
-
-                        val adapter = GroupActionAdapter(holder.on, GroupActionDisplay.Layout.PHOTO) { it, _ ->
-                            item.attachment.add("activity", on<JsonHandler>().toJsonTree(it))
-                            notifyDataSetChanged()
-                        }
-                        view.actionRecyclerView.adapter = adapter
-                        view.actionRecyclerView.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
-
-                        view.searchActivities.doOnTextChanged { text, _, _, _ ->
-                            searchGroupActivities(holder, adapter, text.toString())
-                        }
-
-                        searchGroupActivities(holder, adapter, null)
-
-                        content.addView(view)
+                    override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
+                        item.attachment.get("header").asJsonObject.add("text", JsonPrimitive(text.toString()))
                     }
+                })
+
+                holder.on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
+                    mention -> holder.on<GroupMessageParseHandler>().insertMention(view.input, mention)
                 }
-                else -> {}
+
+                holder.binding.content.addView(view.root)
             }
+            item.attachment.has("text") -> {
+                val view = CreatePostSectionTextBinding.inflate(LayoutInflater.from(holder.binding.content.context), holder.binding.content, false)
+                view.input.setText(holder.on<GroupMessageParseHandler>().parseText(view.input, item.attachment.get("text").asJsonObject.get("text").asString))
+                view.input.addTextChangedListener(object : TextWatcher {
+
+                    private var isDeleteMention: Boolean = false
+                    private var shouldDeleteMention: Boolean = false
+
+                    override fun afterTextChanged(text: Editable) {
+                        holder.on<GroupMessageMentionHandler>().showSuggestionsForName(holder.on<GroupMessageParseHandler>().extractName(text, view.input.selectionStart))
+
+                        if (shouldDeleteMention) {
+                            isDeleteMention = true
+                            holder.on<GroupMessageParseHandler>().deleteMention(view.input)
+                        }
+                    }
+
+                    override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
+                        shouldDeleteMention = !isDeleteMention && after == 0 && holder.on<GroupMessageParseHandler>().isMentionSelected(view.input)
+                        isDeleteMention = false
+                    }
+
+                    override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
+                        item.attachment.get("text").asJsonObject.add("text", JsonPrimitive(text.toString()))
+                    }
+                })
+
+                holder.on<GroupMessageMentionHandler>().attach(view.mentionSuggestionsLayout, view.mentionSuggestionRecyclerView) {
+                    mention -> holder.on<GroupMessageParseHandler>().insertMention(view.input, mention)
+                }
+
+                holder.binding.content.addView(view.root)
+            }
+            item.attachment.has("photo") -> {
+                on<MessageSections>().renderPhotoSection(item.attachment.get("photo").asJsonObject, holder.binding.content).subscribe { view ->
+                    holder.binding.content.addView(view.root)
+                }.also { holder.disposableGroup.add(it) }
+            }
+            item.attachment.has("activity") -> {
+                val activity = item.attachment.get("activity")
+
+                if (activity.isJsonObject) {
+                    on<MessageSections>().renderGroupActionSection(item.attachment.get("activity").asJsonObject, holder.binding.content).subscribe { view ->
+                        holder.binding.content.addView(view)
+                    }.also { holder.disposableGroup.add(it) }
+                } else {
+                    val view = CreatePostSelectGroupActionBinding.inflate(LayoutInflater.from(holder.binding.content.context), holder.binding.content, false)
+
+                    val adapter = GroupActionAdapter(holder.on, GroupActionDisplay.Layout.PHOTO) { it, _ ->
+                        item.attachment.add("activity", on<JsonHandler>().toJsonTree(it))
+                        notifyDataSetChanged()
+                    }
+                    view.actionRecyclerView.adapter = adapter
+                    view.actionRecyclerView.layoutManager = LinearLayoutManager(holder.binding.content.context, RecyclerView.HORIZONTAL, false)
+
+                    view.searchActivities.doOnTextChanged { text, _, _, _ ->
+                        searchGroupActivities(holder, adapter, text.toString())
+                    }
+
+                    searchGroupActivities(holder, adapter, null)
+
+                    holder.binding.content.addView(view.root)
+                }
+            }
+            else -> {}
         }
     }
 
@@ -235,7 +227,7 @@ data class PostSection constructor(
     var attachment: JsonObject
 )
 
-class CreatePostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class CreatePostViewHolder(val binding: CreatePostItemBinding) : RecyclerView.ViewHolder(binding.root) {
     lateinit var disposableGroup: DisposableGroup
     lateinit var on: On
 }

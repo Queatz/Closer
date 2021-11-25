@@ -3,13 +3,15 @@ package closer.vlllage.com.closer.handler.group
 import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.CommentsModalBinding
+import closer.vlllage.com.closer.databinding.GroupActionDescriptionModalBinding
+import closer.vlllage.com.closer.databinding.GroupActionEditFlowModalBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.FeatureHandler
 import closer.vlllage.com.closer.handler.FeatureType
@@ -29,7 +31,6 @@ import com.google.gson.JsonPrimitive
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.group_action_edit_flow_modal.view.*
 import java.util.*
 
 class GroupActionDisplay constructor(private val on: On) {
@@ -206,13 +207,12 @@ class GroupActionDisplay constructor(private val on: On) {
         }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ groupInfo ->
-            on<AlertHandler>().make().apply {
+            on<AlertHandler>().view { CommentsModalBinding.inflate(it) }.apply {
                 val noComment = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.firstOrNull()?.asJsonObject?.let {
                     if (it.has("noComment")) it["noComment"].asBoolean else false
                 } ?: false
 
                 if (!noComment) {
-                    layoutResId = R.layout.comments_modal
                     textViewId = R.id.input
                     onTextViewSubmitCallback = { comment ->
                         val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, "${selection?.let { if (comment.isBlank()) it else "$it\n\n" } ?: ""}${comment}")
@@ -270,13 +270,12 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     private fun editGroupActionAbout(groupAction: GroupAction) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { GroupActionDescriptionModalBinding.inflate(it) }.apply {
             title = on<Val>().of(groupAction.name, on<ResourcesHandler>().resources.getString(R.string.app_name))
-            layoutResId = R.layout.group_action_description_modal
             textViewId = R.id.input
             onTextViewSubmitCallback = { about -> on<GroupActionUpgradeHandler>().setAbout(groupAction, about) }
             onAfterViewCreated = { alert, view ->
-                view.findViewById<EditText>(alert.textViewId!!).setText(groupAction.about ?: "")
+                view.root.findViewById<EditText>(alert.textViewId!!).setText(groupAction.about ?: "")
             }
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.update_description)
             show()
@@ -284,11 +283,11 @@ class GroupActionDisplay constructor(private val on: On) {
     }
 
     private fun editGroupActionFlow(groupAction: GroupAction) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { GroupActionEditFlowModalBinding.inflate(it) }.apply {
             theme = R.style.AppTheme_AlertDialog
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.save)
             positiveButtonCallback = { result ->
-                val view = result as ViewGroup
+                val view = result as GroupActionEditFlowModalBinding
 
                 val flow = JsonArray()
 
@@ -314,7 +313,6 @@ class GroupActionDisplay constructor(private val on: On) {
 
                 on<GroupActionUpgradeHandler>().setFlow(groupAction, flow)
             }
-            layoutResId = R.layout.group_action_edit_flow_modal
             onAfterViewCreated = { alertConfig, view ->
                 alertConfig.alertResult = view
 

@@ -27,13 +27,13 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.CameraPosition
 import at.bluesource.choicesdk.maps.common.LatLng
+import closer.vlllage.com.closer.databinding.FeedItemPublicGroupsBinding
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.feed_item_public_groups.view.*
 import java.util.*
 
 class PublicGroupFeedItemHandler constructor(private val on: On) {
@@ -58,7 +58,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var peopleContainer: ViewGroup
     private lateinit var appsToolbar: RecyclerView
 
-    private lateinit var itemView: View
+    private lateinit var binding: FeedItemPublicGroupsBinding
     private lateinit var onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit
     private lateinit var toolbarAdapter: ToolbarAdapter
 
@@ -70,26 +70,26 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     private var groupActionsDisposable: DataSubscription? = null
 
-    fun attach(itemView: ViewGroup, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
-        this.itemView = itemView
+    fun attach(binding: FeedItemPublicGroupsBinding, onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) {
+        this.binding = binding
         this.onToolbarItemSelected = onToolbarItemSelected
 
-        groupsRecyclerView = itemView.publicGroupsRecyclerView
-        groupsHeader = itemView.publicGroupsHeader
-        actionHeader = itemView.thingsToDoHeader
-        eventsHeader = itemView.eventsHeader
-        eventsRecyclerView = itemView.publicEventsRecyclerView
-        hubsRecyclerView = itemView.publicHubsRecyclerView
-        actionRecyclerView = itemView.groupActionsRecyclerView
-        suggestionsRecyclerView = itemView.suggestionsRecyclerView
-        peopleRecyclerView = itemView.peopleRecyclerView
-        searchGroups = itemView.searchGroups
-        saySomething = itemView.saySomething
-        saySomethingHeader = itemView.saySomethingHeader
-        sendSomethingButton = itemView.sendSomethingButton
-        launchGroupButton = itemView.launchGroupButton
-        peopleContainer = itemView.peopleContainer
-        appsToolbar = itemView.appsToolbar
+        groupsRecyclerView = binding.publicGroupsRecyclerView
+        groupsHeader = binding.publicGroupsHeader
+        actionHeader = binding.thingsToDoHeader
+        eventsHeader = binding.eventsHeader
+        eventsRecyclerView = binding.publicEventsRecyclerView
+        hubsRecyclerView = binding.publicHubsRecyclerView
+        actionRecyclerView = binding.groupActionsRecyclerView
+        suggestionsRecyclerView = binding.suggestionsRecyclerView
+        peopleRecyclerView = binding.peopleRecyclerView
+        searchGroups = binding.searchGroups
+        saySomething = binding.saySomething
+        saySomethingHeader = binding.saySomethingHeader
+        sendSomethingButton = binding.sendSomethingButton
+        launchGroupButton = binding.launchGroupButton
+        peopleContainer = binding.peopleContainer
+        appsToolbar = binding.appsToolbar
 
         setupAppsToolbar(appsToolbar)
 
@@ -148,15 +148,15 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         })
 
         searchGroups.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            if (searchGroups.hasFocus() && bottom != oldBottom) on<FeedHandler>().scrollTo(itemView, searchGroups)
+            if (searchGroups.hasFocus() && bottom != oldBottom) on<FeedHandler>().scrollTo(binding.root, searchGroups)
         }
 
         searchGroups.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) on<FeedHandler>().scrollTo(itemView, searchGroups)
+            if (hasFocus) on<FeedHandler>().scrollTo(binding.root, searchGroups)
         }
 
         searchGroups.setOnClickListener {
-            on<FeedHandler>().scrollTo(itemView, searchGroups)
+            on<FeedHandler>().scrollTo(binding.root, searchGroups)
         }
 
         on<SearchGroupHandler>().showGroupsForQuery(searchGroups.text.toString())
@@ -208,7 +208,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             searchGroupsAdapter.setCreatePublicGroupName(it)
         })
 
-        itemView.historyButton.setOnClickListener {
+        binding.historyButton.setOnClickListener {
             when (toolbarAdapter.selectedContentView.value) {
                 ContentViewType.HOME_QUESTS -> {
                     on<QuestHandler>().createQuest()
@@ -264,7 +264,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                     on<DisposableHandler>().add(it)
                 }
             } else {
-                on<LocalityHelper>().getLocality(cameraPosition.target!!) {
+                on<LocalityHelper>().getLocality(cameraPosition.target) {
                     saySomething.hint = it?.let {
                         on<ResourcesHandler>().resources.getString(R.string.say_something_in, it)
                     } ?: let {
@@ -328,7 +328,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
     private fun setupAppsToolbar(appsToolbar: RecyclerView) {
         on<DragDropHandler>().attach(appsToolbar, {
-            itemView.appsToolbarContainer.preventScrolling = it
+            binding.appsToolbarContainer.preventScrolling = it
         }) { from, to ->
             toolbarAdapter.moveItem(from, to)
             on<PersistenceHandler>().appsToolbarOrder = toolbarAdapter.items.mapNotNull { it.value }
@@ -341,7 +341,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
         appsToolbar.adapter = toolbarAdapter
 
         on<FeedHandler>().content.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            toolbarAdapter.selectedContentView.onNext(when (it!!) {
+            toolbarAdapter.selectedContentView.onNext(when (it) {
                 FeedContent.CALENDAR -> ContentViewType.HOME_CALENDAR
                 FeedContent.NOTIFICATIONS -> ContentViewType.HOME_NOTIFICATIONS
                 FeedContent.GROUPS -> ContentViewType.HOME_GROUPS
@@ -404,11 +404,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 suggestionsRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
-                                itemView.historyButton.visible = false
+                                binding.historyButton.visible = false
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                             }
                             ContentViewType.HOME_CONTACTS -> {
                                 saySomethingHeader.visible = false
@@ -423,11 +423,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 suggestionsRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
-                                itemView.historyButton.visible = false
+                                binding.historyButton.visible = false
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                             }
                             ContentViewType.HOME_NOTIFICATIONS -> {
                                 saySomethingHeader.visible = false
@@ -442,11 +442,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 suggestionsRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
-                                itemView.historyButton.visible = false
+                                binding.historyButton.visible = false
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                             }
                             ContentViewType.HOME_POSTS -> {
                                 saySomethingHeader.visible = false
@@ -461,11 +461,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 suggestionsRecyclerView.visible = false
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = false
-                                itemView.historyButton.visible = false
+                                binding.historyButton.visible = false
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                                 searchGroupsAdapter.showCreateOption(false)
                             }
                             ContentViewType.HOME_ACTIVITIES -> {
@@ -486,11 +486,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 on<ResourcesHandler>().resources.getString(R.string.search_for_things_to_do).let { hint ->
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }
-                                itemView.historyButton.visible = false
+                                binding.historyButton.visible = false
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                             }
                             ContentViewType.HOME_CALENDAR -> {
                                 saySomethingHeader.visible = false
@@ -506,13 +506,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsRecyclerView.visible = false
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_events_hint)
-                                itemView.historyButton.visible = true
-                                itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
-                                itemView.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.red))
+                                binding.historyButton.visible = true
+                                binding.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
+                                binding.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.red))
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                             }
                             ContentViewType.HOME_PLACES -> {
                                 eventsRecyclerView.visible = false
@@ -524,19 +524,19 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsHeader.visible = false
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_places)
-                                itemView.historyButton.visible = true
-                                itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
-                                itemView.historyButton.imageTintList = null
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = true
+                                binding.historyButton.visible = true
+                                binding.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
+                                binding.historyButton.imageTintList = null
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = true
                                 saySomethingHeader.visible = false
                                 saySomething.visible = false
                                 sendSomethingButton.visible = false
                                 peopleContainer.visible = false
-                                itemView.placesHeader.visible = false
+                                binding.placesHeader.visible = false
                                 actionHeader.visible = false
-                                itemView.feedText.setText(R.string.conversations)
+                                binding.feedText.setText(R.string.conversations)
                                 searchGroups.visible = true
                             }
                             ContentViewType.HOME_QUESTS -> {
@@ -549,17 +549,17 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsHeader.visible = false
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_quests)
-                                itemView.historyButton.visible = true
-                                itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
-                                itemView.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.forestgreen))
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.historyButton.visible = true
+                                binding.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
+                                binding.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.forestgreen))
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                                 saySomethingHeader.visible = false
                                 saySomething.visible = false
                                 sendSomethingButton.visible = false
                                 peopleContainer.visible = false
-                                itemView.placesHeader.visible = false
+                                binding.placesHeader.visible = false
                                 actionHeader.visible = false
                                 searchGroups.visible = true
                                 searchGroupsAdapter.showCreateOption(false)
@@ -575,19 +575,19 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 groupsHeader.visible = false
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_communities)
-                                itemView.historyButton.visible = explore
-                                itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
-                                itemView.historyButton.imageTintList = null
+                                binding.historyButton.visible = explore
+                                binding.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
+                                binding.historyButton.imageTintList = null
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = true
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = true
 
                                 saySomethingHeader.visible = false
                                 saySomething.visible = false
                                 sendSomethingButton.visible = false
                                 peopleContainer.visible = false
-                                itemView.feedText.setText(R.string.conversations)
+                                binding.feedText.setText(R.string.conversations)
                                 searchGroupsAdapter.setCreateIsPublic(true)
                                 searchGroupsAdapter.showCreateOption(true)
                             }
@@ -603,20 +603,20 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 actionHeader.visible = false
                                 searchGroups.visible = true
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
-                                itemView.historyButton.visible = explore
-                                itemView.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
-                                itemView.historyButton.imageTintList = null
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = state.hasPlaces
-                                itemView.feedText.visible = true
+                                binding.historyButton.visible = explore
+                                binding.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
+                                binding.historyButton.imageTintList = null
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = state.hasPlaces
+                                binding.feedText.visible = true
 
                                 saySomethingHeader.visible = false
                                 saySomething.visible = false
                                 sendSomethingButton.visible = false
                                 peopleContainer.visible = false
-                                itemView.placesHeader.setText(R.string.your_places)
+                                binding.placesHeader.setText(R.string.your_places)
                                 groupsHeader.setText(R.string.groups)
-                                itemView.feedText.setText(R.string.conversations)
+                                binding.feedText.setText(R.string.conversations)
                                 searchGroupsAdapter.setCreateIsPublic(false)
                                 searchGroupsAdapter.showCreateOption(true)
                             }
@@ -638,13 +638,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 on<ResourcesHandler>().resources.getString(R.string.search_lifestyles).let { hint ->
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }
-                                itemView.historyButton.visible = true
-                                itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
-                                itemView.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.pink500))
+                                binding.historyButton.visible = true
+                                binding.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
+                                binding.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.pink500))
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                             }
                             ContentViewType.HOME_GOALS -> {
                                 saySomethingHeader.visible = false
@@ -664,13 +664,13 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 on<ResourcesHandler>().resources.getString(R.string.search_goals).let { hint ->
                                     if (searchGroups.hint != hint) searchGroups.hint = hint
                                 }
-                                itemView.historyButton.visible = true
-                                itemView.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
-                                itemView.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.pink500))
+                                binding.historyButton.visible = true
+                                binding.historyButton.setImageResource(R.drawable.ic_add_black_24dp)
+                                binding.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.pink500))
                                 actionHeader.visible = false
-                                itemView.suggestionsHeader.visible = false
-                                itemView.placesHeader.visible = false
-                                itemView.feedText.visible = false
+                                binding.suggestionsHeader.visible = false
+                                binding.placesHeader.visible = false
+                                binding.feedText.visible = false
                             }
                         }
                     })

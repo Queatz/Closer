@@ -4,6 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.GroupHeaderItemBinding
+import closer.vlllage.com.closer.databinding.GroupPhotoItemBinding
+import closer.vlllage.com.closer.databinding.GroupTextItemBinding
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ImageHandler
@@ -16,21 +19,20 @@ import com.google.gson.JsonObject
 import com.queatz.on.On
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
-import kotlinx.android.synthetic.main.message_item.view.*
 
 class MessageSections constructor(private val on: On) {
     fun renderSection(jsonObject: JsonObject, parent: ViewGroup): Single<View> {
         return when {
             jsonObject.has("activity") -> renderGroupActionSection(jsonObject.get("activity").asJsonObject, parent)
-            jsonObject.has("header") -> renderHeaderSection(jsonObject.get("header").asJsonObject, parent)
-            jsonObject.has("text") -> renderTextSection(jsonObject.get("text").asJsonObject, parent)
+            jsonObject.has("header") -> renderHeaderSection(jsonObject.get("header").asJsonObject, parent).map { it.root }
+            jsonObject.has("text") -> renderTextSection(jsonObject.get("text").asJsonObject, parent).map { it.root }
 //            jsonObject.has("action") -> displayAction(holder, jsonObject, groupMessage)
 //            jsonObject.has("review") -> displayReview(holder, jsonObject, groupMessage)
 //            jsonObject.has("message") -> displayMessage(holder, jsonObject, groupMessage)
 //            jsonObject.has("event") -> displayEvent(holder, jsonObject, groupMessage, onEventClickListener)
 //            jsonObject.has("group") -> displayGroup(holder, jsonObject, groupMessage, onGroupClickListener)
 //            jsonObject.has("suggestion") -> displaySuggestion(holder, jsonObject, groupMessage, onSuggestionClickListener)
-            jsonObject.has("photo") -> renderPhotoSection(jsonObject.get("photo").asJsonObject, parent)
+            jsonObject.has("photo") -> renderPhotoSection(jsonObject.get("photo").asJsonObject, parent).map { it.root }
 //            jsonObject.has("share") -> displayShare(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
 //            jsonObject.has("post") -> displayPost(holder, jsonObject, groupMessage, onEventClickListener, onGroupClickListener, onSuggestionClickListener)
             else -> Single.just(View(parent.context))
@@ -42,7 +44,7 @@ class MessageSections constructor(private val on: On) {
         else -> false
     }
 
-    fun renderPhotoSection(photo: JsonObject, parent: ViewGroup) = Single.just(LayoutInflater.from(parent.context).inflate(R.layout.group_photo_item, parent, false).also { rootView ->
+    fun renderPhotoSection(photo: JsonObject, parent: ViewGroup) = Single.just(GroupPhotoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false).also { rootView ->
         val isFullWidth = photo.get("large")?.asBoolean == true
         val url = photo.get("photo").asString + "?s=500"
 
@@ -58,7 +60,7 @@ class MessageSections constructor(private val on: On) {
                 .into(rootView.photo)
     })
 
-    fun renderHeaderSection(header: JsonObject, parent: ViewGroup) = LayoutInflater.from(parent.context).inflate(R.layout.group_header_item, parent, false).let { rootView ->
+    fun renderHeaderSection(header: JsonObject, parent: ViewGroup) = GroupHeaderItemBinding.inflate(LayoutInflater.from(parent.context), parent, false).let { rootView ->
         rootView.message.text = on<GroupMessageParseHandler>().parseText(rootView.message, header.getAsJsonPrimitive("text").asString)
 
         on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
@@ -68,7 +70,7 @@ class MessageSections constructor(private val on: On) {
         Single.just(rootView)
     }
 
-    fun renderTextSection(text: JsonObject, parent: ViewGroup) = LayoutInflater.from(parent.context).inflate(R.layout.group_text_item, parent, false).let { rootView ->
+    fun renderTextSection(text: JsonObject, parent: ViewGroup) = GroupTextItemBinding.inflate(LayoutInflater.from(parent.context), parent, false).let { rootView ->
         rootView.message.text = on<GroupMessageParseHandler>().parseText(rootView.message, text.getAsJsonPrimitive("text").asString)
 
         on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {

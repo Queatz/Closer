@@ -1,18 +1,17 @@
 package closer.vlllage.com.closer.handler.group
 
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.InputModalBinding
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.simple_input_modal.view.*
 
 class PhysicalGroupUpgradeHandler constructor(private val on: On) {
     fun convertToHub(group: Group, onGroupUpdateListener: (Group) -> Unit) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { InputModalBinding.inflate(it) }.apply {
             title = on<ResourcesHandler>().resources.getString(R.string.set_name)
-            layoutResId = R.layout.input_modal
             textViewId = R.id.input
             onAfterViewCreated = { _, view -> view.input.setText(group.name ?: "") }
             onTextViewSubmitCallback = { result ->

@@ -2,7 +2,7 @@ package closer.vlllage.com.closer.handler.feed.content
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.FeedItemPublicGroupsBinding
 import closer.vlllage.com.closer.handler.feed.PublicGroupFeedItemHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.map.FeedHandler
@@ -10,7 +10,7 @@ import com.queatz.on.On
 
 class HeaderMixedItem : MixedItem(MixedItemType.Header)
 
-class HeaderViewHolder(val view: ViewGroup): MixedItemViewHolder(view, MixedItemType.Header) {
+class HeaderViewHolder(val binding: FeedItemPublicGroupsBinding): MixedItemViewHolder(binding.root, MixedItemType.Header) {
     lateinit var on: On
 }
 
@@ -26,8 +26,7 @@ class HeaderMixedItemAdapter(private val on: On) : MixedItemAdapter<HeaderMixedI
 
     override fun areContentsTheSame(old: HeaderMixedItem, new: HeaderMixedItem) = true
 
-    override fun onCreateViewHolder(parent: ViewGroup) = HeaderViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.feed_item_public_groups, parent, false) as ViewGroup)
+    override fun onCreateViewHolder(parent: ViewGroup) = HeaderViewHolder(FeedItemPublicGroupsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onViewRecycled(holder: HeaderViewHolder) {
         holder.on.off()
@@ -35,6 +34,6 @@ class HeaderMixedItemAdapter(private val on: On) : MixedItemAdapter<HeaderMixedI
 
     private fun bindHeader(holder: HeaderViewHolder) {
         holder.on = On(on).apply { use<DisposableHandler>() }
-        holder.on<PublicGroupFeedItemHandler>().attach(holder.view) { on<FeedHandler>().show(it.value!!) }
+        holder.on<PublicGroupFeedItemHandler>().attach(holder.binding) { on<FeedHandler>().show(it.value!!) }
     }
 }

@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.TextView
 
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.LongMessageModalBinding
 import com.queatz.on.On
 
 class DefaultAlerts constructor(private val on: On) {
@@ -31,10 +32,9 @@ class DefaultAlerts constructor(private val on: On) {
     }
 
     fun longMessage(@StringRes title: Int?, message: CharSequence) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { LongMessageModalBinding.inflate(it) }.apply {
             this.title = if (title == null) null else on<ResourcesHandler>().resources.getString(title)
-            layoutResId = R.layout.long_message_modal
-            onAfterViewCreated = { _, view -> (view.findViewById<View>(R.id.messageText) as TextView).text = message }
+            onAfterViewCreated = { _, view -> view.messageText.text = message }
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.ok)
             show()
         }

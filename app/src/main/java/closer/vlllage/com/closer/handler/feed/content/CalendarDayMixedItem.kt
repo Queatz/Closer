@@ -24,12 +24,13 @@ import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Event_
 import at.bluesource.choicesdk.maps.common.LatLng
 import closer.vlllage.com.closer.databinding.CalendarDayItemBinding
+import closer.vlllage.com.closer.databinding.CalendarEventItemBinding
+import closer.vlllage.com.closer.databinding.CalendarReminderItemBinding
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.android.synthetic.main.calendar_event_item.view.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.floor
@@ -191,10 +192,10 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
         holder.disposable = holder.on<ApiHandler>().getEventRemindersOnDay(date).subscribe({
             it.forEach { eventReminder ->
                 eventReminder.instances?.forEach { instance ->
-                    val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_reminder_item, holder.binding.day, false)
+                    val view = CalendarReminderItemBinding.inflate(LayoutInflater.from(holder.itemView.context), holder.binding.day, false)
 
                     view.name.text = eventReminder.text?.let { "$it${eventReminder.event?.name?.let { " ($it)" } ?: ""}" } ?: eventReminder.event?.name
-                    (view.layoutParams as ConstraintLayout.LayoutParams).apply {
+                    (view.root.layoutParams as ConstraintLayout.LayoutParams).apply {
                         topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                         startToStart = ConstraintLayout.LayoutParams.PARENT_ID
                         endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
@@ -210,7 +211,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 
                     overlapping.add(Overlapping.Companion.Entry(instance, Date(instance.time + TimeUnit.HOURS.toMillis(1))))
 
-                    view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
+                    view.root.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
                         it.time = instance
                         (it.get(Calendar.DAY_OF_YEAR) - dayOfYear).toFloat() +
                                 it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
@@ -221,14 +222,14 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                         R.drawable.ic_baseline_flag_18dp, 0, 0, 0
                     )
 
-                    view.setBackgroundResource(R.drawable.clickable_blue_8dp)
+                    view.root.setBackgroundResource(R.drawable.clickable_blue_8dp)
 
-                    view.setOnClickListener {
-                        eventReminder.event?.let { on<GroupActivityTransitionHandler>().showGroupForEvent(view, EventResult.from(it)) }
+                    view.root.setOnClickListener {
+                        eventReminder.event?.let { on<GroupActivityTransitionHandler>().showGroupForEvent(view.root, EventResult.from(it)) }
                     }
 
-                    holder.binding.day.addView(view)
-                    holder.views.add(view)
+                    holder.binding.day.addView(view.root)
+                    holder.views.add(view.root)
                 }
             }
         }, {
@@ -238,11 +239,11 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
         }
 
         holder.events?.sortedBy { it.startsAt }?.onEach { event ->
-            val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.binding.day, false)
+            val view = CalendarEventItemBinding.inflate(LayoutInflater.from(holder.itemView.context), holder.binding.day, false)
 
             view.name.text = event.name
             view.about.text = on<EventDetailsHandler>().formatEventDetails(event)
-            (view.layoutParams as ConstraintLayout.LayoutParams).apply {
+            (view.root.layoutParams as ConstraintLayout.LayoutParams).apply {
                 val h = (event.endsAt!!.time - event.startsAt!!.time).toFloat() / TimeUnit.DAYS.toMillis(1) * vH
 
                 topToTop = ConstraintLayout.LayoutParams.PARENT_ID
@@ -259,7 +260,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 
             overlapping.add(Overlapping.Companion.Entry(event.startsAt!!, event.endsAt!!))
 
-            view.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
+            view.root.translationY = (vH * Calendar.getInstance(TimeZone.getDefault()).let {
                 it.time = event.startsAt!!
                 (it.get(Calendar.DAY_OF_YEAR) - dayOfYear).toFloat() +
                         it.get(Calendar.HOUR_OF_DAY).toFloat() / TimeUnit.DAYS.toHours(1).toFloat() +
@@ -270,12 +271,12 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                 if (event.isPublic) R.drawable.ic_public_black_18dp else R.drawable.ic_group_black_18dp, 0, 0, 0
             )
 
-            view.setOnClickListener {
-                on<GroupActivityTransitionHandler>().showGroupForEvent(view, event)
+            view.root.setOnClickListener {
+                on<GroupActivityTransitionHandler>().showGroupForEvent(view.root, event)
             }
 
-            holder.binding.day.addView(view)
-            holder.views.add(view)
+            holder.binding.day.addView(view.root)
+            holder.views.add(view.root)
         }
     }
 }

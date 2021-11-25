@@ -4,7 +4,6 @@ plugins {
     id("com.android.application")
     id("com.github.triplet.play")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
     id("io.objectbox")
     id("com.google.gms.google-services")

@@ -13,6 +13,7 @@ import closer.vlllage.com.closer.store.models.Suggestion
 import closer.vlllage.com.closer.store.models.Suggestion_
 import at.bluesource.choicesdk.maps.common.LatLng
 import at.bluesource.choicesdk.maps.common.LatLngBounds
+import closer.vlllage.com.closer.databinding.MakeSuggestionModalBinding
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
@@ -89,10 +90,9 @@ class SuggestionHandler constructor(private val on: On) {
     }
 
     fun createNewSuggestion(latLng: LatLng) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { MakeSuggestionModalBinding.inflate(it) }.apply {
             title = on<ResourcesHandler>().resources.getString(R.string.add_a_suggestion)
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.add_suggestion)
-            layoutResId = R.layout.make_suggestion_modal
             textViewId = R.id.input
             onTextViewSubmitCallback = { result -> createNewSuggestion(latLng, result) }
             show()

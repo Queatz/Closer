@@ -1,22 +1,31 @@
 package closer.vlllage.com.closer.handler.helpers
 
 import android.content.DialogInterface
-import android.view.View
+import android.view.LayoutInflater
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.viewbinding.ViewBinding
 import closer.vlllage.com.closer.handler.group.GroupMessageParseHandler
 import com.queatz.on.On
 
 
 class AlertHandler constructor(private val on: On) {
 
-    fun make(): AlertConfig {
-        return AlertConfig { showAlertConfig(it) }
+    fun <T : ViewBinding>view(inflate: (LayoutInflater) -> T): AlertConfig<T> {
+        return make(inflate(on<ActivityHandler>().activity!!.layoutInflater))
     }
 
-    private fun showAlertConfig(alertConfig: AlertConfig) {
+    fun <T : ViewBinding>make(binding: T): AlertConfig<T> {
+        return AlertConfig { showAlertConfig(binding, it) }
+    }
+
+    fun make(): AlertConfig<ViewBinding> {
+        return AlertConfig { showAlertConfig(null, it) }
+    }
+
+    private fun <T : ViewBinding>showAlertConfig(binding: T?, alertConfig: AlertConfig<T>) {
         if (!on<ActivityHandler>().isPresent) {
             if (alertConfig.message != null) {
                 on<ToastHandler>().show(alertConfig.message!!)
@@ -26,34 +35,33 @@ class AlertHandler constructor(private val on: On) {
 
         if (alertConfig.message != null) {
             on<GroupMessageParseHandler>().parseString(alertConfig.message!!, prefix = "").subscribe({
-                show(alertConfig, it)
+                show(binding, alertConfig, it)
             }, {
-                show(alertConfig, alertConfig.message)
+                show(binding, alertConfig, alertConfig.message)
             }).also {
                 on<DisposableHandler>().add(it)
             }
         } else {
-            show(alertConfig, alertConfig.message)
+            show(binding, alertConfig, alertConfig.message)
         }
     }
 
-    private fun show(alertConfig: AlertConfig, parsedMessage: String?) {
+    private fun <T : ViewBinding>show(binding: T?, alertConfig: AlertConfig<T>, parsedMessage: String?) {
         val dialogBuilder = AlertDialog.Builder(on<ActivityHandler>().activity!!, alertConfig.theme)
         var textView: TextView? = null
-        if (alertConfig.layoutResId != null) {
-            val view = View.inflate(on<ActivityHandler>().activity, alertConfig.layoutResId!!, null)
 
+        if (binding != null) {
             if (alertConfig.textViewId != null) {
-                textView = view.findViewById(alertConfig.textViewId!!)
+                textView = binding.root.findViewById(alertConfig.textViewId!!)
                 val finalTextView = textView
                 textView?.post { textView.requestFocus() }
                 textView?.post { on<KeyboardHandler>().showKeyboard(finalTextView, true) }
                 dialogBuilder.setOnDismissListener { on<KeyboardHandler>().showKeyboard(finalTextView, false) }
             }
 
-            alertConfig.onAfterViewCreated?.invoke(alertConfig, view)
+            alertConfig.onAfterViewCreated?.invoke(alertConfig, binding)
 
-            dialogBuilder.setView(view)
+            dialogBuilder.setView(binding.root)
         }
 
         if (alertConfig.positiveButton != null) {

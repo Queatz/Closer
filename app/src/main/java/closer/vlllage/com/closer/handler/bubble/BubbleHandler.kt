@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import closer.vlllage.com.closer.handler.map.MapHandler
 import at.bluesource.choicesdk.maps.common.LatLng
 import at.bluesource.choicesdk.maps.common.Map
+import closer.vlllage.com.closer.databinding.MapBubblePhysicalGroupBinding
 import com.queatz.on.On
 
 class BubbleHandler constructor(private val on: On) {
@@ -33,14 +34,14 @@ class BubbleHandler constructor(private val on: On) {
                     BubbleType.MENU -> on<MapBubbleMenuView>().from(view!!, mapBubble, onMenuItemClickListener)
                     BubbleType.SUGGESTION -> on<MapBubbleSuggestionView>().from(view!!, mapBubble, onMapBubbleSuggestionClickListener)
                     BubbleType.EVENT -> on<MapBubbleEventView>().from(view!!, mapBubble, onMapBubbleEventClickListener)
-                    BubbleType.PHYSICAL_GROUP -> on<MapBubblePhysicalGroupView>().from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener)
-                    else -> on<MapBubblePhysicalGroupView>().from(view!!, mapBubble, onClickListener!!)
+                    BubbleType.PHYSICAL_GROUP -> on<MapBubblePhysicalGroupView>().from(view!!, mapBubble, onMapBubblePhysicalGroupClickListener).root
+                    else -> on<MapBubblePhysicalGroupView>().from(view!!, mapBubble, onClickListener!!).root
                 }
             }
 
             override fun updateView(mapBubble: MapBubble) {
                 when (mapBubble.type) {
-                    BubbleType.STATUS -> on<MapBubblePhysicalGroupView>().update(mapBubble.view!!, mapBubble)
+                    BubbleType.STATUS -> on<MapBubblePhysicalGroupView>().update(MapBubblePhysicalGroupBinding.bind(mapBubble.view!!), mapBubble)
                 }
             }
         }

@@ -2,15 +2,13 @@ package closer.vlllage.com.closer.handler.post
 
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.TextHeaderItemBinding
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.ui.RecyclerViewHeader
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.text_header_item.view.*
 
 class CreatePostHeaderAdapter(on: On, action: (CreatePostAction) -> Unit) : CreatePostAdapter(on, action) {
 
@@ -20,8 +18,8 @@ class CreatePostHeaderAdapter(on: On, action: (CreatePostAction) -> Unit) : Crea
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             when (viewType) {
-                HEADER_VIEW_TYPE -> HeaderViewHolder(LayoutInflater.from(parent.context)
-                        .inflate(R.layout.text_header_item, parent, false))
+                HEADER_VIEW_TYPE -> HeaderViewHolder(TextHeaderItemBinding
+                        .inflate(LayoutInflater.from(parent.context), parent, false))
                 else -> super.onCreateViewHolder(parent, viewType)
             }
 
@@ -30,7 +28,7 @@ class CreatePostHeaderAdapter(on: On, action: (CreatePostAction) -> Unit) : Crea
             when (holder) {
                 is HeaderViewHolder -> {
                     headerViewHolder = holder
-                    holder.name.text = headerText
+                    holder.binding.name.text = headerText
                 }
             }
         } else {
@@ -60,14 +58,12 @@ class CreatePostHeaderAdapter(on: On, action: (CreatePostAction) -> Unit) : Crea
 
     fun setHeaderText(text: String) {
         headerText = text
-        headerViewHolder?.name?.text = text
+        headerViewHolder?.binding?.name?.text = text
     }
 
     companion object {
         private const val HEADER_VIEW_TYPE = -1
     }
 
-    class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.name!!
-    }
+    class HeaderViewHolder(val binding: TextHeaderItemBinding) : RecyclerView.ViewHolder(binding.root)
 }

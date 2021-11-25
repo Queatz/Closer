@@ -10,6 +10,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.FragmentGroupMessagesBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.data.SyncHandler
@@ -26,32 +27,23 @@ import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_group_messages.view.*
 import java.util.*
 
 class GroupMessagesHandler constructor(private val on: On) {
 
+    private lateinit var binding: FragmentGroupMessagesBinding
     private lateinit var groupMessagesAdapter: GroupMessagesAdapter
     private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var replyMessage: EditText
-    private lateinit var sendButton: ImageButton
-    private lateinit var sendMoreButton: ImageButton
-    private lateinit var sendMoreLayout: View
-    private lateinit var recyclerView: RecyclerView
     private var groupMessagesSubscription: DataSubscription? = null
     private var isRespond: Boolean = false
 
-    fun attach(recyclerView: RecyclerView, replyMessage: EditText, sendButton: ImageButton, sendMoreButton: ImageButton, sendMoreLayout: View) {
-        this.replyMessage = replyMessage
-        this.sendButton = sendButton
-        this.sendMoreButton = sendMoreButton
-        this.sendMoreLayout = sendMoreLayout
-        this.recyclerView = recyclerView
+    fun attach(binding: FragmentGroupMessagesBinding) {
+        this.binding = binding
 
         if (isRespond) {
-            replyMessage.postDelayed({
-                replyMessage.requestFocus()
-                on<KeyboardHandler>().showKeyboard(replyMessage, true)
+            binding.replyMessage.postDelayed({
+                binding.replyMessage.requestFocus()
+                on<KeyboardHandler>().showKeyboard(binding.replyMessage, true)
             }, 500)
         }
 
@@ -61,7 +53,7 @@ class GroupMessagesHandler constructor(private val on: On) {
                 true
         )
 
-        recyclerView.layoutManager = layoutManager
+        binding.messagesRecyclerView.layoutManager = layoutManager
 
         groupMessagesAdapter = GroupMessagesAdapter(On(on).apply {
             use<GroupMessageHelper> {
@@ -70,14 +62,14 @@ class GroupMessagesHandler constructor(private val on: On) {
                 onGroupClickListener = { group -> on<GroupActivityTransitionHandler>().showGroupMessages(null, group.id) }
             }
         })
-        recyclerView.adapter = groupMessagesAdapter
+        binding.messagesRecyclerView.adapter = groupMessagesAdapter
 
-        this.replyMessage.setOnEditorActionListener { textView, action, _ ->
+        binding.replyMessage.setOnEditorActionListener { textView, action, _ ->
             if (EditorInfo.IME_ACTION_GO == action) {
-                if (replyMessage.text.toString().isBlank()) {
+                if (binding.replyMessage.text.toString().isBlank()) {
                     return@setOnEditorActionListener false
                 }
-                val success = send(replyMessage.text.toString())
+                val success = send(binding.replyMessage.text.toString())
                 if (success) {
                     textView.text = ""
                 }
@@ -87,8 +79,8 @@ class GroupMessagesHandler constructor(private val on: On) {
             false
         }
 
-        this.sendButton.setOnClickListener {
-            if (replyMessage.text.toString().isBlank()) {
+        binding.sendButton.setOnClickListener {
+            if (binding.replyMessage.text.toString().isBlank()) {
                 on<CameraHandler>().showCamera { photoUri ->
                     on<PhotoUploadGroupMessageHandler>().upload(photoUri!!) { photoId ->
                         val success = on<GroupMessageAttachmentHandler>().sharePhoto(on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId), on<GroupHandler>().group!!.id!!)
@@ -100,26 +92,26 @@ class GroupMessagesHandler constructor(private val on: On) {
                 return@setOnClickListener
             }
 
-            val success = send(replyMessage.text.toString())
+            val success = send(binding.replyMessage.text.toString())
             if (success) {
-                replyMessage.setText("")
+                binding.replyMessage.setText("")
             }
         }
 
         updateSendButton()
         on<GroupHandler>().onGroupChanged { group ->
             on<TypingHandler>().setGroup(group.id!!)
-            replyMessage.setText(on<GroupMessageParseHandler>().parseText(replyMessage, on<GroupDraftHandler>().getDraft(group.id!!)?.message ?: ""))
+            binding.replyMessage.setText(on<GroupMessageParseHandler>().parseText(binding.replyMessage, on<GroupDraftHandler>().getDraft(group.id!!)?.message ?: ""))
             updateSendButton()
         }
 
-        sendMoreLayout.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+        binding.sendMoreLayout.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             updatePadding()
         }
 
         var stopTypingDisposable: Disposable? = null
 
-        this.replyMessage.doAfterTextChanged {
+        binding.replyMessage.doAfterTextChanged {
             on<TypingHandler>().isTyping = it!!.isNotEmpty()
 
             if (on<TypingHandler>().isTyping) {
@@ -130,13 +122,13 @@ class GroupMessagesHandler constructor(private val on: On) {
             }
         }
 
-        this.replyMessage.addTextChangedListener(object : TextWatcher {
+        binding.replyMessage.addTextChangedListener(object : TextWatcher {
 
             private var isDeleteMention: Boolean = false
             private var shouldDeleteMention: Boolean = false
 
             override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
-                shouldDeleteMention = !isDeleteMention && after == 0 && on<GroupMessageParseHandler>().isMentionSelected(replyMessage)
+                shouldDeleteMention = !isDeleteMention && after == 0 && on<GroupMessageParseHandler>().isMentionSelected(binding.replyMessage)
                 isDeleteMention = false
             }
 
@@ -147,42 +139,42 @@ class GroupMessagesHandler constructor(private val on: On) {
 
                 on<GroupHandler>().group?.let { group ->
                     on<GroupDraftHandler>().saveDraft(group.id!!, text.toString())
-                    on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, replyMessage.selectionStart))
+                    on<GroupMessageMentionHandler>().showSuggestionsForName(on<GroupMessageParseHandler>().extractName(text, binding.replyMessage.selectionStart))
                 }
 
                 if (shouldDeleteMention) {
                     isDeleteMention = true
-                    on<GroupMessageParseHandler>().deleteMention(replyMessage)
+                    on<GroupMessageParseHandler>().deleteMention(binding.replyMessage)
                 }
             }
         })
 
-        this.sendMoreButton.setOnClickListener { showSendMoreOptions(!sendMoreLayout.visible) }
+        binding.sendMoreButton.setOnClickListener { showSendMoreOptions(!binding.sendMoreLayout.visible) }
 
-        val sendMoreActionAudio = this.sendMoreLayout.sendMoreActionAudio
-        val sendMoreActionVideo = this.sendMoreLayout.sendMoreActionVideo
-        val sendMoreActionFile = this.sendMoreLayout.sendMoreActionFile
-        val sendMoreActionPhoto = this.sendMoreLayout.sendMoreActionPhoto
-        val sendMoreActionPost = this.sendMoreLayout.sendMoreActionPost
+        val sendMoreActionAudio = binding.sendMoreActionAudio
+        val sendMoreActionVideo = binding.sendMoreActionVideo
+        val sendMoreActionFile = binding.sendMoreActionFile
+        val sendMoreActionPhoto = binding.sendMoreActionPhoto
+        val sendMoreActionPost = binding.sendMoreActionPost
 
         sendMoreActionAudio.setOnClickListener {
-            this.sendMoreButton.callOnClick()
+            binding.sendMoreButton.callOnClick()
             on<DefaultAlerts>().message("Woah matey!")
         }
         sendMoreActionVideo.setOnClickListener {
-            this.sendMoreButton.callOnClick()
+            binding.sendMoreButton.callOnClick()
             on<DefaultAlerts>().message("Woah matey!")
         }
         sendMoreActionFile.setOnClickListener {
-            this.sendMoreButton.callOnClick()
+            binding.sendMoreButton.callOnClick()
             on<DefaultAlerts>().message("Woah matey!")
         }
         sendMoreActionPost.setOnClickListener {
-            this.sendMoreButton.callOnClick()
+            binding.sendMoreButton.callOnClick()
             on<CreatePostActivityTransitionHandler>().show(on<GroupHandler>().group!!.id!!)
         }
         sendMoreActionPhoto.setOnClickListener {
-            this.sendMoreButton.callOnClick()
+            binding.sendMoreButton.callOnClick()
             on<MediaHandler>().getPhoto { photoUri ->
                 on<PhotoUploadGroupMessageHandler>().upload(photoUri) { photoId ->
                     val success = on<GroupMessageAttachmentHandler>().sharePhoto(on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId), on<GroupHandler>().group!!.id!!)
@@ -198,7 +190,7 @@ class GroupMessagesHandler constructor(private val on: On) {
                 on<DisposableHandler>().dispose(groupMessagesSubscription!!)
             }
 
-            on<GroupNameHelper>().loadName(group, replyMessage, true) {
+            on<GroupNameHelper>().loadName(group, binding.replyMessage, true) {
                 on<ResourcesHandler>().resources.getString(when {
                     group.direct -> R.string.talk_with_x
                     group.hasPhone() -> R.string.talk_on_x_profile
@@ -220,7 +212,7 @@ class GroupMessagesHandler constructor(private val on: On) {
 
         on<DisposableHandler>().add(
                 on<LightDarkHandler>().onLightChanged.subscribe {
-                    sendMoreButton.imageTintList = it.tint
+                    binding.sendMoreButton.imageTintList = it.tint
                     sendMoreActionAudio.imageTintList = it.tint
                     sendMoreActionVideo.imageTintList = it.tint
                     sendMoreActionFile.imageTintList = it.tint
@@ -231,40 +223,40 @@ class GroupMessagesHandler constructor(private val on: On) {
     }
 
     private fun updatePadding() {
-        replyMessage.setPadding(
-                replyMessage.paddingLeft,
-                replyMessage.paddingTop,
-                (sendMoreLayout.width.takeIf { sendMoreLayout.visible } ?: 0) +
-                (sendMoreButton.width.takeIf { sendMoreButton.visible } ?: 0) +
+        binding.replyMessage.setPadding(
+                binding.replyMessage.paddingLeft,
+                binding.replyMessage.paddingTop,
+                (binding.sendMoreLayout.width.takeIf { binding.sendMoreLayout.visible } ?: 0) +
+                (binding.sendMoreButton.width.takeIf { binding.sendMoreButton.visible } ?: 0) +
                 (on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padDouble).takeIf {
-                    !sendMoreLayout.visible && !sendMoreButton.visible
+                    !binding.sendMoreLayout.visible && !binding.sendMoreButton.visible
                 } ?: 0),
-                replyMessage.paddingBottom
+                binding.replyMessage.paddingBottom
         )
     }
 
     fun insertMention(mention: Phone) {
-        on<GroupMessageParseHandler>().insertMention(replyMessage, mention)
+        on<GroupMessageParseHandler>().insertMention(binding.replyMessage, mention)
     }
 
     private fun showSendMoreOptions(show: Boolean) {
-        sendMoreButton.setImageResource(if (show) R.drawable.ic_close_black_24dp else R.drawable.ic_more_horiz_black_24dp)
-        sendMoreLayout.visible = show
+        binding.sendMoreButton.setImageResource(if (show) R.drawable.ic_close_black_24dp else R.drawable.ic_more_horiz_black_24dp)
+        binding.sendMoreLayout.visible = show
         updatePadding()
     }
 
     private fun updateSendButton() {
-        val blank = replyMessage.text.toString().isBlank()
+        val blank = binding.replyMessage.text.toString().isBlank()
 
         if (blank) {
-            sendButton.setImageResource(R.drawable.ic_camera_black_24dp)
-            sendMoreButton.visible = true
+            binding.sendButton.setImageResource(R.drawable.ic_camera_black_24dp)
+            binding.sendMoreButton.visible = true
             on<GroupActionHandler>().show(true)
         } else {
-            sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
-            sendMoreButton.visible = false
-            sendMoreLayout.visible = false
-            sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
+            binding.sendButton.setImageResource(R.drawable.ic_chevron_right_black_24dp)
+            binding.sendMoreButton.visible = false
+            binding.sendMoreLayout.visible = false
+            binding.sendMoreButton.setImageResource(R.drawable.ic_more_horiz_black_24dp)
             on<GroupActionHandler>().show(false)
         }
 
@@ -274,7 +266,7 @@ class GroupMessagesHandler constructor(private val on: On) {
     private fun setGroupMessages(groupMessages: List<GroupMessage>) {
         groupMessagesAdapter.setGroupMessages(groupMessages)
         if (layoutManager.findFirstVisibleItemPosition() < 3) {
-            recyclerView.post { recyclerView.smoothScrollToPosition(0) }
+            binding.messagesRecyclerView.post { binding.messagesRecyclerView.smoothScrollToPosition(0) }
         }
     }
 

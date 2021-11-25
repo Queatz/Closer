@@ -3,15 +3,14 @@ package closer.vlllage.com.closer.handler.helpers
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.InputType
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.SimpleInputModalBinding
+import closer.vlllage.com.closer.databinding.SimpleTwoInputModalBinding
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.simple_input_modal.view.*
-import kotlinx.android.synthetic.main.simple_two_input_modal.view.*
 
 
 class DefaultInput constructor(private val on: On) {
@@ -46,8 +45,7 @@ class DefaultInput constructor(private val on: On) {
              @StyleRes themeRes: Int? = null,
              maxLength: Int? = null,
              callback: (String) -> Unit) {
-        on<AlertHandler>().make().apply {
-            layoutResId = R.layout.simple_input_modal
+        on<AlertHandler>().view { SimpleInputModalBinding.inflate(it) }.apply {
             themeRes?.let { theme = it }
             textViewId = R.id.input
             onAfterViewCreated = { _, view ->
@@ -82,9 +80,8 @@ class DefaultInput constructor(private val on: On) {
              @StyleRes theme: Int? = null,
              callback: (String, String) -> Unit,
              buttonCallback: ((String, String) -> Boolean)?) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { SimpleTwoInputModalBinding.inflate(it) }.apply {
             theme?.let { this.theme = it }
-            layoutResId = R.layout.simple_two_input_modal
             onAfterViewCreated = { _, view ->
                 val inputOne: TextView = view.inputOne
                 val inputTwo: TextView = view.inputTwo
@@ -95,18 +92,18 @@ class DefaultInput constructor(private val on: On) {
                 alertResult = view
             }
             positiveButtonCallback = {
-                (it as ViewGroup).apply {
+                (it as SimpleTwoInputModalBinding).let { alertResult ->
                     callback(
-                            inputOne.text.toString(),
-                            inputTwo.text.toString()
+                        alertResult.inputOne.text.toString(),
+                        alertResult.inputTwo.text.toString()
                     )
                 }
             }
             buttonClickCallback = { it, _ ->
-                (it as ViewGroup).let { alertResult ->
+                (it as SimpleTwoInputModalBinding).let { alertResult ->
                     buttonCallback?.invoke(
-                            alertResult.inputOne.text.toString(),
-                            alertResult.inputTwo.text.toString()
+                        alertResult.inputOne.text.toString(),
+                        alertResult.inputTwo.text.toString()
                     ) ?: true
                 }
             }

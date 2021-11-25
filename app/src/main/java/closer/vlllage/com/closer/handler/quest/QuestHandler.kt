@@ -19,19 +19,10 @@ import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
+import closer.vlllage.com.closer.databinding.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.add_progress_modal.view.*
-import kotlinx.android.synthetic.main.create_post_select_group_action.view.actionRecyclerView
-import kotlinx.android.synthetic.main.create_post_select_group_action.view.searchActivities
-import kotlinx.android.synthetic.main.create_quest_modal.view.*
-import kotlinx.android.synthetic.main.edit_quest_action_modal.view.*
-import kotlinx.android.synthetic.main.edit_quest_duration_modal.view.*
-import kotlinx.android.synthetic.main.edit_quest_duration_modal.view.count
-import kotlinx.android.synthetic.main.edit_quest_finish_date_modal.view.*
-import kotlinx.android.synthetic.main.link_quest_modal.view.*
-import kotlinx.android.synthetic.main.update_quest_count_modal.view.*
 import java.util.*
 
 class QuestHandler(private val on: On) {
@@ -111,10 +102,9 @@ class QuestHandler(private val on: On) {
     }
 
     fun createQuest() {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { CreateQuestModalBinding.inflate(it) }.apply {
             theme = R.style.AppTheme_AlertDialog_ForestGreen
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.create_quest)
-            layoutResId = R.layout.create_quest_modal
             onAfterViewCreated = { alertConfig, view ->
                 val viewHolder = CreateQuestViewHolder(view).also {
                     it.disposableGroup = on<DisposableHandler>().group()
@@ -179,7 +169,7 @@ class QuestHandler(private val on: On) {
                 on<ToggleHelper>().updateToggleButtonWeights(view.isPublicToggle)
 
                 view.actionRecyclerView.adapter = adapter
-                view.actionRecyclerView.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
+                view.actionRecyclerView.layoutManager = LinearLayoutManager(view.root.context, RecyclerView.HORIZONTAL, false)
 
                 view.searchActivities.doOnTextChanged { text, _, _, _ ->
                     searchGroupActivities(viewHolder, adapter, text.toString())
@@ -275,10 +265,9 @@ class QuestHandler(private val on: On) {
 
             when (it.type) {
                 QuestActionType.Percent -> {
-                    on<AlertHandler>().make().apply {
+                    on<AlertHandler>().view { AddProgressModalBinding.inflate(it) }.apply {
                         title = quest.name
                         message = "${on<AccountHandler>().name} ${groupAction.intent}"
-                        layoutResId = R.layout.add_progress_modal
                         onAfterViewCreated = { alertConfig, view ->
                             alertConfig.alertResult = current
                             view.progressSeekBar.progress = alertConfig.alertResult as Int
@@ -304,9 +293,8 @@ class QuestHandler(private val on: On) {
                     }
                 }
                 else -> {
-                    on<AlertHandler>().make().apply {
+                    on<AlertHandler>().view { UpdateQuestCountModalBinding.inflate(it) }.apply {
                         title = quest.name
-                        layoutResId = R.layout.update_quest_count_modal
                         onAfterViewCreated = { config, view ->
                             view.count.setText((current + 1).toString())
                             view.count.selectAll()
@@ -416,12 +404,11 @@ class QuestHandler(private val on: On) {
     }
 
     fun addLinkedQuest(quest: Quest, success: () -> Unit) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { LinkQuestModalBinding.inflate(it) }.apply {
             val close = { dialog?.dismiss() }
 
             title = on<ResourcesHandler>().resources.getString(R.string.add_next_quest)
             message = on<ResourcesHandler>().resources.getString(R.string.add_next_quest_description)
-            layoutResId = R.layout.link_quest_modal
             onAfterViewCreated = { alertConfig, view ->
                 val holder = LinkQuestViewHolder(view).also {
                     it.disposableGroup = on<DisposableHandler>().group()
@@ -520,13 +507,13 @@ class QuestHandler(private val on: On) {
     }
 
     private fun refreshFinish(viewHolder: CreateQuestViewHolder) {
-        viewHolder.view.finishDateText.visible = viewHolder.finish != null
-        viewHolder.view.finishDateText.text = when {
+        viewHolder.binding.finishDateText.visible = viewHolder.finish != null
+        viewHolder.binding.finishDateText.text = when {
             viewHolder.finish?.date != null -> on<TimeStr>().prettyDate(viewHolder.finish!!.date!!)
             viewHolder.finish?.duration != null -> durationText(viewHolder.finish!!)
             else -> ""
         }
-        viewHolder.view.finishDateText.setOnClickListener {
+        viewHolder.binding.finishDateText.setOnClickListener {
             when {
                 viewHolder.finish?.date != null -> {
                     setFinishDate(viewHolder) { refreshFinish(viewHolder) }
@@ -545,10 +532,10 @@ class QuestHandler(private val on: On) {
     }, finish.duration ?: 1, finish.duration ?: 1)
 
     private fun refresh(viewHolder: CreateQuestViewHolder) {
-        searchGroupActivities(viewHolder, viewHolder.searchGroupsAdapter, viewHolder.view.searchActivities.text.toString())
+        searchGroupActivities(viewHolder, viewHolder.searchGroupsAdapter, viewHolder.binding.searchActivities.text.toString())
         viewHolder.on<GroupActionGridRecyclerViewHandler>().adapter.setGroupActions(viewHolder.activities, true)
-        viewHolder.view.questActionsHeader.visible = viewHolder.activities.isNotEmpty()
-        viewHolder.view.questActionRecyclerView.visible = viewHolder.activities.isNotEmpty()
+        viewHolder.binding.questActionsHeader.visible = viewHolder.activities.isNotEmpty()
+        viewHolder.binding.questActionRecyclerView.visible = viewHolder.activities.isNotEmpty()
     }
 
     private fun setDuration(viewHolder: CreateQuestViewHolder, onChange: () -> Unit) {
@@ -558,10 +545,9 @@ class QuestHandler(private val on: On) {
         )
         onChange()
 
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { EditQuestDurationModalBinding.inflate(it) }.apply {
             theme = R.style.AppTheme_AlertDialog_ForestGreen
             title = on<ResourcesHandler>().resources.getString(R.string.finish_in)
-            layoutResId = R.layout.edit_quest_duration_modal
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.save)
             onAfterViewCreated = { _, view ->
 
@@ -629,10 +615,9 @@ class QuestHandler(private val on: On) {
         viewHolder.finish = QuestFinish(date = viewHolder.finish?.date ?: Date())
         onChange()
 
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { EditQuestFinishDateModalBinding.inflate(it) }.apply {
             theme = R.style.AppTheme_AlertDialog_ForestGreen
             title = on<ResourcesHandler>().resources.getString(R.string.finish_by)
-            layoutResId = R.layout.edit_quest_finish_date_modal
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.save)
             onAfterViewCreated = { alertConfig, view ->
                 val cal = Calendar.getInstance(TimeZone.getDefault()).apply {
@@ -652,12 +637,11 @@ class QuestHandler(private val on: On) {
     }
 
     private fun editQuestAction(viewHolder: CreateQuestViewHolder, groupAction: GroupAction, questAction: QuestAction, onChange: () -> Unit) {
-        on<AlertHandler>().make().apply {
+        on<AlertHandler>().view { EditQuestActionModalBinding.inflate(it) }.apply {
             theme = R.style.AppTheme_AlertDialog_ForestGreen
             title = on<ResourcesHandler>().resources.getString(R.string.edit_quest_activity)
             negativeButton = on<ResourcesHandler>().resources.getString(R.string.delete)
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.save)
-            layoutResId = R.layout.edit_quest_action_modal
             negativeButtonCallback = {
                 viewHolder.activities.remove(groupAction)
                 viewHolder.activityConfig.remove(groupAction.id!!)
@@ -756,7 +740,7 @@ class QuestHandler(private val on: On) {
                 questFinishText(quest))
     }
 
-    private class CreateQuestViewHolder(val view: View) {
+    private class CreateQuestViewHolder(val binding: CreateQuestModalBinding) {
         lateinit var on: On
         var isPublic: Boolean = false
         var finish: QuestFinish? = null
@@ -767,11 +751,11 @@ class QuestHandler(private val on: On) {
         lateinit var disposableGroup: DisposableGroup
     }
 
-    private class LinkQuestViewHolder(val view: View) {
+    private class LinkQuestViewHolder(val binding: LinkQuestModalBinding) {
         lateinit var disposableGroup: DisposableGroup
     }
 
-    private class QuestActionViewHolder(val view: View) {
+    private class QuestActionViewHolder(val binding: EditQuestActionModalBinding) {
         var times = 1
     }
 }
