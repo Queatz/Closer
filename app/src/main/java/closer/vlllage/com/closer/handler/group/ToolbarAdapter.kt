@@ -3,20 +3,19 @@ package closer.vlllage.com.closer.handler.group
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.ToolbarItemBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import com.queatz.on.On
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.toolbar_item.view.*
 
 class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHandler.ToolbarItem) -> Unit) : PoolRecyclerAdapter<ToolbarAdapter.ToolbarViewHolder>(on) {
 
@@ -43,35 +42,35 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToolbarViewHolder {
-        return ToolbarViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.toolbar_item, parent, false))
+        return ToolbarViewHolder(ToolbarItemBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(viewHolder: ToolbarViewHolder, position: Int) {
         val item = items[position]
 
-        viewHolder.button.setCompoundDrawablesRelativeWithIntrinsicBounds(
+        viewHolder.binding.button.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 0, item.icon, 0, 0
         )
 
-        viewHolder.button.text = item.name
+        viewHolder.binding.button.text = item.name
 
-        viewHolder.button.setOnClickListener {
+        viewHolder.binding.button.setOnClickListener {
             item.onClickListener.onClick(it)
             onToolbarItemSelected.invoke(item)
         }
 
         viewHolder.disposableGroup = on<DisposableHandler>().group()
         viewHolder.disposableGroup.add(on<LightDarkHandler>().onLightChanged.subscribe {
-            recolor(item, viewHolder.button, it, selectedContentView.value)
+            recolor(item, viewHolder.binding.button, it, selectedContentView.value)
         })
 
         selectedContentView.subscribe {
-            recolor(item, viewHolder.button, if (isLight) on<LightDarkHandler>().LIGHT else on<LightDarkHandler>().onLightChanged.value!!, it)
+            recolor(item, viewHolder.binding.button, if (isLight) on<LightDarkHandler>().LIGHT else on<LightDarkHandler>().onLightChanged.value!!, it)
         }.also { viewHolder.disposableGroup.add(it) }
 
         item.indicator?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe { viewHolder.indicator.visible = it }?.also {
+                ?.subscribe { viewHolder.binding.indicator.visible = it }?.also {
                     viewHolder.disposableGroup.add(it)
                 }
     }
@@ -104,9 +103,7 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
 
     override fun getItemCount() = items.size
 
-    class ToolbarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val indicator: View = itemView.indicator
-        val button: Button = itemView.button
+    class ToolbarViewHolder(val binding: ToolbarItemBinding) : RecyclerView.ViewHolder(binding.root) {
         lateinit var disposableGroup: DisposableGroup
     }
 }

@@ -23,12 +23,12 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.Event
 import closer.vlllage.com.closer.store.models.Event_
 import at.bluesource.choicesdk.maps.common.LatLng
+import closer.vlllage.com.closer.databinding.CalendarDayItemBinding
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.android.synthetic.main.calendar_day_item.view.*
 import kotlinx.android.synthetic.main.calendar_event_item.view.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -36,15 +36,12 @@ import kotlin.math.floor
 
 class CalendarDayMixedItem(val position: Int, val date: Date) : MixedItem(MixedItemType.CalendarDay)
 
-class CalendarDayViewHolder(itemView: View) : MixedItemViewHolder(itemView, MixedItemType.CalendarDay) {
+class CalendarDayViewHolder(val binding: CalendarDayItemBinding) : MixedItemViewHolder(binding.root, MixedItemType.CalendarDay) {
     var disposable: Disposable? = null
     lateinit var on: On
     var eventsObservable: DataSubscription? = null
     val views = mutableSetOf<View>()
-    var date = itemView.date!!
     lateinit var allDayAdapter: EventAdapter
-    var allDayEvents = itemView.allDayEvents!!
-    var day = itemView.day!!
     var events: List<Event>? = null
 }
 
@@ -60,8 +57,8 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
 
     override fun areContentsTheSame(old: CalendarDayMixedItem, new: CalendarDayMixedItem) = false
 
-    override fun onCreateViewHolder(parent: ViewGroup) = CalendarDayViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.calendar_day_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup) = CalendarDayViewHolder(CalendarDayItemBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onViewRecycled(holder: CalendarDayViewHolder) {
         holder.on.off()
@@ -72,20 +69,20 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
             use<DisposableHandler>()
         }
 
-        holder.date.text = on<TimeStr>().day(date)
+        holder.binding.date.text = on<TimeStr>().day(date)
 
         holder.allDayAdapter = EventAdapter(on)
-        holder.allDayEvents.adapter = holder.allDayAdapter
-        holder.allDayEvents.layoutManager = LinearLayoutManager(holder.allDayEvents.context, LinearLayoutManager.HORIZONTAL, false)
+        holder.binding.allDayEvents.adapter = holder.allDayAdapter
+        holder.binding.allDayEvents.layoutManager = LinearLayoutManager(holder.binding.allDayEvents.context, LinearLayoutManager.HORIZONTAL, false)
 
-        holder.itemView.headerPadding.visible = false && position == 0
-        holder.itemView.headerPadding.clipToOutline = true
+        holder.binding.headerPadding.visible = false && position == 0
+        holder.binding.headerPadding.clipToOutline = true
 
-        holder.day.clipToOutline = true
+        holder.binding.day.clipToOutline = true
 
-        holder.day.setOnTouchListener { _, event ->
+        holder.binding.day.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
-                val vH = holder.day.measuredHeight
+                val vH = holder.binding.day.measuredHeight
                 val h = floor((event.y / vH) * TimeUnit.DAYS.toHours(1)).toInt()
 
                 var startsAt = Calendar.getInstance(TimeZone.getDefault()).let {
@@ -113,7 +110,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
         val dateEnd = Date(date.time + TimeUnit.DAYS.toMillis(1) - 1)
         val isToday = DateUtils.isToday(dateStart.time)
 
-        holder.itemView.pastTime.visible = isToday
+        holder.binding.pastTime.visible = isToday
 
         // TODO also track future days
         if (isToday) {
@@ -154,7 +151,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                     now.get(Calendar.MINUTE) * TimeUnit.MINUTES.toSeconds(1)
                     ).toFloat() / TimeUnit.DAYS.toSeconds(1)
 
-            holder.itemView.pastTime.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            holder.binding.pastTime.updateLayoutParams<ConstraintLayout.LayoutParams> {
                 matchConstraintPercentHeight = percentDayPast
             }
 
@@ -163,19 +160,19 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
     }
 
     private fun setAllDayEvents(holder: CalendarDayViewHolder, events: List<Event>) {
-        holder.allDayEvents.visible = events.isEmpty().not()
+        holder.binding.allDayEvents.visible = events.isEmpty().not()
         holder.allDayAdapter.items = events.sortedBy { it.startsAt }.toMutableList()
     }
 
     private fun setCalendarDayEvents(holder: CalendarDayViewHolder, date: Date, events: List<Event>? = null) {
-        holder.views.forEach { holder.day.removeView(it) }
+        holder.views.forEach { holder.binding.day.removeView(it) }
         holder.views.clear()
 
         if (events != null) {
             holder.events = events
         }
 
-        val vH = holder.day.measuredHeight
+        val vH = holder.binding.day.measuredHeight
         val minH = ((TimeUnit.HOURS.toMillis(1) ).toFloat() / TimeUnit.DAYS.toMillis(1) * vH).toInt()
 
         if (vH == 0) {
@@ -194,7 +191,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
         holder.disposable = holder.on<ApiHandler>().getEventRemindersOnDay(date).subscribe({
             it.forEach { eventReminder ->
                 eventReminder.instances?.forEach { instance ->
-                    val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_reminder_item, holder.day, false)
+                    val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_reminder_item, holder.binding.day, false)
 
                     view.name.text = eventReminder.text?.let { "$it${eventReminder.event?.name?.let { " ($it)" } ?: ""}" } ?: eventReminder.event?.name
                     (view.layoutParams as ConstraintLayout.LayoutParams).apply {
@@ -230,7 +227,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                         eventReminder.event?.let { on<GroupActivityTransitionHandler>().showGroupForEvent(view, EventResult.from(it)) }
                     }
 
-                    holder.day.addView(view)
+                    holder.binding.day.addView(view)
                     holder.views.add(view)
                 }
             }
@@ -241,7 +238,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
         }
 
         holder.events?.sortedBy { it.startsAt }?.onEach { event ->
-            val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.day, false)
+            val view = LayoutInflater.from(holder.itemView.context).inflate(R.layout.calendar_event_item, holder.binding.day, false)
 
             view.name.text = event.name
             view.about.text = on<EventDetailsHandler>().formatEventDetails(event)
@@ -277,7 +274,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                 on<GroupActivityTransitionHandler>().showGroupForEvent(view, event)
             }
 
-            holder.day.addView(view)
+            holder.binding.day.addView(view)
             holder.views.add(view)
         }
     }

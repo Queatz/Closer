@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.ActivityPersonalBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.AccountHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -26,15 +27,15 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
-import kotlinx.android.synthetic.main.activity_personal.*
 import java.util.*
 
 class PersonalSlideFragment : PoolFragment() {
 
+    private lateinit var binding: ActivityPersonalBinding
     private var previousStatus: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        on<NetworkConnectionViewHandler>().attach(connectionError)
+        on<NetworkConnectionViewHandler>().attach(binding.connectionError)
 
         val searchGroupsAdapter = SearchGroupsAdapter(on, false, { group, v -> on<GroupActivityTransitionHandler>().showGroupMessages(v, group.id) }, null)
 
@@ -42,8 +43,8 @@ class PersonalSlideFragment : PoolFragment() {
         searchGroupsAdapter.setIsSmall(true)
         searchGroupsAdapter.setLayoutResId(R.layout.search_groups_item_large_padding)
 
-        subscribedGroupsRecyclerView.adapter = searchGroupsAdapter
-        subscribedGroupsRecyclerView.layoutManager = LinearLayoutManager(subscribedGroupsRecyclerView.context)
+        binding.subscribedGroupsRecyclerView.adapter = searchGroupsAdapter
+        binding.subscribedGroupsRecyclerView.layoutManager = LinearLayoutManager(binding.subscribedGroupsRecyclerView.context)
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
                 .equal(GroupMember_.phone, on<Val>().trimmed(on<PersistenceHandler>().phoneId), QueryBuilder.StringOrder.CASE_SENSITIVE)
@@ -53,10 +54,10 @@ class PersonalSlideFragment : PoolFragment() {
                 .on(AndroidScheduler.mainThread())
                 .observer { groupMembers ->
                     if (groupMembers.isEmpty()) {
-                        youveSubscribedEmpty.visible = true
+                        binding.youveSubscribedEmpty.visible = true
                         searchGroupsAdapter.setGroups(listOf())
                     } else {
-                        youveSubscribedEmpty.visible = false
+                        binding.youveSubscribedEmpty.visible = false
 
                         val ids = HashSet<String>()
                         for (groupMember in groupMembers) {
@@ -67,9 +68,9 @@ class PersonalSlideFragment : PoolFragment() {
                     }
                 })
 
-        shareYourLocationSwitch.isChecked = on<AccountHandler>().active
+        binding.shareYourLocationSwitch.isChecked = on<AccountHandler>().active
 
-        shareYourLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
+        binding.shareYourLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
             on<AccountHandler>().updateActive(isChecked)
 
             if (isChecked) {
@@ -78,20 +79,20 @@ class PersonalSlideFragment : PoolFragment() {
         }
 
         previousStatus = on<AccountHandler>().status
-        currentStatus.setText(previousStatus)
+        binding.currentStatus.setText(previousStatus)
 
-        currentStatus.setOnFocusChangeListener { _, _ ->
-            if (currentStatus.text.toString() == previousStatus) {
+        binding.currentStatus.setOnFocusChangeListener { _, _ ->
+            if (binding.currentStatus.text.toString() == previousStatus) {
                 return@setOnFocusChangeListener
             }
 
-            on<AccountHandler>().updateStatus(currentStatus.text.toString())
-            on<KeyboardHandler>().showKeyboard(currentStatus, false)
+            on<AccountHandler>().updateStatus(binding.currentStatus.text.toString())
+            on<KeyboardHandler>().showKeyboard(binding.currentStatus, false)
         }
 
-        yourName.text = on<Val>().of(on<AccountHandler>().name, on<ResourcesHandler>().resources.getString(R.string.update_your_name))
+        binding.yourName.text = on<Val>().of(on<AccountHandler>().name, on<ResourcesHandler>().resources.getString(R.string.update_your_name))
 
-        yourPhoto.setOnClickListener {
+        binding.yourPhoto.setOnClickListener {
             on<DefaultMenus>().uploadPhoto { photoId ->
                 val photo = on<PhotoUploadGroupMessageHandler>().getPhotoPathFromId(photoId)
                 on<AccountHandler>().updatePhoto(photo)
@@ -102,35 +103,37 @@ class PersonalSlideFragment : PoolFragment() {
             on<ImageHandler>().get().load(on<PersistenceHandler>().myPhoto + "?s=128")
                     .apply(RequestOptions().circleCrop())
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(yourPhoto)
+                    .into(binding.yourPhoto)
         }
 
         on<DisposableHandler>().add(on<AccountHandler>().changes().subscribe(
                 { accountChange ->
                     if (accountChange.prop == AccountHandler.ACCOUNT_FIELD_NAME) {
-                        yourName.text = on<AccountHandler>().name
+                        binding.yourName.text = on<AccountHandler>().name
                     }
                     if (accountChange.prop == AccountHandler.ACCOUNT_FIELD_PHOTO) {
-                        on<PhotoHelper>().loadCircle(yourPhoto, on<PersistenceHandler>().myPhoto + "?s=128")
+                        on<PhotoHelper>().loadCircle(binding.yourPhoto, on<PersistenceHandler>().myPhoto + "?s=128")
                     }
                     if (accountChange.prop == AccountHandler.ACCOUNT_FIELD_ACTIVE) {
-                        shareYourLocationSwitch.isChecked = accountChange.value == true
+                        binding.shareYourLocationSwitch.isChecked = accountChange.value == true
                     }
                 },
                 { on<DefaultAlerts>().thatDidntWork() }
         ))
 
-        yourName.setOnClickListener { v -> on<SetNameHandler>().modifyName() }
+        binding.yourName.setOnClickListener { v -> on<SetNameHandler>().modifyName() }
 
-        yourName.requestFocus()
+        binding.yourName.requestFocus()
 
-        actionViewProfile.setOnClickListener {
-            on<NavigationHandler>().showMyProfile(actionViewProfile)
+        binding.actionViewProfile.setOnClickListener {
+            on<NavigationHandler>().showMyProfile(binding.actionViewProfile)
         }
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.activity_personal, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        ActivityPersonalBinding.inflate(inflater, container, false).let {
+            binding = it
+            it.root
+        }
 }

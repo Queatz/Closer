@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.FragmentGroupEventsBinding
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.map.MapActivityHandler
@@ -15,16 +15,18 @@ import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
-import kotlinx.android.synthetic.main.fragment_group_events.*
 
 class GroupEventsFragment : PoolActivityFragment() {
 
+    private lateinit var binding: FragmentGroupEventsBinding
     private lateinit var disposableGroup: DisposableGroup
     private lateinit var groupDisposableGroup: DisposableGroup
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_group_events, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        FragmentGroupEventsBinding.inflate(inflater, container, false).let {
+            binding = it
+            it.root
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
@@ -36,14 +38,14 @@ class GroupEventsFragment : PoolActivityFragment() {
         on<GroupMessageHelper>().onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(view, event) }
         on<GroupMessageHelper>().onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(view, group1.id) }
 
-        messagesRecyclerView.layoutManager = LinearLayoutManager(messagesRecyclerView.context)
-        messagesRecyclerView.adapter = groupMessagesAdapter
+        binding.messagesRecyclerView.layoutManager = LinearLayoutManager(binding.messagesRecyclerView.context)
+        binding.messagesRecyclerView.adapter = groupMessagesAdapter
 
         on<GroupHandler> {
             onGroupChanged(disposableGroup) { group ->
                 groupDisposableGroup.clear()
 
-                hostEvent.setOnClickListener {
+                binding.hostEvent.setOnClickListener {
                     on<HostEventHelper>().hostEvent(group)
                 }
 
@@ -56,8 +58,8 @@ class GroupEventsFragment : PoolActivityFragment() {
                         .subscribe()
                         .on(AndroidScheduler.mainThread())
                         .observer { groupMessages ->
-                            emptyText.visible = groupMessages.isEmpty()
-                            hostEvent.visible = groupMessages.isEmpty()
+                            binding.emptyText.visible = groupMessages.isEmpty()
+                            binding.hostEvent.visible = groupMessages.isEmpty()
 
                             groupMessagesAdapter.setGroupMessages(groupMessages)
                         })
@@ -65,8 +67,8 @@ class GroupEventsFragment : PoolActivityFragment() {
         }
 
         on<DisposableHandler>().add(on<LightDarkHandler>().onLightChanged.subscribe {
-            emptyText.setTextColor(it.text)
-            hostEvent.setTextColor(it.text)
+            binding.emptyText.setTextColor(it.text)
+            binding.hostEvent.setTextColor(it.text)
         })
     }
 

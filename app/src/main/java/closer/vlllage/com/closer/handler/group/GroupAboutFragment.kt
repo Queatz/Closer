@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.FragmentGroupAboutBinding
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
@@ -16,29 +16,31 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.quest.QuestDisplaySettings
 import closer.vlllage.com.closer.pool.PoolActivityFragment
 import com.queatz.on.On
-import kotlinx.android.synthetic.main.fragment_group_about.*
 
 class GroupAboutFragment : PoolActivityFragment() {
 
+    private lateinit var binding: FragmentGroupAboutBinding
     private lateinit var mixedAdapter: MixedHeaderAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var disposableGroup: DisposableGroup
     private lateinit var groupMessagesDisposableGroup: DisposableGroup
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_group_about, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        FragmentGroupAboutBinding.inflate(inflater, container, false).let {
+            binding = it
+            it.root
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
         groupMessagesDisposableGroup = disposableGroup.group()
 
         layoutManager = LinearLayoutManager(
-                recyclerView.context,
+                binding.recyclerView.context,
                 RecyclerView.VERTICAL,
                 false
         )
-        recyclerView.layoutManager = layoutManager
+        binding.recyclerView.layoutManager = layoutManager
 
         mixedAdapter = MixedHeaderAdapter(On(on).apply {
             use<GroupMessageHelper>()
@@ -47,7 +49,7 @@ class GroupAboutFragment : PoolActivityFragment() {
         mixedAdapter.showFeedHeader = false
         mixedAdapter.useHeader = false
 
-        recyclerView.adapter = mixedAdapter
+        binding.recyclerView.adapter = mixedAdapter
 
         on<QuestDisplaySettings>().isAbout = true
 

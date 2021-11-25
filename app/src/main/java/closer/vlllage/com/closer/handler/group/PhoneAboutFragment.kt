@@ -18,17 +18,20 @@ import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.pool.PoolActivityFragment
 import at.bluesource.choicesdk.maps.common.LatLng
-import kotlinx.android.synthetic.main.fragment_phone_about.*
+import closer.vlllage.com.closer.databinding.FragmentPhoneAboutBinding
 
 
 class PhoneAboutFragment : PoolActivityFragment() {
 
+    private lateinit var binding: FragmentPhoneAboutBinding
     private lateinit var disposableGroup: DisposableGroup
     private lateinit var phoneDisposableGroup: DisposableGroup
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_phone_about, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        FragmentPhoneAboutBinding.inflate(inflater, container, false).let {
+            binding = it
+            it.root
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
@@ -37,42 +40,42 @@ class PhoneAboutFragment : PoolActivityFragment() {
         on<GroupHandler> {
             onPhoneUpdated(disposableGroup) { phone ->
 
-                activeTextView.text = on<TimeStr>().lastActive(phone.updated)
-                joined.text = on<TimeStr>().joined(phone.created)
-                phoneVerifiedTextView.visible = phone.verified ?: false
+                binding.activeTextView.text = on<TimeStr>().lastActive(phone.updated)
+                binding.joined.text = on<TimeStr>().joined(phone.created)
+                binding.phoneVerifiedTextView.visible = phone.verified ?: false
 
                 (phone.latitude != null && phone.longitude != null).let { hasLocation ->
                     if (hasLocation) {
                         on<ProximityHandler>().locationFromLatLng(LatLng(phone.latitude!!, phone.longitude!!)) {
-                            location.text = it
-                            location.visible = it.isNullOrBlank().not()
+                            binding.location.text = it
+                            binding.location.visible = it.isNullOrBlank().not()
                         }
                     }
                 }
 
-                sendDirectMessageButton.visible = phone.id != on<PersistenceHandler>().phoneId
+                binding.sendDirectMessageButton.visible = phone.id != on<PersistenceHandler>().phoneId
 
-                sendDirectMessageButton.setOnClickListener {
+                binding.sendDirectMessageButton.setOnClickListener {
                     on<ReplyHandler>().reply(phone)
                 }
 
-                startCallMessageButton.visible = phone.id != on<PersistenceHandler>().phoneId
+                binding.startCallMessageButton.visible = phone.id != on<PersistenceHandler>().phoneId
 
-                startCallMessageButton.setOnClickListener {
+                binding.startCallMessageButton.setOnClickListener {
                     on<CallHandler>().startCall(phone.id!!)
                 }
 
                 val nothing = on<ResourcesHandler>().resources.getString(R.string.nothing_here)
-                introductionTextView.text = phone.introduction?.takeIf { it.isNotBlank() } ?: nothing
-                offtimeTextView.text = phone.offtime?.takeIf { it.isNotBlank() } ?: nothing
-                occupationTextView.text = phone.occupation?.takeIf { it.isNotBlank() } ?: nothing
-                historyTextView.text = phone.history?.takeIf { it.isNotBlank() } ?: nothing
+                binding.introductionTextView.text = phone.introduction?.takeIf { it.isNotBlank() } ?: nothing
+                binding.offtimeTextView.text = phone.offtime?.takeIf { it.isNotBlank() } ?: nothing
+                binding.occupationTextView.text = phone.occupation?.takeIf { it.isNotBlank() } ?: nothing
+                binding.historyTextView.text = phone.history?.takeIf { it.isNotBlank() } ?: nothing
 
                 val name = on<NameHandler>().getName(phone)
-                goalsHeader.text = on<ResourcesHandler>().resources.getString(R.string.current_goals, name)
-                lifestyleHeader.text = on<ResourcesHandler>().resources.getString(R.string.current_lifestyles, name)
-                aboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.about_x, name)
-                moreAboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.more_about_x, name)
+                binding.goalsHeader.text = on<ResourcesHandler>().resources.getString(R.string.current_goals, name)
+                binding.lifestyleHeader.text = on<ResourcesHandler>().resources.getString(R.string.current_lifestyles, name)
+                binding.aboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.about_x, name)
+                binding.moreAboutHeader.text = on<ResourcesHandler>().resources.getString(R.string.more_about_x, name)
 
                 if (group?.photo.isNullOrEmpty()) {
                     on<LightDarkHandler>().setLight(true)
@@ -81,31 +84,31 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 }
 
                 on<LightDarkHandler>().onLightChanged.subscribe {
-                    goalsHeader.setTextColor(it.text)
-                    lifestyleHeader.setTextColor(it.text)
-                    moreAboutHeader.setTextColor(it.text)
-                    aboutHeader.setTextColor(it.text)
+                    binding.goalsHeader.setTextColor(it.text)
+                    binding.lifestyleHeader.setTextColor(it.text)
+                    binding.moreAboutHeader.setTextColor(it.text)
+                    binding.aboutHeader.setTextColor(it.text)
                 }.also {
                     on<DisposableHandler>().add(it)
                 }
 
                 with(on<ResourcesHandler>().resources) {
-                    introductionTextView.setTextColor(
+                    binding.introductionTextView.setTextColor(
                             if (phone.introduction.isNullOrBlank()) getColor(R.color.textHintInverse)
                             else getColor(R.color.textInverse)
                     )
 
-                    offtimeTextView.setTextColor(
+                    binding.offtimeTextView.setTextColor(
                             if (phone.offtime.isNullOrBlank()) getColor(R.color.textHintInverse)
                             else getColor(R.color.textInverse)
                     )
 
-                    occupationTextView.setTextColor(
+                    binding.occupationTextView.setTextColor(
                             if (phone.occupation.isNullOrBlank()) getColor(R.color.textHintInverse)
                             else getColor(R.color.textInverse)
                     )
 
-                    historyTextView.setTextColor(
+                    binding.historyTextView.setTextColor(
                             if (phone.history.isNullOrBlank()) getColor(R.color.textHintInverse)
                             else getColor(R.color.textInverse)
                     )
@@ -116,14 +119,14 @@ class PhoneAboutFragment : PoolActivityFragment() {
                             if (text.isNullOrBlank()) R.color.textHintInverse else R.color.textInverse
                     ))
                 }) {
-                    this(introductionTextView, phone.introduction)
-                    this(offtimeTextView, phone.offtime)
-                    this(occupationTextView, phone.occupation)
-                    this(historyTextView, phone.history)
+                    this(binding.introductionTextView, phone.introduction)
+                    this(binding.offtimeTextView, phone.offtime)
+                    this(binding.occupationTextView, phone.occupation)
+                    this(binding.historyTextView, phone.history)
                 }
 
-                goalsEmptyTextView.visible = phone.goals.isNullOrEmpty()
-                lifestylesEmptyTextView.visible = phone.lifestyles.isNullOrEmpty()
+                binding.goalsEmptyTextView.visible = phone.goals.isNullOrEmpty()
+                binding.lifestylesEmptyTextView.visible = phone.lifestyles.isNullOrEmpty()
 
                 val editable = phone.id == on<PersistenceHandler>().phoneId
 
@@ -153,8 +156,8 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 goalAdapter.items = phone.goals?.toMutableList() ?: mutableListOf()
                 goalAdapter.isRemove = editable
 
-                goalsRecyclerView.adapter = goalAdapter
-                goalsRecyclerView.layoutManager = LinearLayoutManager(context)
+                binding.goalsRecyclerView.adapter = goalAdapter
+                binding.goalsRecyclerView.layoutManager = LinearLayoutManager(context)
 
                 val lifestyleAdapter = GoalAdapter(on, true) {
                     if (editable) {
@@ -182,23 +185,23 @@ class PhoneAboutFragment : PoolActivityFragment() {
                 lifestyleAdapter.items = phone.lifestyles?.toMutableList() ?: mutableListOf()
                 lifestyleAdapter.isRemove = editable
 
-                lifestyleRecyclerView.adapter = lifestyleAdapter
-                lifestyleRecyclerView.layoutManager = LinearLayoutManager(context)
+                binding.lifestyleRecyclerView.adapter = lifestyleAdapter
+                binding.lifestyleRecyclerView.layoutManager = LinearLayoutManager(context)
 
-                actionEditIntroduction.visible = editable
-                actionAddGoal.visible = editable
-                actionAddLifestyle.visible = editable
-                actionEditOfftime.visible = editable
-                actionEditOccupation.visible = editable
-                actionEditHistory.visible = editable
+                binding.actionEditIntroduction.visible = editable
+                binding.actionAddGoal.visible = editable
+                binding.actionAddLifestyle.visible = editable
+                binding.actionEditOfftime.visible = editable
+                binding.actionEditOccupation.visible = editable
+                binding.actionEditHistory.visible = editable
 
                 if (editable) {
-                    actionEditIntroduction.setOnClickListener { on<ProfileHelper>().editIntroduction(phone) }
-                    actionAddGoal.setOnClickListener { on<ProfileHelper>().addGoal(phone.id!!) }
-                    actionAddLifestyle.setOnClickListener { on<ProfileHelper>().joinLifestyle(phone.id!!) }
-                    actionEditOfftime.setOnClickListener { on<ProfileHelper>().editOfftime(phone) }
-                    actionEditOccupation.setOnClickListener { on<ProfileHelper>().editOccupation(phone) }
-                    actionEditHistory.setOnClickListener { on<ProfileHelper>().editHistory(phone) }
+                    binding.actionEditIntroduction.setOnClickListener { on<ProfileHelper>().editIntroduction(phone) }
+                    binding.actionAddGoal.setOnClickListener { on<ProfileHelper>().addGoal(phone.id!!) }
+                    binding.actionAddLifestyle.setOnClickListener { on<ProfileHelper>().joinLifestyle(phone.id!!) }
+                    binding.actionEditOfftime.setOnClickListener { on<ProfileHelper>().editOfftime(phone) }
+                    binding.actionEditOccupation.setOnClickListener { on<ProfileHelper>().editOccupation(phone) }
+                    binding.actionEditHistory.setOnClickListener { on<ProfileHelper>().editHistory(phone) }
                 }
             }
         }

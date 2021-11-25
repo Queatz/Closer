@@ -50,9 +50,9 @@ class CreateGroupHelper(private val on: On) {
                         group.latitude = latLng.latitude
                         group.longitude = latLng.longitude
                         on<StoreHandler>().store.box(Group::class).put(group)
-                        on<SyncHandler>().sync(group, { groupId ->
+                        on<SyncHandler>().sync(group) { groupId ->
                             openGroup(groupId)
-                        })
+                        }
                     }
                     positiveButton = on<ResourcesHandler>().resources.getString(if (isPublic) R.string.create_public_group else R.string.create_private_group)
                     show()

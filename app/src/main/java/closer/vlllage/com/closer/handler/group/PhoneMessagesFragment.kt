@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.FragmentPhoneMessagesBinding
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableGroup
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
@@ -17,17 +18,19 @@ import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
-import kotlinx.android.synthetic.main.fragment_phone_messages.*
 
 class PhoneMessagesFragment : PoolActivityFragment() {
 
+    private lateinit var binding: FragmentPhoneMessagesBinding
     private lateinit var disposableGroup: DisposableGroup
     private lateinit var phoneDisposableGroup: DisposableGroup
     private lateinit var groupMessagesAdapter: GroupMessagesAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_phone_messages, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        FragmentPhoneMessagesBinding.inflate(inflater, container, false).let {
+            binding = it
+            it.root
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
@@ -39,8 +42,8 @@ class PhoneMessagesFragment : PoolActivityFragment() {
         on<GroupMessageHelper>().onEventClickListener = { event -> on<GroupActivityTransitionHandler>().showGroupForEvent(view, event) }
         on<GroupMessageHelper>().onGroupClickListener = { group1 -> on<GroupActivityTransitionHandler>().showGroupMessages(view, group1.id) }
 
-        messagesRecyclerView.layoutManager = LinearLayoutManager(messagesRecyclerView.context)
-        messagesRecyclerView.adapter = groupMessagesAdapter
+        binding.messagesRecyclerView.layoutManager = LinearLayoutManager(binding.messagesRecyclerView.context)
+        binding.messagesRecyclerView.adapter = groupMessagesAdapter
 
         on<GroupHandler> {
             onPhoneChanged(disposableGroup) { phone ->

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import closer.vlllage.com.closer.R
+import closer.vlllage.com.closer.databinding.FragmentPhonePhotosBinding
 import closer.vlllage.com.closer.handler.data.RefreshHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.pool.PoolActivityFragment
@@ -16,16 +17,18 @@ import closer.vlllage.com.closer.store.models.GroupContact_
 import closer.vlllage.com.closer.store.models.Group_
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
-import kotlinx.android.synthetic.main.fragment_phone_photos.*
 
 class PhoneGroupsFragment : PoolActivityFragment() {
+    private lateinit var binding: FragmentPhonePhotosBinding
     private lateinit var searchGroupsAdapter: SearchGroupsAdapter
     private lateinit var disposableGroup: DisposableGroup
     private lateinit var phoneDisposableGroup: DisposableGroup
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_phone_photos, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        FragmentPhonePhotosBinding.inflate(inflater, container, false).let {
+            binding = it
+            it.root
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         disposableGroup = on<DisposableHandler>().group()
@@ -41,8 +44,8 @@ class PhoneGroupsFragment : PoolActivityFragment() {
             transparentBackground = true
         }
 
-        photosRecyclerView.layoutManager = LinearLayoutManager(photosRecyclerView.context)
-        photosRecyclerView.adapter = searchGroupsAdapter
+        binding.photosRecyclerView.layoutManager = LinearLayoutManager(binding.photosRecyclerView.context)
+        binding.photosRecyclerView.adapter = searchGroupsAdapter
 
         on<GroupHandler> {
             onPhoneChanged(disposableGroup) { phone ->
