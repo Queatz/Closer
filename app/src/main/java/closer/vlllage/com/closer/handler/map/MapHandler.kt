@@ -20,7 +20,7 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.WindowHandler
 import com.queatz.on.On
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
 import kotlin.math.min
 
@@ -216,8 +216,8 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
 
     }
 
-    fun onMapIdleObservable() = onMapIdleObservable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())!!
-    fun onMapReadyObservable() = onMapReadyObservable.observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())!!
+    fun onMapIdleObservable() = onMapIdleObservable.observeOn(AndroidSchedulers.mainThread())!!
+    fun onMapReadyObservable() = onMapReadyObservable.observeOn(AndroidSchedulers.mainThread())!!
 
     companion object {
         const val DEFAULT_ZOOM = 18f

@@ -2,7 +2,7 @@ package closer.vlllage.com.closer.api
 
 import closer.vlllage.com.closer.api.models.*
 import closer.vlllage.com.closer.handler.event.EventReminder
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
 interface Backend {

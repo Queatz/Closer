@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.huawei.agconnect:agcp:1.5.2.300")
+        classpath("com.huawei.agconnect:agcp:1.6.1.300")
         classpath("com.android.tools.build:gradle:4.2.2")
         classpath("com.github.triplet.gradle:play-publisher:3.2.0-agp4.2")
         classpath("com.google.gms:google-services:4.3.10")
@@ -27,7 +27,6 @@ allprojects {
         mavenCentral()
         google()
         maven(url = "https://jitpack.io")
-        maven(url = "https://dl.bintray.com/google/webrtc/")
     }
 }
 

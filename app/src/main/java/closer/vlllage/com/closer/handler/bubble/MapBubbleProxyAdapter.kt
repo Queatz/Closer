@@ -16,7 +16,7 @@ import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.*
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class MapBubbleProxyAdapter(on: On, private val onClickListener: (MapBubble) -> Unit)
     : PoolRecyclerAdapter<MapBubbleProxyAdapter.ProxyMapBubbleViewHolder>(on) {

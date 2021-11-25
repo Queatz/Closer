@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
+import io.objectbox.query.QueryBuilder
 
 class MyBubbleHandler constructor(private val on: On) {
 
@@ -48,7 +49,10 @@ class MyBubbleHandler constructor(private val on: On) {
 
     private fun updateLocation(latLng: LatLng) {
         if (myBubble == null) {
-            val phone = on<StoreHandler>().store.box(Phone::class).query().equal(Phone_.id, on<PersistenceHandler>().phoneId!!).build().findFirst()
+            val phone = on<StoreHandler>().store.box(Phone::class).query()
+                .equal(Phone_.id, on<PersistenceHandler>().phoneId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .build()
+                .findFirst()
             myBubble = MapBubble(
                     latLng,
                     on<AccountHandler>().name,

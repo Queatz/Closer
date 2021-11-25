@@ -33,8 +33,9 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.queatz.on.On
 import com.vdurmont.emoji.EmojiManager
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.util.*
 
 
@@ -682,7 +683,7 @@ class MessageDisplay constructor(private val on: On) {
         return if (groupId == null)
             null
         else on<StoreHandler>().store.box(Group::class).query()
-                .equal(Group_.id, groupId)
+                .equal(Group_.id, groupId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .findFirst()
     }

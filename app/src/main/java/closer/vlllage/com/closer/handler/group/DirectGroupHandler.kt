@@ -10,9 +10,9 @@ import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupContact_
 import closer.vlllage.com.closer.store.models.Phone
 import com.queatz.on.On
-import io.objectbox.rx.RxQuery
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.objectbox.rx3.RxQuery
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class DirectGroupHandler constructor(private val on: On) {
     fun getContactName(groupId: String): Single<String> {

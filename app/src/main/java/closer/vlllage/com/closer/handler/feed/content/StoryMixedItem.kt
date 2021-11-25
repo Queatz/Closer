@@ -32,7 +32,7 @@ import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Story
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.story_item.view.*
 import java.util.*
 import kotlin.math.abs

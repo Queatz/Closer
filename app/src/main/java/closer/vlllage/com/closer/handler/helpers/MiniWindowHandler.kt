@@ -11,7 +11,7 @@ import closer.vlllage.com.closer.handler.settings.UserLocalSetting.CLOSER_SETTIN
 import com.queatz.on.On
 import closer.vlllage.com.closer.ui.DragTriggerView
 import closer.vlllage.com.closer.ui.TimedValue
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.lang.Math.abs
 import java.lang.Math.max
 

@@ -15,7 +15,7 @@ import closer.vlllage.com.closer.store.models.Phone
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.map_bubble_physical_group.view.*
 
 class MapBubblePhysicalGroupView constructor(private val on: On) {

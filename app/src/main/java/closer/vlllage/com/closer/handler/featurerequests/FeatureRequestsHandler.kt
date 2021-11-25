@@ -7,7 +7,7 @@ import closer.vlllage.com.closer.api.models.FeatureRequestResult
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import com.queatz.on.On
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class FeatureRequestsHandler constructor(private val on: On) {
 

@@ -31,9 +31,8 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_call.*
-import org.webrtc.RendererCommon
 
 
 class CallActivity : PoolActivity() {
@@ -79,8 +78,8 @@ class CallActivity : PoolActivity() {
 
         if (intent != null) onNewIntent(intent)
 
-        remoteView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
-        localView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
+//        remoteView!!.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
+//        localView!!.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
 
         on<ApplicationHandler>().app.on<CallConnectionHandler>().active
                 .observeOn(AndroidSchedulers.mainThread())
@@ -225,8 +224,6 @@ class CallActivity : PoolActivity() {
     }
 
     override fun onDestroy() {
-        localView.release()
-        remoteView.release()
         ring?.release()
         on<ApplicationHandler>().app.on<CallConnectionHandler>().detach()
         super.onDestroy()

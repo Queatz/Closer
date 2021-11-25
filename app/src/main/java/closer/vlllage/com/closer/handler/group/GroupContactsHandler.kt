@@ -18,6 +18,7 @@ import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
 import java.util.*
 
@@ -133,11 +134,11 @@ class GroupContactsHandler constructor(private val on: On) {
         })
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupInvite::class).query()
-                .equal(GroupInvite_.group, group.id!!)
+                .equal(GroupInvite_.group, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupInvites -> phoneContactAdapter.setInvites(groupInvites) })
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupContact::class).query()
-                .equal(GroupContact_.groupId, group.id!!)
+                .equal(GroupContact_.groupId, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupContacts -> phoneContactAdapter.setGroupContacts(groupContacts) })
     }
 
@@ -232,7 +233,7 @@ class GroupContactsHandler constructor(private val on: On) {
             on<DisposableHandler>().dispose(dataSubscription!!)
         }
         dataSubscription = on<StoreHandler>().store.box(Phone::class).query()
-                .contains(Phone_.name, on<Val>().trimmed(query))
+                .contains(Phone_.name, on<Val>().trimmed(query), QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .notNull(Phone_.id)
                 .greater(Phone_.updated, on<TimeAgo>().fifteenDaysAgo())
                 .build()

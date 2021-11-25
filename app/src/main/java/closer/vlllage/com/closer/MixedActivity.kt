@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class MixedActivity : CircularRevealActivity() {
 

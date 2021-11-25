@@ -6,7 +6,7 @@ import android.os.Looper
 
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.Disposable
 
 class TimerHandler constructor(private val on: On) : OnLifecycle {
 

@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.store.models.GroupMessage_
 import closer.vlllage.com.closer.ui.GridSpacingItemDecoration
 import com.google.gson.JsonObject
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import kotlinx.android.synthetic.main.fragment_phone_photos.*
 
 class GroupPhotosFragment : PoolActivityFragment() {
@@ -46,7 +47,7 @@ class GroupPhotosFragment : PoolActivityFragment() {
                 val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
                 groupMessagesDisposableGroup.add(queryBuilder
                         .sort(on<SortHandler>().sortGroupMessages())
-                        .equal(GroupMessage_.to, group.id!!)
+                        .equal(GroupMessage_.to, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                         .build()
                         .subscribe()
                         .on(AndroidScheduler.mainThread())

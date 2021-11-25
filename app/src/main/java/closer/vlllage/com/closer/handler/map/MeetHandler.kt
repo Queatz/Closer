@@ -11,7 +11,7 @@ import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.models.Phone
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class MeetHandler constructor(private val on: On) {
 

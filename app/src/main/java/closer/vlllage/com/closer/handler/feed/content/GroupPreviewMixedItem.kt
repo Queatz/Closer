@@ -21,7 +21,8 @@ import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.group_preview_item.view.*
 import java.util.*
 import kotlin.math.min
@@ -86,7 +87,7 @@ class GroupPreviewMixedItemAdapter(private val on: On) : MixedItemAdapter<GroupP
         val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
         holder.on<DisposableHandler>().add(queryBuilder
                 .sort(on<SortHandler>().sortGroupMessages())
-                .equal(GroupMessage_.to, group.id!!)
+                .equal(GroupMessage_.to, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())

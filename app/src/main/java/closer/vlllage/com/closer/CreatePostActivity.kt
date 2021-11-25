@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.store.models.Group
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class CreatePostActivity : ListActivity() {
 

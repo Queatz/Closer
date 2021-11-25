@@ -1,10 +1,10 @@
 package closer.vlllage.com.closer.api
 
 import com.google.gson.GsonBuilder
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.logging.Logger
 
@@ -48,7 +48,7 @@ class ApiService {
                 .baseUrl(Backend.BASE_URL)
                 .client(http)
                 .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(Backend::class.java)
 
@@ -62,21 +62,21 @@ class ApiService {
         photoUploadBackend = Retrofit.Builder()
                 .baseUrl(PhotoUploadBackend.BASE_URL)
                 .client(httpPhotoUploadClient.build())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(PhotoUploadBackend::class.java)
 
         contentBackend = Retrofit.Builder()
                 .baseUrl(ContentBackend.BASE_URL)
                 .client(http)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(ContentBackend::class.java)
 
         placesBackend = Retrofit.Builder()
                 .baseUrl(PlacesBackend.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(PlacesBackend::class.java)
     }

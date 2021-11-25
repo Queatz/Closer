@@ -29,9 +29,10 @@ import at.bluesource.choicesdk.maps.common.CameraPosition
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.feed_item_public_groups.view.*
 import java.util.*
 
@@ -686,7 +687,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .and()
                 .greater(Phone_.updated, on<TimeAgo>().fifteenDaysAgo())
                 .or()
-                .equal(Phone_.id, on<PersistenceHandler>().phoneId ?: "")
+                .equal(Phone_.id, on<PersistenceHandler>().phoneId ?: "", QueryBuilder.StringOrder.CASE_SENSITIVE)
 
         on<DisposableHandler>().add(queryBuilder
                 .sort(on<SortHandler>().sortPhones())
@@ -775,7 +776,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .`in`(GroupAction_.group, groups
                         .filter { it.id != null }
                         .map { it.id }
-                        .toTypedArray())
+                        .toTypedArray(), QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .sort(on<SortHandler>().sortGroupActions())
                 .build()
                 .subscribe()

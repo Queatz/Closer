@@ -17,7 +17,8 @@ import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupContact_
 import closer.vlllage.com.closer.store.models.GroupMember
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class GroupMemberHandler constructor(private val on: On) {
     fun changeGroupSettings(group: Group?) {
@@ -247,8 +248,8 @@ class GroupMemberHandler constructor(private val on: On) {
 
     fun isCurrentUserMemberOf(group: Group?): Boolean {
         return if (group == null) false else on<StoreHandler>().store.box(GroupContact::class).query()
-                .equal(GroupContact_.groupId, group.id!!)
-                .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)
+                .equal(GroupContact_.groupId, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .count() > 0
     }

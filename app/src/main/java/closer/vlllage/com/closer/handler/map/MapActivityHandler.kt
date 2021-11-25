@@ -17,6 +17,7 @@ import closer.vlllage.com.closer.handler.map.MapHandler.Companion.DEFAULT_ZOOM
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
+import io.objectbox.query.QueryBuilder
 
 class MapActivityHandler constructor(private val on: On) {
 
@@ -58,7 +59,7 @@ class MapActivityHandler constructor(private val on: On) {
             return
         }
         val phone = on<StoreHandler>().store.box(Phone::class).query()
-                .equal(Phone_.id, phoneId)
+                .equal(Phone_.id, phoneId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .notNull(Phone_.latitude)
                 .notNull(Phone_.longitude)
                 .build()

@@ -13,8 +13,8 @@ import closer.vlllage.com.closer.handler.helpers.DefaultMenus
 import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.store.models.Story
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
 
 class StoryHandler(private val on: On) {

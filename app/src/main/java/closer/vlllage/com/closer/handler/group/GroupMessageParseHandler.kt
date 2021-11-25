@@ -22,8 +22,8 @@ import closer.vlllage.com.closer.handler.phone.NavigationHandler
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.TextImageSpan
 import com.queatz.on.On
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 import java.util.regex.Pattern
 
 class GroupMessageParseHandler constructor(private val on: On) {

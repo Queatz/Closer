@@ -14,6 +14,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import kotlinx.android.synthetic.main.fragment_group_events.*
 
 class GroupEventsFragment : PoolActivityFragment() {
@@ -49,8 +50,8 @@ class GroupEventsFragment : PoolActivityFragment() {
                 val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
                 groupDisposableGroup.add(queryBuilder
                         .sort(on<SortHandler>().sortGroupMessages())
-                        .equal(GroupMessage_.to, group.id!!)
-                        .contains(GroupMessage_.attachment, "\"event\"")
+                        .equal(GroupMessage_.to, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                        .contains(GroupMessage_.attachment, "\"event\"", QueryBuilder.StringOrder.CASE_SENSITIVE)
                         .build()
                         .subscribe()
                         .on(AndroidScheduler.mainThread())

@@ -6,7 +6,8 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
 import com.queatz.on.On
-import io.reactivex.subjects.BehaviorSubject
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
 
 class SearchGroupHandler constructor(private val on: On) {
@@ -52,7 +53,9 @@ class SearchGroupHandler constructor(private val on: On) {
 
     private fun groupActionNamesContains(group: Group, searchQuery: String): Boolean {
         val groupActions = on<StoreHandler>().store.box(GroupAction::class).query()
-                .equal(GroupAction_.group, group.id!!).build().find()
+            .equal(GroupAction_.group, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+            .build()
+            .find()
 
         for (groupAction in groupActions) {
             if (groupAction.name!!.toLowerCase(Locale.getDefault()).contains(searchQuery)) {

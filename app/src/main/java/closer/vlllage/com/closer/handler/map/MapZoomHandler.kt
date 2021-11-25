@@ -1,8 +1,8 @@
 package closer.vlllage.com.closer.handler.map
 
 import com.queatz.on.On
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class MapZoomHandler constructor(private val on: On) {
 

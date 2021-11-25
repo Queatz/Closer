@@ -7,7 +7,7 @@ import closer.vlllage.com.closer.handler.mqtt.MqttHandler
 import closer.vlllage.com.closer.handler.mqtt.events.TypingMqttEvent
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class TypingHandler constructor(private val on: On) : OnLifecycle {
 

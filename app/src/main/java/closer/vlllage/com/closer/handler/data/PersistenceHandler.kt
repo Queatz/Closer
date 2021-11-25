@@ -10,7 +10,7 @@ import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import closer.vlllage.com.closer.handler.helpers.Val
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PersistenceHandler constructor(private val on: On) : OnLifecycle {
 

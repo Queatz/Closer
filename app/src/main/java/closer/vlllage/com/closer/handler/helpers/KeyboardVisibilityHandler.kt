@@ -3,8 +3,8 @@ package closer.vlllage.com.closer.handler.helpers
 import android.view.View
 
 import com.queatz.on.On
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class KeyboardVisibilityHandler constructor(private val on: On) {
 

@@ -11,6 +11,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 
 class PinnedMessagesHandler constructor(private val on: On) {
 
@@ -45,7 +46,7 @@ class PinnedMessagesHandler constructor(private val on: On) {
         on<RefreshHandler>().refreshPins(group.id!!)
 
         on<StoreHandler>().store.box(Pin::class).query()
-                .equal(Pin_.to, group.id!!)
+                .equal(Pin_.to, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
@@ -62,7 +63,7 @@ class PinnedMessagesHandler constructor(private val on: On) {
                     }
 
                     on<StoreHandler>().store.box(GroupMessage::class).query()
-                            .`in`(GroupMessage_.id, ids.toTypedArray())
+                            .`in`(GroupMessage_.id, ids.toTypedArray(), QueryBuilder.StringOrder.CASE_SENSITIVE)
                             .build()
                             .subscribe()
                             .on(AndroidScheduler.mainThread())

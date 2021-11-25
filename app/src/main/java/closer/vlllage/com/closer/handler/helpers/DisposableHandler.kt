@@ -3,8 +3,8 @@ package closer.vlllage.com.closer.handler.helpers
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
 import io.objectbox.reactive.DataSubscription
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import java.util.*
 
 class DisposableHandler constructor(private val on: On) : OnLifecycle {

@@ -9,8 +9,8 @@ import closer.vlllage.com.closer.handler.group.PhysicalGroupHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 
 class GroupNameHelper(private val on: On) {
     fun loadName(group: Group, textView: TextView, hint: Boolean = false, callback: (String) -> String) {

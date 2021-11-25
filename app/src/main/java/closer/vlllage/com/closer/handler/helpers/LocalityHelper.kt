@@ -5,9 +5,9 @@ import android.location.Geocoder
 import closer.vlllage.com.closer.handler.map.PlacesHandler
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.IOException
 
 class LocalityHelper constructor(private val on: On) {

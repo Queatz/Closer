@@ -20,7 +20,8 @@ import closer.vlllage.com.closer.store.models.GroupAction
 import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.store.models.Group_
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class ShareActivity : ListActivity() {
 
@@ -111,7 +112,7 @@ class ShareActivity : ListActivity() {
                     }
                     groupId != null -> {
                         groupToShare = on<StoreHandler>().store.box(Group::class).query()
-                                .equal(Group_.id, groupId!!)
+                                .equal(Group_.id, groupId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                                 .build().findFirst()
 
                         searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(
@@ -122,7 +123,7 @@ class ShareActivity : ListActivity() {
                     }
                     groupActionId != null -> {
                         groupActionToShare = on<StoreHandler>().store.box(GroupAction::class).query()
-                                .equal(GroupAction_.id, groupActionId!!)
+                                .equal(GroupAction_.id, groupActionId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                                 .build().findFirst()
 
                         searchGroupsAdapter.setHeaderText(on<ResourcesHandler>().resources.getString(R.string.share_group_to, on<Val>().of(

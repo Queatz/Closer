@@ -10,10 +10,11 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class GroupHandler constructor(private val on: On) {
 
@@ -45,7 +46,7 @@ class GroupHandler constructor(private val on: On) {
             on<RefreshHandler>().refreshGroupContacts(group.id!!)
 
             disposableGroup.add(on<StoreHandler>().store.box(Group::class).query()
-                    .equal(Group_.id, group.id!!)
+                    .equal(Group_.id, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                     .build()
                     .subscribe()
                     .onlyChanges()
@@ -58,8 +59,8 @@ class GroupHandler constructor(private val on: On) {
 
             on<PersistenceHandler>().phoneId?.let { phoneId ->
                 disposableGroup.add(on<StoreHandler>().store.box(GroupMember::class).query()
-                        .equal(GroupMember_.group, group.id!!)
-                        .equal(GroupMember_.phone, phoneId)
+                        .equal(GroupMember_.group, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                        .equal(GroupMember_.phone, phoneId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                         .build()
                         .subscribe()
                         .on(AndroidScheduler.mainThread())
@@ -115,7 +116,7 @@ class GroupHandler constructor(private val on: On) {
 
         disposableGroup.add(on<StoreHandler>().store.box(GroupContact::class)
                 .query()
-                .equal(GroupContact_.groupId, group.id!!)
+                .equal(GroupContact_.groupId, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
@@ -136,7 +137,7 @@ class GroupHandler constructor(private val on: On) {
 
         disposableGroup.add(on<StoreHandler>().store.box(GroupInvite::class)
                 .query()
-                .equal(GroupInvite_.group, group.id!!)
+                .equal(GroupInvite_.group, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
@@ -172,7 +173,7 @@ class GroupHandler constructor(private val on: On) {
         on<RefreshHandler>().refreshPhone(phoneId)
 
         disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
-                .equal(Phone_.id, phoneId)
+                .equal(Phone_.id, phoneId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())

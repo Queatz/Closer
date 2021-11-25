@@ -19,7 +19,8 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.messages_contact_item.view.*
 
 class MessagesContactMixedItem(val group: Group) : MixedItem(MixedItemType.MessageContact)
@@ -65,7 +66,7 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
 
         holder.on<GroupActionRecyclerViewHandler>().attach(holder.actionRecyclerView, GroupActionDisplay.Layout.TEXT)
         holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query()
-                .equal(GroupAction_.group, item.group.id!!)
+                .equal(GroupAction_.group, item.group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .subscribe()
                 .single()

@@ -5,7 +5,7 @@ import closer.vlllage.com.closer.handler.group.PhoneContacts
 import closer.vlllage.com.closer.handler.helpers.ApplicationHandler
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 
 class PhoneContactsHandler constructor(private val on: On) : OnLifecycle {
 

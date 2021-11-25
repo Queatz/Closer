@@ -12,7 +12,7 @@ import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 class PhysicalGroupHandler constructor(private val on: On) {
 

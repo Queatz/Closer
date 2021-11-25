@@ -7,6 +7,7 @@ import com.queatz.on.On
 import com.queatz.on.OnLifecycle
 import io.objectbox.Property
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.SubscriptionBuilder
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -50,7 +51,7 @@ class StoreHandler constructor(private val on: On) : OnLifecycle {
                 isNotFirst = true
             }
 
-            query.notEqual(idProperty, idToKeep)
+            query.notEqual(idProperty, idToKeep, QueryBuilder.StringOrder.CASE_SENSITIVE)
         }
 
         if (async) {
@@ -69,7 +70,7 @@ class StoreHandler constructor(private val on: On) : OnLifecycle {
 
         var isNotFirst = false
         if (ids.isEmpty()) {
-            query.`in`(idProperty, arrayOf<String>())
+            query.`in`(idProperty, arrayOf<String>(), QueryBuilder.StringOrder.CASE_SENSITIVE)
         } else
             for (id in ids) {
                 if (isNotFirst) {
@@ -78,7 +79,7 @@ class StoreHandler constructor(private val on: On) : OnLifecycle {
                     isNotFirst = true
                 }
 
-                query.equal(idProperty, id)
+                query.equal(idProperty, id, QueryBuilder.StringOrder.CASE_SENSITIVE)
             }
 
         if (sort != null) {

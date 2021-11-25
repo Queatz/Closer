@@ -25,7 +25,7 @@ import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.reactive.DataSubscription
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_group_messages.view.*
 import java.util.*
 

@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import com.google.gson.JsonObject
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import kotlinx.android.synthetic.main.fragment_group_events.messagesRecyclerView
 import kotlinx.android.synthetic.main.fragment_group_reviews.*
 
@@ -83,8 +84,8 @@ class GroupReviewsFragment : PoolActivityFragment() {
         val queryBuilder = on<StoreHandler>().store.box(GroupMessage::class).query()
         groupDisposableGroup.add(queryBuilder
                 .sort(on<SortHandler>().sortGroupMessages())
-                .equal(GroupMessage_.to, group.id!!)
-                .contains(GroupMessage_.attachment, "\"review\"")
+                .equal(GroupMessage_.to, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .contains(GroupMessage_.attachment, "\"review\"", QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
                 .subscribe()
                 .on(AndroidScheduler.mainThread())

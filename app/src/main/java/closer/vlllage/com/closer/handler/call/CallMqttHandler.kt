@@ -5,8 +5,8 @@ import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.mqtt.MqttHandler
 import closer.vlllage.com.closer.handler.mqtt.events.CallMqttEvent
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.logging.Logger.getAnonymousLogger
 
 class CallMqttHandler(private val on: On) {

@@ -14,7 +14,7 @@ import closer.vlllage.com.closer.handler.welcome.WelcomeSlideFragment
 import closer.vlllage.com.closer.pool.PoolActivity
 import com.github.queatz.slidescreen.SlideScreen
 import com.github.queatz.slidescreen.SlideScreenAdapter
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class MapsActivity : PoolActivity() {
 

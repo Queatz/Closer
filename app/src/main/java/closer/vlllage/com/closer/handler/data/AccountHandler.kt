@@ -6,7 +6,7 @@ import closer.vlllage.com.closer.handler.helpers.LatLngStr
 import closer.vlllage.com.closer.handler.helpers.Val
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class AccountHandler constructor(private val on: On) {
 
@@ -111,7 +111,7 @@ class AccountHandler constructor(private val on: On) {
     }
 
     fun changes(prop: String? = null) = accountChanges.let { changes ->
-        prop?.let { prop -> changes.startWith(AccountChange(prop, get(prop))).filter { it.prop == prop } } ?: changes
+        prop?.let { prop -> changes.startWithItem(AccountChange(prop, get(prop))).filter { it.prop == prop } } ?: changes
     }
 
     fun get(prop: String): Any? = when (prop) {

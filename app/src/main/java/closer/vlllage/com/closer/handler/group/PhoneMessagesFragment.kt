@@ -16,6 +16,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupMessage
 import closer.vlllage.com.closer.store.models.GroupMessage_
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import kotlinx.android.synthetic.main.fragment_phone_messages.*
 
 class PhoneMessagesFragment : PoolActivityFragment() {
@@ -48,7 +49,7 @@ class PhoneMessagesFragment : PoolActivityFragment() {
                 on<RefreshHandler>().refreshGroupMessagesForPhone(phone.id!!)
 
                 on<StoreHandler>().store.box(GroupMessage::class).query()
-                        .equal(GroupMessage_.from, phone.id!!)
+                        .equal(GroupMessage_.from, phone.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                         .sort(on<SortHandler>().sortGroupMessages())
                         .build()
                         .subscribe()

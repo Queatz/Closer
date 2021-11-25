@@ -12,8 +12,8 @@ import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.models.QuestProgress
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.person_item.view.activeNowIndicator
 import kotlinx.android.synthetic.main.person_item.view.photo
 import kotlinx.android.synthetic.main.person_item_small.view.*

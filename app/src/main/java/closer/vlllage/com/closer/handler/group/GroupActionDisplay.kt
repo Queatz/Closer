@@ -28,7 +28,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.group_action_edit_flow_modal.view.*
 import java.util.*
 

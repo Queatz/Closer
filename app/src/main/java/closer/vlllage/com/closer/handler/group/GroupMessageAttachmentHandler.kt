@@ -11,6 +11,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.queatz.on.On
+import io.objectbox.query.QueryBuilder
 import java.util.*
 
 class GroupMessageAttachmentHandler constructor(private val on: On) {
@@ -128,8 +129,8 @@ class GroupMessageAttachmentHandler constructor(private val on: On) {
         return if (on<PersistenceHandler>().phoneId == null) {
             null
         } else on<StoreHandler>().store.box(GroupContact::class).query()
-                .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!)
-                .equal(GroupContact_.groupId, group.id!!)
+                .equal(GroupContact_.contactId, on<PersistenceHandler>().phoneId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .equal(GroupContact_.groupId, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build().findFirst()
 
     }

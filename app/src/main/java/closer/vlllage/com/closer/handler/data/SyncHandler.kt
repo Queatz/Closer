@@ -8,7 +8,7 @@ import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.objectbox.Property
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 class SyncHandler constructor(private val on: On) {
     fun syncAll() {

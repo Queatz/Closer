@@ -4,12 +4,13 @@ import com.queatz.on.On
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.GroupDraft
 import closer.vlllage.com.closer.store.models.GroupDraft_
+import io.objectbox.query.QueryBuilder
 
 class GroupDraftHandler constructor(private val on: On) {
     fun saveDraft(groupId: String, message: String? = null, post: String? = null) {
         on<StoreHandler>().store.box(GroupDraft::class)
                 .query()
-                .equal(GroupDraft_.groupId, groupId)
+                .equal(GroupDraft_.groupId, groupId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build().subscribe().single()
                 .observer { groupDrafts ->
                     val groupDraft: GroupDraft
@@ -29,7 +30,7 @@ class GroupDraftHandler constructor(private val on: On) {
 
     fun getDraft(groupId: String) = on<StoreHandler>().store.box(GroupDraft::class)
             .query()
-            .equal(GroupDraft_.groupId, groupId)
+            .equal(GroupDraft_.groupId, groupId, QueryBuilder.StringOrder.CASE_SENSITIVE)
             .build()
             .findFirst()
 }

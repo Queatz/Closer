@@ -25,6 +25,7 @@ import closer.vlllage.com.closer.store.models.Group_
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import kotlinx.android.synthetic.main.activity_personal.*
 import java.util.*
 
@@ -45,7 +46,7 @@ class PersonalSlideFragment : PoolFragment() {
         subscribedGroupsRecyclerView.layoutManager = LinearLayoutManager(subscribedGroupsRecyclerView.context)
 
         on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupMember::class).query()
-                .equal(GroupMember_.phone, on<Val>().trimmed(on<PersistenceHandler>().phoneId))
+                .equal(GroupMember_.phone, on<Val>().trimmed(on<PersistenceHandler>().phoneId), QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .equal(GroupMember_.subscribed, true)
                 .build()
                 .subscribe()

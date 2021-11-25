@@ -20,8 +20,8 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
 
 class GroupToolbarHandler constructor(private val on: On) {

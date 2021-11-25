@@ -25,7 +25,7 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_group.view.*
 import java.text.SimpleDateFormat
 import java.util.*

@@ -10,7 +10,7 @@ import closer.vlllage.com.closer.handler.map.MapHandler
 import closer.vlllage.com.closer.handler.map.MapZoomHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.util.*
 
 class PhysicalGroupBubbleHandler constructor(private val on: On) {

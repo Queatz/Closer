@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
+import io.objectbox.query.QueryBuilder
 import java.util.*
 import kotlin.math.abs
 
@@ -68,8 +69,12 @@ class SortHandler constructor(private val on: On) {
 
     fun sortGroupContacts(): Comparator<GroupContact> {
         return Comparator { groupContact, groupContactOther ->
-            val group = on<StoreHandler>().store.box(Group::class).query().equal(Group_.id, groupContact.groupId!!).build().findFirst()
-            val groupOther = on<StoreHandler>().store.box(Group::class).query().equal(Group_.id, groupContactOther.groupId!!).build().findFirst()
+            val group = on<StoreHandler>().store.box(Group::class).query()
+                .equal(Group_.id, groupContact.groupId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .build().findFirst()
+            val groupOther = on<StoreHandler>().store.box(Group::class).query()
+                .equal(Group_.id, groupContactOther.groupId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .build().findFirst()
 
             if (group == null || groupOther == null) {
                 return@Comparator 0
@@ -141,16 +146,16 @@ class SortHandler constructor(private val on: On) {
     fun sortQuests(latLng: LatLng): Comparator<Quest> {
         return Comparator { o1, o2 ->
             val questProgresses = on<StoreHandler>().store.box(QuestProgress::class).query()
-                    .equal(QuestProgress_.questId, o1.id!!)
+                    .equal(QuestProgress_.questId, o1.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                     .equal(QuestProgress_.active, true)
-                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!)
+                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                     .build()
                     .count()
 
             val questProgressesOther = on<StoreHandler>().store.box(QuestProgress::class).query()
-                    .equal(QuestProgress_.questId, o2.id!!)
+                    .equal(QuestProgress_.questId, o2.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                     .equal(QuestProgress_.active, true)
-                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!)
+                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                     .build()
                     .count()
 

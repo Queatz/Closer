@@ -32,7 +32,7 @@ import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.android.synthetic.main.activity_maps.view.*
 import kotlinx.android.synthetic.main.fragment_group_messages.*

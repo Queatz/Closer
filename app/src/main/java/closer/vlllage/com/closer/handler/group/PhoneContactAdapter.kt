@@ -18,6 +18,7 @@ import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import kotlinx.android.synthetic.main.phone_contact_item.view.*
 
 class PhoneContactAdapter(on: On,
@@ -102,7 +103,7 @@ class PhoneContactAdapter(on: On,
                         holder.phoneIcon.setOnClickListener { on<PhotoActivityTransitionHandler>().show(holder.phoneIcon, groupContact.photo!!) }
                     } else {
                         holder.disposableGroup.add(on<StoreHandler>().store.box(Phone::class).query()
-                                .equal(Phone_.id, groupContact.contactId!!)
+                                .equal(Phone_.id, groupContact.contactId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                                 .build()
                                 .subscribe()
                                 .on(AndroidScheduler.mainThread())

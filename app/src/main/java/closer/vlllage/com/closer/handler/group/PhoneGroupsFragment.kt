@@ -15,6 +15,7 @@ import closer.vlllage.com.closer.store.models.GroupContact
 import closer.vlllage.com.closer.store.models.GroupContact_
 import closer.vlllage.com.closer.store.models.Group_
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import kotlinx.android.synthetic.main.fragment_phone_photos.*
 
 class PhoneGroupsFragment : PoolActivityFragment() {
@@ -52,7 +53,7 @@ class PhoneGroupsFragment : PoolActivityFragment() {
                 val queryBuilder = on<StoreHandler>().store.box(GroupContact::class).query()
                 phoneDisposableGroup.add(queryBuilder
                         .sort(on<SortHandler>().sortGroupContacts())
-                        .equal(GroupContact_.contactId, phone.id!!)
+                        .equal(GroupContact_.contactId, phone.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                         .build()
                         .subscribe()
                         .on(AndroidScheduler.mainThread())

@@ -8,6 +8,7 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.Property
+import io.objectbox.query.QueryBuilder
 import java.util.*
 import kotlin.collections.HashSet
 
@@ -138,10 +139,10 @@ class RefreshHandler constructor(private val on: On) {
     fun refreshGroupActions(groupId: String) {
         on<DisposableHandler>().add(on<ApiHandler>().getGroupActions(groupId).subscribe({ groupActionResults ->
             val removeQuery = on<StoreHandler>().store.box(GroupAction::class).query()
-                    .equal(GroupAction_.group, groupId)
+                    .equal(GroupAction_.group, groupId, QueryBuilder.StringOrder.CASE_SENSITIVE)
 
             for (groupActionResult in groupActionResults) {
-                removeQuery.notEqual(GroupAction_.id, groupActionResult.id!!)
+                removeQuery.notEqual(GroupAction_.id, groupActionResult.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
             }
 
             val removeIds = removeQuery.build().findIds()
@@ -165,7 +166,7 @@ class RefreshHandler constructor(private val on: On) {
 
             handleMessages(groupMessageResults)
 
-            on<StoreHandler>().store.box(Pin::class).query().equal(Pin_.to, groupId).build().remove()
+            on<StoreHandler>().store.box(Pin::class).query().equal(Pin_.to, groupId, QueryBuilder.StringOrder.CASE_SENSITIVE).build().remove()
             handleFullListResult(pinResults, Pin::class.java, Pin_.id, false, { PinResult.from(it) })
         }, connectionError))
     }
@@ -227,7 +228,7 @@ class RefreshHandler constructor(private val on: On) {
                 query.or()
             }
 
-            query.equal(GroupMessage_.id, message.id!!)
+            query.equal(GroupMessage_.id, message.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
         }
 
         query.build().subscribe().single()

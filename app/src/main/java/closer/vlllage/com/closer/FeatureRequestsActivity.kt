@@ -13,8 +13,8 @@ import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler
 import closer.vlllage.com.closer.handler.helpers.TimeAgo
 import closer.vlllage.com.closer.ui.CircularRevealActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.activity_feature_requests.*
 
 class FeatureRequestsActivity : CircularRevealActivity() {

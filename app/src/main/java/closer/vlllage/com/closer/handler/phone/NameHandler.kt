@@ -9,14 +9,15 @@ import closer.vlllage.com.closer.store.models.GroupInvite
 import closer.vlllage.com.closer.store.models.Phone
 import closer.vlllage.com.closer.store.models.Phone_
 import com.queatz.on.On
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 import java.util.*
 
 class NameHandler constructor(private val on: On) {
 
     fun getName(phoneId: String): String {
-        val phoneList = on<StoreHandler>().store.box(Phone::class).query().equal(Phone_.id, phoneId).build().find()
+        val phoneList = on<StoreHandler>().store.box(Phone::class).query().equal(Phone_.id, phoneId, QueryBuilder.StringOrder.CASE_SENSITIVE).build().find()
         return if (phoneList.isEmpty())
             on<ResourcesHandler>().resources.getString(R.string.unknown)
         else getName(phoneList[0])

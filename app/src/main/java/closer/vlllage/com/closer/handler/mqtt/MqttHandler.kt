@@ -10,8 +10,8 @@ import closer.vlllage.com.closer.handler.mqtt.events.TypingMqttEvent
 import com.google.gson.JsonObject
 import com.queatz.on.On
 import com.queatz.on.OnLifecycle
-import io.reactivex.subjects.PublishSubject
-import org.eclipse.paho.android.service.MqttAndroidClient
+import info.mqtt.android.service.MqttAndroidClient
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.eclipse.paho.client.mqttv3.*
 import java.nio.charset.Charset
 import kotlin.reflect.KClass
@@ -28,7 +28,7 @@ class MqttHandler constructor(private val on: On) : OnLifecycle {
     }
 
     override fun on() {
-        mqttClient = MqttAndroidClient(on<ApplicationHandler>().app, MQTT_URI, on<PersistenceHandler>().phone)
+        mqttClient = MqttAndroidClient(on<ApplicationHandler>().app, MQTT_URI, on<PersistenceHandler>().phone!!)
 
         mqttClient.setCallback(object : MqttCallback {
             override fun messageArrived(channel: String, message: MqttMessage) {

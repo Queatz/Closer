@@ -6,9 +6,10 @@ import closer.vlllage.com.closer.store.models.*
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.objectbox.query.Query
-import io.objectbox.rx.RxQuery
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.objectbox.query.QueryBuilder
+import io.objectbox.rx3.RxQuery
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 
 class DataHandler constructor(private val on: On) {
     fun getPhonesNear(latLng: LatLng) = on<ApiHandler>().getPhonesNear(latLng)
@@ -45,7 +46,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getGroup(groupId: String) = chain({
         on<StoreHandler>().store.box(Group::class).query()
-                .equal(Group_.id, groupId)
+                .equal(Group_.id, groupId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
     }, {
         on<ApiHandler>()
@@ -55,7 +56,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getDirectGroup(phoneId: String) = chain({
         on<StoreHandler>().store.box(Group::class).query()
-                .equal(Group_.id, "i am not an id") // todo always fail for now
+                .equal(Group_.id, "i am not an id", QueryBuilder.StringOrder.CASE_SENSITIVE) // todo always fail for now
                 .build()
     }, {
         on<ApiHandler>()
@@ -65,7 +66,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getGroupMessage(groupMessageId: String) = chain({
         on<StoreHandler>().store.box(GroupMessage::class).query()
-                .equal(GroupMessage_.id, groupMessageId)
+                .equal(GroupMessage_.id, groupMessageId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
     }, {
         on<ApiHandler>()
@@ -75,7 +76,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getGroupAction(groupActionId: String) = chain({
         on<StoreHandler>().store.box(GroupAction::class).query()
-                .equal(GroupAction_.id, groupActionId)
+                .equal(GroupAction_.id, groupActionId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
     }, {
         on<ApiHandler>()
@@ -85,8 +86,8 @@ class DataHandler constructor(private val on: On) {
 
     fun getGroupMember(groupId: String) = chain({
         on<StoreHandler>().store.box(GroupMember::class).query()
-                .equal(GroupMember_.group, groupId)
-                .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!)
+                .equal(GroupMember_.group, groupId, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .equal(GroupMember_.phone, on<PersistenceHandler>().phoneId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
     }, {
         on<ApiHandler>().getGroupMember(groupId)
@@ -95,7 +96,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getQuest(questId: String) = chain({
         on<StoreHandler>().store.box(Quest::class).query()
-                .equal(Quest_.id, questId)
+                .equal(Quest_.id, questId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .notNull(Quest_.groupId)
                 .build()
     }, {
@@ -106,7 +107,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getQuestProgress(questProgressId: String) = chain({
         on<StoreHandler>().store.box(QuestProgress::class).query()
-                .equal(QuestProgress_.id, questProgressId)
+                .equal(QuestProgress_.id, questProgressId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .notNull(QuestProgress_.groupId)
                 .build()
     }, {
@@ -117,7 +118,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getEvent(eventId: String) = chain({
         on<StoreHandler>().store.box(Event::class).query()
-                .equal(Event_.id, eventId)
+                .equal(Event_.id, eventId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .notNull(Event_.groupId)
                 .build()
     }, {
@@ -128,7 +129,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getPhone(phoneId: String) = chain({
         on<StoreHandler>().store.box(Phone::class).query()
-                .equal(Phone_.id, phoneId)
+                .equal(Phone_.id, phoneId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
     }, {
         on<ApiHandler>()
@@ -138,7 +139,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getGroupForPhone(phoneId: String) = chain({
         on<StoreHandler>().store.box(Group::class).query()
-                .equal(Group_.phoneId, phoneId)
+                .equal(Group_.phoneId, phoneId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
     }, {
         on<ApiHandler>()
@@ -150,7 +151,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getStory(storyId: String) = chain({
         on<StoreHandler>().store.box(Story::class).query()
-                .equal(Story_.id, storyId)
+                .equal(Story_.id, storyId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
     }, {
         on<ApiHandler>().getStory(storyId)
@@ -159,7 +160,7 @@ class DataHandler constructor(private val on: On) {
 
     fun getSuggestion(suggestionId: String) =
             RxQuery.single(on<StoreHandler>().store.box(Suggestion::class).query()
-                    .equal(Suggestion_.id, suggestionId)
+                    .equal(Suggestion_.id, suggestionId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                     .build()).flatMap {
                 if (it.isNotEmpty()) {
                     Single.just(it.first()).observeOn(AndroidSchedulers.mainThread())
@@ -170,8 +171,8 @@ class DataHandler constructor(private val on: On) {
 
     fun getGroupContact(groupId: String, phoneId: String) = chain({
         on<StoreHandler>().store.box(GroupContact::class).query()
-                .equal(GroupContact_.groupId, groupId)
-                .equal(GroupContact_.contactId, phoneId)
+                .equal(GroupContact_.groupId, groupId, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                .equal(GroupContact_.contactId, phoneId, QueryBuilder.StringOrder.CASE_SENSITIVE)
                 .build()
     }, {
         Single.error(Throwable("Not found"))

@@ -21,8 +21,9 @@ import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
+import io.objectbox.query.QueryBuilder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
 
 open class SearchGroupsAdapter constructor(
@@ -110,7 +111,7 @@ open class SearchGroupsAdapter constructor(
                 } else if (group.hasEvent()) {
                     holder.action.text = if (actionText != null) actionText else if (recentActivity) on<TimeStr>().active(group.updated) else on<ResourcesHandler>().resources.getString(R.string.open_event)
                     val event = on<StoreHandler>().store.box(Event::class).query()
-                            .equal(Event_.id, group.eventId!!)
+                            .equal(Event_.id, group.eventId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                             .build()
                             .findFirst()
                     holder.about.text = if (event != null)
@@ -120,11 +121,11 @@ open class SearchGroupsAdapter constructor(
                 } else if (group.ofKind == "quest") {
                     holder.action.text = on<ResourcesHandler>().resources.getString(R.string.open_quest)
                     holder.about.text = on<StoreHandler>().store.box(Quest::class).query()
-                            .equal(Quest_.id, group.ofId!!)
+                            .equal(Quest_.id, group.ofId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                             .build()
                             .findFirst()?.let { quest -> on<QuestHandler>().questProgressText(on<StoreHandler>().store.box(QuestProgress::class).query()
-                                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!)
-                                    .equal(QuestProgress_.questId, group.ofId!!)
+                                    .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                                    .equal(QuestProgress_.questId, group.ofId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                                     .equal(QuestProgress_.active, true)
                                     .build()
                                     .findFirst(), quest) }
@@ -160,14 +161,14 @@ open class SearchGroupsAdapter constructor(
 
                     if (group.ofKind == "quest") {
                         questProgress = on<StoreHandler>().store.box(QuestProgress::class).query()
-                                .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!)
-                                .equal(QuestProgress_.questId, group.ofId!!)
+                                .equal(QuestProgress_.ofId, on<PersistenceHandler>().phoneId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                                .equal(QuestProgress_.questId, group.ofId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                                 .equal(QuestProgress_.active, true)
                                 .build()
                                 .findFirst()
 
                         quest = on<StoreHandler>().store.box(Quest::class).query()
-                                .equal(Quest_.id, group.ofId!!)
+                                .equal(Quest_.id, group.ofId!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                                 .build()
                                 .findFirst()
                     }
@@ -190,11 +191,15 @@ open class SearchGroupsAdapter constructor(
                     })
                     holder.on<DisposableHandler>().add(on<StoreHandler>().store.box(GroupAction::class).query().let {
                         if (group.ofKind == "quest") {
-                            it.`in`(GroupAction_.id, quest?.flow?.items?.map { it.groupActionId!! }?.filter { groupActionId ->
-                                        !on<QuestHandler>().isGroupActionProgressDone(quest, questProgress, groupActionId)
-                                    }?.toTypedArray() ?: arrayOf())
+                            it.`in`(
+                                GroupAction_.id,
+                                quest?.flow?.items?.map { it.groupActionId!! }?.filter { groupActionId ->
+                                    !on<QuestHandler>().isGroupActionProgressDone(quest, questProgress, groupActionId)
+                                }?.toTypedArray() ?: arrayOf(),
+                                QueryBuilder.StringOrder.CASE_SENSITIVE
+                            )
                         } else {
-                            it.equal(GroupAction_.group, group.id!!)
+                            it.equal(GroupAction_.group, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                         }
                     }
                             .build().subscribe().single()

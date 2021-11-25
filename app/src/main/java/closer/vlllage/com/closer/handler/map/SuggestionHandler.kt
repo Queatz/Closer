@@ -15,6 +15,7 @@ import at.bluesource.choicesdk.maps.common.LatLng
 import at.bluesource.choicesdk.maps.common.LatLngBounds
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.SubscriptionBuilder
 import java.util.*
 
@@ -114,7 +115,7 @@ class SuggestionHandler constructor(private val on: On) {
     fun loadAll(suggestions: List<SuggestionResult>) {
         for (suggestionResult in suggestions) {
             on<StoreHandler>().store.box(Suggestion::class).query()
-                    .equal(Suggestion_.id, suggestionResult.id!!)
+                    .equal(Suggestion_.id, suggestionResult.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                     .build().subscribe().single().on(AndroidScheduler.mainThread())
                     .observer { result ->
                         if (result.isEmpty()) {

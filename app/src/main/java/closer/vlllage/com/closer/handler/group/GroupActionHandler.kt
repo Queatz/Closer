@@ -18,8 +18,9 @@ import closer.vlllage.com.closer.store.models.GroupAction_
 import closer.vlllage.com.closer.ui.RevealAnimatorForConstraintLayout
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
+import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscription
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.add_action_modal.view.*
 
 class GroupActionHandler constructor(private val on: On) {
@@ -56,7 +57,7 @@ class GroupActionHandler constructor(private val on: On) {
             }
 
             groupActionsDisposable = on<StoreHandler>().store.box(GroupAction::class).query()
-                    .equal(GroupAction_.group, group.id!!)
+                    .equal(GroupAction_.group, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
                     .build()
                     .subscribe()
                     .on(AndroidScheduler.mainThread())

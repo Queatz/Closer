@@ -11,7 +11,7 @@ import closer.vlllage.com.closer.handler.quest.QuestHandler
 import closer.vlllage.com.closer.pool.PoolRecyclerAdapter
 import closer.vlllage.com.closer.store.models.GroupAction
 import com.queatz.on.On
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 
 class GroupActionAdapter(on: On,

@@ -28,7 +28,7 @@ import closer.vlllage.com.closer.store.models.Quest
 import closer.vlllage.com.closer.store.models.QuestProgress
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.item_quest.view.*
 
 class QuestMixedItem(val quest: Quest) : MixedItem(MixedItemType.Quest)

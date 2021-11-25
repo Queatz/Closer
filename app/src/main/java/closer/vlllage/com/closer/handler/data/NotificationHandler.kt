@@ -77,7 +77,7 @@ class NotificationHandler constructor(private val on: On) {
                 context,
                 REQUEST_CODE_NOTIFICATION,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val notificationTag = phone + "/" + on<Val>().rndId()
@@ -205,7 +205,7 @@ class NotificationHandler constructor(private val on: On) {
                 context,
                 REQUEST_CODE_NOTIFICATION,
                 intent,
-                PendingIntent.FLAG_ONE_SHOT
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val phoneName = on<NameHandler>().getFallbackName(
@@ -256,7 +256,7 @@ class NotificationHandler constructor(private val on: On) {
             context,
             REQUEST_CODE_NOTIFICATION,
             intent,
-            0
+            PendingIntent.FLAG_IMMUTABLE
         ))
     }
 
@@ -311,8 +311,8 @@ class NotificationHandler constructor(private val on: On) {
         if (remoteInput != null) {
             val replyPendingIntent = PendingIntent.getBroadcast(context,
                     REQUEST_CODE_NOTIFICATION,
-                    backgroundIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT)
+                    backgroundIntent!!,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
             val action = NotificationCompat.Action.Builder(R.drawable.ic_notification,
                     on<ResourcesHandler>().resources.getString(R.string.reply), replyPendingIntent)
@@ -327,21 +327,21 @@ class NotificationHandler constructor(private val on: On) {
                     context,
                     REQUEST_CODE_NOTIFICATION,
                     it,
-                    PendingIntent.FLAG_ONE_SHOT
+                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
             )
 
             val pendingIgnoreIntent = PendingIntent.getBroadcast(
                     context,
                     REQUEST_CODE_NOTIFICATION_IGNORE,
-                    fullScreenIgnoreIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
+                    fullScreenIgnoreIntent!!,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
             val pendingAnswerIntent = PendingIntent.getActivity(
                     context,
                     REQUEST_CODE_NOTIFICATION_ANSWER,
                     fullScreenAnswerIntent,
-                    PendingIntent.FLAG_ONE_SHOT
+                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
             )
 
             builder.addAction(R.drawable.ic_baseline_call_end_24,

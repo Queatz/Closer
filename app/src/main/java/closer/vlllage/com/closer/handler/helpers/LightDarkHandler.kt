@@ -5,7 +5,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import closer.vlllage.com.closer.R
 import com.queatz.on.On
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class LightDarkHandler constructor(private val on: On) {
 

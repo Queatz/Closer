@@ -6,6 +6,7 @@ import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Group_
 import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
+import io.objectbox.query.QueryBuilder
 
 class ProximityHandler constructor(private val on: On) {
 
@@ -20,7 +21,7 @@ class ProximityHandler constructor(private val on: On) {
                 .equal(Group_.physical, true)
                 .let {
                     if (!includeNonHubs) {
-                        it.notEqual(Group_.name, "")
+                        it.notEqual(Group_.name, "", QueryBuilder.StringOrder.CASE_SENSITIVE)
                     }
                     it
                 }

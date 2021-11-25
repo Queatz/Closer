@@ -8,7 +8,7 @@ import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.store.models.Group
 import com.queatz.on.On
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class InstallShortcutHandler constructor(private val on: On) {
     fun installShortcut(group: Group) {

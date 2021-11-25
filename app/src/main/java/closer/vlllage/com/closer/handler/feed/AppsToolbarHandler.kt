@@ -9,7 +9,7 @@ import closer.vlllage.com.closer.handler.group.ToolbarAdapter
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.map.FeedHandler
 import com.queatz.on.On
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class AppsToolbarHandler constructor(private val on: On) {
     fun attach(toolbarAdapter: ToolbarAdapter, showCalendarIndicator: BehaviorSubject<Boolean>, isLight: Boolean = false) {

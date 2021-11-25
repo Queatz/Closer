@@ -17,7 +17,7 @@ import closer.vlllage.com.closer.handler.map.SetNameHandler
 import closer.vlllage.com.closer.handler.map.VerifyNumberHandler
 import closer.vlllage.com.closer.handler.settings.ConfigHandler
 import closer.vlllage.com.closer.pool.PoolFragment
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_welcome.view.*
 
 class WelcomeSlideFragment : PoolFragment() {

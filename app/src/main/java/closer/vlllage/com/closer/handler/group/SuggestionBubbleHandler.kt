@@ -15,7 +15,7 @@ import closer.vlllage.com.closer.store.models.Suggestion
 import closer.vlllage.com.closer.store.models.Suggestion_
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.util.*
 
 
