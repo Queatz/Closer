@@ -65,6 +65,7 @@ play {
 }
 
 dependencies {
+    "implementation"(files("libs/google-webrtc-1.0.32006.aar"))
     "implementation"("at.bluesource.choicesdk:choicesdk-location:0.3.0") {
         exclude(group = "com.huawei.hms")
     }
@@ -119,8 +120,6 @@ dependencies {
     "androidTestImplementation"("androidx.test:runner:1.4.0")
     "androidTestImplementation"("androidx.test.espresso:espresso-core:3.4.0")
     "implementation"(kotlin("stdlib-jdk8", rootProject.extra["kotlinVersion"] as String))
-    "implementation"("io.pristine:libjingle:11139@aar")
-//    "implementation"("org.webrtc:google-webrtc:1.0.30039")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).all {

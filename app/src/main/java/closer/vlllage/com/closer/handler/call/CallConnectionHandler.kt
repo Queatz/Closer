@@ -25,7 +25,11 @@ class CallConnectionHandler constructor(private val on: On) {
     }
 
     init {
-        PeerConnectionFactory.initializeInternalTracer()
+        val options = PeerConnectionFactory.InitializationOptions.builder(on<ApplicationHandler>().app)
+            .setEnableInternalTracer(true)
+            .setFieldTrials("WebRTC-H264HighProfile/Enabled/")
+            .createInitializationOptions()
+        PeerConnectionFactory.initialize(options)
         PeerConnectionFactory.initializeFieldTrials("WebRTC-H264HighProfile/Enabled/")
     }
 
@@ -41,11 +45,11 @@ class CallConnectionHandler constructor(private val on: On) {
 
     private val iceServers = listOf(
             // todo host own STUN server
-            PeerConnection.IceServer("stun:stun.l.google.com:19302"),
+            PeerConnection.IceServer.builder("stun:stun.l.google.com:19302").createIceServer(),
 
             // todo host own TURN server
-            PeerConnection.IceServer("turn:numb.viagenie.ca", "webrtc@live.com", "muazkh")
-    )
+        PeerConnection.IceServer.builder("turn:numb.viagenie.ca").setUsername("webrtc@live.com").setPassword("muazkh").createIceServer()
+  )
 
     private val rootEglBase: EglBase = EglBase.create()
 
@@ -61,12 +65,15 @@ class CallConnectionHandler constructor(private val on: On) {
         }
     }
 
-    private val peerConnectionFactory = PeerConnectionFactory().apply {
-        setOptions(PeerConnectionFactory.Options().apply {
+    private val peerConnectionFactory = PeerConnectionFactory
+        .builder()
+        .setVideoDecoderFactory(DefaultVideoDecoderFactory(rootEglBase.eglBaseContext))
+        .setVideoEncoderFactory(DefaultVideoEncoderFactory(rootEglBase.eglBaseContext, true, true))
+        .setOptions(PeerConnectionFactory.Options().apply {
             disableEncryption = true // todo ???
             disableNetworkMonitor = true
         })
-    }
+        .createPeerConnectionFactory()
 
     private var peerConnection: PeerConnection? = null
     private var videoCapturer: VideoCapturer? = null
@@ -87,7 +94,7 @@ class CallConnectionHandler constructor(private val on: On) {
         audioManager?.isMicrophoneMute = false
         audioManager?.isSpeakerphoneOn = true
 
-        peerConnection = peerConnectionFactory.createPeerConnection(iceServers, MediaConstraints(), object : PeerConnection.Observer {
+        peerConnection = peerConnectionFactory.createPeerConnection(iceServers, object : PeerConnection.Observer {
             override fun onIceCandidate(iceCandidate: IceCandidate) {
                 peerConnection?.addIceCandidate(iceCandidate)
                 send("connect", iceCandidate)
@@ -100,7 +107,7 @@ class CallConnectionHandler constructor(private val on: On) {
 
             override fun onAddStream(mediaStream: MediaStream?) {
                 remoteView.let {
-//                    mediaStream?.videoTracks?.getOrNull(0)?.addRenderer(it)
+                    mediaStream?.videoTracks?.getOrNull(0)?.addSink(it)
                     it.post { it.visible = true }
                 }
             }
@@ -111,14 +118,17 @@ class CallConnectionHandler constructor(private val on: On) {
                     active.onNext(true)
                 }
             }
+            override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {}
             override fun onRemoveStream(p0: MediaStream?) {}
             override fun onRenegotiationNeeded() {}
+            override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {}
         })!!
 
         startLocalVideoCapture(localView)
     }
 
     fun detach() {
+        videoCapturer?.stopCapture()
         videoCapturer?.dispose()
         videoCapturer = null
 
@@ -201,27 +211,17 @@ class CallConnectionHandler constructor(private val on: On) {
 
     private fun initSurfaceView(view: SurfaceViewRenderer) = view.run {
         setMirror(true)
-//        setEnableHardwareScaler(true)
+        setEnableHardwareScaler(true)
         init(rootEglBase.eglBaseContext, null)
     }
 
     private fun startLocalVideoCapture(localVideoOutput: SurfaceViewRenderer) {
+        val surfaceTextureHelper = SurfaceTextureHelper.create(Thread.currentThread().name, rootEglBase.eglBaseContext)
         val localStream = peerConnectionFactory.createLocalMediaStream(LOCAL_STREAM_ID)
 
-        videoCapturer = VideoCapturerAndroid.create(CameraEnumerationAndroid.getNameOfFrontFacingDevice())
-        val localVideoSource = peerConnectionFactory.createVideoSource(videoCapturer, MediaConstraints())
-//        videoCapturer.startCapture(720, 1280, 60)
-        val localVideoTrack = peerConnectionFactory.createVideoTrack(LOCAL_VIDEO_TRACK_ID, localVideoSource)
-//        localVideoTrack.addRenderer(localVideoOutput)
-        localStream?.addTrack(localVideoTrack)
-
-
-        if (videoCapturer == null) {
-            on<DefaultAlerts>().thatDidntWork()
-            return
-        }
-
+        val localVideoSource = peerConnectionFactory.createVideoSource(false)
 //      val localScreencastVideoSource = peerConnectionFactory.createVideoSource(true) // todo screencast
+
         val localAudioSource = peerConnectionFactory.createAudioSource(MediaConstraints().apply {
             mandatory.add(MediaConstraints.KeyValuePair("googEchoCancellation", "false"))
             mandatory.add(MediaConstraints.KeyValuePair("googAutoGainControl", "false"))
@@ -229,10 +229,31 @@ class CallConnectionHandler constructor(private val on: On) {
             mandatory.add(MediaConstraints.KeyValuePair("googNoiseSuppression", "false"))
         })
 
+        videoCapturer = Camera2Enumerator(on<ApplicationHandler>().app).let {
+            it.deviceNames.find { device ->
+                it.isFrontFacing(device)
+            }?.let { device ->
+                it.createCapturer(device, null)
+            }
+        }?.also { videoCapturer ->
+            videoCapturer.initialize(surfaceTextureHelper, localVideoOutput.context, localVideoSource.capturerObserver)
+            videoCapturer.startCapture(720, 1280, 60)
+            val localVideoTrack = peerConnectionFactory.createVideoTrack(LOCAL_VIDEO_TRACK_ID, localVideoSource)
+            localVideoTrack.addSink(localVideoOutput)
+            localStream?.addTrack(localVideoTrack)
+        }
+
+        if (videoCapturer == null) {
+            on<DefaultAlerts>().thatDidntWork()
+            return
+        }
+
         val localAudioTrack = peerConnectionFactory.createAudioTrack(LOCAL_AUDIO_TRACK_ID, localAudioSource)
         localAudioTrack.setEnabled(true)
         localStream?.addTrack(localAudioTrack)
         peerConnection?.addStream(localStream)
+        peerConnection?.setAudioRecording(true)
+        peerConnection?.setAudioPlayout(true)
     }
 
     fun onStart(callEvent: CallEvent) {
