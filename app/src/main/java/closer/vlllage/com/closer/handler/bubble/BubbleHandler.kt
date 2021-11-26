@@ -41,6 +41,7 @@ class BubbleHandler constructor(private val on: On) {
 
             override fun updateView(mapBubble: MapBubble) {
                 when (mapBubble.type) {
+                    //     Caused by: java.lang.ClassCastException: androidx.constraintlayout.widget.ConstraintLayout cannot be cast to android.widget.LinearLayout
                     BubbleType.STATUS -> on<MapBubblePhysicalGroupView>().update(MapBubblePhysicalGroupBinding.bind(mapBubble.view!!), mapBubble)
                 }
             }

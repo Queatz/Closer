@@ -8,7 +8,7 @@ import com.queatz.on.On
 class MapViewHandler constructor(private val on: On) {
 
     private val mapSlideFragment by lazy { MapSlideFragment() }
-    lateinit var onRequestMapOnScreenListener: (() -> Unit)
+    var onRequestMapOnScreenListener: (() -> Unit) = {}
 
     val mapFragment: Fragment = mapSlideFragment
 

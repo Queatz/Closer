@@ -91,27 +91,28 @@ class MapHandler constructor(private val on: On) : OnMapReadyCallback {
                     .build()))
         }
 
-        onMapReadyListener!!.invoke(map!!)
-        map!!.setOnCameraMoveListener { this.mapChanged() }
-        map!!.setOnMapClickListener { onMapClickedListener!!.invoke(it) }
-        map!!.setOnMapLongClickListener { onMapLongClickedListener?.invoke(it) }
-        map!!.setOnCameraIdleListener {
-            on<PersistenceHandler>().lastMapCenter = map!!.cameraPosition.target
-            onMapIdleListener!!.invoke(map!!.cameraPosition.target)
-            onMapIdleObservable.onNext(map!!.cameraPosition)
+        onMapReadyListener!!.invoke(map)
+        map.setOnCameraMoveListener { this.mapChanged() }
+        map.setOnMapClickListener { onMapClickedListener!!.invoke(it) }
+        map.setOnMapLongClickListener { onMapLongClickedListener?.invoke(it) }
+        map.setOnCameraIdleListener {
+            on<PersistenceHandler>().lastMapCenter = map.cameraPosition.target
+            onMapIdleListener!!.invoke(map.cameraPosition.target)
+            onMapIdleObservable.onNext(map.cameraPosition)
         }
         onMapChangedListener!!.invoke()
-        map!!.setPadding(
+        map.setPadding(
                 on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf),
                 topPadding,
                 on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf),
                 on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf))
-        map!!.getUiSettings().isMyLocationButtonEnabled = false
+        map.getUiSettings().isMyLocationButtonEnabled = false
+        map.getUiSettings().isZoomControlsEnabled = false
 
         if (centerOnMapLoad == null) {
             locateMe()
         } else {
-            map!!.moveCamera(CameraUpdateFactory.get().newLatLngZoom(centerOnMapLoad!!, DEFAULT_ZOOM))
+            map.moveCamera(CameraUpdateFactory.get().newLatLngZoom(centerOnMapLoad!!, DEFAULT_ZOOM))
             centerOnMapLoad = null
         }
 

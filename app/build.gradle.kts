@@ -75,6 +75,10 @@ dependencies {
     "implementation"("at.bluesource.choicesdk:choicesdk-messaging:0.3.0") {
         exclude(group = "com.huawei.hms")
     }
+
+    "implementation"("com.huawei.hms:location:6.2.0.300")
+    "implementation"("com.huawei.hms:push:6.1.0.300")
+
     "implementation"("androidx.work:work-runtime-ktx:2.7.1")
     "implementation"("com.huawei.agconnect:agconnect-core:1.6.1.300")
     "implementation"("com.huawei.hms:maps:6.2.0.301")
