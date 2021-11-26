@@ -135,7 +135,7 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
     override fun getMixedItemClass() = MessagesContactMixedItem::class
     override fun getMixedItemType() = MixedItemType.MessageContact
 
-    override fun areItemsTheSame(old: MessagesContactMixedItem, new: MessagesContactMixedItem) = false
+    override fun areItemsTheSame(old: MessagesContactMixedItem, new: MessagesContactMixedItem) = old.group.id == new.group.id
 
     override fun areContentsTheSame(old: MessagesContactMixedItem, new: MessagesContactMixedItem) = false
 

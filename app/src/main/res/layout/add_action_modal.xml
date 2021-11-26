@@ -1,108 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/padDouble">
-
-    <TextView
-        android:id="@+id/nameInfo"
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/name"
-        android:drawablePadding="@dimen/pad"
-        android:drawableStart="@drawable/ic_help_black_18dp"
-        android:gravity="top"
-        android:padding="@dimen/pad"
-        android:drawableTint="@color/colorPrimary"
-        android:textColor="@color/textInverse"
-        android:text="@string/activity_name_info"
-        android:lineSpacingMultiplier="1.25"
-        android:background="@drawable/rounded_map_ambient_16dp"
-        android:textAppearance="?android:textAppearance" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/nameInfo"
-        app:layout_constraintBottom_toTopOf="@+id/intentHeader"
-        android:hint="@string/action_name_hint"
-        android:focusedByDefault="true"
-        android:imeOptions="actionNext"
-        android:paddingTop="@dimen/padDouble"
-        android:padding="@dimen/pad"
-        android:maxLength="48"
-        android:background="@null"
-        android:inputType="textShortMessage|textCapSentences"
-        android:maxLines="1" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padDouble">
 
-    <TextView
-        android:id="@+id/intentHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/name"
-        app:layout_constraintBottom_toTopOf="@+id/intentInfo"
-        android:layout_marginTop="@dimen/padDouble"
-        android:text="@string/action_intent"
-        android:paddingStart="@dimen/pad"
-        android:textColor="@color/textInverse"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:textAppearance="?android:textAppearance" />
+        <TextView
+                android:id="@+id/nameInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/name"
+                android:drawablePadding="@dimen/pad"
+                android:drawableStart="@drawable/ic_help_black_18dp"
+                android:gravity="top"
+                android:padding="@dimen/pad"
+                android:drawableTint="@color/colorPrimary"
+                android:textColor="@color/textInverse"
+                android:text="@string/activity_name_info"
+                android:lineSpacingMultiplier="1.25"
+                android:background="@drawable/rounded_map_ambient_16dp"
+                android:textAppearance="?android:textAppearance" />
 
-    <TextView
-        android:id="@+id/intentInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/intentHeader"
-        android:drawablePadding="@dimen/pad"
-        android:layout_marginTop="@dimen/pad"
-        android:drawableStart="@drawable/ic_help_black_18dp"
-        android:gravity="top"
-        android:padding="@dimen/pad"
-        android:drawableTint="@color/colorPrimary"
-        android:textColor="@color/textInverse"
-        android:text="@string/activity_intent_info"
-        android:lineSpacingMultiplier="1.25"
-        android:background="@drawable/rounded_map_ambient_16dp"
-        android:textAppearance="?android:textAppearance" />
+        <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/nameInfo"
+                app:layout_constraintBottom_toTopOf="@+id/intentHeader"
+                android:hint="@string/action_name_hint"
+                android:focusedByDefault="true"
+                android:imeOptions="actionNext"
+                android:paddingTop="@dimen/padDouble"
+                android:padding="@dimen/pad"
+                android:maxLength="48"
+                android:background="@null"
+                android:inputType="textShortMessage|textCapSentences"
+                android:maxLines="1" />
 
-    <TextView
-        android:id="@+id/intentPrefix"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/intentInfo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/intent"
-        android:paddingTop="@dimen/padDouble"
-        android:paddingBottom="@dimen/pad"
-        android:paddingStart="@dimen/pad"
-        android:textColor="@color/textHintInverse"
-        android:text="@string/sample_name"
-        android:textAppearance="?android:textAppearanceMedium" />
+        <TextView
+                android:id="@+id/intentHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/name"
+                app:layout_constraintBottom_toTopOf="@+id/intentInfo"
+                android:layout_marginTop="@dimen/padDouble"
+                android:text="@string/action_intent"
+                android:paddingStart="@dimen/pad"
+                android:textColor="@color/textInverse"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textAppearance="?android:textAppearance" />
 
-    <EditText
-        android:id="@+id/intent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/intentInfo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/intentPrefix"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:hint="@string/action_intent_hint"
-        android:imeOptions="actionDone"
-        android:paddingTop="@dimen/padDouble"
-        android:paddingBottom="@dimen/pad"
-        android:paddingStart="6dp"
-        android:paddingEnd="@dimen/pad"
-        android:maxLength="96"
-        android:background="@null"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:inputType="textShortMessage"
-        android:maxLines="1" />
+        <TextView
+                android:id="@+id/intentInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/intentHeader"
+                android:drawablePadding="@dimen/pad"
+                android:layout_marginTop="@dimen/pad"
+                android:drawableStart="@drawable/ic_help_black_18dp"
+                android:gravity="top"
+                android:padding="@dimen/pad"
+                android:drawableTint="@color/colorPrimary"
+                android:textColor="@color/textInverse"
+                android:text="@string/activity_intent_info"
+                android:lineSpacingMultiplier="1.25"
+                android:background="@drawable/rounded_map_ambient_16dp"
+                android:textAppearance="?android:textAppearance" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+                android:id="@+id/intentPrefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/intentInfo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/intent"
+                android:paddingTop="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:paddingStart="@dimen/pad"
+                android:textColor="@color/textHintInverse"
+                android:text="@string/sample_name"
+                android:textAppearance="?android:textAppearanceMedium" />
+
+        <EditText
+                android:id="@+id/intent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/intentInfo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/intentPrefix"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:hint="@string/action_intent_hint"
+                android:imeOptions="actionDone"
+                android:paddingTop="@dimen/padDouble"
+                android:paddingBottom="@dimen/pad"
+                android:paddingStart="6dp"
+                android:paddingEnd="@dimen/pad"
+                android:maxLength="96"
+                android:background="@null"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:inputType="textShortMessage"
+                android:maxLines="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

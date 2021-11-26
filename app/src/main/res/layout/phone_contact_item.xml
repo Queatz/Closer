@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:background="@drawable/clickable_light"
     android:clickable="true"
+    android:minHeight="80dp"
     android:elevation="@dimen/elevation"
     android:layout_marginTop="@dimen/padDouble"
     android:layout_marginStart="@dimen/padDouble"

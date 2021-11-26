@@ -444,6 +444,9 @@ class FeedHandler constructor(private val on: On) {
 
         if (layoutManager.findFirstVisibleItemPosition() != 0) {
             recyclerView.smoothScrollToPosition(0)
+            recyclerView.post {
+                recyclerView.smoothScrollToPosition(0)
+            }
         } else {
             reveal(false)
         }

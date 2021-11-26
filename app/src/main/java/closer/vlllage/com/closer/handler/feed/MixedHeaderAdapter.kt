@@ -3,16 +3,10 @@ package closer.vlllage.com.closer.handler.feed
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.handler.data.AccountHandler
-import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.feed.content.*
-import closer.vlllage.com.closer.handler.helpers.CreateGroupHelper
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.handler.helpers.ProfileHelper
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
-import closer.vlllage.com.closer.handler.map.FeedHandler
 import closer.vlllage.com.closer.handler.map.HeaderAdapter
 import closer.vlllage.com.closer.store.models.*
 import com.queatz.on.On
