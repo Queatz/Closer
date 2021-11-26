@@ -192,6 +192,7 @@
             android:layout_marginBottom="@dimen/padDouble"
             app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
             android:src="@drawable/ic_my_location_black_24dp"
+            app:tint="@color/iconInverse"
             android:backgroundTint="@color/white"
             app:borderWidth="0dp" />
 
@@ -204,6 +205,7 @@
             android:layout_marginBottom="@dimen/padDouble"
             app:layout_constraintBottom_toTopOf="@+id/locateMeButton"
             android:src="@drawable/ic_qr_code_black_24dp"
+            app:tint="@color/iconInverse"
             android:backgroundTint="@color/white"
             app:borderWidth="0dp" />
 

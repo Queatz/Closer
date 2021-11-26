@@ -97,7 +97,7 @@
             android:minWidth="0dp"
             android:padding="@dimen/pad"
             android:background="@drawable/clickable_light_rounded"
-            android:tint="@color/textInverse"
+            android:tint="@color/iconInverse"
             android:src="@drawable/ic_launch_black_24dp"
             android:contentDescription="@string/open_group"
             android:visibility="gone"
@@ -116,7 +116,7 @@
             android:minWidth="0dp"
             android:background="@drawable/clickable_dark_flat"
             android:padding="@dimen/pad"
-            android:tint="@color/textInverse"
+            android:tint="@color/iconInverse"
             android:src="@drawable/ic_camera_black_24dp"
             android:contentDescription="@string/send_message" />
 
@@ -344,7 +344,7 @@
             android:minWidth="0dp"
             android:background="@drawable/clickable_dark_flat"
             android:padding="@dimen/pad"
-            android:tint="@color/textInverse"
+            android:tint="@color/iconInverse"
             android:src="@drawable/ic_history_black_24dp"
             android:contentDescription="@string/perform_archeology" />
 

@@ -526,7 +526,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_places)
                                 binding.historyButton.visible = true
                                 binding.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
-                                binding.historyButton.imageTintList = null
+                                binding.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.iconInverse))
                                 binding.suggestionsHeader.visible = false
                                 binding.placesHeader.visible = false
                                 binding.feedText.visible = true
@@ -577,7 +577,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_communities)
                                 binding.historyButton.visible = explore
                                 binding.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
-                                binding.historyButton.imageTintList = null
+                                binding.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.iconInverse))
                                 actionHeader.visible = false
                                 binding.suggestionsHeader.visible = false
                                 binding.placesHeader.visible = false
@@ -605,7 +605,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                                 searchGroups.hint = on<ResourcesHandler>().resources.getString(R.string.search_public_groups_hint)
                                 binding.historyButton.visible = explore
                                 binding.historyButton.setImageResource(R.drawable.ic_history_black_24dp)
-                                binding.historyButton.imageTintList = null
+                                binding.historyButton.imageTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(R.color.iconInverse))
                                 binding.suggestionsHeader.visible = false
                                 binding.placesHeader.visible = state.hasPlaces
                                 binding.feedText.visible = true
