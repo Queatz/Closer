@@ -2,29 +2,31 @@ package closer.vlllage.com.closer
 
 import android.content.Intent
 import android.os.Bundle
-import closer.vlllage.com.closer.handler.PersonalSlideFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
+import closer.vlllage.com.closer.databinding.MainBinding
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.ScanQrCodeHandler
 import closer.vlllage.com.closer.handler.helpers.ToastHandler
 import closer.vlllage.com.closer.handler.map.MapViewHandler
-import closer.vlllage.com.closer.handler.settings.SettingsSlideFragment
 import closer.vlllage.com.closer.handler.welcome.WelcomeSlideFragment
 import closer.vlllage.com.closer.pool.PoolActivity
-import com.github.queatz.slidescreen.SlideScreen
-import com.github.queatz.slidescreen.SlideScreenAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class MapsActivity : PoolActivity() {
 
-    private lateinit var slideScreen: SlideScreen
+    private lateinit var fragmentContainer: FragmentContainerView
 
     private val accessDisposableGroup = on<DisposableHandler>().group()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.slidescreen)
-        slideScreen = findViewById(R.id.slideScreen)
+        fragmentContainer = MainBinding.inflate(layoutInflater).let {
+            setContentView(it.root)
+            it.fragmentContainer
+        }
+
         refreshScreens()
 
         if (intent != null) {
@@ -59,20 +61,6 @@ class MapsActivity : PoolActivity() {
             on<ToastHandler>().show(intent.getStringExtra(EXTRA_PROMPT)!!)
         }
 
-        if (intent.hasExtra(EXTRA_SCREEN)) {
-            when (intent.getStringExtra(EXTRA_SCREEN)) {
-                EXTRA_SCREEN_PERSONAL -> {
-                    slideScreen.slide = POSITION_SCREEN_PERSONAL
-                }
-                EXTRA_SCREEN_MAP -> {
-                    slideScreen.slide = POSITION_SCREEN_MAP
-                }
-                EXTRA_SCREEN_SETTINGS -> {
-                    slideScreen.slide = POSITION_SCREEN_SETTINGS
-                }
-            }
-        }
-
         on<MapViewHandler>().handleIntent(intent)
     }
 
@@ -80,11 +68,6 @@ class MapsActivity : PoolActivity() {
         if (on<PersistenceHandler>().access) {
             on<MapViewHandler>().onBackPressed {
                 if (it) {
-                    return@onBackPressed
-                }
-
-                if (!slideScreen.isExpose) {
-                    slideScreen.expose(true)
                     return@onBackPressed
                 }
 
@@ -97,31 +80,16 @@ class MapsActivity : PoolActivity() {
 
     private fun refreshScreens() {
         if (on<PersistenceHandler>().access.not()) {
-            slideScreen.adapter = object : SlideScreenAdapter {
-                override fun getCount() = 1
-                override fun getSlide(position: Int) = WelcomeSlideFragment()
-                override fun getFragmentManager() = this@MapsActivity.supportFragmentManager
-            }
+            show(WelcomeSlideFragment())
         } else {
-            slideScreen.adapter = object : SlideScreenAdapter {
-                override fun getCount() = NUM_SCREENS
-
-                override fun getSlide(position: Int) = when (position) {
-                    POSITION_SCREEN_PERSONAL -> PersonalSlideFragment()
-                    POSITION_SCREEN_MAP -> on<MapViewHandler>().mapFragment
-                    POSITION_SCREEN_SETTINGS -> SettingsSlideFragment()
-                    else -> throw IndexOutOfBoundsException()
-                }
-
-                override fun getFragmentManager() = this@MapsActivity.supportFragmentManager
-            }
-
-            on<MapViewHandler>().onRequestMapOnScreenListener = {
-                slideScreen.slide = POSITION_SCREEN_MAP
-            }
-
-            slideScreen.slide = POSITION_SCREEN_MAP
+            show(on<MapViewHandler>().mapFragment)
         }
+    }
+
+    private fun show(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commitAllowingStateLoss()
     }
 
     companion object {
@@ -130,15 +98,6 @@ class MapsActivity : PoolActivity() {
         const val EXTRA_SUGGESTION = "suggestion"
         const val EXTRA_EVENT_ID = "eventId"
         const val EXTRA_PHONE = "phone"
-        const val EXTRA_SCREEN = "screen"
         const val EXTRA_PROMPT = "prompt"
-        const val EXTRA_SCREEN_MAP = "screen.map"
-        const val EXTRA_SCREEN_PERSONAL = "screen.personal"
-        const val EXTRA_SCREEN_SETTINGS = "screen.settings"
-
-        const val POSITION_SCREEN_PERSONAL = 0
-        const val POSITION_SCREEN_MAP = 1
-        const val POSITION_SCREEN_SETTINGS = 2
-        const val NUM_SCREENS = 3
     }
 }

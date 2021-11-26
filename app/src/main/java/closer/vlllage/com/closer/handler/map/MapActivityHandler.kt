@@ -6,7 +6,6 @@ import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_EVENT_ID
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_LAT_LNG
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_PROMPT
-import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_SCREEN
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_SUGGESTION
 import closer.vlllage.com.closer.MapsActivity.Companion.EXTRA_ZOOM
 import closer.vlllage.com.closer.R
@@ -81,10 +80,9 @@ class MapActivityHandler constructor(private val on: On) {
         on<ActivityHandler>().activity!!.startActivity(intent)
     }
 
-    fun goToScreen(screenName: String, message: String? = null) {
+    fun goToMap(message: String? = null) {
         val intent = Intent(on<ActivityHandler>().activity, MapsActivity::class.java)
         intent.action = Intent.ACTION_VIEW
-        intent.putExtra(EXTRA_SCREEN, screenName)
         message?.let { intent.putExtra(EXTRA_PROMPT, it) }
         on<ActivityHandler>().activity!!.startActivity(intent)
     }

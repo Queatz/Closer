@@ -1,7 +1,6 @@
 package closer.vlllage.com.closer.handler.phone
 
 import android.view.View
-import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
 import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
@@ -47,7 +46,7 @@ class NavigationHandler constructor(private val on: On) {
     }
 
     fun showMap(message: String? = null, close: Boolean = true) {
-        val runnable = { on<MapActivityHandler>().goToScreen(MapsActivity.EXTRA_SCREEN_MAP, message) }
+        val runnable = { on<MapActivityHandler>().goToMap(message) }
 
         if (close && on<ActivityHandler>().activity is CircularRevealActivity) {
             (on<ActivityHandler>().activity as CircularRevealActivity).finish(runnable)

@@ -111,7 +111,6 @@ dependencies {
     "implementation"("com.googlecode.libphonenumber:libphonenumber:8.12.37")
     "implementation"("com.vdurmont:emoji-java:5.1.1")
     "implementation"("com.luckycatlabs:SunriseSunsetCalculator:1.2")
-    "implementation"("com.github.Queatz:Android-UX-Extras-Slide-Screen:0.2")
     "implementation"("com.github.Queatz:On:0.1.6.4")
     "implementation"(group = "com.github.haifengl", name = "smile-core", version = "1.5.2")
     "implementation"("io.objectbox:objectbox-kotlin:${rootProject.extra["objectboxVersion"]}")

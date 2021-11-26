@@ -103,6 +103,10 @@ class MapSlideFragment : PoolFragment() {
         binding.toggleShowMeOnMapButton.setOnClickListener {
             val active = !on<AccountHandler>().active
             on<AccountHandler>().updateActive(active)
+
+            if (active) {
+                on<DefaultAlerts>().message(R.string.your_sharing_location)
+            }
         }
 
         on<BubbleHandler>().attach(view.findViewById(R.id.bubbleMapLayer), { mapBubble ->
