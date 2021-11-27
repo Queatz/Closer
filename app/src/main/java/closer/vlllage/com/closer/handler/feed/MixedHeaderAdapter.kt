@@ -127,6 +127,7 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
             on<GoalMixedItemAdapter>(),
             on<WelcomeMixedItemAdapter>(),
             on<StoryMixedItemAdapter>(),
+            on<SpacerMixedItemAdapter>(),
     ).map { Pair(it.getMixedItemType(), it as MixedItemAdapter<MixedItem, MixedItemViewHolder>) }.toMap()
 
     private val regenerate = BehaviorSubject.create<Unit>()
@@ -218,6 +219,8 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
                     add(WelcomeMixedItem("\uD83D\uDE00"))
                 }
             }
+
+            add(SpacerMixedItem())
         }
     }
 

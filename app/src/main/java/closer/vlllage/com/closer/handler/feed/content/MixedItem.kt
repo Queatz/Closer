@@ -19,6 +19,7 @@ enum class MixedItemType {
     Goal,
     Welcome,
     Story,
+    Spacer,
 }
 
 abstract class MixedItem(val type: MixedItemType)

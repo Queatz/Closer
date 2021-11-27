@@ -9,9 +9,11 @@ import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import at.bluesource.choicesdk.maps.common.LatLng
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.StoryResult
+import closer.vlllage.com.closer.extensions.dpToPx
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -29,7 +31,6 @@ import closer.vlllage.com.closer.handler.settings.UserLocalSetting
 import closer.vlllage.com.closer.handler.story.StoryHandler
 import closer.vlllage.com.closer.store.StoreHandler
 import closer.vlllage.com.closer.store.models.*
-import at.bluesource.choicesdk.maps.common.LatLng
 import com.queatz.on.On
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.QueryBuilder
@@ -393,8 +394,12 @@ class FeedHandler constructor(private val on: On) {
                     if (isFirstLoad && on<SettingsHandler>()[UserLocalSetting.CLOSER_SETTINGS_OPEN_FEED_EXPANDED]) {
                         isFirstLoad = false
                         on<TimerHandler>().postDisposable({
-                            reveal(true)
-                        }, 250)
+                            reveal(
+                                show = true,
+                                full = true,
+                                smooth = false
+                            )
+                        }, 0)
                     }
                 }.also { loadGroupsDisposableGroup.add(it) }
     }
@@ -499,15 +504,19 @@ class FeedHandler constructor(private val on: On) {
         }
     }
 
-    private fun reveal(show: Boolean) {
+    private fun reveal(show: Boolean, full: Boolean = false, smooth: Boolean = true) {
         recyclerView.findViewHolderForAdapterPosition(0)?.itemView?.let { feedItemView ->
             val recyclerBounds = Rect().also { recyclerView.getGlobalVisibleRect(it) }
             val feedBounds = Rect().also { feedItemView.getGlobalVisibleRect(it) }
-            val scroll = feedBounds.top - (recyclerBounds.top + recyclerBounds.bottom) / 3
+            val scroll = feedBounds.top - (if (full) 96.dpToPx(on<ActivityHandler>().activity!!) else (recyclerBounds.top + recyclerBounds.bottom) / 3)
             val scrollBuffer = feedBounds.top - (recyclerBounds.top + recyclerBounds.bottom) / 1.5f
 
             if ((show && scrollBuffer > 0) || (!show && scroll < 0)) {
-                recyclerView.smoothScrollBy(0, if (show) scroll else scrollBuffer.toInt())
+                if (smooth) {
+                    recyclerView.smoothScrollBy(0, if (show) scroll else scrollBuffer.toInt())
+                } else {
+                    recyclerView.scrollBy(0, if (show) scroll else scrollBuffer.toInt())
+                }
             }
         }
     }
