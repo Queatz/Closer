@@ -73,7 +73,7 @@ class FeedHandler constructor(private val on: On) {
         override fun findTargetSnapPosition(layoutManager: RecyclerView.LayoutManager?, velocityX: Int, velocityY: Int): Int {
             val result = super.findTargetSnapPosition(layoutManager, velocityX, velocityY)
 
-            targetPosition = if (result == 0)
+            targetPosition = if ((noSnap && velocityY < 0) || result <= 1)
                 RecyclerView.NO_POSITION
             else
                 result
@@ -443,15 +443,14 @@ class FeedHandler constructor(private val on: On) {
     fun feedContent() = mixedAdapter.content
 
     fun hide() {
-        if (layoutManager.findFirstVisibleItemPosition() > 2) {
-            recyclerView.scrollToPosition(2)
+        if (layoutManager.findFirstVisibleItemPosition() > 1) {
+            recyclerView.scrollToPosition(1)
         }
 
         if (layoutManager.findFirstVisibleItemPosition() != 0) {
-            recyclerView.smoothScrollToPosition(0)
-            recyclerView.post {
+            recyclerView.postDelayed({
                 recyclerView.smoothScrollToPosition(0)
-            }
+            }, 0)
         } else {
             reveal(false)
         }

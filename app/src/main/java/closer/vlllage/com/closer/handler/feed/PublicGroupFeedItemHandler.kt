@@ -375,7 +375,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             add(toolbarAdapter.selectedContentView.distinctUntilChanged()
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnNext { scrollToolbarTo(it) }
-                    .switchMap { content -> stateObservable.map { Pair(content, state) } }
+                    .switchMap { content -> stateObservable.distinctUntilChanged().map { Pair(content, state) } }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         val content = it.first
@@ -793,12 +793,12 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     }
 }
 
-class ViewState {
-    var hasGroupActions = false
-    var hasEvents = false
-    var hasPlaces = false
-    var hasQuests = false
-    var hasSuggestions = false
-    var hasPeople = false
-    var privateOnly = false
-}
+data class ViewState constructor(
+    var hasGroupActions: Boolean = false,
+    var hasEvents: Boolean = false,
+    var hasPlaces: Boolean = false,
+    var hasQuests: Boolean = false,
+    var hasSuggestions: Boolean = false,
+    var hasPeople: Boolean = false,
+    var privateOnly: Boolean = false
+)

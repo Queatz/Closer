@@ -8,8 +8,8 @@ import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import closer.vlllage.com.closer.R
-import closer.vlllage.com.closer.extensions.dpToPx
 import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
+import closer.vlllage.com.closer.handler.helpers.WindowHandler
 import com.queatz.on.On
 
 class SpacerMixedItem : MixedItem(MixedItemType.Spacer)
@@ -23,23 +23,23 @@ class SpacerMixedItemAdapter(private val on: On) : MixedItemAdapter<SpacerMixedI
     override fun bind(holder: SpacerViewHolder, item: SpacerMixedItem, position: Int) {
         holder.view.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
             height = (
-                holder.parent.measuredHeight - 96.dpToPx(holder.view.context)
+                holder.parent.measuredHeight - on<WindowHandler>().statusBarHeight
             ).coerceAtLeast(0)
         }
 
         holder.listener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             holder.view.updateLayoutParams {
                 height = (
-                        holder.parent.measuredHeight - 96.dpToPx(holder.view.context)
+                        holder.parent.measuredHeight - on<WindowHandler>().statusBarHeight - (holder.parent.children.filter { it != holder.view }.sumOf { it.measuredHeight })
                 ).coerceAtLeast(0)
             }
         }
 
         holder.scrollListener = object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                holder.view.updateLayoutParams {
+                if (dy > 0) holder.view.updateLayoutParams {
                     height = (
-                        holder.parent.measuredHeight - 96.dpToPx(holder.view.context) - (holder.parent.children.filter { it != holder.view }.sumOf { it.measuredHeight })
+                        holder.parent.measuredHeight - on<WindowHandler>().statusBarHeight - (holder.parent.children.filter { it != holder.view }.sumOf { it.measuredHeight })
                     ).coerceAtLeast(0)
                 }
             }
@@ -64,5 +64,6 @@ class SpacerMixedItemAdapter(private val on: On) : MixedItemAdapter<SpacerMixedI
 
     override fun onViewRecycled(holder: SpacerViewHolder) {
         holder.parent.removeOnLayoutChangeListener(holder.listener)
+        holder.parent.removeOnScrollListener(holder.scrollListener!!)
     }
 }

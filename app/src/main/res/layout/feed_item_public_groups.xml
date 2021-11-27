@@ -135,6 +135,7 @@
                 android:layout_height="wrap_content"
                 android:clipChildren="false"
                 android:clipToPadding="false"
+                android:visibility="gone"
                 android:paddingStart="@dimen/padQuarter"
                 android:paddingEnd="@dimen/pad"
                 android:paddingTop="@dimen/pad"
@@ -209,6 +210,7 @@
                     android:id="@+id/groupActionsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:clipChildren="false"
                     android:clipToPadding="false"
                     android:paddingStart="@dimen/padQuarter"
@@ -237,6 +239,7 @@
                     android:id="@+id/publicEventsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:paddingStart="@dimen/padHalf"
                     android:paddingEnd="@dimen/padHalf"
                     android:clipToPadding="false" />
@@ -264,6 +267,7 @@
                     android:id="@+id/publicGroupsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:paddingStart="@dimen/padHalf"
                     android:paddingEnd="@dimen/padHalf"
                     android:clipToPadding="false" />
@@ -291,6 +295,7 @@
                     android:id="@+id/publicHubsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:paddingStart="@dimen/padHalf"
                     android:paddingEnd="@dimen/padHalf"
                     android:clipToPadding="false" />
