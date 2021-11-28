@@ -13,7 +13,6 @@ import at.bluesource.choicesdk.maps.common.LatLng
 import closer.vlllage.com.closer.ContentViewType
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.api.models.StoryResult
-import closer.vlllage.com.closer.extensions.dpToPx
 import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.data.ApiHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
@@ -507,7 +506,7 @@ class FeedHandler constructor(private val on: On) {
         recyclerView.findViewHolderForAdapterPosition(0)?.itemView?.let { feedItemView ->
             val recyclerBounds = Rect().also { recyclerView.getGlobalVisibleRect(it) }
             val feedBounds = Rect().also { feedItemView.getGlobalVisibleRect(it) }
-            val scroll = feedBounds.top - (if (full) 96.dpToPx(on<ActivityHandler>().activity!!) else (recyclerBounds.top + recyclerBounds.bottom) / 3)
+            val scroll = feedBounds.top - (if (full) on<WindowHandler>().statusBarHeight else (recyclerBounds.top + recyclerBounds.bottom) / 3)
             val scrollBuffer = feedBounds.top - (recyclerBounds.top + recyclerBounds.bottom) / 1.5f
 
             if ((show && scrollBuffer > 0) || (!show && scroll < 0)) {

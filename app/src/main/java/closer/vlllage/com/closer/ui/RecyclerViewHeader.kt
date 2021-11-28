@@ -3,6 +3,11 @@ package closer.vlllage.com.closer.ui
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnAttach
+import androidx.core.view.doOnLayout
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.queatz.on.On
 import kotlin.math.max
@@ -108,10 +113,15 @@ class RecyclerViewHeader(private val on: On) {
                 setHeaderMargin()
             }
         }
+        recyclerView.doOnAttach {  }
     }
 
     private fun setHeaderMargin() {
         if (headerViewHolder == null || recyclerView == null || !enabled) {
+            footerViewHolder?.itemView?.updateLayoutParams<RecyclerView.LayoutParams> {
+                bottomMargin = 0
+            }
+
             return
         }
 
@@ -125,8 +135,19 @@ class RecyclerViewHeader(private val on: On) {
         params.topMargin = headerMargin
         headerViewHolder?.itemView?.layoutParams = params
 
+        footerViewHolder?.itemView?.updateLayoutParams<RecyclerView.LayoutParams> {
+            bottomMargin = recyclerView?.measuredHeight ?: 0
+        }
+
+        footerViewHolder?.itemView?.post {
+            footerViewHolder?.itemView?.updateLayoutParams<RecyclerView.LayoutParams> {
+                bottomMargin = 0
+            }
+        }
+
         recyclerView?.postInvalidate()
         headerViewHolder?.itemView?.postInvalidate()
+        footerViewHolder?.itemView?.postInvalidate()
     }
 
     fun enable(enabled: Boolean) {
