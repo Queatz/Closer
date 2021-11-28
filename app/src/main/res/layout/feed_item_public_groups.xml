@@ -135,7 +135,6 @@
                 android:layout_height="wrap_content"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:visibility="gone"
                 android:paddingStart="@dimen/padQuarter"
                 android:paddingEnd="@dimen/pad"
                 android:paddingTop="@dimen/pad"

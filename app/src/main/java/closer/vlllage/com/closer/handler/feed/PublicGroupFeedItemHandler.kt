@@ -63,7 +63,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
     private lateinit var toolbarAdapter: ToolbarAdapter
 
     private var nearestGroup: Group? = null
-    private val state = ViewState()
+    private var state = ViewState()
+        set(value) {
+            field = value
+            stateObservable.onNext(state)
+        }
 
     private val stateObservable = BehaviorSubject.createDefault(state)
     private val showCalendarIndicator = BehaviorSubject.createDefault(false)
@@ -163,8 +167,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 
         on<DisposableHandler>().add(on<SearchGroupHandler>().groups.observeOn(AndroidSchedulers.mainThread()).subscribe { groups ->
             searchEventsAdapter.setGroups(on<FilterGroups>().events(groups).also {
-                state.hasEvents = it.isNotEmpty()
-                stateObservable.onNext(state)
+                state = state.copy(hasEvents = it.isNotEmpty())
             })
 
             when (on<FeedHandler>().feedContent()) {
@@ -174,8 +177,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 FeedContent.QUESTS -> {
                     val quests = on<FilterGroups>().quests(groups)
                     searchGroupsAdapter.setGroups(quests)
-                    state.hasQuests = quests.isNotEmpty()
-                    stateObservable.onNext(state)
+                    state = state.copy(hasQuests = quests.isNotEmpty())
                 }
                 else -> {
                     searchGroupsAdapter.setGroups(on<FilterGroups>().public(groups))
@@ -183,8 +185,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             }
 
             searchHubsAdapter.setGroups(on<FilterGroups>().hub(groups).also {
-                state.hasPlaces = it.isNotEmpty()
-                stateObservable.onNext(state)
+                state = state.copy(hasPlaces = it.isNotEmpty())
             })
 
             showGroupActions(groups)
@@ -279,8 +280,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 loadSuggestions(center)
                 loadPeople(center)
             }
-            state.privateOnly = on<AccountHandler>().privateOnly
-            stateObservable.onNext(state)
+            state = state.copy(privateOnly = on<AccountHandler>().privateOnly)
         })
 
         on<DisposableHandler>().add(on<MapHandler>().onMapIdleObservable()
@@ -696,8 +696,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .on(AndroidScheduler.mainThread())
                 .single()
                 .observer { phones ->
-                    state.hasPeople = phones.isNotEmpty()
-                    stateObservable.onNext(state)
+                    state = state.copy(hasPeople = phones.isNotEmpty())
                     on<PeopleRecyclerViewHandler>().setPeople(phones)
                 })
     }
@@ -718,8 +717,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 //                .on(AndroidScheduler.mainThread())
 //                .single()
 //                .observer { suggestions ->
-//                    state.hasSuggestions = suggestions.isNotEmpty()
-//                    stateObservable.onNext(state)
+//                    state = state.copy(hasSuggestions = suggestions.isNotEmpty())
 //                    on<SuggestionsRecyclerViewHandler>().setSuggestions(suggestions)
 //                })
     }
@@ -782,8 +780,7 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
                 .subscribe()
                 .on(AndroidScheduler.mainThread())
                 .observer { groupActions ->
-                    state.hasGroupActions = groupActions.isNotEmpty()
-                    stateObservable.onNext(state)
+                    state = state.copy(hasGroupActions = groupActions.isNotEmpty())
                     on<GroupActionRecyclerViewHandler>().adapter!!.setGroupActions(groupActions)
                 }.also { on<DisposableHandler>().add(it) }
     }
@@ -794,11 +791,11 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
 }
 
 data class ViewState constructor(
-    var hasGroupActions: Boolean = false,
-    var hasEvents: Boolean = false,
-    var hasPlaces: Boolean = false,
-    var hasQuests: Boolean = false,
-    var hasSuggestions: Boolean = false,
-    var hasPeople: Boolean = false,
-    var privateOnly: Boolean = false
+    val hasGroupActions: Boolean = false,
+    val hasEvents: Boolean = false,
+    val hasPlaces: Boolean = false,
+    val hasQuests: Boolean = false,
+    val hasSuggestions: Boolean = false,
+    val hasPeople: Boolean = false,
+    val privateOnly: Boolean = false
 )
