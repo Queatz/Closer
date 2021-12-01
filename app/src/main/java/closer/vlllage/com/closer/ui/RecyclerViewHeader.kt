@@ -4,15 +4,12 @@ import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnAttach
-import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
-import androidx.core.view.updateMargins
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.queatz.on.On
 import kotlin.math.max
 
-class RecyclerViewHeader(private val on: On) {
+class RecyclerViewHeader(private val on: On, private val stableFooter: Boolean = false) {
 
     var headerMargin: Int = 0
         private set
@@ -118,7 +115,7 @@ class RecyclerViewHeader(private val on: On) {
 
     private fun setHeaderMargin() {
         if (headerViewHolder == null || recyclerView == null || !enabled) {
-            footerViewHolder?.itemView?.updateLayoutParams<RecyclerView.LayoutParams> {
+            if (stableFooter) footerViewHolder?.itemView?.updateLayoutParams<RecyclerView.LayoutParams> {
                 bottomMargin = 0
             }
 
@@ -135,19 +132,21 @@ class RecyclerViewHeader(private val on: On) {
         params.topMargin = headerMargin
         headerViewHolder?.itemView?.layoutParams = params
 
-        footerViewHolder?.itemView?.updateLayoutParams<RecyclerView.LayoutParams> {
-            bottomMargin = recyclerView?.measuredHeight ?: 0
-        }
-
-        footerViewHolder?.itemView?.post {
+        if (stableFooter) {
             footerViewHolder?.itemView?.updateLayoutParams<RecyclerView.LayoutParams> {
-                bottomMargin = 0
+                bottomMargin = recyclerView?.measuredHeight ?: 0
+            }
+
+            footerViewHolder?.itemView?.post {
+                footerViewHolder?.itemView?.updateLayoutParams<RecyclerView.LayoutParams> {
+                    bottomMargin = 0
+                }
             }
         }
 
         recyclerView?.postInvalidate()
         headerViewHolder?.itemView?.postInvalidate()
-        footerViewHolder?.itemView?.postInvalidate()
+        if (stableFooter) footerViewHolder?.itemView?.postInvalidate()
     }
 
     fun enable(enabled: Boolean) {

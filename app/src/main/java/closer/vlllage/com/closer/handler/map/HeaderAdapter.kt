@@ -9,7 +9,7 @@ import com.queatz.on.On
 
 abstract class HeaderAdapter<T : RecyclerView.ViewHolder>(on: On) : PoolRecyclerAdapter<T>(on) {
 
-    private val header = RecyclerViewHeader(on)
+    private val header = RecyclerViewHeader(on, true)
 
     val headerMargin get() = header.headerMargin
 

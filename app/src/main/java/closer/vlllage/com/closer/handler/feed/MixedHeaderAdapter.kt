@@ -15,7 +15,11 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : HeaderAdapter<MixedItemViewHolder>(on) {
+class MixedHeaderAdapter(
+    on: On,
+    private val hideText: Boolean = false,
+    private val includeSpacer: Boolean = false
+) : HeaderAdapter<MixedItemViewHolder>(on) {
 
     var goals = mutableListOf<Goal>()
         set(value) {
@@ -220,7 +224,7 @@ class MixedHeaderAdapter(on: On, private val hideText: Boolean = false) : Header
                 }
             }
 
-            add(SpacerMixedItem())
+            if (includeSpacer) add(SpacerMixedItem())
         }
     }
 

@@ -16,11 +16,20 @@ import com.queatz.on.On
 class SpacerMixedItem : MixedItem(MixedItemType.Spacer)
 
 class SpacerViewHolder(val view: View, val parent: RecyclerView) : MixedItemViewHolder(view, MixedItemType.Spacer) {
+    var scrollListener: RecyclerView.OnScrollListener? = null
     var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 }
 
 class SpacerMixedItemAdapter(private val on: On) : MixedItemAdapter<SpacerMixedItem, SpacerViewHolder> {
     override fun bind(holder: SpacerViewHolder, item: SpacerMixedItem, position: Int) {
+        holder.scrollListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                update(holder, true)
+            }
+        }
+
+        holder.parent.addOnScrollListener(holder.scrollListener!!)
+
         holder.layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
             update(holder, true)
         }
@@ -57,5 +66,6 @@ class SpacerMixedItemAdapter(private val on: On) : MixedItemAdapter<SpacerMixedI
 
     override fun onViewRecycled(holder: SpacerViewHolder) {
         holder.parent.viewTreeObserver.removeOnGlobalLayoutListener(holder.layoutListener!!)
+        holder.parent.removeOnScrollListener(holder.scrollListener!!)
     }
 }

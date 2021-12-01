@@ -43,7 +43,8 @@ open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionRe
                     on<PhotoHelper>().loadCircle(viewHolder.photo, reaction.phone!!.photo!!)
                     viewHolder.photo.scaleType = ImageView.ScaleType.CENTER_CROP
                 }
-                viewHolder.photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(viewHolder.photo, reaction.phone!!.photo!!) }
+                viewHolder.photo.setOnClickListener { v ->
+                    reaction.phone?.photo?.let { on<PhotoActivityTransitionHandler>().show(viewHolder.photo, it) } }
 
                 viewHolder.itemView.setOnClickListener { v -> onReactionClickListener.invoke(reaction) }
             }
