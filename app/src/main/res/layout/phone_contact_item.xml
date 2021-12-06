@@ -8,7 +8,6 @@
     android:orientation="vertical"
     android:background="@drawable/clickable_light"
     android:clickable="true"
-    android:minHeight="80dp"
     android:elevation="@dimen/elevation"
     android:layout_marginTop="@dimen/padDouble"
     android:layout_marginStart="@dimen/padDouble"
@@ -22,7 +21,7 @@
         android:layout_height="@dimen/profilePhotoSmall"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:tint="@color/text"
+        app:tint="@color/text"
         android:alpha=".75"
         android:scaleType="centerInside"
         android:src="@drawable/ic_person_add_black_24dp"/>

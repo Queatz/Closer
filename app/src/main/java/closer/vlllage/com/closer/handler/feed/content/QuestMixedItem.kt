@@ -113,7 +113,7 @@ class QuestMixedItemAdapter(private val on: On) : MixedItemAdapter<QuestMixedIte
                 false
         )
 
-        holder.nextQuestsAdapter = QuestLinkAdapter(holder.on, {
+        holder.nextQuestsAdapter = QuestLinkAdapter(holder.on, false, {
             on<MenuHandler>().show(
                     MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.remove_quest_link)) {
                         on<ApiHandler>().removeQuestLink(quest.id!!, it.id!!).subscribe({

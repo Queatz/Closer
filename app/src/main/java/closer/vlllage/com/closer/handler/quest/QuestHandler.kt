@@ -414,7 +414,7 @@ class QuestHandler(private val on: On) {
                     it.disposableGroup = on<DisposableHandler>().group()
                 }
 
-                val adapter = QuestLinkAdapter(on) { it, _ -> addLinkedQuestInternal(quest, it) {
+                val adapter = QuestLinkAdapter(on, true) { it, _ -> addLinkedQuestInternal(quest, it) {
                     close()
                     success()
                 } }

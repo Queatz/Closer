@@ -13,7 +13,7 @@ import closer.vlllage.com.closer.store.models.Quest
 import com.queatz.on.On
 
 
-class QuestLinkAdapter(on: On, private val onQuestLongClickListener: ((Quest) -> Unit)? = null, private val onQuestClickListener: ((Quest, View) -> Unit)? = null) : PoolRecyclerAdapter<QuestLinkAdapter.QuestLinkViewHolder>(on) {
+class QuestLinkAdapter(on: On, private val isLightTheme: Boolean = false, private val onQuestLongClickListener: ((Quest) -> Unit)? = null, private val onQuestClickListener: ((Quest, View) -> Unit)? = null) : PoolRecyclerAdapter<QuestLinkAdapter.QuestLinkViewHolder>(on) {
 
     private val quests = mutableListOf<Quest>()
 
@@ -27,12 +27,18 @@ class QuestLinkAdapter(on: On, private val onQuestLongClickListener: ((Quest) ->
             use<DisposableHandler>()
         }
 
-        holder.on<LightDarkHandler>().onLightChanged.subscribe {
-            holder.binding.name.compoundDrawableTintList = it.tint
-            holder.binding.name.setTextColor(it.text)
-            holder.binding.name.setBackgroundResource(it.clickableRoundedBackground)
-        }.also {
-            holder.on<DisposableHandler>().add(it)
+        if (isLightTheme) {
+            holder.binding.name.compoundDrawableTintList = holder.on<LightDarkHandler>().LIGHT.tint
+            holder.binding.name.setTextColor(holder.on<LightDarkHandler>().LIGHT.text)
+            holder.binding.name.setBackgroundResource(holder.on<LightDarkHandler>().LIGHT.clickableRoundedBackground)
+        } else {
+            holder.on<LightDarkHandler>().onLightChanged.subscribe {
+                holder.binding.name.compoundDrawableTintList = it.tint
+                holder.binding.name.setTextColor(it.text)
+                holder.binding.name.setBackgroundResource(it.clickableRoundedBackground)
+            }.also {
+                holder.on<DisposableHandler>().add(it)
+            }
         }
 
         holder.binding.name.text = quest.name ?: ""
