@@ -222,7 +222,7 @@ class CalendarDayMixedItemAdapter(private val on: On) : MixedItemAdapter<Calenda
                         R.drawable.ic_baseline_flag_18dp, 0, 0, 0
                     )
 
-                    view.root.setBackgroundResource(R.drawable.clickable_blue_8dp)
+                    view.root.setBackgroundResource(R.drawable.outlined_clickable_blue_8dp)
 
                     view.root.setOnClickListener {
                         eventReminder.event?.let { on<GroupActivityTransitionHandler>().showGroupForEvent(view.root, EventResult.from(it)) }
