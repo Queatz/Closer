@@ -553,9 +553,9 @@
     <string name="your_story_updated">Your story has been posted</string>
     <string name="share_story">Share story</string>
     <string name="view_story">View story</string>
-    <string name="loading_stories">Loading stories, please wait…</string>
+    <string name="loading_stories">Loading updates, please wait…</string>
     <string name="choose_hours">Choose hours</string>
-    <string name="rename_group">Rename group</string>
+    <string name="rename_group">Rename group…</string>
     <string name="icon_text">Icon text</string>
     <string name="group_renamed">Group renamed to %1$s</string>
     <string name="event_renamed">Event renamed to %1$s</string>
@@ -564,6 +564,8 @@
     <string name="behavior">Behavior</string>
     <string name="display">Display</string>
     <string name="your_auto_answering">Incoming calls will be automatically answered, and anyone on Closer may call you.</string>
+    <string name="updates">Updates</string>
+    <string name="join_quest">Join quest</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

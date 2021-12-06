@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.data
 
+import android.util.Log
 import closer.vlllage.com.closer.api.models.CreateResult
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.store.StoreHandler
@@ -157,7 +158,9 @@ class SyncHandler constructor(private val on: On) {
                 on<StoreHandler>().store.box(Event::class).put(event)
                 onSyncResult?.invoke(createResult.id!!)
             }
-        }, { error -> on<ConnectionErrorHandler>().notifyConnectionError() }))
+        }, { error ->
+            on<ConnectionErrorHandler>().notifyConnectionError()
+        }))
     }
 
     private fun sendCreateSuggestion(suggestion: Suggestion, onSyncResult: OnSyncResult?) {

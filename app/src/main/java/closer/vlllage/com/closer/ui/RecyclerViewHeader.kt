@@ -104,7 +104,7 @@ class RecyclerViewHeader(private val on: On, private val stableFooter: Boolean =
     fun attach(recyclerView: RecyclerView, pad: Int) {
         this.pad = pad
         this.recyclerView = recyclerView
-        recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
+//        recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         recyclerView.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (top != oldTop || bottom != oldBottom) {
                 setHeaderMargin()

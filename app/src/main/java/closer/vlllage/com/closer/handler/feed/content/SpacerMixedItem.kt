@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.ViewTreeObserver
+import androidx.annotation.ColorRes
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@ import closer.vlllage.com.closer.handler.helpers.ResourcesHandler
 import closer.vlllage.com.closer.handler.helpers.WindowHandler
 import com.queatz.on.On
 
-class SpacerMixedItem : MixedItem(MixedItemType.Spacer)
+class SpacerMixedItem(@ColorRes val color: Int = R.color.white) : MixedItem(MixedItemType.Spacer)
 
 class SpacerViewHolder(val view: View, val parent: RecyclerView) : MixedItemViewHolder(view, MixedItemType.Spacer) {
     var scrollListener: RecyclerView.OnScrollListener? = null
@@ -22,6 +23,8 @@ class SpacerViewHolder(val view: View, val parent: RecyclerView) : MixedItemView
 
 class SpacerMixedItemAdapter(private val on: On) : MixedItemAdapter<SpacerMixedItem, SpacerViewHolder> {
     override fun bind(holder: SpacerViewHolder, item: SpacerMixedItem, position: Int) {
+        holder.itemView.setBackgroundColor(on<ResourcesHandler>().resources.getColor(item.color))
+
         holder.scrollListener = object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 update(holder, true)
@@ -59,7 +62,6 @@ class SpacerMixedItemAdapter(private val on: On) : MixedItemAdapter<SpacerMixedI
             height = (parent.measuredHeight - on<WindowHandler>().statusBarHeight).coerceAtLeast(0)
         }
 
-        setBackgroundColor(on<ResourcesHandler>().resources.getColor(R.color.white))
         isClickable = true
         elevation = on<ResourcesHandler>().resources.getDimension(R.dimen.elevation)
     }, parent as RecyclerView)

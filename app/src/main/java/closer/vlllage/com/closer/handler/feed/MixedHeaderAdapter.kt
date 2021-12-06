@@ -224,7 +224,13 @@ class MixedHeaderAdapter(
                 }
             }
 
-            if (includeSpacer) add(SpacerMixedItem())
+            if (includeSpacer) add(SpacerMixedItem(when (content) {
+                FeedContent.GROUPS,
+                FeedContent.FRIENDS,
+                FeedContent.PLACES,
+                FeedContent.QUESTS -> R.color.offwhite
+                else -> R.color.white
+            }))
         }
     }
 

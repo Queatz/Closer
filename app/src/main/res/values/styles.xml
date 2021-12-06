@@ -12,13 +12,10 @@
 
     <style name="AppTheme.Translucent">
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="AppTheme.AlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">

@@ -110,6 +110,16 @@ class GroupMemberHandler constructor(private val on: On) {
                                             on<DefaultAlerts>().thatDidntWork()
                                         })
                                 }
+                            }, MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.leave_group_action) {
+                                on<AlertHandler>().make().apply {
+                                    negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
+                                    positiveButton = on<ResourcesHandler>().resources.getString(R.string.leave_group, group.name)
+                                    positiveButtonCallback = { on<GroupContactsHandler>().leaveGroup(group) }
+                                    title = on<ResourcesHandler>().resources.getString(R.string.leave_group_title, group.name)
+                                    message = on<ResourcesHandler>().resources.getString(
+                                        if (group.isPublic) R.string.leave_public_group_message else R.string.leave_private_group_message)
+                                    show()
+                                }
                             })
                         }.visible(group.direct.not()),
                         MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.unhide_from_contacts) {
@@ -238,7 +248,16 @@ class GroupMemberHandler constructor(private val on: On) {
         on<AlertHandler>().make().apply {
             positiveButton = on<ResourcesHandler>().resources.getString(R.string.join_group_title, group.name)
             positiveButtonCallback = { on<GroupActionHandler>().joinGroup(group) }
-            title = on<ResourcesHandler>().resources.getString(if (group.hasEvent()) R.string.join_event else R.string.join_group)
+            title = on<ResourcesHandler>().resources.getString( when {
+                group.hasEvent() -> R.string.join_event
+                group.ofKind == "quest" -> R.string.join_quest
+                else -> R.string.join_group
+            })
+            theme = when {
+                group.hasEvent() -> R.style.AppTheme_AlertDialog_Red
+                group.ofKind == "quest" -> R.style.AppTheme_AlertDialog_ForestGreen
+                else -> R.style.AppTheme_AlertDialog
+            }
             message = on<ResourcesHandler>().resources.getString(if (group.hasEvent()) R.string.join_event_message else R.string.join_group_message)
             show()
         }

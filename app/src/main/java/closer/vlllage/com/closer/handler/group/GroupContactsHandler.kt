@@ -93,8 +93,9 @@ class GroupContactsHandler constructor(private val on: On) {
                         },
                         MenuHandler.MenuOption(R.drawable.ic_close_black_24dp, R.string.leave_group_action) {
                     on<AlertHandler>().make().apply {
+                        negativeButton = on<ResourcesHandler>().resources.getString(R.string.nope)
                         positiveButton = on<ResourcesHandler>().resources.getString(R.string.leave_group, group.name)
-                        positiveButtonCallback = { result -> leaveGroup(group) }
+                        positiveButtonCallback = { leaveGroup(group) }
                         title = on<ResourcesHandler>().resources.getString(R.string.leave_group_title, group.name)
                         message = on<ResourcesHandler>().resources.getString(
                                 if (group.isPublic) R.string.leave_public_group_message else R.string.leave_private_group_message)
@@ -142,7 +143,7 @@ class GroupContactsHandler constructor(private val on: On) {
                 .build().subscribe().on(AndroidScheduler.mainThread()).observer { groupContacts -> phoneContactAdapter.setGroupContacts(groupContacts) })
     }
 
-    private fun leaveGroup(group: Group) {
+    fun leaveGroup(group: Group) {
         on<DisposableHandler>().add(on<ApiHandler>().leaveGroup(group.id!!).subscribe({ successResult ->
             if (successResult.success) {
                 on<DefaultAlerts>().message(

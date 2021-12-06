@@ -23,8 +23,8 @@ class AppsToolbarHandler constructor(private val on: On) {
 
         toolbarAdapter.items = listOf(
             GroupToolbarHandler.ToolbarItem(
-                on<ResourcesHandler>().resources.getString(R.string.contacts),
-                R.drawable.ic_person_black_24dp,
+                on<ResourcesHandler>().resources.getString(R.string.messages),
+                R.drawable.ic_message_black_24dp,
                 {
                     on<FeedHandler>().show(ContentViewType.HOME_CONTACTS)
                     on<AccountHandler>().updatePrivateOnly(true)
@@ -33,7 +33,7 @@ class AppsToolbarHandler constructor(private val on: On) {
                 color = R.color.colorPrimary
             ),
             GroupToolbarHandler.ToolbarItem(
-                on<ResourcesHandler>().resources.getString(R.string.talk),
+                on<ResourcesHandler>().resources.getString(R.string.updates),
                 R.drawable.ic_whatshot_black_24dp,
                 {
                     on<FeedHandler>().show(ContentViewType.HOME_POSTS)
@@ -74,7 +74,7 @@ class AppsToolbarHandler constructor(private val on: On) {
             ),
             GroupToolbarHandler.ToolbarItem(
                 on<ResourcesHandler>().resources.getString(R.string.communities),
-                R.drawable.ic_location_city_black_24dp,
+                R.drawable.ic_forum_black_24dp,
                 {
                     on<FeedHandler>().show(ContentViewType.HOME_GROUPS)
                     on<AccountHandler>().updatePrivateOnly(false)

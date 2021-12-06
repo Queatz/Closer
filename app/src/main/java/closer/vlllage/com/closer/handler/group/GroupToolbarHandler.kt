@@ -216,11 +216,17 @@ class GroupToolbarHandler constructor(private val on: On) {
 
         if (!group.hasPhone() && group.isPublic && on<GroupMemberHandler>().isCurrentUserMemberOf(group).not()) {
             items.add(ToolbarItem(
-                    on<ResourcesHandler>().resources.getString(if (group.hasEvent()) R.string.join_event else R.string.join_group),
-                    R.drawable.ic_person_add_black_24dp,
-                    {
-                        on<GroupMemberHandler>().join(group)
+                on<ResourcesHandler>().resources.getString(
+                    when {
+                        group.hasEvent() -> R.string.join_event
+                        group.ofKind == "quest" -> R.string.join_quest
+                        else -> R.string.join_group
                     }
+                ),
+                R.drawable.ic_person_add_black_24dp,
+                {
+                    on<GroupMemberHandler>().join(group)
+                }
             ))
         }
 
@@ -333,7 +339,7 @@ class GroupToolbarHandler constructor(private val on: On) {
         }
 
         items.add(if (aboutIsFirstItem) 1 else 0, ToolbarItem(
-                on<ResourcesHandler>().resources.getString(R.string.talk),
+                on<ResourcesHandler>().resources.getString(R.string.updates),
                 R.drawable.ic_message_black_24dp,
                 {
                     contentView.onNext(ContentViewType.MESSAGES)

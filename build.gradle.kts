@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 buildscript {
     extra["kotlinVersion"] = "1.6.0"
     extra["objectboxVersion"] = "3.0.1"
@@ -13,8 +11,8 @@ buildscript {
 
     dependencies {
         classpath("com.huawei.agconnect:agcp:1.6.1.300")
-        classpath("com.android.tools.build:gradle:4.2.2")
-        classpath("com.github.triplet.gradle:play-publisher:3.2.0-agp4.2")
+        classpath("com.android.tools.build:gradle:7.0.3")
+        classpath("com.github.triplet.gradle:play-publisher:3.7.0")
         classpath("com.google.gms:google-services:4.3.10")
         classpath("io.objectbox:objectbox-gradle-plugin:${rootProject.extra["objectboxVersion"]}")
         classpath(kotlin("gradle-plugin", version = rootProject.extra["kotlinVersion"] as String))
