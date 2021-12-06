@@ -3,11 +3,12 @@ package closer.vlllage.com.closer.handler.helpers
 import com.queatz.on.On
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
+import java.text.DateFormat
 
 class JsonHandler constructor(private val on: On) {
 
     private val gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            .setDateFormat(DateFormat.FULL)
             .serializeNulls()
             .create()
 

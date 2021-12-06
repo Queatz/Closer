@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.DateFormat
 import java.util.logging.Logger
 
 class ApiService {
@@ -47,7 +48,7 @@ class ApiService {
         backend = Retrofit.Builder()
                 .baseUrl(Backend.BASE_URL)
                 .client(http)
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create()))
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat(DateFormat.FULL).create()))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(Backend::class.java)
@@ -75,7 +76,7 @@ class ApiService {
 
         placesBackend = Retrofit.Builder()
                 .baseUrl(PlacesBackend.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create()))
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat(DateFormat.FULL).create()))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
                 .create(PlacesBackend::class.java)
