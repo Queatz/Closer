@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="@dimen/pad"
             android:background="@drawable/clickable_dark_flat"
-            android:tint="@color/textInverse"
+            app:tint="@color/textInverse"
             android:scaleType="centerInside"
             android:clickable="true"
             android:src="@drawable/ic_person_black_24dp"/>
@@ -64,6 +64,8 @@
             app:layout_constrainedWidth="true"
             android:lineSpacingMultiplier="1.5"
             android:textSize="@dimen/textSizeSmall"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/textHintInverse"
             tools:text="Sent a photo" />
 

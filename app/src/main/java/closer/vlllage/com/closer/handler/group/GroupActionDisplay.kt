@@ -203,51 +203,69 @@ class GroupActionDisplay constructor(private val on: On) {
 
     private fun onGroupActionSelection(groupAction: GroupAction, view: View?, selection: String?) {
         on<DataHandler>().getGroup(groupAction.group!!).flatMap {
-            on<GroupNameHelper>().getName(it).map { groupName -> object { val group = it; val groupName = groupName } }
+            on<GroupNameHelper>().getName(it).map { groupName ->
+                object {
+                    val group = it;
+                    val groupName = groupName
+                }
+            }
         }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ groupInfo ->
-            on<AlertHandler>().view { CommentsModalBinding.inflate(it) }.apply {
-                val noComment = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }?.firstOrNull()?.asJsonObject?.let {
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ groupInfo ->
+                val noComment = groupAction.flow?.let { on<JsonHandler>().from(it, JsonArray::class.java) }
+                    ?.firstOrNull()?.asJsonObject?.let {
                     if (it.has("noComment")) it["noComment"].asBoolean else false
                 } ?: false
 
-                if (!noComment) {
-                    textViewId = R.id.input
-                    onTextViewSubmitCallback = { comment ->
-                        val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, "${selection?.let { if (comment.isBlank()) it else "$it\n\n" } ?: ""}${comment}")
-                        if (!success) {
-                            on<DefaultAlerts>().thatDidntWork()
-                        } else {
-                            on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
+                (if (noComment) on<AlertHandler>().make() else on<AlertHandler>().view { CommentsModalBinding.inflate(it) }).apply {
+                    if (!noComment) {
+                        textViewId = R.id.input
+                        onTextViewSubmitCallback = { comment ->
+                            val success = on<GroupMessageAttachmentHandler>().groupActionReply(
+                                groupAction.group!!,
+                                groupAction,
+                                "${selection?.let { if (comment.isBlank()) it else "$it\n\n" } ?: ""}${comment}")
+                            if (!success) {
+                                on<DefaultAlerts>().thatDidntWork()
+                            } else {
+                                on<DisposableHandler>().add(
+                                    on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {})
+                                )
 
-                            if (launchGroup) {
+                                if (launchGroup) {
+                                    on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
+                                }
+                            }
+                        }
+                    } else {
+                        positiveButtonCallback = {
+                            val success = on<GroupMessageAttachmentHandler>().groupActionReply(
+                                groupAction.group!!,
+                                groupAction,
+                                selection ?: ""
+                            )
+                            if (!success) {
+                                on<DefaultAlerts>().thatDidntWork()
+                            } else {
+                                on<DisposableHandler>().add(
+                                    on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {})
+                                )
                                 on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
                             }
                         }
                     }
-                } else {
-                    positiveButtonCallback = {
-                        val success = on<GroupMessageAttachmentHandler>().groupActionReply(groupAction.group!!, groupAction, selection ?: "")
-                        if (!success) {
-                            on<DefaultAlerts>().thatDidntWork()
-                        } else {
-                            on<DisposableHandler>().add(on<ApiHandler>().usedGroupAction(groupAction.id!!).subscribe({}, {}))
-                            on<GroupActivityTransitionHandler>().showGroupMessages(view, groupAction.group)
-                        }
-                    }
-                }
 
-                title = "${on<AccountHandler>().name} ${groupAction.intent}"
-                message = "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it"} ?: ""}".let { if (it.isBlank()) null else it }
-                positiveButton = postText(groupInfo.group, groupInfo.groupName)
-                show()
+                    title = "${on<AccountHandler>().name} ${groupAction.intent}"
+                    message =
+                        "${groupAction.about ?: ""}${selection?.let { if (groupAction.about.isNullOrBlank()) it else "\n\n$it" } ?: ""}".let { if (it.isBlank()) null else it }
+                    positiveButton = postText(groupInfo.group, groupInfo.groupName)
+                    show()
+                }
+            }, {
+                on<DefaultAlerts>().thatDidntWork()
+            }).also {
+                on<DisposableHandler>().add(it)
             }
-        }, {
-            on<DefaultAlerts>().thatDidntWork()
-        }).also {
-            on<DisposableHandler>().add(it)
-        }
     }
 
     private fun onGroupActionLongClick(groupAction: GroupAction) {

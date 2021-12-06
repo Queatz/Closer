@@ -9,10 +9,7 @@ import closer.vlllage.com.closer.extensions.visible
 import closer.vlllage.com.closer.handler.call.CallHandler
 import closer.vlllage.com.closer.handler.data.DataHandler
 import closer.vlllage.com.closer.handler.data.PersistenceHandler
-import closer.vlllage.com.closer.handler.group.GroupActionDisplay
-import closer.vlllage.com.closer.handler.group.GroupActionRecyclerViewHandler
-import closer.vlllage.com.closer.handler.group.GroupActivityTransitionHandler
-import closer.vlllage.com.closer.handler.group.HideHandler
+import closer.vlllage.com.closer.handler.group.*
 import closer.vlllage.com.closer.handler.helpers.*
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.store.StoreHandler
@@ -128,6 +125,31 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
         } else {
             holder.binding.lastMessage.text = on<TimeStr>().prettyDate(group.updated)
         }
+
+        on<StoreHandler>().store.box(GroupMessage::class).query()
+            .equal(GroupMessage_.to, group.id!!, QueryBuilder.StringOrder.CASE_SENSITIVE)
+            .orderDesc(GroupMessage_.created)
+            .build()
+            .subscribe()
+            .on(AndroidScheduler.mainThread())
+            .observer {
+                it.firstOrNull()?.let { groupMessage ->
+                    on<MessageDisplay>().displayText(groupMessage)?.let {
+                        it.observeOn(AndroidSchedulers.mainThread()).subscribe { text ->
+                            holder.binding.lastMessage.text = if (
+                                groupMessage.from == on<PersistenceHandler>().phoneId &&
+                                on<MessageDisplay>().attachmentType(groupMessage) != "message"
+                            ) "${
+                                on<ResourcesHandler>().resources.getString(R.string.you)
+                            }: $text" else text
+                        }.also {
+                            holder.on<DisposableHandler>().add(it)
+                        }
+                    }
+                }
+            }.also {
+                holder.on<DisposableHandler>().add(it)
+            }
 
         holder.binding.actionRecyclerView
     }

@@ -566,6 +566,7 @@
     <string name="your_auto_answering">Incoming calls will be automatically answered, and anyone on Closer may call you.</string>
     <string name="updates">Updates</string>
     <string name="join_quest">Join quest</string>
+    <string name="you">You</string>
 
     <plurals name="review_count_parenthesized">
         <item quantity="one">(%1$s review)</item>

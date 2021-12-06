@@ -436,6 +436,57 @@ class MessageDisplay constructor(private val on: On) {
         holder.time.text = on<TimeStr>().pretty(groupMessage.created)
     }
 
+    fun displayText(groupMessage: GroupMessage): Single<String>? = when {
+        groupMessage.text?.isNotBlank() == true -> Single.just(groupMessage.text!!)
+        groupMessage.attachment != null -> {
+            val jsonObject = on<JsonHandler>().from(groupMessage.attachment!!, JsonObject::class.java)
+            when {
+                jsonObject.has("activity") -> Single.just("Shared an activity")
+                jsonObject.has("action") -> on<NameCacheHandler>()[groupMessage.from!!]?.let {
+                    Single.just(it + " " + jsonObject.get("action").asJsonObject.get("intent").asString)
+                }
+                jsonObject.has("review") -> Single.just("Posted a review")
+                jsonObject.has("message") -> on<GroupMessageParseHandler>().parseString(jsonObject.get("message").asString)
+                jsonObject.has("event") -> Single.just("Shared an event")
+                jsonObject.has("group") -> Single.just("Shared a group")
+                jsonObject.has("suggestion") -> {
+                    val suggestion: Suggestion = on<JsonHandler>().from(jsonObject.get("suggestion"), Suggestion::class.java)
+
+                    if (suggestion.id.isNullOrBlank()) {
+                        Single.just("Shared a location")
+                    } else {
+                        Single.just("Shared a suggestion")
+                    }
+                }
+                jsonObject.has("story") -> Single.just("Shared a story")
+                jsonObject.has("photo") -> Single.just("Shared a photo")
+                jsonObject.has("share") -> Single.just("Shared a message")
+                jsonObject.has("post") -> Single.just("Shared a post")
+                else -> null
+            }
+        }
+        else -> null
+    }
+
+    fun attachmentType(groupMessage: GroupMessage): String? {
+        val jsonObject = on<JsonHandler>().from(groupMessage.attachment ?: return null, JsonObject::class.java)
+
+        return when {
+            jsonObject.has("activity") -> "activity"
+            jsonObject.has("action") -> "action"
+            jsonObject.has("review") -> "review"
+            jsonObject.has("message") -> "message"
+            jsonObject.has("event") -> "event"
+            jsonObject.has("group") -> "group"
+            jsonObject.has("suggestion") -> "suggestion"
+            jsonObject.has("story") -> "story"
+            jsonObject.has("photo") -> "photo"
+            jsonObject.has("share") -> "share"
+            jsonObject.has("post") -> "post"
+            else -> null
+        }
+    }
+
     fun display(holder: GroupMessageViewHolder,
                 groupMessage: GroupMessage,
                 previousGroupMessage: GroupMessage?,
