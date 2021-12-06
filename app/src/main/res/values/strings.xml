@@ -8,6 +8,7 @@
     <string name="closer_notifications">Closer notifications</string>
     <string name="what_s_up">Your status message</string>
     <string name="public_status">Your status</string>
+    <string name="person_s_status">%1$s\'s status</string>
     <string name="update_your_name">Update your name</string>
     <string name="your_name_here">Your name here</string>
     <string name="set_name">Set name</string>

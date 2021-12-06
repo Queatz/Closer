@@ -357,8 +357,15 @@ class GroupActivity : CircularRevealActivity() {
 
         binding.groupAbout.setOnClickListener {
             on<DefaultAlerts>().message(
-                    on<ResourcesHandler>().resources.getString(on<GroupHandler>().phone?.let { R.string.public_status } ?: R.string.about_this_group),
-                    on<GroupHandler>().phone?.status ?: on<GroupHandler>().group?.about ?: ""
+                on<GroupHandler>().phone?.let {
+                    if (it.id == on<PersistenceHandler>().phoneId) on<ResourcesHandler>().resources.getString(R.string.public_status) else
+                        on<ResourcesHandler>().resources.getString(
+                            R.string.person_s_status,
+                            on<NameHandler>().getName(it)
+                        )
+
+                } ?: on<ResourcesHandler>().resources.getString(R.string.about_this_group),
+                on<GroupHandler>().phone?.status ?: on<GroupHandler>().group?.about ?: ""
             )
         }
 
