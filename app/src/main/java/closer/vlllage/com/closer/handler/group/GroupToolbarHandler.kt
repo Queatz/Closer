@@ -339,7 +339,7 @@ class GroupToolbarHandler constructor(private val on: On) {
         }
 
         items.add(if (aboutIsFirstItem) 1 else 0, ToolbarItem(
-                on<ResourcesHandler>().resources.getString(R.string.updates),
+                on<ResourcesHandler>().resources.getString(if (group.hasPhone()) R.string.updates else R.string.talk),
                 R.drawable.ic_message_black_24dp,
                 {
                     contentView.onNext(ContentViewType.MESSAGES)

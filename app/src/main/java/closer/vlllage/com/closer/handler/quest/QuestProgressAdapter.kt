@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.quest
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,9 +87,11 @@ class QuestProgressAdapter constructor(private val on: On, private val onClick: 
 
             if (it.photo.isNullOrBlank()) {
                 holder.binding.photo.setImageResource(R.drawable.ic_person_black_24dp)
+                holder.binding.photo.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(questProgress.ofId!!))
                 holder.binding.photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
             } else {
                 holder.binding.photo.scaleType = ImageView.ScaleType.CENTER_CROP
+                holder.binding.photo.imageTintList = null
                 on<PhotoHelper>().loadCircle(holder.binding.photo, "${it.photo}?s=256")
             }
         }, {}).also {

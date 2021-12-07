@@ -120,7 +120,7 @@ class GroupMemberHandler constructor(private val on: On) {
                                         if (group.isPublic) R.string.leave_public_group_message else R.string.leave_private_group_message)
                                     show()
                                 }
-                            })
+                            }.visible(isCurrentUserMemberOf(group)))
                         }.visible(group.direct.not()),
                         MenuHandler.MenuOption(R.drawable.ic_visibility_black_24dp, R.string.unhide_from_contacts) {
                             on<HideHandler>().unhide(group)

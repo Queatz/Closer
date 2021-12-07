@@ -220,7 +220,7 @@ class MixedHeaderAdapter(
                         }
                     }
                 FeedContent.WELCOME -> {
-                    add(WelcomeMixedItem("\uD83D\uDE00"))
+                    add(SettingsMixedItem("\uD83D\uDE00"))
                 }
             }
 

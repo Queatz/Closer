@@ -3,7 +3,6 @@ package closer.vlllage.com.closer.handler.feed.content
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import closer.vlllage.com.closer.BuildConfig
-import closer.vlllage.com.closer.MapsActivity
 import closer.vlllage.com.closer.R
 import closer.vlllage.com.closer.databinding.ActivitySettingsBinding
 import closer.vlllage.com.closer.extensions.visible
@@ -25,23 +24,23 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.queatz.on.On
 
-class WelcomeMixedItem(val text: String, val cta: String? = null, val callback: (() -> Unit)? = null) : MixedItem(MixedItemType.Welcome)
+class SettingsMixedItem(val text: String, val cta: String? = null, val callback: (() -> Unit)? = null) : MixedItem(MixedItemType.Welcome)
 
 class WelcomeViewHolder(val binding: ActivitySettingsBinding) : MixedItemViewHolder(binding.root, MixedItemType.Welcome) {
     var previousStatus: String? = null
 }
 
-class WelcomeMixedItemAdapter(private val on: On) : MixedItemAdapter<WelcomeMixedItem, WelcomeViewHolder> {
-    override fun bind(holder: WelcomeViewHolder, item: WelcomeMixedItem, position: Int) {
+class WelcomeMixedItemAdapter(private val on: On) : MixedItemAdapter<SettingsMixedItem, WelcomeViewHolder> {
+    override fun bind(holder: WelcomeViewHolder, item: SettingsMixedItem, position: Int) {
         bindWelcome(holder, item)
     }
 
-    override fun getMixedItemClass() = WelcomeMixedItem::class
+    override fun getMixedItemClass() = SettingsMixedItem::class
     override fun getMixedItemType() = MixedItemType.Welcome
 
-    override fun areItemsTheSame(old: WelcomeMixedItem, new: WelcomeMixedItem) = false
+    override fun areItemsTheSame(old: SettingsMixedItem, new: SettingsMixedItem) = false
 
-    override fun areContentsTheSame(old: WelcomeMixedItem, new: WelcomeMixedItem) = false
+    override fun areContentsTheSame(old: SettingsMixedItem, new: SettingsMixedItem) = false
 
     override fun onCreateViewHolder(parent: ViewGroup) = WelcomeViewHolder(ActivitySettingsBinding
             .inflate(LayoutInflater.from(parent.context), parent, false))
@@ -49,7 +48,7 @@ class WelcomeMixedItemAdapter(private val on: On) : MixedItemAdapter<WelcomeMixe
     override fun onViewRecycled(holder: WelcomeViewHolder) {
     }
 
-    private fun bindWelcome(holder: WelcomeViewHolder, item: WelcomeMixedItem) {
+    private fun bindWelcome(holder: WelcomeViewHolder, item: SettingsMixedItem) {
         val binding = holder.binding
 
         // Profile
@@ -95,8 +94,6 @@ class WelcomeMixedItemAdapter(private val on: On) : MixedItemAdapter<WelcomeMixe
         ))
 
         binding.yourName.setOnClickListener { v -> on<SetNameHandler>().modifyName() }
-
-        binding.yourName.requestFocus()
 
         binding.actionViewProfile.setOnClickListener {
             on<NavigationHandler>().showMyProfile(binding.actionViewProfile)
