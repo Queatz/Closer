@@ -3,6 +3,7 @@ package closer.vlllage.com.closer.handler.data
 import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
+import android.os.Looper
 import at.bluesource.choicesdk.location.common.*
 import at.bluesource.choicesdk.location.factory.FusedLocationProviderFactory
 import closer.vlllage.com.closer.handler.helpers.ActivityHandler
@@ -74,7 +75,7 @@ class LocationHandler constructor(private val on: On) {
                         lastKnownLocation = locationResult.lastLocation
                         callback.invoke(locationResult.lastLocation!!)
                     }
-                }, on<ActivityHandler>().activity!!.mainLooper)
+                }, on<ActivityHandler>().activity?.mainLooper ?: Looper.getMainLooper())
             }
         }
     }

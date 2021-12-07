@@ -50,10 +50,11 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
         val item = items[position]
 
         viewHolder.binding.button.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                0, item.icon, 0, 0
+            item.icon, 0, 0, 0
         )
 
-        viewHolder.binding.button.text = item.name
+        viewHolder.binding.button.compoundDrawablePadding = 0
+        viewHolder.binding.button.text = ""
 
         viewHolder.binding.button.setOnClickListener {
             item.onClickListener.onClick(it)
@@ -78,13 +79,21 @@ class ToolbarAdapter(on: On, private val onToolbarItemSelected: (GroupToolbarHan
     private fun recolor(item: GroupToolbarHandler.ToolbarItem, button: Button, colors: LightDarkColors, selected: ContentViewType?) {
         val isSelected = item.value == selected
 
-        if (item.color != null) {
+        if (item.color != null && isSelected) {
             button.compoundDrawableTintList = ColorStateList.valueOf(on<ResourcesHandler>().resources.getColor(item.color!!))
             button.setTextColor(on<ResourcesHandler>().resources.getColor(R.color.textInverse))
             button.setTypeface(null, if (item.value == selected) Typeface.BOLD else Typeface.NORMAL)
         } else {
             button.compoundDrawableTintList = if (item.value == selected) colors.tintSelected else colors.tint
             button.setTextColor(if (item.value == selected) colors.selected else colors.text)
+        }
+
+        if (isSelected) {
+            button.compoundDrawablePadding = on<ResourcesHandler>().resources.getDimensionPixelSize(R.dimen.padHalf)
+            button.text = item.name
+        } else {
+            button.compoundDrawablePadding = 0
+            button.text = ""
         }
 
         button.animate()

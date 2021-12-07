@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -14,6 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:minWidth="0dp"
         android:padding="@dimen/pad"
         android:textSize="@dimen/textSize"
         android:drawableTint="@color/text"
@@ -24,15 +26,15 @@
         android:singleLine="true"
         android:textColor="@color/text"
         android:textAllCaps="false"
-        tools:drawableTop="@drawable/ic_close_black_24dp"
-        tools:text="@string/cancel" />
+        tools:drawableLeft="@drawable/ic_whatshot_black_24dp"
+        tools:text="@string/updates" />
 
     <View
         android:id="@+id/indicator"
         android:layout_width="12dp"
         android:layout_height="12dp"
-        app:layout_constraintHorizontal_bias=".667"
-        app:layout_constraintEnd_toEndOf="@+id/button"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toStartOf="@+id/button"
         app:layout_constraintTop_toTopOf="@+id/button"
         android:background="@drawable/color_red_stroke"
