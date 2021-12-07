@@ -149,7 +149,7 @@ class GroupMessageHelper constructor(private val on: On) {
 
         on<MessageDisplay>().display(holder, groupMessage, previousGroupMessage, onEventClickListener!!, onGroupClickListener!!, onSuggestionClickListener!!)
 
-        if (groupMessage.reactions.isNullOrEmpty()) {
+        if (groupMessage.reactions.isEmpty()) {
             holder.reactionsRecyclerView.visible = false
         } else {
             holder.reactionsRecyclerView.visible = true

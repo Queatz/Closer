@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.phone
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +39,10 @@ open class PhoneAdapter(on: On, private val onReactionClickListener: (ReactionRe
 
                 if (reaction.phone!!.photo == null) {
                     viewHolder.photo.setImageResource(R.drawable.ic_person_black_24dp)
+                    viewHolder.photo.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(reaction.phone!!.id!!))
                     viewHolder.photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 } else {
+                    viewHolder.photo.imageTintList = null
                     on<PhotoHelper>().loadCircle(viewHolder.photo, reaction.phone!!.photo!!)
                     viewHolder.photo.scaleType = ImageView.ScaleType.CENTER_CROP
                 }

@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.bubble
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,8 +61,11 @@ class MapBubbleView constructor(private val on: On) {
 
                 if (photo != null) {
                     if (!phone.photo.isNullOrBlank()) {
+                        photo.imageTintList = null
                         on<PhotoHelper>().loadCircle(photo, phone.photo!!)
                         photo.setOnClickListener { v -> on<PhotoActivityTransitionHandler>().show(photo, phone.photo!!) }
+                    } else {
+                        photo.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(phone.id!!))
                     }
                 }
             }

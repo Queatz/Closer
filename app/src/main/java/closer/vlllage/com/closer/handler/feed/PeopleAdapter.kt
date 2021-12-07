@@ -1,5 +1,7 @@
 package closer.vlllage.com.closer.handler.feed
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -84,9 +86,11 @@ class PeopleAdapter(private val on: On, private val small: Boolean = false) : Re
 
         if (person.photo == null) {
             photo.setImageResource(R.drawable.ic_person_black_24dp)
+            photo.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(person.id!!))
             photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
         } else {
             on<PhotoHelper>().loadCircle(photo, "${person.photo}?s=256")
+            photo.imageTintList = null
             photo.scaleType = ImageView.ScaleType.CENTER_CROP
         }
         

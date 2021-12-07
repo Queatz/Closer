@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.Gravity
@@ -560,6 +561,7 @@ class MessageDisplay constructor(private val on: On) {
             }
 
             holder.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
+            holder.profilePhoto.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(groupMessage.from!!))
             holder.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
 
             on<DataHandler>().getPhone(groupMessage.from!!).subscribe({
@@ -567,9 +569,11 @@ class MessageDisplay constructor(private val on: On) {
 
                 if (it.photo.isNullOrBlank()) {
                     holder.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
+                    holder.profilePhoto.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(groupMessage.from!!))
                     holder.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 } else {
                     holder.profilePhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+                    holder.profilePhoto.imageTintList = null
                     on<PhotoHelper>().loadCircle(holder.profilePhoto, "${it.photo}?s=256")
                 }
             }, {}).also {

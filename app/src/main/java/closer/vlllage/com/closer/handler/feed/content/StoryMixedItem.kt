@@ -2,6 +2,7 @@ package closer.vlllage.com.closer.handler.feed.content
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.graphics.Point
 import android.graphics.Rect
 import android.text.method.ScrollingMovementMethod
@@ -193,9 +194,11 @@ class StoryMixedItemAdapter(private val on: On) : MixedItemAdapter<StoryMixedIte
 
         if (phone.photo.isNullOrBlank()) {
             holder.binding.profilePhoto.setImageResource(R.drawable.ic_person_black_24dp)
+            holder.binding.profilePhoto.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(phone.id!!))
             holder.binding.profilePhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
         } else {
             holder.binding.profilePhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+            holder.binding.profilePhoto.imageTintList = null
             on<PhotoHelper>().loadCircle(holder.binding.profilePhoto, "${phone.photo}?s=64")
         }
 

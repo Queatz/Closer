@@ -75,7 +75,7 @@ class WelcomeMixedItemAdapter(private val on: On) : MixedItemAdapter<WelcomeMixe
             }
         }
 
-        if (!on<PersistenceHandler>().myPhoto.isBlank()) {
+        if (on<PersistenceHandler>().myPhoto.isNotBlank()) {
             on<ImageHandler>().get().load(on<PersistenceHandler>().myPhoto + "?s=128")
                 .apply(RequestOptions().circleCrop())
                 .transition(DrawableTransitionOptions.withCrossFade())

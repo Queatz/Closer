@@ -113,6 +113,7 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
                 holder.on<PhotoHelper>().loadCircle(holder.binding.photo, phone.photo!!, R.dimen.profilePhotoSmall)
             }
             else -> {
+                holder.binding.photo.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(phone.id!!))
                 holder.on<ImageHandler>().get().clear(holder.binding.photo)
             }
         }
@@ -159,7 +160,7 @@ class MessagesContactItemAdapter(private val on: On) : MixedItemAdapter<Messages
 
     override fun areItemsTheSame(old: MessagesContactMixedItem, new: MessagesContactMixedItem) = old.group.id == new.group.id
 
-    override fun areContentsTheSame(old: MessagesContactMixedItem, new: MessagesContactMixedItem) = false
+    override fun areContentsTheSame(old: MessagesContactMixedItem, new: MessagesContactMixedItem) = true
 
     override fun onCreateViewHolder(parent: ViewGroup) = MessagesContactViewHolder(MessagesContactItemBinding
             .inflate(LayoutInflater.from(parent.context), parent, false))

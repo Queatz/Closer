@@ -1,5 +1,6 @@
 package closer.vlllage.com.closer.handler.group
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -87,6 +88,7 @@ class PhoneContactAdapter(on: On,
                     val groupContact = groupContacts[position]
 
                     holder.binding.phoneIcon.setImageResource(R.drawable.ic_person_black_24dp)
+                    holder.binding.phoneIcon.imageTintList = ColorStateList.valueOf(on<PhotoHelper>().colorForPhone(groupContact.contactId!!))
 
                     holder.binding.phoneIcon.setOnClickListener(null)
                     holder.itemView.setOnLongClickListener(null)
