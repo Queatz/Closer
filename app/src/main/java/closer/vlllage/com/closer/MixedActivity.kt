@@ -11,11 +11,11 @@ import closer.vlllage.com.closer.handler.feed.FeedContent
 import closer.vlllage.com.closer.handler.feed.MixedHeaderAdapter
 import closer.vlllage.com.closer.handler.helpers.DefaultAlerts
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
-import closer.vlllage.com.closer.ui.CircularRevealActivity
+import closer.vlllage.com.closer.pool.PoolActivity
 import com.queatz.on.On
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
-class MixedActivity : CircularRevealActivity() {
+class MixedActivity : PoolActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mixedAdapter: MixedHeaderAdapter
@@ -62,7 +62,14 @@ class MixedActivity : CircularRevealActivity() {
                 }
     }
 
-        override val backgroundId = R.id.background
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        findViewById<View>(R.id.background).setOnTouchListener { view, motionEvent ->
+            view.setOnTouchListener(null)
+            finish()
+            true
+        }
+    }
 
     companion object {
         const val EXTRA_STORY_ID = "storyId"

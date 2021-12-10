@@ -13,11 +13,11 @@ import closer.vlllage.com.closer.handler.featurerequests.FeatureRequestsHandler
 import closer.vlllage.com.closer.handler.helpers.DisposableHandler
 import closer.vlllage.com.closer.handler.helpers.MiniWindowHandler
 import closer.vlllage.com.closer.handler.helpers.TimeAgo
-import closer.vlllage.com.closer.ui.CircularRevealActivity
+import closer.vlllage.com.closer.pool.PoolActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class FeatureRequestsActivity : CircularRevealActivity() {
+class FeatureRequestsActivity : PoolActivity() {
 
     private lateinit var binding: ActivityFeatureRequestsBinding
     private lateinit var adapter: FeatureRequestAdapter
@@ -79,5 +79,12 @@ class FeatureRequestsActivity : CircularRevealActivity() {
         })
     }
 
-    override val backgroundId = R.id.activityLayout
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        binding.activityLayout.setOnTouchListener { view, motionEvent ->
+            view.setOnTouchListener(null)
+            finish()
+            true
+        }
+    }
 }

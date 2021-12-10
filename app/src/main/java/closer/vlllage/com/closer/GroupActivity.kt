@@ -21,15 +21,15 @@ import closer.vlllage.com.closer.handler.map.MeetHandler
 import closer.vlllage.com.closer.handler.phone.NameHandler
 import closer.vlllage.com.closer.handler.settings.SettingsHandler
 import closer.vlllage.com.closer.handler.settings.UserLocalSetting
+import closer.vlllage.com.closer.pool.PoolActivity
 import closer.vlllage.com.closer.store.models.Group
 import closer.vlllage.com.closer.store.models.Phone
-import closer.vlllage.com.closer.ui.CircularRevealActivity
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GroupActivity : CircularRevealActivity() {
+class GroupActivity : PoolActivity() {
 
     lateinit var groupId: String
 
@@ -112,6 +112,15 @@ class GroupActivity : CircularRevealActivity() {
             binding.peopleInGroup.setTextColor(it.text)
             binding.backgroundPhoto.alpha = if (it.light) .15f else 1f
         })
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        binding.background.setOnTouchListener { view, motionEvent ->
+            view.setOnTouchListener(null)
+            finish()
+            true
+        }
     }
 
     private fun bindToGroup() {
@@ -386,8 +395,6 @@ class GroupActivity : CircularRevealActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         handleIntent(intent)
-        setSourceBounds(intent.sourceBounds)
-        reveal()
     }
 
     private fun handleIntent(intent: Intent?) {
@@ -443,8 +450,6 @@ class GroupActivity : CircularRevealActivity() {
         super.onPause()
         on<ApplicationHandler>().app.on<TopHandler>().setGroupActive(null)
     }
-
-    override val backgroundId = R.id.background
 
     private fun toggleContactsView() {
         on<GroupToolbarHandler>().contentView.onNext(if (on<GroupToolbarHandler>().contentView.value == ContentViewType.CONTACTS) ContentViewType.MESSAGES else ContentViewType.CONTACTS)
