@@ -172,6 +172,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/textInverse"
                     android:lineSpacingMultiplier="1.25"
+                    android:autoLink="all"
                     android:textSize="@dimen/textSize"
                     tools:text="Something here..." />
 

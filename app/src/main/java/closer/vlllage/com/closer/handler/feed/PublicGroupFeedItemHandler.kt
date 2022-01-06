@@ -191,6 +191,8 @@ class PublicGroupFeedItemHandler constructor(private val on: On) {
             showGroupActions(groups)
         })
 
+        toolbarAdapter.isLight = true
+
         toolbarAdapter.selectedContentView
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { content ->

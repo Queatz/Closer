@@ -506,8 +506,8 @@
     <string name="search_lifestyles">Search lifestyles</string>
     <string name="no_notifications">You don\'t have any notifications yet.</string>
     <string name="welcome">Welcome</string>
-    <string name="post_now">Post now</string>
-    <string name="share_this">Share this</string>
+    <string name="post_now">Post to group</string>
+    <string name="share_this_activity">Share this activity</string>
     <string name="create_a_post">Create a post</string>
     <string name="group_expired_on">This group expired %1$s</string>
     <string name="restore">Restore</string>

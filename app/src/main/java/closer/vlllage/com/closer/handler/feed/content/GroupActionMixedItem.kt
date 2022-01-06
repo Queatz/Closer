@@ -47,7 +47,7 @@ class GroupActionMixedItemAdapter(private val on: On) : MixedItemAdapter<GroupAc
 
         holder.on<GroupActionDisplay>().onGroupActionClickListener = { groupAction, proceed ->
             on<MenuHandler>().show(
-                    MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.share_this)) {
+                    MenuHandler.MenuOption(R.drawable.ic_share_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.share_this_activity)) {
                         on<ShareActivityTransitionHandler>().shareGroupActionToGroup(groupAction.id!!)
                     },
                     MenuHandler.MenuOption(R.drawable.ic_edit_black_24dp, title = on<ResourcesHandler>().resources.getString(R.string.post_now)) {
